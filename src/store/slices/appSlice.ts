@@ -22,7 +22,7 @@ const appSlice = createSlice({
     },
     setSidebarOpen(state, action: PayloadAction<boolean>) {
       state.sidebarOpen = action.payload;
-    }
+    },
   },
 });
 

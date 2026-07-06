@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -8,6 +9,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import {
   flexRender,
@@ -18,9 +25,27 @@ import {
   useReactTable,
   type ColumnDef,
 } from "@tanstack/react-table";
-import { SearchX } from "lucide-react";
+import { MoreHorizontal, SearchX } from "lucide-react";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
+
+export interface RowAction<TData> {
+  label: string;
+  icon?: React.ReactNode;
+  onClick: (row: TData) => void;
+  variant?: "default" | "destructive";
+}
+
+export interface FacetedFilterOption {
+  label: string;
+  value: string;
+}
+
+export interface FacetedFilter {
+  columnId: string;
+  title: string;
+  options: FacetedFilterOption[];
+}
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData, unknown>[];
@@ -32,6 +57,8 @@ interface DataTableProps<TData> {
   onRowClick?: (row: TData) => void;
   isLoading?: boolean;
   emptyMessage?: string;
+  rowActions?: RowAction<TData>[];
+  filters?: FacetedFilter[];
 }
 
 export function DataTable<TData>({
@@ -44,11 +71,46 @@ export function DataTable<TData>({
   onRowClick,
   isLoading = false,
   emptyMessage = "No results found.",
+  rowActions,
+  filters,
 }: DataTableProps<TData>) {
+  const allColumns = useMemo(() => {
+    if (!rowActions) return columns;
+    return [
+      ...columns,
+      {
+        id: "actions",
+        header: () => <span className="sr-only">Actions</span>,
+        cell: ({ row }: { row: { original: TData } }) => (
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              onClick={(e) => e.stopPropagation()}
+              className="flex size-8 items-center justify-center rounded-lg transition-colors hover:bg-muted"
+            >
+              <MoreHorizontal className="size-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-44">
+              {rowActions.map((action) => (
+                <DropdownMenuItem
+                  key={action.label}
+                  variant={action.variant}
+                  onClick={() => action.onClick(row.original)}
+                >
+                  {action.icon}
+                  {action.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ),
+      } as ColumnDef<TData>,
+    ];
+  }, [columns, rowActions]);
+
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
-    columns,
+    columns: allColumns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: enableSorting ? getSortedRowModel() : undefined,
     getPaginationRowModel: getPaginationRowModel(),
@@ -60,7 +122,11 @@ export function DataTable<TData>({
 
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
-      <DataTableToolbar table={table} toolbarActions={toolbarActions} />
+      <DataTableToolbar
+        table={table}
+        toolbarActions={toolbarActions}
+        filters={filters}
+      />
       <div className="overflow-x-auto">
         <Table>
           <TableHeader className="bg-secondary">

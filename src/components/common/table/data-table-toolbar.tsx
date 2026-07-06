@@ -3,11 +3,18 @@
 import { useEffect, useRef, useState } from "react";
 import type { Table } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Search, Settings2 } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Search, Settings2, Filter } from "lucide-react";
+import type { FacetedFilter } from "./data-table";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   toolbarActions?: React.ReactNode;
+  filters?: FacetedFilter[];
 }
 
 function humanize(str: string) {
@@ -21,6 +28,7 @@ function humanize(str: string) {
 export function DataTableToolbar<TData>({
   table,
   toolbarActions,
+  filters,
 }: DataTableToolbarProps<TData>) {
   const [search, setSearch] = useState("");
   const [showColumns, setShowColumns] = useState(false);
@@ -58,6 +66,60 @@ export function DataTableToolbar<TData>({
       </div>
 
       <div className="flex items-center gap-3" ref={panelRef}>
+        {filters?.map((filter) => {
+          const column = table.getColumn(filter.columnId);
+          const currentValue = column?.getFilterValue() as
+            | string
+            | undefined;
+
+          return (
+            <Popover key={filter.columnId}>
+              <PopoverTrigger className="flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-bold transition-colors hover:bg-muted data-[state=open]:text-primary">
+                <Filter className="size-4" />
+                {filter.title}
+                {currentValue && (
+                  <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary">
+                    {filter.options.find((o) => o.value === currentValue)
+                      ?.label ?? currentValue}
+                  </span>
+                )}
+              </PopoverTrigger>
+              <PopoverContent className="w-48 p-2">
+                <p className="mb-1 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  {filter.title}
+                </p>
+                <label className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
+                  <Checkbox
+                    checked={!currentValue}
+                    onCheckedChange={() =>
+                      column?.setFilterValue(undefined)
+                    }
+                  />
+                  All
+                </label>
+                {filter.options.map((option) => (
+                  <label
+                    key={option.value}
+                    className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted"
+                  >
+                    <Checkbox
+                      checked={currentValue === option.value}
+                      onCheckedChange={() => {
+                        if (currentValue === option.value) {
+                          column?.setFilterValue(undefined);
+                        } else {
+                          column?.setFilterValue(option.value);
+                        }
+                      }}
+                    />
+                    {option.label}
+                  </label>
+                ))}
+              </PopoverContent>
+            </Popover>
+          );
+        })}
+
         {toolbarActions}
 
         <div className="relative">

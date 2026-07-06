@@ -4,7 +4,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { Subscription } from "@/data/subscriptions";
 import { DataTableColumnHeader } from "@/components/common/table";
 import { SubscriptionStatusBadge } from "./subscription-status-badge";
-import { ChevronRight } from "lucide-react";
 
 export const subscriptionColumns: ColumnDef<Subscription>[] = [
   {
@@ -70,6 +69,7 @@ export const subscriptionColumns: ColumnDef<Subscription>[] = [
   },
   {
     accessorKey: "status",
+    filterFn: "equalsString",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Status" />
     ),
@@ -86,17 +86,6 @@ export const subscriptionColumns: ColumnDef<Subscription>[] = [
       <div className="text-sm text-muted-foreground">
         <p>{row.original.startDate}</p>
         <p className="text-[13px]">→ {row.original.endDate}</p>
-      </div>
-    ),
-  },
-  {
-    id: "actions",
-    header: () => <span className="sr-only">Actions</span>,
-    cell: () => (
-      <div className="flex justify-end">
-        <button className="flex items-center gap-1 text-[11px] font-bold text-primary transition-all hover:gap-2">
-          View Details <ChevronRight className="size-4" />
-        </button>
       </div>
     ),
   },

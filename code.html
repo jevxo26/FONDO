@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 
-<html class="light" lang="en"><head>
+<html class="scroll-smooth" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Subscription Management | Heritage Suite Admin</title>
+<title>Heritage Suite | Customer Payments</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Playfair+Display:wght@600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Playfair+Display:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
@@ -113,388 +117,418 @@
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        .bento-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        .transaction-row:hover .tx-action {
+            opacity: 1;
         }
-        .bento-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px -5px rgba(200, 162, 61, 0.1);
-        }
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #d1c5b1;
-            border-radius: 10px;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
         }
     </style>
 </head>
 <body class="bg-heritage-cream text-on-surface font-body-lg">
-<!-- SideNavBar -->
-<aside class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-heritage-cream dark:bg-charcoal-black border-r border-outline-variant dark:border-on-surface-variant shadow-sm z-50 flex flex-col py-8 px-4">
+<!-- Side Navigation Bar (Shared Component) -->
+<nav class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-heritage-cream border-r border-outline-variant shadow-sm flex flex-col py-8 px-4 z-50">
 <div class="mb-10 px-2">
-<h1 class="text-headline-md font-headline-md font-bold text-charcoal-black dark:text-heritage-cream">Heritage Suite</h1>
-<p class="text-body-sm text-body-gray mt-1">Restaurant Admin</p>
+<span class="text-headline-md font-headline-md font-bold text-charcoal-black">Heritage Suite</span>
+<p class="text-body-sm font-body-sm text-body-gray">Restaurant Admin</p>
 </div>
-<nav class="flex-1 space-y-2">
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-body-gray dark:text-secondary-fixed-dim hover:text-charcoal-black dark:hover:text-white hover:bg-surface-container-high dark:hover:bg-on-surface-variant transition-colors duration-200" href="#">
-<span class="material-symbols-outlined">storefront</span>
+<div class="space-y-1 flex-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-body-gray hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
 <span class="text-label-bold font-label-bold">Vendors</span>
 </a>
-<!-- Active Tab: Customers (Contextual mapping for Subscription Mgt) -->
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-golden-amber font-bold border-r-4 border-golden-amber bg-surface-container-low dark:bg-on-surface-variant/20 transition-all" href="#">
-<span class="material-symbols-outlined">group</span>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-body-gray hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
 <span class="text-label-bold font-label-bold">Customers</span>
 </a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-body-gray dark:text-secondary-fixed-dim hover:text-charcoal-black dark:hover:text-white hover:bg-surface-container-high dark:hover:bg-on-surface-variant transition-colors duration-200" href="#">
-<span class="material-symbols-outlined">restaurant</span>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-body-gray hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
 <span class="text-label-bold font-label-bold">Food</span>
 </a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-body-gray dark:text-secondary-fixed-dim hover:text-charcoal-black dark:hover:text-white hover:bg-surface-container-high dark:hover:bg-on-surface-variant transition-colors duration-200" href="#">
-<span class="material-symbols-outlined">inventory_2</span>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-body-gray hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
 <span class="text-label-bold font-label-bold">Packages</span>
 </a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-body-gray dark:text-secondary-fixed-dim hover:text-charcoal-black dark:hover:text-white hover:bg-surface-container-high dark:hover:bg-on-surface-variant transition-colors duration-200" href="#">
-<span class="material-symbols-outlined">receipt_long</span>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-body-gray hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
 <span class="text-label-bold font-label-bold">Orders</span>
 </a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-body-gray dark:text-secondary-fixed-dim hover:text-charcoal-black dark:hover:text-white hover:bg-surface-container-high dark:hover:bg-on-surface-variant transition-colors duration-200" href="#">
-<span class="material-symbols-outlined">payments</span>
+<!-- Active State: Payments -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-golden-amber font-bold border-r-4 border-golden-amber bg-surface-container-low transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
 <span class="text-label-bold font-label-bold">Payments</span>
 </a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-body-gray dark:text-secondary-fixed-dim hover:text-charcoal-black dark:hover:text-white hover:bg-surface-container-high dark:hover:bg-on-surface-variant transition-colors duration-200" href="#">
-<span class="material-symbols-outlined">delivery_dining</span>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-body-gray hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="delivery_dining">delivery_dining</span>
 <span class="text-label-bold font-label-bold">Riders</span>
 </a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-body-gray dark:text-secondary-fixed-dim hover:text-charcoal-black dark:hover:text-white hover:bg-surface-container-high dark:hover:bg-on-surface-variant transition-colors duration-200" href="#">
-<span class="material-symbols-outlined">assessment</span>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-body-gray hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
 <span class="text-label-bold font-label-bold">Reports</span>
 </a>
-</nav>
-<div class="mt-auto pt-6 border-t border-outline-variant">
-<button class="w-full flex items-center justify-center gap-2 bg-charcoal-black text-white py-3 rounded-full hover:bg-opacity-90 active:scale-95 transition-all text-label-bold font-label-bold">
-<span class="material-symbols-outlined">support_agent</span>
+</div>
+<div class="mt-auto px-2">
+<button class="w-full py-3 bg-charcoal-black text-white rounded-full text-label-bold font-label-bold flex items-center justify-center gap-2 scale-95 active:opacity-80 transition-all hover:bg-black">
+<span class="material-symbols-outlined text-sm" data-icon="support_agent">support_agent</span>
                 Support Dashboard
             </button>
 </div>
-</aside>
-<!-- Main Content Area -->
-<main class="ml-64 min-h-screen pb-12">
-<!-- TopAppBar -->
-<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 z-40 bg-white/80 dark:bg-charcoal-black/80 backdrop-blur-md border-b border-outline-variant dark:border-on-surface-variant shadow-sm flex justify-between items-center px-8">
+</nav>
+<!-- Top App Bar (Shared Component) -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-white/80 backdrop-blur-md border-b border-outline-variant shadow-sm z-40 flex justify-between items-center px-8">
 <div class="flex items-center gap-4 flex-1">
 <div class="relative w-full max-w-md">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-body-gray">search</span>
-<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full focus:ring-2 focus:ring-golden-amber text-body-sm transition-all" placeholder="Search subscriptions..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-body-gray text-xl" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-body-sm focus:ring-2 focus:ring-golden-amber transition-all" placeholder="Search transactions, IDs, or customers..." type="text"/>
 </div>
 </div>
 <div class="flex items-center gap-6">
-<div class="flex items-center gap-4">
-<button class="relative text-body-gray hover:text-golden-amber transition-colors duration-200">
-<span class="material-symbols-outlined">notifications</span>
-<span class="absolute top-0 right-0 w-2 h-2 bg-status-red rounded-full border-2 border-white"></span>
+<button class="text-body-gray hover:text-golden-amber transition-opacity active:opacity-70">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
 </button>
-<button class="text-body-gray hover:text-golden-amber transition-colors duration-200">
-<span class="material-symbols-outlined">settings</span>
+<button class="text-body-gray hover:text-golden-amber transition-opacity active:opacity-70">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
 </button>
-<button class="text-body-gray hover:text-golden-amber transition-colors duration-200">
-<span class="material-symbols-outlined">help</span>
+<button class="text-body-gray hover:text-golden-amber transition-opacity active:opacity-70">
+<span class="material-symbols-outlined" data-icon="help">help</span>
 </button>
-</div>
 <div class="h-8 w-px bg-outline-variant"></div>
 <div class="flex items-center gap-3">
 <div class="text-right">
-<p class="text-label-bold font-label-bold text-charcoal-black">Ahmed Kamal</p>
-<p class="text-[10px] text-body-gray uppercase tracking-widest">Admin</p>
+<p class="text-label-bold font-label-bold text-charcoal-black">Ahmed Kabir</p>
+<p class="text-xs text-body-gray">Administrator</p>
 </div>
-<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-golden-amber/20">
-<img class="w-full h-full object-cover" data-alt="Professional studio portrait of a senior restaurant administrator in Dhaka, wearing a tailored dark suit. The lighting is warm and cinematic, suggesting a high-end corporate office environment. The background is softly blurred with hints of traditional copper kitchenware and modern architectural glass. The aesthetic is modern-heritage with rich textures and premium clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBn7HW4uzVKeLE91PRo3BqIWwBqvYyHr1HwupL_6SKj52NjDaYy448lZPfbQuHs9hKb54FL9hb0DdrhLCu2DVssOHQ4LFEqYDlcW6JyWmKn4htBNhQBBCVjHOzIHJCldZvugk__ggUcGpTWrLDMNyZdop29YKpt8sOMHJFLmbp0x--ajMGrp7-3qQD9BNkKG4rlS82VJ6keuV1rBWs7eLniSKIcPHEKFdlRbi9aropBM27L1GI8E6xS"/>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a senior South Asian restaurant administrator in business attire, looking confident and smiling warmly against a soft-focus backdrop of an elegant, modern Mughlai dining hall. The lighting is warm and cinematic, highlighting the rich textures and premium brand aesthetic of the Heritage Suite." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDihD4YFjtmVN26L1mbL4oygkx4SBFYawRpTvXdBl49hAlJ-QdEAEPcqS06iGd48PgSN6P-e-d7tHD01UUrvGpvSYemCJMY2LsEJX9nxR5h6fmUl4jzcx4a95banjJ5htKUCj6yG0b_PFKx6SNSslYPKR-a4VTCOJPbyIscl4hZo7zpHINHZ31Js0UZSn_6PX9gN9Ds-Zcjs6wWF4JTGCPNESUxtzMRqtOo-I7zQcTq0B3jlaqO4KnX"/>
 </div>
 </div>
 </div>
 </header>
-<!-- Content Canvas -->
-<div class="mt-16 p-8 max-w-[1200px] mx-auto">
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen">
+<div class="max-w-[1200px] mx-auto px-8 py-10">
 <!-- Page Header -->
-<div class="flex justify-between items-end mb-8">
+<div class="flex justify-between items-end mb-10">
 <div>
-<h2 class="text-headline-lg font-headline-lg text-charcoal-black">Subscription Management</h2>
-<p class="text-body-lg text-body-gray mt-2">Oversee premium culinary memberships and recurring revenue.</p>
+<h1 class="font-headline-lg text-headline-lg text-charcoal-black mb-2">Financial Overview</h1>
+<p class="text-body-lg text-body-gray">Track and manage every financial interaction across the ecosystem.</p>
 </div>
 <div class="flex gap-3">
-<button class="flex items-center gap-2 border border-charcoal-black px-5 py-2.5 rounded-full text-label-bold font-label-bold hover:bg-charcoal-black hover:text-white transition-all">
-<span class="material-symbols-outlined">download</span> Export Data
+<button class="px-6 py-2 border border-outline-variant rounded-full text-label-bold font-label-bold flex items-center gap-2 hover:bg-white transition-all">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+                        Export CSV
                     </button>
-<button class="flex items-center gap-2 bg-golden-amber text-white px-5 py-2.5 rounded-full text-label-bold font-label-bold shadow-md hover:brightness-110 active:scale-95 transition-all">
-<span class="material-symbols-outlined">add</span> Create New Plan
+<button class="px-6 py-2 bg-golden-amber text-white rounded-full text-label-bold font-label-bold flex items-center gap-2 hover:opacity-90 transition-all">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                        Manual Refund
                     </button>
 </div>
 </div>
-<!-- Bento Metrics Grid -->
-<div class="grid grid-cols-12 gap-6 mb-10">
-<!-- Main Metric Card -->
-<div class="col-span-12 md:col-span-4 bg-charcoal-black rounded-xl p-6 text-white bento-card relative overflow-hidden">
+<!-- Bento Summary Cards -->
+<div class="grid grid-cols-12 gap-6 mb-12">
+<!-- Total Revenue Collected -->
+<div class="col-span-12 md:col-span-7 bg-charcoal-black text-white p-8 rounded-xl shadow-lg relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[120px]" data-icon="payments">payments</span>
+</div>
 <div class="relative z-10">
-<div class="flex justify-between items-start mb-4">
-<span class="material-symbols-outlined p-2 bg-white/10 rounded-lg">card_membership</span>
-<span class="text-status-green flex items-center text-sm font-bold bg-status-green/10 px-2 py-1 rounded">+12.5%</span>
+<p class="text-label-bold font-label-bold text-primary-fixed mb-4">Total Revenue Collected</p>
+<div class="flex items-baseline gap-2 mb-6">
+<span class="font-display-lg text-display-lg text-primary-fixed">৳</span>
+<h2 class="font-display-lg text-display-lg">1,42,850.00</h2>
 </div>
-<p class="text-body-sm text-heritage-cream/60 uppercase tracking-widest font-label-bold">Active Subscriptions</p>
-<h3 class="text-display-lg font-display-lg mt-1">1,284</h3>
-<p class="text-body-sm text-heritage-cream/40 mt-4 italic">Surging demand for Gold Tier Mughal dining</p>
+<div class="flex gap-6 border-t border-white/10 pt-6">
+<div>
+<p class="text-xs text-secondary-fixed-dim uppercase tracking-wider mb-1">Growth</p>
+<p class="flex items-center text-status-green font-bold">
+<span class="material-symbols-outlined text-sm mr-1" data-icon="trending_up">trending_up</span>
+                                    +12.4%
+                                </p>
 </div>
+<div>
+<p class="text-xs text-secondary-fixed-dim uppercase tracking-wider mb-1">Successful</p>
+<p class="font-bold">2,143 Tx</p>
 </div>
-<!-- Churn Rate Card -->
-<div class="col-span-12 md:col-span-4 bg-white rounded-xl p-6 border border-outline-variant bento-card">
-<div class="flex justify-between items-start mb-4">
-<span class="material-symbols-outlined p-2 bg-status-red/10 text-status-red rounded-lg">trending_down</span>
-<span class="text-status-green flex items-center text-sm font-bold">-2.1%</span>
-</div>
-<p class="text-body-sm text-body-gray uppercase tracking-widest font-label-bold">Churn Rate</p>
-<h3 class="text-headline-lg font-headline-lg mt-1 text-charcoal-black">3.4%</h3>
-<div class="w-full bg-surface-container mt-6 h-1.5 rounded-full overflow-hidden">
-<div class="bg-status-red h-full" style="width: 3.4%"></div>
-</div>
-<p class="text-body-sm text-body-gray mt-4">Industry average: 5.2%</p>
-</div>
-<!-- MRR Card -->
-<div class="col-span-12 md:col-span-4 bg-surface-container-low rounded-xl p-6 border border-outline-variant bento-card">
-<div class="flex justify-between items-start mb-4">
-<span class="material-symbols-outlined p-2 bg-golden-amber/10 text-golden-amber rounded-lg">account_balance_wallet</span>
-<span class="text-status-green flex items-center text-sm font-bold">↑ ৳12k</span>
-</div>
-<p class="text-body-sm text-body-gray uppercase tracking-widest font-label-bold">Monthly Recurring Revenue</p>
-<h3 class="text-headline-lg font-headline-lg mt-1 text-charcoal-black">৳458,200</h3>
-<div class="flex -space-x-2 mt-6">
-<div class="w-8 h-8 rounded-full border-2 border-white bg-slate-300 overflow-hidden"><img class="w-full h-full object-cover" data-alt="Close up face of a satisfied young professional man in Dhaka enjoying a meal. High-end food photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlDr9fvTnA2mjM0syNce_kKYUi63RIL87cUweOTp5_a_wpSDra38e94bo3bEwIW2FIuAyHClB1LJ-rowHysT5vrNXjrZLIXgG_wRY-B5_MbXujy4aSRIx_vAi5xH3CizYgSJOVsH3Dr-MBQrwKI6JND2xmGzUMjp7Yb1ColU1lilE2t1vRijRQNywBTpiic0FtOStgsCQuDu2hwQvkdlfDNjojvlcuSXyXulqvovnEM92Dvy5-d2rf"/></div>
-<div class="w-8 h-8 rounded-full border-2 border-white bg-slate-400 overflow-hidden"><img class="w-full h-full object-cover" data-alt="Elegant woman in her 30s dining at a luxury restaurant in Bangladesh. Warm soft ambient lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzYm5sfn1B1KVkHhGqqKiMnX4i4THIL0giXnWk9SDgn-aRZNm7h4EtHEYVKyjeURFvbXWqse17aOM9jHdIkQRrvvnLP1vfjCf9er6yI96dsATFstgn-AXZc1KCvBVefHwjXU5LauxVG-so4m2rUaPv7vHhdShONMkOIviAVDmn3R5R24bULwnGcYlk5LKUmIlAxSmMe_ueCzQOL68NirZOz3i8NfMuYWnf9S2um2bD1bdb-9dcNKG4"/></div>
-<div class="w-8 h-8 rounded-full border-2 border-white bg-slate-500 overflow-hidden"><img class="w-full h-full object-cover" data-alt="Elderly distinguished man in a traditional panjabi looking happy while reviewing a menu. Warm heritage aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXmiQo3UdP2qKSO_A81JqQH8XSfXzV8q5fu7hOPgWXsgGTyYSDfvji4dIYaJaKzLl7yUkBwtov8G4RClPapwx7JsAhoO3yClI8Koew66BQ6YIFvcPUm3Ds7mGXrWWUDF5PpDyNbnkPCciz7gS_mVsXoTp7JnoG_h2s7wbvVps9_OrsjdR0pIsxxTZeBFcegRq3ZxJ74lP0aRF4fXaD50RVM521M3-z74YoASt7oJWKaBe5bOWTKEfm"/></div>
-<div class="flex items-center justify-center w-8 h-8 rounded-full border-2 border-white bg-golden-amber text-[10px] font-bold text-white">+82</div>
-</div>
-<p class="text-body-sm text-body-gray mt-2 ml-1">New members this month</p>
+<div>
+<p class="text-xs text-secondary-fixed-dim uppercase tracking-wider mb-1">Avg. Order</p>
+<p class="font-bold">৳1,250</p>
 </div>
 </div>
-<!-- Main Table Section -->
-<div class="bg-white rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
-<div class="p-6 border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest">
-<div class="flex gap-4">
-<select class="bg-heritage-cream border-outline-variant rounded-full text-body-sm px-4 py-2 focus:ring-golden-amber focus:border-golden-amber">
-<option>All Tiers</option>
-<option>Gold Tier</option>
-<option>Silver Tier</option>
-<option>Regular</option>
-</select>
-<select class="bg-heritage-cream border-outline-variant rounded-full text-body-sm px-4 py-2 focus:ring-golden-amber focus:border-golden-amber">
-<option>Status: Active</option>
-<option>Status: Paused</option>
-<option>Status: Cancelled</option>
-</select>
 </div>
-<button class="text-body-sm font-label-bold text-golden-amber hover:underline flex items-center gap-1">
-                        Advanced Filters <span class="material-symbols-outlined text-sm">filter_list</span>
+</div>
+<!-- Pending Payouts -->
+<div class="col-span-12 md:col-span-5 bg-white p-8 rounded-xl border border-outline-variant shadow-sm flex flex-col justify-between">
+<div>
+<p class="text-label-bold font-label-bold text-body-gray mb-4">Pending Payouts</p>
+<div class="flex items-baseline gap-2">
+<span class="text-headline-md font-headline-md text-golden-amber">৳</span>
+<h2 class="text-headline-md font-headline-md text-charcoal-black">28,400.00</h2>
+</div>
+</div>
+<div class="mt-6">
+<div class="w-full bg-surface-container rounded-full h-2 mb-4">
+<div class="bg-golden-amber h-2 rounded-full" style="width: 65%"></div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-body-sm text-body-gray italic">Next payout scheduled: Oct 24</span>
+<button class="text-golden-amber font-label-bold text-label-bold hover:underline">Process Now</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Transaction Table Filter Bar -->
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+<div class="flex gap-2">
+<button class="px-5 py-2 rounded-full bg-charcoal-black text-white text-label-bold font-label-bold">All Transactions</button>
+<button class="px-5 py-2 rounded-full bg-white border border-outline-variant text-charcoal-black text-label-bold font-label-bold hover:bg-surface-container transition-colors">Success</button>
+<button class="px-5 py-2 rounded-full bg-white border border-outline-variant text-charcoal-black text-label-bold font-label-bold hover:bg-surface-container transition-colors">Refunded</button>
+<button class="px-5 py-2 rounded-full bg-white border border-outline-variant text-charcoal-black text-label-bold font-label-bold hover:bg-surface-container transition-colors">Failed</button>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-body-sm text-body-gray">Date Range:</span>
+<button class="px-4 py-2 bg-white border border-outline-variant rounded-lg text-body-sm flex items-center gap-2">
+<span>Oct 1 - Oct 15, 2023</span>
+<span class="material-symbols-outlined text-sm" data-icon="calendar_today">calendar_today</span>
 </button>
 </div>
-<div class="overflow-x-auto">
+</div>
+<!-- Transactions Table -->
+<div class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
 <table class="w-full text-left border-collapse">
 <thead>
-<tr class="bg-surface-container-low text-body-gray">
-<th class="px-6 py-4 text-label-bold font-label-bold uppercase">Customer</th>
-<th class="px-6 py-4 text-label-bold font-label-bold uppercase">Plan Tier</th>
-<th class="px-6 py-4 text-label-bold font-label-bold uppercase">Billing Cycle</th>
-<th class="px-6 py-4 text-label-bold font-label-bold uppercase">Next Renewal</th>
-<th class="px-6 py-4 text-label-bold font-label-bold uppercase">Status</th>
-<th class="px-6 py-4 text-label-bold font-label-bold uppercase text-right">Actions</th>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-6 py-4 text-label-bold font-label-bold text-on-surface-variant">Transaction ID</th>
+<th class="px-6 py-4 text-label-bold font-label-bold text-on-surface-variant">Customer</th>
+<th class="px-6 py-4 text-label-bold font-label-bold text-on-surface-variant">Method</th>
+<th class="px-6 py-4 text-label-bold font-label-bold text-on-surface-variant">Status</th>
+<th class="px-6 py-4 text-label-bold font-label-bold text-on-surface-variant">Amount</th>
+<th class="px-6 py-4 text-label-bold font-label-bold text-on-surface-variant">Timestamp</th>
+<th class="px-6 py-4"></th>
 </tr>
 </thead>
 <tbody class="divide-y divide-outline-variant">
 <!-- Row 1 -->
-<tr class="hover:bg-heritage-cream/50 transition-colors">
+<tr class="transaction-row hover:bg-surface-container-low transition-colors duration-150">
+<td class="px-6 py-4">
+<span class="font-mono text-charcoal-black font-bold">#TXN-94021</span>
+</td>
 <td class="px-6 py-4">
 <div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-bold text-golden-amber">ZA</div>
-<div>
-<p class="font-bold text-charcoal-black">Zayer Al-Habib</p>
-<p class="text-body-sm text-body-gray">zayer@example.com</p>
-</div>
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed text-xs font-bold">MK</div>
+<span class="text-body-sm font-semibold">Mahbub Khan</span>
 </div>
 </td>
 <td class="px-6 py-4">
-<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-golden-amber/10 text-golden-amber text-xs font-bold uppercase tracking-wider">
-<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">stars</span> Gold
-                                    </span>
+<div class="flex items-center gap-2">
+<div class="w-6 h-4 bg-pink-100 rounded flex items-center justify-center text-[8px] font-bold text-pink-600">bKash</div>
+<span class="text-body-sm">Personal</span>
+</div>
 </td>
-<td class="px-6 py-4 text-body-sm">Annually</td>
-<td class="px-6 py-4 text-body-sm font-medium">Oct 24, 2024</td>
 <td class="px-6 py-4">
-<span class="inline-block w-2 h-2 rounded-full bg-status-green mr-2"></span>
-<span class="text-body-sm font-medium text-status-green">Active</span>
+<span class="px-3 py-1 rounded-full bg-status-green/10 text-status-green text-xs font-bold flex items-center w-fit gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-status-green"></span>
+                                    Success
+                                </span>
 </td>
+<td class="px-6 py-4 font-bold text-charcoal-black">৳1,450.00</td>
+<td class="px-6 py-4 text-body-sm text-body-gray">Oct 15, 2023 • 14:23</td>
 <td class="px-6 py-4 text-right">
-<div class="flex justify-end gap-2">
-<button class="p-2 hover:bg-surface-container rounded-lg text-golden-amber transition-colors" title="Upgrade Plan"><span class="material-symbols-outlined">upgrade</span></button>
-<button class="p-2 hover:bg-surface-container rounded-lg text-body-gray transition-colors" title="Pause"><span class="material-symbols-outlined">pause_circle</span></button>
-<button class="p-2 hover:bg-surface-container rounded-lg text-body-gray transition-colors" title="More Options"><span class="material-symbols-outlined">more_vert</span></button>
-</div>
+<button class="tx-action opacity-0 material-symbols-outlined text-body-gray hover:text-charcoal-black transition-all" data-icon="more_vert">more_vert</button>
 </td>
 </tr>
 <!-- Row 2 -->
-<tr class="hover:bg-heritage-cream/50 transition-colors">
+<tr class="transaction-row hover:bg-surface-container-low transition-colors duration-150">
+<td class="px-6 py-4">
+<span class="font-mono text-charcoal-black font-bold">#TXN-94018</span>
+</td>
 <td class="px-6 py-4">
 <div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-bold text-secondary">MS</div>
-<div>
-<p class="font-bold text-charcoal-black">Mariya Sultana</p>
-<p class="text-body-sm text-body-gray">m.sultana@mail.net</p>
-</div>
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container text-xs font-bold">SR</div>
+<span class="text-body-sm font-semibold">Saima Rahman</span>
 </div>
 </td>
 <td class="px-6 py-4">
-<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-bold uppercase tracking-wider">
-<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">stars</span> Silver
-                                    </span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-blue-600" data-icon="credit_card">credit_card</span>
+<span class="text-body-sm">Visa (•••• 4291)</span>
+</div>
 </td>
-<td class="px-6 py-4 text-body-sm">Monthly</td>
-<td class="px-6 py-4 text-body-sm font-medium">Aug 12, 2024</td>
 <td class="px-6 py-4">
-<span class="inline-block w-2 h-2 rounded-full bg-status-green mr-2"></span>
-<span class="text-body-sm font-medium text-status-green">Active</span>
+<span class="px-3 py-1 rounded-full bg-status-red/10 text-status-red text-xs font-bold flex items-center w-fit gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-status-red"></span>
+                                    Failed
+                                </span>
 </td>
+<td class="px-6 py-4 font-bold text-charcoal-black">৳3,200.00</td>
+<td class="px-6 py-4 text-body-sm text-body-gray">Oct 15, 2023 • 12:45</td>
 <td class="px-6 py-4 text-right">
-<div class="flex justify-end gap-2">
-<button class="p-2 hover:bg-surface-container rounded-lg text-golden-amber transition-colors"><span class="material-symbols-outlined">upgrade</span></button>
-<button class="p-2 hover:bg-surface-container rounded-lg text-body-gray transition-colors"><span class="material-symbols-outlined">pause_circle</span></button>
-<button class="p-2 hover:bg-surface-container rounded-lg text-body-gray transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
-</div>
+<button class="tx-action opacity-0 material-symbols-outlined text-body-gray hover:text-charcoal-black transition-all" data-icon="more_vert">more_vert</button>
 </td>
 </tr>
 <!-- Row 3 -->
-<tr class="hover:bg-heritage-cream/50 transition-colors">
+<tr class="transaction-row hover:bg-surface-container-low transition-colors duration-150">
+<td class="px-6 py-4">
+<span class="font-mono text-charcoal-black font-bold">#TXN-94015</span>
+</td>
 <td class="px-6 py-4">
 <div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-bold text-body-gray">RB</div>
-<div>
-<p class="font-bold text-charcoal-black">Rahat Bashar</p>
-<p class="text-body-sm text-body-gray">rahat@dhaka.com</p>
-</div>
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed text-xs font-bold">AS</div>
+<span class="text-body-sm font-semibold">Arif Shah</span>
 </div>
 </td>
 <td class="px-6 py-4">
-<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 text-orange-600 text-xs font-bold uppercase tracking-wider border border-orange-100">
-<span class="material-symbols-outlined text-[14px]">stars</span> Regular
-                                    </span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-golden-amber" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="text-body-sm">Heritage Wallet</span>
+</div>
 </td>
-<td class="px-6 py-4 text-body-sm">Monthly</td>
-<td class="px-6 py-4 text-body-sm font-medium">Pending</td>
 <td class="px-6 py-4">
-<span class="inline-block w-2 h-2 rounded-full bg-amber-400 mr-2"></span>
-<span class="text-body-sm font-medium text-amber-600">Paused</span>
+<span class="px-3 py-1 rounded-full bg-outline-variant text-on-surface-variant text-xs font-bold flex items-center w-fit gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+                                    Refunded
+                                </span>
 </td>
+<td class="px-6 py-4 font-bold text-charcoal-black">৳850.00</td>
+<td class="px-6 py-4 text-body-sm text-body-gray">Oct 14, 2023 • 20:10</td>
 <td class="px-6 py-4 text-right">
-<div class="flex justify-end gap-2">
-<button class="p-2 hover:bg-surface-container rounded-lg text-golden-amber transition-colors"><span class="material-symbols-outlined">play_circle</span></button>
-<button class="p-2 hover:bg-surface-container rounded-lg text-status-red transition-colors"><span class="material-symbols-outlined">cancel</span></button>
-<button class="p-2 hover:bg-surface-container rounded-lg text-body-gray transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
-</div>
+<button class="tx-action opacity-0 material-symbols-outlined text-body-gray hover:text-charcoal-black transition-all" data-icon="more_vert">more_vert</button>
 </td>
 </tr>
 <!-- Row 4 -->
-<tr class="hover:bg-heritage-cream/50 transition-colors">
+<tr class="transaction-row hover:bg-surface-container-low transition-colors duration-150">
+<td class="px-6 py-4">
+<span class="font-mono text-charcoal-black font-bold">#TXN-94012</span>
+</td>
 <td class="px-6 py-4">
 <div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-bold text-golden-amber">MK</div>
-<div>
-<p class="font-bold text-charcoal-black">Munira Khan</p>
-<p class="text-body-sm text-body-gray">munira.k@heritage.bd</p>
-</div>
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed text-xs font-bold">ZT</div>
+<span class="text-body-sm font-semibold">Zayn Talukdar</span>
 </div>
 </td>
 <td class="px-6 py-4">
-<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-golden-amber/10 text-golden-amber text-xs font-bold uppercase tracking-wider">
-<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">stars</span> Gold
-                                    </span>
+<div class="flex items-center gap-2">
+<div class="w-6 h-4 bg-pink-100 rounded flex items-center justify-center text-[8px] font-bold text-pink-600">bKash</div>
+<span class="text-body-sm">Merchant</span>
+</div>
 </td>
-<td class="px-6 py-4 text-body-sm">Quarterly</td>
-<td class="px-6 py-4 text-body-sm font-medium">Nov 05, 2024</td>
 <td class="px-6 py-4">
-<span class="inline-block w-2 h-2 rounded-full bg-status-green mr-2"></span>
-<span class="text-body-sm font-medium text-status-green">Active</span>
+<span class="px-3 py-1 rounded-full bg-status-green/10 text-status-green text-xs font-bold flex items-center w-fit gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-status-green"></span>
+                                    Success
+                                </span>
 </td>
+<td class="px-6 py-4 font-bold text-charcoal-black">৳12,050.00</td>
+<td class="px-6 py-4 text-body-sm text-body-gray">Oct 14, 2023 • 18:30</td>
 <td class="px-6 py-4 text-right">
-<div class="flex justify-end gap-2">
-<button class="p-2 hover:bg-surface-container rounded-lg text-golden-amber transition-colors"><span class="material-symbols-outlined">upgrade</span></button>
-<button class="p-2 hover:bg-surface-container rounded-lg text-body-gray transition-colors"><span class="material-symbols-outlined">pause_circle</span></button>
-<button class="p-2 hover:bg-surface-container rounded-lg text-body-gray transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+<button class="tx-action opacity-0 material-symbols-outlined text-body-gray hover:text-charcoal-black transition-all" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="transaction-row hover:bg-surface-container-low transition-colors duration-150">
+<td class="px-6 py-4">
+<span class="font-mono text-charcoal-black font-bold">#TXN-94010</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container text-xs font-bold">FJ</div>
+<span class="text-body-sm font-semibold">Farhana Jabin</span>
 </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-orange-600" data-icon="credit_card">credit_card</span>
+<span class="text-body-sm">Mastercard (•••• 8821)</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-status-green/10 text-status-green text-xs font-bold flex items-center w-fit gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-status-green"></span>
+                                    Success
+                                </span>
+</td>
+<td class="px-6 py-4 font-bold text-charcoal-black">৳2,100.00</td>
+<td class="px-6 py-4 text-body-sm text-body-gray">Oct 14, 2023 • 15:15</td>
+<td class="px-6 py-4 text-right">
+<button class="tx-action opacity-0 material-symbols-outlined text-body-gray hover:text-charcoal-black transition-all" data-icon="more_vert">more_vert</button>
 </td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="p-6 border-t border-outline-variant flex justify-between items-center text-body-sm text-body-gray">
-<p>Showing 1 to 4 of 1,284 subscriptions</p>
+<!-- Pagination -->
+<div class="px-6 py-4 flex items-center justify-between border-t border-outline-variant bg-surface-container-lowest">
+<span class="text-body-sm text-body-gray">Showing 1-10 of 2,143 transactions</span>
 <div class="flex gap-2">
-<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container transition-colors disabled:opacity-50" disabled="">
-<span class="material-symbols-outlined">chevron_left</span>
+<button class="w-10 h-10 rounded border border-outline-variant flex items-center justify-center text-body-gray hover:bg-white active:scale-95 transition-all disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
 </button>
-<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-golden-amber text-white font-bold">1</button>
-<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container transition-colors">2</button>
-<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container transition-colors">3</button>
-<span class="px-2 self-center">...</span>
-<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container transition-colors">32</button>
-<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container transition-colors">
-<span class="material-symbols-outlined">chevron_right</span>
+<button class="w-10 h-10 rounded border border-golden-amber bg-surface-container-low flex items-center justify-center text-golden-amber font-bold active:scale-95 transition-all">1</button>
+<button class="w-10 h-10 rounded border border-outline-variant flex items-center justify-center text-body-gray hover:bg-white active:scale-95 transition-all">2</button>
+<button class="w-10 h-10 rounded border border-outline-variant flex items-center justify-center text-body-gray hover:bg-white active:scale-95 transition-all">3</button>
+<button class="w-10 h-10 rounded border border-outline-variant flex items-center justify-center text-body-gray hover:bg-white active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
 </button>
 </div>
 </div>
 </div>
-<!-- Contextual Plan Promotion Section -->
-<section class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
-<div class="bg-white p-8 rounded-2xl border border-outline-variant flex flex-col justify-between h-64 overflow-hidden relative group">
-<div class="relative z-10">
-<span class="text-label-bold font-label-bold text-golden-amber tracking-widest uppercase">Admin Insight</span>
-<h4 class="text-headline-md font-headline-md text-charcoal-black mt-2">Conversion Opportunities</h4>
-<p class="text-body-lg text-body-gray mt-2 max-w-sm">45 Regular Tier users have exceeded their dining limit this month. Consider a targeted "Upgrade to Silver" campaign.</p>
+<!-- Contextual Insight Footer -->
+<div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-outline-variant pt-12">
+<div>
+<h4 class="text-label-bold font-label-bold text-charcoal-black mb-4">Fraud Prevention</h4>
+<p class="text-body-sm text-body-gray mb-4">All transactions are monitored by Heritage Guard. No suspicious activities detected in the last 24 hours.</p>
+<a class="text-golden-amber text-body-sm font-bold flex items-center gap-1 hover:underline" href="#">
+                        Security Settings
+                        <span class="material-symbols-outlined text-xs" data-icon="arrow_forward">arrow_forward</span>
+</a>
 </div>
-<button class="relative z-10 self-start text-charcoal-black font-bold border-b-2 border-golden-amber pb-1 hover:text-golden-amber transition-colors">View Customer Segment</button>
-<div class="absolute -right-10 -bottom-10 opacity-5 group-hover:scale-110 transition-transform duration-500">
-<span class="material-symbols-outlined text-[200px]" style="font-variation-settings: 'wght' 200;">rocket_launch</span>
+<div>
+<h4 class="text-label-bold font-label-bold text-charcoal-black mb-4">Payment Methods</h4>
+<div class="flex gap-4">
+<div class="flex-1 p-3 border border-outline-variant rounded-lg bg-white flex flex-col items-center">
+<span class="text-headline-md font-headline-md text-charcoal-black">65%</span>
+<span class="text-xs text-body-gray uppercase tracking-tighter">Mobile Wallets</span>
+</div>
+<div class="flex-1 p-3 border border-outline-variant rounded-lg bg-white flex flex-col items-center">
+<span class="text-headline-md font-headline-md text-charcoal-black">35%</span>
+<span class="text-xs text-body-gray uppercase tracking-tighter">Card/Direct</span>
 </div>
 </div>
-<div class="bg-charcoal-black p-8 rounded-2xl flex flex-col justify-center h-64 relative overflow-hidden group">
-<div class="relative z-10 text-center">
-<h4 class="text-headline-md font-headline-lg text-heritage-cream">Revenue Projection</h4>
-<p class="text-display-lg font-display-lg text-golden-amber mt-2">৳1.2M</p>
-<p class="text-body-sm text-heritage-cream/60 uppercase tracking-widest mt-4">Estimated End of Year (EOY)</p>
+</div>
+<div>
+<h4 class="text-label-bold font-label-bold text-charcoal-black mb-4">Support Summary</h4>
+<ul class="space-y-3">
+<li class="flex justify-between text-body-sm">
+<span class="text-body-gray">Unresolved Disputes</span>
+<span class="font-bold text-status-red">3</span>
+</li>
+<li class="flex justify-between text-body-sm">
+<span class="text-body-gray">Average Refund Time</span>
+<span class="font-bold">2.4 Days</span>
+</li>
+</ul>
 </div>
 </div>
-</section>
 </div>
 </main>
-<!-- FAB for Contextual Action (Suppress on Detail pages, but keep for Home/Management Dashboard) -->
-<button class="fixed bottom-8 right-8 w-14 h-14 bg-golden-amber text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
-<span class="material-symbols-outlined">smart_toy</span>
-</button>
+<!-- Floating Action Button (Limited Context) -->
+<!-- Not visible on sub-pages as per hierarchy but left as a manual trigger for "Help" if needed on Dashboard-style views -->
 <script>
-        // Simple UI Micro-interactions
-        document.querySelectorAll('button').forEach(button => {
-            button.addEventListener('mousedown', () => {
-                button.classList.add('opacity-80');
-            });
-            button.addEventListener('mouseup', () => {
-                button.classList.remove('opacity-80');
+        // Micro-interaction for table rows and sorting
+        document.querySelectorAll('.transaction-row').forEach(row => {
+            row.addEventListener('click', () => {
+                // In a real app, this would open a side panel or modal with transaction details
+                console.log('Opening transaction details for:', row.querySelector('.font-mono').innerText);
             });
         });
 
         // Search Bar Focus Effect
         const searchInput = document.querySelector('input[type="text"]');
+        const searchContainer = searchInput.parentElement;
         searchInput.addEventListener('focus', () => {
-            searchInput.parentElement.classList.add('ring-2', 'ring-golden-amber/20');
+            searchContainer.classList.add('ring-2', 'ring-golden-amber');
         });
         searchInput.addEventListener('blur', () => {
-            searchInput.parentElement.classList.remove('ring-2', 'ring-golden-amber/20');
+            searchContainer.classList.remove('ring-2', 'ring-golden-amber');
         });
     </script>
 </body></html>

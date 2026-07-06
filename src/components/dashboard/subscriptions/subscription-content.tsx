@@ -26,12 +26,12 @@ const rowActions: RowAction<Subscription>[] = [
   {
     label: "View Details",
     icon: <Eye className="size-4" />,
-    onClick: (row) => console.log("View", row.id),
+    onClick: (row) => console.log("View Details", row.id),
   },
   {
     label: "Pause Subscription",
     icon: <Pause className="size-4" />,
-    onClick: (row) => console.log("Pause", row.id),
+    onClick: (row) => console.log("Pause Subscription", row.id),
   },
   {
     label: "Cancel",

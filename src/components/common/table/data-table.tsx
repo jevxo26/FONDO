@@ -26,26 +26,10 @@ import {
   type ColumnDef,
 } from "@tanstack/react-table";
 import { MoreHorizontal, SearchX } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { RowAction, FacetedFilter } from "./types";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
-
-export interface RowAction<TData> {
-  label: string;
-  icon?: React.ReactNode;
-  onClick: (row: TData) => void;
-  variant?: "default" | "destructive";
-}
-
-export interface FacetedFilterOption {
-  label: string;
-  value: string;
-}
-
-export interface FacetedFilter {
-  columnId: string;
-  title: string;
-  options: FacetedFilterOption[];
-}
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData, unknown>[];
@@ -151,7 +135,7 @@ export function DataTable<TData>({
                 <TableRow key={i}>
                   {columns.map((_, j) => (
                     <TableCell key={j} className="px-6 py-5">
-                      <div className="h-4 animate-pulse rounded bg-muted/60" />
+                      <Skeleton className="h-4 w-full" />
                     </TableCell>
                   ))}
                 </TableRow>

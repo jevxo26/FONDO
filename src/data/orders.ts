@@ -1,3 +1,14 @@
+function seededRandom(seed: number) {
+  let s = seed % 2147483647;
+  if (s <= 0) s += 2147483646;
+  return () => {
+    s = (s * 16807) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+const rand = seededRandom(5731);
+
 export type OrderStatus =
   | "PENDING" | "PAYMENT_PENDING" | "CONFIRMED" | "PREPARING"
   | "READY_FOR_PICKUP" | "PICKED_UP" | "ON_THE_WAY"
@@ -28,7 +39,7 @@ const statuses: OrderStatus[] = [
 ];
 
 function randomItem<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
+  return arr[Math.floor(rand() * arr.length)];
 }
 
 function generateOrders(count: number): CustomerOrder[] {
@@ -41,12 +52,12 @@ function generateOrders(count: number): CustomerOrder[] {
       orderNumber: `#FONDO-${String(i).padStart(5, "0")}`,
       customerId: `USR-${String(29000 + i).slice(0, 5)}`,
       customerName: name,
-      items: Math.floor(Math.random() * 8) + 1,
-      totalAmount: Math.floor(Math.random() * 8000) + 500,
+      items: Math.floor(rand() * 8) + 1,
+      totalAmount: Math.floor(rand() * 8000) + 500,
       orderStatus: status,
       paymentStatus: status === "CANCELLED" ? "REFUNDED" : "PAID",
-      placedAt: `${Math.floor(Math.random() * 28) + 1} ${
-        ["Jan", "Feb", "Mar", "Apr", "May", "Jun"][Math.floor(Math.random() * 6)]
+      placedAt: `${Math.floor(rand() * 28) + 1} ${
+        ["Jan", "Feb", "Mar", "Apr", "May", "Jun"][Math.floor(rand() * 6)]
       }, 2026`,
     });
   }

@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { DataTable } from "@/components/common/table";
 import { FilterBar } from "@/components/dashboard/customers/orders/filter-bar";
 import { ContextCards } from "@/components/dashboard/customers/orders/context-cards";
+import { OrdersTableSection } from "@/components/dashboard/customers/orders/orders-table-section";
 import { orders } from "@/data/orders";
-import { orderColumns } from "@/components/dashboard/customers/orders/order-columns";
 import { Download, Plus, X } from "lucide-react";
 
 export default async function CustomerOrdersPage({
@@ -77,7 +76,7 @@ export default async function CustomerOrdersPage({
 
       <div className="mt-6">
         <FilterBar />
-        <DataTable columns={orderColumns} data={filteredOrders} />
+        <OrdersTableSection data={filteredOrders} />
       </div>
 
       <ContextCards />

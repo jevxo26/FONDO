@@ -18,7 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Search, Settings2, Filter } from "lucide-react";
-import type { FacetedFilter } from "./data-table";
+import type { FacetedFilter } from "./types";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;

@@ -1,5 +1,4 @@
 import { CustomerCard } from "@/components/dashboard/customers/customer-card";
-import { CustomerTabs } from "@/components/dashboard/customers/customer-tabs";
 import { StatusMetrics } from "@/components/dashboard/customers/status-metrics";
 import { TransactionList } from "@/components/dashboard/customers/transaction-list";
 import { WalletCard } from "@/components/dashboard/customers/wallet-card";
@@ -9,20 +8,10 @@ import { Download, Filter, Grid3x3, UserPlus } from "lucide-react";
 export default function CustomersPage() {
   const totalHoldings = customers.reduce((s, c) => s + c.walletBalance, 0);
   const activeCount = customers.filter((c) => c.status === "ACTIVE").length;
-  const suspendedCount = customers.filter(
-    (c) => c.status === "SUSPENDED",
-  ).length;
+  const suspendedCount = customers.filter((c) => c.status === "SUSPENDED").length;
 
   return (
     <div>
-      <nav className="mb-2 flex gap-2 text-xs text-muted-foreground">
-        <a href="/dashboard" className="hover:text-primary">
-          Dashboard
-        </a>
-        <span>/</span>
-        <span className="font-bold text-primary">Customer Management Hub</span>
-      </nav>
-
       <div className="flex items-end justify-between">
         <div>
           <h2 className="font-fraunces text-4xl font-bold text-foreground">
@@ -41,13 +30,9 @@ export default function CustomersPage() {
         </div>
       </div>
 
-      <div className="mb-8 mt-8">
-        <CustomerTabs />
-      </div>
-
       <div className="grid grid-cols-12 gap-8">
         <div className="col-span-8">
-          <div className="mb-6 flex items-center justify-between">
+          <div className="mb-6 mt-8 flex items-center justify-between">
             <h3 className="font-fraunces text-xl font-semibold text-foreground">
               Active Profiles
             </h3>
@@ -68,11 +53,8 @@ export default function CustomersPage() {
           </div>
         </div>
 
-        <div className="col-span-4 space-y-8">
-          <WalletCard
-            totalHoldings={totalHoldings}
-            pendingRefunds={46500}
-          />
+        <div className="col-span-4 mt-8 space-y-8">
+          <WalletCard totalHoldings={totalHoldings} pendingRefunds={46500} />
           <TransactionList transactions={recentTransactions} />
           <StatusMetrics
             activeCount={activeCount}

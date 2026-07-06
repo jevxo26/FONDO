@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { OrdersTable } from "@/components/dashboard/customers/orders/orders-table";
+import { DataTable } from "@/components/common/table";
 import { FilterBar } from "@/components/dashboard/customers/orders/filter-bar";
 import { ContextCards } from "@/components/dashboard/customers/orders/context-cards";
 import { orders } from "@/data/orders";
+import { orderColumns } from "@/components/dashboard/customers/orders/order-columns";
 import { Download, Plus, X } from "lucide-react";
 
 export default async function CustomerOrdersPage({
@@ -20,7 +21,9 @@ export default async function CustomerOrdersPage({
     : orders;
 
   const totalOrders = filteredOrders.length;
-  const pending = filteredOrders.filter((o) => o.orderStatus === "PENDING").length;
+  const pending = filteredOrders.filter(
+    (o) => o.orderStatus === "PENDING",
+  ).length;
   const inProgress = filteredOrders.filter(
     (o) => o.orderStatus === "PREPARING" || o.orderStatus === "ON_THE_WAY",
   ).length;
@@ -74,7 +77,7 @@ export default async function CustomerOrdersPage({
 
       <div className="mt-6">
         <FilterBar />
-        <OrdersTable orders={filteredOrders} />
+        <DataTable columns={orderColumns} data={filteredOrders} />
       </div>
 
       <ContextCards />

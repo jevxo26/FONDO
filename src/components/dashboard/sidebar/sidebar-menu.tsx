@@ -1,9 +1,9 @@
 "use client";
 
+import { sidebarItems } from "@/data/dashboard";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { sidebarItems } from "@/data/dashboard";
 
 export function SidebarMenu() {
   const pathname = usePathname();
@@ -11,13 +11,13 @@ export function SidebarMenu() {
   return (
     <nav className="flex-1 space-y-1">
       {sidebarItems.map((item) => {
-        const isActive = pathname.startsWith(item.href);
+        const isActive = pathname.startsWith(`/dashboard${item.href}`);
         const Icon = item.icon;
 
         return (
           <Link
             key={item.href}
-            href={item.href}
+            href={`/dashboard${item.href}`}
             className={cn(
               "flex items-center gap-3 rounded-lg px-3 py-3 text-muted-foreground transition-colors duration-200 hover:bg-muted",
               isActive &&

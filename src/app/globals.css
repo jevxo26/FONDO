@@ -160,7 +160,7 @@
     font-family: var(--font-fraunces);
   }
 
-  .container-main {
+  .wrapper {
     margin-inline: auto;
     width: 100%;
     max-width: 1440px;
@@ -168,13 +168,13 @@
   }
 
   @media (width >= 40rem) {
-    .container-main {
+    .wrapper {
       padding-inline: 1.5rem;
     }
   }
 
   @media (width >= 64rem) {
-    .container-main {
+    .wrapper {
       padding-inline: 60px;
     }
   }

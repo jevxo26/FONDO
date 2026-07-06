@@ -13,7 +13,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 h-[88px] bg-background shadow-[0_4px_10px_rgba(0,0,0,0.1)]">
-      <div className="container-main">
+      <div className="wrapper">
         <div className="flex h-[88px] items-center justify-between">
           <div className="flex items-center gap-4 lg:gap-[50px]">
             <Link href="/" className="flex items-center gap-2">

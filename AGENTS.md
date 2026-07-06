@@ -95,7 +95,7 @@ src/
 ### CSS & Styling
 - **Tailwind CSS v4** with CSS variables in `globals.css`
 - Use `cn()` from `@/lib/utils` for conditional classes
-- Container wrapper: `<div className="container-main">` (defined in globals.css)
+- Container wrapper: `<div className="wrapper">` (defined in globals.css)
 - Use `@utility` in globals.css for reusable utility classes
 - Theme tokens defined in `:root` and `.dark` — never hardcode hex values in components
 

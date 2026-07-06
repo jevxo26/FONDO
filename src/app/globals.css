@@ -159,4 +159,23 @@
   .font-fraunces {
     font-family: var(--font-fraunces);
   }
+
+  .container-main {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1440px;
+    padding-inline: 1rem;
+  }
+
+  @media (width >= 40rem) {
+    .container-main {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  @media (width >= 64rem) {
+    .container-main {
+      padding-inline: 60px;
+    }
+  }
 }

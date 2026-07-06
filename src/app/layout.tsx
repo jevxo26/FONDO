@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import { ReduxProvider } from "@/components/ReduxProvider";
+import { Navbar } from "@/components/layout/navbar/navbar";
+import { MobileNav } from "@/components/layout/navbar/mobile-nav";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -24,9 +26,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${inter.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${inter.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col">
-        <ReduxProvider>{children}</ReduxProvider>
+        <ReduxProvider>
+          <Navbar />
+          <MobileNav />
+          <main className="flex-1">{children}</main>
+        </ReduxProvider>
       </body>
     </html>
   );

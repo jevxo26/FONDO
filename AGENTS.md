@@ -46,3 +46,59 @@ Admin → Register Vendor → Vendor Adds Foods → Admin Approves → Customer 
 
 ## Design System
 See `docs/DESIGN.md` for FONDO brand colors, typography, spacing, and component tokens.
+
+## Coding Conventions & Best Practices
+
+### File Structure
+```
+src/
+  app/                          # Next.js App Router pages
+  components/
+    {feature}/                  # Feature-based folders (layout, auth, cart, etc.)
+      {component-name}/
+        component.tsx           # Component file (<100 lines)
+        component-client.tsx    # Client sub-component (if needed)
+  data/                         # Static data, constants, types
+    {domain}.ts                 # e.g., navigation.ts
+  store/                        # Redux Toolkit state management
+    store.ts                    # configureStore + typed hooks
+    slices/                     # Redux slices per domain
+  lib/                          # Utilities
+    utils.ts                    # cn() helper
+```
+
+### Component Rules
+- **<100 lines per file**. Break into multiple files if bigger.
+- **UI only**. No data fetching or business logic in components — keep presentation pure.
+- **Server-first**. Default to server components. Add `"use client"` only for:
+  - `usePathname()`, `useSearchParams()`
+  - Redux hooks (`useAppDispatch`, `useAppSelector`)
+  - Event handlers (`onClick`, `onSubmit`)
+  - `useState`, `useEffect`, `useRef`
+  - Any browser-only API
+
+### Data Separation
+- Static data (arrays, constants, types) goes in `src/data/`
+- Do NOT hardcode data arrays inside component files
+- Import data: `import { mainNavLinks } from "@/data/navigation"`
+
+### Icons
+- Use **Lucide icons** (already in deps) — prefer over custom SVGs
+- Import: `import { Heart, ShoppingCart } from "lucide-react"`
+- If Lucide lacks the icon needed, use inline SVG code as a fallback
+
+### State Management
+- **Redux Toolkit** for global state (auth, cart, UI)
+- **TanStack Query** for server state (API data fetching)
+- Use typed hooks from `@/store/store`: `useAppDispatch`, `useAppSelector`
+
+### CSS & Styling
+- **Tailwind CSS v4** with CSS variables in `globals.css`
+- Use `cn()` from `@/lib/utils` for conditional classes
+- Container wrapper: `<div className="container-main">` (defined in globals.css)
+- Use `@utility` in globals.css for reusable utility classes
+- Theme tokens defined in `:root` and `.dark` — never hardcode hex values in components
+
+### Imports
+- Use `@/` alias: `@/components/...`, `@/store/...`, `@/data/...`, `@/lib/...`
+- Sibling imports: `./search-form`, `../other-component`

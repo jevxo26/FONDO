@@ -1,3 +1,14 @@
+function seededRandom(seed: number) {
+  let s = seed % 2147483647;
+  if (s <= 0) s += 2147483646;
+  return () => {
+    s = (s * 16807) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+const rand = seededRandom(9821);
+
 export type SubscriptionStatus =
   | "PENDING"
   | "ACTIVE"
@@ -51,7 +62,7 @@ const statuses: SubscriptionStatus[] = [
 ];
 
 function randomItem<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
+  return arr[Math.floor(rand() * arr.length)];
 }
 
 function generateSubscriptions(count: number): Subscription[] {
@@ -63,7 +74,7 @@ function generateSubscriptions(count: number): Subscription[] {
       ? pkg.price
       : status === "PAUSED"
         ? Math.floor(pkg.price * 0.6)
-        : Math.floor(pkg.price * (status === "PENDING" ? 0 : Math.random()));
+        : Math.floor(pkg.price * (status === "PENDING" ? 0 : rand()));
     subs.push({
       id: `SUB-${String(i).padStart(4, "0")}`,
       subscriptionNumber: `#SUB-${String(i).padStart(5, "0")}`,
@@ -72,14 +83,14 @@ function generateSubscriptions(count: number): Subscription[] {
       packageId: `PKG-${String(packages.indexOf(pkg) + 1).padStart(3, "0")}`,
       packageName: pkg.name,
       durationDays: pkg.duration,
-      startDate: `${Math.floor(Math.random() * 28) + 1} ${["Jan", "Feb", "Mar", "Apr", "May", "Jun"][Math.floor(Math.random() * 6)]}, 2026`,
-      endDate: `${Math.floor(Math.random() * 28) + 1} ${["Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][Math.floor(Math.random() * 6)]}, 2026`,
+      startDate: `${Math.floor(rand() * 28) + 1} ${["Jan", "Feb", "Mar", "Apr", "May", "Jun"][Math.floor(rand() * 6)]}, 2026`,
+      endDate: `${Math.floor(rand() * 28) + 1} ${["Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][Math.floor(rand() * 6)]}, 2026`,
       status,
       totalAmount: pkg.price,
       paidAmount: paid,
       remainingAmount: pkg.price - paid,
-      autoRenew: Math.random() > 0.5,
-      currentCycle: Math.floor(Math.random() * 3) + 1,
+      autoRenew: rand() > 0.5,
+      currentCycle: Math.floor(rand() * 3) + 1,
     });
   }
   return subs;

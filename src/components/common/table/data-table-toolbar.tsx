@@ -4,6 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import type { Table } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -31,8 +40,6 @@ export function DataTableToolbar<TData>({
   filters,
 }: DataTableToolbarProps<TData>) {
   const [search, setSearch] = useState("");
-  const [showColumns, setShowColumns] = useState(false);
-  const panelRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
@@ -41,17 +48,6 @@ export function DataTableToolbar<TData>({
     }, 300);
     return () => clearTimeout(timeoutRef.current);
   }, [search, table]);
-
-  useEffect(() => {
-    if (!showColumns) return;
-    const handler = (e: MouseEvent) => {
-      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
-        setShowColumns(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [showColumns]);
 
   return (
     <div className="flex items-center justify-between gap-4 p-4">
@@ -65,7 +61,7 @@ export function DataTableToolbar<TData>({
         />
       </div>
 
-      <div className="flex items-center gap-3" ref={panelRef}>
+      <div className="flex items-center gap-3">
         {filters?.map((filter) => {
           const column = table.getColumn(filter.columnId);
           const currentValue = column?.getFilterValue() as
@@ -122,36 +118,29 @@ export function DataTableToolbar<TData>({
 
         {toolbarActions}
 
-        <div className="relative">
-          <button
-            onClick={() => setShowColumns(!showColumns)}
-            className="flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-muted-foreground transition-colors hover:bg-muted"
-          >
+        <DropdownMenu>
+          <DropdownMenuTrigger className="flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-muted-foreground transition-colors hover:bg-muted data-[state=open]:text-primary">
             <Settings2 className="size-4" />
             View
-          </button>
-          {showColumns && (
-            <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-xl border border-border bg-card p-2 shadow-lg">
-              <p className="mb-1 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Toggle Columns
-              </p>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>
+              <DropdownMenuSeparator />
               {table.getAllLeafColumns().map((column) => (
-                <label
+                <DropdownMenuCheckboxItem
                   key={column.id}
-                  className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-muted"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) =>
+                    column.toggleVisibility(!!value)
+                  }
                 >
-                  <Checkbox
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  />
                   {humanize(column.id)}
-                </label>
+                </DropdownMenuCheckboxItem>
               ))}
-            </div>
-          )}
-        </div>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

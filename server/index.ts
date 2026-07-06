@@ -5,10 +5,10 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import { PrismaClient } from '@prisma/client';
-import path from 'path';
+// import path from 'path';
 import userRoutes from './routes/userRoutes';
-import authRoutes from './routes/authRoutes';
-import uploadRoutes from './routes/uploadRoutes';
+// import authRoutes from './routes/authRoutes';
+// import uploadRoutes from './routes/uploadRoutes';
 const prisma = new PrismaClient();
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -43,11 +43,11 @@ app.prepare().then(async () => {
   });
 
   server.use('/api/users', userRoutes);
-  server.use('/api/auth', authRoutes);
-  server.use('/api/upload', uploadRoutes);
+  // server.use('/api/auth', authRoutes);
+  // server.use('/api/upload', uploadRoutes);
 
   // Serve uploaded files statically
-  server.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')));
+  // server.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')));
 
   // Let Next.js handle all other routes
   server.use((req: Request, res: Response) => {

@@ -22,7 +22,6 @@ export function Categories({ activeCategory, onCategoryChange }: CategoriesProps
   return (
     <section className="w-full border-y border-border/60 bg-secondary/30 py-5">
       <div className="wrapper">
-        {/* Horizontal scroll wrapper for mobile, normal flex wrapping on desktop */}
         <div className="scrollbar-none flex items-center gap-3 overflow-x-auto pb-1 sm:pb-0 md:flex-wrap">
           {CATEGORIES.map((category) => {
             const isActive = activeCategory === category.id;

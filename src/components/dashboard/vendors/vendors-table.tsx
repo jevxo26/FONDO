@@ -9,9 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Pagination } from "../customers/orders/pagination"; // টিমমেটের Pagination ব্যবহার করো
+import { Pagination } from "../customers/orders/pagination"; 
 
-// ভেন্ডর টাইপ (তোমার ডাটা অনুযায়ী)
 interface Vendor {
   id: string;
   name: string;

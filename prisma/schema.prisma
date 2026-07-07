@@ -8,21 +8,46 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  phone     String?
-  password  String?
-  provider  String   @default("local")
-  providerId String? @unique
-  role      String   @default("employee")
-  issueDate DateTime @default(now())
-  loginLog  Json?    // Can store array of login timestamps or IP addresses
-  
-  resetPasswordToken   String?
-  resetPasswordExpires DateTime?
-  refreshToken         String?
+  id              String     @id @default(uuid())
+  firstName       String
+  lastName        String
+  phone           String     @unique
+  email           String     @unique
+  password        String?
+  avatar          String?
+  gender          Gender
+  dateOfBirth     DateTime?
+  role            Role       @default(CUSTOMER)
+  status          UserStatus @default(ACTIVE)
+  isPhoneVerified Boolean    @default(false)
+  isEmailVerified Boolean    @default(false)
+  lastLoginAt     DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  deletedAt       DateTime?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@map("users")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  VENDOR
+  VENDOR_STAFF
+  KITCHEN_STAFF
+  RIDER
+  CUSTOMER
+  SUPPORT_AGENT
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
 }

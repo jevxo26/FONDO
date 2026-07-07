@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Customer } from "@/data/customers";
 import { ArrowRight } from "lucide-react";
 
@@ -17,7 +18,10 @@ export function CustomerCard({ customer }: CustomerCardProps) {
       : { label: "Silver", style: "bg-muted text-muted-foreground border-border" };
 
   return (
-    <div className="group relative cursor-pointer rounded-xl border border-border bg-card p-6 transition-all hover:shadow-lg">
+    <Link
+      href={`/dashboard/customers/orders?customer=${encodeURIComponent(customer.fullName)}`}
+      className="group relative block rounded-xl border border-border bg-card p-6 transition-all hover:shadow-lg"
+    >
       <div className="mb-4 flex items-start justify-between">
         <div className="flex gap-4">
           <div className="flex size-14 items-center justify-center rounded-full bg-primary/20 text-lg font-bold text-primary">
@@ -58,10 +62,10 @@ export function CustomerCard({ customer }: CustomerCardProps) {
         <p className="text-sm text-muted-foreground">
           Last active: {customer.lastActive}
         </p>
-        <button className="flex items-center gap-1 text-xs font-bold text-primary transition-all group-hover:gap-2">
+        <span className="flex items-center gap-1 text-xs font-bold text-primary transition-all group-hover:gap-2">
           Manage <ArrowRight className="size-4" />
-        </button>
+        </span>
       </div>
-    </div>
+    </Link>
   );
 }

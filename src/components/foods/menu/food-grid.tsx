@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { Heart, Star, Clock, ShoppingBag, Plus, ArrowUpRight, ShoppingCart } from "lucide-react";
+import Link from "next/link";
 
 const FOOD_ITEMS = [
   {
@@ -70,22 +71,25 @@ export function FoodGrid({ activeCategory }: FoodGridProps) {
                 </button>
 
                 {/* Central Cart Badge */}
-                  <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center px-4
+                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center px-4
     transition-all duration-300
     opacity-0 scale-95 pointer-events-none
     group-hover:opacity-100 group-hover:scale-100">
-                    <div className="inline-flex items-center gap-2 rounded-4xl bg-[#16100C]/90 backdrop-blur-md px-4 py-2.5 text-white shadow-lg border border-white/10">
-                      <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-primary">
-                        <ShoppingBag className="size-4 text-foreground" />
-                      </div>
-                      <span className="font-sans text-xs font-medium">
-                        {item.cartItemsCount} items &middot; ৳{item.price}
-                      </span>
-                      <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-white/20">
-                        <ArrowUpRight className="size-5 text-white"/>
-                      </div>
+                  <div className="inline-flex items-center gap-2 rounded-4xl bg-[#16100C]/90 backdrop-blur-md px-4 py-2.5 text-white shadow-lg border border-white/10">
+                    <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-primary">
+                      <ShoppingBag className="size-4 text-foreground" />
+                    </div>
+                    <span className="font-sans text-xs font-medium">
+                      {item.cartItemsCount} items &middot; ৳{item.price}
+                    </span>
+                    <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-white/20">
+                    <Link href={`/categories/${item.id}`} className="flex items-center justify-center">
+                                          <ArrowUpRight className="size-5 text-white" />
+
+                    </Link>
                     </div>
                   </div>
+                </div>
               </div>
 
               {/* Card Content */}
@@ -124,8 +128,8 @@ export function FoodGrid({ activeCategory }: FoodGridProps) {
                     </span>
                   </div>
                   <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-primary">
-                        <Plus className="size-4 text-foreground" />
-                      </div>
+                    <Plus className="size-4 text-foreground" />
+                  </div>
                 </button>
               </div>
             </div>

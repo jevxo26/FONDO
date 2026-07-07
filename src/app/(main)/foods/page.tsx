@@ -1,4 +1,4 @@
-import CategoriesMenu from "@/components/categories/menu/Menu";
+import CategoriesMenu from "@/components/foods/menu/Menu";
 
 export default function CategoriesPage() {
 

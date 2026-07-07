@@ -5,7 +5,11 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export function SidebarMenu() {
+interface SidebarMenuProps {
+  onItemClick?: () => void;
+}
+
+export function SidebarMenu({ onItemClick }: SidebarMenuProps) {
   const pathname = usePathname();
 
   return (
@@ -18,6 +22,7 @@ export function SidebarMenu() {
           <Link
             key={item.href}
             href={`/dashboard${item.href}`}
+            onClick={onItemClick}
             className={cn(
               "flex items-center gap-3 rounded-lg px-3 py-3 text-muted-foreground transition-colors duration-200 hover:bg-muted",
               isActive &&

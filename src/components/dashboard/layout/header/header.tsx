@@ -1,9 +1,20 @@
-import { Bell, HelpCircle, Search, Settings } from "lucide-react";
+"use client";
+
+import { Bell, HelpCircle, Menu, Search, Settings } from "lucide-react";
+import { useSidebar } from "../sidebar-context";
 
 export function DashboardHeader() {
+  const { toggle } = useSidebar();
+
   return (
-    <header className="fixed right-0 top-0 z-40 flex h-16 w-[calc(100%-16rem)] items-center justify-between border-b border-border bg-card/80 px-8 shadow-sm backdrop-blur-md">
-      <div className="flex w-1/3 items-center gap-4">
+    <header className="fixed right-0 top-0 z-30 flex h-16 w-full items-center justify-between border-b border-border bg-card/80 px-4 shadow-sm backdrop-blur-md lg:w-[calc(100%-16rem)] lg:px-8">
+      <div className="flex items-center gap-4">
+        <button
+          onClick={toggle}
+          className="flex size-10 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted lg:hidden"
+        >
+          <Menu className="size-5" />
+        </button>
         <div className="relative w-full max-w-sm">
           <Search className="absolute left-3 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
           <input
@@ -14,8 +25,8 @@ export function DashboardHeader() {
         </div>
       </div>
 
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-4 border-r border-border pr-6">
+      <div className="flex items-center gap-4 lg:gap-6">
+        <div className="hidden items-center gap-4 border-r border-border pr-6 md:flex">
           <button className="text-muted-foreground transition-colors hover:text-primary">
             <Bell className="size-5" />
           </button>
@@ -28,7 +39,7 @@ export function DashboardHeader() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="text-right">
+          <div className="hidden text-right md:block">
             <p className="text-sm font-bold text-foreground">Ahmed Rizvi</p>
             <p className="text-[10px] uppercase tracking-tighter text-muted-foreground">
               System Administrator

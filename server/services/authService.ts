@@ -1,11 +1,13 @@
 import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { catchServiceAsync } from '../utils/catchServiceAsync';
 import { sendTemplateEmail } from './emailService';
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
 
 export class AuthService {
   static registerUser = catchServiceAsync(async (data: Prisma.UserCreateInput) => {

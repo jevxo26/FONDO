@@ -1,7 +1,9 @@
 import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { catchServiceAsync } from '../utils/catchServiceAsync';
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
 
 const getAllUsers = catchServiceAsync(async () => {
   return prisma.user.findMany();

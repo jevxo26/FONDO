@@ -1,10 +1,12 @@
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { OAuth2Client } from 'google-auth-library';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { catchServiceAsync } from '../utils/catchServiceAsync';
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export class SocialAuthService {

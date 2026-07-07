@@ -1,17 +1,15 @@
-import { Download, Plus } from "lucide-react";
-import { transactions } from "@/data/payments";
-import { PaymentSummaryCards } from "@/components/dashboard/payments/payment-summary-cards";
-import { PaymentTableSection } from "@/components/dashboard/payments/payment-table-section";
-import { PaymentInsightCards } from "@/components/dashboard/payments/payment-insight-cards";
+import { Download, Plus } from 'lucide-react';
+import { transactions } from '@/data/payments';
+import { PaymentSummaryCards } from '@/components/dashboard/customers/payments/payment-summary-cards';
+import { PaymentTableSection } from '@/components/dashboard/customers/payments/payment-table-section';
+import { PaymentInsightCards } from '@/components/dashboard/customers/payments/payment-insight-cards';
 
 export default function PaymentsPage() {
   return (
     <div>
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Financial Overview
-          </h2>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Financial Overview</h2>
           <p className="mt-2 text-muted-foreground">
             Track and manage every financial interaction across the ecosystem.
           </p>

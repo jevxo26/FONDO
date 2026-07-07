@@ -1,32 +1,26 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
+import Link from 'next/link';
+import { useState } from 'react';
 
-const tabs = [
-  "Profiles",
-  "Orders",
-  "Subscriptions",
-  "Payments",
-  "Wallets",
-] as const;
+const tabs = ['Profiles', 'Orders', 'Subscriptions', 'Payments', 'Wallets'] as const;
 
 export function CustomerTabs() {
-  const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("Profiles");
+  const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>('Profiles');
 
   return (
     <nav className="relative flex gap-10 border-b border-border">
       {tabs.map((tab) =>
-        tab === "Orders" ? (
+        tab === 'Orders' ? (
           <Link
             key={tab}
             href="/dashboard/customers/orders"
             className={cn(
-              "relative pb-4 text-sm font-medium transition-colors",
+              'relative pb-4 text-sm font-medium transition-colors',
               activeTab === tab
-                ? "font-bold text-primary"
-                : "text-muted-foreground hover:text-foreground",
+                ? 'font-bold text-primary'
+                : 'text-muted-foreground hover:text-foreground',
             )}
           >
             {tab}
@@ -36,10 +30,10 @@ export function CustomerTabs() {
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={cn(
-              "relative pb-4 text-sm font-medium transition-colors",
+              'relative pb-4 text-sm font-medium transition-colors',
               activeTab === tab
-                ? "font-bold text-primary"
-                : "text-muted-foreground hover:text-foreground",
+                ? 'font-bold text-primary'
+                : 'text-muted-foreground hover:text-foreground',
             )}
           >
             {tab}

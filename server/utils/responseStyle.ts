@@ -1,0 +1,17 @@
+export const sendUserDataAsResponse = {
+  id: true,
+  firstName: true,
+  lastName: true,
+  phone: true,
+  email: true,
+  avatar: true,
+  gender: true,
+  dateOfBirth: true,
+  role: true,
+  status: true,
+  isPhoneVerified: true,
+  isEmailVerified: true,
+  lastLoginAt: true,
+  createdAt: true,
+  updatedAt: true,
+}

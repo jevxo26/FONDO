@@ -5,10 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import { PrismaClient } from '@prisma/client';
-// import path from 'path';
 import userRoutes from './routes/userRoutes';
-// import authRoutes from './routes/authRoutes';
-// import uploadRoutes from './routes/uploadRoutes';
 const prisma = new PrismaClient();
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -43,11 +40,6 @@ app.prepare().then(async () => {
   });
 
   server.use('/api/users', userRoutes);
-  // server.use('/api/auth', authRoutes);
-  // server.use('/api/upload', uploadRoutes);
-
-  // Serve uploaded files statically
-  // server.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')));
 
   // Let Next.js handle all other routes
   server.use((req: Request, res: Response) => {
@@ -57,14 +49,14 @@ app.prepare().then(async () => {
   // Global Error Handler
   server.use((err: any, req: Request, res: Response, next: express.NextFunction) => {
     console.error(err);
-    
+
     let statusCode = err.statusCode || 500;
     if (err.message === 'User already exists with this email') statusCode = 409;
     if (err.message === 'Invalid email or password') statusCode = 401;
     if (err.message === 'Unauthorized') statusCode = 401;
-    
+
     const message = err.message || 'Internal Server Error';
-    res.status(statusCode).json({ 
+    res.status(statusCode).json({
       success: false,
       message: message,
       data: null

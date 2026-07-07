@@ -1,4 +1,4 @@
-import { TrendingUp, CreditCard } from "lucide-react";
+import { CreditCard, TrendingUp } from 'lucide-react';
 
 export function PaymentSummaryCards() {
   return (
@@ -8,21 +8,19 @@ export function PaymentSummaryCards() {
           <CreditCard className="size-32" />
         </div>
         <div className="relative z-10">
-          <p className="mb-4 text-[11px] font-bold uppercase tracking-wider text-primary-fixed">
+          <p className="mb-4 text-[11px] font-bold uppercase tracking-wider text-primary">
             Total Revenue Collected
           </p>
           <div className="mb-6 flex items-baseline gap-2">
-            <span className="font-fraunces text-3xl font-bold text-primary-fixed">৳</span>
-            <h2 className="font-fraunces text-5xl font-bold text-white">
-              1,42,850.00
-            </h2>
+            <span className="font-fraunces text-3xl font-bold text-primary">৳</span>
+            <h2 className="font-fraunces text-5xl font-bold text-white">1,42,850.00</h2>
           </div>
           <div className="flex gap-6 border-t border-white/10 pt-6">
             <div>
               <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 Growth
               </p>
-              <p className="flex items-center font-bold text-status-green">
+              <p className="flex items-center font-bold text-success">
                 <TrendingUp className="mr-1 size-4" />
                 +12.4%
               </p>
@@ -50,25 +48,18 @@ export function PaymentSummaryCards() {
           </p>
           <div className="flex items-baseline gap-2">
             <span className="font-fraunces text-2xl font-bold text-primary">৳</span>
-            <h2 className="font-fraunces text-3xl font-bold text-foreground">
-              28,400.00
-            </h2>
+            <h2 className="font-fraunces text-3xl font-bold text-foreground">28,400.00</h2>
           </div>
         </div>
         <div className="mt-6">
           <div className="mb-4 h-2 w-full rounded-full bg-muted">
-            <div
-              className="h-2 rounded-full bg-primary"
-              style={{ width: "65%" }}
-            />
+            <div className="h-2 rounded-full bg-primary" style={{ width: '65%' }} />
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm italic text-muted-foreground">
               Next payout scheduled: Oct 24
             </span>
-            <button className="text-xs font-bold text-primary hover:underline">
-              Process Now
-            </button>
+            <button className="text-xs font-bold text-primary hover:underline">Process Now</button>
           </div>
         </div>
       </div>

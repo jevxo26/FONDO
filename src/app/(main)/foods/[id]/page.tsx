@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Heart, Star, Share2, Plus, Minus, ShoppingCart, MessageSquare } from "lucide-react";
 
-export function ProductInfo() {
+export default function ProductPage() {
   const [quantity, setQuantity] = useState(1);
 
   return (

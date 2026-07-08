@@ -1,0 +1,9 @@
+export { Hero } from "./hero/hero";
+export { TrustBar } from "./trust-bar/trust-bar";
+export { PopularCategories } from "./popular-categories/popular-categories";
+export { BestSellers } from "./best-sellers/best-sellers";
+export { SignatureDish } from "./signature-dish/signature-dish";
+export { Combos } from "./combos/combos";
+export { ChefStory } from "./chef-story/chef-story";
+export { Testimonials } from "./testimonials/testimonials";
+export { CTABanner } from "./cta/cta-banner";

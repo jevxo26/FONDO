@@ -1,67 +1,85 @@
-import Image from "next/image";
+import { ArrowRight, Check, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { PriceTag } from "@/components/common/price-tag";
 
 interface ComboCardProps {
   combo: {
     id: number;
     title: string;
-    description: string;
+    serves: string;
+    popular: boolean;
+    saveAmount: number | null;
+    items: string[];
+    freeDrink: boolean;
     price: number;
-    originalPrice: number;
-    discount: string;
-    images: string[];
   };
   className?: string;
 }
 
 export function ComboCard({ combo, className }: ComboCardProps) {
   return (
-    <Card className={cn("overflow-visible", className)}>
-      <CardContent className="flex flex-col gap-4 p-4">
-        <div className="relative flex h-40 items-end justify-center">
-          {combo.images.map((image, i) => (
-            <div
-              key={image}
-              className={cn(
-                "relative overflow-hidden rounded-2xl",
-                i === 0 ? "size-32 z-10" : "absolute left-1/2 top-4 size-28 -translate-x-1/2 opacity-80"
-              )}
-            >
-              <Image
-                src={image}
-                alt={`${combo.title} item ${i + 1}`}
-                fill
-                sizes="128px"
-                className="object-cover"
-              />
+    <div
+      className={cn(
+        "flex w-[289px] shrink-0 flex-col rounded-[20px] border border-border bg-card p-5",
+        className
+      )}
+    >
+      {/* Top row: serves + badge */}
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-normal uppercase tracking-[1px] text-foreground/55">
+          Serves {combo.serves}
+        </span>
+        {combo.popular ? (
+          <span className="rounded-full bg-[#E7963D] px-3 py-0.5 text-[10px] font-bold uppercase text-white">
+            Most Popular
+          </span>
+        ) : combo.saveAmount ? (
+          <span className="rounded-full bg-[#E7963D]/15 px-3 py-0.5 text-[10px] font-semibold text-[#FF9639]">
+            Save ৳{combo.saveAmount}
+          </span>
+        ) : null}
+      </div>
+
+      {/* Title */}
+      <h3 className="mt-3 font-fraunces text-[24px] font-semibold leading-tight text-foreground">
+        {combo.title}
+      </h3>
+
+      {/* Items list */}
+      <ul className="mt-4 flex flex-col gap-2">
+        {combo.items.map((item) => (
+          <li key={item} className="flex items-center gap-2">
+            <div className="flex size-3.5 shrink-0 items-center justify-center rounded-full border border-[#FF9639]">
+              <Check className="size-2 text-[#FF9639]" strokeWidth={3} />
             </div>
-          ))}
-        </div>
+            <span className="text-sm text-foreground/65">{item}</span>
+          </li>
+        ))}
+      </ul>
 
-        <div className="flex flex-col gap-2">
-          <h3 className="font-fraunces text-lg text-foreground">
-            {combo.title}
-          </h3>
-          <p className="text-sm text-muted-foreground">{combo.description}</p>
+      {/* Free drink */}
+      {combo.freeDrink && (
+        <div className="mt-3 flex items-center gap-1.5 text-sm text-foreground/65">
+          <Flame className="size-3.5 text-[#FF9639]" />
+          Free drink included
         </div>
-      </CardContent>
+      )}
 
-      <CardFooter className="flex items-center justify-between p-4 pt-0">
-        <PriceTag
-          price={combo.price}
-          originalPrice={combo.originalPrice}
-          size="md"
-        />
-        <Badge
-          variant="destructive"
-          className="bg-orange-500/10 text-orange-600 hover:bg-orange-500/20"
-        >
-          {combo.discount}
-        </Badge>
-      </CardFooter>
-    </Card>
+      {/* Spacer */}
+      <div className="mt-auto" />
+
+      {/* Bottom row: price + button */}
+      <div className="mt-6 flex items-end justify-between">
+        <div className="flex flex-col">
+          <span className="font-fraunces text-[24px] font-bold text-foreground">
+            ৳{combo.price}
+          </span>
+          <span className="text-[11px] text-foreground/45">all inclusive</span>
+        </div>
+        <button className="flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-[12px] font-bold uppercase tracking-[0.6px] text-background transition-colors hover:bg-foreground/90">
+          Order Combo
+          <ArrowRight className="size-3.5" />
+        </button>
+      </div>
+    </div>
   );
 }

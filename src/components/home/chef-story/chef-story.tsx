@@ -1,17 +1,28 @@
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { Award, Sparkles, BookOpen } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { CHEF_STORY } from "@/data/homepage";
+
+const iconMap = {
+  trophy: Award,
+  star: Sparkles,
+  book: BookOpen,
+};
+
+const variantClasses = {
+  dark: "bg-foreground text-white border-foreground",
+  orange: "bg-[#E7963D]/15 text-foreground border-[#E7963D]/40",
+  light: "bg-white text-foreground border-border",
+};
 
 export function ChefStory() {
   return (
     <section className="bg-secondary py-16">
       <div className="wrapper">
         <div className="flex flex-col items-center gap-8 lg:flex-row lg:justify-between lg:gap-16">
+          {/* Image */}
           <div className="relative flex-1">
-            <div className="relative aspect-[4/3] w-full max-w-md overflow-hidden rounded-2xl">
+            <div className="relative aspect-[4/5] w-full max-w-lg overflow-hidden rounded-[28px]">
               <Image
                 src={CHEF_STORY.image}
                 alt={CHEF_STORY.name}
@@ -19,41 +30,57 @@ export function ChefStory() {
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
               />
+              {/* Stats overlay card */}
+              <div className="absolute bottom-6 right-6 flex flex-col rounded-[20px] border border-border bg-white p-4 shadow-[var(--shadow-elevated)]">
+                <span className="font-sans text-[30px] font-bold leading-none tracking-[-0.6px] text-foreground">
+                  {CHEF_STORY.stats.value}
+                </span>
+                <span className="mt-1 text-xs text-foreground/55">
+                  {CHEF_STORY.stats.label}
+                </span>
+              </div>
             </div>
-            <div className="absolute -top-4 -right-4 -z-10 size-32 rounded-2xl bg-primary/20 lg:-right-8 lg:-top-8 lg:size-40" />
           </div>
 
-          <div className="flex flex-1 flex-col gap-6">
-            <Badge variant="secondary" className="w-fit bg-background text-foreground">
-              Meet Our Chef
-            </Badge>
-            <h2 className="font-fraunces text-3xl text-foreground sm:text-4xl lg:text-[40px]">
-              {CHEF_STORY.name}
-            </h2>
-            <p className="text-sm font-medium text-primary">{CHEF_STORY.title}</p>
-            <p className="text-sm leading-relaxed text-muted-foreground lg:text-base">
-              {CHEF_STORY.bio}
-            </p>
-
-            <Separator />
-
-            <div className="flex gap-6">
-              {CHEF_STORY.stats.map((stat) => (
-                <div key={stat.label} className="flex flex-col gap-1">
-                  <span className="text-2xl font-bold text-foreground">
-                    {stat.value}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {stat.label}
-                  </span>
-                </div>
-              ))}
+          {/* Text */}
+          <div className="flex flex-1 flex-col gap-8">
+            <div className="flex flex-col gap-3">
+              <span className="text-xs font-semibold uppercase tracking-[2.534px] text-foreground/60">
+                {CHEF_STORY.label}
+              </span>
+              <h2 className="font-fraunces text-[48px] leading-tight tracking-[-0.96px] text-foreground">
+                {CHEF_STORY.name}
+              </h2>
+              <p className="text-base leading-relaxed text-foreground/65">
+                {CHEF_STORY.bio}
+              </p>
             </div>
 
-            <Button variant="link" className="w-fit gap-1 p-0 text-foreground">
-              Read Full Story
-              <ArrowRight className="size-4" />
-            </Button>
+            {/* Quote */}
+            <blockquote className="border-l-[3px] border-primary pl-5">
+              <p className="font-fraunces text-[24px] italic leading-snug tracking-[-0.48px] text-foreground">
+                &ldquo;{CHEF_STORY.quote}&rdquo;
+              </p>
+            </blockquote>
+
+            {/* Badges */}
+            <div className="flex flex-wrap items-center gap-4">
+              {CHEF_STORY.badges.map((badge) => {
+                const Icon = iconMap[badge.icon as keyof typeof iconMap];
+                return (
+                  <div
+                    key={badge.text}
+                    className={cn(
+                      "flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold",
+                      variantClasses[badge.variant]
+                    )}
+                  >
+                    {Icon && <Icon className="size-3" />}
+                    {badge.text}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

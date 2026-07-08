@@ -51,7 +51,7 @@ const expired = subscriptions.filter(
 export function SubscriptionContent() {
   return (
     <div>
-      <div className="mt-8 grid grid-cols-4 gap-6">
+      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Total Subscriptions" value={total} />
         <StatCard label="Active" value={active} />
         <StatCard label="Paused" value={paused} />

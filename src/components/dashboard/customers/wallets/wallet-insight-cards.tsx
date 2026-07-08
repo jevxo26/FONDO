@@ -1,4 +1,5 @@
 import { Gift, Smartphone, CreditCard, Landmark } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function WalletInsightCards() {
   return (
@@ -10,9 +11,9 @@ export function WalletInsightCards() {
         <p className="mb-6 mt-2 text-sm opacity-90">
           Auto-credit ৳500 to all Platinum members who haven&apos;t ordered in 30 days.
         </p>
-        <button className="w-full rounded-full bg-foreground py-3 text-sm font-bold text-white shadow-xl transition-all hover:opacity-80 active:scale-95">
+        <Button className="w-full rounded-full">
           Launch Bulk Reward
-        </button>
+        </Button>
         <div className="absolute -bottom-4 -right-4 opacity-10">
           <Gift className="size-32" />
         </div>

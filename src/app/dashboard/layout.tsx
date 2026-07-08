@@ -1,5 +1,5 @@
-import { SidebarProvider } from '@/components/dashboard/layout/sidebar-context';
-import { Sidebar } from '@/components/dashboard/layout/sidebar/sidebar';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/dashboard/layout/sidebar/app-sidebar';
 import { DashboardHeader } from '@/components/dashboard/layout/header/header';
 
 export default function DashboardLayout({
@@ -9,13 +9,11 @@ export default function DashboardLayout({
 }>) {
   return (
     <SidebarProvider>
-      <Sidebar />
-      <DashboardHeader />
-      <main className="min-h-screen pt-16 lg:ml-64">
-        <div className="mx-auto max-w-[1400px] px-4 py-6 md:px-8 md:py-8">
-          {children}
-        </div>
-      </main>
+      <AppSidebar />
+      <SidebarInset className="max-h-svh overflow-y-auto">
+        <DashboardHeader />
+        <div className="mx-auto w-full max-w-[1400px] px-4 py-6 md:px-8 md:py-8">{children}</div>
+      </SidebarInset>
     </SidebarProvider>
   );
 }

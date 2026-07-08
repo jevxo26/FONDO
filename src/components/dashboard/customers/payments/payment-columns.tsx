@@ -4,6 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { PaymentTransaction } from "@/data/payments";
 import { DataTableColumnHeader } from "@/components/common/table";
 import { PaymentStatusBadge } from "./payment-status-badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export const paymentColumns: ColumnDef<PaymentTransaction>[] = [
   {
@@ -24,9 +25,11 @@ export const paymentColumns: ColumnDef<PaymentTransaction>[] = [
     ),
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
-        <div className="flex size-8 items-center justify-center rounded-full bg-primary-fixed text-xs font-bold text-on-primary-fixed">
-          {row.original.customerInitials}
-        </div>
+        <Avatar>
+          <AvatarFallback className="bg-muted text-xs font-bold text-muted-foreground">
+            {row.original.customerInitials}
+          </AvatarFallback>
+        </Avatar>
         <span className="text-sm font-semibold text-foreground">
           {row.original.customerName}
         </span>

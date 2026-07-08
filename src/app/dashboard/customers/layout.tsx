@@ -19,23 +19,9 @@ export default function CustomersLayout({
 }) {
   const pathname = usePathname();
 
-  const activeTab = tabs.find((t) =>
-    t.href === "/dashboard/customers"
-      ? pathname === "/dashboard/customers"
-      : pathname.startsWith(t.href),
-  );
-
   return (
     <div>
-      <nav className="flex gap-2 text-xs text-muted-foreground">
-        <a href="/dashboard" className="hover:text-primary">Dashboard</a>
-        <span>/</span>
-        <span className="font-bold text-primary">Customer Management</span>
-        <span>/</span>
-        <span className="text-foreground">{activeTab?.label ?? "Profiles"}</span>
-      </nav>
-
-      <nav className="relative mb-8 mt-6 flex gap-10 border-b border-border">
+      <nav className="relative mb-8 flex gap-4 overflow-x-auto whitespace-nowrap border-b border-border md:gap-10">
         {tabs.map((tab) => {
           const isActive =
             tab.href === "/dashboard/customers"

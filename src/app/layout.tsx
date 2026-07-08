@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import { ReduxProvider } from "@/components/ReduxProvider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -26,7 +27,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <ReduxProvider>{children}</ReduxProvider>
+        <TooltipProvider delay={0}>
+          <ReduxProvider>{children}</ReduxProvider>
+        </TooltipProvider>
       </body>
     </html>
   );

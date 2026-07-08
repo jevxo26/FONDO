@@ -38,7 +38,7 @@ export function DataTablePagination<TData>({
   }
 
   return (
-    <div className="flex items-center justify-between border-t border-border bg-secondary px-6 py-4">
+    <div className="flex flex-col items-center justify-between gap-2 border-t border-border bg-secondary px-4 py-4 md:flex-row md:px-6">
       <p className="text-sm text-muted-foreground">
         Showing{" "}
         <span className="font-bold text-foreground">

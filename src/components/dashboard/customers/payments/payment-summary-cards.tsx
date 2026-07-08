@@ -1,4 +1,5 @@
 import { CreditCard, TrendingUp } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
 export function PaymentSummaryCards() {
   return (
@@ -59,7 +60,7 @@ export function PaymentSummaryCards() {
             <span className="text-sm italic text-muted-foreground">
               Next payout scheduled: Oct 24
             </span>
-            <button className="text-xs font-bold text-primary hover:underline">Process Now</button>
+            <Button variant="link" className="h-auto p-0 text-xs font-bold">Process Now</Button>
           </div>
         </div>
       </div>

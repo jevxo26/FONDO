@@ -1,4 +1,5 @@
 import { ShieldCheck, Smartphone, CreditCard, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function PaymentInsightCards() {
   return (
@@ -11,13 +12,10 @@ export function PaymentInsightCards() {
           All transactions are monitored by FONDO Guard. No suspicious
           activities detected in the last 24 hours.
         </p>
-        <a
-          href="#"
-          className="flex items-center gap-1 text-xs font-bold text-primary hover:underline"
-        >
+        <Button variant="link" className="h-auto gap-1 p-0 text-xs font-bold">
           <ShieldCheck className="size-4" />
           Security Settings
-        </a>
+        </Button>
       </div>
 
       <div>
@@ -53,7 +51,7 @@ export function PaymentInsightCards() {
         <ul className="space-y-3">
           <li className="flex justify-between text-sm">
             <span className="text-muted-foreground">Unresolved Disputes</span>
-            <span className="font-bold text-status-red">3</span>
+            <span className="font-bold text-destructive">3</span>
           </li>
           <li className="flex justify-between text-sm">
             <span className="text-muted-foreground">Avg. Refund Time</span>

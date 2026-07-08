@@ -10,7 +10,7 @@ export default function DashboardPage() {
         Overview
       </h2>
 
-      <div className="mt-8 grid grid-cols-4 gap-6">
+      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (

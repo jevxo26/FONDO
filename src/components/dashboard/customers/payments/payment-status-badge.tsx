@@ -6,9 +6,9 @@ interface PaymentStatusBadgeProps {
 }
 
 const statusConfig: Record<PaymentStatus, { dot: string; bg: string; label: string }> = {
-  SUCCESS: { dot: "bg-status-green", bg: "bg-status-green/10 text-status-green", label: "Success" },
-  FAILED: { dot: "bg-status-red", bg: "bg-status-red/10 text-status-red", label: "Failed" },
-  REFUNDED: { dot: "bg-outline", bg: "bg-outline-variant text-on-surface-variant", label: "Refunded" },
+  SUCCESS: { dot: "bg-success", bg: "bg-success/10 text-success", label: "Success" },
+  FAILED: { dot: "bg-destructive", bg: "bg-destructive/10 text-destructive", label: "Failed" },
+  REFUNDED: { dot: "bg-muted-foreground", bg: "bg-muted text-muted-foreground", label: "Refunded" },
 };
 
 export function PaymentStatusBadge({ status }: PaymentStatusBadgeProps) {

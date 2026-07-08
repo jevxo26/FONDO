@@ -1,5 +1,6 @@
 import type { Transaction } from "@/data/customers";
 import { Minus, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface TransactionListProps {
   transactions: Transaction[];
@@ -10,9 +11,9 @@ export function TransactionList({ transactions }: TransactionListProps) {
     <section className="rounded-2xl border border-border bg-card p-6">
       <div className="mb-6 flex items-center justify-between">
         <h4 className="font-semibold text-foreground">Recent Transactions</h4>
-        <a href="#" className="text-xs font-bold text-primary">
+        <Button variant="link" className="h-auto p-0 text-xs font-bold">
           View All
-        </a>
+        </Button>
       </div>
 
       <div className="space-y-4">

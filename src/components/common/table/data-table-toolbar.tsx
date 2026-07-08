@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/popover";
 import { Search, Settings2, Filter } from "lucide-react";
 import type { FacetedFilter } from "./types";
+import { Input } from "@/components/ui/input";
+import { buttonVariants } from "@/components/ui/button";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -50,18 +52,19 @@ export function DataTableToolbar<TData>({
   }, [search, table]);
 
   return (
-    <div className="flex items-center justify-between gap-4 p-4">
-      <div className="relative">
+    <div className="flex flex-wrap items-center justify-between gap-3 p-4">
+      <div className="relative w-full md:w-auto">
         <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <input
+        <Input
+          type="search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search across all columns..."
-          className="w-72 rounded-full bg-secondary py-2 pl-10 pr-4 text-sm transition-all focus:ring-2 focus:ring-primary focus:outline-none"
+          className="w-full rounded-full bg-secondary pl-10 md:w-72"
         />
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         {filters?.map((filter) => {
           const column = table.getColumn(filter.columnId);
           const currentValue = column?.getFilterValue() as
@@ -70,7 +73,9 @@ export function DataTableToolbar<TData>({
 
           return (
             <Popover key={filter.columnId}>
-              <PopoverTrigger className="flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-bold transition-colors hover:bg-muted data-[state=open]:text-primary">
+              <PopoverTrigger
+                className={buttonVariants({ variant: "outline", size: "sm" })}
+              >
                 <Filter className="size-4" />
                 {filter.title}
                 {currentValue && (
@@ -119,7 +124,9 @@ export function DataTableToolbar<TData>({
         {toolbarActions}
 
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-muted-foreground transition-colors hover:bg-muted data-[state=open]:text-primary">
+          <DropdownMenuTrigger
+            className={buttonVariants({ variant: "outline", size: "sm" })}
+          >
             <Settings2 className="size-4" />
             View
           </DropdownMenuTrigger>

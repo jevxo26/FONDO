@@ -4,6 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { WalletTransaction } from "@/data/wallets";
 import { DataTableColumnHeader } from "@/components/common/table";
 import { WalletStatusBadge } from "./wallet-status-badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const typeConfig: Record<string, { dot: string; label: string }> = {
   TOPUP: { dot: "bg-success", label: "Top-up" },
@@ -33,9 +34,11 @@ export const walletColumns: ColumnDef<WalletTransaction>[] = [
     ),
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
-        <div className="flex size-8 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
-          {row.original.customerInitials}
-        </div>
+        <Avatar>
+          <AvatarFallback className="bg-muted text-xs font-bold text-muted-foreground">
+            {row.original.customerInitials}
+          </AvatarFallback>
+        </Avatar>
         <div>
           <p className="text-sm font-semibold text-foreground">
             {row.original.customerName}

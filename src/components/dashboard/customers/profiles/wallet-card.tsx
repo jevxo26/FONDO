@@ -1,4 +1,5 @@
-import { CreditCard, Wallet } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { CreditCard, Wallet } from 'lucide-react';
 
 interface WalletCardProps {
   totalHoldings: number;
@@ -28,16 +29,14 @@ export function WalletCard({ totalHoldings, pendingRefunds }: WalletCardProps) {
           </div>
           <div className="flex items-center justify-between">
             <span className="text-white/60">Pending Refunds</span>
-            <span className="text-destructive">
-              ৳{pendingRefunds.toLocaleString()}
-            </span>
+            <span className="text-destructive">৳{pendingRefunds.toLocaleString()}</span>
           </div>
         </div>
 
-        <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 font-bold text-white transition-all hover:opacity-90 active:scale-95">
+        <Button className="w-full rounded-xl">
           <CreditCard className="size-[18px]" />
           Manage Settlement
-        </button>
+        </Button>
       </div>
       <div className="absolute -bottom-10 -right-10 size-40 rounded-full bg-primary/10 blur-3xl" />
     </section>

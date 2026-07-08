@@ -1,4 +1,5 @@
 import { TrendingUp, Timer, ChefHat, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function ContextCards() {
   return (
@@ -80,9 +81,9 @@ function DarkCard() {
         </p>
       </div>
       <div className="relative z-10">
-        <button className="flex items-center gap-2 text-sm font-bold text-primary transition-all hover:gap-4">
+        <Button variant="link" className="h-auto gap-2 p-0 text-sm font-bold">
           View Analytics <ArrowRight className="size-4" />
-        </button>
+        </Button>
       </div>
     </div>
   );

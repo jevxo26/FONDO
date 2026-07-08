@@ -4,6 +4,7 @@ import { ContextCards } from "@/components/dashboard/customers/orders/context-ca
 import { OrdersTableSection } from "@/components/dashboard/customers/orders/orders-table-section";
 import { orders } from "@/data/orders";
 import { Download, Plus, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default async function CustomerOrdersPage({
   searchParams,
@@ -42,18 +43,18 @@ export default async function CustomerOrdersPage({
           </p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 rounded-full border border-foreground px-6 py-2.5 text-[11px] font-bold text-foreground transition-all hover:bg-foreground hover:text-white">
+          <Button variant="outline" className="rounded-full">
             <Download className="size-[18px]" />
             Export Report
-          </button>
-          <button className="flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[11px] font-bold text-primary-foreground shadow-md transition-all hover:opacity-90 active:scale-95">
+          </Button>
+          <Button className="rounded-full">
             <Plus className="size-[18px]" />
             New Manual Order
-          </button>
+          </Button>
         </div>
       </div>
 
-      <div className="mt-8 grid grid-cols-4 gap-6">
+      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Total Orders" value={totalOrders} />
         <StatCard label="Pending" value={pending} />
         <StatCard label="In Progress" value={inProgress} />

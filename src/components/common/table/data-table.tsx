@@ -27,6 +27,8 @@ import {
 } from "@tanstack/react-table";
 import { MoreHorizontal, SearchX } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { buttonVariants } from "@/components/ui/button";
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import type { RowAction, FacetedFilter } from "./types";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
@@ -68,8 +70,11 @@ export function DataTable<TData>({
         cell: ({ row }: { row: { original: TData } }) => (
           <DropdownMenu>
             <DropdownMenuTrigger
-              onClick={(e) => e.stopPropagation()}
-              className="flex size-8 items-center justify-center rounded-lg transition-colors hover:bg-muted"
+              className={buttonVariants({
+                variant: "ghost",
+                size: "icon",
+                className: "size-8",
+              })}
             >
               <MoreHorizontal className="size-4" />
             </DropdownMenuTrigger>
@@ -117,7 +122,7 @@ export function DataTable<TData>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="px-6 py-4">
+                  <TableHead key={header.id} className="px-4 py-4 md:px-6">
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -134,7 +139,7 @@ export function DataTable<TData>({
               Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>
                   {columns.map((_, j) => (
-                    <TableCell key={j} className="px-6 py-5">
+                    <TableCell key={j} className="px-4 py-4 md:px-6 md:py-5">
                       <Skeleton className="h-4 w-full" />
                     </TableCell>
                   ))}
@@ -152,7 +157,7 @@ export function DataTable<TData>({
                   )}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="px-6 py-5">
+                    <TableCell key={cell.id} className="px-4 py-4 md:px-6 md:py-5">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -167,10 +172,14 @@ export function DataTable<TData>({
                   colSpan={columns.length}
                   className="h-40 text-center"
                 >
-                  <div className="flex flex-col items-center justify-center text-muted-foreground">
-                    <SearchX className="mb-2 size-8" />
-                    <p className="text-sm">{emptyMessage}</p>
-                  </div>
+                  <Empty>
+                    <EmptyHeader>
+                      <EmptyMedia>
+                        <SearchX className="size-8 text-muted-foreground" />
+                      </EmptyMedia>
+                      <EmptyTitle>{emptyMessage}</EmptyTitle>
+                    </EmptyHeader>
+                  </Empty>
                 </TableCell>
               </TableRow>
             )}

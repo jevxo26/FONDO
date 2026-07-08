@@ -1,7 +1,6 @@
-import { Repeat } from 'lucide-react';
-import { SubscriptionContent } from '@/components/dashboard/customers/subscriptions/subscription-content';
+import { Repeat } from "lucide-react";
 
-export default function SubscriptionsPage() {
+export default function ReportsSubscriptionsPage() {
   return (
     <div>
       <div className="flex items-center gap-6">
@@ -10,14 +9,13 @@ export default function SubscriptionsPage() {
         </div>
         <div>
           <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Subscription Management
+            Subscription Report
           </h2>
-          <p className="mt-2 text-muted-foreground">
-            Manage and monitor all customer meal subscriptions.
+          <p className="mt-1 text-muted-foreground">
+            Subscription metrics, renewals, and churn analysis.
           </p>
         </div>
       </div>
-      <SubscriptionContent />
     </div>
   );
 }

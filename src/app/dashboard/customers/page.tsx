@@ -3,7 +3,7 @@ import { StatusMetrics } from '@/components/dashboard/customers/profiles/custome
 import { TransactionList } from '@/components/dashboard/customers/profiles/transaction-list';
 import { WalletCard } from '@/components/dashboard/customers/profiles/wallet-card';
 import { customers, recentTransactions } from '@/data/customers';
-import { Download, Filter, Grid3x3, UserPlus } from 'lucide-react';
+import { Download, Filter, Grid3x3, UserPlus, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function CustomersPage() {
@@ -13,19 +13,27 @@ export default function CustomersPage() {
 
   return (
     <div>
-      <div className="flex flex-col items-start gap-4 md:flex-row md:items-end md:justify-between">
-        <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">Customer Operations</h2>
+      <div className="flex items-center gap-6">
+        <div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10">
+          <Users className="size-8 text-primary" />
         </div>
-        <div className="flex flex-wrap gap-3">
-          <Button variant="outline" className="rounded-full">
-            <Download className="size-[18px]" />
-            Export List
-          </Button>
-          <Button className="rounded-full">
-            <UserPlus className="size-[18px]" />
-            Add New Customer
-          </Button>
+        <div className="flex flex-1 flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="font-fraunces text-4xl font-bold text-foreground">Customer Operations</h2>
+            <p className="mt-2 text-muted-foreground">
+              View and manage customer profiles, segments, and account statuses.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Button variant="outline" className="rounded-full">
+              <Download className="size-[18px]" />
+              Export List
+            </Button>
+            <Button className="rounded-full">
+              <UserPlus className="size-[18px]" />
+              Add New Customer
+            </Button>
+          </div>
         </div>
       </div>
 

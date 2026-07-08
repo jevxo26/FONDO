@@ -1,16 +1,9 @@
 "use client";
 
 import { DataTable } from "@/components/common/table";
-import { type ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-
-interface Vendor {
-  id: string;
-  name: string;
-  status: "ACTIVE" | "PENDING" | "SUSPENDED";
-  kitchen: string;
-  joined: string;
-}
+import type { Vendor } from "@/data/vendors";
 
 const columns: ColumnDef<Vendor>[] = [
   {
@@ -53,4 +46,4 @@ export function VendorsTable({ vendors }: { vendors: Vendor[] }) {
       ]}
     />
   );
-} 
+}

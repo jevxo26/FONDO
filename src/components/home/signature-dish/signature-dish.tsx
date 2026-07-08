@@ -1,66 +1,65 @@
-import Image from "next/image";
-import { Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { PriceTag } from "@/components/common/price-tag";
-import { SIGNATURE_DISH } from "@/data/homepage";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { SIGNATURE_DISH } from '@/data/homepage';
+import { ArrowRight, ShoppingBag } from 'lucide-react';
+import Image from 'next/image';
 
 export function SignatureDish() {
   return (
-    <section className="bg-secondary py-16">
+    <section className="bg-foreground py-16">
       <div className="wrapper">
-        <div className="flex flex-col items-center gap-8 lg:flex-row lg:justify-between lg:gap-16">
-          <div className="flex flex-1 flex-col gap-6">
-            <Badge variant="secondary" className="w-fit bg-background text-foreground">
-              Signature Dish
-            </Badge>
-            <h2 className="font-fraunces text-3xl text-foreground sm:text-4xl lg:text-[40px]">
-              {SIGNATURE_DISH.title}
-            </h2>
-            <p className="text-sm leading-relaxed text-muted-foreground lg:text-base">
-              {SIGNATURE_DISH.description}
-            </p>
-
-            <Separator />
-
-            <div className="flex flex-col gap-3">
-              <span className="text-sm font-medium text-foreground">
-                Ingredients
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {SIGNATURE_DISH.ingredients.map((ingredient) => (
-                  <Badge
-                    key={ingredient}
-                    variant="outline"
-                    className="border-border bg-background text-foreground"
-                  >
-                    <Check className="mr-1 size-3 text-primary" />
-                    {ingredient}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <PriceTag price={SIGNATURE_DISH.price} size="lg" />
-              <Button size="lg" className="gap-2">
-                Add to Cart
-              </Button>
-            </div>
-          </div>
-
-          <div className="relative flex-1">
-            <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-2xl lg:aspect-[4/3]">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
+          <div className="flex-1">
+            <div className="relative aspect-square w-full overflow-hidden rounded-2xl">
               <Image
                 src={SIGNATURE_DISH.image}
-                alt={SIGNATURE_DISH.title}
+                alt={SIGNATURE_DISH.heading}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
               />
             </div>
-            <div className="absolute -bottom-4 -left-4 -z-10 size-32 rounded-2xl bg-primary/20 lg:-left-8 lg:-bottom-8 lg:size-40" />
+          </div>
+
+          <div className="flex flex-1 flex-col gap-6">
+            <span className="text-xs font-medium uppercase tracking-widest text-primary">
+              {SIGNATURE_DISH.label}
+            </span>
+
+            <h2 className="font-fraunces text-3xl text-white sm:text-4xl lg:text-[48px]">
+              {SIGNATURE_DISH.heading}
+            </h2>
+
+            <p className="text-sm leading-relaxed text-white/60 lg:text-base">
+              {SIGNATURE_DISH.description}
+            </p>
+
+            <div className="grid grid-cols-2 gap-3">
+              {SIGNATURE_DISH.infoCards.map((card) => (
+                <Card key={card.title} className="border-white/10 bg-white/5 p-4">
+                  <h4 className="text-sm font-semibold text-white">{card.title}</h4>
+                  <p className="text-xs text-white/50">{card.text}</p>
+                </Card>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-4">
+              <Button
+                size="lg"
+                className="gap-2 h-auto py-3 px-4 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                <ShoppingBag className="size-4" />
+                {SIGNATURE_DISH.primaryButton.label}
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="gap-2 h-auto py-3 px-4 rounded-full bg-transparent text-white hover:bg-white/10 hover:text-white"
+              >
+                {SIGNATURE_DISH.secondaryButton.label}
+                <ArrowRight className="size-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>

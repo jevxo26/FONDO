@@ -1,25 +1,14 @@
-import { Separator } from '@/components/ui/separator';
-import { TRUST_STATS } from '@/data/homepage';
+import { TRUST_FEATURES } from "@/data/homepage";
 
 export function TrustBar() {
   return (
-    <section className="border-y border-border bg-background">
+    <section className="border-y border-border/70 bg-white/40">
       <div className="wrapper">
-        <div className="flex items-center justify-center gap-6 py-4 lg:gap-0 lg:justify-between">
-          {TRUST_STATS.map((stat, i) => (
-            <div key={stat.label} className="flex items-center gap-6">
-              <div className="flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-full bg-secondary">
-                  <stat.icon className={`size-5 ${stat.iconColor}`} />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-bold text-foreground">{stat.value}</span>
-                  <span className="text-xs text-muted-foreground">{stat.label}</span>
-                </div>
-              </div>
-              {i < TRUST_STATS.length - 1 && (
-                <Separator orientation="vertical" className="hidden h-8 lg:block " />
-              )}
+        <div className="flex items-center justify-between py-4">
+          {TRUST_FEATURES.map((feature, i) => (
+            <div key={`${feature.label}-${i}`} className="flex items-center gap-3">
+              <feature.icon className="size-4 text-primary" />
+              <span className="text-sm text-foreground/80">{feature.label}</span>
             </div>
           ))}
         </div>

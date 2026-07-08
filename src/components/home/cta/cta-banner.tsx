@@ -17,6 +17,7 @@ export function CTABanner() {
             variant="secondary"
             size="lg"
             className="bg-background text-foreground hover:bg-background/90"
+            nativeButton={false}
             render={<Link href={CTA.primaryButton.href} />}
           >
             {CTA.primaryButton.label}
@@ -25,6 +26,7 @@ export function CTABanner() {
             variant="outline"
             size="lg"
             className="border-background/40 bg-transparent text-background hover:bg-background/10"
+            nativeButton={false}
             render={<Link href={CTA.secondaryButton.href} />}
           >
             {CTA.secondaryButton.label}

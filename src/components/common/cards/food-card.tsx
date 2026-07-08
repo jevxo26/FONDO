@@ -2,17 +2,19 @@ import Image from "next/image";
 import { Heart, Star, Clock, ShoppingBag, ArrowUpRight } from "lucide-react";
 import AddToCartButton from "../../shared/Button/AddToCartButton";
 import Link from "next/link";
+import { Food } from "@/types/food";
 
-export default function FoodCard({ food }: { food: any }) {
+export default function FoodCard({ food }: { food: Food }) {
     return (
         <div className="group flex flex-col overflow-hidden rounded-[32px] bg-white p-4 shadow-[var(--shadow-card)] border border-border/40 dark:bg-card">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-muted">
                 <Image
                     src={food.thumbnail}
-                    alt={food.title}
-                    fill
+                    alt={food.name}
                     sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="eager"
+                    fill
                 />
                 <button className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm text-foreground shadow-sm transition-colors hover:text-destructive">
                     <Heart className="size-4" />
@@ -20,13 +22,13 @@ export default function FoodCard({ food }: { food: any }) {
 
 
                 <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center px-4
-                    transition-all duration-30 opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100">
+                    transition-all duration-30 opacity-0 scale-95 pointer-events group-hover:opacity-100 group-hover:scale-100">
                     <div className="inline-flex items-center gap-2 rounded-xl bg-[#16100C]/90 backdrop-blur-md px-4 py-2.5 text-white shadow-lg border border-white/10">
                         <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-primary">
                             <ShoppingBag className="size-4 text-foreground" />
                         </div>              <span className="font-sans text-xs font-medium">2 items &middot; ৳520</span>
                         <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-white/20">
-                            <Link href={`/foods/${food.id}`} className="flex items-center justify-center">
+                            <Link href={`/foods/${food.slug}`}>
                                 <ArrowUpRight className="size-5 text-white" />
                             </Link>
                         </div>
@@ -38,7 +40,7 @@ export default function FoodCard({ food }: { food: any }) {
             <div className="flex flex-col flex-1 pt-5 pb-1 px-1">
                 <div className="flex items-start justify-between gap-2">
                     <h3 className="font-sans text-lg font-semibold leading-snug text-secondary-foreground line-clamp-1">
-                        {food.title}
+                        {food.name}
                     </h3>
                     <span className="font-sans text-lg font-bold text-secondary-foreground whitespace-nowrap">
                         ৳{food.price}
@@ -57,7 +59,7 @@ export default function FoodCard({ food }: { food: any }) {
                 </div>
 
                 <p className="mt-3 font-sans text-sm leading-relaxed text-muted-foreground line-clamp-2 flex-1">
-                    {food.description}
+                    {food.shortDescription}
                 </p>
                 <AddToCartButton />
             </div>

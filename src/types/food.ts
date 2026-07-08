@@ -5,6 +5,7 @@ export interface Food {
   foodCode: string;
   name: string;
   slug: string;
+  price: number;
   shortDescription: string;
   description: string;
   thumbnail: string;

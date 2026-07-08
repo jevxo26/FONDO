@@ -1,3 +1,4 @@
+//src/data/foodsdata.ts
 import { Food } from "@/types/food";
 
 export const FOOD_ITEMS: Food[] = [
@@ -26,7 +27,8 @@ export const FOOD_ITEMS: Food[] = [
     "status": "active",
     "createdAt": "2025-01-15T10:00:00Z",
     "updatedAt": "2025-07-01T12:00:00Z",
-    "deletedAt": null
+    "deletedAt": null,
+    "price": 100
   },
   {
     "id": "food_002",
@@ -53,7 +55,8 @@ export const FOOD_ITEMS: Food[] = [
     "status": "active",
     "createdAt": "2025-02-10T09:15:00Z",
     "updatedAt": "2025-07-01T12:00:00Z",
-    "deletedAt": null
+    "deletedAt": null,
+    "price": 100
   },
   {
     "id": "food_003",
@@ -64,8 +67,8 @@ export const FOOD_ITEMS: Food[] = [
     "slug": "salmon-sushi-roll",
     "shortDescription": "Fresh salmon, avocado, and cucumber sushi.",
     "description": "Premium salmon, avocado, cucumber, and seasoned rice wrapped in nori.",
-    "thumbnail": "https://images.unsplash.com/photo-1579877271365-1f0e0b0a4b6c",
-    "coverImage": "https://images.unsplash.com/photo-1579877271365-1f0e0b0a4b6c",
+    "thumbnail": "https://www.allrecipes.com/thmb/XT7-9MROYJZvNyQR4J40HGOVDmQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/19511smoked-salmon-sushi-rollfabeveryday4x3-159a22b4d3ac49fe9a146db94b53c930.jpg",
+    "coverImage": "https://www.allrecipes.com/thmb/XT7-9MROYJZvNyQR4J40HGOVDmQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/19511smoked-salmon-sushi-rollfabeveryday4x3-159a22b4d3ac49fe9a146db94b53c930.jpg",
     "preparationTime": 12,
     "calories": 420,
     "protein": 22,
@@ -80,7 +83,8 @@ export const FOOD_ITEMS: Food[] = [
     "status": "active",
     "createdAt": "2025-03-05T08:30:00Z",
     "updatedAt": "2025-07-01T12:00:00Z",
-    "deletedAt": null
+    "deletedAt": null,
+    "price": 100
   },
   {
     "id": "food_004",
@@ -107,7 +111,8 @@ export const FOOD_ITEMS: Food[] = [
     "status": "active",
     "createdAt": "2025-04-12T13:00:00Z",
     "updatedAt": "2025-07-01T12:00:00Z",
-    "deletedAt": null
+    "deletedAt": null,
+    "price": 100
   },
   {
     "id": "food_005",
@@ -134,7 +139,8 @@ export const FOOD_ITEMS: Food[] = [
     "status": "active",
     "createdAt": "2025-05-01T10:00:00Z",
     "updatedAt": "2025-07-01T12:00:00Z",
-    "deletedAt": null
+    "deletedAt": null,
+    "price": 100
   },
   {
     "id": "food_006",
@@ -161,7 +167,8 @@ export const FOOD_ITEMS: Food[] = [
     "status": "active",
     "createdAt": "2025-02-20T11:45:00Z",
     "updatedAt": "2025-07-01T12:00:00Z",
-    "deletedAt": null
+    "deletedAt": null,
+    "price": 100
   },
   {
     "id": "food_007",
@@ -188,7 +195,8 @@ export const FOOD_ITEMS: Food[] = [
     "status": "active",
     "createdAt": "2025-03-15T09:20:00Z",
     "updatedAt": "2025-07-01T12:00:00Z",
-    "deletedAt": null
+    "deletedAt": null,
+    "price": 100
   },
   {
     "id": "food_008",
@@ -215,7 +223,8 @@ export const FOOD_ITEMS: Food[] = [
     "status": "active",
     "createdAt": "2025-04-25T14:10:00Z",
     "updatedAt": "2025-07-01T12:00:00Z",
-    "deletedAt": null
+    "deletedAt": null,
+    "price": 100
   },
   {
     "id": "food_009",
@@ -242,7 +251,8 @@ export const FOOD_ITEMS: Food[] = [
     "status": "active",
     "createdAt": "2025-05-10T07:50:00Z",
     "updatedAt": "2025-07-01T12:00:00Z",
-    "deletedAt": null
+    "deletedAt": null,
+    "price": 100
   },
   {
     "id": "food_010",
@@ -269,6 +279,7 @@ export const FOOD_ITEMS: Food[] = [
     "status": "active",
     "createdAt": "2025-01-20T16:30:00Z",
     "updatedAt": "2025-07-01T12:00:00Z",
-    "deletedAt": null
+    "deletedAt": null,
+    "price": 100
   }
 ]

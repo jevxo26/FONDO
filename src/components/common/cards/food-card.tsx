@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Heart, Star, Clock, ShoppingBag, ArrowUpRight } from "lucide-react";
-import AddToCartButton from "./Button/AddToCartButton";
+import AddToCartButton from "../../shared/Button/AddToCartButton";
 import Link from "next/link";
 
 export default function FoodCard({ food }: { food: any }) {
@@ -25,7 +25,6 @@ export default function FoodCard({ food }: { food: any }) {
                         <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-primary">
                             <ShoppingBag className="size-4 text-foreground" />
                         </div>              <span className="font-sans text-xs font-medium">2 items &middot; ৳520</span>
-                        <span className="ml-1 flex size-4 rotate-45 items-center justify-center rounded-full bg-white/20 text-[10px]"></span>
                         <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-white/20">
                             <Link href={`/foods/${food.id}`} className="flex items-center justify-center">
                                 <ArrowUpRight className="size-5 text-white" />

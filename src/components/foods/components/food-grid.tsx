@@ -1,4 +1,4 @@
-import FoodCard from "@/components/shared/FoodCard";
+import FoodCard from "@/components/common/cards/food-card";
 
 export default function FoodGrid({ foods }: { foods: any[] }) {
   return (
@@ -7,7 +7,7 @@ export default function FoodGrid({ foods }: { foods: any[] }) {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {foods.map((food, index) => (
             <FoodCard 
-              key={food.id} 
+              key={index} 
               food={food} 
             />
           ))}

@@ -1,6 +1,6 @@
-import Categories from "@/components/foods/menu/categories";
-import FoodGrid from "@/components/foods/menu/food-grid";
-import Pagination from "@/components/foods/menu/pagination";
+import Categories from "@/components/foods/components/categories";
+import FoodGrid from "@/components/foods/components/food-grid";
+import Pagination from "@/components/foods/components/pagination";
 
 async function getFoods() {
   const res = await fetch("https://dummyjson.com/products", {
@@ -13,7 +13,6 @@ async function getFoods() {
 
 export default async function CategoriesPage() {
   const foods = await getFoods();
-console.log(foods)
   return (
     <main className="min-h-screen bg-background pb-16">
       <section className="py-12 lg:py-16">

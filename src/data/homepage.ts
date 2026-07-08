@@ -217,3 +217,11 @@ export const CTA = {
   primaryButton: { label: 'Order Now', href: '/foods' },
   secondaryButton: { label: 'View Menu', href: '/foods' },
 };
+
+export const BLOG_POSTS = [
+  { id: 1, title: 'Street Food in Malaysia', image: '/images/home/blog_1.png' },
+  { id: 2, title: 'Chicken Curry for Bachelors', image: '/images/home/blog_2.png' },
+  { id: 3, title: 'Mughlai Kitchen Secrets', image: '/images/home/blog_3.png' },
+  { id: 4, title: 'Authentic Kacchi Recipe', image: '/images/home/blog_2.png' },
+  { id: 5, title: 'Dhaka Food Tour', image: '/images/home/blog_1.png' },
+];

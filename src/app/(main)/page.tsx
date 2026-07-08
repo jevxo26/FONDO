@@ -5,6 +5,7 @@ import {
   BestSellers,
   SignatureDish,
   Combos,
+  BlogReviews,
   ChefStory,
   Testimonials,
   CTABanner,
@@ -19,6 +20,7 @@ export default function Home() {
       <BestSellers />
       <SignatureDish />
       <Combos />
+      <BlogReviews />
       <ChefStory />
       <Testimonials />
       <CTABanner />

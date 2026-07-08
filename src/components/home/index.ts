@@ -4,6 +4,7 @@ export { PopularCategories } from "./popular-categories/popular-categories";
 export { BestSellers } from "./best-sellers/best-sellers";
 export { SignatureDish } from "./signature-dish/signature-dish";
 export { Combos } from "./combos/combos";
+export { BlogReviews } from "./blog-reviews/blog-reviews";
 export { ChefStory } from "./chef-story/chef-story";
 export { Testimonials } from "./testimonials/testimonials";
 export { CTABanner } from "./cta/cta-banner";

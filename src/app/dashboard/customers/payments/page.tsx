@@ -1,30 +1,36 @@
-import { Download, Plus } from "lucide-react";
+import { CreditCard, Download, Plus } from "lucide-react";
 import { transactions } from "@/data/payments";
-import { PaymentSummaryCards } from "@/components/dashboard/payments/payment-summary-cards";
-import { PaymentTableSection } from "@/components/dashboard/payments/payment-table-section";
-import { PaymentInsightCards } from "@/components/dashboard/payments/payment-insight-cards";
+import { PaymentSummaryCards } from "@/components/dashboard/customers/payments/payment-summary-cards";
+import { PaymentTableSection } from "@/components/dashboard/customers/payments/payment-table-section";
+import { PaymentInsightCards } from "@/components/dashboard/customers/payments/payment-insight-cards";
+import { Button } from "@/components/ui/button";
 
 export default function PaymentsPage() {
   return (
     <div>
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-        <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Financial Overview
-          </h2>
-          <p className="mt-2 text-muted-foreground">
-            Track and manage every financial interaction across the ecosystem.
-          </p>
+      <div className="flex items-center gap-6">
+        <div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10">
+          <CreditCard className="size-8 text-primary" />
         </div>
-        <div className="flex gap-3">
-          <button className="flex items-center gap-2 rounded-full border border-foreground px-6 py-2.5 text-[11px] font-bold text-foreground transition-all hover:bg-foreground hover:text-white">
-            <Download className="size-[18px]" />
-            Export CSV
-          </button>
-          <button className="flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[11px] font-bold text-primary-foreground shadow-md transition-all hover:opacity-90 active:scale-95">
-            <Plus className="size-[18px]" />
-            Manual Refund
-          </button>
+        <div className="flex flex-1 flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="font-fraunces text-4xl font-bold text-foreground">
+              Financial Overview
+            </h2>
+            <p className="mt-2 text-muted-foreground">
+              Track and manage every financial interaction across the ecosystem.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Button variant="outline" className="rounded-full">
+              <Download className="size-[18px]" />
+              Export CSV
+            </Button>
+            <Button className="rounded-full">
+              <Plus className="size-[18px]" />
+              Manual Refund
+            </Button>
+          </div>
         </div>
       </div>
 

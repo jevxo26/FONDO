@@ -3,7 +3,9 @@ import { FilterBar } from "@/components/dashboard/customers/orders/filter-bar";
 import { ContextCards } from "@/components/dashboard/customers/orders/context-cards";
 import { OrdersTableSection } from "@/components/dashboard/customers/orders/orders-table-section";
 import { orders } from "@/data/orders";
-import { Download, Plus, X } from "lucide-react";
+import { Download, Plus, ShoppingBag, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { StatCard } from "@/components/common/cards/stat-card";
 
 export default async function CustomerOrdersPage({
   searchParams,
@@ -32,28 +34,33 @@ export default async function CustomerOrdersPage({
 
   return (
     <div>
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-        <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Customer Orders
-          </h2>
-          <p className="mt-2 text-muted-foreground">
-            Manage and track all customer meal orders across Dhaka.
-          </p>
+      <div className="flex items-center gap-6">
+        <div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10">
+          <ShoppingBag className="size-8 text-primary" />
         </div>
-        <div className="flex gap-3">
-          <button className="flex items-center gap-2 rounded-full border border-foreground px-6 py-2.5 text-[11px] font-bold text-foreground transition-all hover:bg-foreground hover:text-white">
-            <Download className="size-[18px]" />
-            Export Report
-          </button>
-          <button className="flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[11px] font-bold text-primary-foreground shadow-md transition-all hover:opacity-90 active:scale-95">
-            <Plus className="size-[18px]" />
-            New Manual Order
-          </button>
+        <div className="flex flex-1 flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="font-fraunces text-4xl font-bold text-foreground">
+              Customer Orders
+            </h2>
+            <p className="mt-2 text-muted-foreground">
+              Manage and track all customer meal orders across Dhaka.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Button variant="outline" className="rounded-full">
+              <Download className="size-[18px]" />
+              Export Report
+            </Button>
+            <Button className="rounded-full">
+              <Plus className="size-[18px]" />
+              New Manual Order
+            </Button>
+          </div>
         </div>
       </div>
 
-      <div className="mt-8 grid grid-cols-4 gap-6">
+      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Total Orders" value={totalOrders} />
         <StatCard label="Pending" value={pending} />
         <StatCard label="In Progress" value={inProgress} />
@@ -84,13 +91,3 @@ export default async function CustomerOrdersPage({
   );
 }
 
-function StatCard({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
-      <p className="text-[13px] text-muted-foreground">{label}</p>
-      <p className="mt-1 font-fraunces text-2xl font-bold text-foreground">
-        {value}
-      </p>
-    </div>
-  );
-}

@@ -1,4 +1,3 @@
-import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -10,8 +9,7 @@ import next from 'next';
 import userRoutes from './routes/userRoutes';
 // import authRoutes from './routes/authRoutes';
 // import uploadRoutes from './routes/uploadRoutes';
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev, turbopack: true });

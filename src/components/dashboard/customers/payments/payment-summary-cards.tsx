@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 export function PaymentSummaryCards() {
   return (
     <div className="grid grid-cols-12 gap-6">
-      <div className="relative col-span-12 overflow-hidden rounded-xl bg-foreground p-8 shadow-lg md:col-span-7">
+      <div className="relative col-span-12 overflow-hidden rounded-xl bg-foreground p-4 shadow-lg md:p-6 md:col-span-7 lg:p-8">
         <div className="absolute right-0 top-0 p-4 opacity-10">
           <CreditCard className="size-32" />
         </div>
@@ -14,9 +14,9 @@ export function PaymentSummaryCards() {
           </p>
           <div className="mb-6 flex items-baseline gap-2">
             <span className="font-fraunces text-3xl font-bold text-primary">৳</span>
-            <h2 className="font-fraunces text-5xl font-bold text-white">1,42,850.00</h2>
+            <h2 className="font-fraunces text-3xl font-bold text-white md:text-5xl">1,42,850.00</h2>
           </div>
-          <div className="flex gap-6 border-t border-white/10 pt-6">
+          <div className="flex flex-wrap gap-6 border-t border-white/10 pt-6">
             <div>
               <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 Growth
@@ -42,7 +42,7 @@ export function PaymentSummaryCards() {
         </div>
       </div>
 
-      <div className="col-span-12 flex flex-col justify-between rounded-xl border border-border bg-card p-8 shadow-sm md:col-span-5">
+      <div className="col-span-12 flex flex-col justify-between rounded-xl border border-border bg-card p-4 shadow-sm md:col-span-5 md:p-6 lg:p-8">
         <div>
           <p className="mb-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
             Pending Payouts

@@ -5,6 +5,7 @@ import { OrdersTableSection } from "@/components/dashboard/customers/orders/orde
 import { orders } from "@/data/orders";
 import { Download, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { StatCard } from "@/components/common/cards/stat-card";
 
 export default async function CustomerOrdersPage({
   searchParams,
@@ -42,7 +43,7 @@ export default async function CustomerOrdersPage({
             Manage and track all customer meal orders across Dhaka.
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <Button variant="outline" className="rounded-full">
             <Download className="size-[18px]" />
             Export Report
@@ -85,13 +86,3 @@ export default async function CustomerOrdersPage({
   );
 }
 
-function StatCard({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
-      <p className="text-[13px] text-muted-foreground">{label}</p>
-      <p className="mt-1 font-fraunces text-2xl font-bold text-foreground">
-        {value}
-      </p>
-    </div>
-  );
-}

@@ -13,11 +13,11 @@ export default function CustomersPage() {
 
   return (
     <div>
-      <div className="flex items-end justify-between">
+      <div className="flex flex-col items-start gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <h2 className="font-fraunces text-4xl font-bold text-foreground">Customer Operations</h2>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <Button variant="outline" className="rounded-full">
             <Download className="size-[18px]" />
             Export List

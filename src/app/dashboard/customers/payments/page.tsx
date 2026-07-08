@@ -17,7 +17,7 @@ export default function PaymentsPage() {
             Track and manage every financial interaction across the ecosystem.
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <Button variant="outline" className="rounded-full">
             <Download className="size-[18px]" />
             Export CSV

@@ -20,11 +20,11 @@ export function CustomerCard({ customer }: CustomerCardProps) {
   return (
     <Link
       href={`/dashboard/customers/orders?customer=${encodeURIComponent(customer.fullName)}`}
-      className="group relative block rounded-xl border border-border bg-card p-6 transition-all hover:shadow-lg"
+      className="group relative block rounded-xl border border-border bg-card p-4 transition-all hover:shadow-lg md:p-6"
     >
       <div className="mb-4 flex items-start justify-between">
         <div className="flex gap-4">
-          <div className="flex size-14 items-center justify-center rounded-full bg-primary/20 text-lg font-bold text-primary">
+          <div className="flex size-12 items-center justify-center rounded-full bg-primary/20 text-lg font-bold text-primary md:size-14">
             {initials}
           </div>
           <div>

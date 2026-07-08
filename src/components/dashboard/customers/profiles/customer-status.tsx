@@ -12,7 +12,7 @@ export function StatusMetrics({
   const activePercent = Math.round((activeCount / totalCustomers) * 100);
 
   return (
-    <section className="rounded-2xl border border-border bg-card p-6">
+    <section className="rounded-2xl border border-border bg-card p-4 md:p-6">
       <h4 className="mb-6 font-semibold text-foreground">Customer Status</h4>
       <div className="space-y-4">
         <div>

@@ -3,7 +3,7 @@ import { TrendingUp, PersonStanding, Wallet } from 'lucide-react';
 export function WalletSummaryCards() {
   return (
     <div className="grid grid-cols-12 gap-6">
-      <div className="relative col-span-12 overflow-hidden rounded-xl bg-foreground p-8 shadow-lg lg:col-span-5">
+      <div className="relative col-span-12 overflow-hidden rounded-xl bg-foreground p-4 shadow-lg md:p-6 lg:p-8 lg:col-span-5">
         <div className="absolute right-0 top-0 p-4 opacity-10">
           <Wallet className="size-32" />
         </div>
@@ -14,7 +14,7 @@ export function WalletSummaryCards() {
             </p>
             <div className="mb-2 flex items-baseline gap-2">
               <span className="font-fraunces text-3xl font-bold text-primary">৳</span>
-              <h2 className="font-fraunces text-5xl font-bold text-white">48,92,150</h2>
+              <h2 className="font-fraunces text-3xl font-bold text-white md:text-5xl">48,92,150</h2>
             </div>
             <p className="flex items-center gap-1.5 text-sm font-bold text-success">
               <TrendingUp className="size-4" />
@@ -36,7 +36,7 @@ export function WalletSummaryCards() {
         <div className="absolute -right-20 -top-20 size-64 rounded-full bg-primary opacity-10 blur-3xl" />
       </div>
 
-      <div className="col-span-12 flex flex-col justify-between rounded-xl border border-border bg-card p-8 shadow-sm md:col-span-6 lg:col-span-3">
+      <div className="col-span-12 flex flex-col justify-between rounded-xl border border-border bg-card p-4 shadow-sm md:col-span-6 md:p-6 lg:p-8 lg:col-span-3">
         <div>
           <div className="mb-6 flex size-12 items-center justify-center rounded-2xl bg-secondary text-primary">
             <PersonStanding className="size-6" />
@@ -51,7 +51,7 @@ export function WalletSummaryCards() {
         </p>
       </div>
 
-      <div className="relative col-span-12 flex flex-col rounded-xl border border-border bg-card p-8 shadow-sm md:col-span-6 lg:col-span-4">
+      <div className="relative col-span-12 flex flex-col rounded-xl border border-border bg-card p-4 shadow-sm md:col-span-6 md:p-6 lg:p-8 lg:col-span-4">
         <div className="mb-6 flex items-start justify-between">
           <div>
             <p className="mb-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">

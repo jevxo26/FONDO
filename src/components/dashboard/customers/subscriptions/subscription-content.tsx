@@ -6,6 +6,7 @@ import { subscriptionColumns } from '@/components/dashboard/customers/subscripti
 import { SubscriptionContextCards } from '@/components/dashboard/customers/subscriptions/subscription-context-cards';
 import type { Subscription } from '@/data/subscriptions';
 import { subscriptions } from '@/data/subscriptions';
+import { StatCard } from '@/components/common/cards/stat-card';
 import { Eye, Pause, XCircle } from 'lucide-react';
 
 const statusFilter: FacetedFilter = {
@@ -72,11 +73,3 @@ export function SubscriptionContent() {
   );
 }
 
-function StatCard({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
-      <p className="text-[13px] text-muted-foreground">{label}</p>
-      <p className="mt-1 font-fraunces text-2xl font-bold text-foreground">{value}</p>
-    </div>
-  );
-}

@@ -8,14 +8,14 @@ interface WalletCardProps {
 
 export function WalletCard({ totalHoldings, pendingRefunds }: WalletCardProps) {
   return (
-    <section className="relative overflow-hidden rounded-2xl bg-foreground p-8 text-white shadow-xl">
+    <section className="relative overflow-hidden rounded-2xl bg-foreground p-4 text-white shadow-xl md:p-6 lg:p-8">
       <div className="relative z-10">
         <div className="mb-6 flex items-start justify-between">
           <div>
             <p className="mb-1 text-xs font-bold uppercase tracking-widest text-primary">
               Total Assets
             </p>
-            <h4 className="font-fraunces text-4xl font-bold">
+            <h4 className="font-fraunces text-2xl font-bold md:text-4xl">
               ৳{(totalHoldings + pendingRefunds).toLocaleString()}
             </h4>
           </div>

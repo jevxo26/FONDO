@@ -1,25 +1,22 @@
-import { Gift, Smartphone, CreditCard, Landmark } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Gift, Smartphone, CreditCard, Landmark } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { DarkCard } from '@/components/common/cards/dark-card';
 
 export function WalletInsightCards() {
   return (
     <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-3">
-      <div className="relative overflow-hidden rounded-2xl bg-primary p-8 text-primary-foreground">
-        <h3 className="font-fraunces text-2xl font-bold leading-tight">
-          Seasonal Loyalty Drive
-        </h3>
-        <p className="mb-6 mt-2 text-sm opacity-90">
-          Auto-credit ৳500 to all Platinum members who haven&apos;t ordered in 30 days.
-        </p>
-        <Button className="w-full rounded-full">
+      <DarkCard
+        variant="primary"
+        icon={<Gift className="size-32" />}
+        title="Seasonal Loyalty Drive"
+        description="Auto-credit ৳500 to all Platinum members who haven't ordered in 30 days."
+      >
+        <Button variant={'outline'} className="w-full rounded-full">
           Launch Bulk Reward
         </Button>
-        <div className="absolute -bottom-4 -right-4 opacity-10">
-          <Gift className="size-32" />
-        </div>
-      </div>
+      </DarkCard>
 
-      <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
+      <div className="rounded-2xl border border-border bg-card p-4 shadow-sm md:p-6 lg:p-8">
         <h3 className="mb-6 font-fraunces text-lg font-bold text-foreground">
           Wallet Distribution by Tier
         </h3>
@@ -54,10 +51,8 @@ export function WalletInsightCards() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-dashed border-border bg-secondary/50 p-8">
-        <h3 className="mb-4 font-fraunces text-lg font-bold text-foreground">
-          Top-Up Channels
-        </h3>
+      <div className="rounded-2xl border border-dashed border-border bg-secondary/50 p-4 md:p-6 lg:p-8">
+        <h3 className="mb-4 font-fraunces text-lg font-bold text-foreground">Top-Up Channels</h3>
         <div className="flex flex-wrap gap-3">
           <div className="flex items-center gap-2 rounded-full border border-border/30 bg-card px-4 py-2 text-sm shadow-sm">
             <Smartphone className="size-4 text-success" />

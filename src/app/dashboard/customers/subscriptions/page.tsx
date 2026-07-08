@@ -3,7 +3,7 @@ import { SubscriptionContent } from '@/components/dashboard/customers/subscripti
 export default function SubscriptionsPage() {
   return (
     <div>
-      <div className="flex items-end justify-between">
+      <div className="flex flex-col items-start gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <h2 className="font-fraunces text-4xl font-bold text-foreground">
             Subscription Management

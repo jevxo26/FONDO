@@ -8,7 +8,7 @@ interface TransactionListProps {
 
 export function TransactionList({ transactions }: TransactionListProps) {
   return (
-    <section className="rounded-2xl border border-border bg-card p-6">
+    <section className="rounded-2xl border border-border bg-card p-4 md:p-6">
       <div className="mb-6 flex items-center justify-between">
         <h4 className="font-semibold text-foreground">Recent Transactions</h4>
         <Button variant="link" className="h-auto p-0 text-xs font-bold">

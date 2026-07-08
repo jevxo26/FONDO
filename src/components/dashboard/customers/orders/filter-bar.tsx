@@ -10,12 +10,12 @@ const statusFilters = [
 
 export function FilterBar() {
   return (
-    <div className="mb-8 flex flex-wrap items-center gap-6 rounded-xl border border-border/30 bg-white/70 p-6 backdrop-blur-sm">
+    <div className="mb-8 flex flex-wrap items-center gap-6 rounded-xl border border-border/30 bg-white/70 p-4 backdrop-blur-sm md:p-6">
       <div className="flex flex-col gap-2">
         <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
           Order Status
         </span>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {statusFilters.map((filter, i) => (
             <button
               key={filter}

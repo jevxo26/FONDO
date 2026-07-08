@@ -17,7 +17,7 @@ export default function WalletsPage() {
             Oversee liquidity across the ecosystem. Manage rewards, monitor top-ups, and analyze spending patterns.
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <Button variant="outline" className="rounded-full">
             <Download className="size-[18px]" />
             Export Logs

@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import { PrismaClient } from '@prisma/client';
 // import path from 'path';
 import userRoutes from './routes/userRoutes';
+import foodRoutes from './routes/foodRoutes';
 // import authRoutes from './routes/authRoutes';
 // import uploadRoutes from './routes/uploadRoutes';
 const prisma = new PrismaClient();
@@ -43,6 +44,7 @@ app.prepare().then(async () => {
   });
 
   server.use('/api/users', userRoutes);
+  server.use('/api/food', foodRoutes);
   // server.use('/api/auth', authRoutes);
   // server.use('/api/upload', uploadRoutes);
 

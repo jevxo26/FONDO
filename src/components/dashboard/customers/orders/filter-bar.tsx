@@ -1,3 +1,5 @@
+"use client";
+
 import { TogglePill } from '@/components/common/toggle-pill';
 import { Calendar } from 'lucide-react';
 

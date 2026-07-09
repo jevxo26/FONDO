@@ -5,10 +5,10 @@ export function BlogReviews() {
   return (
     <section className="py-12">
       <div className="wrapper">
-        <h2 className="text-center font-sans text-[32px] font-bold leading-[130%] text-foreground">
+        <h2 className="text-center font-sans text-2xl font-bold leading-[130%] text-foreground sm:text-3xl lg:text-[32px]">
           Our BlogsReview
         </h2>
-        <div className="mt-6 flex gap-6 overflow-x-auto pb-4">
+        <div className="mt-6 flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory">
           {BLOG_POSTS.map((post) => (
             <BlogReviewCard key={post.id} post={post} />
           ))}

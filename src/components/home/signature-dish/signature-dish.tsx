@@ -43,7 +43,7 @@ export function SignatureDish() {
               ))}
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               <Button
                 size="lg"
                 className="gap-2 h-auto py-3 px-4 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"

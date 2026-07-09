@@ -19,7 +19,7 @@ export function ComboCard({ combo, className }: ComboCardProps) {
   return (
     <div
       className={cn(
-        "flex w-[289px] shrink-0 flex-col rounded-[20px] border border-border bg-card p-5",
+        "flex w-[80vw] shrink-0 flex-col rounded-[20px] border border-border bg-card p-5 sm:w-[289px] snap-start",
         className
       )}
     >

@@ -48,7 +48,7 @@ export function ChefStory() {
               <span className="text-xs font-semibold uppercase tracking-[2.534px] text-foreground/60">
                 {CHEF_STORY.label}
               </span>
-              <h2 className="font-fraunces text-[48px] leading-tight tracking-[-0.96px] text-foreground">
+              <h2 className="font-fraunces text-3xl leading-tight tracking-[-0.96px] text-foreground sm:text-4xl lg:text-[48px]">
                 {CHEF_STORY.name}
               </h2>
               <p className="text-base leading-relaxed text-foreground/65">

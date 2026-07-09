@@ -2,8 +2,6 @@ import { Flame, Leaf, ShieldCheck, Truck } from 'lucide-react';
 
 export const TRUST_FEATURES = [
   { icon: Leaf, label: 'Fresh daily' },
-  { icon: Leaf, label: 'Fresh daily' },
-  { icon: Leaf, label: 'Fresh daily' },
   { icon: ShieldCheck, label: '100% Halal' },
   { icon: Truck, label: 'Fast delivery' },
   { icon: Flame, label: 'Coal slow oven' },

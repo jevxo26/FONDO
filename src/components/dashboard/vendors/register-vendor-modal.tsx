@@ -52,8 +52,8 @@ export function RegisterVendorModal() {
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button>+ Register New Vendor</Button>
+      <DialogTrigger render={<Button />}>
+        + Register New Vendor
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-md">

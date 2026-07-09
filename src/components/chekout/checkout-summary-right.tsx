@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowUpRight, ShieldCheck, Truck } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface CheckoutSummaryProps {
   subtotal: number;
@@ -43,18 +44,20 @@ export function CheckoutSummary({ subtotal, deliveryFee, savings, isSubmitting }
       </div>
 
       {/* Place Order CTA Button */}
-      <button
+      <Button
         type="submit"
         disabled={isSubmitting}
-        className="flex w-full items-center justify-between rounded-full bg-[#16100C] py-3.5 pl-6 pr-3.5 text-white transition-all hover:bg-[#2C241E] dark:bg-foreground dark:text-background disabled:opacity-50"
+        variant="accent"
+        size="xl"
+        className="w-full justify-between rounded-full pl-6 pr-3.5"
       >
         <span className="font-sans text-sm font-semibold tracking-wide capitalize">
           {isSubmitting ? "Processing..." : "Place Order"}
         </span>
-        <div className="flex size-7 items-center justify-center rounded-full bg-[#CEA359] text-[#1B0E08]">
+        <div className="flex size-7 items-center justify-center rounded-full bg-primary text-primary-foreground">
           <ArrowUpRight className="size-4 stroke-[2.5]" />
         </div>
-      </button>
+      </Button>
 
       {/* Security Micro-Badges */}
       <div className="flex items-center justify-center gap-5 text-[11px] font-sans text-muted-foreground/80 pt-1 border-t border-border/30">
@@ -62,7 +65,7 @@ export function CheckoutSummary({ subtotal, deliveryFee, savings, isSubmitting }
           <ShieldCheck className="size-3.5 text-emerald-600" /> 100% Secure
         </div>
         <div className="flex items-center gap-1">
-          <Truck className="size-3.5 text-[#CEA359]" /> Safe Delivery
+          <Truck className="size-3.5 text-primary" /> Safe Delivery
         </div>
       </div>
     </div>

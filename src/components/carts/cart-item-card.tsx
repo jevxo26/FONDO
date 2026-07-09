@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Plus, Minus, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { CartItem } from "@/types/cart";
 
 interface CartItemCardProps {
@@ -46,32 +47,38 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove }: CartItemCardP
           </div>
 
           {/* Delete Action Item Top Corner */}
-          <button 
+          <Button
+            variant="ghost"
+            size="icon-sm"
             onClick={() => onRemove(item.id)}
-            className="text-muted-foreground/60 transition-colors hover:text-destructive p-1"
+            className="text-muted-foreground/60 hover:text-destructive"
           >
             <Trash2 className="size-4 stroke-[2]" />
-          </button>
+          </Button>
         </div>
 
         {/* Counter controls + Final localized price tracking inline */}
         <div className="flex items-center justify-between gap-4 mt-auto">
           <div className="flex items-center border border-border bg-white rounded-xl overflow-hidden dark:bg-muted/10">
-            <button
+            <Button
+              variant="ghost"
+              size="icon-xs"
               onClick={() => onUpdateQuantity(item.id, Math.max(1, item.quantity - 1))}
-              className="px-2.5 py-1.5 text-muted-foreground hover:bg-muted dark:hover:bg-muted/20 transition-colors"
+              className="rounded-none px-2.5"
             >
               <Minus className="size-3" />
-            </button>
+            </Button>
             <span className="w-8 text-center font-sans text-xs font-semibold text-foreground select-none">
               {item.quantity}
             </span>
-            <button
+            <Button
+              variant="ghost"
+              size="icon-xs"
               onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-              className="px-2.5 py-1.5 text-muted-foreground hover:bg-muted dark:hover:bg-muted/20 transition-colors"
+              className="rounded-none px-2.5"
             >
               <Plus className="size-3" />
-            </button>
+            </Button>
           </div>
 
           {/* Dynamic line calculation display text */}

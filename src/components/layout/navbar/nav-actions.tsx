@@ -4,6 +4,7 @@ import { useAppDispatch } from "@/store/store";
 import { toggleMobileMenu } from "@/store/slices/uiSlice";
 import { Heart, Menu, ShoppingCart, Truck } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function NavActions() {
   const dispatch = useAppDispatch();
@@ -35,14 +36,15 @@ export function NavActions() {
       >
         Order Now
       </Link>
-      <button
-        type="button"
+      <Button
+        variant="ghost"
+        size="icon"
         onClick={() => dispatch(toggleMobileMenu())}
-        className="flex size-9 items-center justify-center rounded-full transition-colors hover:bg-black/5 lg:hidden"
+        className="rounded-full hover:bg-black/5 lg:hidden"
         aria-label="Open menu"
       >
-        <Menu className="size-5 text-foreground" />
-      </button>
+        <Menu className="size-5" />
+      </Button>
     </div>
   );
 }

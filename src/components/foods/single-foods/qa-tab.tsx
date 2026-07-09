@@ -1,6 +1,8 @@
 import { mockFAQs } from "@/data/faq";
 import { FAQ } from "@/types/faq";
 import { CornerDownRight, MessageSquare, Send } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const QaTab = () => {
   return (
@@ -14,15 +16,19 @@ const QaTab = () => {
         </h4>
 
         <div className="relative w-full">
-          <input
+          <Input
             type="text"
             placeholder="Ask about ingredients, portion size, catering..."
-            className="h-12 w-full rounded-xl bg-white border border-border pl-4 pr-14 font-sans text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary dark:bg-card"
+            className="pr-14 bg-white dark:bg-card"
           />
 
-          <button className="absolute right-1.5 top-1.5 flex size-9 items-center justify-center rounded-lg bg-[#CEA359] text-[#1B0E08] transition-transform active:scale-95 hover:bg-[#bfa052]">
+          <Button
+            variant="default"
+            size="icon"
+            className="absolute right-1.5 top-1.5 size-9 rounded-lg active:scale-95"
+          >
             <Send className="size-4" />
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -56,7 +62,7 @@ const QaTab = () => {
                         Food Flow Kitchen
                       </span>
 
-                      <span className="rounded bg-[#CEA359]/20 px-2 py-0.5 font-sans text-[10px] font-medium text-[#1B0E08] dark:text-white border border-[#CEA359]/30">
+                      <span className="rounded bg-primary/20 px-2 py-0.5 font-sans text-[10px] font-medium text-primary-foreground dark:text-white border border-primary/30">
                         Chef
                       </span>
                     </div>
@@ -66,8 +72,8 @@ const QaTab = () => {
                     </span>
                   </div>
 
-                  <p className="font-sans text-sm text-muted-foreground bg-[#16100C]/5 dark:bg-white/5 p-3 rounded-xl border border-border/30 leading-relaxed">
-                    <span className="font-bold text-[#CEA359] mr-1">A:</span>
+                  <p className="font-sans text-sm text-muted-foreground bg-foreground/5 dark:bg-white/5 p-3 rounded-xl border border-border/30 leading-relaxed">
+                    <span className="font-bold text-primary mr-1">A:</span>
                     {item.answer}
                   </p>
                 </div>

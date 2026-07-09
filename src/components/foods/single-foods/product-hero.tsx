@@ -11,6 +11,7 @@ import {
   ShoppingCart,
   MessageSquare,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Food } from "@/types/food";
 
 export function ProductHero({ food }: { food: Food }) {
@@ -40,9 +41,9 @@ export function ProductHero({ food }: { food: Food }) {
                 &middot; {food.status === "active" ? "In stock" : "Out of stock"}
               </span>
 
-              <button className="flex size-9 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-sm hover:text-destructive dark:bg-card">
+              <Button variant="ghost" size="icon" className="rounded-full border border-border bg-white shadow-sm hover:text-destructive dark:bg-card">
                 <Heart className="size-4" />
-              </button>
+              </Button>
             </div>
 
             <h1 className="mt-3 font-fraunces text-3xl font-normal tracking-tight text-secondary-foreground sm:text-4xl leading-tight">
@@ -69,9 +70,9 @@ export function ProductHero({ food }: { food: Food }) {
 
               <span>&middot;</span>
 
-              <button className="inline-flex items-center gap-1 hover:text-foreground">
+              <Button variant="ghost" size="sm" className="h-auto gap-1 p-0 hover:text-foreground">
                 <Share2 className="size-3.5" /> Share
-              </button>
+              </Button>
             </div>
 
             <div className="mt-6 flex items-baseline gap-3">
@@ -135,25 +136,29 @@ export function ProductHero({ food }: { food: Food }) {
               </span>
 
               <div className="flex items-center border border-border bg-white rounded-xl overflow-hidden dark:bg-card">
-                <button
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={() =>
                     setQuantity((prev) => Math.max(1, prev - 1))
                   }
-                  className="p-2.5 text-muted-foreground hover:bg-muted transition-colors"
+                  className="p-2.5 rounded-none"
                 >
                   <Minus className="size-3.5" />
-                </button>
+                </Button>
 
                 <span className="w-10 text-center font-sans text-sm font-semibold text-foreground select-none">
                   {quantity}
                 </span>
 
-                <button
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={() => setQuantity((prev) => prev + 1)}
-                  className="p-2.5 text-muted-foreground hover:bg-muted transition-colors"
+                  className="p-2.5 rounded-none"
                 >
                   <Plus className="size-3.5" />
-                </button>
+                </Button>
               </div>
 
               <span className="text-xs text-muted-foreground">
@@ -163,20 +168,32 @@ export function ProductHero({ food }: { food: Food }) {
 
             {/* Core Page Primary Action Group */}
             <div className="mt-8 grid grid-cols-2 gap-4">
-              <button className="flex h-12 items-center justify-center gap-2 rounded-2xl border border-primary bg-primary/5 font-sans text-sm font-semibold text-primary transition-colors hover:bg-primary/10">
+              <Button
+                variant="outline"
+                size="xl"
+                className="gap-2 rounded-2xl border-primary bg-primary/5 text-primary hover:bg-primary/10"
+              >
                 <ShoppingCart className="size-4" />
                 Add to cart
-              </button>
+              </Button>
 
-              <button className="flex h-12 items-center justify-center rounded-2xl bg-[#CEA359] font-sans text-sm font-semibold text-[#1B0E08] transition-colors hover:bg-[#bfa052]">
+              <Button
+                variant="default"
+                size="xl"
+                className="rounded-2xl"
+              >
                 Buy Now
-              </button>
+              </Button>
             </div>
 
-            <button className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#CEA359]/20 border border-primary/30 font-sans text-sm font-semibold text-[#1B0E08] dark:text-white transition-colors hover:bg-[#CEA359]/30">
+            <Button
+              variant="outline"
+              size="xl"
+              className="mt-4 w-full gap-2 rounded-2xl border-primary/30 bg-primary/20 text-primary-foreground hover:bg-primary/30 dark:text-white"
+            >
               <MessageSquare className="size-4 text-primary" />
               Order Directly via WhatsApp
-            </button>
+            </Button>
           </div>
         </div>
       </div>

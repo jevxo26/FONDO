@@ -1,10 +1,10 @@
-import FoodCard from "@/components/common/cards/food-card";
-import { SectionHeader } from "@/components/common/section-header";
-import { Button } from "@/components/ui/button";
-import { BEST_SELLERS } from "@/data/homepage";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
-import type { Food } from "@/types/food";
+import FoodCard from '@/components/common/cards/food-card/food-card';
+import { SectionHeader } from '@/components/common/section-header';
+import { Button } from '@/components/ui/button';
+import { BEST_SELLERS } from '@/data/homepage';
+import type { Food } from '@/types/food';
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 function toFood(item: (typeof BEST_SELLERS)[number]): Food {
   return {
@@ -14,25 +14,25 @@ function toFood(item: (typeof BEST_SELLERS)[number]): Food {
     shortDescription: item.description,
     description: item.description,
     thumbnail: item.thumbnail,
-    slug: item.title.toLowerCase().replace(/\s+/g, "-"),
+    slug: item.title.toLowerCase().replace(/\s+/g, '-'),
     preparationTime: parseInt(item.time) || 30,
     coverImage: item.thumbnail,
     calories: 0,
     protein: 0,
     fat: 0,
     carbohydrate: 0,
-    servingSize: "",
-    foodType: "",
-    spiceLevel: "",
+    servingSize: '',
+    foodType: '',
+    spiceLevel: '',
     isFeatured: false,
     isPopular: true,
     isRecommended: false,
-    status: "active",
-    categoryId: "",
-    subCategoryId: "",
-    foodCode: "",
-    createdAt: "",
-    updatedAt: "",
+    status: 'active',
+    categoryId: '',
+    subCategoryId: '',
+    foodCode: '',
+    createdAt: '',
+    updatedAt: '',
     deletedAt: null,
   };
 }

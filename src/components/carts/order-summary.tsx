@@ -1,6 +1,8 @@
 "use client";
 
 import { Ticket, ArrowUpRight, ShieldCheck, Truck } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface OrderSummaryProps {
   subtotal: number;
@@ -41,14 +43,17 @@ export function OrderSummary({ subtotal, savings, deliveryCharges }: OrderSummar
         <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground flex items-center">
           <Ticket className="size-4 stroke-[1.8]" />
         </div>
-        <input
+        <Input
           type="text"
           placeholder="Coupon code"
-          className="h-11 w-full rounded-full border border-border bg-muted/20 pl-11 pr-24 font-sans text-xs focus:outline-none focus:ring-1 focus:ring-primary dark:bg-muted/5"
+          className="rounded-full pl-11 pr-24 bg-muted/20 dark:bg-muted/5"
         />
-        <button className="absolute right-1 top-1 h-9 rounded-full bg-[#CEA359] px-5 font-sans text-xs font-semibold text-[#1B0E08] hover:bg-[#bfa052] transition-colors">
+        <Button
+          variant="default"
+          className="absolute right-1 top-1 h-9 rounded-full px-5 text-xs font-semibold"
+        >
           Apply
-        </button>
+        </Button>
       </div>
 
       {/* Total Aggregate Row */}
@@ -58,12 +63,16 @@ export function OrderSummary({ subtotal, savings, deliveryCharges }: OrderSummar
       </div>
 
       {/* Primary Conversion Button Action */}
-      <button className="flex w-full items-center justify-between rounded-full bg-[#16100C] py-3.5 pl-6 pr-3.5 text-white transition-colors hover:bg-[#2C241E] dark:bg-foreground dark:text-background">
+      <Button
+        variant="accent"
+        size="xl"
+        className="w-full justify-between rounded-full pl-6 pr-3.5"
+      >
         <span className="font-sans text-sm font-semibold tracking-wide capitalize">checkout</span>
-        <div className="flex size-7 items-center justify-center rounded-full bg-primary text-[#1B0E08]">
+        <div className="flex size-7 items-center justify-center rounded-full bg-primary text-primary-foreground">
           <ArrowUpRight className="size-4 stroke-[2.5]" />
         </div>
-      </button>
+      </Button>
 
       {/* Operational Micro-Badges Trust Signals */}
       <div className="flex items-center justify-center gap-5 text-[11px] font-sans text-muted-foreground/80 pt-1 border-t border-border/30">

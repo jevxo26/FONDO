@@ -1,4 +1,5 @@
 import { ArrowRight, Check, Flame } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface ComboCardProps {
@@ -75,10 +76,10 @@ export function ComboCard({ combo, className }: ComboCardProps) {
           </span>
           <span className="text-[11px] text-foreground/45">all inclusive</span>
         </div>
-        <button className="flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-[12px] font-bold uppercase tracking-[0.6px] text-background transition-colors hover:bg-foreground/90">
+        <Button variant="accent" className="gap-2 rounded-full px-4 py-2 text-[12px] font-bold uppercase tracking-[0.6px] h-auto">
           Order Combo
           <ArrowRight className="size-3.5" />
-        </button>
+        </Button>
       </div>
     </div>
   );

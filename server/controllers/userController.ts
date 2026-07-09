@@ -2,6 +2,9 @@ import { Request, Response } from 'express';
 import { UserService } from '../services/userService';
 import { catchAsync } from '../utils/catchAsync';
 import { sendResponse } from '../utils/sendResponse';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const users = await UserService.getAllUsers();
@@ -13,11 +16,31 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 });
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
+  const { email, phone } = req.body;
+
+  const existingUser = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { email: email },
+        { phone: phone }
+      ]
+    }
+  });
+
+  if (existingUser) {
+    return sendResponse(res, {
+      statusCode: 400,
+      message: existingUser.email === email
+        ? 'Email is already registered'
+        : 'Phone number is already registered',
+    });
+  }
+
   await UserService.createUser(req.body);
 
   sendResponse(res, {
     statusCode: 201,
-    message: 'User created successfully',
+    message: 'User created successfully', 
   });
 });
 

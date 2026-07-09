@@ -57,22 +57,22 @@ colors:
   rating-star: '#F59E0B'
 typography:
   display:
-    fontFamily: Playfair Display
+    fontFamily: Fraunces
     fontSize: 40px
     fontWeight: '700'
     lineHeight: '1.2'
   headline-lg:
-    fontFamily: Playfair Display
+    fontFamily: Fraunces
     fontSize: 32px
     fontWeight: '700'
     lineHeight: '1.3'
   headline-lg-mobile:
-    fontFamily: Playfair Display
+    fontFamily: Fraunces
     fontSize: 28px
     fontWeight: '700'
     lineHeight: '1.3'
   headline-md:
-    fontFamily: Playfair Display
+    fontFamily: Fraunces
     fontSize: 24px
     fontWeight: '600'
     lineHeight: '1.4'
@@ -115,7 +115,7 @@ rounded:
   xl: 1.5rem
   full: 9999px
 spacing:
-  container-max: 1200px
+  container-max: 1440px
   section-v-space: 80px
   gutter: 24px
   margin-mobile: 16px
@@ -138,7 +138,7 @@ The palette is rooted in **Warm Cream (#FDF8F3)**, which serves as the primary c
 
 ## Typography
 
-This system employs a classic Serif/Sans-Serif pairing. **Playfair Display** is used for all headlines and brand moments to signal tradition and elegance. **Inter** handles all functional UI elements, body text, and labels to ensure maximum legibility and a contemporary, "precise" feel.
+This system employs a classic Serif/Sans-Serif pairing. **Fraunces** (loaded via `next/font/google` as `--font-fraunces`) is used for all headlines and brand moments to signal tradition and elegance. **Inter** (loaded as `--font-sans`) handles all functional UI elements, body text, and labels to ensure maximum legibility and a contemporary, "precise" feel.
 
 - **Headlines:** Use tighter line heights and bold weights to create visual impact.
 - **Labels:** Use Inter Semi-Bold with a slight letter spacing for form labels and category headers to distinguish them from standard body copy.
@@ -146,7 +146,7 @@ This system employs a classic Serif/Sans-Serif pairing. **Playfair Display** is 
 
 ## Layout & Spacing
 
-The layout follows a **Fixed Grid** model on desktop with a maximum width of 1200px, centering the content to create a focused, boutique experience. On mobile, it transitions to a single-column fluid layout with 16px side margins.
+The layout follows a **Fixed Grid** model on desktop with a maximum width of 1440px (via `.wrapper` utility class), centering the content to create a focused, boutique experience. On mobile, it transitions to a single-column fluid layout with 16px side margins.
 
 - **Vertical Rhythm:** Sections are separated by generous 80px gaps to emphasize the "Slow-cooked" brand ethos through whitespace.
 - **Stacking:** Elements within components (like input fields or food cards) use an 8px (sm) or 16px (md) vertical stack to maintain clean associations between labels, inputs, and descriptions.
@@ -188,3 +188,99 @@ The shape language is consistently **Rounded**, striking a balance between organ
 ### Cards & Feedback
 - **Food Cards:** White background with 16px corner radius. Image occupies the top half with a slight zoom on hover.
 - **Pills:** Active pills use the Near Black background to create a high-contrast focal point against the cream layout.
+
+---
+
+## Shadows (from `globals.css`)
+
+| Token | Value | Usage |
+|---|---|---|
+| `--shadow-card` | `0px 1px 2px rgba(30,26,22,0.04), 0px 8px 24px rgba(30,26,22,0.06)` | Default card elevation |
+| `--shadow-badge` | `0px 4px 8px rgba(30,26,22,0.05), 0px 24px 48px -12px rgba(30,26,22,0.18)` | Floating badges, tooltips |
+| `--shadow-elevated` | `0px 8px 24px -8px rgba(13,21,40,0.12), 0px 4px 8px -4px rgba(13,21,40,0.06)` | Hover states, popovers |
+
+Use the `cn()` helper and Tailwind's shadow utilities; avoid hardcoding `box-shadow` values in components.
+
+## Radius Scale (CSS variables in `globals.css`)
+
+| Token | Value | Element mapping |
+|---|---|---|
+| `--radius-sm` | `0.375rem` | Small chips, inline badges |
+| `--radius-md` | `0.5rem` | Input fields, checkboxes, small cards |
+| `--radius-lg` | `0.625rem` | Default radius (cards, dialogs) |
+| `--radius-xl` | `0.875rem` | Medium cards |
+| `--radius-2xl` | `1.125rem` | Large food cards |
+| `--radius-3xl` | `1.375rem` | Order summary containers |
+| `--radius-4xl` | `1.625rem` | Hero sections, prominent surfaces |
+| `--radius-full` | `9999px` | Pill buttons, avatar circles |
+
+## Fluid Spacing (from `globals.css`)
+
+| Token | Value |
+|---|---|
+| `--space-section` | `clamp(2rem, 1.5rem + 2.5vw, 5rem)` |
+| `--space-container` | `clamp(1rem, 0.5rem + 2vw, 3.75rem)` |
+
+Use `--space-section` for vertical gaps between major page sections. Use `--space-container` for horizontal padding and component-level spacing.
+
+## Dark Mode
+
+Dark mode is available via the `.dark` class on `<html>`. Colors defined under `.dark` in `globals.css`:
+
+| Token | Light | Dark |
+|---|---|---|
+| `--background` | `#FAF5EB` | `#1A1A1A` |
+| `--foreground` | `#16100C` | `#FAF5EB` |
+| `--card` | `#FFFFFF` | `#2C2C2C` |
+| `--card-foreground` | `#16100C` | `#FAF5EB` |
+| `--popover` | `#FFFFFF` | `#2C2C2C` |
+| `--popover-foreground` | `#16100C` | `#FAF5EB` |
+| `--primary` | `#CEA359` | `#CEA359` |
+| `--primary-foreground` | `#1B0E08` | `#1B0E08` |
+| `--secondary` | `#FBF5EB` | `#2C2C2C` |
+| `--secondary-foreground` | `#1B1612` | `#FAF5EB` |
+| `--muted` | `#F5F0E8` | `#2C2C2C` |
+| `--muted-foreground` | `#635C57` | `#9CA3AF` |
+| `--accent` | `#FBF5EB` | `#2C2C2C` |
+| `--accent-foreground` | `#1B1612` | `#FAF5EB` |
+| `--destructive` | `#EF4444` | `#EF4444` |
+| `--border` | `#DDD6CF` | `#3A3A3A` |
+| `--input` | `#DDD6CF` | `#3A3A3A` |
+| `--ring` | `#CEA359` | `#CEA359` |
+| `--sidebar` | `#FFFFFF` | `#1A1A1A` |
+| `--sidebar-foreground` | `#16100C` | `#FAF5EB` |
+| `--sidebar-primary` | `#CEA359` | `#CEA359` |
+| `--sidebar-primary-foreground` | `#1B0E08` | `#1B0E08` |
+| `--sidebar-accent` | `#FBF5EB` | `#2C2C2C` |
+| `--sidebar-accent-foreground` | `#1B1612` | `#FAF5EB` |
+| `--sidebar-border` | `#DDD6CF` | `#3A3A3A` |
+| `--sidebar-ring` | `#CEA359` | `#CEA359` |
+
+## Container `.wrapper`
+
+Defined as a `@layer utilities` class in `globals.css`:
+
+```css
+.wrapper {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1440px;
+  padding-inline: 1rem;
+}
+@media (width >= 40rem) {
+  .wrapper { padding-inline: 1.5rem; }
+}
+@media (width >= 64rem) {
+  .wrapper { padding-inline: 60px; }
+}
+```
+
+Apply `<div className="wrapper">` around section content to align with the grid.
+
+## Available shadcn Components (`src/components/ui/`)
+
+Style: **base-nova** | Icons: **Lucide** | RSC: **Yes**
+
+`avatar` · `badge` · `breadcrumb` · `button` · `card` · `checkbox` · `dialog` · `dropdown-menu` · `empty` · `field` · `input` · `label` · `pagination` · `popover` · `select` · `separator` · `sheet` · `sidebar` · `skeleton` · `sonner` · `table` · `tooltip`
+
+Add new ones with `npx shadcn@latest add @shadcn/<name>`.

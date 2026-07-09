@@ -1,8 +1,63 @@
-# Project Vision & Complete System Workflow
-
 # **FONDO – Smart Subscription Food Delivery Platform**
 
 ## **Project Vision & Complete System Workflow**
+
+---
+
+<div style="display: flex; gap: 40px;">
+<div>
+
+### Business & Workflow
+
+| # | Section |
+|---|---|
+| 1 | [Project Vision](#1-project-vision) |
+| 2 | [Business Model](#2-business-model) |
+| 3 | [System Actors](#3-system-actors) |
+| 4 | [Complete Business Workflow](#4-complete-business-workflow) |
+| 5 | [Customer Journey](#5-customer-journey) |
+| 6 | [Subscription Lifecycle](#6-subscription-lifecycle) |
+| 7 | [Daily Meal Generation](#7-daily-meal-generation) |
+| 8 | [Vendor Workflow](#8-vendor-workflow) |
+| 9 | [Kitchen Workflow](#9-kitchen-workflow) |
+| 10 | [Rider Workflow](#10-rider-workflow) |
+| 11 | [Customer Tracking](#11-customer-tracking) |
+| 12 | [Admin Management](#12-admin-management) |
+| 13 | [Hidden Vendor Architecture](#13-hidden-vendor-architecture) |
+| 14 | [Subscription Lifecycle](#14-subscription-lifecycle) |
+| 15 | [Live Delivery Tracking](#15-live-delivery-tracking) |
+| 16 | [Notification System](#16-notification-system) |
+| 17 | [Marketing System](#17-marketing-system) |
+| 18 | [Analytics Dashboard](#18-analytics-dashboard) |
+| 19 | [Recommended Technology Stack](#19-recommended-technology-stack) |
+| 20 | [High-Level System Architecture](#20-high-level-system-architecture) |
+| 21 | [Enterprise Modules](#21-enterprise-modules) |
+
+</div>
+<div>
+
+### Data Models
+
+| # | Module |
+|---|---|
+| 1 | [Authentication Module](#authentication-module) |
+| 2 | [Role & Permission Module](#role--permission-module) |
+| 3 | [Vendor Module](#vendor-module) |
+| 4 | [Food Catalog Module](#food-catalog-module) |
+| 5 | [Hidden Vendor Mapping Module](#hidden-vendor-mapping-module) |
+| 6 | [Meal Plan & Package Module](#meal-plan--package-module) |
+| 7 | [Cart & Order Module](#cart--order-module) |
+| 8 | [Payment, Wallet & Settlement Module](#payment-wallet--settlement-module) |
+| 9 | [Rider, Delivery, Route & Live Tracking Module](#rider-delivery-route--live-tracking-module) |
+| 10 | [Chat, Notification & Support Module](#chat-notification--support-module) |
+| 11 | [CMS, Analytics, Inventory, Audit & System Settings](#cms-analytics-inventory-audit--system-settings) |
+| 12 | [Subscription & Meal Lifecycle Module](#subscription--meal-lifecycle-module) |
+| 13 | [Marketing, Campaign, Referral & Loyalty Module](#marketing-campaign-referral--loyalty-module) |
+| 14 | [Reports, Business Intelligence & Data Warehouse](#reports-business-intelligence--data-warehouse) |
+| 15 | [Infrastructure, DevOps & System Operations Module](#infrastructure-devops--system-operations-module) |
+
+</div>
+</div>
 
 ---
 

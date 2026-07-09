@@ -5,6 +5,7 @@ export const TRUST_FEATURES = [
   { icon: ShieldCheck, label: '100% Halal' },
   { icon: Truck, label: 'Fast delivery' },
   { icon: Flame, label: 'Coal slow oven' },
+  { icon: Leaf, label: 'Fresh daily' },
 ];
 
 export const CATEGORY_CARDS = [

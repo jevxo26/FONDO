@@ -1,6 +1,7 @@
 import { VendorsTable } from "@/components/dashboard/vendors/vendors-table";
 import { VendorControls } from "@/components/dashboard/vendors/vendors-controls";
 import { BottomWidgets } from "@/components/dashboard/vendors/bottom-widgets";
+import { VendorApprovalQueue } from "@/components/dashboard/vendors/vendor-approval-queue";    
 import { Button } from "@/components/ui/button";
 import { vendors } from "@/data/vendors";
 import { Plus } from "lucide-react";
@@ -38,6 +39,9 @@ export default function VendorsPage() {
       <div className="mt-6">
         <BottomWidgets />
       </div>
+      <div className="mt-6">
+        <VendorApprovalQueue/>
+         </div>
     </div>
   );
 }

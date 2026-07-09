@@ -3,6 +3,8 @@ import { UserService } from '../services/userService';
 import { catchAsync } from '../utils/catchAsync';
 import { sendResponse } from '../utils/sendResponse';
 import { PrismaClient } from '@prisma/client';
+import AppError from '../utils/AppError';
+import { AuthRequest } from '../types/auth.types';
 
 const prisma = new PrismaClient();
 
@@ -40,12 +42,17 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     statusCode: 201,
-    message: 'User created successfully', 
+    message: 'User created successfully',
   });
 });
 
-const getUserById = catchAsync(async (req: Request, res: Response) => {
+const getUserById = catchAsync(async (req: AuthRequest, res: Response) => {
   const id = req.params.id as string;
+  const userId = req.user?.userId;
+
+  if (id !== userId) {
+    throw new AppError(403, 'You are not authorized to access this user information');
+  }
 
   const user = await UserService.getUserById(id);
 

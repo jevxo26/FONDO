@@ -4,6 +4,7 @@ import { BottomWidgets } from "@/components/dashboard/vendors/bottom-widgets";
 import { Button } from "@/components/ui/button";
 import { vendors } from "@/data/vendors";
 import { Plus } from "lucide-react";
+import { RegisterVendorModal } from "@/components/dashboard/vendors/register-vendor-modal";
 
 export default function VendorsPage() {
   return (
@@ -17,10 +18,11 @@ export default function VendorsPage() {
             Register, manage, and monitor vendor operations across the platform.
           </p>
         </div>
-        <Button className="rounded-full">
+        {/* <Button className="rounded-full">
           <Plus className="size-[18px]" />
           Register New Vendor
-        </Button>
+        </Button> */}
+        <RegisterVendorModal></RegisterVendorModal>
       </div>
 
       <div className="mt-6">

@@ -5,6 +5,8 @@ export { BestSellers } from "./best-sellers/best-sellers";
 export { SignatureDish } from "./signature-dish/signature-dish";
 export { Combos } from "./combos/combos";
 export { BlogReviews } from "./blog-reviews/blog-reviews";
+export { KitchenDining } from "./kitchen-dining/kitchen-dining";
 export { ChefStory } from "./chef-story/chef-story";
+export { ServiceBanner } from "./service-banner/service-banner";
 export { Testimonials } from "./testimonials/testimonials";
 export { CTABanner } from "./cta/cta-banner";

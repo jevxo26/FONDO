@@ -1,15 +1,16 @@
 import {
-  Hero,
-  TrustBar,
-  PopularCategories,
   BestSellers,
-  SignatureDish,
-  Combos,
   BlogReviews,
   ChefStory,
+  Combos,
+  Hero,
+  KitchenDining,
+  PopularCategories,
+  ServiceBanner,
+  SignatureDish,
   Testimonials,
-  CTABanner,
-} from "@/components/home";
+  TrustBar,
+} from '@/components/home';
 
 export default function Home() {
   return (
@@ -21,9 +22,10 @@ export default function Home() {
       <SignatureDish />
       <Combos />
       <BlogReviews />
-      <ChefStory />
       <Testimonials />
-      <CTABanner />
+      <KitchenDining />
+      <ChefStory />
+      <ServiceBanner />
     </>
   );
 }

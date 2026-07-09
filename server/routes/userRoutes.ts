@@ -7,7 +7,6 @@ const router = Router();
 router.get('/', verifyToken, isAdmin, UserController.getAllUsers);
 router.get('/:id', verifyToken, UserController.getUserById);
 router.post('/', UserController.createUser);
-router.patch('/:id', UserController.updateUser);
+router.patch('/:id', verifyToken, UserController.updateUser);
 
 export default router;
- 

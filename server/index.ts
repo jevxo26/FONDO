@@ -6,9 +6,9 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import next from 'next';
 // import path from 'path';
-import foodRoutes from './routes/foodRoutes';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
+import vendorRoutes from './routes/vendorRoutes';
 // import uploadRoutes from './routes/uploadRoutes';
 const prisma = new PrismaClient();
 
@@ -48,8 +48,8 @@ app
     });
 
     server.use('/api/users', userRoutes);
+    server.use('/api/vendor', vendorRoutes);
     server.use('/api/auth', authRoutes);
-    server.use('/api/food', foodRoutes);
     // server.use('/api/upload', uploadRoutes);
 
     // Serve uploaded files statically

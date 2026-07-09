@@ -1,0 +1,28 @@
+// types/food-review.ts
+
+export interface FoodRating {
+  id: string;
+  foodId: string;
+  averageRating: number;
+  totalReview: number;
+  fiveStar: number;
+  fourStar: number;
+  threeStar: number;
+  twoStar: number;
+  oneStar: number;
+  updatedAt: Date;
+}
+
+export interface Review {
+  id: string;
+  foodId: string;
+  customerId: string;
+  customerName: string;
+  customerAvatar: string;
+  orderId: string;
+  rating: number;
+  review: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}

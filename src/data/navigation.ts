@@ -5,7 +5,7 @@ interface NavLink {
 
 export const mainNavLinks: NavLink[] = [
   { href: "/", label: "Home" },
-  { href: "/menu", label: "Menu" },
+  { href: "/foods", label: "Menu" },
   { href: "/our-story", label: "Our Story" },
   { href: "/contact", label: "Contact" },
 ];

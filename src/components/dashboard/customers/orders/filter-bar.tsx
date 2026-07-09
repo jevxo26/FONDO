@@ -1,11 +1,12 @@
-import { Calendar } from "lucide-react";
+import { TogglePill } from '@/components/common/toggle-pill';
+import { Calendar } from 'lucide-react';
 
 const statusFilters = [
-  "All Orders",
-  "Processing",
-  "Out for Delivery",
-  "Completed",
-  "Cancelled",
+  'All Orders',
+  'Processing',
+  'Out for Delivery',
+  'Completed',
+  'Cancelled',
 ] as const;
 
 export function FilterBar() {
@@ -15,20 +16,7 @@ export function FilterBar() {
         <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
           Order Status
         </span>
-        <div className="flex flex-wrap gap-2">
-          {statusFilters.map((filter, i) => (
-            <button
-              key={filter}
-              className={`rounded-full px-4 py-2 text-[13px] font-bold transition-all ${
-                i === 0
-                  ? "bg-foreground text-white"
-                  : "border border-border bg-card text-muted-foreground hover:border-primary"
-              }`}
-            >
-              {filter}
-            </button>
-          ))}
-        </div>
+        <TogglePill items={statusFilters} value="All Orders" onChange={() => {}} />
       </div>
 
       <div className="mx-2 hidden h-12 w-px bg-border sm:block" />

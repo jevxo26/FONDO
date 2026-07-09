@@ -36,7 +36,7 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts",
     "app/dashboard/components/txt"
-  ],
+, "src/app/(main)/traking-page"  ],
   "exclude": [
     "node_modules"
   ]

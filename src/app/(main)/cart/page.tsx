@@ -5,8 +5,8 @@ import Link from "next/link";
 import { Navbar } from "@/components/layout/navbar/navbar";
 import { CartItem } from "@/types/cart";
 import { mockCartItems } from "@/data/cart-items";
-import { CartItemCard } from "@/components/carts/components/cart-item-card";
-import { OrderSummary } from "@/components/carts/components/order-summary";
+import { CartItemCard } from "@/components/carts/cart-item-card";
+import { OrderSummary } from "@/components/carts/order-summary";
 
 
 export default function CartPageView() {

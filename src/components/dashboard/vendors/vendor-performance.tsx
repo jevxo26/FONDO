@@ -21,7 +21,7 @@ export function VendorPerformance() {
         </div>
         <div className="flex gap-3">
           <Button variant="outline" className="border-slate-200">Last 30 Days</Button>
-          <Button className="bg-slate-900 hover:bg-slate-800">Export Report</Button>
+          <Button className="">Export Report</Button>
         </div>
       </div>
 

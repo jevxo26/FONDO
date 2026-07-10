@@ -1,5 +1,5 @@
-import { Package, SquareCheck } from "lucide-react";
-import Image from "next/image";
+import { Package, SquareCheck } from 'lucide-react';
+import Image from 'next/image';
 
 export function HeroImage() {
   return (
@@ -8,7 +8,7 @@ export function HeroImage() {
         <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/20 to-primary/5" />
         <div className="absolute inset-0 overflow-hidden rounded-3xl">
           <Image
-            src="/images/hero/hero_image.png"
+            src="/images/home/hero_image.png"
             alt="Hero Image"
             fill
             sizes="(max-width: 1024px) 100vw, 681px"

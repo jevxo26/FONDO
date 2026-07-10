@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Utensils, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { closeMobileMenu } from "@/store/slices/uiSlice";
 import { mobileNavLinks } from "@/data/navigation";
@@ -39,14 +40,15 @@ export function MobileNav() {
               </div>
               <span className="text-lg font-bold text-foreground">FONDO</span>
             </Link>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => dispatch(closeMobileMenu())}
-              className="flex size-8 items-center justify-center rounded-full transition-colors hover:bg-muted"
+              className="size-8 rounded-full hover:bg-muted"
               aria-label="Close menu"
             >
-              <X className="size-5 text-foreground" />
-            </button>
+              <X className="size-5" />
+            </Button>
           </div>
           <nav className="flex-1 overflow-y-auto py-4">
             <ul className="space-y-1">

@@ -2,6 +2,11 @@ import { Request, Response } from 'express';
 import { UserService } from '../services/userService';
 import { catchAsync } from '../utils/catchAsync';
 import { sendResponse } from '../utils/sendResponse';
+import { PrismaClient } from '@prisma/client';
+import AppError from '../utils/AppError';
+import { AuthRequest } from '../types/auth.types';
+
+const prisma = new PrismaClient();
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const users = await UserService.getAllUsers();
@@ -13,6 +18,26 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 });
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
+  const { email, phone } = req.body;
+
+  const existingUser = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { email: email },
+        { phone: phone }
+      ]
+    }
+  });
+
+  if (existingUser) {
+    return sendResponse(res, {
+      statusCode: 400,
+      message: existingUser.email === email
+        ? 'Email is already registered'
+        : 'Phone number is already registered',
+    });
+  }
+
   await UserService.createUser(req.body);
 
   sendResponse(res, {
@@ -21,8 +46,13 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getUserById = catchAsync(async (req: Request, res: Response) => {
+const getUserById = catchAsync(async (req: AuthRequest, res: Response) => {
   const id = req.params.id as string;
+  const userId = req.user?.userId;
+
+  if (id !== userId) {
+    throw new AppError(403, 'You are not authorized to access this user information');
+  }
 
   const user = await UserService.getUserById(id);
 

@@ -1,23 +1,27 @@
 "use client";
 
 import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export function SearchForm() {
   return (
     <div className="hidden items-center lg:flex">
-      <form className="flex h-[40px] w-[296px] items-center rounded-[16px] border-[0.67px] border-border bg-muted">
-        <input
+      <form className="flex h-10 w-[296px] items-center rounded-2xl border border-border bg-muted">
+        <Input
           type="text"
           placeholder="Search for products..."
-          className="h-full w-[195px] rounded-l-[16px] bg-transparent px-4 py-[10px] text-[16px] text-foreground placeholder:text-muted-foreground"
+          size="sm"
+          className="h-full w-[195px] rounded-l-2xl border-0 bg-transparent px-4 text-base shadow-none"
         />
-        <button
+        <Button
           type="submit"
-          className="flex h-[40px] w-[100px] items-center justify-center gap-[6px] rounded-r-[16px] bg-primary px-4 py-[10px]"
+          variant="default"
+          className="h-10 w-[100px] gap-1.5 rounded-r-2xl rounded-l-none px-4 text-sm font-medium text-white"
         >
-          <Search className="size-4 text-white" />
-          <span className="text-[14px] font-medium text-white">Search</span>
-        </button>
+          <Search className="size-4" />
+          Search
+        </Button>
       </form>
     </div>
   );

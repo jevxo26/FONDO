@@ -52,338 +52,48 @@ enum UserStatus {
   SUSPENDED
 }
 
-// ─── Food Catalog ───
+model Vendor {
+  id                 String             @id @default(uuid())
+  vendorCode         String             @unique
+  businessName       String
+  ownerName          String
+  phone              String             @unique
+  email              String             @unique
+  tradeLicenseNumber String             @unique
+  tinNumber          String             @unique
+  binNumber          String             @unique
+  logo               String?
+  coverImage         String?
+  description        String?            @db.Text
+  status             VendorStatus       @default(PENDING)
+  verificationStatus VerificationStatus @default(UNVERIFIED)
+  isActive           Boolean            @default(false)
+  isOnline           Boolean            @default(false)
+  commissionType     CommissionType     @default(PERCENTAGE)
+  commissionValue    Decimal            @default(0.00) @db.Decimal(10, 2)
+  openingTime        String?
+  closingTime        String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  deletedAt          DateTime?
 
-model Category {
-  id        String    @id @default(uuid())
-  name      String
-  slug      String    @unique
-  description String?
-  icon      String?
-  image     String?
-  sortOrder Int       @default(0)
-  status    String    @default("ACTIVE")
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-
-  foods     Food[]
-  subCategories SubCategory[]
-
-  @@map("categories")
+  @@map("vendors")
 }
 
-model SubCategory {
-  id         String    @id @default(uuid())
-  categoryId String
-  name       String
-  slug       String    @unique
-  description String?
-  icon       String?
-  image      String?
-  sortOrder  Int       @default(0)
-  status     String    @default("ACTIVE")
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  deletedAt  DateTime?
-
-  category   Category  @relation(fields: [categoryId], references: [id])
-  foods      Food[]
-
-  @@map("sub_categories")
+enum VendorStatus {
+  PENDING
+  APPROVED
+  SUSPENDED
+  REJECTED
 }
 
-enum FoodType {
-  VEG
-  NON_VEG
-  VEGAN
-  SEAFOOD
+enum VerificationStatus {
+  UNVERIFIED
+  UNDER_REVIEW
+  VERIFIED
 }
 
-enum SpiceLevel {
-  MILD
-  MEDIUM
-  HOT
-  EXTRA_HOT
-}
-
-model Food {
-  id              String     @id @default(uuid())
-  categoryId      String
-  subCategoryId   String?
-  foodCode        String     @unique
-  name            String
-  slug            String     @unique
-  shortDescription String?
-  description     String?
-  thumbnail       String?
-  coverImage      String?
-  preparationTime Int?
-  calories        Int?
-  protein         Int?
-  fat             Int?
-  carbohydrate    Int?
-  servingSize     String?
-  foodType        FoodType?
-  spiceLevel      SpiceLevel?
-  isFeatured      Boolean    @default(false)
-  isPopular       Boolean    @default(false)
-  isRecommended   Boolean    @default(false)
-  status          String     @default("ACTIVE")
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  deletedAt       DateTime?
-
-  category        Category       @relation(fields: [categoryId], references: [id])
-  subCategory     SubCategory?   @relation(fields: [subCategoryId], references: [id])
-  variants        FoodVariant[]
-  addons          FoodAddon[]
-  nutrition       FoodNutrition?
-  ingredients     FoodIngredient[]
-  allergens       FoodAllergen[]
-  schedules       FoodSchedule[]
-  prices          FoodPrice[]
-  discounts       FoodDiscount[]
-  tagMappings     FoodTagMapping[]
-  labels          FoodLabel[]
-  diets           FoodDiet[]
-  reviews         FoodReview[]
-  favorites       FoodFavorite[]
-
-  @@map("foods")
-}
-
-model FoodVariant {
-  id           String  @id @default(uuid())
-  foodId       String
-  name         String
-  description  String?
-  price        Float
-  discountPrice Float?
-  weight       String?
-  servingSize  String?
-  status       String  @default("ACTIVE")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  food         Food    @relation(fields: [foodId], references: [id], onDelete: Cascade)
-
-  @@map("food_variants")
-}
-
-model FoodAddon {
-  id          String    @id @default(uuid())
-  foodId      String
-  name        String
-  isRequired  Boolean   @default(false)
-  maxSelection Int?
-  status      String    @default("ACTIVE")
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  food        Food      @relation(fields: [foodId], references: [id], onDelete: Cascade)
-  items       FoodAddonItem[]
-
-  @@map("food_addons")
-}
-
-model FoodAddonItem {
-  id        String   @id @default(uuid())
-  addonId   String
-  name      String
-  price     Float
-  image     String?
-  status    String   @default("ACTIVE")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  addon     FoodAddon @relation(fields: [addonId], references: [id], onDelete: Cascade)
-
-  @@map("food_addon_items")
-}
-
-model FoodNutrition {
-  id            String   @id @default(uuid())
-  foodId        String   @unique
-  calories      Int?
-  protein       Int?
-  fat           Int?
-  carbohydrate  Int?
-  fiber         Int?
-  sugar         Int?
-  sodium        Int?
-  cholesterol   Int?
-  servingSize   String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  food          Food     @relation(fields: [foodId], references: [id], onDelete: Cascade)
-
-  @@map("food_nutritions")
-}
-
-model FoodIngredient {
-  id             String  @id @default(uuid())
-  foodId         String
-  ingredientName String
-  quantity       String?
-  unit           String?
-  isOptional     Boolean @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  food           Food    @relation(fields: [foodId], references: [id], onDelete: Cascade)
-
-  @@map("food_ingredients")
-}
-
-model FoodAllergen {
-  id          String   @id @default(uuid())
-  foodId      String
-  allergen    String
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  food        Food     @relation(fields: [foodId], references: [id], onDelete: Cascade)
-
-  @@map("food_allergens")
-}
-
-enum MealType {
-  BREAKFAST
-  LUNCH
-  DINNER
-  SNACKS
-}
-
-model FoodSchedule {
-  id        String   @id @default(uuid())
-  foodId    String
-  mealType  MealType
-  startTime String?
-  endTime   String?
-  status    String   @default("ACTIVE")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  food      Food     @relation(fields: [foodId], references: [id], onDelete: Cascade)
-
-  @@map("food_schedules")
-}
-
-model FoodPrice {
-  id            String   @id @default(uuid())
-  foodId        String
-  basePrice     Float
-  salePrice     Float?
-  currency      String   @default("BDT")
-  effectiveFrom DateTime?
-  effectiveTo   DateTime?
-  status        String   @default("ACTIVE")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  food          Food     @relation(fields: [foodId], references: [id], onDelete: Cascade)
-
-  @@map("food_prices")
-}
-
-enum DiscountType {
+enum CommissionType {
   PERCENTAGE
   FLAT
-}
-
-model FoodDiscount {
-  id            String       @id @default(uuid())
-  foodId        String
-  discountType  DiscountType
-  discountValue Float
-  startDate     DateTime?
-  endDate       DateTime?
-  status        String       @default("ACTIVE")
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-
-  food          Food         @relation(fields: [foodId], references: [id], onDelete: Cascade)
-
-  @@map("food_discounts")
-}
-
-model FoodTag {
-  id        String   @id @default(uuid())
-  name      String
-  slug      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  foods     FoodTagMapping[]
-
-  @@map("food_tags")
-}
-
-model FoodTagMapping {
-  id        String   @id @default(uuid())
-  foodId    String
-  tagId     String
-  createdAt DateTime @default(now())
-
-  food      Food     @relation(fields: [foodId], references: [id], onDelete: Cascade)
-  tag       FoodTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
-
-  @@unique([foodId, tagId])
-  @@map("food_tag_mappings")
-}
-
-model FoodLabel {
-  id        String   @id @default(uuid())
-  foodId    String
-  label     String
-  color     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  food      Food     @relation(fields: [foodId], references: [id], onDelete: Cascade)
-
-  @@map("food_labels")
-}
-
-model FoodDiet {
-  id        String   @id @default(uuid())
-  foodId    String
-  dietType  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  food      Food     @relation(fields: [foodId], references: [id], onDelete: Cascade)
-
-  @@map("food_diets")
-}
-
-model FoodReview {
-  id         String   @id @default(uuid())
-  foodId     String
-  customerId String
-  orderId    String?
-  rating     Int
-  review     String?
-  status     String   @default("PENDING")
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  food       Food     @relation(fields: [foodId], references: [id], onDelete: Cascade)
-
-  @@map("food_reviews")
-}
-
-model FoodFavorite {
-  id        String   @id @default(uuid())
-  userId    String
-  foodId    String
-  createdAt DateTime @default(now())
-
-  food      Food     @relation(fields: [foodId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, foodId])
-  @@map("food_favorites")
 }

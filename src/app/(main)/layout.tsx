@@ -1,5 +1,6 @@
-import { Navbar } from "@/components/layout/navbar/navbar";
+import { Footer } from "@/components/layout/footer/footer";
 import { MobileNav } from "@/components/layout/navbar/mobile-nav";
+import { Navbar } from "@/components/layout/navbar/navbar";
 
 export default function MainLayout({
   children,
@@ -11,6 +12,7 @@ export default function MainLayout({
       <Navbar />
       <MobileNav />
       <main className="flex-1">{children}</main>
+      <Footer />
     </>
   );
 }

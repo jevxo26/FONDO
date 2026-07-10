@@ -11,3 +11,9 @@ export const encryptPassword = catchServiceAsync(async (password: string): Promi
 
   return hashedPassword;
 });
+
+export const isPasswordValid = catchServiceAsync(
+  async (password: string, hashPassword: string): Promise<boolean> => {
+    return await bcrypt.compare(password, hashPassword);
+  }
+);

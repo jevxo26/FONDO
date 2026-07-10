@@ -22,7 +22,7 @@ export function HeroContent() {
 
       <div className="flex flex-wrap items-center gap-4">
         <Link
-          href="/menu"
+          href="/foods"
           className="flex items-center justify-center gap-3 rounded-2xl bg-primary px-5 py-4"
         >
           <Menu className="size-4 text-white" />
@@ -31,7 +31,7 @@ export function HeroContent() {
           </span>
         </Link>
         <Link
-          href="/menu"
+          href="/foods"
           className="flex items-center justify-center gap-2 rounded-2xl border border-primary bg-white/4 px-5 py-4"
         >
           <span className="font-sans text-sm font-medium leading-5 text-foreground">

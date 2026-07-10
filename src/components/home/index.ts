@@ -1,0 +1,11 @@
+export { BestSellers } from './best-sellers/best-sellers';
+export { BlogReviews } from './blog-reviews/blog-reviews';
+export { ChefStory } from './chef-story/chef-story';
+export { Combos } from './combos/combos';
+export { Hero } from './hero/hero';
+export { KitchenDining } from './kitchen-dining/kitchen-dining';
+export { PopularCategories } from './popular-categories/popular-categories';
+export { ServiceBanner } from './service-banner/service-banner';
+export { SignatureDish } from './signature-dish/signature-dish';
+export { Testimonials } from './testimonials/testimonials';
+export { TrustBar } from './trust-bar/trust-bar';

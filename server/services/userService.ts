@@ -6,7 +6,9 @@ import { sendUserDataAsResponse } from '../utils/responseStyle';
 const prisma = new PrismaClient();
 
 const getAllUsers = catchServiceAsync(async () => {
-  return prisma.user.findMany();
+  return prisma.user.findMany({
+    select: sendUserDataAsResponse
+  });
 });
 
 const createUser = catchServiceAsync(async (data: Prisma.UserCreateInput) => {

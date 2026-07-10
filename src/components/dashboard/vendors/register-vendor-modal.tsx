@@ -39,6 +39,7 @@ export function RegisterVendorModal() {
   });
 
   const onSubmit = (data: FormValues) => console.log(data);
+
   const getError = (message?: string) => (message ? [{ message }] : undefined);
 
   return (

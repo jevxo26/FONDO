@@ -39,8 +39,6 @@ export function RegisterVendorModal() {
   });
 
   const onSubmit = (data: FormValues) => console.log(data);
-
-  // হেল্পার ফাংশন যা এরর অবজেক্টকে সঠিক ফরম্যাটে কনভার্ট করবে
   const getError = (message?: string) => (message ? [{ message }] : undefined);
 
   return (

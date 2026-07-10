@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -14,25 +15,16 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-  FieldError,
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field";
 
 const schema = yup.object({
   businessName: yup.string().required("Business name is required"),
   ownerName: yup.string().required("Owner name is required"),
-  phone: yup
-    .string()
-    .min(11, "Phone must be at least 11 digits")
-    .required("Phone is required"),
-  email: yup
-    .string()
-    .email("Invalid email")
-    .required("Email is required"),
+  phone: yup.string().min(11, "Must be at least 11 digits").required("Phone is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  tradeLicenseNumber: yup.string().required("Trade license is required"),
+  tinNumber: yup.string().required("TIN number is required"),
+  binNumber: yup.string().required("BIN number is required"),
 });
 
 type FormValues = yup.InferType<typeof schema>;
@@ -46,117 +38,67 @@ export function RegisterVendorModal() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
-  };
+  const onSubmit = (data: FormValues) => console.log(data);
+
+  // হেল্পার ফাংশন যা এরর অবজেক্টকে সঠিক ফরম্যাটে কনভার্ট করবে
+  const getError = (message?: string) => (message ? [{ message }] : undefined);
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button>+ Register New Vendor</Button>
-      </DialogTrigger>
+      <DialogTrigger render={<Button>+ Register New Vendor</Button>} />
 
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Register New Vendor</DialogTitle>
         </DialogHeader>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-6"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <FieldGroup>
-            <Field data-invalid={!!errors.businessName}>
-              <FieldLabel htmlFor="businessName">
-                Business Name
-              </FieldLabel>
-
-              <Input
-                id="businessName"
-                placeholder="ABC Enterprise"
-                aria-invalid={!!errors.businessName}
-                {...register("businessName")}
-              />
-
-              <FieldError
-                errors={
-                  errors.businessName
-                    ? [errors.businessName]
-                    : undefined
-                }
-              />
+            <Field>
+              <FieldLabel htmlFor="businessName">Business Name</FieldLabel>
+              <Input id="businessName" {...register("businessName")} />
+              <FieldError errors={getError(errors.businessName?.message)} />
             </Field>
 
-            <Field data-invalid={!!errors.ownerName}>
-              <FieldLabel htmlFor="ownerName">
-                Owner Name
-              </FieldLabel>
-
-              <Input
-                id="ownerName"
-                placeholder="John Doe"
-                aria-invalid={!!errors.ownerName}
-                {...register("ownerName")}
-              />
-
-              <FieldError
-                errors={
-                  errors.ownerName
-                    ? [errors.ownerName]
-                    : undefined
-                }
-              />
+            <Field>
+              <FieldLabel htmlFor="ownerName">Owner Name</FieldLabel>
+              <Input id="ownerName" {...register("ownerName")} />
+              <FieldError errors={getError(errors.ownerName?.message)} />
             </Field>
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <Field data-invalid={!!errors.phone}>
-                <FieldLabel htmlFor="phone">
-                  Phone
-                </FieldLabel>
-
-                <Input
-                  id="phone"
-                  placeholder="01XXXXXXXXX"
-                  aria-invalid={!!errors.phone}
-                  {...register("phone")}
-                />
-
-                <FieldError
-                  errors={
-                    errors.phone
-                      ? [errors.phone]
-                      : undefined
-                  }
-                />
+            <div className="grid grid-cols-2 gap-4">
+              <Field>
+                <FieldLabel htmlFor="phone">Phone</FieldLabel>
+                <Input id="phone" {...register("phone")} />
+                <FieldError errors={getError(errors.phone?.message)} />
               </Field>
-
-              <Field data-invalid={!!errors.email}>
-                <FieldLabel htmlFor="email">
-                  Email
-                </FieldLabel>
-
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="vendor@example.com"
-                  aria-invalid={!!errors.email}
-                  {...register("email")}
-                />
-
-                <FieldError
-                  errors={
-                    errors.email
-                      ? [errors.email]
-                      : undefined
-                  }
-                />
+              <Field>
+                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <Input id="email" type="email" {...register("email")} />
+                <FieldError errors={getError(errors.email?.message)} />
               </Field>
             </div>
 
-            <Button
-              type="submit"
-              className="w-full"
-            >
+            <Field>
+              <FieldLabel htmlFor="tradeLicenseNumber">Trade License</FieldLabel>
+              <Input id="tradeLicenseNumber" {...register("tradeLicenseNumber")} />
+              <FieldError errors={getError(errors.tradeLicenseNumber?.message)} />
+            </Field>
+
+            <div className="grid grid-cols-2 gap-4">
+              <Field>
+                <FieldLabel htmlFor="tinNumber">TIN Number</FieldLabel>
+                <Input id="tinNumber" {...register("tinNumber")} />
+                <FieldError errors={getError(errors.tinNumber?.message)} />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="binNumber">BIN Number</FieldLabel>
+                <Input id="binNumber" {...register("binNumber")} />
+                <FieldError errors={getError(errors.binNumber?.message)} />
+              </Field>
+            </div>
+
+            <Button type="submit" className="w-full">
               Submit Registration
             </Button>
           </FieldGroup>

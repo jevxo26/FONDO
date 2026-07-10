@@ -19,7 +19,7 @@ export default function VendorsPendingPage() {
       </div>
 
       <div className="mt-6">
-        <VendorApprovalQueue />
+        <VendorApprovalQueue/>
       </div>
     </div>
   );

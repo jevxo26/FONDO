@@ -1,4 +1,5 @@
 import { Wallet } from "lucide-react";
+import { VendorFinancialSettlement } from "@/components/dashboard/vendors/financial-settlement";
 
 export default function VendorsSettlementPage() {
   return (
@@ -14,6 +15,13 @@ export default function VendorsSettlementPage() {
           </p>
         </div>
       </div>
+
+      <div className="mt-6">
+   <VendorFinancialSettlement/>
+        
     </div>
+
+  </div>
   );
+  
 }

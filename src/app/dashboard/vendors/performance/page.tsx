@@ -1,3 +1,4 @@
+import { VendorPerformance } from "@/components/dashboard/vendors/vendor-performance";
 import { TrendingUp } from "lucide-react";
 
 export default function VendorsPerformancePage() {
@@ -14,6 +15,9 @@ export default function VendorsPerformancePage() {
           </p>
         </div>
       </div>
+      <div className="mt-6">
+              <VendorPerformance/>
+            </div>
     </div>
   );
 }

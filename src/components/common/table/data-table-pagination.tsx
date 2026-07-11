@@ -1,6 +1,5 @@
 "use client";
 
-import type { Table } from "@tanstack/react-table";
 import {
   PaginationContent,
   PaginationEllipsis,
@@ -10,33 +9,41 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-interface DataTablePaginationProps<TData> {
-  table: Table<TData>;
+interface DataTablePaginationProps {
+  currentPage: number;
+  totalPages: number;
+  start: number;
+  end: number;
+  totalItems: number;
+  onPageChange: (page: number) => void;
 }
 
-export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
-  const pageIndex = table.getState().pagination.pageIndex;
-  const pageSize = table.getState().pagination.pageSize;
-  const totalItems = table.getFilteredRowModel().rows.length;
-  const totalPages = table.getPageCount();
-  const start = pageIndex * pageSize + 1;
-  const end = Math.min((pageIndex + 1) * pageSize, totalItems);
-
-  const pages: (number | "ellipsis")[] = [];
-  for (let i = 0; i < totalPages; i++) {
-    if (i === 0 || i === totalPages - 1 || (i >= pageIndex - 1 && i <= pageIndex + 1)) {
-      pages.push(i);
-    } else if (pages[pages.length - 1] !== "ellipsis") {
-      pages.push("ellipsis");
+export function DataTablePagination({
+  currentPage,
+  totalPages,
+  start,
+  end,
+  totalItems,
+  onPageChange,
+}: DataTablePaginationProps) {
+  const getPageNumbers = () => {
+    const pages: (number | "ellipsis")[] = [];
+    for (let i = 0; i < totalPages; i++) {
+      if (i === 0 || i === totalPages - 1 || (i >= currentPage - 1 && i <= currentPage + 1)) {
+        pages.push(i);
+      } else if (pages[pages.length - 1] !== "ellipsis") {
+        pages.push("ellipsis");
+      }
     }
-  }
+    return pages;
+  };
 
   return (
     <div className="flex flex-col items-center justify-between gap-2 border-t border-border bg-secondary px-4 py-4 md:flex-row md:px-6">
       <p className="text-sm text-muted-foreground">
         Showing{" "}
         <span className="font-bold text-foreground">
-          {start}-{end}
+          {start + 1}-{end}
         </span>{" "}
         of <span className="font-bold text-foreground">{totalItems}</span> entries
       </p>
@@ -44,18 +51,18 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
-              onClick={() => table.previousPage()}
-              className={!table.getCanPreviousPage() ? "pointer-events-none opacity-30" : ""}
+              onClick={() => onPageChange(Math.max(0, currentPage - 1))}
+              className={currentPage === 0 ? "pointer-events-none opacity-30" : "cursor-pointer"}
             />
           </PaginationItem>
-          {pages.map((p, i) =>
+          {getPageNumbers().map((p, i) =>
             p === "ellipsis" ? (
               <PaginationItem key={`ellipsis-${i}`}>
                 <PaginationEllipsis />
               </PaginationItem>
             ) : (
               <PaginationItem key={p}>
-                <PaginationLink isActive={p === pageIndex} onClick={() => table.setPageIndex(p)}>
+                <PaginationLink isActive={p === currentPage} onClick={() => onPageChange(p)}>
                   {p + 1}
                 </PaginationLink>
               </PaginationItem>
@@ -63,8 +70,10 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
           )}
           <PaginationItem>
             <PaginationNext
-              onClick={() => table.nextPage()}
-              className={!table.getCanNextPage() ? "pointer-events-none opacity-30" : ""}
+              onClick={() => onPageChange(Math.min(totalPages - 1, currentPage + 1))}
+              className={
+                currentPage === totalPages - 1 ? "pointer-events-none opacity-30" : "cursor-pointer"
+              }
             />
           </PaginationItem>
         </PaginationContent>

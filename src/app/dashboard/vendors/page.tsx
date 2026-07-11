@@ -1,8 +1,8 @@
-import { VendorsTable } from "@/components/dashboard/vendors/vendors-table";
-import { VendorControls } from "@/components/dashboard/vendors/vendors-controls";
 import { BottomWidgets } from "@/components/dashboard/vendors/bottom-widgets";
-import { vendors } from "@/data/vendors";
 import { RegisterVendorModal } from "@/components/dashboard/vendors/register-vendor-modal";
+import { VendorControls } from "@/components/dashboard/vendors/vendors-controls";
+import { VendorsTable } from "@/components/dashboard/vendors/vendors-table";
+import { vendors } from "@/data/vendors";
 
 export default function VendorsPage() {
   return (

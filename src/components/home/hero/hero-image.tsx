@@ -1,32 +1,39 @@
-"use client"
+'use client';
 
-import Image from "next/image"
-import { Star, Timer } from "lucide-react"
-import { type CarouselApi, Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
-import { BEST_SELLERS } from "@/data/homepage"
-import { useEffect, useState, useCallback, startTransition } from "react"
+import {
+  type CarouselApi,
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel';
+import { BEST_SELLERS } from '@/data/homepage';
+import { Star, Timer } from 'lucide-react';
+import Image from 'next/image';
+import { startTransition, useCallback, useEffect, useState } from 'react';
 
 export function HeroImage() {
-  const [api, setApi] = useState<CarouselApi>()
-  const [current, setCurrent] = useState(0)
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
 
   const onSelect = useCallback(() => {
-    if (!api) return
-    startTransition(() => setCurrent(api.selectedScrollSnap()))
-  }, [api])
+    if (!api) return;
+    startTransition(() => setCurrent(api.selectedScrollSnap()));
+  }, [api]);
 
   useEffect(() => {
-    if (!api) return
-    onSelect()
-    api.on("select", onSelect)
-    return () => { api.off("select", onSelect) }
-  }, [api, onSelect])
+    if (!api) return;
+    onSelect();
+    api.on('select', onSelect);
+    return () => {
+      api.off('select', onSelect);
+    };
+  }, [api, onSelect]);
 
   useEffect(() => {
-    if (!api) return
-    const interval = setInterval(() => api.scrollNext(), 4000)
-    return () => clearInterval(interval)
-  }, [api])
+    if (!api) return;
+    const interval = setInterval(() => api.scrollNext(), 4000);
+    return () => clearInterval(interval);
+  }, [api]);
 
   return (
     <div className="flex w-full flex-col items-center gap-4 lg:max-w-[500px] xl:max-w-[681px]">
@@ -62,8 +69,9 @@ export function HeroImage() {
                   <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/20">
                     <Timer className="size-4 text-primary" />
                   </div>
-                  <span className="font-sans text-xs font-semibold leading-snug text-foreground">
-                    {item.time} &middot; {item.rating} &starf;
+                  <span className="inline-flex items-center gap-1 font-sans text-xs font-semibold leading-snug text-foreground">
+                    {item.time} &middot; {item.rating}
+                    <Star className="size-3 fill-foreground flex items-center" />
                   </span>
                 </div>
               </div>
@@ -78,13 +86,11 @@ export function HeroImage() {
             key={index}
             onClick={() => api?.scrollTo(index)}
             className={`size-2.5 rounded-full transition-colors ${
-              index === current
-                ? "bg-primary"
-                : "border border-primary bg-transparent"
+              index === current ? 'bg-primary' : 'border border-primary bg-transparent'
             }`}
           />
         ))}
       </div>
     </div>
-  )
+  );
 }

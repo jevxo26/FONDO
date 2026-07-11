@@ -42,7 +42,7 @@ export function HeroContent() {
       </div>
 
       <div className="flex flex-wrap items-center gap-6">
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 pr-4 border-r border-border">
           <span className="font-sans text-lg font-semibold leading-tight text-foreground">
             28m
           </span>
@@ -50,7 +50,7 @@ export function HeroContent() {
             Avg delivery
           </span>
         </div>
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 pr-4 border-r border-border">
           <span className="font-sans text-lg font-semibold leading-tight text-foreground">
             4.9
           </span>

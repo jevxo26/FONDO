@@ -18,7 +18,7 @@ export function TestimonialCard({ testimonial, className }: TestimonialCardProps
   return (
     <div
       className={cn(
-        "flex w-[80vw] shrink-0 flex-col gap-5 rounded-[20px] bg-card p-6 shadow-[var(--shadow-card)] sm:w-[380px] snap-start",
+        "flex w-[80vw] shrink-0 flex-col gap-5 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)] sm:w-[380px] snap-start",
         className
       )}
     >

@@ -1,3 +1,4 @@
+import { SectionReveal } from '@/components/common/section-reveal';
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -7,9 +8,10 @@ import { InfiniteSlider } from "@/components/ui/infinite-slider";
 
 export function Combos() {
   return (
-    <section className="py-16">
+    <section>
       <div className="wrapper">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <SectionReveal distance={20}>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex flex-col gap-2">
             <span className="text-[11px] font-semibold uppercase tracking-[2.534px] text-foreground/60">
               Combos
@@ -38,6 +40,7 @@ export function Combos() {
             <ComboCard key={combo.id} combo={combo} />
           ))}
         </InfiniteSlider>
+        </SectionReveal>
       </div>
     </section>
   );

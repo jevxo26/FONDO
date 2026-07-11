@@ -1,10 +1,12 @@
+import { SectionReveal } from '@/components/common/section-reveal';
 import Image from "next/image";
 
 export function KitchenDining() {
   return (
-    <section className="py-10 sm:py-16">
+    <section>
       <div className="wrapper">
-        <div className="mx-auto flex max-w-2xl flex-col items-center gap-2">
+        <SectionReveal distance={20}>
+          <div className="mx-auto flex max-w-2xl flex-col items-center gap-2">
           <span className="text-[11.5px] font-semibold uppercase tracking-[2.534px] text-foreground/60">
             Behind the pass
           </span>
@@ -19,7 +21,7 @@ export function KitchenDining() {
 
         <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
           {/* Left: Kitchen brigade (tall) */}
-          <div className="relative aspect-[4/6] overflow-hidden rounded-[20px] md:row-span-2 md:h-[456px] md:aspect-auto">
+          <div className="relative aspect-[4/6] overflow-hidden rounded-3xl md:row-span-2 md:h-[456px] md:aspect-auto">
             <Image
               src="/images/home/kitchen_brigade.png"
               alt="Kitchen brigade"
@@ -31,7 +33,7 @@ export function KitchenDining() {
 
           {/* Center: Cooking + Dining table (stacked) */}
           <div className="flex flex-col gap-4">
-            <div className="relative aspect-[327/220] overflow-hidden rounded-[20px] md:h-[220px] md:aspect-auto">
+            <div className="relative aspect-[327/220] overflow-hidden rounded-3xl md:h-[220px] md:aspect-auto">
               <Image
                 src="/images/home/cooking.png"
                 alt="Cooking"
@@ -40,7 +42,7 @@ export function KitchenDining() {
                 className="object-cover"
               />
             </div>
-            <div className="relative aspect-[327/220] overflow-hidden rounded-[20px] md:h-[220px] md:aspect-auto">
+            <div className="relative aspect-[327/220] overflow-hidden rounded-3xl md:h-[220px] md:aspect-auto">
               <Image
                 src="/images/home/dining_table.png"
                 alt="Dining table"
@@ -52,7 +54,7 @@ export function KitchenDining() {
           </div>
 
           {/* Right: Restaurant interior (tall) */}
-          <div className="relative aspect-[4/6] overflow-hidden rounded-[20px] md:row-span-2 md:h-[456px] md:aspect-auto">
+          <div className="relative aspect-[4/6] overflow-hidden rounded-3xl md:row-span-2 md:h-[456px] md:aspect-auto">
             <Image
               src="/images/home/restaurant_interior.png"
               alt="Restaurant interior"
@@ -62,6 +64,7 @@ export function KitchenDining() {
             />
           </div>
         </div>
+        </SectionReveal>
       </div>
     </section>
   );

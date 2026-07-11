@@ -1,8 +1,6 @@
 import { FOOTER_LINKS, PAYMENT_METHODS, SOCIAL_ICONS } from '@/data/footer-data';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 export function Footer() {
   return (
@@ -10,7 +8,7 @@ export function Footer() {
       <div className="wrapper">
         <div className="mx-auto flex max-w-[1320px] flex-col gap-6">
           {/* Top row */}
-          <div className="flex flex-col items-start gap-10 lg:flex-row lg:gap-[100px]">
+          <div className="flex flex-col items-start gap-10 lg:flex-row lg:gap-10">
             {/* Left: Logo + Description + Newsletter */}
             <div className="flex w-full max-w-[441px] flex-col gap-6">
               <div className="flex items-center gap-2">
@@ -45,7 +43,7 @@ export function Footer() {
             </div>
 
             {/* Right: Link columns */}
-            <div className="grid w-full grid-cols-2 gap-8 sm:grid-cols-3 lg:flex lg:gap-8">
+            <div className="grid w-full grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-[1fr_1fr_1.5fr] lg:gap-8">
               {/* Visit */}
               <div className="flex flex-col gap-6">
                 <h4 className="text-lg font-bold text-background">{FOOTER_LINKS.visit.title}</h4>

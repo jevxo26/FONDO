@@ -14,7 +14,7 @@ import {
 
 export default function Home() {
   return (
-    <>
+    <main className="flex flex-col gap-12 lg:gap-[5rem] pb-[3rem] lg:pb-[5rem]">
       <Hero />
       <TrustBar />
       <PopularCategories />
@@ -26,6 +26,6 @@ export default function Home() {
       <KitchenDining />
       <ChefStory />
       <ServiceBanner />
-    </>
+    </main>
   );
 }

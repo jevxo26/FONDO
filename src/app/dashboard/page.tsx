@@ -1,30 +1,71 @@
-import { StatCard } from '@/components/dashboard/common/stat-card';
-import { BarChart3, TrendingUp, Truck, Users, Wallet } from 'lucide-react';
-import { RevenueChart } from './revenue-chart';
-import { RecentActivity } from './recent-activity';
+import { StatCard } from "@/components/dashboard/common/stat-card";
+import { BarChart3, TrendingUp, Truck, Users, Wallet } from "lucide-react";
+import { RecentActivity } from "./recent-activity";
+import { RevenueChart } from "./revenue-chart";
 
 const stats = [
-  { label: 'Total Revenue', value: '৳428.5K', trend: 'up' as const, trendValue: '+12.5%', icon: Wallet, variant: 'default' as const },
-  { label: 'Orders Today', value: '156', trend: 'up' as const, trendValue: '+23.1%', icon: TrendingUp, variant: 'success' as const },
-  { label: 'Active Customers', value: '1,882', trend: 'up' as const, trendValue: '+8.2%', icon: Users, variant: 'default' as const },
-  { label: 'Pending Settlements', value: '৳46.5K', trend: 'down' as const, trendValue: '-2 vendors', icon: BarChart3, variant: 'warning' as const },
-  { label: 'Active Riders', value: '42', trend: 'up' as const, trendValue: '+3', icon: Truck, variant: 'success' as const },
+  {
+    label: "Total Revenue",
+    value: "৳428.5K",
+    trend: "up" as const,
+    trendValue: "+12.5%",
+    icon: Wallet,
+    variant: "default" as const,
+  },
+  {
+    label: "Orders Today",
+    value: "156",
+    trend: "up" as const,
+    trendValue: "+23.1%",
+    icon: TrendingUp,
+    variant: "success" as const,
+  },
+  {
+    label: "Active Customers",
+    value: "1,882",
+    trend: "up" as const,
+    trendValue: "+8.2%",
+    icon: Users,
+    variant: "default" as const,
+  },
+  {
+    label: "Pending Settlements",
+    value: "৳46.5K",
+    trend: "down" as const,
+    trendValue: "-2 vendors",
+    icon: BarChart3,
+    variant: "warning" as const,
+  },
+  {
+    label: "Active Riders",
+    value: "42",
+    trend: "up" as const,
+    trendValue: "+3",
+    icon: Truck,
+    variant: "success" as const,
+  },
 ];
 
 export default function DashboardPage() {
   return (
     <div>
-      <div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
-        <span className="font-medium text-foreground">Dashboard</span>
-      </div>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className="size-2 rounded-full bg-primary" />
-            <h1 className="font-fraunces text-[32px] font-bold leading-tight tracking-tight text-foreground">Overview</h1>
+            <h1 className="font-fraunces text-[32px] font-bold leading-tight tracking-tight text-foreground">
+              Overview
+            </h1>
           </div>
           <div className="hidden h-8 w-px bg-border md:block" />
-          <span className="hidden text-sm text-muted-foreground md:block">{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</span>
+          <span className="hidden text-sm text-muted-foreground md:block">
+            {new Date().toLocaleDateString("en-US", {
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </span>
         </div>
       </div>
       <div className="mt-2 h-px w-24 bg-gradient-to-r from-primary/40 to-transparent" />

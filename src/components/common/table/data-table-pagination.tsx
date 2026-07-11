@@ -39,7 +39,7 @@ export function DataTablePagination({
   };
 
   return (
-    <div className="flex flex-col items-center justify-between gap-2 border-t border-border bg-[var(--muted)] px-4 py-4 md:flex-row md:px-6">
+    <div className="flex flex-col items-center justify-between gap-2 border-t border-primary/10 bg-amber-50/80 dark:bg-amber-950/30 px-4 py-4 md:flex-row md:px-6">
       <p className="text-sm text-muted-foreground">
         Showing{" "}
         <span className="font-bold text-foreground">
@@ -65,7 +65,7 @@ export function DataTablePagination({
                 <PaginationLink
                   isActive={p === currentPage}
                   onClick={() => onPageChange(p)}
-                  className={p === currentPage ? "bg-primary text-primary-foreground border-0" : ""}
+                  className={p === currentPage ? "bg-primary text-primary-foreground border-0 shadow-[0_2px_8px_rgba(206,163,89,0.25)]" : ""}
                 >
                   {p + 1}
                 </PaginationLink>

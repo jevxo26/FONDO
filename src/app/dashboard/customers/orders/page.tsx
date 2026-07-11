@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { FilterBar } from "@/components/dashboard/customers/orders/filter-bar";
 import { ContextCards } from "@/components/dashboard/customers/orders/context-cards";
 import { OrdersTableSection } from "@/components/dashboard/customers/orders/orders-table-section";
 import { orders } from "@/data/orders";
@@ -55,7 +54,7 @@ export default async function CustomerOrdersPage({
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Total Orders" value={totalOrders} icon={ShoppingBag} accent="right" />
         <StatCard label="Pending" value={pending} variant="warning" icon={Clock} accent="right" />
-        <StatCard label="In Progress" value={inProgress} icon={Timer} accent="right" />
+        <StatCard label="In Progress" value={inProgress} variant="danger" icon={Timer} accent="right" />
         <StatCard label="Completed" value={completed} variant="success" icon={CheckCircle} accent="right" />
       </div>
 
@@ -74,7 +73,6 @@ export default async function CustomerOrdersPage({
       )}
 
       <div className="mt-6">
-        <FilterBar />
         <OrdersTableSection data={filteredOrders} />
       </div>
 

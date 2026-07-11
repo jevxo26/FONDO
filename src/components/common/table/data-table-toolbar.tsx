@@ -48,7 +48,7 @@ export function DataTableToolbar<TData>({
   }, [search, table]);
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 p-4">
+    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-primary/10 bg-card px-4 py-4">
       <div className="relative w-full md:w-auto">
         <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
@@ -56,7 +56,7 @@ export function DataTableToolbar<TData>({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search across all columns..."
-          className="w-full rounded-full bg-secondary pl-10 md:w-72"
+          className="w-full rounded-full bg-primary/[0.04] pl-10 ring-1 ring-border/50 focus-visible:ring-primary/30 md:w-72"
         />
       </div>
 

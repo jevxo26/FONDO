@@ -110,12 +110,16 @@ export function DataTable<TData>({
   });
 
   return (
-    <div className="relative rounded-3xl bg-border/15 p-[1px] shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
-      <div className="rounded-[calc(1.375rem-1px)] bg-gradient-to-br from-card via-card to-card/98 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
+    <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)]">
+      <div className="pointer-events-none absolute -bottom-6 -right-6 z-0 size-36 rounded-full bg-primary/8 blur-3xl" />
+      <div className="pointer-events-none absolute -top-3 -left-3 z-0 size-20 rounded-full bg-primary/5 blur-2xl" />
+      <div className="pointer-events-none absolute -top-8 -right-8 z-0 size-28 rounded-full bg-primary/5 blur-2xl" />
+      <div className="pointer-events-none absolute right-3 top-3 z-10 size-[7px] rotate-45 border border-primary/30" />
+      <div className="relative z-10">
         <DataTableToolbar table={table} toolbarActions={toolbarActions} filters={filters} />
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader className="bg-[var(--muted)]">
+            <TableHeader className="bg-amber-50/80 dark:bg-amber-950/30">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
@@ -146,8 +150,7 @@ export function DataTable<TData>({
                     data-state={row.getIsSelected() && "selected"}
                     onClick={() => onRowClick?.(row.original)}
                     className={cn(
-                      "transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/5",
-                      rowIndex % 2 === 0 && "bg-card/50",
+                      "bg-card transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/8",
                       onRowClick && "cursor-pointer",
                     )}
                   >

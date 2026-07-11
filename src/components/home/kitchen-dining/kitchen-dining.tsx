@@ -19,7 +19,7 @@ export function KitchenDining() {
 
         <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
           {/* Left: Kitchen brigade (tall) */}
-          <div className="relative overflow-hidden rounded-[20px] md:row-span-2 md:h-[456px]">
+          <div className="relative aspect-[4/6] overflow-hidden rounded-[20px] md:row-span-2 md:h-[456px] md:aspect-auto">
             <Image
               src="/images/home/kitchen_brigade.png"
               alt="Kitchen brigade"
@@ -52,7 +52,7 @@ export function KitchenDining() {
           </div>
 
           {/* Right: Restaurant interior (tall) */}
-          <div className="relative overflow-hidden rounded-[20px] md:row-span-2 md:h-[456px]">
+          <div className="relative aspect-[4/6] overflow-hidden rounded-[20px] md:row-span-2 md:h-[456px] md:aspect-auto">
             <Image
               src="/images/home/restaurant_interior.png"
               alt="Restaurant interior"

@@ -29,7 +29,7 @@ export function HeroImage() {
   }, [api])
 
   return (
-    <div className="flex w-full flex-col items-center gap-4 lg:w-[681px]">
+    <div className="flex w-full flex-col items-center gap-4 lg:max-w-[500px] xl:max-w-[681px]">
       <Carousel setApi={setApi} className="w-full" opts={{ loop: true }}>
         <CarouselContent>
           {BEST_SELLERS.map((item) => (

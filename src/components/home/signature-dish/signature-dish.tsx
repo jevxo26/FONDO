@@ -43,21 +43,21 @@ export function SignatureDish() {
               ))}
             </div>
 
-            <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-3">
               <Button
                 size="lg"
-                className="gap-2 h-auto py-3 px-4 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+                className="h-auto gap-2 whitespace-nowrap rounded-full bg-primary px-4 py-3 text-primary-foreground hover:bg-primary/90"
               >
-                <ShoppingBag className="size-4" />
+                <ShoppingBag className="size-4 shrink-0" />
                 {SIGNATURE_DISH.primaryButton.label}
               </Button>
               <Button
                 variant="outline"
                 size="lg"
-                className="gap-2 h-auto py-3 px-4 rounded-full bg-transparent text-white hover:bg-white/10 hover:text-white"
+                className="h-auto gap-2 whitespace-nowrap rounded-full bg-transparent px-4 py-3 text-white hover:bg-white/10 hover:text-white"
               >
                 {SIGNATURE_DISH.secondaryButton.label}
-                <ArrowRight className="size-4" />
+                <ArrowRight className="size-4 shrink-0" />
               </Button>
             </div>
           </div>

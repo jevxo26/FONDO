@@ -47,7 +47,7 @@ const foodNames = [
   { name: "Gulab Jamun", cat: "Desserts", type: "VEG" },
   { name: "Firni", cat: "Desserts", type: "VEG" },
   { name: "Chocolate Mousse", cat: "Desserts", type: "VEG" },
-];
+] as const;
 
 const imgs = [
   "https://images.pexels.com/photos/2299981/pexels-photo-2299981.jpeg",

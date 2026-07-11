@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { BookOpen, ChevronDown, House, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -16,7 +15,6 @@ const parentIcon: Record<string, typeof House> = {
 };
 
 export function MobileNav() {
-  const pathname = usePathname();
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector((state) => state.ui.isMobileMenuOpen);
   const [expanded, setExpanded] = useState<string | null>("Menu");
@@ -33,11 +31,6 @@ export function MobileNav() {
 
   const closeAndClear = () => {
     dispatch(closeMobileMenu());
-  };
-
-  const isCurrentPath = (href: string) => {
-    if (href === "/") return pathname === "/";
-    return pathname.startsWith(href.split("#")[0]);
   };
 
   return (
@@ -70,9 +63,6 @@ export function MobileNav() {
         <nav className="flex-1 overflow-y-auto py-2">
           {mainNavLinks.map((link) => {
             const ParentIcon = link.children ? undefined : parentIcon[link.label] || House;
-            const isActive = link.href
-              ? isCurrentPath(link.href)
-              : link.children?.some((c) => isCurrentPath(c.href));
             const isExpanded = expanded === link.label;
 
             return (
@@ -81,10 +71,7 @@ export function MobileNav() {
                   <>
                     <button
                       onClick={() => toggleExpand(link.label)}
-                      className={cn(
-                        "flex w-full items-center justify-between px-4 py-3 text-sm font-medium transition-colors hover:bg-muted",
-                        isActive ? "text-primary" : "text-foreground",
-                      )}
+                      className="flex w-full items-center justify-between px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
                     >
                       <span>{link.label}</span>
                       <ChevronDown
@@ -104,10 +91,7 @@ export function MobileNav() {
                               key={child.href}
                               href={child.href}
                               onClick={closeAndClear}
-                              className={cn(
-                                "flex items-center gap-3 px-4 py-2.5 pl-8 text-sm font-medium transition-colors hover:bg-muted",
-                                isCurrentPath(child.href) ? "text-primary" : "text-foreground/75",
-                              )}
+                              className="flex items-center gap-3 px-4 py-2.5 pl-8 text-sm font-medium text-foreground/75 transition-colors hover:bg-muted"
                             >
                               {ChildIcon && <ChildIcon className="size-4 shrink-0" />}
                               {child.label}
@@ -121,10 +105,7 @@ export function MobileNav() {
                   <Link
                     href={link.href!}
                     onClick={closeAndClear}
-                    className={cn(
-                      "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors hover:bg-muted",
-                      isCurrentPath(link.href!) ? "text-primary" : "text-foreground",
-                    )}
+                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
                   >
                     {ParentIcon && <ParentIcon className="size-4 shrink-0" />}
                     {link.label}

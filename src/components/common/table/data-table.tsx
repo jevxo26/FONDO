@@ -173,7 +173,14 @@ export function DataTable<TData>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination
+        currentPage={table.getState().pagination.pageIndex}
+        totalPages={table.getPageCount()}
+        start={table.getState().pagination.pageIndex * pageSize}
+        end={Math.min((table.getState().pagination.pageIndex + 1) * pageSize, data.length)}
+        totalItems={data.length}
+        onPageChange={(page) => table.setPageIndex(page)}
+      />
     </div>
   );
 }

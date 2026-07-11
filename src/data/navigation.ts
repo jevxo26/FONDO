@@ -55,7 +55,6 @@ export const mainNavLinks: NavLink[] = [
     children: [
       { href: "/reviews", label: "Reviews" },
       { href: "/contact", label: "Contact" },
-      { href: "/traking-page", label: "Track Order" },
       { href: "/faq", label: "FAQ" },
     ],
   },

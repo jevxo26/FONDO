@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { NavActions } from "./nav-actions";
 import { SearchForm } from "./search-form";
 import { mainNavLinks, childIcons } from "@/data/navigation";
@@ -18,18 +17,6 @@ import {
 } from "@/components/ui/navigation-menu";
 
 export function Navbar() {
-  const pathname = usePathname();
-
-  const isCurrentPath = (href: string) => {
-    if (href === "/") return pathname === "/";
-    return pathname.startsWith(href.split("#")[0]);
-  };
-
-  const isParentActive = (link: (typeof mainNavLinks)[number]) => {
-    if (!link.children) return false;
-    return link.children.some((child) => isCurrentPath(child.href));
-  };
-
   return (
     <header className="sticky top-0 z-50 bg-background shadow-[0_4px_10px_rgba(0,0,0,0.1)]">
       <div className="wrapper">
@@ -55,8 +42,7 @@ export function Navbar() {
                         <NavigationMenuTrigger
                           className={cn(
                             navigationMenuTriggerStyle(),
-                            "text-[16px] font-semibold",
-                            isParentActive(link) ? "text-primary" : "text-foreground/75",
+                            "text-[16px] font-semibold text-foreground/75",
                           )}
                         >
                           {link.label}
@@ -70,12 +56,7 @@ export function Navbar() {
                                 <li key={child.href}>
                                   <NavigationMenuLink
                                     href={child.href}
-                                    className={cn(
-                                      "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors hover:bg-muted",
-                                      isCurrentPath(child.href)
-                                        ? "text-primary"
-                                        : "text-foreground",
-                                    )}
+                                    className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
                                   >
                                     {ChildIcon && <ChildIcon className="size-4 shrink-0" />}
                                     {child.label}
@@ -90,9 +71,8 @@ export function Navbar() {
                       <NavigationMenuLink
                         href={link.href!}
                         className={cn(
-                          navigationMenuTriggerStyle(),
-                          "text-[16px] font-semibold",
-                          isCurrentPath(link.href!) ? "text-primary" : "text-foreground/75",
+                            navigationMenuTriggerStyle(),
+                            "text-[16px] font-semibold text-foreground/75",
                         )}
                       >
                         {link.label}

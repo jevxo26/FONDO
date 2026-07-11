@@ -2,6 +2,7 @@
 import Categories from "./categories";
 import FoodGrid from "./food-grid";
 import Pagination from "./pagination";
+import { FOOD_ITEMS } from "@/data/foodsdata";
 
 const CategoriesMenu = () => {
   return (
@@ -9,7 +10,7 @@ const CategoriesMenu = () => {
       {/* Category Selection tab */}
       <Categories />
       {/* Food Cards Section */}
-      <FoodGrid />
+      <FoodGrid foods={FOOD_ITEMS} />
       {/* Pagination Controls */}
       <div className="wrapper">
         <Pagination />

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Eye, Search, X, ChevronDown, ChevronUp, Download, FileText, User, MapPin, Tag, Clock } from "lucide-react";
 import {
   Dialog,
@@ -21,7 +20,15 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { DataTablePagination } from "@/components/common/table";
 
-const mockVendors = [
+interface Vendor {
+  id: number;
+  name: string;
+  type: string;
+  location: string;
+  status: string;
+}
+
+const mockVendors: Vendor[] = [
   { id: 1, name: "Zaman Heritage", type: "Mughlai", location: "Banani, Dhaka", status: "Pending" },
   { id: 2, name: "Kacchi Bhai Express", type: "Biryani", location: "Dhanmondi", status: "Documents Pending" },
   { id: 3, name: "Spice Garden", type: "Indian", location: "Gulshan, Dhaka", status: "Pending" },
@@ -51,7 +58,7 @@ const PAGE_SIZE = 5;
 
 export function VendorApprovalQueue() {
   const [vendors, setVendors] = useState(mockVendors);
-  const [selectedVendor, setSelectedVendor] = useState<any>(null);
+  const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -61,7 +68,7 @@ export function VendorApprovalQueue() {
   const [note, setNote] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
 
-  const handleViewDetails = (vendor: any) => {
+  const handleViewDetails = (vendor: Vendor) => {
     setSelectedVendor(vendor);
     setIsModalOpen(true);
   };
@@ -208,101 +215,103 @@ export function VendorApprovalQueue() {
         )}
       </div>
 
-      <Card className="overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-muted/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-sm font-medium">
-                  <button
-                    onClick={() => handleSort("name")}
-                    className="flex items-center gap-1 hover:text-foreground"
-                  >
-                    Name
-                    {sortField === "name" && (
-                      sortDirection === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />
-                    )}
-                  </button>
-                </th>
-                <th className="px-4 py-3 text-left text-sm font-medium">
-                  <button
-                    onClick={() => handleSort("type")}
-                    className="flex items-center gap-1 hover:text-foreground"
-                  >
-                    Type
-                    {sortField === "type" && (
-                      sortDirection === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />
-                    )}
-                  </button>
-                </th>
-                <th className="px-4 py-3 text-left text-sm font-medium">
-                  <button
-                    onClick={() => handleSort("location")}
-                    className="flex items-center gap-1 hover:text-foreground"
-                  >
-                    Location
-                    {sortField === "location" && (
-                      sortDirection === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />
-                    )}
-                  </button>
-                </th>
-                <th className="px-4 py-3 text-left text-sm font-medium">
-                  <button
-                    onClick={() => handleSort("status")}
-                    className="flex items-center gap-1 hover:text-foreground"
-                  >
-                    Status
-                    {sortField === "status" && (
-                      sortDirection === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />
-                    )}
-                  </button>
-                </th>
-                <th className="px-4 py-3 text-left text-sm font-medium">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentVendors.map((vendor) => (
-                <tr key={vendor.id} className="border-t hover:bg-muted/50 transition-colors">
-                  <td className="px-4 py-3 text-sm font-medium">{vendor.name}</td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground">{vendor.type}</td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground">{vendor.location}</td>
-                  <td className="px-4 py-3">
-                    <Badge variant={getStatusVariant(vendor.status)}>
-                      {vendor.status}
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-3">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleViewDetails(vendor)}
-                      className="h-8 w-8 p-0"
+      <div className="group relative rounded-3xl bg-border/15 p-[1px] shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+        <div className="rounded-[calc(1.375rem-1px)] bg-gradient-to-br from-card via-card to-card/98 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-[var(--muted)]">
+                <tr>
+                  <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                    <button
+                      onClick={() => handleSort("name")}
+                      className="flex items-center gap-1 hover:text-foreground"
                     >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                  </td>
+                      Name
+                      {sortField === "name" && (
+                        sortDirection === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />
+                      )}
+                    </button>
+                  </th>
+                  <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                    <button
+                      onClick={() => handleSort("type")}
+                      className="flex items-center gap-1 hover:text-foreground"
+                    >
+                      Type
+                      {sortField === "type" && (
+                        sortDirection === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />
+                      )}
+                    </button>
+                  </th>
+                  <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                    <button
+                      onClick={() => handleSort("location")}
+                      className="flex items-center gap-1 hover:text-foreground"
+                    >
+                      Location
+                      {sortField === "location" && (
+                        sortDirection === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />
+                      )}
+                    </button>
+                  </th>
+                  <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                    <button
+                      onClick={() => handleSort("status")}
+                      className="flex items-center gap-1 hover:text-foreground"
+                    >
+                      Status
+                      {sortField === "status" && (
+                        sortDirection === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />
+                      )}
+                    </button>
+                  </th>
+                  <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          {filteredVendors.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground">
-              No vendors found
-            </div>
+              </thead>
+              <tbody>
+                {currentVendors.map((vendor) => (
+                  <tr key={vendor.id} className="border-t border-border/50 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/5">
+                    <td className="px-4 py-3 text-sm font-medium">{vendor.name}</td>
+                    <td className="px-4 py-3 text-sm text-muted-foreground">{vendor.type}</td>
+                    <td className="px-4 py-3 text-sm text-muted-foreground">{vendor.location}</td>
+                    <td className="px-4 py-3">
+                      <Badge variant={getStatusVariant(vendor.status)}>
+                        {vendor.status}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-3">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleViewDetails(vendor)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {filteredVendors.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground">
+                No vendors found
+              </div>
+            )}
+          </div>
+
+          {filteredVendors.length > 0 && (
+            <DataTablePagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              start={start}
+              end={end}
+              totalItems={totalItems}
+              onPageChange={setCurrentPage}
+            />
           )}
         </div>
-
-        {filteredVendors.length > 0 && (
-          <DataTablePagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            start={start}
-            end={end}
-            totalItems={totalItems}
-            onPageChange={setCurrentPage}
-          />
-        )}
-      </Card>
+      </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">

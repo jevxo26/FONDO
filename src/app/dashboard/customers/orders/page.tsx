@@ -3,9 +3,9 @@ import { FilterBar } from "@/components/dashboard/customers/orders/filter-bar";
 import { ContextCards } from "@/components/dashboard/customers/orders/context-cards";
 import { OrdersTableSection } from "@/components/dashboard/customers/orders/orders-table-section";
 import { orders } from "@/data/orders";
-import { Download, Plus, ShoppingBag, X } from "lucide-react";
+import { CheckCircle, Clock, Download, Plus, ShoppingBag, Timer, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { StatCard } from "@/components/common/cards/stat-card";
+import { StatCard } from "@/components/dashboard/common/stat-card";
 
 export default async function CustomerOrdersPage({
   searchParams,
@@ -53,10 +53,10 @@ export default async function CustomerOrdersPage({
       </div>
 
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total Orders" value={totalOrders} />
-        <StatCard label="Pending" value={pending} />
-        <StatCard label="In Progress" value={inProgress} />
-        <StatCard label="Completed" value={completed} />
+        <StatCard label="Total Orders" value={totalOrders} icon={ShoppingBag} accent="right" />
+        <StatCard label="Pending" value={pending} variant="warning" icon={Clock} accent="right" />
+        <StatCard label="In Progress" value={inProgress} icon={Timer} accent="right" />
+        <StatCard label="Completed" value={completed} variant="success" icon={CheckCircle} accent="right" />
       </div>
 
       {customerFilter && (

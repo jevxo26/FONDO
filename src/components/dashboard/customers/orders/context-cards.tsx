@@ -1,5 +1,5 @@
-import { DarkCard } from "@/components/common/cards/dark-card";
-import { GlassCard } from "@/components/common/cards/glass-card";
+import { DarkCard } from "@/components/dashboard/common/dark-card";
+import { GlassCard } from "@/components/dashboard/common/glass-card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChefHat, Timer, TrendingUp } from "lucide-react";
 

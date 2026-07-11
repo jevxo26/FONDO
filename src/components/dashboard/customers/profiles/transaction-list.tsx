@@ -1,6 +1,8 @@
 import type { Transaction } from "@/data/customers";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { GlassCard } from "@/components/dashboard/common/glass-card";
+import { Receipt } from "lucide-react";
 
 interface TransactionListProps {
   transactions: Transaction[];
@@ -8,41 +10,35 @@ interface TransactionListProps {
 
 export function TransactionList({ transactions }: TransactionListProps) {
   return (
-    <section className="rounded-2xl border border-border bg-card p-4 md:p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <h4 className="font-semibold text-foreground">Recent Transactions</h4>
-        <Button variant="link" className="h-auto p-0 text-xs font-bold">
-          View All
-        </Button>
-      </div>
-
-      <div className="space-y-4">
+    <GlassCard
+      icon={<Receipt className="size-5 text-primary" />}
+      iconBg="bg-primary/10"
+      title="Recent Transactions"
+      value={transactions.length.toString()}
+      subtitle="total transactions"
+      layout="stack"
+    >
+      <div className="mt-4 space-y-3">
         {transactions.map((tx) => (
           <div
             key={tx.id}
-            className="flex items-center gap-4 rounded-xl p-3 transition-colors hover:bg-muted"
+            className="flex items-center gap-3 rounded-xl p-2.5 transition-colors hover:bg-muted"
           >
             <div
-              className={`flex size-10 items-center justify-center rounded-full ${
+              className={`flex size-9 shrink-0 items-center justify-center rounded-full ${
                 tx.type === "CREDIT"
                   ? "bg-success/10 text-success"
                   : "bg-destructive/10 text-destructive"
               }`}
             >
-              {tx.type === "CREDIT" ? <Plus className="size-5" /> : <Minus className="size-5" />}
+              {tx.type === "CREDIT" ? <Plus className="size-4" /> : <Minus className="size-4" />}
             </div>
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-foreground">{tx.title}</p>
-              <p className="text-[10px] text-muted-foreground">
-                #{tx.id} - {tx.description}
-              </p>
+              <p className="text-[10px] text-muted-foreground truncate">#{tx.id} - {tx.description}</p>
             </div>
-            <div className="text-right">
-              <p
-                className={`text-sm font-bold ${
-                  tx.type === "CREDIT" ? "text-success" : "text-destructive"
-                }`}
-              >
+            <div className="text-right shrink-0">
+              <p className={`text-sm font-bold ${tx.type === "CREDIT" ? "text-success" : "text-destructive"}`}>
                 {tx.type === "CREDIT" ? "+" : "-"}৳{tx.amount.toLocaleString()}
               </p>
               <p className="text-[10px] text-muted-foreground">{tx.time}</p>
@@ -50,6 +46,9 @@ export function TransactionList({ transactions }: TransactionListProps) {
           </div>
         ))}
       </div>
-    </section>
+      <Button variant="ghost" className="mt-3 w-full gap-1 text-xs font-bold text-muted-foreground hover:text-primary">
+        View All <ArrowUpRight className="size-3" />
+      </Button>
+    </GlassCard>
   );
 }

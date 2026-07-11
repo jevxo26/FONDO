@@ -110,77 +110,80 @@ export function DataTable<TData>({
   });
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
-      <DataTableToolbar table={table} toolbarActions={toolbarActions} filters={filters} />
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader className="bg-secondary">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="px-4 py-4 md:px-6">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={i}>
-                  {columns.map((_, j) => (
-                    <TableCell key={j} className="px-4 py-4 md:px-6 md:py-5">
-                      <Skeleton className="h-4 w-full" />
-                    </TableCell>
+    <div className="relative rounded-3xl bg-border/15 p-[1px] shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+      <div className="rounded-[calc(1.375rem-1px)] bg-gradient-to-br from-card via-card to-card/98 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
+        <DataTableToolbar table={table} toolbarActions={toolbarActions} filters={filters} />
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader className="bg-[var(--muted)]">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id} className="px-4 py-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground md:px-6">
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  onClick={() => onRowClick?.(row.original)}
-                  className={cn(
-                    "transition-colors hover:bg-secondary/60",
-                    onRowClick && "cursor-pointer",
-                  )}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="px-4 py-4 md:px-6 md:py-5">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+              ))}
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <TableRow key={i}>
+                    {columns.map((_, j) => (
+                      <TableCell key={j} className="px-4 py-4 md:px-6 md:py-5">
+                        <Skeleton className="h-4 w-full" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : table.getRowModel().rows.length ? (
+                table.getRowModel().rows.map((row, rowIndex) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    onClick={() => onRowClick?.(row.original)}
+                    className={cn(
+                      "transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/5",
+                      rowIndex % 2 === 0 && "bg-card/50",
+                      onRowClick && "cursor-pointer",
+                    )}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="px-4 py-4 md:px-6 md:py-5">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-40 text-center">
+                    <Empty>
+                      <EmptyHeader>
+                        <EmptyMedia>
+                          <SearchX className="size-8 text-muted-foreground" />
+                        </EmptyMedia>
+                        <EmptyTitle>{emptyMessage}</EmptyTitle>
+                      </EmptyHeader>
+                    </Empty>
+                  </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-40 text-center">
-                  <Empty>
-                    <EmptyHeader>
-                      <EmptyMedia>
-                        <SearchX className="size-8 text-muted-foreground" />
-                      </EmptyMedia>
-                      <EmptyTitle>{emptyMessage}</EmptyTitle>
-                    </EmptyHeader>
-                  </Empty>
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <DataTablePagination
+          currentPage={table.getState().pagination.pageIndex}
+          totalPages={table.getPageCount()}
+          start={table.getState().pagination.pageIndex * pageSize}
+          end={Math.min((table.getState().pagination.pageIndex + 1) * pageSize, data.length)}
+          totalItems={data.length}
+          onPageChange={(page) => table.setPageIndex(page)}
+        />
       </div>
-      <DataTablePagination
-        currentPage={table.getState().pagination.pageIndex}
-        totalPages={table.getPageCount()}
-        start={table.getState().pagination.pageIndex * pageSize}
-        end={Math.min((table.getState().pagination.pageIndex + 1) * pageSize, data.length)}
-        totalItems={data.length}
-        onPageChange={(page) => table.setPageIndex(page)}
-      />
     </div>
   );
 }

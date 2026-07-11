@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DarkCard } from "@/components/dashboard/common/dark-card";
+import { Wallet } from "lucide-react";
 
 export function VendorControls() {
   return (
@@ -19,11 +21,15 @@ export function VendorControls() {
         </Select>
       </div>
 
-      <div className="flex flex-col justify-center rounded-xl bg-primary p-4 text-primary-foreground lg:w-[300px]">
-        <p className="text-xs opacity-90">TOTAL VENDOR BALANCE</p>
-        <h3 className="font-fraunces text-2xl font-bold">৳1,42,850.00</h3>
-        <p className="text-xs opacity-80">48 Active Payouts</p>
-      </div>
+      <DarkCard
+        variant="primary"
+        icon={<Wallet className="size-32" />}
+        title="৳1,42,850.00"
+        description="48 Active Payouts"
+        className="lg:w-[300px]"
+      >
+        <p className="text-[11px] font-bold uppercase tracking-wider opacity-70">Total Vendor Balance</p>
+      </DarkCard>
     </div>
   );
 }

@@ -1,3 +1,6 @@
+import { GlassCard } from "@/components/dashboard/common/glass-card";
+import { Users } from "lucide-react";
+
 interface StatusMetricsProps {
   activeCount: number;
   suspendedCount: number;
@@ -8,34 +11,34 @@ export function StatusMetrics({ activeCount, suspendedCount, totalCustomers }: S
   const activePercent = Math.round((activeCount / totalCustomers) * 100);
 
   return (
-    <section className="rounded-2xl border border-border bg-card p-4 md:p-6">
-      <h4 className="mb-6 font-semibold text-foreground">Customer Status</h4>
-      <div className="space-y-4">
+    <GlassCard
+      icon={<Users className="size-5 text-primary" />}
+      iconBg="bg-primary/10"
+      title="Customer Status"
+      value={`${activeCount} Active`}
+      subtitle={`${suspendedCount} Suspended`}
+      layout="stack"
+    >
+      <div className="mt-4 space-y-3">
         <div>
-          <div className="mb-2 flex justify-between text-sm">
+          <div className="mb-1.5 flex justify-between text-sm">
             <span className="text-muted-foreground">Active</span>
-            <span className="font-bold text-foreground">{activeCount} Users</span>
+            <span className="font-bold text-foreground">{activePercent}%</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
-            <div
-              className="h-full rounded-full bg-primary"
-              style={{ width: `${activePercent}%` }}
-            />
+            <div className="h-full rounded-full bg-primary" style={{ width: `${activePercent}%` }} />
           </div>
         </div>
         <div>
-          <div className="mb-2 flex justify-between text-sm">
+          <div className="mb-1.5 flex justify-between text-sm">
             <span className="text-muted-foreground">Suspended</span>
-            <span className="font-bold text-foreground">{suspendedCount} Users</span>
+            <span className="font-bold text-foreground">{100 - activePercent}%</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
-            <div
-              className="h-full rounded-full bg-muted-foreground"
-              style={{ width: `${100 - activePercent}%` }}
-            />
+            <div className="h-full rounded-full bg-muted-foreground" style={{ width: `${100 - activePercent}%` }} />
           </div>
         </div>
       </div>
-    </section>
+    </GlassCard>
   );
 }

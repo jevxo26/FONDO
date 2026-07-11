@@ -50,8 +50,14 @@ const customerNames = [
 const txnTypes: TxnType[] = ["TOPUP", "PURCHASE", "REFUND", "ADJUSTMENT", "CREDIT", "DEBIT"];
 
 const statuses: WalletStatus[] = [
-  "COMPLETED", "COMPLETED", "COMPLETED", "COMPLETED", "COMPLETED",
-  "PENDING", "FAILED", "REVERSED",
+  "COMPLETED",
+  "COMPLETED",
+  "COMPLETED",
+  "COMPLETED",
+  "COMPLETED",
+  "PENDING",
+  "FAILED",
+  "REVERSED",
 ];
 
 const referenceTypes = ["Order", "Topup", "Reward", "Subscription", "Refund"];
@@ -67,15 +73,29 @@ function generateTransactions(count: number): WalletTransaction[] {
     const customer = randomItem(customerNames);
     const txnType = randomItem(txnTypes);
     const status = randomItem(statuses);
-    const amount = txnType === "TOPUP" || txnType === "CREDIT" || txnType === "REFUND"
-      ? Math.floor(rand() * 10000) + 200
-      : Math.floor(rand() * 5000) + 100;
+    const amount =
+      txnType === "TOPUP" || txnType === "CREDIT" || txnType === "REFUND"
+        ? Math.floor(rand() * 10000) + 200
+        : Math.floor(rand() * 5000) + 100;
     const balanceBefore = balance;
     const isCredit = ["TOPUP", "CREDIT", "REFUND"].includes(txnType);
     balance = isCredit ? balance + amount : balance - amount;
     if (balance < 0) balance = 0;
     const day = Math.floor(rand() * 28) + 1;
-    const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][Math.floor(rand() * 12)];
+    const month = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ][Math.floor(rand() * 12)];
     const hour = String(Math.floor(rand() * 24)).padStart(2, "0");
     const minute = String(Math.floor(rand() * 60)).padStart(2, "0");
     txns.push({

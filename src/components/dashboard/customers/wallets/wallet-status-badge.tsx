@@ -15,7 +15,10 @@ const statusConfig: Record<WalletStatus, { dot: string; bg: string; label: strin
 export function WalletStatusBadge({ status }: WalletStatusBadgeProps) {
   const config = statusConfig[status];
   return (
-    <Badge variant="outline" className={`flex w-fit items-center gap-1.5 rounded-full border-0 px-3 py-1 text-xs font-bold ${config.bg}`}>
+    <Badge
+      variant="outline"
+      className={`flex w-fit items-center gap-1.5 rounded-full border-0 px-3 py-1 text-xs font-bold ${config.bg}`}
+    >
       <span className={`size-1.5 rounded-full ${config.dot}`} />
       {config.label}
     </Badge>

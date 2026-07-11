@@ -1,4 +1,4 @@
-import { CreditCard, TrendingUp } from 'lucide-react';
+import { CreditCard, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function PaymentSummaryCards() {
@@ -54,13 +54,15 @@ export function PaymentSummaryCards() {
         </div>
         <div className="mt-6">
           <div className="mb-4 h-2 w-full rounded-full bg-muted">
-            <div className="h-2 rounded-full bg-primary" style={{ width: '65%' }} />
+            <div className="h-2 rounded-full bg-primary" style={{ width: "65%" }} />
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm italic text-muted-foreground">
               Next payout scheduled: Oct 24
             </span>
-            <Button variant="link" className="h-auto p-0 text-xs font-bold">Process Now</Button>
+            <Button variant="link" className="h-auto p-0 text-xs font-bold">
+              Process Now
+            </Button>
           </div>
         </div>
       </div>

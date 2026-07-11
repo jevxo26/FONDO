@@ -33,11 +33,8 @@ export const foodColumns: ColumnDef<AdminFoodItem>[] = [
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
         <div className="size-9 shrink-0 overflow-hidden rounded-lg bg-muted">
-          <img
-            src={row.original.thumbnail}
-            alt=""
-            className="size-full object-cover"
-          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={row.original.thumbnail} alt="" className="size-full object-cover" />
         </div>
         <span className="font-medium text-foreground">{row.original.name}</span>
       </div>
@@ -85,9 +82,7 @@ export const foodColumns: ColumnDef<AdminFoodItem>[] = [
     accessorKey: "basePrice",
     header: "Price",
     cell: ({ row }) => (
-      <span className="font-mono text-sm font-medium">
-        ৳{row.original.basePrice}
-      </span>
+      <span className="font-mono text-sm font-medium">৳{row.original.basePrice}</span>
     ),
   },
   {

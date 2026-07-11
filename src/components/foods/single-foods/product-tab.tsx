@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { Food } from "@/types/food";
-import { mockFoodRating, mockFoodReviews } from "@/data/review";
-import { Star } from "lucide-react";
+import { mockFoodRating } from "@/data/review";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DescriptionTab from "./description-tab";
 import ReviewsTab from "./reviews-tab";

@@ -8,7 +8,7 @@ export const mockCartItems: CartItem[] = [
     oldPrice: 320,
     quantity: 1,
     thumbnail: "/images/menu/kacchi.jpg",
-    itemsSold: 1240
+    itemsSold: 1240,
   },
   {
     id: "cart_02",
@@ -17,6 +17,6 @@ export const mockCartItems: CartItem[] = [
     oldPrice: 330,
     quantity: 1,
     thumbnail: "/images/menu/beef.jpg",
-    itemsSold: 1240
-  }
+    itemsSold: 1240,
+  },
 ];

@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
-import { UserService } from '../services/userService';
-import { catchAsync } from '../utils/catchAsync';
-import { sendResponse } from '../utils/sendResponse';
-import { PrismaClient } from '@prisma/client';
-import AppError from '../utils/AppError';
-import { AuthRequest } from '../types/auth.types';
+import { Request, Response } from "express";
+import { UserService } from "../services/userService";
+import { catchAsync } from "../utils/catchAsync";
+import { sendResponse } from "../utils/sendResponse";
+import { PrismaClient } from "@prisma/client";
+import AppError from "../utils/AppError";
+import { AuthRequest } from "../types/auth.types";
 
 const prisma = new PrismaClient();
 
@@ -22,19 +22,17 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 
   const existingUser = await prisma.user.findFirst({
     where: {
-      OR: [
-        { email: email },
-        { phone: phone }
-      ]
-    }
+      OR: [{ email: email }, { phone: phone }],
+    },
   });
 
   if (existingUser) {
     return sendResponse(res, {
       statusCode: 400,
-      message: existingUser.email === email
-        ? 'Email is already registered'
-        : 'Phone number is already registered',
+      message:
+        existingUser.email === email
+          ? "Email is already registered"
+          : "Phone number is already registered",
     });
   }
 
@@ -42,7 +40,7 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     statusCode: 201,
-    message: 'User created successfully',
+    message: "User created successfully",
   });
 });
 
@@ -51,7 +49,7 @@ const getUserById = catchAsync(async (req: AuthRequest, res: Response) => {
   const userId = req.user?.userId;
 
   if (id !== userId) {
-    throw new AppError(403, 'You are not authorized to access this user information');
+    throw new AppError(403, "You are not authorized to access this user information");
   }
 
   const user = await UserService.getUserById(id);
@@ -64,10 +62,10 @@ const getUserById = catchAsync(async (req: AuthRequest, res: Response) => {
   } else {
     sendResponse(res, {
       statusCode: 404,
-      message: 'User not found',
+      message: "User not found",
     });
   }
-})
+});
 
 const updateUser = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id as string;
@@ -75,14 +73,14 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     statusCode: 200,
-    message: 'User updated successfully',
+    message: "User updated successfully",
     data: user,
   });
-})
+});
 
 export const UserController = {
   getAllUsers,
   createUser,
   getUserById,
-  updateUser
-}
+  updateUser,
+};

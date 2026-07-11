@@ -43,25 +43,17 @@ export function CustomerCard({ customer }: CustomerCardProps) {
 
       <div className="grid grid-cols-2 gap-4 border-y border-border py-4">
         <div>
-          <p className="mb-1 text-[10px] uppercase text-muted-foreground">
-            Total Orders
-          </p>
+          <p className="mb-1 text-[10px] uppercase text-muted-foreground">Total Orders</p>
           <p className="font-bold text-foreground">{customer.totalOrders} Orders</p>
         </div>
         <div>
-          <p className="mb-1 text-[10px] uppercase text-muted-foreground">
-            Wallet Balance
-          </p>
-          <p className="font-bold text-success">
-            ৳{customer.walletBalance.toLocaleString()}
-          </p>
+          <p className="mb-1 text-[10px] uppercase text-muted-foreground">Wallet Balance</p>
+          <p className="font-bold text-success">৳{customer.walletBalance.toLocaleString()}</p>
         </div>
       </div>
 
       <div className="mt-4 flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          Last active: {customer.lastActive}
-        </p>
+        <p className="text-sm text-muted-foreground">Last active: {customer.lastActive}</p>
         <span className="flex items-center gap-1 text-xs font-bold text-primary transition-all group-hover:gap-2">
           Manage <ArrowRight className="size-4" />
         </span>

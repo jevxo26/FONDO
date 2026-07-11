@@ -1,9 +1,7 @@
 import { VendorsTable } from "@/components/dashboard/vendors/vendors-table";
 import { VendorControls } from "@/components/dashboard/vendors/vendors-controls";
 import { BottomWidgets } from "@/components/dashboard/vendors/bottom-widgets";
-import { Button } from "@/components/ui/button";
 import { vendors } from "@/data/vendors";
-import { Plus } from "lucide-react";
 import { RegisterVendorModal } from "@/components/dashboard/vendors/register-vendor-modal";
 
 export default function VendorsPage() {
@@ -11,9 +9,7 @@ export default function VendorsPage() {
     <div>
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Vendor Management
-          </h2>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Vendor Management</h2>
           <p className="mt-2 text-muted-foreground">
             Register, manage, and monitor vendor operations across the platform.
           </p>

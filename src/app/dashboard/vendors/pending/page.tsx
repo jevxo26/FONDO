@@ -8,12 +8,8 @@ export default function VendorsPendingPage() {
           <Clock className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Pending Approval
-          </h2>
-          <p className="mt-1 text-muted-foreground">
-            Review and approve newly registered vendors.
-          </p>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Pending Approval</h2>
+          <p className="mt-1 text-muted-foreground">Review and approve newly registered vendors.</p>
         </div>
       </div>
     </div>

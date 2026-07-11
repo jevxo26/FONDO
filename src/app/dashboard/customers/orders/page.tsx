@@ -16,21 +16,15 @@ export default async function CustomerOrdersPage({
   const customerFilter = typeof customer === "string" ? customer : undefined;
 
   const filteredOrders = customerFilter
-    ? orders.filter(
-        (o) => o.customerName.toLowerCase() === customerFilter.toLowerCase(),
-      )
+    ? orders.filter((o) => o.customerName.toLowerCase() === customerFilter.toLowerCase())
     : orders;
 
   const totalOrders = filteredOrders.length;
-  const pending = filteredOrders.filter(
-    (o) => o.orderStatus === "PENDING",
-  ).length;
+  const pending = filteredOrders.filter((o) => o.orderStatus === "PENDING").length;
   const inProgress = filteredOrders.filter(
     (o) => o.orderStatus === "PREPARING" || o.orderStatus === "ON_THE_WAY",
   ).length;
-  const completed = filteredOrders.filter(
-    (o) => o.orderStatus === "COMPLETED",
-  ).length;
+  const completed = filteredOrders.filter((o) => o.orderStatus === "COMPLETED").length;
 
   return (
     <div>
@@ -40,9 +34,7 @@ export default async function CustomerOrdersPage({
         </div>
         <div className="flex flex-1 flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="font-fraunces text-4xl font-bold text-foreground">
-              Customer Orders
-            </h2>
+            <h2 className="font-fraunces text-4xl font-bold text-foreground">Customer Orders</h2>
             <p className="mt-2 text-muted-foreground">
               Manage and track all customer meal orders across Dhaka.
             </p>
@@ -90,4 +82,3 @@ export default async function CustomerOrdersPage({
     </div>
   );
 }
-

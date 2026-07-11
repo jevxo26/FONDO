@@ -1,9 +1,9 @@
-import { Button } from '@/components/ui/button';
-import { Food } from '@/types/food';
-import { ArrowUpRight, Clock, Heart, ShoppingBag, Star } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import AddToCartButton from './add-to-cart-button';
+import { Button } from "@/components/ui/button";
+import { Food } from "@/types/food";
+import { ArrowUpRight, Clock, Heart, ShoppingBag, Star } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import AddToCartButton from "./add-to-cart-button";
 
 export default function FoodCard({ food }: { food: Food }) {
   return (
@@ -32,7 +32,7 @@ export default function FoodCard({ food }: { food: Food }) {
           <div className="inline-flex items-center gap-2 rounded-xl bg-[#16100C]/90 backdrop-blur-md px-4 py-2.5 text-white shadow-lg border border-white/10">
             <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-primary">
               <ShoppingBag className="size-4 text-foreground" />
-            </div>{' '}
+            </div>{" "}
             <span className="font-sans text-xs font-medium">2 items &middot; ৳520</span>
             <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-white/20">
               <Link href={`/foods/${food.slug}`}>

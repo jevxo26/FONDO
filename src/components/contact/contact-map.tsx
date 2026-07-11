@@ -18,16 +18,12 @@ export default function ContactMap() {
   return (
     <section className="bg-background pb-16">
       <div className="wrapper">
-        
         {/* MAP CONTAINER BOUNDARY */}
         {/* Mobile: fixed height. Tablet/Desktop: 21/9 panoramic aspect ratio */}
         <div className="relative w-full h-[350px] md:h-auto md:aspect-[21/9] rounded-[32px] overflow-hidden shadow-[var(--shadow-card)] border border-border/40 z-0 bg-secondary">
-          
           {/* Render the dynamically imported Leaflet Map */}
           <DynamicMap />
-
         </div>
-        
       </div>
     </section>
   );

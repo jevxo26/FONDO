@@ -1,15 +1,15 @@
-import { CustomerCard } from '@/components/dashboard/customers/profiles/customer-card';
-import { StatusMetrics } from '@/components/dashboard/customers/profiles/customer-status';
-import { TransactionList } from '@/components/dashboard/customers/profiles/transaction-list';
-import { WalletCard } from '@/components/dashboard/customers/profiles/wallet-card';
-import { customers, recentTransactions } from '@/data/customers';
-import { Download, Filter, Grid3x3, UserPlus, Users } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { CustomerCard } from "@/components/dashboard/customers/profiles/customer-card";
+import { StatusMetrics } from "@/components/dashboard/customers/profiles/customer-status";
+import { TransactionList } from "@/components/dashboard/customers/profiles/transaction-list";
+import { WalletCard } from "@/components/dashboard/customers/profiles/wallet-card";
+import { customers, recentTransactions } from "@/data/customers";
+import { Download, Filter, Grid3x3, UserPlus, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function CustomersPage() {
   const totalHoldings = customers.reduce((s, c) => s + c.walletBalance, 0);
-  const activeCount = customers.filter((c) => c.status === 'ACTIVE').length;
-  const suspendedCount = customers.filter((c) => c.status === 'SUSPENDED').length;
+  const activeCount = customers.filter((c) => c.status === "ACTIVE").length;
+  const suspendedCount = customers.filter((c) => c.status === "SUSPENDED").length;
 
   return (
     <div>
@@ -19,7 +19,9 @@ export default function CustomersPage() {
         </div>
         <div className="flex flex-1 flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="font-fraunces text-4xl font-bold text-foreground">Customer Operations</h2>
+            <h2 className="font-fraunces text-4xl font-bold text-foreground">
+              Customer Operations
+            </h2>
             <p className="mt-2 text-muted-foreground">
               View and manage customer profiles, segments, and account statuses.
             </p>

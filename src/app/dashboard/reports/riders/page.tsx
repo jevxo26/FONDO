@@ -8,12 +8,8 @@ export default function ReportsRidersPage() {
           <Truck className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Rider Report
-          </h2>
-          <p className="mt-1 text-muted-foreground">
-            Rider delivery and earnings reports.
-          </p>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Rider Report</h2>
+          <p className="mt-1 text-muted-foreground">Rider delivery and earnings reports.</p>
         </div>
       </div>
     </div>

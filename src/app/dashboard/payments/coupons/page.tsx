@@ -8,9 +8,7 @@ export default function PaymentsCouponsPage() {
           <TicketPercent className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Coupons
-          </h2>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Coupons</h2>
           <p className="mt-1 text-muted-foreground">
             Manage discount coupons and promotional codes.
           </p>

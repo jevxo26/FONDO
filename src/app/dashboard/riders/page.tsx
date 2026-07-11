@@ -8,12 +8,8 @@ export default function RidersPage() {
           <Truck className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            All Riders
-          </h2>
-          <p className="mt-1 text-muted-foreground">
-            View and manage all registered riders.
-          </p>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">All Riders</h2>
+          <p className="mt-1 text-muted-foreground">View and manage all registered riders.</p>
         </div>
       </div>
     </div>

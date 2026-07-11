@@ -1,9 +1,9 @@
-import { PrismaClient } from '@prisma/client';
-import AppError from '../utils/AppError';
-import { isPasswordValid } from '../utils/bcryptService';
-import { catchServiceAsync } from '../utils/catchServiceAsync';
-import { createRefreshToken, createToken } from '../utils/jwtService';
-import { sendUserDataAsResponse } from '../utils/responseStyle';
+import { PrismaClient } from "@prisma/client";
+import AppError from "../utils/AppError";
+import { isPasswordValid } from "../utils/bcryptService";
+import { catchServiceAsync } from "../utils/catchServiceAsync";
+import { createRefreshToken, createToken } from "../utils/jwtService";
+import { sendUserDataAsResponse } from "../utils/responseStyle";
 
 const prisma = new PrismaClient();
 
@@ -13,12 +13,12 @@ export const loginUser = catchServiceAsync(async (email: string, password: strin
   });
 
   if (!user || !user.password) {
-    throw new AppError(401, 'Invalid email or password');
+    throw new AppError(401, "Invalid email or password");
   }
 
   const isMatch = await isPasswordValid(password, user.password);
   if (!isMatch) {
-    throw new AppError(401, 'Invalid email or password');
+    throw new AppError(401, "Invalid email or password");
   }
 
   const token = createToken(user.id, user.email, user.role);

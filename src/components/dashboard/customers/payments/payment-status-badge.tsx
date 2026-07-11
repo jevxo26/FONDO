@@ -14,7 +14,10 @@ const statusConfig: Record<PaymentStatus, { dot: string; bg: string; label: stri
 export function PaymentStatusBadge({ status }: PaymentStatusBadgeProps) {
   const config = statusConfig[status];
   return (
-    <Badge variant="outline" className={`flex w-fit items-center gap-1.5 rounded-full border-0 px-3 py-1 text-xs font-bold ${config.bg}`}>
+    <Badge
+      variant="outline"
+      className={`flex w-fit items-center gap-1.5 rounded-full border-0 px-3 py-1 text-xs font-bold ${config.bg}`}
+    >
       <span className={`size-1.5 rounded-full ${config.dot}`} />
       {config.label}
     </Badge>

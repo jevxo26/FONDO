@@ -17,7 +17,7 @@ export function BlogReviewCard({ post, className }: BlogReviewCardProps) {
       <div
         className={cn(
           "group relative aspect-[312/228] w-[80vw] shrink-0 overflow-hidden rounded-4xl border-[3px] border-primary bg-card shadow-[var(--shadow-card)] sm:aspect-auto sm:h-[228px] sm:w-[312px] snap-start",
-          className
+          className,
         )}
       >
         <Image

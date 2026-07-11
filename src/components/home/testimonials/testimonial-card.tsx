@@ -19,7 +19,7 @@ export function TestimonialCard({ testimonial, className }: TestimonialCardProps
     <div
       className={cn(
         "flex w-[80vw] shrink-0 flex-col gap-5 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)] sm:w-[380px] snap-start",
-        className
+        className,
       )}
     >
       {/* Stars */}
@@ -29,9 +29,7 @@ export function TestimonialCard({ testimonial, className }: TestimonialCardProps
             key={i}
             className={cn(
               "size-4",
-              i < testimonial.rating
-                ? "fill-primary text-primary"
-                : "fill-muted text-muted"
+              i < testimonial.rating ? "fill-primary text-primary" : "fill-muted text-muted",
             )}
           />
         ))}
@@ -54,12 +52,8 @@ export function TestimonialCard({ testimonial, className }: TestimonialCardProps
           />
         </div>
         <div className="flex flex-col">
-          <span className="text-sm font-medium text-foreground">
-            {testimonial.name}
-          </span>
-          <span className="text-xs text-muted-foreground">
-            {testimonial.location}
-          </span>
+          <span className="text-sm font-medium text-foreground">{testimonial.name}</span>
+          <span className="text-xs text-muted-foreground">{testimonial.location}</span>
         </div>
       </div>
     </div>

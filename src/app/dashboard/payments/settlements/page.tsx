@@ -8,12 +8,8 @@ export default function PaymentsSettlementsPage() {
           <ArrowLeftRight className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Settlements
-          </h2>
-          <p className="mt-1 text-muted-foreground">
-            Manage platform-wide payment settlements.
-          </p>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Settlements</h2>
+          <p className="mt-1 text-muted-foreground">Manage platform-wide payment settlements.</p>
         </div>
       </div>
     </div>

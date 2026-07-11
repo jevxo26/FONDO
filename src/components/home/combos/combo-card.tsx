@@ -22,7 +22,7 @@ export function ComboCard({ combo, className }: ComboCardProps) {
     <div
       className={cn(
         "flex w-[80vw] shrink-0 flex-col rounded-3xl border border-border bg-card p-5 shadow-[var(--shadow-card)] sm:w-[289px] snap-start active:scale-[0.98] transition-transform duration-200",
-        className
+        className,
       )}
     >
       {/* Top row: serves + badge */}
@@ -77,7 +77,12 @@ export function ComboCard({ combo, className }: ComboCardProps) {
           </span>
           <span className="text-[11px] text-foreground/45">all inclusive</span>
         </div>
-        <Button variant="accent" className="gap-2 rounded-full px-4 py-2 text-[12px] font-bold uppercase tracking-[0.6px] h-auto" nativeButton={false} render={<Link href="/foods" />}>
+        <Button
+          variant="accent"
+          className="gap-2 rounded-full px-4 py-2 text-[12px] font-bold uppercase tracking-[0.6px] h-auto"
+          nativeButton={false}
+          render={<Link href="/foods" />}
+        >
           Order Combo
           <ArrowRight className="size-3.5" />
         </Button>

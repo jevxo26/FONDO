@@ -52,7 +52,15 @@ const paymentMethods = [
   { method: "Heritage Wallet", icon: "text-golden-amber", detail: "Wallet" },
 ];
 
-const statuses: PaymentStatus[] = ["SUCCESS", "SUCCESS", "SUCCESS", "SUCCESS", "SUCCESS", "FAILED", "REFUNDED"];
+const statuses: PaymentStatus[] = [
+  "SUCCESS",
+  "SUCCESS",
+  "SUCCESS",
+  "SUCCESS",
+  "SUCCESS",
+  "FAILED",
+  "REFUNDED",
+];
 
 function randomItem<T>(arr: T[]): T {
   return arr[Math.floor(rand() * arr.length)];
@@ -65,7 +73,20 @@ function generateTransactions(count: number): PaymentTransaction[] {
     const method = randomItem(paymentMethods);
     const status = randomItem(statuses);
     const day = Math.floor(rand() * 28) + 1;
-    const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][Math.floor(rand() * 12)];
+    const month = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ][Math.floor(rand() * 12)];
     const hour = String(Math.floor(rand() * 24)).padStart(2, "0");
     const minute = String(Math.floor(rand() * 60)).padStart(2, "0");
     txns.push({

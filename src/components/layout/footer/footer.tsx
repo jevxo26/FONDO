@@ -1,6 +1,6 @@
-import { FOOTER_LINKS, PAYMENT_METHODS, SOCIAL_ICONS } from '@/data/footer-data';
-import { ArrowRight } from 'lucide-react';
-import Image from 'next/image';
+import { FOOTER_LINKS, PAYMENT_METHODS, SOCIAL_ICONS } from "@/data/footer-data";
+import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 export function Footer() {
   return (

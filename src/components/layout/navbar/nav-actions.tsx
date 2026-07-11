@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { toggleMobileMenu } from '@/store/slices/uiSlice';
-import { useAppDispatch } from '@/store/store';
-import { Heart, Menu, ShoppingCart, Truck } from 'lucide-react';
-import Link from 'next/link';
+import { Button } from "@/components/ui/button";
+import { toggleMobileMenu } from "@/store/slices/uiSlice";
+import { useAppDispatch } from "@/store/store";
+import { Heart, Menu, ShoppingCart, Truck } from "lucide-react";
+import Link from "next/link";
 
 export function NavActions() {
   const dispatch = useAppDispatch();

@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { Search, X } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { Search, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 export function SearchForm() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
@@ -36,7 +36,11 @@ export function SearchForm() {
         className="flex size-9 items-center justify-center rounded-full bg-muted border border-border 2xl:hidden"
         aria-label="Toggle search"
       >
-        {isOpen ? <X className="size-4 text-foreground" /> : <Search className="size-4 text-foreground" />}
+        {isOpen ? (
+          <X className="size-4 text-foreground" />
+        ) : (
+          <Search className="size-4 text-foreground" />
+        )}
       </button>
 
       {isOpen && (
@@ -59,5 +63,5 @@ export function SearchForm() {
         </div>
       )}
     </>
-  )
+  );
 }

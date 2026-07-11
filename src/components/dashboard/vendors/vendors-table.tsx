@@ -17,7 +17,11 @@ const columns: ColumnDef<Vendor>[] = [
     cell: ({ row }) => {
       const status = row.original.status;
       return (
-        <Badge variant={status === "ACTIVE" ? "default" : status === "PENDING" ? "secondary" : "destructive"}>
+        <Badge
+          variant={
+            status === "ACTIVE" ? "default" : status === "PENDING" ? "secondary" : "destructive"
+          }
+        >
           {status}
         </Badge>
       );

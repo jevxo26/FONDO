@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
 import {
   type CarouselApi,
   Carousel,
   CarouselContent,
   CarouselItem,
-} from '@/components/ui/carousel';
-import { BEST_SELLERS } from '@/data/homepage';
-import { Star, Timer } from 'lucide-react';
-import Image from 'next/image';
-import { startTransition, useCallback, useEffect, useState } from 'react';
+} from "@/components/ui/carousel";
+import { BEST_SELLERS } from "@/data/homepage";
+import { Star, Timer } from "lucide-react";
+import Image from "next/image";
+import { startTransition, useCallback, useEffect, useState } from "react";
 
 export function HeroImage() {
   const [api, setApi] = useState<CarouselApi>();
@@ -23,9 +23,9 @@ export function HeroImage() {
   useEffect(() => {
     if (!api) return;
     onSelect();
-    api.on('select', onSelect);
+    api.on("select", onSelect);
     return () => {
-      api.off('select', onSelect);
+      api.off("select", onSelect);
     };
   }, [api, onSelect]);
 
@@ -86,7 +86,7 @@ export function HeroImage() {
             key={index}
             onClick={() => api?.scrollTo(index)}
             className={`size-2.5 rounded-full transition-colors ${
-              index === current ? 'bg-primary' : 'border border-primary bg-transparent'
+              index === current ? "bg-primary" : "border border-primary bg-transparent"
             }`}
           />
         ))}

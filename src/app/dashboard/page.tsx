@@ -6,25 +6,18 @@ export default function DashboardPage() {
       <nav className="mb-2 flex gap-2 text-xs text-muted-foreground">
         <span className="font-bold text-primary">Dashboard</span>
       </nav>
-      <h2 className="font-fraunces text-4xl font-bold text-foreground">
-        Overview
-      </h2>
+      <h2 className="font-fraunces text-4xl font-bold text-foreground">Overview</h2>
 
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <div
-              key={stat.label}
-              className="rounded-xl border border-border bg-card p-6"
-            >
+            <div key={stat.label} className="rounded-xl border border-border bg-card p-6">
               <div className="flex items-center justify-between">
                 <p className="text-sm text-muted-foreground">{stat.label}</p>
                 <Icon className="size-5 text-primary" />
               </div>
-              <p className="mt-2 font-fraunces text-3xl font-bold text-foreground">
-                {stat.value}
-              </p>
+              <p className="mt-2 font-fraunces text-3xl font-bold text-foreground">{stat.value}</p>
               <p className="mt-1 text-xs text-success">{stat.change}</p>
             </div>
           );

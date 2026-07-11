@@ -1,4 +1,4 @@
-import { SectionReveal } from '@/components/common/section-reveal';
+import { SectionReveal } from "@/components/common/section-reveal";
 import { BlogReviewCard } from "./blog-review-card";
 import { BLOG_POSTS } from "@/data/homepage";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";

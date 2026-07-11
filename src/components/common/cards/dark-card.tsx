@@ -21,7 +21,9 @@ export function DarkCard({
     <div
       className={cn(
         "group relative flex min-h-44 flex-col justify-between overflow-hidden rounded-2xl p-4 shadow-lg md:p-6 lg:p-8",
-        variant === "foreground" ? "bg-foreground text-white" : "bg-primary text-primary-foreground",
+        variant === "foreground"
+          ? "bg-foreground text-white"
+          : "bg-primary text-primary-foreground",
         className,
       )}
     >

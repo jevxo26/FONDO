@@ -8,9 +8,7 @@ export default function VendorsPerformancePage() {
           <TrendingUp className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Vendor Performance
-          </h2>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Vendor Performance</h2>
           <p className="mt-1 text-muted-foreground">
             Analyze vendor performance metrics and ratings.
           </p>

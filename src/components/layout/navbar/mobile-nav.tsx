@@ -1,53 +1,48 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { BookOpen, ChevronDown, House, X } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { useAppDispatch, useAppSelector } from "@/store/store"
-import { closeMobileMenu } from "@/store/slices/uiSlice"
-import { mainNavLinks, childIcons } from "@/data/navigation"
-import { useState } from "react"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { BookOpen, ChevronDown, House, X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { closeMobileMenu } from "@/store/slices/uiSlice";
+import { mainNavLinks, childIcons } from "@/data/navigation";
+import { useState } from "react";
 
 const parentIcon: Record<string, typeof House> = {
   Home: House,
   "Our Story": BookOpen,
-}
+};
 
 export function MobileNav() {
-  const pathname = usePathname()
-  const dispatch = useAppDispatch()
-  const isOpen = useAppSelector((state) => state.ui.isMobileMenuOpen)
-  const [expanded, setExpanded] = useState<string | null>("Menu")
-  const [prevIsOpen, setPrevIsOpen] = useState(isOpen)
+  const pathname = usePathname();
+  const dispatch = useAppDispatch();
+  const isOpen = useAppSelector((state) => state.ui.isMobileMenuOpen);
+  const [expanded, setExpanded] = useState<string | null>("Menu");
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
   if (isOpen !== prevIsOpen) {
-    setPrevIsOpen(isOpen)
-    if (isOpen) setExpanded("Menu")
+    setPrevIsOpen(isOpen);
+    if (isOpen) setExpanded("Menu");
   }
 
   const toggleExpand = (label: string) => {
-    setExpanded(expanded === label ? null : label)
-  }
+    setExpanded(expanded === label ? null : label);
+  };
 
   const closeAndClear = () => {
-    dispatch(closeMobileMenu())
-  }
+    dispatch(closeMobileMenu());
+  };
 
   const isCurrentPath = (href: string) => {
-    if (href === "/") return pathname === "/"
-    return pathname.startsWith(href.split("#")[0])
-  }
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href.split("#")[0]);
+  };
 
   return (
     <>
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-black/50"
-          onClick={closeAndClear}
-        />
-      )}
+      {isOpen && <div className="fixed inset-0 z-50 bg-black/50" onClick={closeAndClear} />}
       <div
         className={cn(
           "fixed inset-y-0 left-0 z-50 w-72 flex flex-col bg-background transition-transform duration-300",
@@ -55,11 +50,7 @@ export function MobileNav() {
         )}
       >
         <div className="flex items-center justify-between border-b border-border px-4 py-4">
-          <Link
-            href="/"
-            className="flex items-center gap-2"
-            onClick={closeAndClear}
-          >
+          <Link href="/" className="flex items-center gap-2" onClick={closeAndClear}>
             <div className="flex size-8 items-center justify-center rounded-lg bg-primary">
               <House className="size-4 text-white" />
             </div>
@@ -78,11 +69,11 @@ export function MobileNav() {
 
         <nav className="flex-1 overflow-y-auto py-2">
           {mainNavLinks.map((link) => {
-            const ParentIcon = link.children ? undefined : parentIcon[link.label] || House
+            const ParentIcon = link.children ? undefined : parentIcon[link.label] || House;
             const isActive = link.href
               ? isCurrentPath(link.href)
-              : link.children?.some((c) => isCurrentPath(c.href))
-            const isExpanded = expanded === link.label
+              : link.children?.some((c) => isCurrentPath(c.href));
+            const isExpanded = expanded === link.label;
 
             return (
               <div key={link.label}>
@@ -106,7 +97,7 @@ export function MobileNav() {
                     {isExpanded && (
                       <div className="bg-muted/30">
                         {link.children.map((child) => {
-                          const ChildIcon = childIcons[child.href]
+                          const ChildIcon = childIcons[child.href];
 
                           return (
                             <Link
@@ -115,15 +106,13 @@ export function MobileNav() {
                               onClick={closeAndClear}
                               className={cn(
                                 "flex items-center gap-3 px-4 py-2.5 pl-8 text-sm font-medium transition-colors hover:bg-muted",
-                                isCurrentPath(child.href)
-                                  ? "text-primary"
-                                  : "text-foreground/75",
+                                isCurrentPath(child.href) ? "text-primary" : "text-foreground/75",
                               )}
                             >
                               {ChildIcon && <ChildIcon className="size-4 shrink-0" />}
                               {child.label}
                             </Link>
-                          )
+                          );
                         })}
                       </div>
                     )}
@@ -134,9 +123,7 @@ export function MobileNav() {
                     onClick={closeAndClear}
                     className={cn(
                       "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors hover:bg-muted",
-                      isCurrentPath(link.href!)
-                        ? "text-primary"
-                        : "text-foreground",
+                      isCurrentPath(link.href!) ? "text-primary" : "text-foreground",
                     )}
                   >
                     {ParentIcon && <ParentIcon className="size-4 shrink-0" />}
@@ -144,7 +131,7 @@ export function MobileNav() {
                   </Link>
                 )}
               </div>
-            )
+            );
           })}
         </nav>
 
@@ -159,5 +146,5 @@ export function MobileNav() {
         </div>
       </div>
     </>
-  )
+  );
 }

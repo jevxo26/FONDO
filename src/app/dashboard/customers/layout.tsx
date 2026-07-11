@@ -12,11 +12,7 @@ const tabs = [
   { label: "Wallets", href: "/dashboard/customers/wallets" },
 ] as const;
 
-export default function CustomersLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function CustomersLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
@@ -34,15 +30,11 @@ export default function CustomersLayout({
               href={tab.href}
               className={cn(
                 "relative pb-4 text-sm font-medium transition-colors",
-                isActive
-                  ? "font-bold text-primary"
-                  : "text-muted-foreground hover:text-foreground",
+                isActive ? "font-bold text-primary" : "text-muted-foreground hover:text-foreground",
               )}
             >
               {tab.label}
-              {isActive && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
-              )}
+              {isActive && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
             </Link>
           );
         })}

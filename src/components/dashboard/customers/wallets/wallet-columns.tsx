@@ -18,20 +18,14 @@ const typeConfig: Record<string, { dot: string; label: string }> = {
 export const walletColumns: ColumnDef<WalletTransaction>[] = [
   {
     accessorKey: "id",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Transaction ID" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Transaction ID" />,
     cell: ({ row }) => (
-      <span className="font-mono text-sm font-bold text-foreground">
-        {row.original.id}
-      </span>
+      <span className="font-mono text-sm font-bold text-foreground">{row.original.id}</span>
     ),
   },
   {
     accessorKey: "customerName",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Customer" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Customer" />,
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
         <Avatar>
@@ -40,21 +34,15 @@ export const walletColumns: ColumnDef<WalletTransaction>[] = [
           </AvatarFallback>
         </Avatar>
         <div>
-          <p className="text-sm font-semibold text-foreground">
-            {row.original.customerName}
-          </p>
-          <p className="text-[13px] text-muted-foreground">
-            {row.original.walletId}
-          </p>
+          <p className="text-sm font-semibold text-foreground">{row.original.customerName}</p>
+          <p className="text-[13px] text-muted-foreground">{row.original.walletId}</p>
         </div>
       </div>
     ),
   },
   {
     accessorKey: "transactionType",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Type" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
     cell: ({ row }) => {
       const type = row.original.transactionType;
       const config = typeConfig[type] ?? { dot: "bg-border", label: type };
@@ -68,9 +56,7 @@ export const walletColumns: ColumnDef<WalletTransaction>[] = [
   },
   {
     accessorKey: "amount",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Amount" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
     cell: ({ row }) => {
       const txn = row.original;
       const isCredit = ["TOPUP", "CREDIT", "REFUND"].includes(txn.transactionType);
@@ -83,9 +69,7 @@ export const walletColumns: ColumnDef<WalletTransaction>[] = [
   },
   {
     accessorKey: "balanceAfter",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Balance" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Balance" />,
     cell: ({ row }) => (
       <span className="font-bold text-foreground">
         ৳{row.original.balanceAfter.toLocaleString()}
@@ -95,22 +79,14 @@ export const walletColumns: ColumnDef<WalletTransaction>[] = [
   {
     accessorKey: "status",
     filterFn: "equalsString",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ row }) => (
-      <WalletStatusBadge status={row.original.status} />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    cell: ({ row }) => <WalletStatusBadge status={row.original.status} />,
   },
   {
     accessorKey: "timestamp",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Timestamp" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Timestamp" />,
     cell: ({ row }) => (
-      <span className="text-sm text-muted-foreground">
-        {row.original.timestamp}
-      </span>
+      <span className="text-sm text-muted-foreground">{row.original.timestamp}</span>
     ),
   },
 ];

@@ -1,10 +1,10 @@
-import { SectionReveal } from '@/components/common/section-reveal';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { SIGNATURE_DISH } from '@/data/homepage';
-import { ArrowRight, ShoppingBag } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { SectionReveal } from "@/components/common/section-reveal";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { SIGNATURE_DISH } from "@/data/homepage";
+import { ArrowRight, ShoppingBag } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export function SignatureDish() {
   return (

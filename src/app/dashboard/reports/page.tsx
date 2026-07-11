@@ -8,12 +8,8 @@ export default function ReportsPage() {
           <BarChart3 className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Sales Report
-          </h2>
-          <p className="mt-1 text-muted-foreground">
-            View sales performance across all channels.
-          </p>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Sales Report</h2>
+          <p className="mt-1 text-muted-foreground">View sales performance across all channels.</p>
         </div>
       </div>
     </div>

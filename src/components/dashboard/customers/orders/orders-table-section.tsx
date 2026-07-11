@@ -70,9 +70,7 @@ export function OrdersTableSection({ data }: { data: CustomerOrder[] }) {
       toolbarActions={
         <Select value={sortKey} onValueChange={(v) => v && setSortKey(v)}>
           <SelectTrigger className="w-36 border-border text-xs font-bold">
-            <SelectValue>
-              {sortOptions.find((o) => o.value === sortKey)?.label}
-            </SelectValue>
+            <SelectValue>{sortOptions.find((o) => o.value === sortKey)?.label}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             {sortOptions.map((opt) => (

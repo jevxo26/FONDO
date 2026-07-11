@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { TogglePill } from '@/components/common/toggle-pill';
-import { Calendar } from 'lucide-react';
+import { TogglePill } from "@/components/common/toggle-pill";
+import { Calendar } from "lucide-react";
 
-const statusFilters = ['All Transactions', 'Success', 'Refunded', 'Failed'] as const;
+const statusFilters = ["All Transactions", "Success", "Refunded", "Failed"] as const;
 
 interface PaymentFilterBarProps {
   activeFilter: string;

@@ -1,10 +1,10 @@
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 interface SectionHeaderProps {
   title: string;
   description?: string;
   action?: React.ReactNode;
-  align?: 'left' | 'center';
+  align?: "left" | "center";
   className?: string;
 }
 
@@ -12,15 +12,15 @@ export function SectionHeader({
   title,
   description,
   action,
-  align = 'left',
+  align = "left",
   className,
 }: SectionHeaderProps) {
   return (
     <div
       className={cn(
-        'flex items-center gap-4',
-        align === 'center' && 'justify-center text-center',
-        align === 'left' && 'w-full',
+        "flex items-center gap-4",
+        align === "center" && "justify-center text-center",
+        align === "left" && "w-full",
         className,
       )}
     >

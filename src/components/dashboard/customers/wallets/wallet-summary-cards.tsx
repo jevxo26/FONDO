@@ -1,4 +1,4 @@
-import { TrendingUp, PersonStanding, Wallet } from 'lucide-react';
+import { TrendingUp, PersonStanding, Wallet } from "lucide-react";
 
 export function WalletSummaryCards() {
   return (
@@ -26,7 +26,7 @@ export function WalletSummaryCards() {
               <div
                 key={i}
                 className={`h-full w-full rounded-t-lg transition-all duration-500 ${
-                  i === 3 ? 'bg-primary' : 'bg-white/10'
+                  i === 3 ? "bg-primary" : "bg-white/10"
                 }`}
                 style={{ height: `${h}%` }}
               />

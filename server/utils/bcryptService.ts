@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 import { catchServiceAsync } from "./catchServiceAsync";
 
 export const encryptPassword = catchServiceAsync(async (password: string): Promise<string> => {
@@ -15,5 +15,5 @@ export const encryptPassword = catchServiceAsync(async (password: string): Promi
 export const isPasswordValid = catchServiceAsync(
   async (password: string, hashPassword: string): Promise<boolean> => {
     return await bcrypt.compare(password, hashPassword);
-  }
+  },
 );

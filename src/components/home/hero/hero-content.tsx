@@ -16,8 +16,8 @@ export function HeroContent() {
       </h1>
 
       <p className="font-sans text-base leading-relaxed text-muted-foreground lg:text-lg">
-        Experience hyper-seasonal ingredients prepared with obsessive detail in
-        a space designed for slow conversations.
+        Experience hyper-seasonal ingredients prepared with obsessive detail in a space designed for
+        slow conversations.
       </p>
 
       <div className="flex items-center gap-3 sm:gap-4">
@@ -43,17 +43,13 @@ export function HeroContent() {
 
       <div className="flex flex-wrap items-center gap-6">
         <div className="flex flex-col gap-0.5 pr-4 border-r border-border">
-          <span className="font-sans text-lg font-semibold leading-tight text-foreground">
-            28m
-          </span>
+          <span className="font-sans text-lg font-semibold leading-tight text-foreground">28m</span>
           <span className="font-sans text-sm font-normal leading-tight text-muted-foreground">
             Avg delivery
           </span>
         </div>
         <div className="flex flex-col gap-0.5 pr-4 border-r border-border">
-          <span className="font-sans text-lg font-semibold leading-tight text-foreground">
-            4.9
-          </span>
+          <span className="font-sans text-lg font-semibold leading-tight text-foreground">4.9</span>
           <span className="font-sans text-sm font-normal leading-tight text-muted-foreground">
             Rating &middot; 12k
           </span>

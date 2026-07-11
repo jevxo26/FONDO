@@ -35,7 +35,14 @@ export function GlassCard({
         <div className={`mb-4 flex size-10 items-center justify-center rounded-lg ${iconBg}`}>
           {icon}
         </div>
-        <h3 className={cn("font-fraunces leading-tight text-foreground", layout === "row" ? "text-xl" : "text-lg")}>{title}</h3>
+        <h3
+          className={cn(
+            "font-fraunces leading-tight text-foreground",
+            layout === "row" ? "text-xl" : "text-lg",
+          )}
+        >
+          {title}
+        </h3>
       </div>
       {layout === "row" ? (
         <div className="flex items-baseline gap-2">

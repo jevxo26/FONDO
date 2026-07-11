@@ -8,12 +8,8 @@ export default function ReportsRevenuePage() {
           <TrendingUp className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Revenue Report
-          </h2>
-          <p className="mt-1 text-muted-foreground">
-            Analyze platform revenue across all streams.
-          </p>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Revenue Report</h2>
+          <p className="mt-1 text-muted-foreground">Analyze platform revenue across all streams.</p>
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
 
 import {
   Dialog,
@@ -10,19 +10,19 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-import { FormField } from '@/components/common/form-field';
-import { FieldGroup } from '@/components/ui/field';
+import { FormField } from "@/components/common/form-field";
+import { FieldGroup } from "@/components/ui/field";
 
 const schema = yup.object({
-  businessName: yup.string().required('Business name is required'),
-  ownerName: yup.string().required('Owner name is required'),
-  phone: yup.string().min(11, 'Phone must be at least 11 digits').required('Phone is required'),
-  email: yup.string().email('Invalid email').required('Email is required'),
+  businessName: yup.string().required("Business name is required"),
+  ownerName: yup.string().required("Owner name is required"),
+  phone: yup.string().min(11, "Phone must be at least 11 digits").required("Phone is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
 });
 
 type FormValues = yup.InferType<typeof schema>;
@@ -61,7 +61,7 @@ export function RegisterVendorModal() {
                 id="businessName"
                 placeholder="ABC Enterprise"
                 aria-invalid={!!errors.businessName}
-                {...register('businessName')}
+                {...register("businessName")}
               />
             </FormField>
 
@@ -70,7 +70,7 @@ export function RegisterVendorModal() {
                 id="ownerName"
                 placeholder="John Doe"
                 aria-invalid={!!errors.ownerName}
-                {...register('ownerName')}
+                {...register("ownerName")}
               />
             </FormField>
 
@@ -80,7 +80,7 @@ export function RegisterVendorModal() {
                   id="phone"
                   placeholder="01XXXXXXXXX"
                   aria-invalid={!!errors.phone}
-                  {...register('phone')}
+                  {...register("phone")}
                 />
               </FormField>
 
@@ -90,7 +90,7 @@ export function RegisterVendorModal() {
                   type="email"
                   placeholder="vendor@example.com"
                   aria-invalid={!!errors.email}
-                  {...register('email')}
+                  {...register("email")}
                 />
               </FormField>
             </div>

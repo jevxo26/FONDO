@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { CreditCard, Wallet } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { CreditCard, Wallet } from "lucide-react";
 
 interface WalletCardProps {
   totalHoldings: number;

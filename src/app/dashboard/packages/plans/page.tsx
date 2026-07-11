@@ -8,9 +8,7 @@ export default function PackagesPlansPage() {
           <Calendar className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Meal Plans
-          </h2>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Meal Plans</h2>
           <p className="mt-1 text-muted-foreground">
             Create and manage meal plan templates for packages.
           </p>

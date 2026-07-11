@@ -8,9 +8,7 @@ export default function ReportsVendorsPage() {
           <Store className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Vendor Report
-          </h2>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Vendor Report</h2>
           <p className="mt-1 text-muted-foreground">
             Vendor-specific sales and performance reports.
           </p>

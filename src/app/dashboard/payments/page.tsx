@@ -8,9 +8,7 @@ export default function PaymentsPage() {
           <CreditCard className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Transactions
-          </h2>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Transactions</h2>
           <p className="mt-1 text-muted-foreground">
             Monitor all payment transactions across the platform.
           </p>

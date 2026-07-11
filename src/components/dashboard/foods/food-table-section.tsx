@@ -17,11 +17,7 @@ const rowActions: RowAction<AdminFoodItem>[] = [
 export function FoodTableSection() {
   return (
     <div className="rounded-xl border border-border bg-card p-6">
-      <DataTable
-        data={adminFoods}
-        columns={foodColumns}
-        rowActions={rowActions}
-      />
+      <DataTable data={adminFoods} columns={foodColumns} rowActions={rowActions} />
     </div>
   );
 }

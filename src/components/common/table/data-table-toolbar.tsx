@@ -12,11 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Search, Settings2, Filter } from "lucide-react";
 import type { FacetedFilter } from "./types";
 import { Input } from "@/components/ui/input";
@@ -67,21 +63,16 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-wrap items-center gap-3">
         {filters?.map((filter) => {
           const column = table.getColumn(filter.columnId);
-          const currentValue = column?.getFilterValue() as
-            | string
-            | undefined;
+          const currentValue = column?.getFilterValue() as string | undefined;
 
           return (
             <Popover key={filter.columnId}>
-              <PopoverTrigger
-                className={buttonVariants({ variant: "outline", size: "sm" })}
-              >
+              <PopoverTrigger className={buttonVariants({ variant: "outline", size: "sm" })}>
                 <Filter className="size-4" />
                 {filter.title}
                 {currentValue && (
                   <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary">
-                    {filter.options.find((o) => o.value === currentValue)
-                      ?.label ?? currentValue}
+                    {filter.options.find((o) => o.value === currentValue)?.label ?? currentValue}
                   </span>
                 )}
               </PopoverTrigger>
@@ -92,9 +83,7 @@ export function DataTableToolbar<TData>({
                 <label className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
                   <Checkbox
                     checked={!currentValue}
-                    onCheckedChange={() =>
-                      column?.setFilterValue(undefined)
-                    }
+                    onCheckedChange={() => column?.setFilterValue(undefined)}
                   />
                   All
                 </label>
@@ -124,9 +113,7 @@ export function DataTableToolbar<TData>({
         {toolbarActions}
 
         <DropdownMenu>
-          <DropdownMenuTrigger
-            className={buttonVariants({ variant: "outline", size: "sm" })}
-          >
+          <DropdownMenuTrigger className={buttonVariants({ variant: "outline", size: "sm" })}>
             <Settings2 className="size-4" />
             View
           </DropdownMenuTrigger>
@@ -138,9 +125,7 @@ export function DataTableToolbar<TData>({
                 <DropdownMenuCheckboxItem
                   key={column.id}
                   checked={column.getIsVisible()}
-                  onCheckedChange={(value) =>
-                    column.toggleVisibility(!!value)
-                  }
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
                 >
                   {humanize(column.id)}
                 </DropdownMenuCheckboxItem>

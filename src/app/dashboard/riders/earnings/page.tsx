@@ -8,12 +8,8 @@ export default function RidersEarningsPage() {
           <Wallet className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Earnings
-          </h2>
-          <p className="mt-1 text-muted-foreground">
-            View rider earnings and payout history.
-          </p>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Earnings</h2>
+          <p className="mt-1 text-muted-foreground">View rider earnings and payout history.</p>
         </div>
       </div>
     </div>

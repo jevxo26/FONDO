@@ -8,12 +8,8 @@ export default function OrdersConfirmedPage() {
           <CheckCircle className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Confirmed Orders
-          </h2>
-          <p className="mt-1 text-muted-foreground">
-            Orders confirmed and queued for preparation.
-          </p>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Confirmed Orders</h2>
+          <p className="mt-1 text-muted-foreground">Orders confirmed and queued for preparation.</p>
         </div>
       </div>
     </div>

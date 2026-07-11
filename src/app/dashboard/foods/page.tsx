@@ -19,9 +19,7 @@ export default function FoodsPage() {
         </div>
         <div className="flex flex-1 flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="font-fraunces text-4xl font-bold text-foreground">
-              All Foods
-            </h2>
+            <h2 className="font-fraunces text-4xl font-bold text-foreground">All Foods</h2>
             <p className="mt-2 text-muted-foreground">
               Browse and manage all food items across vendors.
             </p>

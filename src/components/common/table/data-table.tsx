@@ -111,11 +111,7 @@ export function DataTable<TData>({
 
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
-      <DataTableToolbar
-        table={table}
-        toolbarActions={toolbarActions}
-        filters={filters}
-      />
+      <DataTableToolbar table={table} toolbarActions={toolbarActions} filters={filters} />
       <div className="overflow-x-auto">
         <Table>
           <TableHeader className="bg-secondary">
@@ -125,10 +121,7 @@ export function DataTable<TData>({
                   <TableHead key={header.id} className="px-4 py-4 md:px-6">
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
@@ -158,20 +151,14 @@ export function DataTable<TData>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="px-4 py-4 md:px-6 md:py-5">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-40 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-40 text-center">
                   <Empty>
                     <EmptyHeader>
                       <EmptyMedia>

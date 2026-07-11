@@ -14,11 +14,10 @@ export default function WalletsPage() {
         </div>
         <div className="flex flex-1 flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="font-fraunces text-4xl font-bold text-foreground">
-              Customer Wallets
-            </h2>
+            <h2 className="font-fraunces text-4xl font-bold text-foreground">Customer Wallets</h2>
             <p className="mt-2 text-muted-foreground">
-              Oversee liquidity across the ecosystem. Manage rewards, monitor top-ups, and analyze spending patterns.
+              Oversee liquidity across the ecosystem. Manage rewards, monitor top-ups, and analyze
+              spending patterns.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">

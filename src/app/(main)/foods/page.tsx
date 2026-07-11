@@ -3,8 +3,6 @@ import FoodGrid from "@/components/foods/components/food-grid";
 import Pagination from "@/components/foods/components/pagination";
 import { FOOD_ITEMS } from "@/data/foodsdata";
 
-
-
 export default async function CategoriesPage() {
   const allfoods = FOOD_ITEMS;
   const foods = allfoods.slice(0, 6); // Get the first 6 foods for the current page
@@ -20,7 +18,8 @@ export default async function CategoriesPage() {
               The Menu.
             </h1>
             <p className="font-sans text-sm md:text-base leading-relaxed text-muted-foreground mt-1">
-              Slow-cooked Mughlai classics, prepared in single batches. <br className="hidden sm:inline" />
+              Slow-cooked Mughlai classics, prepared in single batches.{" "}
+              <br className="hidden sm:inline" />
               Anything you order before 10 pm is delivered hot tonight.
             </p>
           </div>

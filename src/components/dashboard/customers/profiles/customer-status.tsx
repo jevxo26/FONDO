@@ -4,11 +4,7 @@ interface StatusMetricsProps {
   totalCustomers: number;
 }
 
-export function StatusMetrics({
-  activeCount,
-  suspendedCount,
-  totalCustomers,
-}: StatusMetricsProps) {
+export function StatusMetrics({ activeCount, suspendedCount, totalCustomers }: StatusMetricsProps) {
   const activePercent = Math.round((activeCount / totalCustomers) * 100);
 
   return (
@@ -18,9 +14,7 @@ export function StatusMetrics({
         <div>
           <div className="mb-2 flex justify-between text-sm">
             <span className="text-muted-foreground">Active</span>
-            <span className="font-bold text-foreground">
-              {activeCount} Users
-            </span>
+            <span className="font-bold text-foreground">{activeCount} Users</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
             <div
@@ -32,9 +26,7 @@ export function StatusMetrics({
         <div>
           <div className="mb-2 flex justify-between text-sm">
             <span className="text-muted-foreground">Suspended</span>
-            <span className="font-bold text-foreground">
-              {suspendedCount} Users
-            </span>
+            <span className="font-bold text-foreground">{suspendedCount} Users</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
             <div

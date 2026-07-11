@@ -9,8 +9,8 @@ export function PaymentInsightCards() {
           Fraud Prevention
         </h4>
         <p className="mb-4 text-sm text-muted-foreground">
-          All transactions are monitored by FONDO Guard. No suspicious
-          activities detected in the last 24 hours.
+          All transactions are monitored by FONDO Guard. No suspicious activities detected in the
+          last 24 hours.
         </p>
         <Button variant="link" className="h-auto gap-1 p-0 text-xs font-bold">
           <ShieldCheck className="size-4" />
@@ -25,18 +25,14 @@ export function PaymentInsightCards() {
         <div className="flex gap-4">
           <div className="flex flex-1 flex-col items-center rounded-lg border border-border bg-card p-3">
             <Smartphone className="mb-1 size-5 text-primary" />
-            <span className="font-fraunces text-2xl font-bold text-foreground">
-              65%
-            </span>
+            <span className="font-fraunces text-2xl font-bold text-foreground">65%</span>
             <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               Mobile Wallets
             </span>
           </div>
           <div className="flex flex-1 flex-col items-center rounded-lg border border-border bg-card p-3">
             <CreditCard className="mb-1 size-5 text-primary" />
-            <span className="font-fraunces text-2xl font-bold text-foreground">
-              35%
-            </span>
+            <span className="font-fraunces text-2xl font-bold text-foreground">35%</span>
             <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               Card / Direct
             </span>

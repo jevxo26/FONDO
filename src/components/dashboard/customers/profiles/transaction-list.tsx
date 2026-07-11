@@ -29,11 +29,7 @@ export function TransactionList({ transactions }: TransactionListProps) {
                   : "bg-destructive/10 text-destructive"
               }`}
             >
-              {tx.type === "CREDIT" ? (
-                <Plus className="size-5" />
-              ) : (
-                <Minus className="size-5" />
-              )}
+              {tx.type === "CREDIT" ? <Plus className="size-5" /> : <Minus className="size-5" />}
             </div>
             <div className="flex-1">
               <p className="text-sm font-bold text-foreground">{tx.title}</p>
@@ -47,8 +43,7 @@ export function TransactionList({ transactions }: TransactionListProps) {
                   tx.type === "CREDIT" ? "text-success" : "text-destructive"
                 }`}
               >
-                {tx.type === "CREDIT" ? "+" : "-"}৳
-                {tx.amount.toLocaleString()}
+                {tx.type === "CREDIT" ? "+" : "-"}৳{tx.amount.toLocaleString()}
               </p>
               <p className="text-[10px] text-muted-foreground">{tx.time}</p>
             </div>

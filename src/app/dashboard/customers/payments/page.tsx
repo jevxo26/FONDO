@@ -14,9 +14,7 @@ export default function PaymentsPage() {
         </div>
         <div className="flex flex-1 flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="font-fraunces text-4xl font-bold text-foreground">
-              Financial Overview
-            </h2>
+            <h2 className="font-fraunces text-4xl font-bold text-foreground">Financial Overview</h2>
             <p className="mt-2 text-muted-foreground">
               Track and manage every financial interaction across the ecosystem.
             </p>

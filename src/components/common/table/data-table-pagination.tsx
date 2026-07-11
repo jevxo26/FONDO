@@ -14,9 +14,7 @@ interface DataTablePaginationProps<TData> {
   table: Table<TData>;
 }
 
-export function DataTablePagination<TData>({
-  table,
-}: DataTablePaginationProps<TData>) {
+export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
   const pageIndex = table.getState().pagination.pageIndex;
   const pageSize = table.getState().pagination.pageSize;
   const totalItems = table.getFilteredRowModel().rows.length;
@@ -26,11 +24,7 @@ export function DataTablePagination<TData>({
 
   const pages: (number | "ellipsis")[] = [];
   for (let i = 0; i < totalPages; i++) {
-    if (
-      i === 0 ||
-      i === totalPages - 1 ||
-      (i >= pageIndex - 1 && i <= pageIndex + 1)
-    ) {
+    if (i === 0 || i === totalPages - 1 || (i >= pageIndex - 1 && i <= pageIndex + 1)) {
       pages.push(i);
     } else if (pages[pages.length - 1] !== "ellipsis") {
       pages.push("ellipsis");
@@ -44,19 +38,14 @@ export function DataTablePagination<TData>({
         <span className="font-bold text-foreground">
           {start}-{end}
         </span>{" "}
-        of <span className="font-bold text-foreground">{totalItems}</span>{" "}
-        entries
+        of <span className="font-bold text-foreground">{totalItems}</span> entries
       </p>
       <div className="flex items-center">
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
               onClick={() => table.previousPage()}
-              className={
-                !table.getCanPreviousPage()
-                  ? "pointer-events-none opacity-30"
-                  : ""
-              }
+              className={!table.getCanPreviousPage() ? "pointer-events-none opacity-30" : ""}
             />
           </PaginationItem>
           {pages.map((p, i) =>
@@ -66,10 +55,7 @@ export function DataTablePagination<TData>({
               </PaginationItem>
             ) : (
               <PaginationItem key={p}>
-                <PaginationLink
-                  isActive={p === pageIndex}
-                  onClick={() => table.setPageIndex(p)}
-                >
+                <PaginationLink isActive={p === pageIndex} onClick={() => table.setPageIndex(p)}>
                   {p + 1}
                 </PaginationLink>
               </PaginationItem>
@@ -78,11 +64,7 @@ export function DataTablePagination<TData>({
           <PaginationItem>
             <PaginationNext
               onClick={() => table.nextPage()}
-              className={
-                !table.getCanNextPage()
-                  ? "pointer-events-none opacity-30"
-                  : ""
-              }
+              className={!table.getCanNextPage() ? "pointer-events-none opacity-30" : ""}
             />
           </PaginationItem>
         </PaginationContent>

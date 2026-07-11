@@ -1,8 +1,8 @@
-import { SectionReveal } from '@/components/common/section-reveal';
-import { CHEF_STORY } from '@/data/homepage';
-import { cn } from '@/lib/utils';
-import { Award, BookOpen, Sparkles } from 'lucide-react';
-import Image from 'next/image';
+import { SectionReveal } from "@/components/common/section-reveal";
+import { CHEF_STORY } from "@/data/homepage";
+import { cn } from "@/lib/utils";
+import { Award, BookOpen, Sparkles } from "lucide-react";
+import Image from "next/image";
 
 const iconMap = {
   trophy: Award,
@@ -11,9 +11,9 @@ const iconMap = {
 };
 
 const variantClasses = {
-  dark: 'bg-foreground text-white border-foreground',
-  orange: 'bg-[#E7963D]/15 text-foreground border-[#E7963D]/40',
-  light: 'bg-white text-foreground border-border',
+  dark: "bg-foreground text-white border-foreground",
+  orange: "bg-[#E7963D]/15 text-foreground border-[#E7963D]/40",
+  light: "bg-white text-foreground border-border",
 };
 
 export function ChefStory() {
@@ -69,7 +69,7 @@ export function ChefStory() {
                     <div
                       key={badge.text}
                       className={cn(
-                        'flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold',
+                        "flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold",
                         variantClasses[badge.variant],
                       )}
                     >

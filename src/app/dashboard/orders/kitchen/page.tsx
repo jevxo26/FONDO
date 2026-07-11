@@ -8,12 +8,8 @@ export default function OrdersKitchenPage() {
           <CookingPot className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Kitchen Queue
-          </h2>
-          <p className="mt-1 text-muted-foreground">
-            Orders currently being prepared in kitchens.
-          </p>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Kitchen Queue</h2>
+          <p className="mt-1 text-muted-foreground">Orders currently being prepared in kitchens.</p>
         </div>
       </div>
     </div>

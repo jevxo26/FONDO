@@ -27,9 +27,7 @@ export default function PackagesLayout({ children }: { children: React.ReactNode
               href={tab.href}
               className={cn(
                 "relative pb-4 text-sm font-medium transition-colors",
-                isActive
-                  ? "font-bold text-primary"
-                  : "text-muted-foreground hover:text-foreground",
+                isActive ? "font-bold text-primary" : "text-muted-foreground hover:text-foreground",
               )}
             >
               {tab.label}

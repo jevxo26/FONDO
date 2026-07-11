@@ -8,45 +8,29 @@ import { OrderStatusBadge } from "@/components/dashboard/customers/orders/order-
 export const orderColumns: ColumnDef<CustomerOrder>[] = [
   {
     accessorKey: "orderNumber",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Order #" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Order #" />,
     cell: ({ row }) => (
       <span className="font-bold text-foreground">{row.original.orderNumber}</span>
     ),
   },
   {
     accessorKey: "customerName",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Customer" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Customer" />,
     cell: ({ row }) => (
       <div>
-        <p className="text-sm font-bold text-foreground">
-          {row.original.customerName}
-        </p>
-        <p className="text-[13px] text-muted-foreground">
-          {row.original.customerId}
-        </p>
+        <p className="text-sm font-bold text-foreground">{row.original.customerName}</p>
+        <p className="text-[13px] text-muted-foreground">{row.original.customerId}</p>
       </div>
     ),
   },
   {
     accessorKey: "items",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Items" />
-    ),
-    cell: ({ row }) => (
-      <span className="text-sm text-muted-foreground">
-        {row.original.items}
-      </span>
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Items" />,
+    cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.items}</span>,
   },
   {
     accessorKey: "totalAmount",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Total" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Total" />,
     cell: ({ row }) => (
       <span className="font-bold text-foreground">
         ৳{row.original.totalAmount.toLocaleString()}
@@ -56,18 +40,12 @@ export const orderColumns: ColumnDef<CustomerOrder>[] = [
   {
     accessorKey: "orderStatus",
     filterFn: "equalsString",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ row }) => (
-      <OrderStatusBadge status={row.original.orderStatus} />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    cell: ({ row }) => <OrderStatusBadge status={row.original.orderStatus} />,
   },
   {
     accessorKey: "paymentStatus",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Payment" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Payment" />,
     cell: ({ row }) => {
       const status = row.original.paymentStatus;
       return (

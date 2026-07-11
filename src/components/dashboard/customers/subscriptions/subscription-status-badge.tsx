@@ -17,9 +17,7 @@ const statusStyles: Record<SubscriptionStatus, string> = {
   CANCELLED: "border-red-200 bg-red-100 text-red-800",
 };
 
-export function SubscriptionStatusBadge({
-  status,
-}: SubscriptionStatusBadgeProps) {
+export function SubscriptionStatusBadge({ status }: SubscriptionStatusBadgeProps) {
   return (
     <Badge
       variant="outline"

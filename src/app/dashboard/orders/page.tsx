@@ -8,12 +8,8 @@ export default function OrdersPage() {
           <Receipt className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Pending Orders
-          </h2>
-          <p className="mt-1 text-muted-foreground">
-            Orders awaiting confirmation and processing.
-          </p>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Pending Orders</h2>
+          <p className="mt-1 text-muted-foreground">Orders awaiting confirmation and processing.</p>
         </div>
       </div>
     </div>

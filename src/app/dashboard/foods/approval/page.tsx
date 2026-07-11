@@ -8,9 +8,7 @@ export default function FoodsApprovalPage() {
           <ClipboardCheck className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Approval Queue
-          </h2>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Approval Queue</h2>
           <p className="mt-1 text-muted-foreground">
             Review and approve food items submitted by vendors.
           </p>

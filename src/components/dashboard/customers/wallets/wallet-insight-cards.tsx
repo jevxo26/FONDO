@@ -1,6 +1,6 @@
-import { Gift, Smartphone, CreditCard, Landmark } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { DarkCard } from '@/components/common/cards/dark-card';
+import { Gift, Smartphone, CreditCard, Landmark } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DarkCard } from "@/components/common/cards/dark-card";
 
 export function WalletInsightCards() {
   return (
@@ -11,7 +11,7 @@ export function WalletInsightCards() {
         title="Seasonal Loyalty Drive"
         description="Auto-credit ৳500 to all Platinum members who haven't ordered in 30 days."
       >
-        <Button variant={'outline'} className="w-full rounded-full">
+        <Button variant={"outline"} className="w-full rounded-full">
           Launch Bulk Reward
         </Button>
       </DarkCard>

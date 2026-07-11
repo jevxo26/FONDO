@@ -8,9 +8,7 @@ export default function RidersPerformancePage() {
           <BarChart3 className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Performance
-          </h2>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Performance</h2>
           <p className="mt-1 text-muted-foreground">
             Analyze rider delivery performance and ratings.
           </p>

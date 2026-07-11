@@ -8,12 +8,8 @@ export default function OrdersDeliveryPage() {
           <Truck className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Delivery Queue
-          </h2>
-          <p className="mt-1 text-muted-foreground">
-            Orders out for delivery to customers.
-          </p>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Delivery Queue</h2>
+          <p className="mt-1 text-muted-foreground">Orders out for delivery to customers.</p>
         </div>
       </div>
     </div>

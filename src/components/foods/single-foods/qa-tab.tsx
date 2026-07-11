@@ -7,11 +7,10 @@ import { Button } from "@/components/ui/button";
 const QaTab = () => {
   return (
     <div className="flex flex-col gap-8">
-    
       {/* Question Input */}
       <div className="rounded-2xl border border-border/60 bg-muted/20 p-5 dark:bg-muted/5">
         <h4 className="font-sans text-sm font-semibold text-secondary-foreground mb-3 flex items-center gap-2">
-          <MessageSquare className="size-4 text-primary" /> 
+          <MessageSquare className="size-4 text-primary" />
           Have a question about this dish?
         </h4>
 
@@ -32,15 +31,13 @@ const QaTab = () => {
         </div>
       </div>
 
-
       {/* QA List */}
       <div className="flex flex-col gap-6">
-        {mockFAQs.map((item:FAQ) => (
+        {mockFAQs.map((item: FAQ) => (
           <div
             key={item.id}
             className="flex flex-col gap-4 border-b border-border/40 pb-6 last:border-0 last:pb-0"
           >
-            
             {/* Customer Question */}
             <div className="flex flex-col gap-1.5">
               <p className="font-sans text-sm text-foreground bg-muted/10 p-3 rounded-xl border border-border/30">
@@ -48,7 +45,6 @@ const QaTab = () => {
                 {item.question}
               </p>
             </div>
-
 
             {/* Kitchen Answer */}
             {item.answer && (
@@ -67,9 +63,7 @@ const QaTab = () => {
                       </span>
                     </div>
 
-                    <span className="font-sans text-xs text-muted-foreground">
-                     1/2/44
-                    </span>
+                    <span className="font-sans text-xs text-muted-foreground">1/2/44</span>
                   </div>
 
                   <p className="font-sans text-sm text-muted-foreground bg-foreground/5 dark:bg-white/5 p-3 rounded-xl border border-border/30 leading-relaxed">
@@ -79,11 +73,9 @@ const QaTab = () => {
                 </div>
               </div>
             )}
-
           </div>
         ))}
       </div>
-
     </div>
   );
 };

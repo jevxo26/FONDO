@@ -1,14 +1,14 @@
 "use client";
 
-import { TogglePill } from '@/components/common/toggle-pill';
-import { Calendar } from 'lucide-react';
+import { TogglePill } from "@/components/common/toggle-pill";
+import { Calendar } from "lucide-react";
 
 const statusFilters = [
-  'All Orders',
-  'Processing',
-  'Out for Delivery',
-  'Completed',
-  'Cancelled',
+  "All Orders",
+  "Processing",
+  "Out for Delivery",
+  "Completed",
+  "Cancelled",
 ] as const;
 
 export function FilterBar() {

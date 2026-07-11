@@ -38,9 +38,7 @@ export function PriceTag({
   return (
     <div className={cn("flex items-baseline gap-2", className)}>
       <span className={cn(s.price, "text-foreground")}>
-        <span className={cn(s.currency, "text-muted-foreground")}>
-          {currency}
-        </span>
+        <span className={cn(s.currency, "text-muted-foreground")}>{currency}</span>
         {price}
       </span>
       {originalPrice && (

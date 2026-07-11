@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { buttonVariants } from '@/components/ui/button';
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -21,12 +21,12 @@ import {
   SidebarMenuItem,
   SidebarRail,
   useSidebar,
-} from '@/components/ui/sidebar';
-import { sidebarItems } from '@/data/dashboard';
-import { cn } from '@/lib/utils';
-import { ChevronUp, LogOut, Settings, User, Utensils } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+} from "@/components/ui/sidebar";
+import { sidebarItems } from "@/data/dashboard";
+import { cn } from "@/lib/utils";
+import { ChevronUp, LogOut, Settings, User, Utensils } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -37,7 +37,10 @@ export function AppSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" render={<Link href="/" onClick={() => isMobile && setOpenMobile(false)} />}>
+            <SidebarMenuButton
+              size="lg"
+              render={<Link href="/" onClick={() => isMobile && setOpenMobile(false)} />}
+            >
               <div className="flex size-10 items-center justify-center rounded-lg bg-primary group-data-[collapsible=icon]:size-8">
                 <Utensils className="size-5 text-white group-data-[collapsible=icon]:size-4" />
               </div>
@@ -62,12 +65,17 @@ export function AppSidebar() {
                 return (
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton
-                      render={<Link href={`/dashboard${item.href}`} onClick={() => isMobile && setOpenMobile(false)} />}
+                      render={
+                        <Link
+                          href={`/dashboard${item.href}`}
+                          onClick={() => isMobile && setOpenMobile(false)}
+                        />
+                      }
                       isActive={isActive}
                       tooltip={item.label}
                       className={cn(
-                        'rounded-lg px-3 py-3 gap-3 h-auto text-muted-foreground transition-colors duration-200 hover:bg-muted',
-                        isActive && 'border-r-4 border-primary bg-muted font-bold text-primary',
+                        "rounded-lg px-3 py-3 gap-3 h-auto text-muted-foreground transition-colors duration-200 hover:bg-muted",
+                        isActive && "border-r-4 border-primary bg-muted font-bold text-primary",
                       )}
                     >
                       <Icon className="size-5 group-data-[collapsible=icon]:size-4" />
@@ -87,9 +95,9 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger
                 className={buttonVariants({
-                  variant: 'ghost',
+                  variant: "ghost",
                   className:
-                    'w-full justify-start gap-3 rounded-lg px-3 py-3 h-auto group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:py-2',
+                    "w-full justify-start gap-3 rounded-lg px-3 py-3 h-auto group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:py-2",
                 })}
               >
                 <Avatar className="size-8 shrink-0">
@@ -97,9 +105,7 @@ export function AppSidebar() {
                 </Avatar>
                 <div className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
                   <span className="truncate text-sm font-bold">Ahmed Rizvi</span>
-                  <span className="truncate text-[10px] text-muted-foreground">
-                    System Admin
-                  </span>
+                  <span className="truncate text-[10px] text-muted-foreground">System Admin</span>
                 </div>
                 <ChevronUp className="size-4 text-muted-foreground group-data-[collapsible=icon]:hidden" />
               </DropdownMenuTrigger>

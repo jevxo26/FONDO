@@ -8,9 +8,7 @@ export default function PackagesPage() {
           <Package className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            All Packages
-          </h2>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">All Packages</h2>
           <p className="mt-1 text-muted-foreground">
             Create and manage subscription meal packages.
           </p>

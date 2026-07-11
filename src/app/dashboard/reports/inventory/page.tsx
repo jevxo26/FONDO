@@ -8,12 +8,8 @@ export default function ReportsInventoryPage() {
           <Package className="size-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">
-            Inventory Report
-          </h2>
-          <p className="mt-1 text-muted-foreground">
-            Kitchen inventory usage and stock reports.
-          </p>
+          <h2 className="font-fraunces text-4xl font-bold text-foreground">Inventory Report</h2>
+          <p className="mt-1 text-muted-foreground">Kitchen inventory usage and stock reports.</p>
         </div>
       </div>
     </div>

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { cn } from '@/lib/utils';
-import Image from 'next/image';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { NavActions } from './nav-actions';
-import { SearchForm } from './search-form';
-import { mainNavLinks, childIcons } from '@/data/navigation';
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { NavActions } from "./nav-actions";
+import { SearchForm } from "./search-form";
+import { mainNavLinks, childIcons } from "@/data/navigation";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -15,14 +15,14 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu';
+} from "@/components/ui/navigation-menu";
 
 export function Navbar() {
   const pathname = usePathname();
 
   const isCurrentPath = (href: string) => {
-    if (href === '/') return pathname === '/';
-    return pathname.startsWith(href.split('#')[0]);
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href.split("#")[0]);
   };
 
   const isParentActive = (link: (typeof mainNavLinks)[number]) => {
@@ -55,8 +55,8 @@ export function Navbar() {
                         <NavigationMenuTrigger
                           className={cn(
                             navigationMenuTriggerStyle(),
-                            'text-[16px] font-semibold',
-                            isParentActive(link) ? 'text-primary' : 'text-foreground/75',
+                            "text-[16px] font-semibold",
+                            isParentActive(link) ? "text-primary" : "text-foreground/75",
                           )}
                         >
                           {link.label}
@@ -71,10 +71,10 @@ export function Navbar() {
                                   <NavigationMenuLink
                                     href={child.href}
                                     className={cn(
-                                      'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors hover:bg-muted',
+                                      "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors hover:bg-muted",
                                       isCurrentPath(child.href)
-                                        ? 'text-primary'
-                                        : 'text-foreground',
+                                        ? "text-primary"
+                                        : "text-foreground",
                                     )}
                                   >
                                     {ChildIcon && <ChildIcon className="size-4 shrink-0" />}
@@ -91,8 +91,8 @@ export function Navbar() {
                         href={link.href!}
                         className={cn(
                           navigationMenuTriggerStyle(),
-                          'text-[16px] font-semibold',
-                          isCurrentPath(link.href!) ? 'text-primary' : 'text-foreground/75',
+                          "text-[16px] font-semibold",
+                          isCurrentPath(link.href!) ? "text-primary" : "text-foreground/75",
                         )}
                       >
                         {link.label}

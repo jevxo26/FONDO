@@ -43,7 +43,6 @@ export function PaymentSummaryCards() {
           title="Pending Payouts"
           value="৳28,400.00"
           subtitle="Next payout: Oct 24"
-          layout="stack"
         >
           <div className="mt-4">
             <div className="h-2 w-full rounded-full bg-muted mb-2">

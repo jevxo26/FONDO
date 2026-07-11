@@ -16,7 +16,6 @@ export function TransactionList({ transactions }: TransactionListProps) {
       title="Recent Transactions"
       value={transactions.length.toString()}
       subtitle="total transactions"
-      layout="stack"
     >
       <div className="mt-4 space-y-3">
         {transactions.map((tx) => (

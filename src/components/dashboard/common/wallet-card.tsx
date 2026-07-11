@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { CreditCard, Wallet } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { CreditCard, Wallet } from "lucide-react";
 
 interface WalletCardProps {
   totalHoldings: number;
@@ -24,29 +24,22 @@ export function WalletCard({ totalHoldings, pendingRefunds }: WalletCardProps) {
                 ৳{(totalHoldings + pendingRefunds).toLocaleString()}
               </h4>
             </div>
-            <div className="flex flex-col items-end gap-3">
-              <Wallet className="size-8 text-primary drop-shadow-[0_2px_3px_rgba(0,0,0,0.3)]" />
-              <div className="flex flex-col items-center gap-[2px]">
-                <div className="size-8 rounded bg-gradient-to-br from-primary/40 to-primary/20 border border-primary/30" />
-                <div className="flex gap-[3px]">
-                  <div className="size-[3px] rounded-full bg-primary/30" />
-                  <div className="size-[3px] rounded-full bg-primary/30" />
-                  <div className="size-[3px] rounded-full bg-primary/30" />
-                  <div className="size-[3px] rounded-full bg-primary/30" />
-                </div>
-              </div>
-            </div>
+            <Wallet className="size-8 text-primary drop-shadow-[0_2px_3px_rgba(0,0,0,0.3)]" />
           </div>
 
           <div className="relative mb-8 space-y-4 text-sm">
             <div className="absolute inset-x-0 bottom-0 h-px -mb-4 bg-gradient-to-r from-transparent via-white/15 to-transparent" />
             <div className="flex items-center justify-between">
               <span className="text-white/60">Cust. Wallet Holdings</span>
-              <span className="drop-shadow-[0_1px_1px_rgba(0,0,0,0.2)]">৳{totalHoldings.toLocaleString()}</span>
+              <span className="drop-shadow-[0_1px_1px_rgba(0,0,0,0.2)]">
+                ৳{totalHoldings.toLocaleString()}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-white/60">Pending Refunds</span>
-              <span className="text-destructive drop-shadow-[0_1px_1px_rgba(0,0,0,0.2)]">৳{pendingRefunds.toLocaleString()}</span>
+              <span className="text-destructive drop-shadow-[0_1px_1px_rgba(0,0,0,0.2)]">
+                ৳{pendingRefunds.toLocaleString()}
+              </span>
             </div>
           </div>
 

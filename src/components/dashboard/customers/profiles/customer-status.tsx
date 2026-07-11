@@ -17,7 +17,6 @@ export function StatusMetrics({ activeCount, suspendedCount, totalCustomers }: S
       title="Customer Status"
       value={`${activeCount} Active`}
       subtitle={`${suspendedCount} Suspended`}
-      layout="stack"
     >
       <div className="mt-4 space-y-3">
         <div>

@@ -21,8 +21,12 @@ const iconConfig: Record<string, { bg: string; color: string }> = {
 
 export function RecentActivity() {
   return (
-    <div className="group relative rounded-3xl bg-border/15 p-[1px] shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)]">
-      <div className="rounded-[calc(1.375rem-1px)] bg-gradient-to-br from-card via-card to-card/98 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:ring-1 group-hover:ring-primary/10">
+    <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)]">
+      <div className="pointer-events-none absolute -bottom-6 -right-6 z-0 size-36 rounded-full bg-primary/8 blur-3xl" />
+      <div className="pointer-events-none absolute -top-3 -left-3 z-0 size-20 rounded-full bg-primary/5 blur-2xl" />
+      <div className="pointer-events-none absolute -top-8 -right-8 z-0 size-28 rounded-full bg-primary/5 blur-2xl" />
+      <div className="pointer-events-none absolute right-3 top-3 z-10 size-[7px] rotate-45 border border-primary/30" />
+      <div className="relative z-10 p-6">
         <h3 className="font-fraunces text-lg font-semibold text-foreground">Recent Activity</h3>
         <div className="mt-5 flex flex-col gap-4">
           {activities.map((activity) => {
@@ -32,7 +36,7 @@ export function RecentActivity() {
                 <div className={`flex size-8 shrink-0 items-center justify-center rounded-lg shadow-sm ${cfg.bg} ring-1 ring-primary/5`}>
                   <activity.icon className={`size-4 ${cfg.color}`} />
                 </div>
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <p className="text-sm text-foreground">{activity.text}</p>
                   <div className="mt-0.5 flex items-center gap-1">
                     <Clock className="size-3 text-primary/50" />

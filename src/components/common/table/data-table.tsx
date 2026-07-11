@@ -1,6 +1,14 @@
 "use client";
 
-import { useMemo } from "react";
+import { buttonVariants } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -9,12 +17,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import {
   flexRender,
@@ -26,12 +28,10 @@ import {
   type ColumnDef,
 } from "@tanstack/react-table";
 import { MoreHorizontal, SearchX } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { buttonVariants } from "@/components/ui/button";
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
-import type { RowAction, FacetedFilter } from "./types";
+import { useMemo } from "react";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
+import type { FacetedFilter, RowAction } from "./types";
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData, unknown>[];
@@ -123,7 +123,10 @@ export function DataTable<TData>({
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} className="px-4 py-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground md:px-6">
+                    <TableHead
+                      key={header.id}
+                      className="px-4 py-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground md:px-6"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(header.column.columnDef.header, header.getContext())}

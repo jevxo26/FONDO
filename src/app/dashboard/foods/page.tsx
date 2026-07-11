@@ -2,7 +2,6 @@ import { Archive, CheckCircle, Download, FileEdit, Utensils } from 'lucide-react
 import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/dashboard/common/page-header';
 import { StatCard } from '@/components/dashboard/common/stat-card';
-import { FoodControls } from '@/components/dashboard/foods/food-controls';
 import { FoodTableSection } from '@/components/dashboard/foods/food-table-section';
 import { adminFoods } from '@/data/foods';
 
@@ -26,16 +25,13 @@ export default function FoodsPage() {
         }
       />
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total Foods" value={total} icon={Utensils} accent="top" />
-        <StatCard label="Active" value={active} variant="success" icon={CheckCircle} accent="top" />
-        <StatCard label="Draft" value={draft} variant="warning" icon={FileEdit} accent="top" />
-        <StatCard label="Archived" value={archived} variant="default" icon={Archive} accent="top" />
+        <StatCard label="Total Foods" value={total} icon={Utensils} accent="right" />
+        <StatCard label="Active" value={active} variant="success" icon={CheckCircle} accent="right" />
+        <StatCard label="Draft" value={draft} variant="warning" icon={FileEdit} accent="right" />
+        <StatCard label="Archived" value={archived} variant="danger" icon={Archive} accent="right" />
       </div>
       <div className="mt-6">
-        <FoodControls />
-      </div>
-      <div className="mt-6">
-        <FoodTableSection />
+        <FoodTableSection data={adminFoods} />
       </div>
     </div>
   );

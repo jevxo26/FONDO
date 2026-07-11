@@ -5,6 +5,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { AdminFoodItem } from "@/data/foods";
 import { cn } from "@/lib/utils";
 import { Star, ThumbsUp } from "lucide-react";
+import { DataTableColumnHeader } from "@/components/common/table";
 
 const foodTypeStyles: Record<string, string> = {
   VEG: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
@@ -29,7 +30,7 @@ const statusVariants: Record<string, "default" | "secondary" | "destructive"> = 
 export const foodColumns: ColumnDef<AdminFoodItem>[] = [
   {
     accessorKey: "name",
-    header: "Food Name",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Food Name" />,
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
         <div className="size-9 shrink-0 overflow-hidden rounded-lg bg-muted">
@@ -42,11 +43,11 @@ export const foodColumns: ColumnDef<AdminFoodItem>[] = [
   },
   {
     accessorKey: "categoryName",
-    header: "Category",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Category" />,
   },
   {
     accessorKey: "foodType",
-    header: "Type",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
     cell: ({ row }) => {
       const type = row.original.foodType;
       return (
@@ -63,7 +64,7 @@ export const foodColumns: ColumnDef<AdminFoodItem>[] = [
   },
   {
     accessorKey: "spiceLevel",
-    header: "Spice",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Spice" />,
     cell: ({ row }) => {
       const spice = row.original.spiceLevel;
       return (
@@ -80,14 +81,14 @@ export const foodColumns: ColumnDef<AdminFoodItem>[] = [
   },
   {
     accessorKey: "basePrice",
-    header: "Price",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Price" />,
     cell: ({ row }) => (
       <span className="font-mono text-sm font-medium">৳{row.original.basePrice}</span>
     ),
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({ row }) => (
       <Badge variant={statusVariants[row.original.status] || "default"}>
         {row.original.status}
@@ -96,7 +97,7 @@ export const foodColumns: ColumnDef<AdminFoodItem>[] = [
   },
   {
     id: "flags",
-    header: "Flags",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Flags" />,
     cell: ({ row }) => {
       const { isFeatured, isPopular, isRecommended } = row.original;
       return (
@@ -131,6 +132,6 @@ export const foodColumns: ColumnDef<AdminFoodItem>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "Added",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Added" />,
   },
 ];

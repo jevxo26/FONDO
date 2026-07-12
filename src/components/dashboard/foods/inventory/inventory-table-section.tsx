@@ -1,29 +1,12 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/common/table";
 import type { FacetedFilter, RowAction } from "@/components/common/table";
 import { inventoryColumns } from "./inventory-columns";
 import { inventoryItems, type InventoryItem } from "@/data/inventory";
+import { adminFoods } from "@/data/foods";
 import { ClipboardCheck, Eye, RefreshCw, Store, Trash2 } from "lucide-react";
-
-const rowActions: RowAction<InventoryItem>[] = [
-  {
-    label: "View Details",
-    icon: <Eye className="size-4" />,
-    onClick: (item) => console.log("View Details", item.id),
-  },
-  {
-    label: "Restock",
-    icon: <RefreshCw className="size-4" />,
-    onClick: (item) => console.log("Restock", item.id),
-  },
-  {
-    label: "Discontinue",
-    icon: <Trash2 className="size-4" />,
-    variant: "destructive",
-    onClick: (item) => console.log("Discontinue", item.id),
-  },
-];
 
 const statusFilter: FacetedFilter = {
   columnId: "status",
@@ -53,6 +36,30 @@ const vendorFilter: FacetedFilter = {
 };
 
 export function InventoryTableSection() {
+  const router = useRouter();
+
+  const rowActions: RowAction<InventoryItem>[] = [
+    {
+      label: "View Details",
+      icon: <Eye className="size-4" />,
+      onClick: (item) => {
+        const food = adminFoods.find((f) => f.name === item.foodName);
+        if (food) router.push(`/dashboard/foods/${food.id}`);
+      },
+    },
+    {
+      label: "Restock",
+      icon: <RefreshCw className="size-4" />,
+      onClick: (item) => console.log("Restock", item.id),
+    },
+    {
+      label: "Discontinue",
+      icon: <Trash2 className="size-4" />,
+      variant: "destructive",
+      onClick: (item) => console.log("Discontinue", item.id),
+    },
+  ];
+
   return (
     <DataTable
       data={inventoryItems}

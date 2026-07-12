@@ -1,24 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/common/table";
 import type { FacetedFilter, RowAction } from "@/components/common/table";
 import { foodColumns } from "./food-columns";
 import { adminFoods, type AdminFoodItem } from "@/data/foods";
 import { Archive, Beef, Eye, Flame, ListChecks } from "lucide-react";
-
-const rowActions: RowAction<AdminFoodItem>[] = [
-  {
-    label: "View Details",
-    icon: <Eye className="size-4" />,
-    onClick: (food) => console.log("View Details", food.id),
-  },
-  {
-    label: "Archive",
-    icon: <Archive className="size-4" />,
-    variant: "destructive",
-    onClick: (food) => console.log("Archive", food.id),
-  },
-];
 
 const statusFilter: FacetedFilter = {
   columnId: "status",
@@ -56,6 +43,22 @@ const spiceFilter: FacetedFilter = {
 };
 
 export function FoodTableSection() {
+  const router = useRouter();
+
+  const rowActions: RowAction<AdminFoodItem>[] = [
+    {
+      label: "View Details",
+      icon: <Eye className="size-4" />,
+      onClick: (food) => router.push(`/dashboard/foods/${food.id}`),
+    },
+    {
+      label: "Archive",
+      icon: <Archive className="size-4" />,
+      variant: "destructive",
+      onClick: (food) => console.log("Archive", food.id),
+    },
+  ];
+
   return (
     <DataTable
       data={adminFoods}

@@ -32,7 +32,7 @@ export default function VendorDetailsPage() {
              </div>
              <div>
                 <p className="text-sm text-muted-foreground">Owner Name</p>
-                <p className="font-medium">Saima Akter</p>
+                <p className="font-medium">Florence Evelyn</p>
              </div>
           </div>
         </Card>

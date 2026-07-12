@@ -16,6 +16,7 @@ export interface FacetedFilter {
   columnId: string;
   title: string;
   options: FacetedFilterOption[];
+  icon?: React.ReactNode;
 }
 
 /** Optional default sort applied on mount. */

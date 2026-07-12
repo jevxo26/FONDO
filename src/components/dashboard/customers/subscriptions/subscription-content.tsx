@@ -7,11 +7,12 @@ import { SubscriptionContextCards } from "@/components/dashboard/customers/subsc
 import type { Subscription } from "@/data/subscriptions";
 import { subscriptions } from "@/data/subscriptions";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { CheckCircle, CreditCard, Eye, Pause, PauseCircle, XCircle } from "lucide-react";
+import { CalendarCheck, CheckCircle, CreditCard, Eye, Package, Pause, PauseCircle, XCircle } from "lucide-react";
 
 const statusFilter: FacetedFilter = {
   columnId: "status",
   title: "Status",
+  icon: <CalendarCheck className="size-4" />,
   options: [
     { label: "Pending", value: "PENDING" },
     { label: "Active", value: "ACTIVE" },
@@ -26,6 +27,7 @@ const statusFilter: FacetedFilter = {
 const packageFilter: FacetedFilter = {
   columnId: "packageName",
   title: "Package",
+  icon: <Package className="size-4" />,
   options: [
     { label: "7-Day Wellness", value: "7-Day Wellness" },
     { label: "10-Day Balanced", value: "10-Day Balanced" },

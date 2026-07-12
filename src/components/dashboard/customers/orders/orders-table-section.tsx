@@ -3,7 +3,7 @@
 import type { FacetedFilter, RowAction } from "@/components/common/table";
 import { DataTable } from "@/components/common/table";
 import type { CustomerOrder } from "@/data/orders";
-import { Eye, Truck, XCircle } from "lucide-react";
+import { CreditCard, Eye, Truck, XCircle } from "lucide-react";
 import { orderColumns } from "./order-columns";
 
 const rowActions: RowAction<CustomerOrder>[] = [
@@ -28,6 +28,7 @@ const rowActions: RowAction<CustomerOrder>[] = [
 const orderStatusFilter: FacetedFilter = {
   columnId: "orderStatus",
   title: "Order Status",
+  icon: <Truck className="size-4" />,
   options: [
     { label: "Pending", value: "PENDING" },
     { label: "Preparing", value: "PREPARING" },
@@ -42,6 +43,7 @@ const orderStatusFilter: FacetedFilter = {
 const paymentStatusFilter: FacetedFilter = {
   columnId: "paymentStatus",
   title: "Payment",
+  icon: <CreditCard className="size-4" />,
   options: [
     { label: "Paid", value: "PAID" },
     { label: "Unpaid", value: "UNPAID" },

@@ -4,7 +4,7 @@ import { DataTable } from "@/components/common/table";
 import type { RowAction, FacetedFilter } from "@/components/common/table";
 import { walletColumns } from "./wallet-columns";
 import type { WalletTransaction } from "@/data/wallets";
-import { Eye, Ban, Plus } from "lucide-react";
+import { ArrowLeftRight, Ban, Eye, Plus, Wallet } from "lucide-react";
 
 const rowActions: RowAction<WalletTransaction>[] = [
   {
@@ -28,6 +28,7 @@ const rowActions: RowAction<WalletTransaction>[] = [
 const statusFilter: FacetedFilter = {
   columnId: "status",
   title: "Status",
+  icon: <Wallet className="size-4" />,
   options: [
     { label: "Completed", value: "COMPLETED" },
     { label: "Pending", value: "PENDING" },
@@ -39,6 +40,7 @@ const statusFilter: FacetedFilter = {
 const typeFilter: FacetedFilter = {
   columnId: "transactionType",
   title: "Type",
+  icon: <ArrowLeftRight className="size-4" />,
   options: [
     { label: "Top-up", value: "TOPUP" },
     { label: "Purchase", value: "PURCHASE" },

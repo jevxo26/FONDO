@@ -5,7 +5,7 @@ import type { FacetedFilter, RowAction } from "@/components/common/table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import type { Vendor } from "@/data/vendors";
-import { Eye, ShieldBan } from "lucide-react";
+import { Eye, ShieldBan, ShieldCheck } from "lucide-react";
 
 const columns: ColumnDef<Vendor>[] = [
   {
@@ -57,6 +57,7 @@ const rowActions: RowAction<Vendor>[] = [
 const statusFilter: FacetedFilter = {
   columnId: "status",
   title: "Status",
+  icon: <ShieldCheck className="size-4" />,
   options: [
     { label: "Active", value: "ACTIVE" },
     { label: "Pending", value: "PENDING" },

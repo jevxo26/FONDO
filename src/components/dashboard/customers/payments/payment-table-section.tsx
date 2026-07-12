@@ -4,7 +4,7 @@ import { DataTable } from "@/components/common/table";
 import type { RowAction, FacetedFilter } from "@/components/common/table";
 import { paymentColumns } from "./payment-columns";
 import type { PaymentTransaction } from "@/data/payments";
-import { Eye, Undo2 } from "lucide-react";
+import { CheckCircle, Eye, Landmark, Undo2 } from "lucide-react";
 
 const rowActions: RowAction<PaymentTransaction>[] = [
   {
@@ -23,6 +23,7 @@ const rowActions: RowAction<PaymentTransaction>[] = [
 const statusFilter: FacetedFilter = {
   columnId: "status",
   title: "Status",
+  icon: <CheckCircle className="size-4" />,
   options: [
     { label: "Success", value: "SUCCESS" },
     { label: "Failed", value: "FAILED" },
@@ -33,6 +34,7 @@ const statusFilter: FacetedFilter = {
 const methodFilter: FacetedFilter = {
   columnId: "method",
   title: "Method",
+  icon: <Landmark className="size-4" />,
   options: [
     { label: "bKash", value: "bKash" },
     { label: "Nagad", value: "Nagad" },

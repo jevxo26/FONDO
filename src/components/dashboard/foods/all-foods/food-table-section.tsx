@@ -4,7 +4,7 @@ import { DataTable } from "@/components/common/table";
 import type { FacetedFilter, RowAction } from "@/components/common/table";
 import { foodColumns } from "./food-columns";
 import { adminFoods, type AdminFoodItem } from "@/data/foods";
-import { Archive, Eye } from "lucide-react";
+import { Archive, Beef, Eye, Flame, ListChecks } from "lucide-react";
 
 const rowActions: RowAction<AdminFoodItem>[] = [
   {
@@ -23,6 +23,7 @@ const rowActions: RowAction<AdminFoodItem>[] = [
 const statusFilter: FacetedFilter = {
   columnId: "status",
   title: "Status",
+  icon: <ListChecks className="size-4" />,
   options: [
     { label: "Active", value: "ACTIVE" },
     { label: "Draft", value: "DRAFT" },
@@ -33,6 +34,7 @@ const statusFilter: FacetedFilter = {
 const foodTypeFilter: FacetedFilter = {
   columnId: "foodType",
   title: "Type",
+  icon: <Beef className="size-4" />,
   options: [
     { label: "Veg", value: "VEG" },
     { label: "Non-Veg", value: "NON_VEG" },
@@ -44,6 +46,7 @@ const foodTypeFilter: FacetedFilter = {
 const spiceFilter: FacetedFilter = {
   columnId: "spiceLevel",
   title: "Spice",
+  icon: <Flame className="size-4" />,
   options: [
     { label: "Mild", value: "MILD" },
     { label: "Medium", value: "MEDIUM" },

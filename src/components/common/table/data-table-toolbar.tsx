@@ -74,7 +74,7 @@ export function DataTableToolbar<TData>({
           return (
             <Popover key={filter.columnId}>
               <PopoverTrigger className={buttonVariants({ variant: "outline", size: "sm" })}>
-                <Filter className="size-4" />
+                {filter.icon ?? <Filter className="size-4" />}
                 {filter.title}
                 {currentValue && (
                   <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary">

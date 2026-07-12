@@ -1,9 +1,9 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Store, ShieldCheck } from "lucide-react";
+import { ShieldCheck, Store } from "lucide-react";
+import { useParams } from "next/navigation";
 
 export default function VendorDetailsPage() {
   const { id } = useParams();

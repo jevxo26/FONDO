@@ -33,9 +33,9 @@ import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 
 const sectionConfig = [
-  { label: "Management", items: ["Customers", "Vendors", "Food"] },
+  { label: "Management", items: ["Customers", "Vendors", "Foods"] },
   { label: "Operations", items: ["Orders", "Payments", "Riders"] },
-  { label: "Analytics", items: ["Packages", "Reports"] },
+  { label: "Analytics", items: ["Reports"] },
 ] as const;
 
 export function AppSidebar() {

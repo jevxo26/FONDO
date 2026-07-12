@@ -12,7 +12,7 @@ const links = [
 
 export function PageFooter() {
   return (
-    <div className="group relative mt-16 overflow-hidden rounded-3xl bg-gradient-to-br from-primary/[0.02] via-card to-primary/[0.01] shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] -mb-36">
+    <div className="group relative mt-16 overflow-hidden rounded-3xl bg-gradient-to-br from-primary/[0.02] via-card to-primary/[0.01] shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)]">
       <div className="pointer-events-none absolute -bottom-6 -right-6 z-0 size-36 rounded-full bg-primary/5 blur-3xl" />
       <div className="pointer-events-none absolute -top-3 -left-3 z-0 size-20 rounded-full bg-primary/3 blur-2xl" />
       <div className="pointer-events-none absolute right-4 top-4 z-10 size-[7px] rotate-45 border border-primary/30" />

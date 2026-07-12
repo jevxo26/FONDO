@@ -1,31 +1,27 @@
 import type { OrderStatus } from "@/data/orders";
-import { Badge } from "@/components/ui/badge";
 
 interface OrderStatusBadgeProps {
   status: OrderStatus;
 }
 
 const statusStyles: Record<OrderStatus, string> = {
-  PENDING: "border-amber-200 bg-amber-100 text-amber-800",
-  PAYMENT_PENDING: "border-amber-200 bg-amber-100 text-amber-800",
-  CONFIRMED: "border-blue-200 bg-blue-100 text-blue-800",
-  PREPARING: "border-blue-200 bg-blue-100 text-blue-800",
-  READY_FOR_PICKUP: "border-blue-200 bg-blue-100 text-blue-800",
-  PICKED_UP: "border-blue-200 bg-blue-100 text-blue-800",
-  ON_THE_WAY: "border-blue-200 bg-blue-100 text-blue-800",
-  DELIVERED: "border-green-200 bg-green-100 text-green-800",
-  COMPLETED: "border-green-200 bg-green-100 text-green-800",
-  CANCELLED: "border-red-200 bg-red-100 text-red-800",
-  REFUNDED: "border-gray-200 bg-gray-100 text-gray-800",
+  PENDING: "bg-warning/10 text-warning ring-warning/20",
+  PAYMENT_PENDING: "bg-warning/10 text-warning ring-warning/20",
+  CONFIRMED: "bg-primary/10 text-primary ring-primary/20",
+  PREPARING: "bg-primary/10 text-primary ring-primary/20",
+  READY_FOR_PICKUP: "bg-primary/10 text-primary ring-primary/20",
+  PICKED_UP: "bg-primary/10 text-primary ring-primary/20",
+  ON_THE_WAY: "bg-primary/10 text-primary ring-primary/20",
+  DELIVERED: "bg-success/10 text-success ring-success/20",
+  COMPLETED: "bg-success/10 text-success ring-success/20",
+  CANCELLED: "bg-destructive/10 text-destructive ring-destructive/20",
+  REFUNDED: "bg-muted text-muted-foreground ring-border/40",
 };
 
 export function OrderStatusBadge({ status }: OrderStatusBadgeProps) {
   return (
-    <Badge
-      variant="outline"
-      className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider ${statusStyles[status]}`}
-    >
+    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider ring-1 ${statusStyles[status]}`}>
       {status.replace(/_/g, " ")}
-    </Badge>
+    </span>
   );
 }

@@ -10,12 +10,12 @@ export default function VendorDetailsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Vendor Details</h1>
-          <p className="text-muted-foreground">Detailed profile for vendor ID: {id}</p>
+          <h1 className="text-xl font-bold tracking-tight md:text-3xl">Vendor Details</h1>
+          <p className="text-sm text-muted-foreground md:text-base">Detailed profile for vendor ID: {id}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex shrink-0 flex-wrap gap-2">
           <Button variant="outline">Edit Info</Button>
           <Button>View Kitchens</Button>
         </div>

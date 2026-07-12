@@ -17,8 +17,8 @@ export interface SidebarItem {
 }
 
 export const sidebarItems: SidebarItem[] = [
-  { label: "Vendors", href: "/vendors", icon: Store },
   { label: "Customers", href: "/customers", icon: Users },
+  { label: "Vendors", href: "/vendors", icon: Store },
   { label: "Food", href: "/foods", icon: Utensils },
   { label: "Packages", href: "/packages", icon: Package },
   { label: "Orders", href: "/orders", icon: Receipt },

@@ -1,7 +1,8 @@
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { BarChart3, TrendingUp, Truck, Users, Wallet } from "lucide-react";
+
 import { RecentActivity } from "@/components/dashboard/overview/recent-activity";
 import { RevenueChart } from "@/components/dashboard/overview/revenue-chart";
+import { BarChart3, TrendingUp, Truck, Users, Wallet } from "lucide-react";
 
 const stats = [
   {
@@ -50,10 +51,10 @@ export default function DashboardPage() {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           <div className="flex items-center gap-2">
             <div className="size-2 rounded-full bg-primary" />
-            <h1 className="font-fraunces text-[32px] font-bold leading-tight tracking-tight text-foreground">
+            <h1 className="font-fraunces text-xl font-bold leading-tight tracking-tight text-foreground md:text-[32px]">
               Overview
             </h1>
           </div>
@@ -70,7 +71,7 @@ export default function DashboardPage() {
       </div>
       <div className="mt-2 h-px w-24 bg-gradient-to-r from-primary/40 to-transparent" />
 
-      <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
         {stats.map((stat) => (
           <StatCard key={stat.label} {...stat} />
         ))}
@@ -84,6 +85,7 @@ export default function DashboardPage() {
           <RecentActivity />
         </div>
       </div>
+
     </div>
   );
 }

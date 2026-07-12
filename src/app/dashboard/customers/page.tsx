@@ -1,4 +1,4 @@
-import { CreditCard, Users, Download, UserPlus, UserCheck, UserX, Wallet } from 'lucide-react';
+import { CreditCard, Download, UserPlus, UserCheck, UserX, Users, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/dashboard/common/page-header';
 import { StatCard } from '@/components/dashboard/common/stat-card';
@@ -6,6 +6,7 @@ import { CustomerCard } from '@/components/dashboard/common/customer-card';
 import { DarkCard } from '@/components/dashboard/common/dark-card';
 import { StatusMetrics } from '@/components/dashboard/customers/profiles/customer-status';
 import { TransactionList } from '@/components/dashboard/customers/profiles/transaction-list';
+
 import { customers, recentTransactions } from '@/data/customers';
 
 export default function CustomersPage() {
@@ -39,16 +40,23 @@ export default function CustomersPage() {
         <StatCard label="Suspended" value={suspendedCount} variant="warning" icon={UserX} accent="bottom" />
         <StatCard label="Wallet Holdings" value={`৳${totalHoldings.toLocaleString()}`} variant="default" icon={Wallet} accent="bottom" />
       </div>
-      <div className="grid grid-cols-12 gap-8">
+      <div className="mt-8 grid grid-cols-12 gap-8">
         <div className="col-span-12 lg:col-span-8">
-          <h3 className="font-fraunces mt-8 text-xl font-semibold text-foreground">Active Profiles</h3>
-          <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-            {customers.map((customer) => (
-              <CustomerCard key={customer.id} customer={customer} />
-            ))}
+          <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-6 shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)]">
+            <div className="pointer-events-none absolute -bottom-6 -right-6 z-0 size-36 rounded-full bg-primary/8 blur-3xl" />
+            <div className="pointer-events-none absolute -top-3 -left-3 z-0 size-20 rounded-full bg-primary/5 blur-2xl" />
+            <div className="pointer-events-none absolute right-3 top-3 z-10 size-[7px] rotate-45 border border-primary/30" />
+            <div className="relative z-10">
+              <h3 className="font-fraunces text-xl font-semibold text-foreground">Active Profiles</h3>
+              <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+                {customers.map((customer) => (
+                  <CustomerCard key={customer.id} customer={customer} />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
-        <div className="col-span-12 mt-8 space-y-8 lg:col-span-4 lg:mt-8">
+        <div className="col-span-12 mt-8 space-y-8 lg:col-span-4 lg:mt-0">
           <DarkCard icon={<Wallet className="size-40" />}>
             <div className="mb-6 flex items-start justify-between">
               <div>

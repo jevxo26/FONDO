@@ -63,15 +63,15 @@ export function WalletInsightCards() {
         subtitle="active payment channels"
       >
         <div className="mt-4 flex flex-wrap gap-2">
-          <div className="flex items-center gap-2 rounded-full border border-border/30 bg-card px-4 py-2 text-sm shadow-sm">
+          <div className="flex items-center gap-2 rounded-full bg-primary/5 px-4 py-2 text-sm ring-1 ring-primary/10 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/10">
             <Smartphone className="size-4 text-success" />
             bKash (42%)
           </div>
-          <div className="flex items-center gap-2 rounded-full border border-border/30 bg-card px-4 py-2 text-sm shadow-sm">
+          <div className="flex items-center gap-2 rounded-full bg-primary/5 px-4 py-2 text-sm ring-1 ring-primary/10 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/10">
             <CreditCard className="size-4 text-primary" />
             Credit Card (35%)
           </div>
-          <div className="flex items-center gap-2 rounded-full border border-border/30 bg-card px-4 py-2 text-sm shadow-sm">
+          <div className="flex items-center gap-2 rounded-full bg-primary/5 px-4 py-2 text-sm ring-1 ring-primary/10 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/10">
             <Landmark className="size-4 text-foreground" />
             Bank Transfer (23%)
           </div>

@@ -1,17 +1,14 @@
 import { TrendingUp } from "lucide-react";
+import { PageHeader } from "@/components/dashboard/common/page-header";
 
 export default function ReportsRevenuePage() {
   return (
     <div>
-      <div className="flex items-center gap-6">
-        <div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10">
-          <TrendingUp className="size-8 text-primary" />
-        </div>
-        <div>
-          <h2 className="font-fraunces text-4xl font-bold text-foreground">Revenue Report</h2>
-          <p className="mt-1 text-muted-foreground">Analyze platform revenue across all streams.</p>
-        </div>
-      </div>
+      <PageHeader
+        title="Revenue Report"
+        description="Analyze platform revenue across all streams."
+        icon={TrendingUp}
+      />
     </div>
   );
 }

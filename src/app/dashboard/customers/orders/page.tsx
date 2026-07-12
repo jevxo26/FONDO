@@ -1,10 +1,12 @@
-import Link from "next/link";
+import { StatCard } from "@/components/dashboard/common/stat-card";
 import { ContextCards } from "@/components/dashboard/customers/orders/context-cards";
 import { OrdersTableSection } from "@/components/dashboard/customers/orders/orders-table-section";
+
+import { PageHeader } from "@/components/dashboard/common/page-header";
+import { Button } from "@/components/ui/button";
 import { orders } from "@/data/orders";
 import { CheckCircle, Clock, Download, Plus, ShoppingBag, Timer, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { StatCard } from "@/components/dashboard/common/stat-card";
+import Link from "next/link";
 
 export default async function CustomerOrdersPage({
   searchParams,
@@ -27,35 +29,41 @@ export default async function CustomerOrdersPage({
 
   return (
     <div>
-      <div className="flex items-center gap-6">
-        <div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10">
-          <ShoppingBag className="size-8 text-primary" />
-        </div>
-        <div className="flex flex-1 flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h2 className="font-fraunces text-4xl font-bold text-foreground">Customer Orders</h2>
-            <p className="mt-2 text-muted-foreground">
-              Manage and track all customer meal orders across Dhaka.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
+      <PageHeader
+        title="Customer Orders"
+        description="Manage and track all customer meal orders across Dhaka."
+        icon={ShoppingBag}
+        actions={
+          <>
             <Button variant="outline" className="rounded-full">
               <Download className="size-[18px]" />
               Export Report
             </Button>
             <Button className="rounded-full">
               <Plus className="size-[18px]" />
-              New Manual Order
+              Manual Order
             </Button>
-          </div>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Total Orders" value={totalOrders} icon={ShoppingBag} accent="right" />
         <StatCard label="Pending" value={pending} variant="warning" icon={Clock} accent="right" />
-        <StatCard label="In Progress" value={inProgress} variant="danger" icon={Timer} accent="right" />
-        <StatCard label="Completed" value={completed} variant="success" icon={CheckCircle} accent="right" />
+        <StatCard
+          label="In Progress"
+          value={inProgress}
+          variant="danger"
+          icon={Timer}
+          accent="right"
+        />
+        <StatCard
+          label="Completed"
+          value={completed}
+          variant="success"
+          icon={CheckCircle}
+          accent="right"
+        />
       </div>
 
       {customerFilter && (
@@ -72,11 +80,13 @@ export default async function CustomerOrdersPage({
         </div>
       )}
 
-      <div className="mt-6">
+      <div className="mt-8">
         <OrdersTableSection data={filteredOrders} />
       </div>
 
-      <ContextCards />
+      <div className="mt-8">
+        <ContextCards />
+      </div>
     </div>
   );
 }

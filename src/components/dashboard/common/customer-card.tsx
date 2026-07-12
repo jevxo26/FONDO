@@ -65,7 +65,7 @@ export function CustomerCard({ customer }: CustomerCardProps) {
   return (
     <Link
       href={`/dashboard/customers/orders?customer=${encodeURIComponent(customer.fullName)}`}
-      className={`group relative block overflow-hidden rounded-3xl shadow-[var(--shadow-card)] ring-1 ring-border/60 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] hover:ring-primary/20 active:scale-[0.98] ${config.cardBg}`}
+      className={`group relative block overflow-hidden rounded-3xl shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] active:scale-[0.98] ${config.cardBg}`}
     >
       <span className="pointer-events-none absolute -bottom-4 -right-4 select-none text-[120px] font-bold leading-none text-primary/[0.06]">
         {initial}
@@ -107,7 +107,7 @@ export function CustomerCard({ customer }: CustomerCardProps) {
             <p className="mt-2 text-[10px] text-muted-foreground">Wallet</p>
           </div>
 
-          <div className="rounded-xl bg-muted/40 p-3 ring-1 ring-border/40">
+          <div className="rounded-xl bg-muted/40 p-3 ring-1 ring-primary/[0.06]">
             <div className="flex size-8 items-center justify-center rounded-lg bg-muted">
               <Clock className="size-4 text-muted-foreground" />
             </div>

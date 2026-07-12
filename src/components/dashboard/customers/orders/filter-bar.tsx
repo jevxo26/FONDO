@@ -13,21 +13,21 @@ const statusFilters = [
 
 export function FilterBar() {
   return (
-    <div className="mb-8 flex flex-wrap items-center gap-6 rounded-xl border border-border/30 bg-white/70 p-4 backdrop-blur-sm md:p-6">
+    <div className="mb-8 flex flex-wrap items-center gap-6 rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-4 shadow-[var(--shadow-card)] md:p-6">
       <div className="flex flex-col gap-2">
-        <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-          Order Status
-        </span>
+          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            Order Status
+          </span>
         <TogglePill items={statusFilters} value="All Orders" onChange={() => {}} />
       </div>
 
       <div className="mx-2 hidden h-12 w-px bg-border sm:block" />
 
       <div className="flex flex-col gap-2">
-        <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-          Date Range
-        </span>
-        <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2">
+          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            Date Range
+          </span>
+          <div className="flex items-center gap-2 rounded-xl bg-primary/5 px-4 py-2 ring-1 ring-primary/10 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/10 hover:ring-primary/20">
           <Calendar className="size-4 text-muted-foreground" />
           <input
             className="w-44 border-none p-0 text-sm focus:ring-0"

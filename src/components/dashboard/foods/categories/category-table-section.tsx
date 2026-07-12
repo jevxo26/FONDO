@@ -1,10 +1,10 @@
 "use client";
 
 import { DataTable } from "@/components/common/table";
-import type { RowAction } from "@/components/common/table";
+import type { FacetedFilter, RowAction } from "@/components/common/table";
 import { categoryColumns } from "./category-columns";
 import { adminCategories, type AdminCategory } from "@/data/categories-data";
-import { Eye, Edit } from "lucide-react";
+import { Eye, Edit, ListChecks } from "lucide-react";
 
 const rowActions: RowAction<AdminCategory>[] = [
   {
@@ -19,12 +19,23 @@ const rowActions: RowAction<AdminCategory>[] = [
   },
 ];
 
+const statusFilter: FacetedFilter = {
+  columnId: "status",
+  title: "Status",
+  icon: <ListChecks className="size-4" />,
+  options: [
+    { label: "Active", value: "ACTIVE" },
+    { label: "Draft", value: "DRAFT" },
+  ],
+};
+
 export function CategoryTableSection() {
   return (
     <DataTable
       data={adminCategories}
       columns={categoryColumns}
       rowActions={rowActions}
+      filters={[statusFilter]}
     />
   );
 }

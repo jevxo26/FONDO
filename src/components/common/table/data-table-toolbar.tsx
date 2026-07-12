@@ -22,6 +22,8 @@ interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   toolbarActions?: React.ReactNode;
   filters?: FacetedFilter[];
+  enableSearch?: boolean;
+  enableColumnToggle?: boolean;
 }
 
 function humanize(str: string) {
@@ -36,6 +38,8 @@ export function DataTableToolbar<TData>({
   table,
   toolbarActions,
   filters,
+  enableSearch = true,
+  enableColumnToggle = true,
 }: DataTableToolbarProps<TData>) {
   const [search, setSearch] = useState("");
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -49,16 +53,18 @@ export function DataTableToolbar<TData>({
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-primary/10 bg-card px-4 py-4">
-      <div className="relative w-full md:w-auto">
-        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          type="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search across all columns..."
-          className="w-full rounded-full bg-primary/[0.04] pl-10 ring-1 ring-border/50 focus-visible:ring-primary/30 md:w-72"
-        />
-      </div>
+      {enableSearch && (
+        <div className="relative w-full md:w-auto">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search across all columns..."
+            className="w-full rounded-full bg-primary/[0.04] pl-10 ring-1 ring-border/50 focus-visible:ring-primary/30 md:w-72"
+          />
+        </div>
+      )}
 
       <div className="flex flex-wrap items-center gap-3">
         {filters?.map((filter) => {
@@ -112,27 +118,29 @@ export function DataTableToolbar<TData>({
 
         {toolbarActions}
 
-        <DropdownMenu>
-          <DropdownMenuTrigger className={buttonVariants({ variant: "outline", size: "sm" })}>
-            <Settings2 className="size-4" />
-            View
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuGroup>
-              <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {table.getAllLeafColumns().map((column) => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {humanize(column.id)}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {enableColumnToggle && (
+          <DropdownMenu>
+            <DropdownMenuTrigger className={buttonVariants({ variant: "outline", size: "sm" })}>
+              <Settings2 className="size-4" />
+              View
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {table.getAllLeafColumns().map((column) => (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                  >
+                    {humanize(column.id)}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
     </div>
   );

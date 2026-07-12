@@ -23,6 +23,18 @@ const statusFilter: FacetedFilter = {
   ],
 };
 
+const packageFilter: FacetedFilter = {
+  columnId: "packageName",
+  title: "Package",
+  options: [
+    { label: "7-Day Wellness", value: "7-Day Wellness" },
+    { label: "10-Day Balanced", value: "10-Day Balanced" },
+    { label: "15-Day High Protein", value: "15-Day High Protein" },
+    { label: "Monthly Regular", value: "Monthly Regular" },
+    { label: "Monthly Premium", value: "Monthly Premium" },
+  ],
+};
+
 const rowActions: RowAction<Subscription>[] = [
   {
     label: "View Details",
@@ -63,7 +75,7 @@ export function SubscriptionContent() {
         <DataTable
           columns={subscriptionColumns}
           data={subscriptions}
-          filters={[statusFilter]}
+          filters={[statusFilter, packageFilter]}
           rowActions={rowActions}
         />
       </div>

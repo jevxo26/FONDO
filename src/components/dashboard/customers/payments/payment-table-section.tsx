@@ -30,13 +30,25 @@ const statusFilter: FacetedFilter = {
   ],
 };
 
+const methodFilter: FacetedFilter = {
+  columnId: "method",
+  title: "Method",
+  options: [
+    { label: "bKash", value: "bKash" },
+    { label: "Nagad", value: "Nagad" },
+    { label: "Visa", value: "Visa" },
+    { label: "Mastercard", value: "Mastercard" },
+    { label: "Heritage Wallet", value: "Heritage Wallet" },
+  ],
+};
+
 export function PaymentTableSection({ data }: { data: PaymentTransaction[] }) {
   return (
     <DataTable
       columns={paymentColumns}
       data={data}
       rowActions={rowActions}
-      filters={[statusFilter]}
+      filters={[statusFilter, methodFilter]}
     />
   );
 }

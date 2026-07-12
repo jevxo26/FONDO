@@ -36,13 +36,26 @@ const statusFilter: FacetedFilter = {
   ],
 };
 
+const typeFilter: FacetedFilter = {
+  columnId: "transactionType",
+  title: "Type",
+  options: [
+    { label: "Top-up", value: "TOPUP" },
+    { label: "Purchase", value: "PURCHASE" },
+    { label: "Refund", value: "REFUND" },
+    { label: "Adjustment", value: "ADJUSTMENT" },
+    { label: "Credit", value: "CREDIT" },
+    { label: "Debit", value: "DEBIT" },
+  ],
+};
+
 export function WalletTableSection({ data }: { data: WalletTransaction[] }) {
   return (
     <DataTable
       columns={walletColumns}
       data={data}
       rowActions={rowActions}
-      filters={[statusFilter]}
+      filters={[statusFilter, typeFilter]}
     />
   );
 }

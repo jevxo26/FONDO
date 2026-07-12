@@ -10,14 +10,25 @@ import {
 } from "@/components/ui/pagination";
 
 interface DataTablePaginationProps {
+  /** Zero-based current page index. */
   currentPage: number;
+  /** Total number of pages. */
   totalPages: number;
+  /** 0-based index of the first item on the current page (for the "Showing X-Y" label). */
   start: number;
+  /** 0-based index of the last item on the current page (for the "Showing X-Y" label). */
   end: number;
+  /** Total number of items across all pages. */
   totalItems: number;
+  /** Fired with the new page index when the user changes page. */
   onPageChange: (page: number) => void;
 }
 
+/**
+ * Standalone pagination with previous/next, page numbers, ellipsis, and a
+ * "Showing X-Y of Z" label.  Used internally by `DataTable` and can also be
+ * used standalone for custom table layouts.
+ */
 export function DataTablePagination({
   currentPage,
   totalPages,

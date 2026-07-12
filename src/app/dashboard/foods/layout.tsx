@@ -4,6 +4,7 @@ const tabs = [
   { label: 'All Foods', href: '/dashboard/foods' },
   { label: 'Meal Plans', href: '/dashboard/foods/meal-plans' },
   { label: 'Packages', href: '/dashboard/foods/packages' },
+  { label: 'Inventory', href: '/dashboard/foods/inventory' },
   { label: 'Approval Queue', href: '/dashboard/foods/approval' },
   { label: 'Categories', href: '/dashboard/foods/categories' },
   { label: 'Nutrition', href: '/dashboard/foods/nutrition' },

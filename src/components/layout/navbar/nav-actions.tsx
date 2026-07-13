@@ -1,16 +1,16 @@
 "use client";
 
-import { useAppDispatch } from "@/store/store";
+import { Button } from "@/components/ui/button";
 import { toggleMobileMenu } from "@/store/slices/uiSlice";
+import { useAppDispatch } from "@/store/store";
 import { Heart, Menu, ShoppingCart, Truck } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 export function NavActions() {
   const dispatch = useAppDispatch();
 
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-2">
       <Link
         href="/wishlist"
         className="flex size-9 items-center justify-center rounded-full bg-destructive/20 transition-colors hover:bg-destructive/30"
@@ -31,10 +31,10 @@ export function NavActions() {
         Track Order
       </Link>
       <Link
-        href="/menu"
+        href="/dashboard"
         className="hidden rounded-[8px] bg-foreground px-4 py-2 text-[14px] font-medium text-secondary transition-colors hover:bg-foreground/90 lg:block"
       >
-        Order Now
+        Dashboard
       </Link>
       <Button
         variant="ghost"

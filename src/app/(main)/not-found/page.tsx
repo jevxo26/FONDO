@@ -15,7 +15,6 @@ export default function OrderNotFound() {
   return (
     <div className="min-h-screen bg-background py-12">
       <div className="wrapper">
-        
         {/* TOP PANEL: Section Headline + Integrated Input Search Bar Grid */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-12">
           <div>
@@ -28,7 +27,10 @@ export default function OrderNotFound() {
           </div>
 
           {/* Search Input Box Element */}
-          <form onSubmit={handleTrack} className="flex items-center w-full md:w-auto max-w-md gap-0 relative">
+          <form
+            onSubmit={handleTrack}
+            className="flex items-center w-full md:w-auto max-w-md gap-0 relative"
+          >
             <input
               type="text"
               value={orderNumber}
@@ -47,7 +49,6 @@ export default function OrderNotFound() {
 
         {/* CENTER BOX: NOT FOUND CONTENT BLOCK */}
         <div className="max-w-[570px] mx-auto bg-card rounded-[32px] border border-border/40 py-16 px-8 text-center shadow-[var(--shadow-card)] flex flex-col items-center justify-center">
-          
           {/* Missing Package Emoji Module Wrapper */}
           <span className="text-4xl block mb-5 select-none" role="img" aria-label="Cardboard Box">
             📦
@@ -57,7 +58,7 @@ export default function OrderNotFound() {
           <h2 className="font-sans text-lg font-bold text-secondary-foreground tracking-tight mb-2">
             Order Not Found
           </h2>
-          
+
           <p className="font-sans text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed mb-8">
             We couldn&apos;t find an order with that number. Please double-check and try again.
           </p>
@@ -69,9 +70,7 @@ export default function OrderNotFound() {
           >
             Back to Shopping
           </Link>
-
         </div>
-
       </div>
     </div>
   );

@@ -1,18 +1,18 @@
-import { PrismaClient } from '@prisma/client';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import express, { Request, Response } from 'express';
-import helmet from 'helmet';
-import morgan from 'morgan';
-import next from 'next';
+import { PrismaClient } from "@prisma/client";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import express, { Request, Response } from "express";
+import helmet from "helmet";
+import morgan from "morgan";
+import next from "next";
 // import path from 'path';
-import authRoutes from './routes/authRoutes';
-import userRoutes from './routes/userRoutes';
-import vendorRoutes from './routes/vendorRoutes';
+import authRoutes from "./routes/authRoutes";
+import userRoutes from "./routes/userRoutes";
+import vendorRoutes from "./routes/vendorRoutes";
 // import uploadRoutes from './routes/uploadRoutes';
 const prisma = new PrismaClient();
 
-const dev = process.env.NODE_ENV !== 'production';
+const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev, turbopack: true });
 const handle = app.getRequestHandler();
 
@@ -27,8 +27,8 @@ app
     server.use(cors());
     server.use(helmet({ contentSecurityPolicy: false })); // Disable CSP in dev if needed, or configure properly
     server.use(
-      morgan('[:date[iso]] :method :url :status :response-time ms - :res[content-length]', {
-        skip: (req) => req.url.startsWith('/_next/') || req.url.includes('favicon.ico'),
+      morgan("[:date[iso]] :method :url :status :response-time ms - :res[content-length]", {
+        skip: (req) => req.url.startsWith("/_next/") || req.url.includes("favicon.ico"),
       }),
     );
     server.use(express.json());
@@ -37,19 +37,19 @@ app
     // Database Connection using Prisma
     try {
       await prisma.$connect();
-      console.log('Prisma connected to the database successfully!');
+      console.log("Prisma connected to the database successfully!");
     } catch (err) {
-      console.error('Error connecting to the database with Prisma:', err);
+      console.error("Error connecting to the database with Prisma:", err);
     }
 
     // API Routes
-    server.get('/api/health', (req: Request, res: Response) => {
-      res.json({ status: 'ok', timestamp: new Date() });
+    server.get("/api/health", (req: Request, res: Response) => {
+      res.json({ status: "ok", timestamp: new Date() });
     });
 
-    server.use('/api/users', userRoutes);
-    server.use('/api/vendor', vendorRoutes);
-    server.use('/api/auth', authRoutes);
+    server.use("/api/users", userRoutes);
+    server.use("/api/vendor", vendorRoutes);
+    server.use("/api/auth", authRoutes);
     // server.use('/api/upload', uploadRoutes);
 
     // Serve uploaded files statically
@@ -65,11 +65,11 @@ app
       console.error(err);
 
       let statusCode = err.statusCode || 500;
-      if (err.message === 'User already exists with this email') statusCode = 409;
-      if (err.message === 'Invalid email or password') statusCode = 401;
-      if (err.message === 'Unauthorized') statusCode = 401;
+      if (err.message === "User already exists with this email") statusCode = 409;
+      if (err.message === "Invalid email or password") statusCode = 401;
+      if (err.message === "Unauthorized") statusCode = 401;
 
-      const message = err.message || 'Internal Server Error';
+      const message = err.message || "Internal Server Error";
       res.status(statusCode).json({
         success: false,
         message: message,
@@ -82,6 +82,6 @@ app
     });
   })
   .catch((err) => {
-    console.error('Error starting server', err);
+    console.error("Error starting server", err);
     process.exit(1);
   });

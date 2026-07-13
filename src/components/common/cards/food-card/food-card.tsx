@@ -1,13 +1,13 @@
-import { Button } from '@/components/ui/button';
-import { Food } from '@/types/food';
-import { ArrowUpRight, Clock, Heart, ShoppingBag, Star } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import AddToCartButton from './add-to-cart-button';
+import { Button } from "@/components/ui/button";
+import { Food } from "@/types/food";
+import { ArrowUpRight, Clock, Heart, ShoppingBag, Star } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import AddToCartButton from "./add-to-cart-button";
 
 export default function FoodCard({ food }: { food: Food }) {
   return (
-    <div className="group flex flex-col overflow-hidden rounded-[32px] bg-white p-4 shadow-[var(--shadow-card)] border border-border/40 dark:bg-card">
+    <div className="group flex flex-col overflow-hidden rounded-4xl bg-white p-4 shadow-[var(--shadow-card)] border border-border/40 dark:bg-card active:scale-[0.98] transition-transform duration-200">
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-muted">
         <Image
           src={food.thumbnail}
@@ -27,12 +27,12 @@ export default function FoodCard({ food }: { food: Food }) {
 
         <div
           className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center px-4
-                    transition-all duration-30 opacity-0 scale-95 pointer-events group-hover:opacity-100 group-hover:scale-100"
+                    transition-all duration-30 opacity-0 scale-95 pointer-events group-hover:opacity-100 group-hover:scale-100 group-active:opacity-100 group-active:scale-100"
         >
           <div className="inline-flex items-center gap-2 rounded-xl bg-[#16100C]/90 backdrop-blur-md px-4 py-2.5 text-white shadow-lg border border-white/10">
             <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-primary">
               <ShoppingBag className="size-4 text-foreground" />
-            </div>{' '}
+            </div>{" "}
             <span className="font-sans text-xs font-medium">2 items &middot; ৳520</span>
             <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-white/20">
               <Link href={`/foods/${food.slug}`}>

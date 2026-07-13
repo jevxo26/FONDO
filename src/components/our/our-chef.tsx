@@ -5,10 +5,8 @@ export default function StoryChef() {
   return (
     <section className="bg-background py-16">
       <div className="wrapper">
-        
         {/* ASYMMETRIC TWO-COLUMN SPLIT GRID */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
-          
           {/* LEFT COLUMN: Chef Portrait Image Card Container (5 Cols wide) */}
           <div className="md:col-span-5 relative w-full aspect-[4/5] rounded-[32px] overflow-hidden shadow-[var(--shadow-card)] border border-border/20 bg-muted">
             <Image
@@ -19,7 +17,7 @@ export default function StoryChef() {
               priority
               className="object-cover object-center"
             />
-            
+
             {/* Absolute Positioned Experience Float Badge */}
             <div className="absolute bottom-5 right-5 bg-white/95 backdrop-blur-md rounded-2xl py-2.5 px-4 text-left shadow-md max-w-[120px] border border-white/40">
               <span className="block font-sans text-xl font-extrabold text-[#16100C] leading-none mb-0.5">
@@ -33,7 +31,6 @@ export default function StoryChef() {
 
           {/* RIGHT COLUMN: Biographical Context & Accolades (7 Cols wide) */}
           <div className="md:col-span-7 flex flex-col gap-5">
-            
             {/* Header Identity Info */}
             <div className="flex flex-col gap-1">
               <span className="font-sans text-xs uppercase tracking-widest text-primary font-bold">
@@ -46,16 +43,16 @@ export default function StoryChef() {
 
             {/* Biography Body Text */}
             <p className="font-sans text-sm text-muted-foreground leading-relaxed">
-              Trained in the old kitchens of Puran Dhaka and refined under three-star 
-              chefs in Lucknow, Chef Bashar has spent nearly three decades perfecting a 
-              single, uncompromising idea: Mughlai food cooked the slow, honest way.
+              Trained in the old kitchens of Puran Dhaka and refined under three-star chefs in
+              Lucknow, Chef Bashar has spent nearly three decades perfecting a single,
+              uncompromising idea: Mughlai food cooked the slow, honest way.
             </p>
 
             {/* Signature Accent Left-Bordered Blockquote */}
             <blockquote className="border-l-2 border-primary/60 pl-4 py-1 my-2">
               <p className="font-fraunces text-base md:text-lg italic text-foreground tracking-wide leading-relaxed">
-                &ldquo;A great kacchi cannot be hurried — it has to be sealed, 
-                trusted, and waited on.&rdquo;
+                &ldquo;A great kacchi cannot be hurried — it has to be sealed, trusted, and waited
+                on.&rdquo;
               </p>
             </blockquote>
 

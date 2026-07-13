@@ -1,21 +1,19 @@
-'use client'
-import { useState } from "react";
+"use client";
 import Categories from "./categories";
 import FoodGrid from "./food-grid";
 import Pagination from "./pagination";
-
+import { FOOD_ITEMS } from "@/data/foodsdata";
 
 const CategoriesMenu = () => {
-  const [currentPage, setCurrentPage] = useState(1);
   return (
     <div>
       {/* Category Selection tab */}
-      <Categories/>
+      <Categories />
       {/* Food Cards Section */}
-      <FoodGrid/>
+      <FoodGrid foods={FOOD_ITEMS} />
       {/* Pagination Controls */}
       <div className="wrapper">
-        <Pagination/>
+        <Pagination />
       </div>
     </div>
   );

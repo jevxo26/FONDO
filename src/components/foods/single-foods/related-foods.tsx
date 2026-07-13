@@ -1,7 +1,7 @@
-import FoodCard from '@/components/common/cards/food-card/food-card';
-import { FOOD_ITEMS } from '@/data/foodsdata';
-import { ArrowUpRight } from 'lucide-react';
-import Link from 'next/link';
+import FoodCard from "@/components/common/cards/food-card/food-card";
+import { FOOD_ITEMS } from "@/data/foodsdata";
+import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 
 export function RelatedFoods() {
   return (

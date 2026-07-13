@@ -14,4 +14,4 @@ export const sendUserDataAsResponse = {
   lastLoginAt: true,
   createdAt: true,
   updatedAt: true,
-}
+};

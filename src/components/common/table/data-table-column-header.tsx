@@ -8,6 +8,11 @@ interface DataTableColumnHeaderProps<TData, TValue> {
   title: string;
 }
 
+/**
+ * Sortable column header for TanStack Table.
+ * Renders the column name with sort icons (asc/desc/none).
+ * Non-sortable columns render plain uppercase text.
+ */
 export function DataTableColumnHeader<TData, TValue>({
   column,
   title,

@@ -10,7 +10,12 @@ interface CheckoutSummaryProps {
   isSubmitting: boolean;
 }
 
-export function CheckoutSummary({ subtotal, deliveryFee, savings, isSubmitting }: CheckoutSummaryProps) {
+export function CheckoutSummary({
+  subtotal,
+  deliveryFee,
+  savings,
+  isSubmitting,
+}: CheckoutSummaryProps) {
   const total = subtotal + deliveryFee - savings;
 
   return (

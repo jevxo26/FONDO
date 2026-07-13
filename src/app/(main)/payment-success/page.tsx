@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Check, Package, Home, CheckCircle2, Truck } from "lucide-react";
+import { Check, Package, Home, CheckCircle2 } from "lucide-react";
 
 export default function PaymentSuccessPage() {
   // Mock data matching the design spec
@@ -14,10 +14,8 @@ export default function PaymentSuccessPage() {
   return (
     <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
       <div className="w-full max-w-[540px] flex flex-col gap-6">
-        
         {/* MAIN SUCCESS CARD CONTAINER */}
         <div className="bg-card rounded-[32px] border border-border/40 p-8 text-center shadow-[var(--shadow-card)]">
-          
           {/* Status Badge/Icon */}
           <div className="mx-auto size-16 bg-primary/10 rounded-full flex items-center justify-center mb-5">
             <Check className="size-8 text-primary stroke-[2.5]" />
@@ -28,14 +26,17 @@ export default function PaymentSuccessPage() {
             Order Placed Successfully!
           </h1>
           <p className="font-sans text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed mb-6">
-            Thank you for your order. We&apos;ve received your order and will start processing it soon.
+            Thank you for your order. We&apos;ve received your order and will start processing it
+            soon.
           </p>
 
           {/* Order Data Meta-Block (Receipt Box) */}
           <div className="bg-muted rounded-2xl p-4 flex flex-col gap-3.5 text-left mb-6 border border-border/20">
             <div className="flex justify-between items-center font-sans text-sm">
               <span className="text-muted-foreground">Order Number:</span>
-              <span className="font-bold text-foreground tracking-wide">{orderDetails.orderNumber}</span>
+              <span className="font-bold text-foreground tracking-wide">
+                {orderDetails.orderNumber}
+              </span>
             </div>
             <div className="flex justify-between items-center font-sans text-sm">
               <span className="text-muted-foreground">Estimated Delivery:</span>
@@ -56,7 +57,7 @@ export default function PaymentSuccessPage() {
               <Package className="size-4 stroke-[2]" />
               Track Your Order
             </Link>
-            
+
             <Link
               href="/menu"
               className="flex items-center justify-center gap-2 w-full h-12 rounded-full bg-white border border-border text-foreground font-sans text-sm font-semibold transition-colors hover:bg-muted"
@@ -76,22 +77,24 @@ export default function PaymentSuccessPage() {
               </a>
             </p>
           </div>
-
         </div>
 
         {/* MULTI-CARD PROGRESS MILESTONE TRACKERS */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          
           {/* Card 1: Confirmed */}
           <div className="bg-card border border-border/40 rounded-2xl p-4 text-center shadow-[var(--shadow-card)]">
-            <span className="text-2xl block mb-2" role="img" aria-label="Box">📦</span>
+            <span className="text-2xl block mb-2" role="img" aria-label="Box">
+              📦
+            </span>
             <h4 className="font-sans text-sm font-bold text-foreground mb-0.5">Order Confirmed</h4>
             <p className="font-sans text-[11px] text-muted-foreground">We received your order</p>
           </div>
 
           {/* Card 2: Processing */}
           <div className="bg-card border border-border/40 rounded-2xl p-4 text-center shadow-[var(--shadow-card)]">
-            <span className="text-2xl block mb-2" role="img" aria-label="Truck">🚚</span>
+            <span className="text-2xl block mb-2" role="img" aria-label="Truck">
+              🚚
+            </span>
             <h4 className="font-sans text-sm font-bold text-foreground mb-0.5">Processing</h4>
             <p className="font-sans text-[11px] text-muted-foreground">Preparing for delivery</p>
           </div>
@@ -104,9 +107,7 @@ export default function PaymentSuccessPage() {
             <h4 className="font-sans text-sm font-bold text-foreground mb-0.5">Delivered</h4>
             <p className="font-sans text-[11px] text-muted-foreground">Enjoy your purchase!</p>
           </div>
-
         </div>
-
       </div>
     </div>
   );

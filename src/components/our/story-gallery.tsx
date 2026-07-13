@@ -4,7 +4,6 @@ export default function StoryGallery() {
   return (
     <section className="bg-background py-16">
       <div className="wrapper">
-        
         {/* CENTERED SECTION HEADER */}
         <div className="text-center max-w-xl mx-auto mb-12 flex flex-col gap-2">
           <span className="font-sans text-xs uppercase tracking-widest text-primary font-bold">
@@ -20,7 +19,6 @@ export default function StoryGallery() {
 
         {/* ASYMMETRIC MOSAIC GALLERY GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-6 items-start">
-          
           {/* Left Column: Tall Portrait Action Capture (3 Cols wide on desktop) */}
           <div className="lg:col-span-3 relative aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-sm border border-border/10 bg-muted">
             <Image

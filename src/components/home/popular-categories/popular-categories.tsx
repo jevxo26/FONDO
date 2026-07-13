@@ -1,20 +1,27 @@
-import { SectionHeader } from '@/components/common/section-header';
-import { CategoryCard } from './category-card';
-import { CATEGORY_CARDS } from '@/data/homepage';
+import { SectionHeader } from "@/components/common/section-header";
+import { SectionReveal, SectionRevealItem } from "@/components/common/section-reveal";
+import { CategoryCard } from "./category-card";
+import { CATEGORY_CARDS } from "@/data/homepage";
 
 export function PopularCategories() {
   return (
-    <section className="py-16">
+    <section>
       <div className="wrapper">
         <SectionHeader
           title="Popular Categories"
           description="Open right now and delivering to your area."
         />
-        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 lg:gap-4">
+        <SectionReveal
+          stagger
+          staggerDelay={0.06}
+          className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 lg:gap-4"
+        >
           {CATEGORY_CARDS.map((category) => (
-            <CategoryCard key={category.id} category={category} />
+            <SectionRevealItem key={category.id}>
+              <CategoryCard category={category} />
+            </SectionRevealItem>
           ))}
-        </div>
+        </SectionReveal>
       </div>
     </section>
   );

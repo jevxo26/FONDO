@@ -2,15 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import {
-  Heart,
-  Star,
-  Share2,
-  Plus,
-  Minus,
-  ShoppingCart,
-  MessageSquare,
-} from "lucide-react";
+import { Heart, Star, Share2, Plus, Minus, ShoppingCart, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Food } from "@/types/food";
 
@@ -24,13 +16,7 @@ export function ProductHero({ food }: { food: Food }) {
           {/* Left: Main Showcase Image */}
           <div className="lg:col-span-6">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[32px] bg-muted shadow-[var(--shadow-card)] border border-border/40">
-              <Image
-                src={food.coverImage}
-                alt={food.name}
-                fill
-                priority
-                className="object-cover"
-              />
+              <Image src={food.coverImage} alt={food.name} fill priority className="object-cover" />
             </div>
           </div>
 
@@ -41,7 +27,11 @@ export function ProductHero({ food }: { food: Food }) {
                 &middot; {food.status === "active" ? "In stock" : "Out of stock"}
               </span>
 
-              <Button variant="ghost" size="icon" className="rounded-full border border-border bg-white shadow-sm hover:text-destructive dark:bg-card">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full border border-border bg-white shadow-sm hover:text-destructive dark:bg-card"
+              >
                 <Heart className="size-4" />
               </Button>
             </div>
@@ -53,10 +43,7 @@ export function ProductHero({ food }: { food: Food }) {
             <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
               <div className="flex items-center gap-1">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className="size-3.5 fill-primary text-primary"
-                  />
+                  <Star key={i} className="size-3.5 fill-primary text-primary" />
                 ))}
                 <span className="ml-1 font-semibold text-foreground">
                   {food.isPopular ? "4.9" : "4.7"}
@@ -89,9 +76,7 @@ export function ProductHero({ food }: { food: Food }) {
               </span>
             </div>
 
-            <p className="mt-1 text-xs text-muted-foreground">
-              Free delivery on orders of ৳2,000+
-            </p>
+            <p className="mt-1 text-xs text-muted-foreground">Free delivery on orders of ৳2,000+</p>
 
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               {food.shortDescription}
@@ -131,17 +116,13 @@ export function ProductHero({ food }: { food: Food }) {
 
             {/* Quantity Selector */}
             <div className="mt-6 flex items-center gap-4">
-              <span className="font-sans text-sm font-medium text-muted-foreground">
-                Quantity:
-              </span>
+              <span className="font-sans text-sm font-medium text-muted-foreground">Quantity:</span>
 
               <div className="flex items-center border border-border bg-white rounded-xl overflow-hidden dark:bg-card">
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() =>
-                    setQuantity((prev) => Math.max(1, prev - 1))
-                  }
+                  onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
                   className="p-2.5 rounded-none"
                 >
                   <Minus className="size-3.5" />
@@ -177,11 +158,7 @@ export function ProductHero({ food }: { food: Food }) {
                 Add to cart
               </Button>
 
-              <Button
-                variant="default"
-                size="xl"
-                className="rounded-2xl"
-              >
+              <Button variant="default" size="xl" className="rounded-2xl">
                 Buy Now
               </Button>
             </div>

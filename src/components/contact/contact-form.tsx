@@ -24,13 +24,10 @@ export default function ContactMain() {
   return (
     <section className="bg-background pb-16">
       <div className="wrapper">
-        
         {/* TWO-COLUMN SPLIT LAYOUT */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-          
           {/* LEFT COLUMN: Contact Information Chips (5 Columns Wide) */}
           <div className="lg:col-span-5 flex flex-col gap-4">
-            
             {/* WhatsApp Card */}
             <div className="flex items-center gap-5 p-5 rounded-2xl bg-secondary border border-border/40 shadow-sm transition-colors hover:border-primary/30">
               <div className="size-12 rounded-full border border-primary/30 flex items-center justify-center bg-card shrink-0">
@@ -40,9 +37,7 @@ export default function ContactMain() {
                 <span className="font-sans text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">
                   WhatsApp
                 </span>
-                <span className="font-sans text-sm font-bold text-foreground">
-                  +880 1577147480
-                </span>
+                <span className="font-sans text-sm font-bold text-foreground">+880 1577147480</span>
               </div>
             </div>
 
@@ -90,18 +85,19 @@ export default function ContactMain() {
                 </span>
               </div>
             </div>
-
           </div>
 
           {/* RIGHT COLUMN: Interactive Form Container (7 Columns Wide) */}
           <div className="lg:col-span-7 bg-card rounded-[32px] p-6 sm:p-8 md:p-10 shadow-[var(--shadow-card)] border border-border/40">
             <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-              
               {/* Top Row: Name & Phone Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Name Input */}
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="name" className="font-sans text-xs text-muted-foreground font-medium pl-1">
+                  <label
+                    htmlFor="name"
+                    className="font-sans text-xs text-muted-foreground font-medium pl-1"
+                  >
                     Name *
                   </label>
                   <input
@@ -118,7 +114,10 @@ export default function ContactMain() {
 
                 {/* Phone Input */}
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="phone" className="font-sans text-xs text-muted-foreground font-medium pl-1">
+                  <label
+                    htmlFor="phone"
+                    className="font-sans text-xs text-muted-foreground font-medium pl-1"
+                  >
                     Phone Number
                   </label>
                   <input
@@ -135,7 +134,10 @@ export default function ContactMain() {
 
               {/* Middle Row: Email Input */}
               <div className="flex flex-col gap-2">
-                <label htmlFor="email" className="font-sans text-xs text-muted-foreground font-medium pl-1">
+                <label
+                  htmlFor="email"
+                  className="font-sans text-xs text-muted-foreground font-medium pl-1"
+                >
                   Email Address *
                 </label>
                 <input
@@ -152,7 +154,10 @@ export default function ContactMain() {
 
               {/* Bottom Row: Textarea */}
               <div className="flex flex-col gap-2">
-                <label htmlFor="message" className="font-sans text-xs text-muted-foreground font-medium pl-1">
+                <label
+                  htmlFor="message"
+                  className="font-sans text-xs text-muted-foreground font-medium pl-1"
+                >
                   Message
                 </label>
                 <textarea
@@ -179,12 +184,9 @@ export default function ContactMain() {
                   </div>
                 </button>
               </div>
-
             </form>
           </div>
-
         </div>
-
       </div>
     </section>
   );

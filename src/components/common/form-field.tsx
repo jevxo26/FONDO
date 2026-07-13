@@ -1,6 +1,6 @@
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
-import type { ReactNode } from 'react';
-import type { FieldError as FieldErrorType } from 'react-hook-form';
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import type { ReactNode } from "react";
+import type { FieldError as FieldErrorType } from "react-hook-form";
 
 interface FormFieldProps {
   label: string;

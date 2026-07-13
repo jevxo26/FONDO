@@ -14,7 +14,6 @@ interface CartItemCardProps {
 export function CartItemCard({ item, onUpdateQuantity, onRemove }: CartItemCardProps) {
   return (
     <div className="group relative flex flex-col sm:flex-row gap-5 rounded-[28px] bg-white p-5 border border-border/40 shadow-[var(--shadow-card)] dark:bg-card transition-all hover:border-border/80">
-      
       {/* Left Area: Product Square Media Box */}
       <div className="relative aspect-square w-full sm:w-28 shrink-0 overflow-hidden rounded-2xl bg-muted">
         <Image
@@ -32,15 +31,19 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove }: CartItemCardP
             <h3 className="font-sans text-base font-semibold tracking-tight text-secondary-foreground">
               {item.title}
             </h3>
-            
+
             {/* Price Stack Section */}
             <div className="mt-1 flex items-baseline gap-2">
-              <span className="font-sans text-base font-bold text-secondary-foreground">৳{item.price}</span>
+              <span className="font-sans text-base font-bold text-secondary-foreground">
+                ৳{item.price}
+              </span>
               {item.oldPrice && (
-                <span className="font-sans text-xs text-muted-foreground line-through">৳{item.oldPrice}</span>
+                <span className="font-sans text-xs text-muted-foreground line-through">
+                  ৳{item.oldPrice}
+                </span>
               )}
             </div>
-            
+
             <p className="mt-1 font-sans text-[11px] text-muted-foreground">
               {item.itemsSold} sold
             </p>
@@ -87,7 +90,6 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove }: CartItemCardP
           </span>
         </div>
       </div>
-
     </div>
   );
 }

@@ -1,5 +1,5 @@
-export type FulfillmentType = 'delivery' | 'pickup';
-export type PaymentMethodType = 'online' | 'bkash' | 'nagad' | 'cod';
+export type FulfillmentType = "delivery" | "pickup";
+export type PaymentMethodType = "online" | "bkash" | "nagad" | "cod";
 
 export interface CheckoutFormData {
   fulfillment: FulfillmentType;

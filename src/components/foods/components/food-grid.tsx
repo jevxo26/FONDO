@@ -1,5 +1,5 @@
-import FoodCard from '@/components/common/cards/food-card/food-card';
-import { Food } from '@/types/food';
+import FoodCard from "@/components/common/cards/food-card/food-card";
+import { Food } from "@/types/food";
 
 export default function FoodGrid({ foods }: { foods: Food[] }) {
   return (

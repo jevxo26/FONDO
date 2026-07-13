@@ -10,9 +10,17 @@ function seededRandom(seed: number) {
 const rand = seededRandom(5731);
 
 export type OrderStatus =
-  | "PENDING" | "PAYMENT_PENDING" | "CONFIRMED" | "PREPARING"
-  | "READY_FOR_PICKUP" | "PICKED_UP" | "ON_THE_WAY"
-  | "DELIVERED" | "COMPLETED" | "CANCELLED" | "REFUNDED";
+  | "PENDING"
+  | "PAYMENT_PENDING"
+  | "CONFIRMED"
+  | "PREPARING"
+  | "READY_FOR_PICKUP"
+  | "PICKED_UP"
+  | "ON_THE_WAY"
+  | "DELIVERED"
+  | "COMPLETED"
+  | "CANCELLED"
+  | "REFUNDED";
 
 export interface CustomerOrder {
   id: string;
@@ -27,15 +35,33 @@ export interface CustomerOrder {
 }
 
 const customerNames = [
-  "Tasnim Jahan", "Fahim Ahmed", "Mahmud Hassan", "Sarah Karim",
-  "Rafiq Hasan", "Nusrat Jahan", "Kazi Fahim", "Sadia Islam",
-  "Tanvir Ahmed", "Farzana Rahman", "Hasan Ali", "Jannatul Ferdous",
-  "Mizanur Rahman", "Tahmina Akhtar", "Shahriar Kabir",
+  "Tasnim Jahan",
+  "Fahim Ahmed",
+  "Mahmud Hassan",
+  "Sarah Karim",
+  "Rafiq Hasan",
+  "Nusrat Jahan",
+  "Kazi Fahim",
+  "Sadia Islam",
+  "Tanvir Ahmed",
+  "Farzana Rahman",
+  "Hasan Ali",
+  "Jannatul Ferdous",
+  "Mizanur Rahman",
+  "Tahmina Akhtar",
+  "Shahriar Kabir",
 ];
 
 const statuses: OrderStatus[] = [
-  "PENDING", "CONFIRMED", "PREPARING", "READY_FOR_PICKUP",
-  "ON_THE_WAY", "DELIVERED", "COMPLETED", "CANCELLED", "REFUNDED",
+  "PENDING",
+  "CONFIRMED",
+  "PREPARING",
+  "READY_FOR_PICKUP",
+  "ON_THE_WAY",
+  "DELIVERED",
+  "COMPLETED",
+  "CANCELLED",
+  "REFUNDED",
 ];
 
 function randomItem<T>(arr: T[]): T {

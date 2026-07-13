@@ -29,16 +29,12 @@ export function RatingStars({
           key={i}
           className={cn(
             sizeMap[size],
-            i < Math.floor(rating)
-              ? "fill-primary text-primary"
-              : "fill-muted text-muted"
+            i < Math.floor(rating) ? "fill-primary text-primary" : "fill-muted text-muted",
           )}
         />
       ))}
       {showValue && (
-        <span className="ml-1 text-xs font-semibold text-foreground">
-          {rating.toFixed(1)}
-        </span>
+        <span className="ml-1 text-xs font-semibold text-foreground">{rating.toFixed(1)}</span>
       )}
     </div>
   );

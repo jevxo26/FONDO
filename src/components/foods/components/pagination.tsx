@@ -9,8 +9,8 @@ export default function Pagination() {
 
   return (
     <div className="wrapper flex items-center justify-center gap-2 pt-10 pb-4">
-      <button 
-        onClick={() => setPage(p => Math.max(1, p - 1))}
+      <button
+        onClick={() => setPage((p) => Math.max(1, p - 1))}
         className="flex size-10 items-center justify-center rounded-xl border border-border bg-white text-muted-foreground hover:bg-muted"
       >
         <ChevronLeft className="size-4" />
@@ -23,9 +23,10 @@ export default function Pagination() {
             key={num}
             onClick={() => setPage(num)}
             className={`flex size-10 items-center justify-center rounded-xl font-sans text-sm font-medium border transition-colors
-              ${isActive
-                ? "bg-[#CEA359] border-[#CEA359] text-[#1B0E08]"
-                : "bg-white border-border text-foreground hover:bg-muted"
+              ${
+                isActive
+                  ? "bg-[#CEA359] border-[#CEA359] text-[#1B0E08]"
+                  : "bg-white border-border text-foreground hover:bg-muted"
               }`}
           >
             {num}
@@ -33,8 +34,8 @@ export default function Pagination() {
         );
       })}
 
-      <button 
-        onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+      <button
+        onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
         className="flex size-10 items-center justify-center rounded-xl border border-border bg-white text-muted-foreground hover:bg-muted"
       >
         <ChevronRight className="size-4" />

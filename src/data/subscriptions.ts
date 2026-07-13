@@ -10,13 +10,7 @@ function seededRandom(seed: number) {
 const rand = seededRandom(9821);
 
 export type SubscriptionStatus =
-  | "PENDING"
-  | "ACTIVE"
-  | "PAUSED"
-  | "FROZEN"
-  | "COMPLETED"
-  | "EXPIRED"
-  | "CANCELLED";
+  "PENDING" | "ACTIVE" | "PAUSED" | "FROZEN" | "COMPLETED" | "EXPIRED" | "CANCELLED";
 
 export interface Subscription {
   id: string;
@@ -37,10 +31,21 @@ export interface Subscription {
 }
 
 const customerNames = [
-  "Tasnim Jahan", "Fahim Ahmed", "Mahmud Hassan", "Sarah Karim",
-  "Rafiq Hasan", "Nusrat Jahan", "Kazi Fahim", "Sadia Islam",
-  "Tanvir Ahmed", "Farzana Rahman", "Hasan Ali", "Jannatul Ferdous",
-  "Mizanur Rahman", "Tahmina Akhtar", "Shahriar Kabir",
+  "Tasnim Jahan",
+  "Fahim Ahmed",
+  "Mahmud Hassan",
+  "Sarah Karim",
+  "Rafiq Hasan",
+  "Nusrat Jahan",
+  "Kazi Fahim",
+  "Sadia Islam",
+  "Tanvir Ahmed",
+  "Farzana Rahman",
+  "Hasan Ali",
+  "Jannatul Ferdous",
+  "Mizanur Rahman",
+  "Tahmina Akhtar",
+  "Shahriar Kabir",
 ];
 
 const packages = [
@@ -52,9 +57,14 @@ const packages = [
 ];
 
 const statuses: SubscriptionStatus[] = [
-  "ACTIVE", "ACTIVE", "ACTIVE", "ACTIVE",
-  "PAUSED", "PAUSED",
-  "COMPLETED", "COMPLETED",
+  "ACTIVE",
+  "ACTIVE",
+  "ACTIVE",
+  "ACTIVE",
+  "PAUSED",
+  "PAUSED",
+  "COMPLETED",
+  "COMPLETED",
   "PENDING",
   "EXPIRED",
   "CANCELLED",
@@ -70,11 +80,12 @@ function generateSubscriptions(count: number): Subscription[] {
   for (let i = 1; i <= count; i++) {
     const pkg = randomItem(packages);
     const status = randomItem(statuses);
-    const paid = status === "ACTIVE" || status === "COMPLETED"
-      ? pkg.price
-      : status === "PAUSED"
-        ? Math.floor(pkg.price * 0.6)
-        : Math.floor(pkg.price * (status === "PENDING" ? 0 : rand()));
+    const paid =
+      status === "ACTIVE" || status === "COMPLETED"
+        ? pkg.price
+        : status === "PAUSED"
+          ? Math.floor(pkg.price * 0.6)
+          : Math.floor(pkg.price * (status === "PENDING" ? 0 : rand()));
     subs.push({
       id: `SUB-${String(i).padStart(4, "0")}`,
       subscriptionNumber: `#SUB-${String(i).padStart(5, "0")}`,

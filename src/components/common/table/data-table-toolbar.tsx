@@ -12,11 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Search, Settings2, Filter } from "lucide-react";
 import type { FacetedFilter } from "./types";
 import { Input } from "@/components/ui/input";
@@ -26,6 +22,8 @@ interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   toolbarActions?: React.ReactNode;
   filters?: FacetedFilter[];
+  enableSearch?: boolean;
+  enableColumnToggle?: boolean;
 }
 
 function humanize(str: string) {
@@ -40,6 +38,8 @@ export function DataTableToolbar<TData>({
   table,
   toolbarActions,
   filters,
+  enableSearch = true,
+  enableColumnToggle = true,
 }: DataTableToolbarProps<TData>) {
   const [search, setSearch] = useState("");
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -52,36 +52,33 @@ export function DataTableToolbar<TData>({
   }, [search, table]);
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 p-4">
-      <div className="relative w-full md:w-auto">
-        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          type="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search across all columns..."
-          className="w-full rounded-full bg-secondary pl-10 md:w-72"
-        />
-      </div>
+    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-primary/10 bg-card px-4 py-4">
+      {enableSearch && (
+        <div className="relative w-full md:w-auto">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search across all columns..."
+            className="w-full rounded-full bg-primary/[0.04] pl-10 ring-1 ring-border/50 focus-visible:ring-primary/30 md:w-72"
+          />
+        </div>
+      )}
 
       <div className="flex flex-wrap items-center gap-3">
         {filters?.map((filter) => {
           const column = table.getColumn(filter.columnId);
-          const currentValue = column?.getFilterValue() as
-            | string
-            | undefined;
+          const currentValue = column?.getFilterValue() as string | undefined;
 
           return (
             <Popover key={filter.columnId}>
-              <PopoverTrigger
-                className={buttonVariants({ variant: "outline", size: "sm" })}
-              >
-                <Filter className="size-4" />
+              <PopoverTrigger className={buttonVariants({ variant: "outline", size: "sm" })}>
+                {filter.icon ?? <Filter className="size-4" />}
                 {filter.title}
                 {currentValue && (
                   <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary">
-                    {filter.options.find((o) => o.value === currentValue)
-                      ?.label ?? currentValue}
+                    {filter.options.find((o) => o.value === currentValue)?.label ?? currentValue}
                   </span>
                 )}
               </PopoverTrigger>
@@ -92,9 +89,7 @@ export function DataTableToolbar<TData>({
                 <label className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
                   <Checkbox
                     checked={!currentValue}
-                    onCheckedChange={() =>
-                      column?.setFilterValue(undefined)
-                    }
+                    onCheckedChange={() => column?.setFilterValue(undefined)}
                   />
                   All
                 </label>
@@ -123,31 +118,29 @@ export function DataTableToolbar<TData>({
 
         {toolbarActions}
 
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className={buttonVariants({ variant: "outline", size: "sm" })}
-          >
-            <Settings2 className="size-4" />
-            View
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuGroup>
-              <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {table.getAllLeafColumns().map((column) => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) =>
-                    column.toggleVisibility(!!value)
-                  }
-                >
-                  {humanize(column.id)}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {enableColumnToggle && (
+          <DropdownMenu>
+            <DropdownMenuTrigger className={buttonVariants({ variant: "outline", size: "sm" })}>
+              <Settings2 className="size-4" />
+              View
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {table.getAllLeafColumns().map((column) => (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                  >
+                    {humanize(column.id)}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
     </div>
   );

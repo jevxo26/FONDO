@@ -25,30 +25,58 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { sidebarItems } from "@/data/dashboard";
 import { cn } from "@/lib/utils";
-import { ChevronUp, LayoutDashboard, LogOut, Settings, User, Utensils } from "lucide-react";
+import {
+  ChevronUp,
+  LayoutDashboard,
+  LogOut,
+  Settings,
+  User,
+  type LucideIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 
-const sectionConfig = [
-  { label: "Management", items: ["Customers", "Vendors", "Foods"] },
-  { label: "Operations", items: ["Orders", "Payments", "Riders"] },
-  { label: "Analytics", items: ["Reports"] },
-] as const;
+interface SidebarItem {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+}
 
-export function AppSidebar() {
+interface DashboardSidebarProps {
+  items: SidebarItem[];
+  sections: readonly { readonly label: string; readonly items: readonly string[] }[];
+  basePath: string;
+  panelLabel: string;
+  logoIcon: LucideIcon;
+  showOverview?: boolean;
+  userName?: string;
+  userRole?: string;
+  userInitials?: string;
+}
+
+export function DashboardSidebar({
+  items,
+  sections: sectionConfig,
+  basePath,
+  panelLabel,
+  logoIcon: LogoIcon,
+  showOverview = true,
+  userName = "User",
+  userRole = "Staff",
+  userInitials = "US",
+}: DashboardSidebarProps) {
   const pathname = usePathname();
   const { setOpenMobile, isMobile } = useSidebar();
 
   const sections = useMemo(() => {
-    const itemMap = new Map(sidebarItems.map((item) => [item.label, item]));
+    const itemMap = new Map(items.map((item) => [item.label, item]));
     return sectionConfig.map((section) => ({
       label: section.label,
-      items: section.items.map((label) => itemMap.get(label)).filter(Boolean),
+      items: section.items.map((label) => itemMap.get(label)).filter(Boolean) as SidebarItem[],
     }));
-  }, []);
+  }, [items, sectionConfig]);
 
   return (
     <Sidebar
@@ -66,40 +94,44 @@ export function AppSidebar() {
               render={<Link href="/" onClick={() => isMobile && setOpenMobile(false)} />}
             >
               <div className="flex size-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 shadow-[0_0_24px_rgba(206,163,89,0.25)] group-data-[collapsible=icon]:size-8">
-                <Utensils className="size-5 text-white group-data-[collapsible=icon]:size-4" />
+                <LogoIcon className="size-5 text-white group-data-[collapsible=icon]:size-4" />
               </div>
               <div className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
                 <span className="font-fraunces text-xl font-bold">FONDO</span>
                 <span className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
-                  Admin Panel
+                  {panelLabel}
                 </span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
 
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              render={<Link href="/dashboard" onClick={() => isMobile && setOpenMobile(false)} />}
-              isActive={pathname === "/dashboard"}
-              tooltip="Overview"
-              className={cn(
-                "rounded-lg px-3 py-3 h-auto gap-3 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
-                pathname === "/dashboard" &&
-                  "bg-gradient-to-r from-primary/10 to-primary/5 shadow-[inset_0_1px_1px_rgba(206,163,89,0.15),0_0_16px_rgba(206,163,89,0.12)] font-semibold text-primary",
-              )}
-            >
-              <LayoutDashboard
+          {showOverview && (
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                render={
+                  <Link href={basePath} onClick={() => isMobile && setOpenMobile(false)} />
+                }
+                isActive={pathname === basePath}
+                tooltip="Overview"
                 className={cn(
-                  "size-5 group-data-[collapsible=icon]:size-4 transition-all duration-300",
-                  pathname === "/dashboard" && "text-primary",
+                  "rounded-lg px-3 py-3 h-auto gap-3 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
+                  pathname === basePath &&
+                    "bg-gradient-to-r from-primary/10 to-primary/5 shadow-[inset_0_1px_1px_rgba(206,163,89,0.15),0_0_16px_rgba(206,163,89,0.12)] font-semibold text-primary",
                 )}
-              />
-              <div className="flex items-center gap-2">
-                {pathname === "/dashboard" && <div className="size-1.5 rotate-45 bg-primary" />}
-                <span>Overview</span>
-              </div>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+              >
+                <LayoutDashboard
+                  className={cn(
+                    "size-5 group-data-[collapsible=icon]:size-4 transition-all duration-300",
+                    pathname === basePath && "text-primary",
+                  )}
+                />
+                <div className="flex items-center gap-2">
+                  {pathname === basePath && <div className="size-1.5 rotate-45 bg-primary" />}
+                  <span>Overview</span>
+                </div>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
         </SidebarMenu>
       </SidebarHeader>
 
@@ -120,16 +152,16 @@ export function AppSidebar() {
             <SidebarGroupContent>
               <SidebarMenu className="group-data-[collapsible=icon]:gap-2">
                 {section.items.map((item) => {
-                  if (!item) return null;
                   const Icon = item.icon;
-                  const isActive = pathname.startsWith(`/dashboard${item.href}`);
+                  const href = `${basePath}${item.href}`;
+                  const isActive = pathname.startsWith(href);
 
                   return (
                     <SidebarMenuItem key={item.href}>
                       <SidebarMenuButton
                         render={
                           <Link
-                            href={`/dashboard${item.href}`}
+                            href={href}
                             onClick={() => isMobile && setOpenMobile(false)}
                           />
                         }
@@ -174,12 +206,12 @@ export function AppSidebar() {
             >
               <Avatar className="size-8 shrink-0 ring-2 ring-primary/30 ring-offset-1 ring-offset-sidebar shadow-[0_0_12px_rgba(206,163,89,0.15)]">
                 <AvatarFallback className="bg-primary/10 text-[11px] font-bold text-primary">
-                  AR
+                  {userInitials}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left leading-tight">
-                <span className="truncate text-sm font-semibold text-foreground">Ahmed Rizvi</span>
-                <span className="truncate text-[10px] text-muted-foreground">System Admin</span>
+                <span className="truncate text-sm font-semibold text-foreground">{userName}</span>
+                <span className="truncate text-[10px] text-muted-foreground">{userRole}</span>
               </div>
               <ChevronUp className="size-3.5 text-muted-foreground" />
             </DropdownMenuTrigger>
@@ -241,7 +273,7 @@ export function AppSidebar() {
             >
               <Avatar className="size-7 shrink-0 ring-1 ring-primary/30 ring-offset-1 ring-offset-sidebar">
                 <AvatarFallback className="bg-primary/10 text-[11px] font-bold text-primary">
-                  AR
+                  {userInitials}
                 </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>

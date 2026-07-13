@@ -24,7 +24,7 @@ function FoodNotFound() {
       <h2 className="font-fraunces text-xl font-bold text-foreground">Food Not Found</h2>
       <p className="text-sm text-muted-foreground">The food item you&apos;re looking for doesn&apos;t exist.</p>
       <Link
-        href="/dashboard/foods"
+        href="/dashboard/admin/foods"
         className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
       >
         <ArrowLeft className="size-4" />
@@ -90,7 +90,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <Link
-          href="/dashboard/foods"
+          href="/dashboard/admin/foods"
           className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="size-4" />

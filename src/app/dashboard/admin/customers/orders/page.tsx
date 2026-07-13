@@ -72,7 +72,7 @@ export default async function CustomerOrdersPage({
             Showing orders for <strong>{customerFilter}</strong>
           </span>
           <Link
-            href="/dashboard/customers/orders"
+            href="/dashboard/admin/customers/orders"
             className="flex items-center gap-1 text-xs font-bold text-muted-foreground transition-colors hover:text-foreground"
           >
             <X className="size-3" /> Clear filter

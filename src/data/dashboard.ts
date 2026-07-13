@@ -24,3 +24,9 @@ export const sidebarItems: SidebarItem[] = [
   { label: "Riders", href: "/riders", icon: Truck },
   { label: "Reports", href: "/reports", icon: BarChart3 },
 ];
+
+export const sectionConfig = [
+  { label: "Management", items: ["Customers", "Vendors", "Foods"] },
+  { label: "Operations", items: ["Orders", "Payments", "Riders"] },
+  { label: "Analytics", items: ["Reports"] },
+] as const;

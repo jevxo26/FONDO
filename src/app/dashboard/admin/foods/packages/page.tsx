@@ -1,5 +1,5 @@
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { PackageCard } from "@/components/dashboard/foods/packages/package-card";
+import { PackageCard } from "@/components/dashboard/admin/foods/packages/package-card";
 import { Button } from "@/components/ui/button";
 import { foodPackages } from "@/data/packages";
 import { Package, Plus, Download } from "lucide-react";

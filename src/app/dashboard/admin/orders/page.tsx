@@ -1,7 +1,7 @@
 import { Receipt } from "lucide-react";
-// import { OrderTabs } from "@/components/dashboard/orders/order-tabs";
+// import { OrderTabs } from "@/components/dashboard/admin/orders/order-tabs";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { PendingOrdersTable } from "@/components/dashboard/orders/pending-orders-table";
+import { PendingOrdersTable } from "@/components/dashboard/admin/orders/pending-orders-table";
 
 export default function PendingOrdersPage() {
   const pendingOrders = [

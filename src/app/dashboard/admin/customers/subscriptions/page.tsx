@@ -1,5 +1,5 @@
 import { Repeat } from "lucide-react";
-import { SubscriptionContent } from "@/components/dashboard/customers/subscriptions/subscription-content";
+import { SubscriptionContent } from "@/components/dashboard/admin/customers/subscriptions/subscription-content";
 import { PageHeader } from "@/components/dashboard/common/page-header";
 
 

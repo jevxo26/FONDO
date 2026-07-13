@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { InventoryTableSection } from "@/components/dashboard/foods/inventory/inventory-table-section";
+import { InventoryTableSection } from "@/components/dashboard/admin/foods/inventory/inventory-table-section";
 import { inventoryItems } from "@/data/inventory";
 import { Package, CheckCircle, AlertTriangle, XCircle } from "lucide-react";
 

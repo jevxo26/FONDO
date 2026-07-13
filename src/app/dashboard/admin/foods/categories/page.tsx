@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { CategoryTableSection } from "@/components/dashboard/foods/categories/category-table-section";
+import { CategoryTableSection } from "@/components/dashboard/admin/foods/categories/category-table-section";
 import { adminCategories } from "@/data/categories-data";
 import { ListTree, CheckCircle, FileEdit } from "lucide-react";
 

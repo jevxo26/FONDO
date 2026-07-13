@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { ApprovalTableSection } from "@/components/dashboard/foods/approval/approval-table-section";
+import { ApprovalTableSection } from "@/components/dashboard/admin/foods/approval/approval-table-section";
 import { approvalItems } from "@/data/food-approvals";
 import { ClipboardCheck, Clock, CheckCircle, XCircle } from "lucide-react";
 

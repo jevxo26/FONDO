@@ -1,6 +1,6 @@
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { ContextCards } from "@/components/dashboard/customers/orders/context-cards";
-import { OrdersTableSection } from "@/components/dashboard/customers/orders/orders-table-section";
+import { ContextCards } from "@/components/dashboard/admin/customers/orders/context-cards";
+import { OrdersTableSection } from "@/components/dashboard/admin/customers/orders/orders-table-section";
 
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { Button } from "@/components/ui/button";

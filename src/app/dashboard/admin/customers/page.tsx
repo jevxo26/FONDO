@@ -4,8 +4,8 @@ import { PageHeader } from '@/components/dashboard/common/page-header';
 import { StatCard } from '@/components/dashboard/common/stat-card';
 import { CustomerCard } from '@/components/dashboard/common/customer-card';
 import { DarkCard } from '@/components/dashboard/common/dark-card';
-import { StatusMetrics } from '@/components/dashboard/customers/profiles/customer-status';
-import { TransactionList } from '@/components/dashboard/customers/profiles/transaction-list';
+import { StatusMetrics } from '@/components/dashboard/admin/customers/profiles/customer-status';
+import { TransactionList } from '@/components/dashboard/admin/customers/profiles/transaction-list';
 
 import { customers, recentTransactions } from '@/data/customers';
 

@@ -1,6 +1,6 @@
 import { Clock } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { VendorApprovalQueue } from "@/components/dashboard/vendors/vendor-approval-queue";
+import { VendorApprovalQueue } from "@/components/dashboard/admin/vendors/vendor-approval-queue";
 
 export default function VendorsPendingPage() {
   return (

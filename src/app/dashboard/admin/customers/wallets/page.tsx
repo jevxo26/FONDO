@@ -1,8 +1,8 @@
 import { Download, Gift, Wallet } from "lucide-react";
 import { walletTransactions } from "@/data/wallets";
-import { WalletSummaryCards } from "@/components/dashboard/customers/wallets/wallet-summary-cards";
-import { WalletTableSection } from "@/components/dashboard/customers/wallets/wallet-table-section";
-import { WalletInsightCards } from "@/components/dashboard/customers/wallets/wallet-insight-cards";
+import { WalletSummaryCards } from "@/components/dashboard/admin/customers/wallets/wallet-summary-cards";
+import { WalletTableSection } from "@/components/dashboard/admin/customers/wallets/wallet-table-section";
+import { WalletInsightCards } from "@/components/dashboard/admin/customers/wallets/wallet-insight-cards";
 import { PageHeader } from "@/components/dashboard/common/page-header";
 
 import { Button } from "@/components/ui/button";

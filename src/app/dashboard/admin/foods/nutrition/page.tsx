@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { NutritionTableSection } from "@/components/dashboard/foods/nutrition-columns/nutrition-table-section";
+import { NutritionTableSection } from "@/components/dashboard/admin/foods/nutrition-columns/nutrition-table-section";
 import { nutritionItems } from "@/data/nutrition";
 import { Scale, TrendingDown, DollarSign, Zap } from "lucide-react";
 

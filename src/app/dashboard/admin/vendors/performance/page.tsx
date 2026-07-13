@@ -1,4 +1,4 @@
-import { VendorPerformance } from "@/components/dashboard/vendors/vendor-performance";
+import { VendorPerformance } from "@/components/dashboard/admin/vendors/vendor-performance";
 import { TrendingUp } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/common/page-header";
 

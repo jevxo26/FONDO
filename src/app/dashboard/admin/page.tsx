@@ -1,7 +1,7 @@
 import { StatCard } from "@/components/dashboard/common/stat-card";
 
-import { RecentActivity } from "@/components/dashboard/overview/recent-activity";
-import { RevenueChart } from "@/components/dashboard/overview/revenue-chart";
+import { RecentActivity } from "@/components/dashboard/admin/overview/recent-activity";
+import { RevenueChart } from "@/components/dashboard/admin/overview/revenue-chart";
 import { BarChart3, TrendingUp, Truck, Users, Wallet } from "lucide-react";
 
 const stats = [

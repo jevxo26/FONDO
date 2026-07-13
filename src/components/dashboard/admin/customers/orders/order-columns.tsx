@@ -3,7 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { CustomerOrder } from "@/data/orders";
 import { DataTableColumnHeader } from "@/components/common/table";
-import { OrderStatusBadge } from "@/components/dashboard/customers/orders/order-status-badge";
+import { OrderStatusBadge } from "@/components/dashboard/admin/customers/orders/order-status-badge";
 
 export const orderColumns: ColumnDef<CustomerOrder>[] = [
   {

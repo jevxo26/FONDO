@@ -1,8 +1,8 @@
 import { CreditCard, Download, Plus } from "lucide-react";
 import { transactions } from "@/data/payments";
-import { PaymentSummaryCards } from "@/components/dashboard/customers/payments/payment-summary-cards";
-import { PaymentTableSection } from "@/components/dashboard/customers/payments/payment-table-section";
-import { PaymentInsightCards } from "@/components/dashboard/customers/payments/payment-insight-cards";
+import { PaymentSummaryCards } from "@/components/dashboard/admin/customers/payments/payment-summary-cards";
+import { PaymentTableSection } from "@/components/dashboard/admin/customers/payments/payment-table-section";
+import { PaymentInsightCards } from "@/components/dashboard/admin/customers/payments/payment-insight-cards";
 import { PageHeader } from "@/components/dashboard/common/page-header";
 
 import { Button } from "@/components/ui/button";

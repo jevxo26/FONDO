@@ -1,9 +1,9 @@
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { BottomWidgets } from "@/components/dashboard/vendors/bottom-widgets";
-import { RegisterVendorModal } from "@/components/dashboard/vendors/register-vendor-modal";
-import { VendorControls } from "@/components/dashboard/vendors/vendors-controls";
-import { VendorsTable } from "@/components/dashboard/vendors/vendors-table";
+import { BottomWidgets } from "@/components/dashboard/admin/vendors/bottom-widgets";
+import { RegisterVendorModal } from "@/components/dashboard/admin/vendors/register-vendor-modal";
+import { VendorControls } from "@/components/dashboard/admin/vendors/vendors-controls";
+import { VendorsTable } from "@/components/dashboard/admin/vendors/vendors-table";
 import { vendors } from "@/data/vendors";
 import { CheckCircle, Clock, Store } from "lucide-react";
 

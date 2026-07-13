@@ -2,8 +2,8 @@
 
 import type { FacetedFilter, RowAction } from "@/components/common/table";
 import { DataTable } from "@/components/common/table";
-import { subscriptionColumns } from "@/components/dashboard/customers/subscriptions/subscription-columns";
-import { SubscriptionContextCards } from "@/components/dashboard/customers/subscriptions/subscription-context-cards";
+import { subscriptionColumns } from "@/components/dashboard/admin/customers/subscriptions/subscription-columns";
+import { SubscriptionContextCards } from "@/components/dashboard/admin/customers/subscriptions/subscription-context-cards";
 import type { Subscription } from "@/data/subscriptions";
 import { subscriptions } from "@/data/subscriptions";
 import { StatCard } from "@/components/dashboard/common/stat-card";

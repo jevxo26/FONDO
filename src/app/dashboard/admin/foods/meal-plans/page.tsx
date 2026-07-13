@@ -1,5 +1,5 @@
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { MealPlanCard } from "@/components/dashboard/foods/meal-plan/meal-plan-card";
+import { MealPlanCard } from "@/components/dashboard/admin/foods/meal-plan/meal-plan-card";
 import { Button } from "@/components/ui/button";
 import { mealPlans } from "@/data/meal-plans";
 import { CakeSlice, FileText, Plus } from "lucide-react";

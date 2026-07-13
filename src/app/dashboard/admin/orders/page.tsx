@@ -1,6 +1,7 @@
-import { PageHeader } from "@/components/common/page-header";
-import { PendingOrdersTable } from "@/components/dashboard/admin/orders/pending-orders-table";
 import { Receipt } from "lucide-react";
+// import { OrderTabs } from "@/components/dashboard/admin/orders/order-tabs";
+import { PageHeader } from "@/components/dashboard/common/page-header";
+import { PendingOrdersTable } from "@/components/dashboard/admin/orders/pending-orders-table";
 
 export default function PendingOrdersPage() {
   const pendingOrders = [
@@ -85,14 +86,16 @@ export default function PendingOrdersPage() {
       date: "Jul 08, 2026",
     },
   ];
-
   return (
-    <div className="p-4 md:p-0 max-w-7xl mx-auto space-y-8">
+    <div className="p-8 max-w-7xl mx-auto space-y-8">
+      {/* <OrderTabs /> */}
+
       <PageHeader
         title="Pending Orders"
         description="Orders awaiting confirmation and processing."
         icon={Receipt}
       />
+
       <PendingOrdersTable orders={pendingOrders} />
     </div>
   );

@@ -30,7 +30,7 @@ export default function ReportsInventoryPage() {
       <div className="mt-8">
         <ReportInventorySection data={inventoryReportData} />
       </div>
-      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3 items-start">
         <DarkCard icon={<AlertTriangle className="size-40" />} title="Out of Stock" description={`${outOfStock} items need immediate action`}>
           <div className="font-fraunces text-4xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] text-red-400">{outOfStock}</div>
           <div className="mt-2 text-sm text-white/70">{lowStock} more at low stock levels</div>

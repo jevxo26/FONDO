@@ -1,4 +1,4 @@
-import { BarChart3, TrendingUp, TrendingDown, Award, Star, Medal, Trophy } from "lucide-react";
+import { BarChart3, TrendingUp, TrendingDown, Star, Medal, Trophy } from "lucide-react";
 import { vendorPerformanceData } from "@/data/vendors";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { PageHeader } from "@/components/dashboard/common/page-header";
@@ -30,7 +30,7 @@ export default function VendorsPerformancePage() {
       <div className="mt-8">
         <PerformanceTableSection data={vendorPerformanceData} />
       </div>
-      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <GlassCard
           icon={<Trophy className="size-5 text-warning" />}
           iconBg="bg-warning/10"
@@ -52,17 +52,6 @@ export default function VendorsPerformancePage() {
             {bestOnTime.orders.toLocaleString()} orders with {bestOnTime.complaints} complaints
           </div>
         </DarkCard>
-        <GlassCard
-          icon={<Award className="size-5 text-primary" />}
-          iconBg="bg-primary/10"
-          title="Complaint Rate"
-          value={`${((totalComplaints / totalOrders) * 100).toFixed(1)}%`}
-          subtitle="Across all vendors"
-        >
-          <div className="mt-4 text-xs text-muted-foreground">
-            {totalComplaints} complaints out of {totalOrders.toLocaleString()} orders
-          </div>
-        </GlassCard>
       </div>
     </div>
   );

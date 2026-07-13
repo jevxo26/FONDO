@@ -20,7 +20,7 @@ export default function VendorsPendingPage() {
       <div className="mt-8">
         <PendingTableSection />
       </div>
-      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <GlassCard
           icon={<Clock className="size-5 text-warning" />}
           iconBg="bg-warning/10"
@@ -36,13 +36,6 @@ export default function VendorsPendingPage() {
           <div className="font-fraunces text-4xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">67%</div>
           <div className="mt-3 text-sm text-white/70">Approval rate improvement</div>
         </DarkCard>
-        <GlassCard
-          icon={<CheckCircle className="size-5 text-success" />}
-          iconBg="bg-success/10"
-          title="Documents Verified"
-          value="82%"
-          subtitle="Of submissions complete"
-        />
       </div>
     </div>
   );

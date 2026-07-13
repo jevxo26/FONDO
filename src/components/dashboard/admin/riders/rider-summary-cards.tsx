@@ -26,22 +26,26 @@ export function RiderSummaryCards() {
           description={`${avgRating} avg rating · ${zoneCount} zones`}
         >
           <div className="mb-6 flex items-baseline gap-2">
-            <h2 className="font-fraunces text-3xl font-bold text-white md:text-5xl">
-              {total}
-            </h2>
+            <h2 className="font-fraunces text-3xl font-bold text-white md:text-5xl">{total}</h2>
             <span className="text-sm text-white/70">Total Riders</span>
           </div>
           <div className="flex flex-wrap gap-4 border-t border-white/10 pt-4 text-sm">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Active</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Active
+              </span>
               <p className="font-bold text-success">{active}</p>
             </div>
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Busy</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Busy
+              </span>
               <p className="font-bold text-warning">{busy}</p>
             </div>
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Offline</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Offline
+              </span>
               <p className="font-bold text-muted-foreground">{offline}</p>
             </div>
           </div>
@@ -52,6 +56,7 @@ export function RiderSummaryCards() {
           variant="success"
           icon={DollarSign}
           accent="bottom"
+          className="flex-1"
         />
       </div>
       <div className="col-span-12 lg:col-span-6">
@@ -65,7 +70,10 @@ export function RiderSummaryCards() {
         >
           <div className="mt-4 space-y-2">
             {topZones.map((z) => (
-              <div key={z.name} className="flex items-center justify-between rounded-lg bg-muted px-3 py-2">
+              <div
+                key={z.name}
+                className="flex items-center justify-between rounded-lg bg-muted px-3 py-2"
+              >
                 <span className="flex items-center gap-2 text-xs font-semibold">
                   <MapPin className="size-3 text-primary" /> {z.name}
                 </span>

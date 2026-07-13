@@ -14,7 +14,6 @@ export default function ReportsVendorsPage() {
   const totalCommission = vendorReportData.reduce((s, v) => s + v.commission, 0);
   const topVendor = vendorReportData.reduce((best, v) => (v.revenue > best.revenue ? v : best));
   const avgRating = (vendorReportData.reduce((s, v) => s + v.rating, 0) / total).toFixed(1);
-  const mostOrders = vendorReportData.reduce((best, v) => (v.totalOrders > best.totalOrders ? v : best));
 
   return (
     <div>
@@ -30,7 +29,7 @@ export default function ReportsVendorsPage() {
       <div className="mt-8">
         <ReportVendorsSection data={vendorReportData} />
       </div>
-      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <DarkCard icon={<Award className="size-40" />} title="Top Vendor" description={topVendor.vendorName}>
           <div className="font-fraunces text-3xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">৳{topVendor.revenue.toLocaleString()}</div>
           <div className="mt-2 text-sm text-white/70">{topVendor.totalOrders} orders · {topVendor.rating} rating</div>
@@ -40,11 +39,6 @@ export default function ReportsVendorsPage() {
             {vendorReportData.filter((v) => v.rating >= 4).slice(0, 3).map((v) => (
               <div key={v.id} className="flex justify-between text-xs"><span className="text-muted-foreground">{v.vendorName}</span><span className="font-bold">{v.rating}</span></div>
             ))}
-          </div>
-        </GlassCard>
-        <GlassCard icon={<Store className="size-5 text-warning" />} iconBg="bg-warning/10" title="Most Orders" value={mostOrders.totalOrders.toString()} subtitle={mostOrders.vendorName}>
-          <div className="mt-4 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">
-            Commission rate: ৳{mostOrders.commission.toLocaleString()} ({Math.round((mostOrders.commission / mostOrders.revenue) * 100)}%)
           </div>
         </GlassCard>
       </div>

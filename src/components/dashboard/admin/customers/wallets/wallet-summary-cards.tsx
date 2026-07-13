@@ -23,6 +23,7 @@ export function WalletSummaryCards() {
           variant="success"
           icon={WalletIcon}
           accent="top"
+          className="flex-1"
         />
       </div>
 

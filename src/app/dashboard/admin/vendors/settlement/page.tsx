@@ -28,7 +28,7 @@ export default function VendorsSettlementPage() {
       <div className="mt-8">
         <SettlementTableSection data={vendorSettlements} />
       </div>
-      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3 items-start">
         <GlassCard
           icon={<Wallet className="size-5 text-primary" />}
           iconBg="bg-primary/10"

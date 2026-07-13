@@ -30,7 +30,7 @@ export default function ReportsRidersPage() {
       <div className="mt-8">
         <ReportRidersSection data={riderReportData} />
       </div>
-      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3 items-start">
         <GlassCard icon={<TrendingUp className="size-5 text-success" />} iconBg="bg-success/10" title="On-Time Rate" value={`${onTimeRate}%`} subtitle="Platform average">
           <div className="mt-4 h-2 w-full rounded-full bg-muted">
             <div className="h-2 rounded-full bg-success" style={{ width: `${onTimeRate}%` }} />

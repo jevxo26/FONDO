@@ -2,12 +2,12 @@ import { BookOpen, Heart, LifeBuoy, Shield } from "lucide-react";
 import Link from "next/link";
 
 const links = [
-  { href: "/dashboard", label: "Overview", icon: Heart },
-  { href: "/dashboard/foods", label: "Foods", icon: BookOpen },
-  { href: "/dashboard/vendors", label: "Vendors", icon: Shield },
-  { href: "/dashboard/orders", label: "Orders", icon: LifeBuoy },
-  { href: "/dashboard/customers", label: "Customers", icon: Shield },
-  { href: "/dashboard/reports", label: "Reports", icon: BookOpen },
+  { href: "/dashboard/admin", label: "Overview", icon: Heart },
+  { href: "/dashboard/admin/foods", label: "Foods", icon: BookOpen },
+  { href: "/dashboard/admin/vendors", label: "Vendors", icon: Shield },
+  { href: "/dashboard/admin/orders", label: "Orders", icon: LifeBuoy },
+  { href: "/dashboard/admin/customers", label: "Customers", icon: Shield },
+  { href: "/dashboard/admin/reports", label: "Reports", icon: BookOpen },
 ];
 
 export function PageFooter() {

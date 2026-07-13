@@ -3,7 +3,7 @@ import { riderPerformanceData } from "@/data/riders";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { RiderPerformanceSection } from "@/components/dashboard/admin/riders/rider-performance-section";
-import { DarkCard } from "@/components/dashboard/common/dark-card";
+import { GlassCard } from "@/components/dashboard/common/glass-card";
 
 export default function RidersPerformancePage() {
   const totalDeliveries = riderPerformanceData.reduce((s, r) => s + r.deliveriesThisWeek, 0);
@@ -14,43 +14,26 @@ export default function RidersPerformancePage() {
 
   return (
     <div>
-      <PageHeader
-        title="Performance"
-        description="Analyze rider delivery performance and ratings."
-        icon={BarChart3}
-      />
+      <PageHeader title="Performance" description="Analyze rider delivery performance and ratings." icon={BarChart3} />
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total Deliveries" value={totalDeliveries} icon={BarChart3} accent="bottom" />
-        <StatCard label="On-Time Rate" value={`${avgOnTime}%`} variant="success" icon={TrendingUp} accent="bottom" />
-        <StatCard label="Avg Rating" value={avgRating} variant="default" icon={Award} accent="bottom" />
-        <StatCard label="Complaints" value={totalComplaints} variant="danger" icon={TrendingDown} accent="bottom" />
+        <StatCard label="Total Deliveries" value={totalDeliveries} icon={BarChart3} accent="left" />
+        <StatCard label="On-Time Rate" value={`${avgOnTime}%`} variant="success" icon={TrendingUp} accent="left" />
+        <StatCard label="Avg Rating" value={avgRating} variant="default" icon={Award} accent="left" />
+        <StatCard label="Complaints" value={totalComplaints} variant="danger" icon={TrendingDown} accent="left" />
       </div>
-      <div className="mt-8 grid grid-cols-12 gap-6">
-        <div className="col-span-12 lg:col-span-9">
-          <RiderPerformanceSection data={riderPerformanceData} />
-        </div>
-        <div className="col-span-12 lg:col-span-3">
-          <DarkCard
-            icon={<Medal className="size-40" />}
-            title="Top Performer"
-            description={topRider.name}
-          >
-            <div className="mt-4 space-y-3">
-              <div className="rounded-lg bg-black/20 p-3">
-                <p className="text-[10px] uppercase tracking-widest text-zinc-500">This Week</p>
-                <p className="mt-1 text-base font-bold text-white">{topRider.deliveriesThisWeek} deliveries</p>
-              </div>
-              <div className="rounded-lg bg-black/20 p-3">
-                <p className="text-[10px] uppercase tracking-widest text-zinc-500">On-Time Rate</p>
-                <p className="mt-1 text-base font-bold text-success">{topRider.onTimeRate}%</p>
-              </div>
-              <div className="rounded-lg bg-black/20 p-3">
-                <p className="text-[10px] uppercase tracking-widest text-zinc-500">Rating</p>
-                <p className="mt-1 text-base font-bold text-white">{topRider.avgRating}</p>
-              </div>
-            </div>
-          </DarkCard>
-        </div>
+      <div className="mt-8">
+        <RiderPerformanceSection data={riderPerformanceData} />
+      </div>
+      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <GlassCard icon={<BarChart3 className="size-5 text-primary" />} title="Weekly Volume" value={totalDeliveries.toString()} subtitle="Across all riders">
+          <div className="mt-4 text-xs text-muted-foreground">Avg {(totalDeliveries / riderPerformanceData.length).toFixed(0)} deliveries per rider</div>
+        </GlassCard>
+        <GlassCard icon={<TrendingUp className="size-5 text-success" />} iconBg="bg-success/10" title="Best On-Time" value={`${topRider.onTimeRate}%`} subtitle={topRider.name}>
+          <div className="mt-4 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">{topRider.deliveriesThisWeek} deliveries this week with {topRider.lateDeliveries} late</div>
+        </GlassCard>
+        <GlassCard icon={<Award className="size-5 text-warning" />} iconBg="bg-warning/10" title="Complaint Rate" value={`${((totalComplaints / totalDeliveries) * 100).toFixed(1)}%`} subtitle="Of total deliveries">
+          <div className="mt-4 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">{totalComplaints} complaints out of {totalDeliveries} deliveries</div>
+        </GlassCard>
       </div>
     </div>
   );

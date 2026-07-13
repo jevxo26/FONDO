@@ -18,10 +18,10 @@ export default function RidersLivePage() {
         icon={MapPin}
       />
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Live Riders" value={activeNow} icon={Wifi} accent="bottom" />
-        <StatCard label="On Delivery" value={totalDelivering} variant="success" icon={Navigation} accent="bottom" />
-        <StatCard label="Avg Battery" value={`${avgBattery}%`} variant="warning" icon={Truck} accent="bottom" />
-        <StatCard label="Coverage" value="8 Zones" variant="default" icon={MapPin} accent="bottom" />
+        <StatCard label="Live Riders" value={activeNow} icon={Wifi} accent="right" />
+        <StatCard label="On Delivery" value={totalDelivering} variant="success" icon={Navigation} accent="right" />
+        <StatCard label="Avg Battery" value={`${avgBattery}%`} variant="warning" icon={Truck} accent="right" />
+        <StatCard label="Coverage" value="8 Zones" variant="default" icon={MapPin} accent="right" />
       </div>
       <div className="mt-8">
         <RiderLiveCards />

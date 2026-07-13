@@ -67,10 +67,10 @@ export function SubscriptionContent() {
   return (
     <div>
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total Subscriptions" value={total} icon={CreditCard} accent="bottom" />
-        <StatCard label="Active" value={active} variant="success" icon={CheckCircle} accent="bottom" />
-        <StatCard label="Paused" value={paused} variant="warning" icon={PauseCircle} accent="bottom" />
-        <StatCard label="Expired / Cancelled" value={expired} variant="danger" icon={XCircle} accent="bottom" />
+        <StatCard label="Total Subscriptions" value={total} icon={CreditCard} accent="top" />
+        <StatCard label="Active" value={active} variant="success" icon={CheckCircle} accent="top" />
+        <StatCard label="Paused" value={paused} variant="warning" icon={PauseCircle} accent="top" />
+        <StatCard label="Expired / Cancelled" value={expired} variant="danger" icon={XCircle} accent="top" />
       </div>
 
       <div className="mt-6">

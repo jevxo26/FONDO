@@ -48,21 +48,21 @@ export default async function CustomerOrdersPage({
       />
 
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total Orders" value={totalOrders} icon={ShoppingBag} accent="right" />
-        <StatCard label="Pending" value={pending} variant="warning" icon={Clock} accent="right" />
+        <StatCard label="Total Orders" value={totalOrders} icon={ShoppingBag} accent="bottom" />
+        <StatCard label="Pending" value={pending} variant="warning" icon={Clock} accent="bottom" />
         <StatCard
           label="In Progress"
           value={inProgress}
           variant="danger"
           icon={Timer}
-          accent="right"
+          accent="bottom"
         />
         <StatCard
           label="Completed"
           value={completed}
           variant="success"
           icon={CheckCircle}
-          accent="right"
+          accent="bottom"
         />
       </div>
 

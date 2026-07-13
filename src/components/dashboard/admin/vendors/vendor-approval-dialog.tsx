@@ -19,8 +19,8 @@ import {
   Clock,
   X,
 } from "lucide-react";
-import { documents, getStatusVariant, getInitials } from "./vendor-approval-data";
-import type { Vendor } from "./vendor-approval-data";
+import { documents, getStatusVariant, getInitials } from "@/data/vendors";
+import type { ApprovalVendor as Vendor } from "@/data/vendors";
 
 interface VendorApprovalDialogProps {
   vendor: Vendor | null;

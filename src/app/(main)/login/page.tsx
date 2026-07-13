@@ -24,7 +24,7 @@ export default function LoginPage() {
           onSubmit={methods.handleSubmit(onLoginSubmit)}
           className="w-full max-w-6xl"
         >
-          <CoreLayoutWrapper currentStep={1}>
+          <CoreLayoutWrapper currentStep={3}>
             <LoginForm />
           </CoreLayoutWrapper>
         </form>

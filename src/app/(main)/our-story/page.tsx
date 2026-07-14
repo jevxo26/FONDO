@@ -1,13 +1,17 @@
-import StoryChef from "@/components/our/our-chef";
 import StoryHero from "@/components/our/our-hero";
-import StoryGallery from "@/components/our/story-gallery";
+import OurHeritage from "@/components/our/our-heritage";
+import CulinaryPhilosophy from "@/components/our/culinary-philosophy";
+import StoryMissionStats from "@/components/our/mission-statistics";
+import OurMission from "@/components/our/our-mission";
 
 export default function OurPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
+   
       <StoryHero />
-      <StoryGallery />
-      <StoryChef />
+      <OurHeritage/>
+      <StoryMissionStats />
+      <CulinaryPhilosophy/>
     </main>
   );
 }

@@ -1,0 +1,43 @@
+import * as yup from "yup";
+
+export const createAddressSchema = yup.object({
+  label: yup.string().oneOf(["Home", "Office", "Other"]).optional(),
+  receiverName: yup.string().required("Receiver name is required"),
+  receiverPhone: yup.string().required("Receiver phone is required"),
+  country: yup.string().optional(),
+  division: yup.string().required("Division is required"),
+  district: yup.string().required("District is required"),
+  upazila: yup.string().optional(),
+  area: yup.string().required("Area is required"),
+  road: yup.string().optional(),
+  house: yup.string().optional(),
+  floor: yup.string().optional(),
+  apartment: yup.string().optional(),
+  landmark: yup.string().optional(),
+  postalCode: yup.string().optional(),
+  latitude: yup.number().optional(),
+  longitude: yup.number().optional(),
+  deliveryInstruction: yup.string().optional(),
+  isDefault: yup.boolean().optional(),
+});
+
+export const updateAddressSchema = yup.object({
+  label: yup.string().oneOf(["Home", "Office", "Other"]).optional(),
+  receiverName: yup.string().optional(),
+  receiverPhone: yup.string().optional(),
+  country: yup.string().optional(),
+  division: yup.string().optional(),
+  district: yup.string().optional(),
+  upazila: yup.string().optional(),
+  area: yup.string().optional(),
+  road: yup.string().optional(),
+  house: yup.string().optional(),
+  floor: yup.string().optional(),
+  apartment: yup.string().optional(),
+  landmark: yup.string().optional(),
+  postalCode: yup.string().optional(),
+  latitude: yup.number().optional(),
+  longitude: yup.number().optional(),
+  deliveryInstruction: yup.string().optional(),
+  isDefault: yup.boolean().optional(),
+});

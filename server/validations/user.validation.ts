@@ -16,3 +16,13 @@ export const createUserSchema = yup.object({
   avatar: yup.string().url("Invalid URL format").optional(),
   dateOfBirth: yup.date().optional(),
 });
+
+export const updateProfileSchema = yup.object({
+  firstName: yup.string().optional(),
+  lastName: yup.string().optional(),
+  phone: yup.string().optional(),
+  email: yup.string().email("Invalid email format").optional(),
+  avatar: yup.string().url("Invalid URL format").optional(),
+  gender: yup.string().oneOf(["MALE", "FEMALE", "OTHER"], "Invalid gender").optional(),
+  dateOfBirth: yup.date().optional(),
+});

@@ -76,9 +76,30 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateMe = catchAsync(async (req: AuthRequest, res: Response) => {
+  const user = await UserService.updateMe(req.user!.userId, req.body);
+
+  sendResponse(res, {
+    statusCode: 200,
+    message: "Profile updated successfully",
+    data: user,
+  });
+});
+
+const deleteMe = catchAsync(async (req: AuthRequest, res: Response) => {
+  await UserService.deleteMe(req.user!.userId);
+
+  sendResponse(res, {
+    statusCode: 200,
+    message: "Account deleted successfully",
+  });
+});
+
 export const UserController = {
   getAllUsers,
   createUser,
   getUserById,
   updateUser,
+  updateMe,
+  deleteMe,
 };

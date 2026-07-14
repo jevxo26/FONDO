@@ -1,19 +1,28 @@
 import { Router } from "express";
 import { AuthController } from "../controllers/authController";
-// import { SocialAuthController } from '../controllers/socialAuthController';
-// import { verifyToken } from '../middlewares/authMiddleware';
+import { verifyToken } from "../middlewares/authMiddleware";
+import { validate } from "../middlewares/validate";
+import {
+  registerSchema,
+  loginSchema,
+  otpSendSchema,
+  otpVerifySchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  changePasswordSchema,
+} from "../validations/auth.validation";
 
 const router = Router();
 
-// router.post('/register', AuthController.register);
-router.post("/login", AuthController.login);
-// router.post('/forgot-password', AuthController.forgotPassword);
-// router.post('/reset-password', AuthController.resetPassword);
-// router.post('/refresh-token', AuthController.refreshToken);
-// router.post('/logout', verifyToken, AuthController.logout); // Optional: verifyToken ensures only logged in users can logout
-// router.get('/me', verifyToken, AuthController.me);
-
-// router.post('/social-login/google', SocialAuthController.loginWithGoogle);
-// router.post('/social-login/facebook', SocialAuthController.loginWithFacebook);
+router.post("/register", validate(registerSchema), AuthController.register);
+router.post("/login", validate(loginSchema), AuthController.login);
+router.post("/otp/send", validate(otpSendSchema), AuthController.sendOtp);
+router.post("/otp/verify", validate(otpVerifySchema), AuthController.verifyOtp);
+router.post("/refresh", AuthController.refreshToken);
+router.post("/logout", AuthController.logout);
+router.get("/me", verifyToken, AuthController.me);
+router.post("/forgot-password", validate(forgotPasswordSchema), AuthController.forgotPassword);
+router.post("/reset-password", validate(resetPasswordSchema), AuthController.resetPassword);
+router.patch("/change-password", verifyToken, validate(changePasswordSchema), AuthController.changePassword);
 
 export default router;

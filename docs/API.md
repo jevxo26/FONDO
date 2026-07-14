@@ -5,6 +5,15 @@
 > **Auth:** JWT Bearer in `Authorization` header  
 > **Request body:** JSON. `*` = required. Omitted fields = optional.
 
+**Status Legend**
+| | Meaning |
+|---|---------|
+| 🟢 | Built and working |
+| 🟡 | Partial (route exists, incomplete) |
+| ⚪ | Planned (not started) |
+
+**Quick reference:** [`API_REFERENCE.md`](./API_REFERENCE.md) — one-page route table.
+
 ## Index
 
 <div style="display: flex; gap: 40px;">
@@ -12,33 +21,33 @@
 
 | | Feature | Workflow Module |
 |---|---|---|
-| ✅ | [Users & Profile](#2-users--profile) | Module 1 |
-| ✅ | [Food Catalog (Customer)](#3-food-catalog-customer) | Module 4 |
-| ✅ | [Food Admin (CRUD)](#4-food-admin-crud) | Module 4 |
-| | [Auth](#1-auth) | Module 1 |
-| | [Cart & Checkout](#5-cart--checkout) | Module 7 |
-| | [Orders](#6-orders) | Module 7 |
-| | [Customers (Admin)](#7-customers-admin) | Module 1 |
-| | [Vendors](#8-vendors) | Module 3 |
-| | [Packages & Meal Plans](#9-packages--meal-plans) | Module 6 |
-| | [Subscriptions](#10-subscriptions) | Module 12 |
+| 🟡 | [Auth](#1-auth) | Module 1 |
+| 🟡 | [Users & Profile](#2-users--profile) | Module 1 |
+| ⚪ | [Food Catalog (Customer)](#3-food-catalog-customer) | Module 4 |
+| ⚪ | [Food Admin (CRUD)](#4-food-admin-crud) | Module 4 |
+| ⚪ | [Cart & Checkout](#5-cart--checkout) | Module 7 |
+| ⚪ | [Orders](#6-orders) | Module 7 |
+| ⚪ | [Customers (Admin)](#7-customers-admin) | Module 1 |
+| ⚪ | [Vendors](#8-vendors) | Module 3 |
+| ⚪ | [Packages & Meal Plans](#9-packages--meal-plans) | Module 6 |
+| ⚪ | [Subscriptions](#10-subscriptions) | Module 12 |
 
 </div>
 <div>
 
 | | Feature | Workflow Module |
 |---|---|---|
-| | [Payments](#11-payments) | Module 8 |
-| | [Customer Wallet](#12-customer-wallet) | Module 8 |
-| | [Vendor Settlements](#13-vendor-settlements) | Module 8 |
-| | [Riders](#14-riders) | Module 9 |
-| | [Deliveries & Tracking](#15-deliveries--live-tracking) | Module 9 |
-| | [Notifications](#16-notifications) | Module 10 |
-| | [Support Tickets](#17-support-tickets) | Module 10 |
-| | [CMS](#18-cms) | Module 11 |
-| | [Reports & Analytics](#19-reports--analytics) | Module 14 |
-| | [Roles & Permissions](#20-roles--permissions) | Module 2 |
-| | [System Settings](#21-system-settings) | Module 11 |
+| ⚪ | [Payments](#11-payments) | Module 8 |
+| ⚪ | [Customer Wallet](#12-customer-wallet) | Module 8 |
+| ⚪ | [Vendor Settlements](#13-vendor-settlements) | Module 8 |
+| ⚪ | [Riders](#14-riders) | Module 9 |
+| ⚪ | [Deliveries & Tracking](#15-deliveries--live-tracking) | Module 9 |
+| ⚪ | [Notifications](#16-notifications) | Module 10 |
+| ⚪ | [Support Tickets](#17-support-tickets) | Module 10 |
+| ⚪ | [CMS](#18-cms) | Module 11 |
+| ⚪ | [Reports & Analytics](#19-reports--analytics) | Module 14 |
+| ⚪ | [Roles & Permissions](#20-roles--permissions) | Module 2 |
+| ⚪ | [System Settings](#21-system-settings) | Module 11 |
 
 </div>
 </div>
@@ -67,7 +76,9 @@ Models with `deletedAt` in the workflow doc use soft delete. Send `DELETE` reque
 
 ## 1. Auth
 
-### `POST /auth/register`
+🟡 **Partial** — only `POST /auth/login` is built. The rest are scaffolded (routes/commented) or planned.
+
+### 🟡 `POST /auth/register`
 Create a new customer account.
 
 **Request**
@@ -91,7 +102,7 @@ Create a new customer account.
 }
 ```
 
-### `POST /auth/login`
+### 🟢 `POST /auth/login`
 Login with phone/email and password.
 
 **Request**
@@ -111,7 +122,7 @@ Login with phone/email and password.
 }
 ```
 
-### `POST /auth/login/otp`
+### ⚪ `POST /auth/login/otp`
 Request OTP for phone login.
 
 **Request**
@@ -124,7 +135,7 @@ Request OTP for phone login.
 { "otpSent": true, "expiresIn": 300 }
 ```
 
-### `POST /auth/otp/verify`
+### ⚪ `POST /auth/otp/verify`
 Verify OTP and log in.
 
 **Request**
@@ -137,7 +148,7 @@ Verify OTP and log in.
 { "verified": true, "accessToken": "String", "refreshToken": "String", "user": {} }
 ```
 
-### `POST /auth/otp/send`
+### ⚪ `POST /auth/otp/send`
 Send OTP for a specific purpose.
 
 **Request**
@@ -150,7 +161,7 @@ Send OTP for a specific purpose.
 { "sent": true, "expiresIn": 300 }
 ```
 
-### `POST /auth/refresh`
+### ⚪ `POST /auth/refresh`
 Exchange refresh token for a new access token.
 
 **Request**
@@ -163,7 +174,7 @@ Exchange refresh token for a new access token.
 { "accessToken": "String", "refreshToken": "String" }
 ```
 
-### `POST /auth/logout`
+### ⚪ `POST /auth/logout`
 Invalidate current session.
 
 **Auth:** JWT  
@@ -177,7 +188,7 @@ Invalidate current session.
 { "message": "Logged out" }
 ```
 
-### `POST /auth/forgot-password`
+### ⚪ `POST /auth/forgot-password`
 Request password reset OTP/email.
 
 **Request**
@@ -190,7 +201,7 @@ Request password reset OTP/email.
 { "resetToken": "String", "expiresIn": 600 }
 ```
 
-### `POST /auth/reset-password`
+### ⚪ `POST /auth/reset-password`
 Reset password using token from forgot-password.
 
 **Request**
@@ -203,7 +214,7 @@ Reset password using token from forgot-password.
 { "message": "Password reset successful" }
 ```
 
-### `PATCH /auth/change-password`
+### ⚪ `PATCH /auth/change-password`
 Change password while logged in.
 
 **Auth:** JWT  
@@ -221,7 +232,9 @@ Change password while logged in.
 
 ## 2. Users & Profile
 
-### `GET /users/me`
+🟡 **Partial** — `GET /users/me`, `PATCH /users/me` exist. Admin routes and sub-resources are planned.
+
+### 🟢 `GET /users/me`
 Get current user profile.
 
 **Auth:** JWT  
@@ -246,7 +259,7 @@ Get current user profile.
 }
 ```
 
-### `PATCH /users/me`
+### 🟢 `PATCH /users/me`
 Update own profile.
 
 **Auth:** JWT  
@@ -266,39 +279,39 @@ Update own profile.
 
 **Response** `200` — updated user object
 
-### `DELETE /users/me`
+### ⚪ `DELETE /users/me`
 Delete own account.
 
 **Auth:** JWT (Customer)  
 **Response** `200`
 
-### `GET /users`
+### ⚪ `GET /users`
 List users (admin).
 
 **Auth:** JWT (SuperAdmin, Admin)  
 **Query:** `?page=1&limit=20&role=CUSTOMER&search=&status=`  
 **Response** — paginated list of user objects
 
-### `GET /users/:id`
+### ⚪ `GET /users/:id`
 Get single user.
 
 **Auth:** JWT (Self, SuperAdmin, Admin)  
 **Response** — full user object
 
-### `PATCH /users/:id`
+### ⚪ `PATCH /users/:id`
 Update any user (admin).
 
 **Auth:** JWT (SuperAdmin, Admin)  
 **Request** — same as PATCH /users/me
 
-### `DELETE /users/:id`
+### ⚪ `DELETE /users/:id`
 Soft-delete user.
 
 **Auth:** JWT (SuperAdmin)
 
 ### --- Addresses ---
 
-### `GET /users/:userId/addresses`
+### ⚪ `GET /users/:userId/addresses`
 List user addresses.
 
 **Response**
@@ -310,7 +323,7 @@ List user addresses.
 }
 ```
 
-### `POST /users/:userId/addresses`
+### ⚪ `POST /users/:userId/addresses`
 Add address.
 
 **Request**
@@ -339,21 +352,21 @@ Add address.
 
 **Response** `201` — address object
 
-### `PATCH /addresses/:id`
+### ⚪ `PATCH /addresses/:id`
 Update address.
 
-### `DELETE /addresses/:id`
+### ⚪ `DELETE /addresses/:id`
 Soft-delete address.
 
-### `PATCH /addresses/:id/default`
+### ⚪ `PATCH /addresses/:id/default`
 Set as default address.
 
 ### --- Devices ---
 
-### `GET /users/:userId/devices`
+### ⚪ `GET /users/:userId/devices`
 List registered devices.
 
-### `POST /users/:userId/devices`
+### ⚪ `POST /users/:userId/devices`
 Register device for push notifications.
 
 **Request**
@@ -370,15 +383,15 @@ Register device for push notifications.
 }
 ```
 
-### `DELETE /devices/:id`
+### ⚪ `DELETE /devices/:id`
 Unregister device.
 
 ### --- Notification Settings ---
 
-### `GET /users/:userId/notification-settings`
+### ⚪ `GET /users/:userId/notification-settings`
 Get preferences.
 
-### `PATCH /users/:userId/notification-settings`
+### ⚪ `PATCH /users/:userId/notification-settings`
 Update preferences.
 
 **Request**
@@ -397,12 +410,14 @@ Update preferences.
 
 ### --- Login History ---
 
-### `GET /users/:userId/login-history`
+### ⚪ `GET /users/:userId/login-history`
 List login attempts. **Auth:** JWT (Self, SuperAdmin)
 
 ---
 
 ## 3. Food Catalog (Customer)
+
+⚪ **Planned** — not started.
 
 ### `GET /foods`
 Browse foods with filters and pagination. Public.
@@ -534,6 +549,8 @@ Submit a review.
 ---
 
 ## 4. Food Admin (CRUD)
+
+⚪ **Planned** — not started.
 
 All endpoints in this section require **Auth:** JWT (Admin) unless noted.
 
@@ -718,6 +735,8 @@ Get nutrition info.
 
 ## 5. Cart & Checkout
 
+⚪ **Planned** — not started.
+
 ### `GET /cart`
 Get current user's active cart.
 
@@ -890,6 +909,8 @@ Place order from cart.
 
 ## 6. Orders
 
+⚪ **Planned** — not started.
+
 ### `GET /orders`
 List current customer's orders.
 
@@ -1055,6 +1076,8 @@ Update individual meal status.
 
 ## 7. Customers (Admin)
 
+⚪ **Planned** — not started.
+
 ### `GET /api/admin/customers`
 List all customers.
 
@@ -1107,6 +1130,8 @@ List customer payment history.
 ---
 
 ## 8. Vendors
+
+⚪ **Planned** — not started.
 
 ### Public Endpoints
 
@@ -1370,6 +1395,8 @@ List which vendors serve a given food.
 
 ## 9. Packages & Meal Plans
 
+⚪ **Planned** — not started.
+
 ### Public Endpoints
 
 ### `GET /packages`
@@ -1551,6 +1578,8 @@ Get plan with days and meals.
 ---
 
 ## 10. Subscriptions
+
+⚪ **Planned** — not started.
 
 ### `POST /subscriptions`
 Subscribe to a package.
@@ -1740,6 +1769,8 @@ List subscription invoices.
 
 ## 11. Payments
 
+⚪ **Planned** — not started.
+
 ### `GET /payment-methods`
 List available methods. **Auth:** None
 
@@ -1824,6 +1855,8 @@ Get payment details.
 
 ## 12. Customer Wallet
 
+⚪ **Planned** — not started.
+
 ### `GET /wallet`
 Get current customer's wallet.
 
@@ -1877,6 +1910,8 @@ Approve withdrawal. **Auth:** JWT (Admin)
 
 ## 13. Vendor Settlements
 
+⚪ **Planned** — not started.
+
 ### `GET /vendors/:vendorId/wallet`
 Get vendor wallet.
 
@@ -1927,6 +1962,8 @@ Platform revenue summary. **Auth:** JWT (Admin)
 ---
 
 ## 14. Riders
+
+⚪ **Planned** — not started.
 
 ### Rider CRUD (Admin)
 
@@ -2047,6 +2084,8 @@ Change status. **Auth:** JWT (Admin)
 ---
 
 ## 15. Deliveries & Live Tracking
+
+⚪ **Planned** — not started.
 
 ### `POST /orders/:orderId/delivery`
 Create delivery for an order.
@@ -2180,6 +2219,8 @@ Get ETA only. **Auth:** JWT (Customer)
 
 ## 16. Notifications
 
+⚪ **Planned** — not started.
+
 ### `GET /notifications`
 List current user's notifications.
 
@@ -2256,6 +2297,8 @@ Public.
 
 ## 17. Support Tickets
 
+⚪ **Planned** — not started.
+
 ### `POST /support/tickets`
 Create ticket.
 
@@ -2311,6 +2354,8 @@ List all tickets. **Auth:** JWT (SupportAgent)
 
 ## 18. CMS
 
+⚪ **Planned** — not started.
+
 ### `GET /cms/banners`
 List active banners. **Auth:** None  
 **Response**
@@ -2355,6 +2400,8 @@ Get static page (About, Privacy, Terms, etc.).
 ---
 
 ## 19. Reports & Analytics
+
+⚪ **Planned** — not started.
 
 ### `GET /analytics/dashboard`
 Dashboard overview metrics.
@@ -2466,6 +2513,8 @@ Get user's dashboard layout.
 
 ## 20. Roles & Permissions
 
+⚪ **Planned** — not started.
+
 ### `GET /roles`
 List all roles.
 
@@ -2532,6 +2581,8 @@ Remove role from user.
 ---
 
 ## 21. System Settings
+
+⚪ **Planned** — not started.
 
 ### `GET /admin/settings`
 Get all settings (key-value list).

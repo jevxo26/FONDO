@@ -42,13 +42,13 @@ export function GlassCard({
         <div className="mt-5 h-px w-full bg-gradient-to-r from-primary/40 via-primary/30 to-transparent" />
 
         <div className="mt-5">
-          <p className="font-fraunces text-[28px] tracking-tight text-foreground drop-shadow-[0_1px_1px_rgba(0,0,0,0.03)]">{value}</p>
+          <p className="font-fraunces text-[30px] tracking-tight text-foreground drop-shadow-[0_1px_1px_rgba(0,0,0,0.03)]">{value}</p>
           <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
         </div>
 
         {children && (
           <>
-            <div className="mt-5 h-px w-full bg-gradient-to-r from-border/50 via-border/30 to-transparent" />
+            <div className="mt-5 h-px w-full bg-gradient-to-r from-primary/40 via-primary/30 to-transparent" />
             <div className="mt-5">{children}</div>
           </>
         )}

@@ -2,7 +2,6 @@ import type { LucideIcon } from "lucide-react";
 import {
   BarChart3,
   CreditCard,
-  Package,
   Receipt,
   Store,
   Truck,
@@ -17,12 +16,17 @@ export interface SidebarItem {
 }
 
 export const sidebarItems: SidebarItem[] = [
-  { label: "Vendors", href: "/vendors", icon: Store },
   { label: "Customers", href: "/customers", icon: Users },
-  { label: "Food", href: "/foods", icon: Utensils },
-  { label: "Packages", href: "/packages", icon: Package },
+  { label: "Vendors", href: "/vendors", icon: Store },
+  { label: "Foods", href: "/foods", icon: Utensils },
   { label: "Orders", href: "/orders", icon: Receipt },
   { label: "Payments", href: "/payments", icon: CreditCard },
   { label: "Riders", href: "/riders", icon: Truck },
   { label: "Reports", href: "/reports", icon: BarChart3 },
 ];
+
+export const sectionConfig = [
+  { label: "Management", items: ["Customers", "Vendors", "Foods"] },
+  { label: "Operations", items: ["Orders", "Payments", "Riders"] },
+  { label: "Analytics", items: ["Reports"] },
+] as const;

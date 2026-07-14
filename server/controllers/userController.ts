@@ -2,11 +2,9 @@ import { Request, Response } from "express";
 import { UserService } from "../services/userService";
 import { catchAsync } from "../utils/catchAsync";
 import { sendResponse } from "../utils/sendResponse";
-import { PrismaClient } from "@prisma/client";
 import AppError from "../utils/AppError";
 import { AuthRequest } from "../types/auth.types";
-
-const prisma = new PrismaClient();
+import prisma from "../lib/prisma";
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const users = await UserService.getAllUsers();

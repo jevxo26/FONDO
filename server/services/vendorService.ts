@@ -1,7 +1,6 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
-
-const prisma = new PrismaClient();
+import prisma from "../lib/prisma";
 
 const createVendor = catchServiceAsync(async (data: Prisma.VendorCreateInput) => {
   const vendorCode = `VEND-${String(Date.now()).slice(-7)}`;

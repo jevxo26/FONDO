@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
 import { catchAsync } from "../utils/catchAsync";
 import { sendResponse } from "../utils/sendResponse";
-import { PrismaClient } from "@prisma/client";
 import { VendorService } from "../services/vendorService";
-
-const prisma = new PrismaClient();
+import prisma from "../lib/prisma";
 
 const createVendor = catchAsync(async (req: Request, res: Response) => {
   const { phone, email, tradeLicenseNumber, tinNumber, binNumber } = req.body;

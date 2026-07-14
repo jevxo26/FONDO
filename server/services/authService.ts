@@ -1,11 +1,9 @@
-import { PrismaClient } from "@prisma/client";
 import AppError from "../utils/AppError";
 import { isPasswordValid } from "../utils/bcryptService";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import { createRefreshToken, createToken } from "../utils/jwtService";
 import { sendUserDataAsResponse } from "../utils/responseStyle";
-
-const prisma = new PrismaClient();
+import prisma from "../lib/prisma";
 
 export const loginUser = catchServiceAsync(async (email: string, password: string) => {
   const user = await prisma.user.findUnique({

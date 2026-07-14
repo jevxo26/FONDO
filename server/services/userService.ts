@@ -1,9 +1,8 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import { encryptPassword } from "../utils/bcryptService";
 import { sendUserDataAsResponse } from "../utils/responseStyle";
-
-const prisma = new PrismaClient();
+import prisma from "../lib/prisma";
 
 const getAllUsers = catchServiceAsync(async () => {
   return prisma.user.findMany({

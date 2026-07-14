@@ -7,37 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id              String     @id @default(uuid())
-  firstName       String
-  lastName        String
-  phone           String     @unique
-  email           String     @unique
-  password        String?
-  avatar          String?
-  gender          Gender
-  dateOfBirth     DateTime?
-  role            Role       @default(CUSTOMER)
-  status          UserStatus @default(ACTIVE)
-  isPhoneVerified Boolean    @default(false)
-  isEmailVerified Boolean    @default(false)
-  lastLoginAt     DateTime?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  deletedAt       DateTime?
-
-  @@map("users")
-}
-
-enum Role {
-  SUPER_ADMIN
-  ADMIN
-  VENDOR
-  VENDOR_STAFF
-  KITCHEN_STAFF
-  RIDER
-  CUSTOMER
-  SUPPORT_AGENT
+// ENUMS
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING
 }
 
 enum Gender {
@@ -46,10 +21,329 @@ enum Gender {
   OTHER
 }
 
-enum UserStatus {
+enum OtpPurpose {
+  LOGIN
+  REGISTER
+  FORGOT_PASSWORD
+  PHONE_VERIFY
+  EMAIL_VERIFY
+}
+
+enum TokenType {
+  ACCESS
+  REFRESH
+  RESET_PASSWORD
+  VERIFY_EMAIL
+}
+
+enum OtpStatus {
+  PENDING
+  VERIFIED
+  EXPIRED
+}
+
+enum SessionStatus {
   ACTIVE
-  INACTIVE
-  SUSPENDED
+  EXPIRED
+  REVOKED
+}
+
+enum UserRoleStatus {
+  ACTIVE
+  EXPIRED
+  REVOKED
+}
+
+// AUTHENTICATION MODULE
+model User {
+  id                  String               @id @default(uuid())
+  firstName           String
+  lastName            String
+  phone               String?              @unique
+  email               String               @unique
+  password            String
+  avatar              String?
+  gender              Gender?
+  dateOfBirth         DateTime?
+  status              UserStatus           @default(PENDING)
+  isPhoneVerified     Boolean              @default(false)
+  isEmailVerified     Boolean              @default(false)
+  lastLoginAt         DateTime?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  deletedAt           DateTime?
+
+  // Relationships
+  profile             UserProfile?
+  security            UserSecurity?
+  notificationSetting UserNotificationSetting?
+  addresses           UserAddress[]
+  devices             UserDevice[]
+  sessions            UserSession[]
+  otps                UserOTP[]
+  tokens              UserToken[]
+  loginHistories      UserLoginHistory[]
+  roles               UserRole[]
+
+  @@map("users")
+}
+
+model UserProfile {
+  id                        String   @id @default(uuid())
+  userId                    String   @unique
+  profession                String?
+  occupation                String?
+  company                   String?
+  bio                       String?
+  preferredLanguage         String   @default("en")
+  timezone                  String   @default("UTC")
+  profileCompletionPercentage Int    @default(0)
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+
+  // Relationships
+  user                      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model UserAddress {
+  id                  String    @id @default(uuid())
+  userId              String
+  label               String?   // e.g., Home, Work
+  receiverName        String
+  receiverPhone       String
+  country             String
+  division            String
+  district            String
+  upazila             String?
+  area                String
+  road                String?
+  house               String?
+  floor               String?
+  apartment           String?
+  landmark            String?
+  postalCode          String?
+  latitude            Float?
+  longitude           Float?
+  deliveryInstruction String?
+  isDefault           Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime?
+
+  // Relationships
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_addresses")
+}
+
+model UserDevice {
+  id              String        @id @default(uuid())
+  userId          String
+  deviceId        String        @unique
+  deviceName      String?
+  deviceType      String?       // Mobile, Tablet, Desktop
+  operatingSystem String?
+  osVersion       String?
+  appVersion      String?
+  browser         String?
+  pushToken       String?
+  ipAddress       String?
+  lastActiveAt    DateTime      @default(now())
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relationships
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions        UserSession[]
+
+  @@map("user_devices")
+}
+
+model UserSession {
+  id           String        @id @default(uuid())
+  userId       String
+  deviceId     String
+  accessToken  String        @unique
+  refreshToken String        @unique
+  ipAddress    String?
+  loginAt      DateTime      @default(now())
+  expiresAt    DateTime
+  logoutAt     DateTime?
+  status       SessionStatus @default(ACTIVE)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  // Relationships
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device       UserDevice    @relation(fields: [deviceId], references: [deviceId], onDelete: Cascade)
+
+  @@map("user_sessions")
+}
+
+model UserOTP {
+  id           String     @id @default(uuid())
+  userId       String?    // Nullable if user is generating OTP during registration before user record exists
+  phone        String?
+  email        String?
+  otp          String
+  purpose      OtpPurpose
+  expiresAt    DateTime
+  verifiedAt   DateTime?
+  attemptCount Int        @default(0)
+  status       OtpStatus  @default(PENDING)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  // Relationships
+  user         User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_otps")
+}
+
+model UserToken {
+  id        String    @id @default(uuid())
+  userId    String
+  token     String    @unique
+  type      TokenType
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relationships
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_tokens")
+}
+
+model UserLoginHistory {
+  id          String   @id @default(uuid())
+  userId      String
+  deviceId    String?
+  ipAddress   String?
+  browser     String?
+  platform    String?
+  country     String?
+  city        String?
+  loginMethod String?  // Credentials, Google, Facebook, Apple etc.
+  loginStatus String   // SUCCESS, FAILED
+  loggedInAt  DateTime @default(now())
+  loggedOutAt DateTime?
+  createdAt   DateTime @default(now())
+
+  // Relationships
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_login_histories")
+}
+
+model UserSecurity {
+  id                  String    @id @default(uuid())
+  userId              String    @unique
+  passwordChangedAt   DateTime?
+  failedLoginCount    Int       @default(0)
+  lastFailedLoginAt   DateTime?
+  twoFactorEnabled    Boolean   @default(false)
+  accountLocked       Boolean   @default(false)
+  accountLockedUntil  DateTime?
+  securityQuestion    String?
+  securityAnswer      String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  // Relationships
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_securities")
+}
+
+model UserNotificationSetting {
+  id                    String   @id @default(uuid())
+  userId                String   @unique
+  pushNotification      Boolean  @default(true)
+  emailNotification     Boolean  @default(true)
+  smsNotification       Boolean  @default(false)
+  orderNotification     Boolean  @default(true)
+  paymentNotification   Boolean  @default(true)
+  promotionNotification Boolean  @default(false)
+  chatNotification      Boolean  @default(true)
+  marketingNotification Boolean  @default(false)
+  systemNotification    Boolean  @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  // Relationships
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_notification_settings")
+}
+
+// ROLE & PERMISSION MODULE
+model Role {
+  id          String           @id @default(uuid())
+  name        String           @unique
+  slug        String           @unique // e.g., super-admin, customer
+  description String?
+  isDefault   Boolean          @default(false)
+  status      String           @default("ACTIVE")
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // Relationships
+  permissions RolePermission[]
+  users       UserRole[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String           @id @default(uuid())
+  module      String           // e.g., USER, ORDER, VENDOR
+  name        String           @unique
+  slug        String           @unique // e.g., user-create, order-view
+  description String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // Relationships
+  roles       RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           String     @id @default(uuid())
+  roleId       String
+  permissionId String
+  createdAt    DateTime   @default(now())
+
+  // Relationships
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model UserRole {
+  id         String         @id @default(uuid())
+  userId     String
+  roleId     String
+  assignedBy String?        
+  assignedAt DateTime       @default(now())
+  expiresAt  DateTime?
+  status     UserRoleStatus @default(ACTIVE)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  // Relationships
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       Role           @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+  @@map("user_roles")
 }
 
 model Vendor {

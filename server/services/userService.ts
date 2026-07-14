@@ -2,41 +2,134 @@ import { PrismaClient, Prisma } from '@prisma/client';
 import { catchServiceAsync } from '../utils/catchServiceAsync';
 import { encryptPassword } from '../utils/bcryptService';
 import { sendUserDataAsResponse } from '../utils/responseStyle';
+import { ROLES } from '../utils/roles';
 
 const prisma = new PrismaClient();
 
-const getAllUsers = catchServiceAsync(async () => {
-  return prisma.user.findMany({
-    select: sendUserDataAsResponse
-  });
-});
-
-const createUser = catchServiceAsync(async (data: Prisma.UserCreateInput) => {
+const createUserToDB = catchServiceAsync(async (data: Prisma.UserCreateInput) => {
   if (data.password) {
     data.password = await encryptPassword(data.password);
   }
 
-  return prisma.user.create({ data });
+  return prisma.user.create({
+    data: {
+      ...data,
+      profile: { create: {} },
+      security: { create: {} },
+      notificationSetting: { create: {} },
+
+      roles: {
+        create: {
+          status: "ACTIVE",
+          role: {
+            connectOrCreate: {
+              where: { slug: ROLES.CUSTOMER },
+              create: {
+                name: "Customer",
+                slug: ROLES.CUSTOMER,
+                isDefault: true,
+              },
+            },
+          },
+        },
+      },
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phone: true,
+      status: true,
+      roles: {
+        select: {
+          userId: true,
+          roleId: true,
+          status: true,
+          role: {
+            select: { name: true, slug: true }
+          },
+        },
+      },
+      createdAt: true,
+    },
+  });
 });
 
-const getUserById = catchServiceAsync(async (id: string) => {
+const getUserByIdFromDB = catchServiceAsync(async (userId: string) => {
   return prisma.user.findUnique({
-    where: { id },
+    where: {
+      id: userId,
+      deletedAt: null
+    },
     select: sendUserDataAsResponse
   });
-})
+});
 
-const updateUser = catchServiceAsync(async (id: string, data: Prisma.UserUpdateInput) => {
+const updateUserToDB = catchServiceAsync(async (id: string, payload: Partial<Prisma.UserUpdateInput>) => {
+  const dataToUpdate: Prisma.UserUpdateInput = { ...payload };
+
+  if (dataToUpdate.password && typeof dataToUpdate.password === "string") {
+    dataToUpdate.password = await encryptPassword(dataToUpdate.password);
+  }
+
+  // Todo: image update
+
   return prisma.user.update({
     where: { id },
-    data,
-    select: sendUserDataAsResponse
+    data: dataToUpdate,
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phone: true,
+      status: true,
+      roles: {
+        select: {
+          userId: true,
+          roleId: true,
+          status: true,
+          role: { select: { name: true, slug: true } },
+        },
+      },
+      createdAt: true,
+    },
+  });
+});
+
+const getAllUsersFromDB = catchServiceAsync(async () => {
+  return prisma.user.findMany({
+    where: {
+      deletedAt: null
+    },
+    orderBy: {
+      createdAt: "desc"
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phone: true,
+      status: true,
+      gender: true,
+      roles: {
+        select: {
+          userId: true,
+          roleId: true,
+          status: true,
+          role: { select: { name: true, slug: true } },
+        },
+      },
+      createdAt: true,
+    }
   });
 });
 
 export const UserService = {
-  getAllUsers,
-  createUser,
-  getUserById,
-  updateUser
+  createUserToDB,
+  getUserByIdFromDB,
+  updateUserToDB,
+  getAllUsersFromDB
 }

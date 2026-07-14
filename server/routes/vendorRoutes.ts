@@ -4,6 +4,7 @@ import { VendorController } from '../controllers/vendorController';
 
 const router = Router();
 
+router.get('/', verifyToken, isAdmin, VendorController.getAllVendors);
 router.post('/', verifyToken, isAdmin, VendorController.createVendor);
 
 export default router;

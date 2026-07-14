@@ -6,6 +6,15 @@ import { VendorService } from '../services/vendorService';
 
 const prisma = new PrismaClient();
 
+const getAllVendors = catchAsync(async (req: Request, res: Response) => {
+  const vendors = await VendorService.getAllVendors();
+
+  sendResponse(res, {
+    statusCode: 200,
+    data: vendors,
+  });
+});
+
 const createVendor = catchAsync(async (req: Request, res: Response) => {
     const { phone, email, tradeLicenseNumber, tinNumber, binNumber } = req.body;
     const existingVendor = await prisma.vendor.findFirst({
@@ -51,5 +60,6 @@ const createVendor = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const VendorController = {
+    getAllVendors,
     createVendor
 }

@@ -3,6 +3,10 @@ import { catchServiceAsync } from '../utils/catchServiceAsync';
 
 const prisma = new PrismaClient();
 
+const getAllVendors = catchServiceAsync(async () => {
+  return prisma.vendor.findMany();
+});
+
 const createVendor = catchServiceAsync(async (data: Prisma.VendorCreateInput) => {
     const vendorCode = `VEND-${String(Date.now()).slice(-7)}`;
     return prisma.vendor.create({
@@ -14,5 +18,6 @@ const createVendor = catchServiceAsync(async (data: Prisma.VendorCreateInput) =>
 });
 
 export const VendorService = {
+    getAllVendors,
     createVendor
 }

@@ -47,9 +47,9 @@ app
       res.json({ status: 'ok', timestamp: new Date() });
     });
 
-    server.use('/api/users', userRoutes);
-    server.use('/api/vendor', vendorRoutes);
+    server.use('/api/user', userRoutes);
     server.use('/api/auth', authRoutes);
+    // server.use('/api/vendor', vendorRoutes);
     // server.use('/api/upload', uploadRoutes);
 
     // Serve uploaded files statically

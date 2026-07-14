@@ -1,20 +1,24 @@
 import { Request, Response } from 'express';
-import { catchAsync } from '../utils/catchAsync';
 import { sendResponse } from '../utils/sendResponse';
 import { AuthService } from '../services/authService';
+import { catchAsync } from '../utils/catchAsync';
 
 const login = catchAsync(async (req: Request, res: Response) => {
   const { email, password } = req.body;
+
   if (!email || !password) {
-    sendResponse(res, {
+    return sendResponse(res, {
       statusCode: 400,
       message: 'Email and password are required',
     });
-    return;
   }
-  const result = await AuthService.loginUser(email, password);
 
-  // Set HTTP-only cookie for refresh token
+  const ipAddress = (req.ip || req.headers['x-forwarded-for'] as string || req.socket.remoteAddress) || 'unknown';
+  const userAgent = (req.headers['user-agent'] as string) || 'Unknown Device';
+
+  const result = await AuthService.loginUserFromDB(email, password, { ipAddress, userAgent });
+
+  // HTTP-only cookie
   res.cookie('refreshToken', result.refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -27,11 +31,11 @@ const login = catchAsync(async (req: Request, res: Response) => {
     message: 'Login successful',
     data: {
       user: result.user,
-      token: result.token,
+      accesToken: result.accessToken,
     },
   });
 });
 
 export const AuthController = {
   login
-}
+};

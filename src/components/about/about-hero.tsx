@@ -1,44 +1,34 @@
-"use client";
-
 import Image from "next/image";
+import React from "react";
 
-export default function AboutHero() {
+export default function HeroSection() {
   return (
-    <section className="bg-background py-16 md:py-24">
-      <div className="wrapper max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          
-          {/* Text Content */}
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-              <span className="font-sans text-xs uppercase tracking-widest text-primary font-bold">
-                Our Heritage
-              </span>
-              <h1 className="font-fraunces text-4xl sm:text-5xl md:text-6xl font-normal text-foreground tracking-tight leading-[1.1]">
-                Rooted in tradition. Plated for today.
-              </h1>
-            </div>
-            
-            <p className="font-sans text-base text-muted-foreground leading-relaxed">
-              Food Flow began with a singular mission: to preserve the authentic, 
-              slow-cooked magic of true Mughlai cuisine while presenting it in a 
-              modern, elevated dining experience. Every recipe we serve has been 
-              passed down through generations of master chefs in Old Dhaka.
-            </p>
+    <section className="relative min-h-[85vh] flex items-center bg-[#FAF5EB]">
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center py-12">
+        {/* Left text column */}
+        <div className="lg:col-span-6 space-y-6">
+          <h1 className="font-fraunces text-4xl md:text-6xl font-normal leading-tight text-[#16100C]">
+            Healthy Meals Delivered Every Day.
+          </h1>
+          <p className="font-sans text-sm md:text-base text-[#16100C]/70 max-w-lg leading-relaxed">
+            Beautiful recipes you enjoy. Fresh, organic ingredients prepared by culinary specialists and delivered fresh to your doorstep within a dedicated daily window.
+          </p>
+          <div className="flex flex-wrap gap-4 pt-2">
+            <button className="px-6 py-3 bg-[#CEA359] text-[#FAF5EB] font-sans font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-[#b08443] transition-colors">
+              Explore Meal Plans
+            </button>
+            <button className="px-6 py-3 border border-[#16100C]/20 text-[#16100C] font-sans font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-[#16100C]/5 transition-colors">
+              Customize Your Plan
+            </button>
           </div>
-
-          {/* Featured Image */}
-          <div className="relative w-full aspect-[4/5] sm:aspect-square lg:aspect-[4/5] rounded-[32px] overflow-hidden shadow-[var(--shadow-card)] border border-border/20">
-            <Image
-              src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1000&auto=format&fit=crop"
-              alt="Restaurant interior ambiance showing heritage architecture"
-              fill
-              priority
-              sizes="(max-w-1024px) 100vw, 50vw"
-              className="object-cover transition-transform duration-700 hover:scale-[1.02]"
-            />
-          </div>
-          
+        </div>
+        {/* Right image column */}
+        <div className="lg:col-span-6 h-[50vh] lg:h-[70vh] rounded-3xl overflow-hidden relative shadow-lg">
+          <Image width={600} height={400}
+            src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800" 
+            alt="Food Flow organic ingredients box" 
+            className="w-full h-full object-cover"
+          />
         </div>
       </div>
     </section>

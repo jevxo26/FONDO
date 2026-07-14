@@ -10,6 +10,7 @@ import AppError from "./utils/AppError";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import vendorRoutes from "./routes/vendorRoutes";
+import foodRoutes from "./routes/foodRoutes";
 import prisma from "./lib/prisma";
 
 const dev = env.NODE_ENV !== "production";
@@ -68,6 +69,7 @@ app
     server.use("/api/users", userRoutes);
     server.use("/api/vendor", vendorRoutes);
     server.use("/api/auth", authRoutes);
+server.use("/api/foods", foodRoutes);
 
     // Next.js handler for all other routes
     server.use((req: Request, res: Response) => {

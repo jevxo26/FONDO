@@ -1,49 +1,48 @@
 "use client";
 
-import AboutHero from "@/components/about/about-hero";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import AboutValues from "@/components/about/about-values";
-import AboutMissionVision from "@/components/about/about-vison";
+import HowItWorks from "@/components/about/abou-work";
+import FoodoAdvantage from "@/components/about/about-advantage";
+import CateredNeeds from "@/components/about/about-created-need";
+import HeroSection from "@/components/about/about-hero";
+import OurStory from "@/components/about/about-story";
+import MissionVision from "@/components/about/about-vison";
+import DrivenByValues from "@/components/about/driven-value";
+import KitchenPartners from "@/components/about/kitchen-partner";
+import FoodoPromise from "@/components/about/promise";
+import StatsBanner from "@/components/about/stats-banner";
 
-export default function AboutPage() {
+export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      
+    <main className="min-h-screen bg-[#FAF5EB] text-[#16100C] selection:bg-[#CEA359]/20 overflow-x-hidden">
       {/* 1. Hero Section */}
-      <AboutHero />
+      <HeroSection/>
 
-      {/* 2. Values Section */}
-      <AboutValues />
-{/* 3. Mission & Vision Section (Dark Accent) */}
-      <AboutMissionVision/>
-      {/* 4. Bottom CTA Section */}
-      <section className="py-24 text-center">
-        <div className="wrapper max-w-3xl mx-auto px-4 flex flex-col items-center gap-6">
-          <h2 className="font-fraunces text-3xl md:text-4xl font-normal text-foreground tracking-tight">
-            Ready to experience the heritage?
-          </h2>
-          <p className="font-sans text-base text-muted-foreground mb-4">
-            Join us at our Banani location for an unforgettable dining experience, or order directly to your door.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link
-              href="/contact"
-              className="inline-flex h-12 items-center justify-center rounded-xl bg-[#16100C] px-8 font-sans text-sm font-bold text-white transition-colors hover:bg-[#2C241E] shadow-md"
-            >
-              Book a Table
-            </Link>
-            <Link
-              href="/menu"
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border-2 border-[#16100C] bg-transparent px-8 font-sans text-sm font-bold text-[#16100C] transition-colors hover:bg-black/5"
-            >
-              View Menu
-              <ArrowRight className="size-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* 2. Our Story (The Story Behind Food Flow) */}
+      <OurStory />
 
-    </div>
+      {/* 3. Mission & Vision Cards */}
+      <MissionVision />
+
+      {/* 4. The Foodo Advantage Grid */}
+      <FoodoAdvantage />
+
+      {/* 5. How It Works (Timeline) */}
+      <HowItWorks />
+
+      {/* 6. Catered To Your Needs (Image Grid) */}
+      <CateredNeeds />
+
+      {/* 7. The Foodo Promise */}
+      <FoodoPromise />
+
+      {/* 8. Stats Banner (Full Width Gold Strip) */}
+      <StatsBanner />
+
+      {/* 9. Certified Kitchen Partners & Growing Presence */}
+      <KitchenPartners />
+
+      {/* 10. Driven By Values */}
+      <DrivenByValues />
+    </main>
   );
 }

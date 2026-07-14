@@ -1,59 +1,30 @@
-"use client";
+import React from "react";
+import { Flag, Eye } from "lucide-react";
 
-import { Compass, Eye } from "lucide-react";
-
-export default function AboutMissionVision() {
+export default function MissionVision() {
   return (
-    <section className="bg-[#18110C] py-20 md:py-28">
-      <div className="wrapper max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-          
-          {/* MISSION CARD */}
-          <div className="flex flex-col gap-6 bg-white/[0.03] border border-white/[0.08] rounded-[32px] p-10 md:p-12 transition-colors hover:bg-white/[0.05]">
-            <div className="size-16 rounded-2xl bg-[#EEA25D]/10 flex items-center justify-center border border-[#EEA25D]/20">
-              <Compass className="size-8 text-[#EEA25D] stroke-[1.5]" />
-            </div>
-            
-            <div className="flex flex-col gap-3">
-              <span className="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#EEA25D]">
-                Our Mission
-              </span>
-              <h3 className="font-fraunces text-3xl md:text-4xl font-normal text-white tracking-tight">
-                Preserving the Past
-              </h3>
-              <p className="font-sans text-slate-300 text-sm md:text-base leading-relaxed mt-2">
-                To honor the time-tested techniques of Mughlai culinary arts by meticulously 
-                preparing every dish with authentic, hand-selected ingredients, unwavering 
-                patience, and a profound respect for our rich cultural heritage. We cook 
-                the slow, honest way.
-              </p>
-            </div>
+    <section className="py-12 bg-[#FAF5EB]">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Mission Card */}
+        <div className="bg-white border border-[#16100C]/10 rounded-3xl p-8 space-y-4 shadow-sm">
+          <div className="text-[#CEA359] bg-[#CEA359]/10 size-10 rounded-full flex items-center justify-center">
+            <Flag className="size-5" />
           </div>
-
-          {/* VISION CARD */}
-          <div className="flex flex-col gap-6 bg-white/[0.03] border border-white/[0.08] rounded-[32px] p-10 md:p-12 transition-colors hover:bg-white/[0.05]">
-            <div className="size-16 rounded-2xl bg-[#EEA25D]/10 flex items-center justify-center border border-[#EEA25D]/20">
-              <Eye className="size-8 text-[#EEA25D] stroke-[1.5]" />
-            </div>
-            
-            <div className="flex flex-col gap-3">
-              <span className="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#EEA25D]">
-                Our Vision
-              </span>
-              <h3 className="font-fraunces text-3xl md:text-4xl font-normal text-white tracking-tight">
-                Elevating the Future
-              </h3>
-              <p className="font-sans text-slate-300 text-sm md:text-base leading-relaxed mt-2">
-                To become the premier destination for luxury heritage dining in Dhaka, 
-                setting a new, uncompromising standard for how traditional slow-fire cuisine 
-                is experienced, celebrated, and shared by modern epicureans across the globe.
-              </p>
-            </div>
-          </div>
-
+          <h3 className="font-fraunces text-xl font-normal text-[#16100C]">Our Mission</h3>
+          <p className="font-sans text-xs text-[#16100C]/70 leading-relaxed font-light">
+            To make healthy eating accessible, affordable, and delicious for everyone, showing that premium nutrition is never a luxury, but a daily standard.
+          </p>
         </div>
-
+        {/* Vision Card */}
+        <div className="bg-white border border-[#16100C]/10 rounded-3xl p-8 space-y-4 shadow-sm">
+          <div className="text-[#CEA359] bg-[#CEA359]/10 size-10 rounded-full flex items-center justify-center">
+            <Eye className="size-5" />
+          </div>
+          <h3 className="font-fraunces text-xl font-normal text-[#16100C]">Our Vision</h3>
+          <p className="font-sans text-xs text-[#16100C]/70 leading-relaxed font-light">
+            To become Bangladesh&apos;s most trusted personalized food subscription platform, nurturing a healthier nation one plate at a time.
+          </p>
+        </div>
       </div>
     </section>
   );

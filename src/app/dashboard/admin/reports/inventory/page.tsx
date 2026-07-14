@@ -30,19 +30,19 @@ export default function ReportsInventoryPage() {
       <div className="mt-8">
         <ReportInventorySection data={inventoryReportData} />
       </div>
-      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3 items-start">
-        <DarkCard icon={<AlertTriangle className="size-40" />} title="Out of Stock" description={`${outOfStock} items need immediate action`}>
+      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <DarkCard icon={<AlertTriangle className="size-10" />} title="Out of Stock" description={`${outOfStock} items need immediate action`} className="flex-1">
           <div className="font-fraunces text-4xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] text-red-400">{outOfStock}</div>
           <div className="mt-2 text-sm text-white/70">{lowStock} more at low stock levels</div>
         </DarkCard>
-        <GlassCard icon={<RefreshCw className="size-5 text-primary" />} title="Low Stock" value={lowStock.toString()} subtitle="Items below minimum threshold">
+        <GlassCard icon={<RefreshCw className="size-5 text-primary" />} title="Low Stock" value={lowStock.toString()} subtitle="Items below minimum threshold" className="flex-1">
           <div className="mt-4 space-y-1.5">
             {inventoryReportData.filter((i) => i.status === "LOW_STOCK").slice(0, 4).map((i) => (
               <div key={i.id} className="flex justify-between text-xs"><span className="text-muted-foreground">{i.itemName}</span><span className="font-bold text-warning">{i.currentStock}/{i.minStock}</span></div>
             ))}
           </div>
         </GlassCard>
-        <GlassCard icon={<Package className="size-5 text-muted-foreground" />} iconBg="bg-muted" title="Overstocked" value={overstocked.toString()} subtitle="Items exceeding 3x min stock">
+        <GlassCard icon={<Package className="size-5 text-muted-foreground" />} iconBg="bg-muted" title="Overstocked" value={overstocked.toString()} subtitle="Items exceeding 3x min stock" className="flex-1">
           <div className="mt-4 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">
             Top category: {topCategory[0]} ({topCategory[1]} items) · Avg daily usage: {avgUsage} units
           </div>

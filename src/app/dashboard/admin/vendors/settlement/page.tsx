@@ -1,8 +1,8 @@
 import { Wallet } from "lucide-react";
 import { vendorSettlements } from "@/data/vendors";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { SettlementTableSection } from "@/components/dashboard/admin/vendors/settlement-table-section";
-import { SettlementSummaryCards } from "@/components/dashboard/admin/vendors/settlement-summary-cards";
+import { SettlementTableSection } from "@/components/dashboard/admin/vendors/settlement/settlement-table-section";
+import { SettlementSummaryCards } from "@/components/dashboard/admin/vendors/settlement/settlement-summary-cards";
 import { GlassCard } from "@/components/dashboard/common/glass-card";
 import { DarkCard } from "@/components/dashboard/common/dark-card";
 import { Calendar } from "lucide-react";
@@ -28,13 +28,14 @@ export default function VendorsSettlementPage() {
       <div className="mt-8">
         <SettlementTableSection data={vendorSettlements} />
       </div>
-      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3 items-start">
+      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <GlassCard
           icon={<Wallet className="size-5 text-primary" />}
           iconBg="bg-primary/10"
           title="Total Settled"
           value={`${lastSettled} payments`}
           subtitle="Successfully processed"
+          className="flex-1"
         >
           <div className="mt-4 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">
             Value: ৳{lastSettledAmount.toLocaleString()}
@@ -44,6 +45,7 @@ export default function VendorsSettlementPage() {
           icon={<Calendar className="size-40" />}
           title="Last Settlement Run"
           description="Processed on Nov 02, 2023"
+          className="flex-1"
         >
           <div className="font-bold text-white">{lastSettled} vendors paid</div>
           <div className="mt-2 text-sm text-white/70">
@@ -59,6 +61,7 @@ export default function VendorsSettlementPage() {
           title="Next Payout"
           value="Nov 07, 2023"
           subtitle="Scheduled"
+          className="flex-1"
         />
       </div>
     </div>

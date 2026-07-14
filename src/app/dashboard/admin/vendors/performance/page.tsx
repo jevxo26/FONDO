@@ -2,7 +2,7 @@ import { BarChart3, TrendingUp, TrendingDown, Star, Medal, Trophy } from "lucide
 import { vendorPerformanceData } from "@/data/vendors";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { PerformanceTableSection } from "@/components/dashboard/admin/vendors/performance-table-section";
+import { PerformanceTableSection } from "@/components/dashboard/admin/vendors/performance/performance-table-section";
 import { GlassCard } from "@/components/dashboard/common/glass-card";
 import { DarkCard } from "@/components/dashboard/common/dark-card";
 
@@ -37,6 +37,7 @@ export default function VendorsPerformancePage() {
           title="Top Rated"
           value={topVendor.name}
           subtitle={`${topVendor.rating.toFixed(1)} / 5.0 rating`}
+          className="flex-1"
         >
           <div className="mt-4 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">
             {topVendor.orders.toLocaleString()} orders — {topVendor.onTimeRate}% on-time
@@ -46,6 +47,7 @@ export default function VendorsPerformancePage() {
           icon={<Medal className="size-40" />}
           title="Best On-Time"
           description={`${bestOnTime.onTimeRate}% delivery rate`}
+          className="flex-1"
         >
           <div className="font-bold text-white">{bestOnTime.name}</div>
           <div className="mt-2 text-sm text-white/70">

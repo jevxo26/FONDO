@@ -30,11 +30,11 @@ export default function ReportsVendorsPage() {
         <ReportVendorsSection data={vendorReportData} />
       </div>
       <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <DarkCard icon={<Award className="size-40" />} title="Top Vendor" description={topVendor.vendorName}>
+        <DarkCard icon={<Award className="size-10" />} title="Top Vendor" description={topVendor.vendorName} className="flex-1">
           <div className="font-fraunces text-3xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">৳{topVendor.revenue.toLocaleString()}</div>
           <div className="mt-2 text-sm text-white/70">{topVendor.totalOrders} orders · {topVendor.rating} rating</div>
         </DarkCard>
-        <GlassCard icon={<Award className="size-5 text-primary" />} title="Avg Rating" value={avgRating.toString()} subtitle="Across all vendors">
+        <GlassCard icon={<Award className="size-5 text-primary" />} title="Avg Rating" value={avgRating.toString()} subtitle="Across all vendors" className="flex-1">
           <div className="mt-4 space-y-2">
             {vendorReportData.filter((v) => v.rating >= 4).slice(0, 3).map((v) => (
               <div key={v.id} className="flex justify-between text-xs"><span className="text-muted-foreground">{v.vendorName}</span><span className="font-bold">{v.rating}</span></div>

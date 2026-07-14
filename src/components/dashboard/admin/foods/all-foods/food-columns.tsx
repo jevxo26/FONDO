@@ -46,6 +46,13 @@ export const foodColumns: ColumnDef<AdminFoodItem>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Category" />,
   },
   {
+    accessorKey: "vendor",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Vendor" />,
+    cell: ({ row }) => (
+      <span className="text-sm text-muted-foreground">{row.original.vendor}</span>
+    ),
+  },
+  {
     accessorKey: "foodType",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
     cell: ({ row }) => {

@@ -4,8 +4,8 @@ import { getFoodDetail } from "@/data/food-detail";
 import { RatingStars } from "@/components/common/rating-stars";
 import { PriceTag } from "@/components/common/price-tag";
 import {
-  ArrowLeft, Utensils, Flame, Star, Scale, Hash,
-  Edit, Archive, Eye, MessageSquare,
+  ArrowLeft, Utensils, Flame, Star, Scale, Building, Clock, Edit,
+  TrendingUp, MessageSquare, CheckCircle, XCircle, ThumbsUp, FileEdit, Eye,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -96,14 +96,26 @@ export default async function FoodDetailPage({ params }: PageProps) {
           <ArrowLeft className="size-4" />
           Back to All Foods
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button className="inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] px-4 py-2 text-sm font-medium text-primary shadow-[var(--shadow-card)] ring-1 ring-primary/20 transition-all duration-300 hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]">
             <Edit className="size-4" />
             Edit
           </button>
+          <button className="inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-amber-500/10 via-card to-amber-500/[0.04] px-4 py-2 text-sm font-medium text-amber-600 shadow-[var(--shadow-card)] ring-1 ring-amber-500/20 transition-all duration-300 hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]">
+            <ThumbsUp className="size-4" />
+            Approve
+          </button>
           <button className="inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-destructive/10 via-card to-destructive/[0.04] px-4 py-2 text-sm font-medium text-destructive shadow-[var(--shadow-card)] ring-1 ring-destructive/20 transition-all duration-300 hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]">
-            <Archive className="size-4" />
-            Archive
+            <XCircle className="size-4" />
+            Reject
+          </button>
+          <button className="inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-blue-500/10 via-card to-blue-500/[0.04] px-4 py-2 text-sm font-medium text-blue-600 shadow-[var(--shadow-card)] ring-1 ring-blue-500/20 transition-all duration-300 hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]">
+            <FileEdit className="size-4" />
+            Request Changes
+          </button>
+          <button className="inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-destructive/10 via-card to-destructive/[0.04] px-4 py-2 text-sm font-medium text-destructive shadow-[var(--shadow-card)] ring-1 ring-destructive/20 transition-all duration-300 hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]">
+            <CheckCircle className="size-4" />
+            Deactivate
           </button>
         </div>
       </div>
@@ -145,6 +157,10 @@ export default async function FoodDetailPage({ params }: PageProps) {
                 Recommended
               </span>
             )}
+            <span className="inline-flex items-center gap-1 rounded-full bg-green-500/20 px-3 py-1 text-xs font-medium text-green-300">
+              <CheckCircle className="size-3" />
+              Available
+            </span>
           </div>
           <h1 className="mt-3 font-fraunces text-3xl font-bold text-white drop-shadow-lg md:text-4xl lg:text-5xl">
             {food.name}
@@ -152,11 +168,12 @@ export default async function FoodDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         <InfoBadge icon={<Utensils className="size-4" />} label="Category" value={food.categoryName} />
+        <InfoBadge icon={<Building className="size-4" />} label="Vendor" value={food.vendor} />
         <InfoBadge icon={<Scale className="size-4" />} label="Type" value={food.foodType.replace("_", " ")} />
-        <InfoBadge icon={<Flame className="size-4" />} label="Spice" value={food.spiceLevel.replace("_", " ")} />
-        <InfoBadge icon={<Hash className="size-4" />} label="ID" value={food.id} />
+        <InfoBadge icon={<Clock className="size-4" />} label="Cook Time" value={`${food.preparationTime} min`} />
+        <InfoBadge icon={<TrendingUp className="size-4" />} label="Times Ordered" value={food.timesOrdered.toLocaleString()} />
         <InfoBadge icon={<MessageSquare className="size-4" />} label="Rating" value={`${detail.avgRating} (${detail.totalReviews})`} />
       </div>
 

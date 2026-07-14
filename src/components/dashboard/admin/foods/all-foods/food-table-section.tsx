@@ -5,7 +5,7 @@ import { DataTable } from "@/components/common/table";
 import type { FacetedFilter, RowAction } from "@/components/common/table";
 import { foodColumns } from "./food-columns";
 import { adminFoods, type AdminFoodItem } from "@/data/foods";
-import { Archive, Beef, Eye, Flame, ListChecks } from "lucide-react";
+import { Archive, Beef, Eye, Flame, ListChecks, Store } from "lucide-react";
 
 const statusFilter: FacetedFilter = {
   columnId: "status",
@@ -30,6 +30,22 @@ const foodTypeFilter: FacetedFilter = {
   ],
 };
 
+const vendorFilter: FacetedFilter = {
+  columnId: "vendor",
+  title: "Vendor",
+  icon: <Store className="size-4" />,
+  options: [
+    { label: "Fresh Meals", value: "Fresh Meals" },
+    { label: "Spice House", value: "Spice House" },
+    { label: "Bistro Dhaka", value: "Bistro Dhaka" },
+    { label: "Golden Wok", value: "Golden Wok" },
+    { label: "Pizza Nova", value: "Pizza Nova" },
+    { label: "Curry Leaf", value: "Curry Leaf" },
+    { label: "Sweet Tooth", value: "Sweet Tooth" },
+    { label: "The Kebab House", value: "The Kebab House" },
+  ],
+};
+
 const spiceFilter: FacetedFilter = {
   columnId: "spiceLevel",
   title: "Spice",
@@ -49,7 +65,7 @@ export function FoodTableSection() {
     {
       label: "View Details",
       icon: <Eye className="size-4" />,
-      onClick: (food) => router.push(`/dashboard/foods/${food.id}`),
+      onClick: (food) => router.push(`/dashboard/admin/foods/${food.id}`),
     },
     {
       label: "Archive",
@@ -64,7 +80,7 @@ export function FoodTableSection() {
       data={adminFoods}
       columns={foodColumns}
       rowActions={rowActions}
-      filters={[statusFilter, foodTypeFilter, spiceFilter]}
+      filters={[statusFilter, vendorFilter, foodTypeFilter, spiceFilter]}
     />
   );
 }

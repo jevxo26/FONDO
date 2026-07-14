@@ -1,161 +1,131 @@
 "use client";
 
-import { CookingPot, Download, Plus, ArrowUpDown } from "lucide-react";
-import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/common/table";
-import { StatCard } from "@/components/dashboard/common/stat-card";
+import { orders } from "@/data/orders";
+import { getOrderDetail } from "@/data/order-detail";
+import { PageHeader } from "@/components/dashboard/common/page-header";
+import { CookingPot, Timer, Utensils, CheckCircle } from "lucide-react";
 
-type Order = { 
-  id: string; 
-  customer: string; 
-  items: string; 
-  total: string; 
-  status: string; 
-  date: string; 
-};
+export default function KitchenQueuePage() {
+  const preparing = orders.filter((o) => o.orderStatus === "PREPARING");
+  const queued = orders.filter(
+    (o) => o.orderStatus === "CONFIRMED" || o.orderStatus === "PENDING",
+  );
+  const ready = orders.filter((o) => o.orderStatus === "READY_FOR_PICKUP");
 
-const columns: ColumnDef<Order>[] = [
-  { 
-    accessorKey: "id", 
-    header: ({ column }) => (
-      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-        ORDER ID <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-  },
-  { 
-    accessorKey: "customer", 
-    header: ({ column }) => (
-      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-        CUSTOMER <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-  },
-  { 
-    accessorKey: "items", 
-    header: "ITEMS" 
-  },
-  { 
-    accessorKey: "total", 
-    header: ({ column }) => (
-      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-        TOTAL <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-  },
-  { 
-    accessorKey: "status", 
-    header: "STATUS",
-    cell: ({ row }) => (
-      <Badge className="rounded-full bg-blue-100 text-blue-700 hover:bg-blue-100 border-0">
-        {row.getValue("status")}
-      </Badge>
-    )
-  },
-  { 
-    accessorKey: "date", 
-    header: ({ column }) => (
-      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-        DATE <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-  },
-];
-
-const kitchenOrders: Order[] = [
-  { 
-    id: "ORD-7001", 
-    customer: "Rafiqul Islam", 
-    items: "2x Beef Biryani", 
-    total: "৳ 700", 
-    status: "In Kitchen", 
-    date: "Jul 13, 2026" 
-  },
-  { 
-    id: "ORD-7002", 
-    customer: "Anika Tasnim", 
-    items: "1x Thai Soup", 
-    total: "৳ 350", 
-    status: "In Kitchen", 
-    date: "Jul 13, 2026" 
-  },
-  { 
-    id: "ORD-7003", 
-    customer: "Masud Rana", 
-    items: "3x Pizza", 
-    total: "৳ 1800", 
-    status: "In Kitchen", 
-    date: "Jul 13, 2026" 
-  },
-  { 
-    id: "ORD-7004", 
-    customer: "Sarah Binte", 
-    items: "2x Burger", 
-    total: "৳ 450", 
-    status: "In Kitchen", 
-    date: "Jul 13, 2026" 
-  },
-  { 
-    id: "ORD-7005", 
-    customer: "Kamal Uddin", 
-    items: "1x Mixed Chowmein", 
-    total: "৳ 300", 
-    status: "In Kitchen", 
-    date: "Jul 12, 2026" 
-  },
-];
-
-export default function OrdersKitchenPage() {
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8">
-      {/* Header */}
-      <div className="flex items-center gap-6">
-        <div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10">
-          <CookingPot className="size-8 text-primary" />
+    <div>
+      <PageHeader
+        title="Kitchen Queue"
+        description="Real-time order queue for kitchen preparation."
+        icon={CookingPot}
+      />
+
+      <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <div className="rounded-3xl bg-gradient-to-br from-warning/10 via-card to-warning/[0.04] p-5 shadow-[var(--shadow-card)]">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Queued</p>
+          <p className="mt-1 font-fraunces text-[30px] font-bold text-warning">{queued.length}</p>
         </div>
-        <div className="flex flex-1 flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h2 className="font-fraunces text-4xl font-bold text-foreground">Kitchen Queue</h2>
-            <p className="mt-1 text-muted-foreground">Orders currently being prepared in kitchens.</p>
-          </div>
-          <div className="flex gap-3">
-            <Button variant="outline" className="rounded-full">
-              <Download className="size-4 mr-2" /> 
-              Export
-            </Button>
-            <Button className="rounded-full">
-              <Plus className="size-4 mr-2" /> 
-              Assign Chef
-            </Button>
-          </div>
+        <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-5 shadow-[var(--shadow-card)]">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">In Prep</p>
+          <p className="mt-1 font-fraunces text-[30px] font-bold text-primary">{preparing.length}</p>
+        </div>
+        <div className="rounded-3xl bg-gradient-to-br from-success/10 via-card to-success/[0.04] p-5 shadow-[var(--shadow-card)]">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Ready</p>
+          <p className="mt-1 font-fraunces text-[30px] font-bold text-success">{ready.length}</p>
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total in Kitchen" value={kitchenOrders.length} />
-        <StatCard label="Active Chefs" value="6" />
-        <StatCard label="Avg. Prep Time" value="15m" />
-        <StatCard label="Delayed" value="1" />
-      </div>
+      {preparing.length > 0 && (
+        <div className="mt-8">
+          <h2 className="mb-4 font-fraunces text-lg font-bold text-foreground">In Preparation</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {preparing.map((order) => {
+              const detail = getOrderDetail(order.id);
+              return (
+                <div
+                  key={order.id}
+                  className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-5 shadow-[var(--shadow-card)]"
+                >
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="font-bold text-foreground">{order.orderNumber}</p>
+                      <p className="text-sm text-muted-foreground">{order.customerName}</p>
+                    </div>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-bold uppercase text-primary ring-1 ring-primary/20">
+                      <Timer className="size-3" />
+                      Prep
+                    </span>
+                  </div>
+                  <div className="mt-4 space-y-2">
+                    {detail.items.slice(0, 3).map((item, i) => (
+                      <div key={i} className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">
+                          {item.quantity}x {item.name}
+                        </span>
+                        <span className="font-mono text-foreground">৳{item.price}</span>
+                      </div>
+                    ))}
+                    {detail.items.length > 3 && (
+                      <p className="text-xs text-muted-foreground">+{detail.items.length - 3} more items</p>
+                    )}
+                  </div>
+                  <div className="mt-4 flex items-center justify-between border-t border-border/40 pt-3">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Utensils className="size-3" />
+                      {detail.vendor}
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="rounded-full bg-success/10 px-3 py-1 text-[11px] font-semibold text-success ring-1 ring-success/20 transition-all duration-300 hover:bg-success/20 active:scale-[0.98]">
+                        <CheckCircle className="mr-1 inline size-3" />
+                        Mark Ready
+                      </button>
+                      <button className="rounded-full bg-warning/10 px-3 py-1 text-[11px] font-semibold text-warning ring-1 ring-warning/20 transition-all duration-300 hover:bg-warning/20 active:scale-[0.98]">
+                        <Timer className="mr-1 inline size-3" />
+                        Add Time
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
-      {/* Table */}
-      <div className="mt-6">
-        <DataTable
-          columns={columns}
-          data={kitchenOrders}
-          pageSize={5}
-          enableSorting={true}
-          enableSearch={true}
-          enableColumnToggle={true}
-          
-          isLoading={false}
-          emptyMessage="No orders in kitchen."
-          skeletonRows={5}
-        />
-      </div>
+      {queued.length > 0 && (
+        <div className="mt-8">
+          <h2 className="mb-4 font-fraunces text-lg font-bold text-foreground">Queued (Next to Prepare)</h2>
+          <div className="space-y-2">
+            {queued.slice(0, 5).map((order, i) => (
+              <div
+                key={order.id}
+                className="flex items-center justify-between rounded-2xl border border-border/40 bg-card px-5 py-3 shadow-sm"
+              >
+                <div className="flex items-center gap-4">
+                  <span className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{order.orderNumber}</p>
+                    <p className="text-xs text-muted-foreground">{order.customerName}</p>
+                  </div>
+                </div>
+                <span className="text-sm text-muted-foreground">{order.items} items</span>
+              </div>
+            ))}
+            {queued.length > 5 && (
+              <p className="text-center text-xs text-muted-foreground">+{queued.length - 5} more</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {preparing.length === 0 && queued.length === 0 && (
+        <div className="mt-16 flex flex-col items-center justify-center gap-4 text-center">
+          <CookingPot className="size-12 text-muted-foreground/40" />
+          <p className="text-sm text-muted-foreground">No orders in the kitchen queue.</p>
+        </div>
+      )}
     </div>
   );
 }

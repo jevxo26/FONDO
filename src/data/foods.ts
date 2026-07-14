@@ -19,6 +19,11 @@ const categories = [
 const spiceLevels = ["MILD", "MEDIUM", "HOT", "EXTRA_HOT"] as const;
 const statuses = ["ACTIVE", "ACTIVE", "ACTIVE", "ACTIVE", "DRAFT", "ARCHIVED"] as const;
 
+const vendors = [
+  "Fresh Meals", "Spice House", "Bistro Dhaka", "Golden Wok",
+  "Pizza Nova", "Curry Leaf", "Sweet Tooth", "The Kebab House",
+];
+
 const foodNames = [
   { name: "Royal Mutton Kacchi", cat: "Bengali", type: "NON_VEG" },
   { name: "Chicken Biryani", cat: "Bengali", type: "NON_VEG" },
@@ -62,17 +67,21 @@ const imgs = [
 
 export interface AdminFoodItem {
   id: string;
+  foodCode: string;
   name: string;
   slug: string;
   thumbnail: string;
   categoryName: string;
+  vendor: string;
   foodType: "VEG" | "NON_VEG" | "VEGAN" | "SEAFOOD";
   spiceLevel: "MILD" | "MEDIUM" | "HOT" | "EXTRA_HOT";
   basePrice: number;
+  preparationTime: number;
   status: "ACTIVE" | "DRAFT" | "ARCHIVED";
   isFeatured: boolean;
   isPopular: boolean;
   isRecommended: boolean;
+  timesOrdered: number;
   createdAt: string;
 }
 
@@ -92,17 +101,21 @@ export const adminFoods: AdminFoodItem[] = foodNames.map((item, i) => {
   const imgIdx = Math.floor(rand() * imgs.length);
   return {
     id: `food_${pad(i + 1)}`,
+    foodCode: `F-${pad(i + 1)}`,
     name: item.name,
     slug: generateSlug(item.name),
     thumbnail: imgs[imgIdx],
     categoryName: cat.name,
+    vendor: vendors[Math.floor(rand() * vendors.length)],
     foodType: item.type,
     spiceLevel: spiceLevels[Math.floor(rand() * spiceLevels.length)],
     basePrice: Math.round(150 + rand() * 550),
+    preparationTime: 10 + Math.round(rand() * 35),
     status: statuses[Math.floor(rand() * statuses.length)],
     isFeatured: rand() > 0.6,
     isPopular: rand() > 0.65,
     isRecommended: rand() > 0.7,
+    timesOrdered: 100 + Math.round(rand() * 4900),
     createdAt: new Date(2025, Math.floor(rand() * 12), Math.floor(1 + rand() * 28))
       .toISOString()
       .split("T")[0],

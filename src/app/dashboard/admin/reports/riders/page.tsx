@@ -30,8 +30,8 @@ export default function ReportsRidersPage() {
       <div className="mt-8">
         <ReportRidersSection data={riderReportData} />
       </div>
-      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3 items-start">
-        <GlassCard icon={<TrendingUp className="size-5 text-success" />} iconBg="bg-success/10" title="On-Time Rate" value={`${onTimeRate}%`} subtitle="Platform average">
+      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <GlassCard icon={<TrendingUp className="size-5 text-success" />} iconBg="bg-success/10" title="On-Time Rate" value={`${onTimeRate}%`} subtitle="Platform average" className="flex-1">
           <div className="mt-4 h-2 w-full rounded-full bg-muted">
             <div className="h-2 rounded-full bg-success" style={{ width: `${onTimeRate}%` }} />
           </div>
@@ -40,11 +40,11 @@ export default function ReportsRidersPage() {
             <span>{totalLate} late</span>
           </div>
         </GlassCard>
-        <DarkCard icon={<DollarSign className="size-40" />} title="Avg Earnings" description="Per rider">
+        <DarkCard icon={<DollarSign className="size-10" />} title="Avg Earnings" description="Per rider" className="flex-1">
           <div className="font-fraunces text-3xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">৳{avgEarnings.toLocaleString()}</div>
           <div className="mt-2 text-sm text-white/70">Total: ৳{totalEarnings.toLocaleString()}</div>
         </DarkCard>
-        <GlassCard icon={<Award className="size-5 text-warning" />} iconBg="bg-warning/10" title="Top Rider" value={topRider.riderName} subtitle={`${topRider.deliveries} deliveries`}>
+        <GlassCard icon={<Award className="size-5 text-warning" />} iconBg="bg-warning/10" title="Top Rider" value={topRider.riderName} subtitle={`${topRider.deliveries} deliveries`} className="flex-1">
           <div className="mt-4 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">
             {topRider.onTime} on-time · {topRider.late} late · {topRider.rating} rating
           </div>

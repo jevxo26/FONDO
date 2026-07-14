@@ -1,3 +1,5 @@
+import type { InferType } from "yup";
+import type { updateNotificationSchema } from "../validations/notification.validation";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import prisma from "../lib/prisma";
@@ -15,7 +17,7 @@ const getSettings = catchServiceAsync(async (userId: string) => {
 });
 
 const updateSettings = catchServiceAsync(
-  async (userId: string, data: Record<string, any>) => {
+  async (userId: string, data: InferType<typeof updateNotificationSchema>) => {
     return prisma.userNotificationSetting.upsert({
       where: { userId },
       update: data,

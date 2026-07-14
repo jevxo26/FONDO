@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import prisma from "../lib/prisma";
@@ -20,10 +21,10 @@ const listFoods = catchServiceAsync(
     const limit = params.limit || 20;
     const skip = (page - 1) * limit;
 
-    const where: any = { status: "active", deletedAt: null };
+    const where: Prisma.FoodWhereInput = { status: "active", deletedAt: null };
 
     if (params.categoryId) where.categoryId = params.categoryId;
-    if (params.foodType) where.foodType = params.foodType;
+    if (params.foodType) where.foodType = params.foodType as Prisma.FoodWhereInput["foodType"];
     if (params.spiceLevel) where.spiceLevel = params.spiceLevel;
     if (params.search) {
       where.OR = [
@@ -35,7 +36,7 @@ const listFoods = catchServiceAsync(
       where.diets = { some: { dietType: params.dietType } };
     }
 
-    const orderBy: any = {};
+    const orderBy: Prisma.FoodOrderByWithRelationInput = {};
     if (params.sortBy === "price") {
       orderBy.variants = { _count: "asc" };
       orderBy.prices = { _count: "asc" };

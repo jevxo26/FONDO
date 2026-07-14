@@ -84,31 +84,46 @@ Create a new customer account.
 **Request**
 ```json
 {
-  "fullName": "*String",
+  "firstName": "*String",
+  "lastName": "*String",
   "phone": "*String",
-  "email": "String",
+  "email": "*String",
   "password": "*String (min 6 chars)",
-  "dateOfBirth": "Date",
-  "gender": "String (male|female|other)"
+  "gender": "String (MALE|FEMALE|OTHER)",
+  "avatar": "String (URL)",
+  "dateOfBirth": "Date"
 }
 ```
 
 **Response** `201`
 ```json
 {
-  "user": { "id": "Int", "fullName": "String", "phone": "String", "email": "String", "role": "String" },
-  "accessToken": "String",
-  "refreshToken": "String"
+  "id": "String",
+  "firstName": "String",
+  "lastName": "String",
+  "phone": "String",
+  "email": "String",
+  "avatar": "String",
+  "gender": "String",
+  "dateOfBirth": "Date",
+  "role": "String",
+  "status": "String",
+  "isPhoneVerified": false,
+  "isEmailVerified": false,
+  "lastLoginAt": "DateTime",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
 }
 ```
 
 ### 🟢 `POST /auth/login`
-Login with phone/email and password.
+Login with phone/email and password. Sets `refreshToken` as httpOnly cookie.
 
 **Request**
 ```json
 {
-  "phone": "*String (or email)",
+  "email": "String (or phone)",
+  "phone": "String (or email)",
   "password": "*String"
 }
 ```
@@ -116,9 +131,24 @@ Login with phone/email and password.
 **Response**
 ```json
 {
-  "accessToken": "String",
-  "refreshToken": "String",
-  "user": { "id": "Int", "fullName": "String", "phone": "String", "email": "String", "role": "String", "avatar": "String" }
+  "token": "String",
+  "user": {
+    "id": "String",
+    "firstName": "String",
+    "lastName": "String",
+    "phone": "String",
+    "email": "String",
+    "avatar": "String",
+    "gender": "String",
+    "dateOfBirth": "Date",
+    "role": "String",
+    "status": "String",
+    "isPhoneVerified": "Boolean",
+    "isEmailVerified": "Boolean",
+    "lastLoginAt": "DateTime",
+    "createdAt": "DateTime",
+    "updatedAt": "DateTime"
+  }
 }
 ```
 
@@ -127,12 +157,16 @@ Send OTP for a specific purpose.
 
 **Request**
 ```json
-{ "phone": "*String" }
+{
+  "phone": "String (or email)",
+  "email": "String (or phone)",
+  "purpose": "*String (LOGIN|REGISTER|FORGOT_PASSWORD|PHONE_VERIFY|EMAIL_VERIFY)"
+}
 ```
 
 **Response**
 ```json
-{ "otpSent": true, "expiresIn": 300 }
+{ "otp": "String (6-digit code)", "message": "OTP sent successfully" }
 ```
 
 ### 🟢 `POST /auth/otp/verify`
@@ -143,44 +177,43 @@ Verify OTP and log in.
 { "phone": "*String", "otp": "*String", "purpose": "*Enum (LOGIN|REGISTER|FORGOT_PASSWORD|PHONE_VERIFY|EMAIL_VERIFY)" }
 ```
 
-**Response** (purpose=LOGIN)
+**Response**
 ```json
-{ "verified": true, "accessToken": "String", "refreshToken": "String", "user": {} }
+{ "message": "OTP verified successfully" }
 ```
 
 ### 🟢 `POST /auth/refresh`
-Exchange refresh token for a new access token.
+Exchange refresh token for a new access token. Refresh token from httpOnly cookie or request body.
 
 **Request**
 ```json
-{ "refreshToken": "*String" }
+{ "refreshToken": "String (if not in cookie)" }
 ```
 
 **Response**
 ```json
-{ "accessToken": "String", "refreshToken": "String" }
+{ "token": "String (new access token)" }
 ```
 
 ### 🟢 `POST /auth/logout`
-Invalidate current session.
+Invalidate current session. Clears `refreshToken` cookie. Reads refresh token from httpOnly cookie (or request body).
 
-**Auth:** JWT  
 **Request**
 ```json
-{ "refreshToken": "*String" }
+{ "refreshToken": "String (if not in cookie)" }
 ```
 
 **Response**
 ```json
-{ "message": "Logged out" }
+{ "message": "Logged out successfully" }
 ```
 
 ### 🟢 `POST /auth/forgot-password`
-Request password reset OTP/email.
+Request password reset link. Sends reset token to the registered email.
 
 **Request**
 ```json
-{ "phone": "*String (or email)" }
+{ "email": "*String" }
 ```
 
 **Response**
@@ -193,7 +226,7 @@ Reset password using token from forgot-password.
 
 **Request**
 ```json
-{ "token": "*String", "newPassword": "*String (min 6 chars)" }
+{ "token": "*String", "password": "*String (min 6 chars)" }
 ```
 
 **Response**
@@ -212,7 +245,7 @@ Change password while logged in.
 
 **Response**
 ```json
-{ "message": "Password changed" }
+{ "message": "Password changed successfully" }
 ```
 
 ---
@@ -228,8 +261,7 @@ Get current user profile.
 **Response**
 ```json
 {
-  "id": "Int",
-  "fullName": "String",
+  "id": "String",
   "firstName": "String",
   "lastName": "String",
   "phone": "String",
@@ -241,8 +273,41 @@ Get current user profile.
   "status": "String",
   "isPhoneVerified": "Boolean",
   "isEmailVerified": "Boolean",
-  "profile": { "profession": "String", "company": "String", "bio": "Text", "preferredLanguage": "String", "timezone": "String" },
-  "notificationSettings": { "pushNotification": "Boolean", "emailNotification": "Boolean", ... }
+  "lastLoginAt": "DateTime",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime",
+  "profile": {
+    "profession": "String",
+    "occupation": "String",
+    "company": "String",
+    "bio": "Text",
+    "preferredLanguage": "String",
+    "timezone": "String",
+    "profileCompletionPercentage": "Float"
+  },
+  "addresses": [
+    {
+      "id": "String",
+      "label": "String",
+      "receiverName": "String",
+      "receiverPhone": "String",
+      "area": "String",
+      "district": "String",
+      "division": "String",
+      "isDefault": "Boolean"
+    }
+  ],
+  "notificationSetting": {
+    "pushNotification": "Boolean",
+    "emailNotification": "Boolean",
+    "smsNotification": "Boolean",
+    "orderNotification": "Boolean",
+    "paymentNotification": "Boolean",
+    "promotionNotification": "Boolean",
+    "chatNotification": "Boolean",
+    "marketingNotification": "Boolean",
+    "systemNotification": "Boolean"
+  }
 }
 ```
 
@@ -253,13 +318,12 @@ Update own profile.
 **Request**
 ```json
 {
-  "fullName": "String",
   "firstName": "String",
   "lastName": "String",
   "phone": "String",
   "email": "String",
   "avatar": "String",
-  "gender": "String",
+  "gender": "String (MALE|FEMALE|OTHER)",
   "dateOfBirth": "Date"
 }
 ```
@@ -305,7 +369,29 @@ List user addresses.
 ```json
 {
   "items": [
-    { "id": "Int", "label": "String", "receiverName": "String", "receiverPhone": "String", "area": "String", "district": "String", "division": "String", "address": "String (concatenated)", "latitude": "Float", "longitude": "Float", "isDefault": "Boolean" }
+    {
+      "id": "String",
+      "label": "String",
+      "receiverName": "String",
+      "receiverPhone": "String",
+      "country": "String",
+      "division": "String",
+      "district": "String",
+      "upazila": "String",
+      "area": "String",
+      "road": "String",
+      "house": "String",
+      "floor": "String",
+      "apartment": "String",
+      "landmark": "String",
+      "postalCode": "String",
+      "latitude": "Float",
+      "longitude": "Float",
+      "deliveryInstruction": "Text",
+      "isDefault": "Boolean",
+      "createdAt": "DateTime",
+      "updatedAt": "DateTime"
+    }
   ]
 }
 ```
@@ -365,8 +451,29 @@ Register device for push notifications.
   "operatingSystem": "String",
   "osVersion": "String",
   "appVersion": "String",
+  "browser": "String",
   "pushToken": "*String",
   "ipAddress": "String"
+}
+```
+
+**Response** `201`
+```json
+{
+  "id": "String",
+  "userId": "String",
+  "deviceId": "String",
+  "deviceName": "String",
+  "deviceType": "String",
+  "operatingSystem": "String",
+  "osVersion": "String",
+  "appVersion": "String",
+  "browser": "String",
+  "pushToken": "String",
+  "ipAddress": "String",
+  "lastActiveAt": "DateTime",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
 }
 ```
 
@@ -391,14 +498,45 @@ Update preferences.
   "paymentNotification": "Boolean",
   "promotionNotification": "Boolean",
   "chatNotification": "Boolean",
+  "marketingNotification": "Boolean",
   "systemNotification": "Boolean"
 }
 ```
+
+**Response** — same shape as request with defaults applied.
 
 ### --- Login History ---
 
 ### 🟢 `GET /users/me/login-history`
 List login attempts (paginated). **Auth:** JWT (Self)
+
+**Query:** `?page=1&limit=20`
+
+**Response**
+```json
+{
+  "items": [
+    {
+      "id": "String",
+      "deviceId": "String",
+      "ipAddress": "String",
+      "browser": "String",
+      "platform": "String",
+      "country": "String",
+      "city": "String",
+      "loginMethod": "String",
+      "loginStatus": "String",
+      "loggedInAt": "DateTime",
+      "loggedOutAt": "DateTime",
+      "createdAt": "DateTime"
+    }
+  ],
+  "total": "Int",
+  "page": "Int",
+  "limit": "Int",
+  "totalPages": "Int"
+}
+```
 
 ---
 
@@ -428,7 +566,7 @@ Browse foods with filters and pagination. Public.
 {
   "items": [
     {
-      "id": "Int",
+      "id": "String",
       "name": "String",
       "slug": "String",
       "shortDescription": "String",
@@ -446,12 +584,12 @@ Browse foods with filters and pagination. Public.
       "isPopular": "Boolean",
       "isRecommended": "Boolean",
       "status": "String",
-      "category": { "id": "Int", "name": "String", "slug": "String" },
+      "category": { "id": "String", "name": "String", "slug": "String" },
       "variants": [
-        { "id": "Int", "name": "String", "price": "Float", "discountPrice": "Float", "servingSize": "String" }
+        { "id": "String", "name": "String", "price": "Float", "discountPrice": "Float", "servingSize": "String" }
       ],
       "addons": [
-        { "id": "Int", "name": "String", "isRequired": "Boolean", "items": [ { "id": "Int", "name": "String", "price": "Float" } ] }
+        { "id": "String", "name": "String", "isRequired": "Boolean", "items": [ { "id": "String", "name": "String", "price": "Float" } ] }
       ],
       "rating": { "averageRating": "Float", "totalReview": "Int" },
       "labels": [ { "label": "String", "color": "String" } ],
@@ -460,7 +598,10 @@ Browse foods with filters and pagination. Public.
       "discount": { "discountType": "String", "discountValue": "Float" }
     }
   ],
-  "pagination": { "total": "Int", "page": "Int", "limit": "Int", "totalPages": "Int" }
+  "total": "Int",
+  "page": "Int",
+  "limit": "Int",
+  "totalPages": "Int"
 }
 ```
 
@@ -470,15 +611,18 @@ Get single food by ID.
 **Response** — same item shape as above, plus:
 ```json
 {
-  "nutrition": { "calories": "Float", "protein": "Float", "fat": "Float", "carbohydrate": "Float", "fiber": "Float", "sugar": "Float", "sodium": "Float", "cholesterol": "Float" },
-  "ingredients": [ { "ingredientName": "String", "quantity": "String", "unit": "String" } ],
-  "allergens": [ { "allergen": "String", "description": "String" } ],
-  "schedules": [ { "mealType": "Enum", "startTime": "String", "endTime": "String" } ],
-  "gallery": [ { "image": "String (URL)", "sortOrder": "Int" } ],
-  "reviews": [ { "id": "Int", "customerName": "String", "rating": "Int", "review": "Text", "createdAt": "DateTime" } ],
-  "isFavorited": "Boolean",
-  "preparation": { "preparationTime": "Int", "cookTime": "Int", "packingTime": "Int" },
-  "availability": [ { "dayName": "String", "startTime": "String", "endTime": "String" } ]
+  "subCategory": { "id": "String", "name": "String", "slug": "String" },
+  "nutrition": { "calories": "Float", "protein": "Float", "fat": "Float", "carbohydrate": "Float", "fiber": "Float", "sugar": "Float", "sodium": "Float", "cholesterol": "Float", "servingSize": "String" },
+  "ingredients": [ { "id": "String", "ingredientName": "String", "quantity": "String", "unit": "String", "isOptional": "Boolean" } ],
+  "allergens": [ { "id": "String", "allergen": "String", "description": "String" } ],
+  "schedules": [ { "id": "String", "mealType": "Enum (BREAKFAST|LUNCH|DINNER|SNACKS)", "startTime": "String", "endTime": "String", "status": "String" } ],
+  "gallery": [ { "id": "String", "image": "String (URL)", "sortOrder": "Int" } ],
+  "availability": [ { "id": "String", "isAvailable": "Boolean", "availableFrom": "String", "availableTo": "String", "availableDays": "[String]" } ],
+  "preparation": { "id": "String", "preparationTime": "Int", "cookTime": "Int", "packingTime": "Int" },
+  "prices": [ { "id": "String", "basePrice": "Float", "salePrice": "Float", "currency": "String", "status": "String" } ],
+  "discounts": [ { "id": "String", "discountType": "String", "discountValue": "Float", "status": "String" } ],
+  "images": [ { "id": "String", "image": "String (URL)", "sortOrder": "Int" } ],
+  "tags": [ { "id": "String", "name": "String", "slug": "String" } ]
 }
 ```
 
@@ -528,7 +672,22 @@ List reviews for a food.
 **Query:** `?page=1&limit=10`  
 **Response**
 ```json
-{ "items": [ { "id": "Int", "customerName": "String", "avatar": "String", "rating": "Int", "review": "Text", "createdAt": "DateTime" } ], "pagination": {} }
+{
+  "items": [
+    {
+      "id": "String",
+      "rating": "Int",
+      "review": "Text",
+      "status": "String",
+      "createdAt": "DateTime",
+      "customer": { "id": "String", "firstName": "String", "lastName": "String", "avatar": "String" }
+    }
+  ],
+  "total": "Int",
+  "page": "Int",
+  "limit": "Int",
+  "totalPages": "Int"
+}
 ```
 
 ### 🟢 `POST /foods/:foodId/reviews`
@@ -537,10 +696,22 @@ Submit a review.
 **Auth:** JWT (Customer)  
 **Request**
 ```json
-{ "rating": "*Int (1-5)", "review": "String", "orderId": "Int" }
+{ "rating": "*Int (1-5)", "review": "String" }
 ```
 
 **Response** `201`
+```json
+{
+  "id": "String",
+  "foodId": "String",
+  "customerId": "String",
+  "rating": "Int",
+  "review": "Text",
+  "status": "String",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
+```
 
 ---
 
@@ -556,9 +727,8 @@ Create a new food item.
 **Request**
 ```json
 {
-  "categoryId": "*Int",
-  "subCategoryId": "Int",
-  "foodCode": "*String (unique)",
+  "categoryId": "*String",
+  "subCategoryId": "String",
   "name": "*String",
   "slug": "*String (unique)",
   "shortDescription": "String",
@@ -572,15 +742,15 @@ Create a new food item.
   "carbohydrate": "Float",
   "servingSize": "String",
   "foodType": "*Enum (VEG|NON_VEG|VEGAN|SEAFOOD)",
-  "spiceLevel": "String (mild|medium|hot|extra_hot)",
+  "spiceLevel": "String",
   "isFeatured": "Boolean",
   "isPopular": "Boolean",
   "isRecommended": "Boolean",
-  "status": "String"
+  "status": "String (draft|active|archived)"
 }
 ```
 
-**Response** `201` — food object
+**Response** `201` — food object with category, nutrition, rating, visibility
 
 ### 🟢 `PUT /foods/:id`
 Update food — same body as POST (PUT = full replace).
@@ -615,9 +785,12 @@ Soft-delete subcategory.
 ### --- Variant CRUD ---
 
 ### 🟢 `POST /foods/:foodId/variants`
+**Request**
 ```json
-{ "name": "*String", "description": "String", "price": "*Float", "discountPrice": "Float", "weight": "String", "servingSize": "String", "status": "String" }
+{ "name": "*String", "description": "String", "price": "*Float", "discountPrice": "Float", "weight": "String", "servingSize": "String", "status": "String (active|deleted)" }
 ```
+
+**Response** `201` — variant object
 
 ### 🟢 `PUT /variants/:id`
 Update variant.

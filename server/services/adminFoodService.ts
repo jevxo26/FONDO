@@ -1,4 +1,23 @@
+import type { InferType } from "yup";
 import type { Prisma } from "@prisma/client";
+import type {
+  createFoodSchema, updateFoodSchema,
+  createCategorySchema, updateCategorySchema,
+  createSubCategorySchema, updateSubCategorySchema,
+  createVariantSchema, updateVariantSchema,
+  createAddonSchema, updateAddonSchema,
+  createAddonItemSchema, updateAddonItemSchema,
+  updateNutritionSchema,
+  createIngredientSchema,
+  createAllergenSchema,
+  createPriceSchema,
+  createDiscountSchema,
+  createTagSchema,
+  createLabelSchema,
+  updateAvailabilitySchema,
+  createScheduleSchema,
+  updateVisibilitySchema,
+} from "../validations/adminFood.validation";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import { toPrisma } from "../utils/prismaUtils";
@@ -6,7 +25,7 @@ import prisma from "../lib/prisma";
 
 // ─── Food CRUD ─────────────────────────────────────────────
 
-const createFood = catchServiceAsync(async (data: Record<string, any>) => {
+const createFood = catchServiceAsync(async (data: InferType<typeof createFoodSchema>) => {
   const existing = await prisma.food.findUnique({ where: { slug: data.slug } });
   if (existing) throw new AppError(400, "A food with this slug already exists");
 
@@ -38,7 +57,7 @@ const createFood = catchServiceAsync(async (data: Record<string, any>) => {
       nutrition: { create: {} },
       rating: { create: {} },
       visibility: { create: {} },
-    } as any,
+    } as unknown as Prisma.FoodCreateInput,
     include: {
       category: { select: { id: true, name: true, slug: true } },
       nutrition: true,
@@ -48,7 +67,7 @@ const createFood = catchServiceAsync(async (data: Record<string, any>) => {
   });
 });
 
-const updateFood = catchServiceAsync(async (id: string, data: Record<string, any>) => {
+const updateFood = catchServiceAsync(async (id: string, data: InferType<typeof updateFoodSchema>) => {
   const food = await prisma.food.findFirst({ where: { id, deletedAt: null } });
   if (!food) throw new AppError(404, "Food not found");
 
@@ -74,14 +93,14 @@ const deleteFood = catchServiceAsync(async (id: string) => {
 
 // ─── Category CRUD ─────────────────────────────────────────
 
-const createCategory = catchServiceAsync(async (data: Record<string, any>) => {
+const createCategory = catchServiceAsync(async (data: InferType<typeof createCategorySchema>) => {
   const existing = await prisma.category.findUnique({ where: { slug: data.slug } });
   if (existing) throw new AppError(400, "A category with this slug already exists");
 
   return prisma.category.create({ data: toPrisma<Prisma.CategoryCreateInput>(data) });
 });
 
-const updateCategory = catchServiceAsync(async (id: string, data: Record<string, any>) => {
+const updateCategory = catchServiceAsync(async (id: string, data: InferType<typeof updateCategorySchema>) => {
   const cat = await prisma.category.findFirst({ where: { id, deletedAt: null } });
   if (!cat) throw new AppError(404, "Category not found");
 
@@ -108,7 +127,7 @@ const deleteCategory = catchServiceAsync(async (id: string) => {
 // ─── SubCategory CRUD ──────────────────────────────────────
 
 const createSubCategory = catchServiceAsync(
-  async (categoryId: string, data: Record<string, any>) => {
+  async (categoryId: string, data: InferType<typeof createSubCategorySchema>) => {
     const cat = await prisma.category.findFirst({ where: { id: categoryId, deletedAt: null } });
     if (!cat) throw new AppError(404, "Category not found");
 
@@ -119,7 +138,7 @@ const createSubCategory = catchServiceAsync(
   },
 );
 
-const updateSubCategory = catchServiceAsync(async (id: string, data: Record<string, any>) => {
+const updateSubCategory = catchServiceAsync(async (id: string, data: InferType<typeof updateSubCategorySchema>) => {
   const sub = await prisma.subCategory.findFirst({ where: { id, deletedAt: null } });
   if (!sub) throw new AppError(404, "SubCategory not found");
 
@@ -146,7 +165,7 @@ const deleteSubCategory = catchServiceAsync(async (id: string) => {
 // ─── Variant CRUD ──────────────────────────────────────────
 
 const createVariant = catchServiceAsync(
-  async (foodId: string, data: Record<string, any>) => {
+  async (foodId: string, data: InferType<typeof createVariantSchema>) => {
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
@@ -154,7 +173,7 @@ const createVariant = catchServiceAsync(
   },
 );
 
-const updateVariant = catchServiceAsync(async (id: string, data: Record<string, any>) => {
+const updateVariant = catchServiceAsync(async (id: string, data: InferType<typeof updateVariantSchema>) => {
   const variant = await prisma.foodVariant.findUnique({ where: { id } });
   if (!variant) throw new AppError(404, "Variant not found");
 
@@ -171,7 +190,7 @@ const deleteVariant = catchServiceAsync(async (id: string) => {
 // ─── Addon CRUD ────────────────────────────────────────────
 
 const createAddon = catchServiceAsync(
-  async (foodId: string, data: Record<string, any>) => {
+  async (foodId: string, data: InferType<typeof createAddonSchema>) => {
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
@@ -179,7 +198,7 @@ const createAddon = catchServiceAsync(
   },
 );
 
-const updateAddon = catchServiceAsync(async (id: string, data: Record<string, any>) => {
+const updateAddon = catchServiceAsync(async (id: string, data: InferType<typeof updateAddonSchema>) => {
   const addon = await prisma.foodAddon.findUnique({ where: { id } });
   if (!addon) throw new AppError(404, "Addon group not found");
 
@@ -201,7 +220,7 @@ const deleteAddon = catchServiceAsync(async (id: string) => {
 // ─── Addon Item CRUD ───────────────────────────────────────
 
 const createAddonItem = catchServiceAsync(
-  async (addonId: string, data: Record<string, any>) => {
+  async (addonId: string, data: InferType<typeof createAddonItemSchema>) => {
     const addon = await prisma.foodAddon.findUnique({ where: { id: addonId } });
     if (!addon) throw new AppError(404, "Addon group not found");
 
@@ -209,7 +228,7 @@ const createAddonItem = catchServiceAsync(
   },
 );
 
-const updateAddonItem = catchServiceAsync(async (id: string, data: Record<string, any>) => {
+const updateAddonItem = catchServiceAsync(async (id: string, data: InferType<typeof updateAddonItemSchema>) => {
   const item = await prisma.foodAddonItem.findUnique({ where: { id } });
   if (!item) throw new AppError(404, "Addon item not found");
 
@@ -233,7 +252,7 @@ const getNutrition = catchServiceAsync(async (foodId: string) => {
 });
 
 const updateNutrition = catchServiceAsync(
-  async (foodId: string, data: Record<string, any>) => {
+  async (foodId: string, data: InferType<typeof updateNutritionSchema>) => {
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
@@ -248,7 +267,7 @@ const updateNutrition = catchServiceAsync(
 // ─── Ingredients ───────────────────────────────────────────
 
 const createIngredient = catchServiceAsync(
-  async (foodId: string, data: Record<string, any>) => {
+  async (foodId: string, data: InferType<typeof createIngredientSchema>) => {
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
@@ -266,7 +285,7 @@ const deleteIngredient = catchServiceAsync(async (id: string) => {
 // ─── Allergens ─────────────────────────────────────────────
 
 const createAllergen = catchServiceAsync(
-  async (foodId: string, data: Record<string, any>) => {
+  async (foodId: string, data: InferType<typeof createAllergenSchema>) => {
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
@@ -284,7 +303,7 @@ const deleteAllergen = catchServiceAsync(async (id: string) => {
 // ─── Prices ────────────────────────────────────────────────
 
 const createPrice = catchServiceAsync(
-  async (foodId: string, data: Record<string, any>) => {
+  async (foodId: string, data: InferType<typeof createPriceSchema>) => {
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
@@ -295,7 +314,7 @@ const createPrice = catchServiceAsync(
 // ─── Discounts ─────────────────────────────────────────────
 
 const createDiscount = catchServiceAsync(
-  async (foodId: string, data: Record<string, any>) => {
+  async (foodId: string, data: InferType<typeof createDiscountSchema>) => {
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
@@ -342,7 +361,7 @@ const removeFoodTag = catchServiceAsync(async (foodId: string, tagId: string) =>
   return prisma.foodTagMapping.delete({ where: { id: mapping.id } });
 });
 
-const createTag = catchServiceAsync(async (data: Record<string, any>) => {
+const createTag = catchServiceAsync(async (data: InferType<typeof createTagSchema>) => {
   const existing = await prisma.foodTag.findUnique({ where: { slug: data.slug } });
   if (existing) throw new AppError(400, "A tag with this slug already exists");
 
@@ -352,7 +371,7 @@ const createTag = catchServiceAsync(async (data: Record<string, any>) => {
 // ─── Labels ────────────────────────────────────────────────
 
 const createLabel = catchServiceAsync(
-  async (foodId: string, data: Record<string, any>) => {
+  async (foodId: string, data: InferType<typeof createLabelSchema>) => {
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
@@ -370,7 +389,7 @@ const deleteLabel = catchServiceAsync(async (id: string) => {
 // ─── Availability ──────────────────────────────────────────
 
 const updateAvailability = catchServiceAsync(
-  async (foodId: string, data: Record<string, any>) => {
+  async (foodId: string, data: InferType<typeof updateAvailabilitySchema>) => {
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
@@ -385,7 +404,7 @@ const updateAvailability = catchServiceAsync(
 // ─── Schedule ──────────────────────────────────────────────
 
 const createSchedule = catchServiceAsync(
-  async (foodId: string, data: Record<string, any>) => {
+  async (foodId: string, data: InferType<typeof createScheduleSchema>) => {
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
@@ -403,7 +422,7 @@ const deleteSchedule = catchServiceAsync(async (id: string) => {
 // ─── Visibility ────────────────────────────────────────────
 
 const updateVisibility = catchServiceAsync(
-  async (foodId: string, data: Record<string, any>) => {
+  async (foodId: string, data: InferType<typeof updateVisibilitySchema>) => {
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 

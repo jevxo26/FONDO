@@ -9,7 +9,7 @@ export const createToken = (id: string, email: string, role: string): string => 
     },
     (process.env.JWT_SECRET as string) || "fallback_secret",
     {
-      expiresIn: (process.env.JWT_EXPIRES_IN || "30d") as any,
+      expiresIn: (process.env.JWT_EXPIRES_IN || "30d") as jwt.SignOptions["expiresIn"],
     },
   );
 };
@@ -21,7 +21,7 @@ export const createRefreshToken = (id: string): string => {
     },
     (process.env.JWT_REFRESH_SECRET as string) || "refresh_secret",
     {
-      expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || "7d") as any,
+      expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || "7d") as jwt.SignOptions["expiresIn"],
     },
   );
 };

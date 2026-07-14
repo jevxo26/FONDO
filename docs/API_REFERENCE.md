@@ -1,4 +1,4 @@
-# FONDO — API Reference (Compressed)
+# FONDO — API Reference
 
 > **Full spec:** `API.md`  
 > **Base URL:** `http://localhost:3000/api`  

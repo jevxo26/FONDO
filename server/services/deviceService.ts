@@ -1,3 +1,5 @@
+import type { InferType } from "yup";
+import type { registerDeviceSchema } from "../validations/device.validation";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import prisma from "../lib/prisma";
@@ -10,7 +12,7 @@ const listDevices = catchServiceAsync(async (userId: string) => {
 });
 
 const registerDevice = catchServiceAsync(
-  async (userId: string, data: Record<string, any>) => {
+  async (userId: string, data: InferType<typeof registerDeviceSchema>) => {
     const existing = await prisma.userDevice.findFirst({
       where: { userId, deviceId: data.deviceId },
     });

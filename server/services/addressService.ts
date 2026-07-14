@@ -1,3 +1,5 @@
+import type { InferType } from "yup";
+import type { createAddressSchema, updateAddressSchema } from "../validations/address.validation";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import prisma from "../lib/prisma";
@@ -10,7 +12,7 @@ const listAddresses = catchServiceAsync(async (userId: string) => {
 });
 
 const createAddress = catchServiceAsync(
-  async (userId: string, data: Record<string, any>) => {
+  async (userId: string, data: InferType<typeof createAddressSchema>) => {
     if (data.isDefault) {
       await prisma.userAddress.updateMany({
         where: { userId, isDefault: true },
@@ -45,7 +47,7 @@ const createAddress = catchServiceAsync(
 );
 
 const updateAddress = catchServiceAsync(
-  async (userId: string, addressId: string, data: Record<string, any>) => {
+  async (userId: string, addressId: string, data: InferType<typeof updateAddressSchema>) => {
     const address = await prisma.userAddress.findFirst({
       where: { id: addressId, userId, deletedAt: null },
     });

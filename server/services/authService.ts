@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
+import type { Prisma } from "@prisma/client";
 import AppError from "../utils/AppError";
 import { encryptPassword, isPasswordValid } from "../utils/bcryptService";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
@@ -93,7 +94,7 @@ const registerUser = catchServiceAsync(
         phone: data.phone,
         email: data.email,
         password: hashedPassword,
-        gender: data.gender as any,
+        gender: data.gender as Prisma.UserCreateInput["gender"],
         avatar: data.avatar,
         dateOfBirth: data.dateOfBirth,
         profile: { create: {} },

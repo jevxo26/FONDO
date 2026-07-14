@@ -75,7 +75,7 @@ const deleteMe = catchServiceAsync(async (id: string) => {
 
   return prisma.user.update({
     where: { id },
-    data: { deletedAt: new Date(), status: "INACTIVE" as any },
+    data: { deletedAt: new Date(), status: "INACTIVE" as Prisma.UserUpdateInput["status"] },
     select: sendUserDataAsResponse,
   });
 });

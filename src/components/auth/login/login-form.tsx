@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
+import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import { FormInput } from "../forms-input";
 
-export function LoginForm() {
+interface LoginFormProps {
+  onSubmit: (data: { identity: string; password: string }) => void;
+  loading?: boolean;
+}
+
+export function LoginForm({ onSubmit, loading }: LoginFormProps) {
   const [showPass, setShowPass] = useState(false);
-  const { register } = useFormContext();
+  const { register, handleSubmit } = useFormContext();
 
   return (
     <div className="flex flex-col gap-6 animate-fadeIn w-full max-w-md mx-auto">
@@ -17,7 +23,6 @@ export function LoginForm() {
       </div>
 
       <div className="flex flex-col gap-4">
-        {/* Identity Input Field */}
         <FormInput
           label="Phone or Email"
           type="text"
@@ -26,7 +31,6 @@ export function LoginForm() {
           {...register("identity", { required: true })}
         />
 
-        {/* Secure Password Input Field */}
         <div className="flex flex-col gap-1">
           <FormInput
             label="Password"
@@ -45,26 +49,29 @@ export function LoginForm() {
             {...register("password", { required: true })}
           />
           <div className="text-right mt-1">
-            <span className="text-[11px] text-[#9C6B26] font-semibold font-sans hover:underline cursor-pointer">
+            <Link
+              href="/forgot-password"
+              className="text-[11px] text-[#9C6B26] font-semibold font-sans hover:underline cursor-pointer"
+            >
               Forgot Password?
-            </span>
+            </Link>
           </div>
         </div>
 
-        {/* Action Button */}
         <button
           type="submit"
-          className="w-full h-11 bg-[#1B0E08] text-white rounded-xl text-xs font-bold mt-2 hover:bg-[#1B0E08]/90 transition-colors tracking-wider shadow-sm"
+          disabled={loading}
+          className="w-full h-11 bg-[#1B0E08] text-white rounded-xl text-xs font-bold mt-2 hover:bg-[#1B0E08]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors tracking-wider shadow-sm flex items-center justify-center gap-2"
         >
-          Sign In
+          {loading ? <Loader2 className="size-4 animate-spin" /> : null}
+          {loading ? "Signing In..." : "Sign In"}
         </button>
 
-        {/* Navigation Redirect Link */}
         <p className="text-center font-sans text-[11px] text-[#1B0E08]/50 mt-2">
           Don&apos;t have an account?{" "}
-          <span className="text-[#9C6B26] font-bold hover:underline cursor-pointer">
+          <Link href="/register" className="text-[#9C6B26] font-bold hover:underline cursor-pointer">
             Create Account
-          </span>
+          </Link>
         </p>
       </div>
     </div>

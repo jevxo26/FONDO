@@ -21,10 +21,10 @@
 
 | | Feature | Workflow Module |
 |---|---|---|
-| 🟡 | [Auth](#1-auth) | Module 1 |
-| 🟡 | [Users & Profile](#2-users--profile) | Module 1 |
-| ⚪ | [Food Catalog (Customer)](#3-food-catalog-customer) | Module 4 |
-| ⚪ | [Food Admin (CRUD)](#4-food-admin-crud) | Module 4 |
+| 🟢 | [Auth](#1-auth) | Module 1 |
+| 🟢 | [Users & Profile](#2-users--profile) | Module 1 |
+| 🟢 | [Food Catalog (Customer)](#3-food-catalog-customer) | Module 4 |
+| 🟢 | [Food Admin (CRUD)](#4-food-admin-crud) | Module 4 |
 | ⚪ | [Cart & Checkout](#5-cart--checkout) | Module 7 |
 | ⚪ | [Orders](#6-orders) | Module 7 |
 | ⚪ | [Customers (Admin)](#7-customers-admin) | Module 1 |
@@ -76,9 +76,9 @@ Models with `deletedAt` in the workflow doc use soft delete. Send `DELETE` reque
 
 ## 1. Auth
 
-🟡 **Partial** — only `POST /auth/login` is built. The rest are scaffolded (routes/commented) or planned.
+🟢 **All 10 endpoints built.**
 
-### 🟡 `POST /auth/register`
+### 🟢 `POST /auth/register`
 Create a new customer account.
 
 **Request**
@@ -122,8 +122,8 @@ Login with phone/email and password.
 }
 ```
 
-### ⚪ `POST /auth/login/otp`
-Request OTP for phone login.
+### 🟢 `POST /auth/otp/send`
+Send OTP for a specific purpose.
 
 **Request**
 ```json
@@ -135,7 +135,7 @@ Request OTP for phone login.
 { "otpSent": true, "expiresIn": 300 }
 ```
 
-### ⚪ `POST /auth/otp/verify`
+### 🟢 `POST /auth/otp/verify`
 Verify OTP and log in.
 
 **Request**
@@ -148,20 +148,7 @@ Verify OTP and log in.
 { "verified": true, "accessToken": "String", "refreshToken": "String", "user": {} }
 ```
 
-### ⚪ `POST /auth/otp/send`
-Send OTP for a specific purpose.
-
-**Request**
-```json
-{ "phone": "*String (or email)", "purpose": "*Enum" }
-```
-
-**Response**
-```json
-{ "sent": true, "expiresIn": 300 }
-```
-
-### ⚪ `POST /auth/refresh`
+### 🟢 `POST /auth/refresh`
 Exchange refresh token for a new access token.
 
 **Request**
@@ -174,7 +161,7 @@ Exchange refresh token for a new access token.
 { "accessToken": "String", "refreshToken": "String" }
 ```
 
-### ⚪ `POST /auth/logout`
+### 🟢 `POST /auth/logout`
 Invalidate current session.
 
 **Auth:** JWT  
@@ -188,7 +175,7 @@ Invalidate current session.
 { "message": "Logged out" }
 ```
 
-### ⚪ `POST /auth/forgot-password`
+### 🟢 `POST /auth/forgot-password`
 Request password reset OTP/email.
 
 **Request**
@@ -201,7 +188,7 @@ Request password reset OTP/email.
 { "resetToken": "String", "expiresIn": 600 }
 ```
 
-### ⚪ `POST /auth/reset-password`
+### 🟢 `POST /auth/reset-password`
 Reset password using token from forgot-password.
 
 **Request**
@@ -214,7 +201,7 @@ Reset password using token from forgot-password.
 { "message": "Password reset successful" }
 ```
 
-### ⚪ `PATCH /auth/change-password`
+### 🟢 `PATCH /auth/change-password`
 Change password while logged in.
 
 **Auth:** JWT  
@@ -232,7 +219,7 @@ Change password while logged in.
 
 ## 2. Users & Profile
 
-🟡 **Partial** — `GET /users/me`, `PATCH /users/me` exist. Admin routes and sub-resources are planned.
+🟢 **All 14 endpoints built. Admin user list/create/get/update also built.**
 
 ### 🟢 `GET /users/me`
 Get current user profile.
@@ -279,39 +266,39 @@ Update own profile.
 
 **Response** `200` — updated user object
 
-### ⚪ `DELETE /users/me`
+### 🟢 `DELETE /users/me`
 Delete own account.
 
 **Auth:** JWT (Customer)  
 **Response** `200`
 
-### ⚪ `GET /users`
+### 🟢 `GET /users`
 List users (admin).
 
 **Auth:** JWT (SuperAdmin, Admin)  
 **Query:** `?page=1&limit=20&role=CUSTOMER&search=&status=`  
 **Response** — paginated list of user objects
 
-### ⚪ `GET /users/:id`
+### 🟢 `POST /users`
+Create user (admin).
+
+**Auth:** None (used for initial setup)
+
+### 🟢 `GET /users/:id`
 Get single user.
 
 **Auth:** JWT (Self, SuperAdmin, Admin)  
 **Response** — full user object
 
-### ⚪ `PATCH /users/:id`
+### 🟢 `PATCH /users/:id`
 Update any user (admin).
 
 **Auth:** JWT (SuperAdmin, Admin)  
 **Request** — same as PATCH /users/me
 
-### ⚪ `DELETE /users/:id`
-Soft-delete user.
-
-**Auth:** JWT (SuperAdmin)
-
 ### --- Addresses ---
 
-### ⚪ `GET /users/:userId/addresses`
+### 🟢 `GET /users/me/addresses`
 List user addresses.
 
 **Response**
@@ -323,7 +310,7 @@ List user addresses.
 }
 ```
 
-### ⚪ `POST /users/:userId/addresses`
+### 🟢 `POST /users/me/addresses`
 Add address.
 
 **Request**
@@ -352,21 +339,21 @@ Add address.
 
 **Response** `201` — address object
 
-### ⚪ `PATCH /addresses/:id`
+### 🟢 `PATCH /users/me/addresses/:id`
 Update address.
 
-### ⚪ `DELETE /addresses/:id`
+### 🟢 `DELETE /users/me/addresses/:id`
 Soft-delete address.
 
-### ⚪ `PATCH /addresses/:id/default`
+### 🟢 `PATCH /users/me/addresses/:id/default`
 Set as default address.
 
 ### --- Devices ---
 
-### ⚪ `GET /users/:userId/devices`
+### 🟢 `GET /users/me/devices`
 List registered devices.
 
-### ⚪ `POST /users/:userId/devices`
+### 🟢 `POST /users/me/devices`
 Register device for push notifications.
 
 **Request**
@@ -383,15 +370,15 @@ Register device for push notifications.
 }
 ```
 
-### ⚪ `DELETE /devices/:id`
+### 🟢 `DELETE /users/me/devices/:id`
 Unregister device.
 
 ### --- Notification Settings ---
 
-### ⚪ `GET /users/:userId/notification-settings`
+### 🟢 `GET /users/me/notification-settings`
 Get preferences.
 
-### ⚪ `PATCH /users/:userId/notification-settings`
+### 🟢 `PATCH /users/me/notification-settings`
 Update preferences.
 
 **Request**
@@ -410,16 +397,16 @@ Update preferences.
 
 ### --- Login History ---
 
-### ⚪ `GET /users/:userId/login-history`
-List login attempts. **Auth:** JWT (Self, SuperAdmin)
+### 🟢 `GET /users/me/login-history`
+List login attempts (paginated). **Auth:** JWT (Self)
 
 ---
 
 ## 3. Food Catalog (Customer)
 
-⚪ **Planned** — not started.
+🟢 **All 10 endpoints built. Public — no auth required except favorites/reviews.**
 
-### `GET /foods`
+### 🟢 `GET /foods`
 Browse foods with filters and pagination. Public.
 
 **Query**
@@ -477,7 +464,7 @@ Browse foods with filters and pagination. Public.
 }
 ```
 
-### `GET /foods/:id`
+### 🟢 `GET /foods/:id`
 Get single food by ID.
 
 **Response** — same item shape as above, plus:
@@ -495,38 +482,47 @@ Get single food by ID.
 }
 ```
 
-### `GET /foods/slug/:slug`
+### 🟢 `GET /foods/slug/:slug`
 Get food by slug — same response as `/:id`.
 
-### `GET /categories`
-List all food categories.
+### 🟢 `GET /foods/categories/list`
+List all food categories with subcategories and food counts.
 
 **Response**
 ```json
-{ "items": [ { "id": "Int", "name": "String", "slug": "String", "description": "String", "icon": "String", "image": "String (URL)", "sortOrder": "Int", "subCategories": [ { "id": "Int", "name": "String", "slug": "String" } ] } ] }
+{ "items": [ { "id": "Int", "name": "String", "slug": "String", "description": "String", "icon": "String", "image": "String (URL)", "sortOrder": "Int", "foodCount": "Int", "subCategories": [ { "id": "Int", "name": "String", "slug": "String", "foodCount": "Int" } ] } ] }
 ```
 
-### `GET /categories/:id`
+### 🟢 `GET /foods/categories/:id`
 Get category with subcategories and food count.
 
-### `GET /tags`
-List all food tags (e.g. Healthy, High Protein, Keto, Popular).
+### 🟢 `GET /foods/tags/list`
+List all food tags with usage counts (e.g. Healthy, High Protein, Keto, Popular).
 
 **Response**
 ```json
-{ "items": [ { "id": "Int", "name": "String", "slug": "String" } ] }
+{ "items": [ { "id": "Int", "name": "String", "slug": "String", "foodCount": "Int" } ] }
 ```
 
-### `POST /foods/:foodId/favorite`
-Toggle favorite for current user.
+### 🟢 `POST /foods/:foodId/favorite`
+Add food to favorites for current user.
 
 **Auth:** JWT (Customer)  
 **Response**
 ```json
-{ "isFavorited": "Boolean" }
+{ "isFavorited": true }
 ```
 
-### `GET /foods/:foodId/reviews`
+### 🟢 `DELETE /foods/:foodId/favorite`
+Remove food from favorites for current user.
+
+**Auth:** JWT (Customer)  
+**Response**
+```json
+{ "isFavorited": false }
+```
+
+### 🟢 `GET /foods/:foodId/reviews`
 List reviews for a food.
 
 **Query:** `?page=1&limit=10`  
@@ -535,7 +531,7 @@ List reviews for a food.
 { "items": [ { "id": "Int", "customerName": "String", "avatar": "String", "rating": "Int", "review": "Text", "createdAt": "DateTime" } ], "pagination": {} }
 ```
 
-### `POST /foods/:foodId/reviews`
+### 🟢 `POST /foods/:foodId/reviews`
 Submit a review.
 
 **Auth:** JWT (Customer)  
@@ -550,11 +546,11 @@ Submit a review.
 
 ## 4. Food Admin (CRUD)
 
-⚪ **Planned** — not started.
+🟢 **All 34 endpoints built. Mounted at `/api/admin` prefix.**
 
-All endpoints in this section require **Auth:** JWT (Admin) unless noted.
+All endpoints in this section require **Auth:** JWT (Admin | SuperAdmin) unless noted.
 
-### `POST /foods`
+### 🟢 `POST /foods`
 Create a new food item.
 
 **Request**
@@ -586,147 +582,147 @@ Create a new food item.
 
 **Response** `201` — food object
 
-### `PUT /foods/:id`
+### 🟢 `PUT /foods/:id`
 Update food — same body as POST (PUT = full replace).
 
-### `DELETE /foods/:id`
+### 🟢 `DELETE /foods/:id`
 Soft-delete food.
 
 ### --- Category CRUD ---
 
-### `POST /categories`
+### 🟢 `POST /categories`
 ```json
 { "name": "*String", "slug": "*String (unique)", "description": "String", "icon": "String", "image": "String (URL)", "sortOrder": "Int", "status": "String" }
 ```
 
-### `PUT /categories/:id`
+### 🟢 `PUT /categories/:id`
 Update category.
 
-### `DELETE /categories/:id`
+### 🟢 `DELETE /categories/:id`
 Soft-delete category.
 
-### `POST /categories/:categoryId/subcategories`
+### 🟢 `POST /categories/:categoryId/subcategories`
 ```json
 { "name": "*String", "slug": "*String (unique)", "description": "String", "icon": "String", "image": "String (URL)", "sortOrder": "Int", "status": "String" }
 ```
 
-### `PUT /subcategories/:id`
+### 🟢 `PUT /subcategories/:id`
 Update subcategory.
 
-### `DELETE /subcategories/:id`
+### 🟢 `DELETE /subcategories/:id`
 Soft-delete subcategory.
 
 ### --- Variant CRUD ---
 
-### `POST /foods/:foodId/variants`
+### 🟢 `POST /foods/:foodId/variants`
 ```json
 { "name": "*String", "description": "String", "price": "*Float", "discountPrice": "Float", "weight": "String", "servingSize": "String", "status": "String" }
 ```
 
-### `PUT /variants/:id`
+### 🟢 `PUT /variants/:id`
 Update variant.
 
-### `DELETE /variants/:id`
+### 🟢 `DELETE /variants/:id`
 Delete variant.
 
 ### --- Addon CRUD ---
 
-### `POST /foods/:foodId/addons`
+### 🟢 `POST /foods/:foodId/addons`
 ```json
 { "name": "*String", "isRequired": "Boolean", "maxSelection": "Int", "status": "String" }
 ```
 
-### `PUT /addons/:id`
+### 🟢 `PUT /addons/:id`
 Update addon group.
 
-### `DELETE /addons/:id`
+### 🟢 `DELETE /addons/:id`
 Delete addon group.
 
-### `POST /addons/:addonId/items`
+### 🟢 `POST /addons/:addonId/items`
 ```json
 { "name": "*String", "price": "*Float", "image": "String (URL)", "status": "String" }
 ```
 
-### `PUT /addon-items/:id`
+### 🟢 `PUT /addon-items/:id`
 Update addon item.
 
-### `DELETE /addon-items/:id`
+### 🟢 `DELETE /addon-items/:id`
 Delete addon item.
 
 ### --- Nutrition, Ingredients, Allergens ---
 
-### `GET /foods/:foodId/nutrition`
+### 🟢 `GET /foods/:foodId/nutrition`
 Get nutrition info.
 
-### `PATCH /foods/:foodId/nutrition`
+### 🟢 `PATCH /foods/:foodId/nutrition`
 ```json
 { "calories": "Float", "protein": "Float", "fat": "Float", "carbohydrate": "Float", "fiber": "Float", "sugar": "Float", "sodium": "Float", "cholesterol": "Float", "servingSize": "String" }
 ```
 
-### `POST /foods/:foodId/ingredients`
+### 🟢 `POST /foods/:foodId/ingredients`
 ```json
 { "ingredientName": "*String", "quantity": "String", "unit": "String", "isOptional": "Boolean" }
 ```
 
-### `DELETE /ingredients/:id`
+### 🟢 `DELETE /ingredients/:id`
 
-### `POST /foods/:foodId/allergens`
+### 🟢 `POST /foods/:foodId/allergens`
 ```json
 { "allergen": "*String", "description": "String" }
 ```
 
-### `DELETE /allergens/:id`
+### 🟢 `DELETE /allergens/:id`
 
 ### --- Pricing & Discounts ---
 
-### `POST /foods/:foodId/prices`
+### 🟢 `POST /foods/:foodId/prices`
 ```json
 { "basePrice": "*Float", "salePrice": "Float", "currency": "String", "effectiveFrom": "Date", "effectiveTo": "Date" }
 ```
 
-### `POST /foods/:foodId/discounts`
+### 🟢 `POST /foods/:foodId/discounts`
 ```json
 { "discountType": "*Enum (PERCENTAGE|FLAT)", "discountValue": "*Float", "startDate": "Date", "endDate": "Date" }
 ```
 
-### `DELETE /discounts/:id`
+### 🟢 `DELETE /discounts/:id`
 
 ### --- Tags & Labels ---
 
-### `POST /foods/:foodId/tags`
+### 🟢 `POST /foods/:foodId/tags`
 ```json
 { "tagIds": "*[Int]" }
 ```
 
-### `DELETE /foods/:foodId/tags/:tagId`
+### 🟢 `DELETE /foods/:foodId/tags/:tagId`
 
-### `POST /tags`
+### 🟢 `POST /tags`
 ```json
 { "name": "*String", "slug": "*String" }
 ```
 
-### `POST /foods/:foodId/labels`
+### 🟢 `POST /foods/:foodId/labels`
 ```json
 { "label": "*String", "color": "String" }
 ```
 
-### `DELETE /labels/:id`
+### 🟢 `DELETE /labels/:id`
 
 ### --- Schedule & Availability ---
 
-### `PATCH /foods/:foodId/availability`
+### 🟢 `PATCH /foods/:foodId/availability`
 ```json
 { "isAvailable": "Boolean", "availableFrom": "Time", "availableTo": "Time", "availableDays": "[String]" }
 ```
 
-### `POST /foods/:foodId/schedule`
+### 🟢 `POST /foods/:foodId/schedules`
 ```json
 { "mealType": "*Enum (BREAKFAST|LUNCH|DINNER|SNACKS)", "startTime": "String (HH:mm)", "endTime": "String (HH:mm)", "status": "String" }
 ```
 
-### `DELETE /schedules/:id`
+### 🟢 `DELETE /schedules/:id`
 
-### `PATCH /foods/:foodId/visibility`
+### 🟢 `PATCH /foods/:foodId/visibility`
 ```json
 { "isFeatured": "Boolean", "isRecommended": "Boolean", "displayOrder": "Int" }
 ```
@@ -2675,4 +2671,4 @@ Basic health check. **Auth:** None
 
 > **Document version:** 2.0.0  
 > **Field reference:** See `docs/FONDO – Complete System Workflow.md` Modules 1–15 for all model field definitions  
-> **Last updated:** 2026-07-09
+> **Last updated:** 2026-07-14

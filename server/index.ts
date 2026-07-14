@@ -11,6 +11,7 @@ import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import vendorRoutes from "./routes/vendorRoutes";
 import foodRoutes from "./routes/foodRoutes";
+import adminFoodRoutes from "./routes/adminFoodRoutes";
 import prisma from "./lib/prisma";
 
 const dev = env.NODE_ENV !== "production";
@@ -70,6 +71,7 @@ app
     server.use("/api/vendor", vendorRoutes);
     server.use("/api/auth", authRoutes);
 server.use("/api/foods", foodRoutes);
+server.use("/api/admin", adminFoodRoutes);
 
     // Next.js handler for all other routes
     server.use((req: Request, res: Response) => {

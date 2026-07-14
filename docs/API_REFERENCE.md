@@ -18,18 +18,16 @@
 
 | Method | Endpoint | Auth | Status |
 |--------|----------|------|--------|
-| POST | `/auth/register` | — | 🟡 Partial |
+| POST | `/auth/register` | — | 🟢 Built |
 | POST | `/auth/login` | — | 🟢 Built |
-| POST | `/auth/login/otp` | — | ⚪ Planned |
-| POST | `/auth/otp/verify` | — | ⚪ Planned |
-| POST | `/auth/otp/send` | — | ⚪ Planned |
-| POST | `/auth/refresh` | — | ⚪ Planned |
-| POST | `/auth/logout` | JWT | ⚪ Planned |
-| POST | `/auth/forgot-password` | — | ⚪ Planned |
-| POST | `/auth/reset-password` | — | ⚪ Planned |
-| PATCH | `/auth/change-password` | JWT | ⚪ Planned |
-| POST | `/auth/social-login/google` | — | ⚪ Planned |
-| POST | `/auth/social-login/facebook` | — | ⚪ Planned |
+| POST | `/auth/otp/send` | — | 🟢 Built |
+| POST | `/auth/otp/verify` | — | 🟢 Built |
+| POST | `/auth/refresh` | — | 🟢 Built |
+| POST | `/auth/logout` | — | 🟢 Built |
+| GET | `/auth/me` | JWT | 🟢 Built |
+| POST | `/auth/forgot-password` | — | 🟢 Built |
+| POST | `/auth/reset-password` | — | 🟢 Built |
+| PATCH | `/auth/change-password` | JWT | 🟢 Built |
 
 ---
 
@@ -37,24 +35,24 @@
 
 | Method | Endpoint | Auth | Status |
 |--------|----------|------|--------|
-| GET | `/users/me` | JWT | 🟡 Partial |
-| PATCH | `/users/me` | JWT | 🟡 Partial |
-| DELETE | `/users/me` | JWT (Customer) | ⚪ Planned |
+| GET | `/users/me` | JWT | 🟢 Built |
+| PATCH | `/users/me` | JWT | 🟢 Built |
+| DELETE | `/users/me` | JWT | 🟢 Built |
 | GET | `/users` | JWT (Admin) | 🟢 Built |
-| GET | `/users/:id` | JWT (Self/Admin) | 🟢 Built |
-| PATCH | `/users/:id` | JWT (Admin) | 🟢 Built |
-| DELETE | `/users/:id` | JWT (SuperAdmin) | 🟡 Partial |
-| GET | `/users/:userId/addresses` | JWT | ⚪ Planned |
-| POST | `/users/:userId/addresses` | JWT | ⚪ Planned |
-| PATCH | `/addresses/:id` | JWT | ⚪ Planned |
-| DELETE | `/addresses/:id` | JWT | ⚪ Planned |
-| PATCH | `/addresses/:id/default` | JWT | ⚪ Planned |
-| GET | `/users/:userId/devices` | JWT | ⚪ Planned |
-| POST | `/users/:userId/devices` | JWT | ⚪ Planned |
-| DELETE | `/devices/:id` | JWT | ⚪ Planned |
-| GET | `/users/:userId/notification-settings` | JWT | ⚪ Planned |
-| PATCH | `/users/:userId/notification-settings` | JWT | ⚪ Planned |
-| GET | `/users/:userId/login-history` | JWT (Self/Admin) | ⚪ Planned |
+| POST | `/users` | — | 🟢 Built |
+| GET | `/users/:id` | JWT | 🟢 Built |
+| PATCH | `/users/:id` | JWT | 🟢 Built |
+| GET | `/users/me/addresses` | JWT | 🟢 Built |
+| POST | `/users/me/addresses` | JWT | 🟢 Built |
+| PATCH | `/users/me/addresses/:id` | JWT | 🟢 Built |
+| DELETE | `/users/me/addresses/:id` | JWT | 🟢 Built |
+| PATCH | `/users/me/addresses/:id/default` | JWT | 🟢 Built |
+| GET | `/users/me/devices` | JWT | 🟢 Built |
+| POST | `/users/me/devices` | JWT | 🟢 Built |
+| DELETE | `/users/me/devices/:id` | JWT | 🟢 Built |
+| GET | `/users/me/notification-settings` | JWT | 🟢 Built |
+| PATCH | `/users/me/notification-settings` | JWT | 🟢 Built |
+| GET | `/users/me/login-history` | JWT | 🟢 Built |
 
 ---
 
@@ -62,58 +60,61 @@
 
 | Method | Endpoint | Auth | Status |
 |--------|----------|------|--------|
-| GET | `/foods` | — | ⚪ Planned |
-| GET | `/foods/:id` | — | ⚪ Planned |
-| GET | `/foods/slug/:slug` | — | ⚪ Planned |
-| GET | `/categories` | — | ⚪ Planned |
-| GET | `/categories/:id` | — | ⚪ Planned |
-| GET | `/tags` | — | ⚪ Planned |
-| POST | `/foods/:foodId/favorite` | JWT (Customer) | ⚪ Planned |
-| GET | `/foods/:foodId/reviews` | — | ⚪ Planned |
-| POST | `/foods/:foodId/reviews` | JWT (Customer) | ⚪ Planned |
+| GET | `/foods` | — | 🟢 Built |
+| GET | `/foods/:id` | — | 🟢 Built |
+| GET | `/foods/slug/:slug` | — | 🟢 Built |
+| GET | `/foods/categories/list` | — | 🟢 Built |
+| GET | `/foods/categories/:id` | — | 🟢 Built |
+| GET | `/foods/tags/list` | — | 🟢 Built |
+| POST | `/foods/:foodId/favorite` | JWT | 🟢 Built |
+| DELETE | `/foods/:foodId/favorite` | JWT | 🟢 Built |
+| GET | `/foods/:foodId/reviews` | — | 🟢 Built |
+| POST | `/foods/:foodId/reviews` | JWT | 🟢 Built |
 
 ---
 
 ## 4. Food Admin (CRUD)
 
-| Method | Endpoint | Auth | Status |
-|--------|----------|------|--------|
-| POST | `/foods` | JWT (Admin) | ⚪ Planned |
-| PUT | `/foods/:id` | JWT (Admin) | ⚪ Planned |
-| DELETE | `/foods/:id` | JWT (Admin) | ⚪ Planned |
-| POST | `/categories` | JWT (Admin) | ⚪ Planned |
-| PUT | `/categories/:id` | JWT (Admin) | ⚪ Planned |
-| DELETE | `/categories/:id` | JWT (Admin) | ⚪ Planned |
-| POST | `/categories/:categoryId/subcategories` | JWT (Admin) | ⚪ Planned |
-| PUT | `/subcategories/:id` | JWT (Admin) | ⚪ Planned |
-| DELETE | `/subcategories/:id` | JWT (Admin) | ⚪ Planned |
-| POST | `/foods/:foodId/variants` | JWT (Admin) | ⚪ Planned |
-| PUT | `/variants/:id` | JWT (Admin) | ⚪ Planned |
-| DELETE | `/variants/:id` | JWT (Admin) | ⚪ Planned |
-| POST | `/foods/:foodId/addons` | JWT (Admin) | ⚪ Planned |
-| PUT | `/addons/:id` | JWT (Admin) | ⚪ Planned |
-| DELETE | `/addons/:id` | JWT (Admin) | ⚪ Planned |
-| POST | `/addons/:addonId/items` | JWT (Admin) | ⚪ Planned |
-| PUT | `/addon-items/:id` | JWT (Admin) | ⚪ Planned |
-| DELETE | `/addon-items/:id` | JWT (Admin) | ⚪ Planned |
-| GET | `/foods/:foodId/nutrition` | JWT (Admin) | ⚪ Planned |
-| PATCH | `/foods/:foodId/nutrition` | JWT (Admin) | ⚪ Planned |
-| POST | `/foods/:foodId/ingredients` | JWT (Admin) | ⚪ Planned |
-| DELETE | `/ingredients/:id` | JWT (Admin) | ⚪ Planned |
-| POST | `/foods/:foodId/allergens` | JWT (Admin) | ⚪ Planned |
-| DELETE | `/allergens/:id` | JWT (Admin) | ⚪ Planned |
-| POST | `/foods/:foodId/prices` | JWT (Admin) | ⚪ Planned |
-| POST | `/foods/:foodId/discounts` | JWT (Admin) | ⚪ Planned |
-| DELETE | `/discounts/:id` | JWT (Admin) | ⚪ Planned |
-| POST | `/foods/:foodId/tags` | JWT (Admin) | ⚪ Planned |
-| DELETE | `/foods/:foodId/tags/:tagId` | JWT (Admin) | ⚪ Planned |
-| POST | `/tags` | JWT (Admin) | ⚪ Planned |
-| POST | `/foods/:foodId/labels` | JWT (Admin) | ⚪ Planned |
-| DELETE | `/labels/:id` | JWT (Admin) | ⚪ Planned |
-| PATCH | `/foods/:foodId/availability` | JWT (Admin) | ⚪ Planned |
-| POST | `/foods/:foodId/schedule` | JWT (Admin) | ⚪ Planned |
-| DELETE | `/schedules/:id` | JWT (Admin) | ⚪ Planned |
-| PATCH | `/foods/:foodId/visibility` | JWT (Admin) | ⚪ Planned |
+All mounted at `/api/admin` prefix. Require JWT (Admin | SuperAdmin).
+
+| Method | Endpoint | Status |
+|--------|----------|--------|
+| POST | `/admin/foods` | 🟢 Built |
+| PUT | `/admin/foods/:id` | 🟢 Built |
+| DELETE | `/admin/foods/:id` | 🟢 Built |
+| POST | `/admin/categories` | 🟢 Built |
+| PUT | `/admin/categories/:id` | 🟢 Built |
+| DELETE | `/admin/categories/:id` | 🟢 Built |
+| POST | `/admin/categories/:categoryId/subcategories` | 🟢 Built |
+| PUT | `/admin/subcategories/:id` | 🟢 Built |
+| DELETE | `/admin/subcategories/:id` | 🟢 Built |
+| POST | `/admin/foods/:foodId/variants` | 🟢 Built |
+| PUT | `/admin/variants/:id` | 🟢 Built |
+| DELETE | `/admin/variants/:id` | 🟢 Built |
+| POST | `/admin/foods/:foodId/addons` | 🟢 Built |
+| PUT | `/admin/addons/:id` | 🟢 Built |
+| DELETE | `/admin/addons/:id` | 🟢 Built |
+| POST | `/admin/addons/:addonId/items` | 🟢 Built |
+| PUT | `/admin/addon-items/:id` | 🟢 Built |
+| DELETE | `/admin/addon-items/:id` | 🟢 Built |
+| GET | `/admin/foods/:foodId/nutrition` | 🟢 Built |
+| PATCH | `/admin/foods/:foodId/nutrition` | 🟢 Built |
+| POST | `/admin/foods/:foodId/ingredients` | 🟢 Built |
+| DELETE | `/admin/ingredients/:id` | 🟢 Built |
+| POST | `/admin/foods/:foodId/allergens` | 🟢 Built |
+| DELETE | `/admin/allergens/:id` | 🟢 Built |
+| POST | `/admin/foods/:foodId/prices` | 🟢 Built |
+| POST | `/admin/foods/:foodId/discounts` | 🟢 Built |
+| DELETE | `/admin/discounts/:id` | 🟢 Built |
+| POST | `/admin/foods/:foodId/tags` | 🟢 Built |
+| DELETE | `/admin/foods/:foodId/tags/:tagId` | 🟢 Built |
+| POST | `/admin/tags` | 🟢 Built |
+| POST | `/admin/foods/:foodId/labels` | 🟢 Built |
+| DELETE | `/admin/labels/:id` | 🟢 Built |
+| PATCH | `/admin/foods/:foodId/availability` | 🟢 Built |
+| POST | `/admin/foods/:foodId/schedules` | 🟢 Built |
+| DELETE | `/admin/schedules/:id` | 🟢 Built |
+| PATCH | `/admin/foods/:foodId/visibility` | 🟢 Built |
 
 ---
 

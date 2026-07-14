@@ -3,7 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { InventoryReportEntry } from "@/data/reports";
 import { DataTableColumnHeader } from "@/components/common/table";
-import { StatusDotBadge } from "./report-badges";
+import { StatusDotBadge } from "../report-badges";
 
 export const inventoryReportColumns: ColumnDef<InventoryReportEntry>[] = [
   {

@@ -2,7 +2,7 @@ import { BarChart3, TrendingUp, TrendingDown, Award, Medal } from "lucide-react"
 import { riderPerformanceData } from "@/data/riders";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { RiderPerformanceSection } from "@/components/dashboard/admin/riders/rider-performance-section";
+import { RiderPerformanceSection } from "@/components/dashboard/admin/riders/performance/rider-performance-section";
 import { GlassCard } from "@/components/dashboard/common/glass-card";
 
 export default function RidersPerformancePage() {

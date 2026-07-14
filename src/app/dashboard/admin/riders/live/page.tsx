@@ -2,7 +2,7 @@ import { MapPin, Truck, Clock, Navigation, Wifi } from "lucide-react";
 import { riders, riderLiveData } from "@/data/riders";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { RiderLiveCards } from "@/components/dashboard/admin/riders/rider-live-cards";
+import { RiderLiveCards } from "@/components/dashboard/admin/riders/live/rider-live-cards";
 import { GlassCard } from "@/components/dashboard/common/glass-card";
 
 export default function RidersLivePage() {

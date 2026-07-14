@@ -3,7 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { RevenueEntry } from "@/data/reports";
 import { DataTableColumnHeader } from "@/components/common/table";
-import { StatusDotBadge } from "./report-badges";
+import { StatusDotBadge } from "../report-badges";
 
 const sourceLabels: Record<string, { label: string; short: string }> = {
   PLATFORM_FEE: { label: "Platform Fee", short: "Fee" },

@@ -1,8 +1,8 @@
 import { Wallet, Download } from "lucide-react";
 import { riderEarnings } from "@/data/riders";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { RiderEarningsSection } from "@/components/dashboard/admin/riders/rider-earnings-section";
-import { RiderEarningsSummaryCards } from "@/components/dashboard/admin/riders/rider-earnings-summary-cards";
+import { RiderEarningsSection } from "@/components/dashboard/admin/riders/earnings/rider-earnings-section";
+import { RiderEarningsSummaryCards } from "@/components/dashboard/admin/riders/earnings/rider-earnings-summary-cards";
 import { Button } from "@/components/ui/button";
 
 export default function RidersEarningsPage() {

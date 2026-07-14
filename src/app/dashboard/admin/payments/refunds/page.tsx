@@ -1,8 +1,8 @@
 import { Undo2, Wallet } from "lucide-react";
 import { refunds } from "@/data/payments";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { RefundTableSection } from "@/components/dashboard/admin/payments/refund-table-section";
-import { RefundSummaryCards } from "@/components/dashboard/admin/payments/refund-summary-cards";
+import { RefundTableSection } from "@/components/dashboard/admin/payments/refunds/refund-table-section";
+import { RefundSummaryCards } from "@/components/dashboard/admin/payments/refunds/refund-summary-cards";
 import { DarkCard } from "@/components/dashboard/common/dark-card";
 import { GlassCard } from "@/components/dashboard/common/glass-card";
 

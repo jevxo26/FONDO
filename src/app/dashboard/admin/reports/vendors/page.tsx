@@ -2,7 +2,7 @@ import { Store, TrendingUp, DollarSign, Award, Download } from "lucide-react";
 import { vendorReportData } from "@/data/reports";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { ReportVendorsSection } from "@/components/dashboard/admin/reports/report-vendors-section";
+import { ReportVendorsSection } from "@/components/dashboard/admin/reports/vendors/report-vendors-section";
 import { DarkCard } from "@/components/dashboard/common/dark-card";
 import { GlassCard } from "@/components/dashboard/common/glass-card";
 import { Button } from "@/components/ui/button";

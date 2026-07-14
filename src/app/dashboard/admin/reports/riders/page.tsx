@@ -2,7 +2,7 @@ import { Truck, TrendingUp, Award, AlertTriangle, Download, DollarSign } from "l
 import { riderReportData } from "@/data/reports";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { ReportRidersSection } from "@/components/dashboard/admin/reports/report-riders-section";
+import { ReportRidersSection } from "@/components/dashboard/admin/reports/riders/report-riders-section";
 import { DarkCard } from "@/components/dashboard/common/dark-card";
 import { GlassCard } from "@/components/dashboard/common/glass-card";
 import { Button } from "@/components/ui/button";

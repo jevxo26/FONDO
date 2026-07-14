@@ -1,8 +1,8 @@
 import { Users, Download } from "lucide-react";
 import { customerReportData } from "@/data/reports";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { ReportCustomersSection } from "@/components/dashboard/admin/reports/report-customers-section";
-import { CustomerReportSummaryCards } from "@/components/dashboard/admin/reports/customer-report-summary-cards";
+import { ReportCustomersSection } from "@/components/dashboard/admin/reports/customers/report-customers-section";
+import { CustomerReportSummaryCards } from "@/components/dashboard/admin/reports/customers/customer-report-summary-cards";
 import { Button } from "@/components/ui/button";
 
 export default function ReportsCustomersPage() {

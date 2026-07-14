@@ -2,7 +2,7 @@ import { ArrowLeftRight, CheckCircle, Clock, XCircle, RefreshCw } from "lucide-r
 import { settlements } from "@/data/payments";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { SettlementTableSection } from "@/components/dashboard/admin/payments/settlement-table-section";
+import { SettlementTableSection } from "@/components/dashboard/admin/payments/settlements/settlement-table-section";
 import { Button } from "@/components/ui/button";
 
 export default function PaymentsSettlementsPage() {

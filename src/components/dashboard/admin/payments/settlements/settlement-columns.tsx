@@ -3,7 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Settlement } from "@/data/payments";
 import { DataTableColumnHeader } from "@/components/common/table";
-import { SettlementStatusBadge } from "./payment-status-badge";
+import { SettlementStatusBadge } from "../transactions/payment-status-badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export const settlementColumns: ColumnDef<Settlement>[] = [

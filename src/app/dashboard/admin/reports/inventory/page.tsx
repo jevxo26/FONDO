@@ -2,7 +2,7 @@ import { Package, AlertTriangle, CheckCircle, TrendingDown, RefreshCw } from "lu
 import { inventoryReportData } from "@/data/reports";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { ReportInventorySection } from "@/components/dashboard/admin/reports/report-inventory-section";
+import { ReportInventorySection } from "@/components/dashboard/admin/reports/inventory/report-inventory-section";
 import { DarkCard } from "@/components/dashboard/common/dark-card";
 import { GlassCard } from "@/components/dashboard/common/glass-card";
 

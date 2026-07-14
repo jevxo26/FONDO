@@ -3,7 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { RiderPerformanceData } from "@/data/riders";
 import { DataTableColumnHeader } from "@/components/common/table";
-import { RiderStatusBadge } from "./rider-status-badge";
+import { RiderStatusBadge } from "../all-riders/rider-status-badge";
 
 export const riderPerformanceColumns: ColumnDef<RiderPerformanceData>[] = [
   {

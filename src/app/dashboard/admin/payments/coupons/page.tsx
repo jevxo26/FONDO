@@ -2,7 +2,7 @@ import { TicketPercent, CheckCircle, XCircle, Clock, Download, Plus } from "luci
 import { coupons } from "@/data/payments";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { CouponTableSection } from "@/components/dashboard/admin/payments/coupon-table-section";
+import { CouponTableSection } from "@/components/dashboard/admin/payments/coupons/coupon-table-section";
 import { Button } from "@/components/ui/button";
 
 export default function PaymentsCouponsPage() {

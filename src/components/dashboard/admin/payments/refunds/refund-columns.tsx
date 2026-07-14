@@ -3,7 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { RefundRequest } from "@/data/payments";
 import { DataTableColumnHeader } from "@/components/common/table";
-import { RefundStatusBadge } from "./payment-status-badge";
+import { RefundStatusBadge } from "../transactions/payment-status-badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export const refundColumns: ColumnDef<RefundRequest>[] = [

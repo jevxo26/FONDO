@@ -3,7 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { RiderReportEntry } from "@/data/reports";
 import { DataTableColumnHeader } from "@/components/common/table";
-import { StatusDotBadge } from "./report-badges";
+import { StatusDotBadge } from "../report-badges";
 
 export const riderReportColumns: ColumnDef<RiderReportEntry>[] = [
   {

@@ -1,6 +1,6 @@
 import { riderLiveData } from "@/data/riders";
 import type { RiderStatus } from "@/data/riders";
-import { RiderStatusBadge } from "./rider-status-badge";
+import { RiderStatusBadge } from "../all-riders/rider-status-badge";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { MapPin, Navigation, Wifi, Gauge, Battery, Clock, Truck } from "lucide-react";
 import { cn } from "@/lib/utils";

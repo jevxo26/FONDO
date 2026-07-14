@@ -1,8 +1,8 @@
 import { Truck, Download, UserPlus } from "lucide-react";
 import { riders } from "@/data/riders";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { RiderTableSection } from "@/components/dashboard/admin/riders/rider-table-section";
-import { RiderSummaryCards } from "@/components/dashboard/admin/riders/rider-summary-cards";
+import { RiderTableSection } from "@/components/dashboard/admin/riders/all-riders/rider-table-section";
+import { RiderSummaryCards } from "@/components/dashboard/admin/riders/all-riders/rider-summary-cards";
 import { Button } from "@/components/ui/button";
 
 export default function RidersPage() {

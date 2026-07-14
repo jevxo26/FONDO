@@ -1,7 +1,7 @@
 import { BarChart3, Download } from "lucide-react";
 import { salesEntries } from "@/data/reports";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { ReportSalesSection } from "@/components/dashboard/admin/reports/report-sales-section";
+import { ReportSalesSection } from "@/components/dashboard/admin/reports/sales/report-sales-section";
 import { ReportSummaryCards } from "@/components/dashboard/admin/reports/report-summary-cards";
 import { Button } from "@/components/ui/button";
 

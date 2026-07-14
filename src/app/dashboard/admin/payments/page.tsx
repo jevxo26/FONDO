@@ -2,8 +2,8 @@ import { CheckCircle, CreditCard, XCircle, Undo2, Banknote, Download, Plus } fro
 import { transactions, refunds, settlements } from "@/data/payments";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { PaymentSummaryCards } from "@/components/dashboard/admin/payments/payment-summary-cards";
-import { PaymentTableSection } from "@/components/dashboard/admin/payments/payment-table-section";
+import { PaymentSummaryCards } from "@/components/dashboard/admin/payments/transactions/payment-summary-cards";
+import { PaymentTableSection } from "@/components/dashboard/admin/payments/transactions/payment-table-section";
 import { Button } from "@/components/ui/button";
 
 export default function PaymentsPage() {

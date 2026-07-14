@@ -1,8 +1,8 @@
 import { TrendingUp, Download } from "lucide-react";
 import { revenueEntries } from "@/data/reports";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { ReportRevenueSection } from "@/components/dashboard/admin/reports/report-revenue-section";
-import { RevenueSummaryCards } from "@/components/dashboard/admin/reports/revenue-summary-cards";
+import { ReportRevenueSection } from "@/components/dashboard/admin/reports/revenue/report-revenue-section";
+import { RevenueSummaryCards } from "@/components/dashboard/admin/reports/revenue/revenue-summary-cards";
 import { Button } from "@/components/ui/button";
 
 export default function ReportsRevenuePage() {

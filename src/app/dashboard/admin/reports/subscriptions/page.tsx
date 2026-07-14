@@ -1,8 +1,8 @@
 import { Repeat, Download } from "lucide-react";
 import { subscriptionReportData } from "@/data/reports";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { ReportSubscriptionsSection } from "@/components/dashboard/admin/reports/report-subscriptions-section";
-import { SubscriptionReportSummaryCards } from "@/components/dashboard/admin/reports/subscription-report-summary-cards";
+import { ReportSubscriptionsSection } from "@/components/dashboard/admin/reports/subscriptions/report-subscriptions-section";
+import { SubscriptionReportSummaryCards } from "@/components/dashboard/admin/reports/subscriptions/subscription-report-summary-cards";
 import { Button } from "@/components/ui/button";
 
 export default function ReportsSubscriptionsPage() {

@@ -3,7 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { SalesEntry } from "@/data/reports";
 import { DataTableColumnHeader } from "@/components/common/table";
-import { ChannelBadge, StatusDotBadge } from "./report-badges";
+import { ChannelBadge, StatusDotBadge } from "../report-badges";
 
 export const salesColumns: ColumnDef<SalesEntry>[] = [
   {

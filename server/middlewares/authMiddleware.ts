@@ -3,6 +3,9 @@ import jwt from 'jsonwebtoken';
 import { catchAsync } from '../utils/catchAsync';
 import AppError from '../utils/AppError';
 import { AuthRequest, CustomJwtPayload } from '../types/auth.types';
+import { PrismaClient, UserRoleStatus } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export const verifyToken = catchAsync(async (req: AuthRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
@@ -13,7 +16,7 @@ export const verifyToken = catchAsync(async (req: AuthRequest, res: Response, ne
   const token = authHeader.split(' ')[1];
 
   try {
-    const secret = (process.env.JWT_SECRET as string) || 'fallback_secret';
+    const secret = (process.env.JWT_SECRET as string) || 'fondo'; 
     const decoded = jwt.verify(token, secret) as CustomJwtPayload;
 
     req.user = decoded;
@@ -23,14 +26,33 @@ export const verifyToken = catchAsync(async (req: AuthRequest, res: Response, ne
   }
 });
 
-export const isAdmin = catchAsync(async (req: AuthRequest, res: Response, next: NextFunction) => {
-  if (!req.user) {
-    throw new AppError(401, 'Authentication required. Please verify token first.');
-  }
+export const authorizeRoles = (...allowedRoles: string[]) => {
+  return catchAsync(async (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      throw new AppError(401, 'Authentication required. Please verify token first.');
+    }
 
-  if (req.user.role !== 'ADMIN') {
-    throw new AppError(403, 'Access denied. Admin privileges required.');
-  }
+    const userRoles = await prisma.userRole.findMany({
+      where: {
+        userId: req.user.userId,
+        status: UserRoleStatus.ACTIVE,
+      },
+      select: {
+        role: {
+          select: {
+            slug: true,
+          },
+        },
+      },
+    });
 
-  next();
-});
+    const currentRoles = userRoles.map((ur) => ur.role.slug);
+    const hasPermission = currentRoles.some((role) => allowedRoles.includes(role));
+
+    if (!hasPermission) {
+      throw new AppError(403, 'Access denied. You do not have permission to access this resource.');
+    }
+
+    next();
+  });
+};

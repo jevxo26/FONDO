@@ -18,7 +18,7 @@ export const createRefreshToken = (id: string): string => {
         {
             userId: id
         },
-        (process.env.JWT_REFRESH_SECRET as string) || 'fondo',
+        (process.env.JWT_REFRESH_SECRET as string) || 'fondo_refresh',
         {
             expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d') as any
         }

@@ -100,12 +100,12 @@ const updateUserToDB = catchServiceAsync(async (id: string, payload: Partial<Pri
 
 const getAllUsersFromDB = catchServiceAsync(async () => {
   return prisma.user.findMany({
-    where: {
-      deletedAt: null
+    where: { 
+      deletedAt: null 
     },
-    orderBy: {
-      createdAt: "desc"
-    },
+    orderBy: { 
+      createdAt: "desc" 
+    }, 
     select: {
       id: true,
       firstName: true,

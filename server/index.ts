@@ -70,8 +70,8 @@ app
     server.use("/api/users", userRoutes);
     server.use("/api/vendor", vendorRoutes);
     server.use("/api/auth", authRoutes);
-server.use("/api/foods", foodRoutes);
-server.use("/api/admin", adminFoodRoutes);
+    server.use("/api/foods", foodRoutes);
+    server.use("/api/admin", adminFoodRoutes);
 
     // Next.js handler for all other routes
     server.use((req: Request, res: Response) => {

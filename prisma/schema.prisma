@@ -1041,6 +1041,7 @@ model Food {
   vendorFoodAssignments VendorFoodAssignment[]
   vendorFoods  VendorFood[]
   cartItems    CartItem[]
+  cartMealFoods CartMealFood[]
   orderItems   OrderItem[]
 
   @@map("foods")
@@ -2040,9 +2041,11 @@ model Cart {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  customer User          @relation(fields: [customerId], references: [id])
+  customer User            @relation(fields: [customerId], references: [id])
   items    CartItem[]
   meals    CartMeal[]
+  summary  CartSummary?
+  histories CartHistory[]
 
   @@map("carts")
 }
@@ -2059,10 +2062,24 @@ model CartItem {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  cart  Cart    @relation(fields: [cartId], references: [id])
-  food  Food    @relation(fields: [foodId], references: [id])
+  cart    Cart        @relation(fields: [cartId], references: [id])
+  food    Food        @relation(fields: [foodId], references: [id])
+  addons  CartAddon[]
 
   @@map("cart_items")
+}
+
+model CartAddon {
+  id          String   @id @default(uuid())
+  cartItemId  String
+  addonItemId String
+  quantity    Int      @default(1)
+  price       Decimal  @db.Decimal(10, 2)
+  createdAt   DateTime @default(now())
+
+  cartItem CartItem @relation(fields: [cartItemId], references: [id])
+
+  @@map("cart_addons")
 }
 
 model CartMeal {
@@ -2090,8 +2107,40 @@ model CartMealFood {
   updatedAt    DateTime @updatedAt
 
   cartMeal CartMeal @relation(fields: [cartMealId], references: [id])
+  food     Food     @relation(fields: [foodId], references: [id])
 
   @@map("cart_meal_foods")
+}
+
+model CartSummary {
+  id            String   @id @default(uuid())
+  cartId        String   @unique
+  itemCount     Int      @default(0)
+  mealCount     Int      @default(0)
+  subtotal      Decimal  @default(0) @db.Decimal(10, 2)
+  discount      Decimal  @default(0) @db.Decimal(10, 2)
+  deliveryCharge Decimal @default(0) @db.Decimal(10, 2)
+  vat           Decimal  @default(0) @db.Decimal(10, 2)
+  grandTotal    Decimal  @default(0) @db.Decimal(10, 2)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  cart Cart @relation(fields: [cartId], references: [id])
+
+  @@map("cart_summaries")
+}
+
+model CartHistory {
+  id          String   @id @default(uuid())
+  cartId      String
+  action      String
+  performedBy String
+  remarks     String?
+  createdAt   DateTime @default(now())
+
+  cart Cart @relation(fields: [cartId], references: [id])
+
+  @@map("cart_histories")
 }
 
 model Order {

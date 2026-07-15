@@ -10,3 +10,7 @@ export interface CustomJwtPayload extends JwtPayload {
 export interface AuthRequest extends Request {
     user?: CustomJwtPayload;
 }
+
+export interface AuthenticatedRequest extends Request {
+  user: CustomJwtPayload; 
+}

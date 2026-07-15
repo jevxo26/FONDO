@@ -3,6 +3,7 @@ import { catchServiceAsync } from '../utils/catchServiceAsync';
 import { encryptPassword } from '../utils/bcryptService';
 import { sendUserDataAsResponse } from '../utils/responseStyle';
 import { ROLES } from '../utils/roles';
+import AppError from '../utils/AppError';
 
 const prisma = new PrismaClient();
 
@@ -127,9 +128,23 @@ const getAllUsersFromDB = catchServiceAsync(async () => {
   });
 });
 
+const getMyProfileFromDB = async (userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId, deletedAt: null },
+    select: sendUserDataAsResponse,
+  });
+
+  if (!user) {
+    throw new AppError(404, 'User not found');
+  }
+
+  return user;
+};
+
 export const UserService = {
   createUserToDB,
   getUserByIdFromDB,
   updateUserToDB,
-  getAllUsersFromDB
+  getAllUsersFromDB,
+  getMyProfileFromDB
 }

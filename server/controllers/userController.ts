@@ -3,6 +3,7 @@ import { UserService } from '../services/userService';
 import { sendResponse } from '../utils/sendResponse';
 import { PrismaClient } from '@prisma/client';
 import { catchServiceAsync } from '../utils/catchServiceAsync';
+import { AuthenticatedRequest } from '../types/auth.types';
 
 const prisma = new PrismaClient();
 
@@ -40,13 +41,6 @@ const createUser = catchServiceAsync(async (req: Request, res: Response) => {
 const getUserById = catchServiceAsync(async (req: Request, res: Response) => {
   const id = req.params.id as string;
 
-  // Todo: cross check id
-  //   const userId = req.user?.userId;
-
-  //   if (id !== userId) {
-  //     throw new AppError(403, 'You are not authorized to access this user information');
-  //   }
-
   const result = await UserService.getUserByIdFromDB(id);
 
   if (!result) {
@@ -66,13 +60,6 @@ const getUserById = catchServiceAsync(async (req: Request, res: Response) => {
 
 const updateUser = catchServiceAsync(async (req: Request, res: Response) => {
   const id = req.params.id as string;
-
-  // Todo: cross check id
-  //   const userId = req.user?.userId;
-
-  //   if (id !== userId) {
-  //     throw new AppError(403, 'You are not authorized to access this user information');
-  //   }
 
   const forbiddenFields = [
     "id",
@@ -126,9 +113,23 @@ const getAllUsers = catchServiceAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMyProfile = catchServiceAsync(async (req: Request, res: Response) => {
+  const authReq = req as AuthenticatedRequest;
+
+  const result = await UserService.getMyProfileFromDB(authReq.user.userId);
+  // const result = await UserService.getMyProfileFromDB(req.user.userId);
+
+  sendResponse(res, {
+    statusCode: 200,
+    message: 'My profile fetched successfully',
+    data: result
+  });
+});
+
 export const UserController = {
   createUser,
   getUserById,
   updateUser,
-  getAllUsers
+  getAllUsers,
+  getMyProfile
 }

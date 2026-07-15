@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -12,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronUp, LogOut, Settings, User } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface SidebarUserMenuProps {
   userName: string;
@@ -20,6 +22,13 @@ interface SidebarUserMenuProps {
 }
 
 export function SidebarUserMenu({ userName, userRole, userInitials }: SidebarUserMenuProps) {
+  const router = useRouter();
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/login");
+  };
   return (
     <>
       <div className="group-data-[collapsible=icon]:hidden mx-4 mt-3">
@@ -50,7 +59,12 @@ export function SidebarUserMenu({ userName, userRole, userInitials }: SidebarUse
               <DropdownMenuSeparator />
               {[
                 { icon: User, label: "Profile", desc: "View your profile", onClick: "Profile" },
-                { icon: Settings, label: "Settings", desc: "Dashboard preferences", onClick: "Settings" },
+                {
+                  icon: Settings,
+                  label: "Settings",
+                  desc: "Dashboard preferences",
+                  onClick: "Settings",
+                },
               ].map((item) => (
                 <DropdownMenuItem
                   key={item.label}
@@ -69,7 +83,7 @@ export function SidebarUserMenu({ userName, userRole, userInitials }: SidebarUse
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="flex items-center gap-3 py-2.5 text-destructive"
-                onClick={() => console.log("Logout")}
+                onClick={handleLogout}
               >
                 <div className="flex size-8 items-center justify-center rounded-lg bg-destructive/8">
                   <LogOut className="size-4 text-destructive" />
@@ -109,7 +123,7 @@ export function SidebarUserMenu({ userName, userRole, userInitials }: SidebarUse
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">
+            <DropdownMenuItem className="text-destructive" onClick={handleLogout}>
               <LogOut className="size-4" />
               <span>Logout</span>
             </DropdownMenuItem>

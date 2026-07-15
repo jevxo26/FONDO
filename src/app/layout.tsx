@@ -4,6 +4,7 @@ import "./globals.css";
 import { ReduxProvider } from "@/components/ReduxProvider";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/sonner";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -32,6 +33,7 @@ export default function RootLayout({
           <ReduxProvider>
             <QueryProvider>{children}</QueryProvider>
           </ReduxProvider>
+          <Toaster />
         </TooltipProvider>
       </body>
     </html>

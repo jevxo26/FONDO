@@ -44,6 +44,24 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, user, router]);
 
+  const quickLogin = async (email: string, password: string) => {
+    try {
+      await login(email, password);
+      toast.success(`Logged in as ${email}`);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Login failed";
+      toast.error(message);
+    }
+  };
+
+  const devUsers = [
+    { label: "Admin", email: "admin@fondo.com", role: "ADMIN" },
+    { label: "Vendor", email: "vendor@fondo.com", role: "VENDOR" },
+    { label: "Kitchen", email: "kitchen@fondo.com", role: "KITCHEN_STAFF" },
+    { label: "Rider", email: "rider@fondo.com", role: "RIDER" },
+    { label: "Customer", email: "customer@fondo.com", role: "CUSTOMER" },
+  ];
+
   return (
     <div className="min-h-screen bg-[#F5EFE6] flex items-center justify-center py-10 px-4">
       <FormProvider {...methods}>
@@ -56,6 +74,23 @@ export default function LoginPage() {
           </CoreLayoutWrapper>
         </form>
       </FormProvider>
+
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-2 bg-black/80 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl">
+        <span className="text-xs text-gray-400 flex items-center mr-1 whitespace-nowrap">
+          Quick Login:
+        </span>
+        {devUsers.map((u) => (
+          <button
+            key={u.role}
+            type="button"
+            disabled={loading}
+            onClick={() => quickLogin(u.email, "password123")}
+            className="px-3 py-1.5 rounded text-xs font-medium text-white transition-colors bg-gray-700 hover:bg-gray-600 disabled:opacity-50"
+          >
+            {u.label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

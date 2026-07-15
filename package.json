@@ -7,7 +7,6 @@
     "build": "next build && tsc --project tsconfig.server.json",
     "start": "NODE_ENV=production node dist/server/index.js",
     "lint": "eslint",
-    "seed": "ts-node --project tsconfig.server.json server/seed.ts",
     "format": "prettier --write \"{src,server}/**/*.{ts,tsx,js,jsx,json}\""
   },
   "dependencies": {

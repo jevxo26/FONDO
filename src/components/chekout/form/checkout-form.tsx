@@ -4,20 +4,25 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { CheckoutFormData, PaymentMethodType } from "@/types/checkout-type";
 import { Check, CreditCard, ShoppingBag, Truck } from "lucide-react";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { CheckoutSummary } from "../checkout-summary-right";
+import { useCart } from "@/hooks/use-cart";
+import { usePlaceOrder } from "@/hooks/use-orders";
+import { handleApiError } from "@/lib/api-error";
 const CheckoutForm = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { data: cart, isLoading: cartLoading } = useCart();
+  const placeOrder = usePlaceOrder();
+  const router = useRouter();
 
-  // Initialize React Hook Form
   const {
     register,
     handleSubmit,
     watch,
     setValue,
     formState: { errors },
-    reset,
   } = useForm<CheckoutFormData>({
     defaultValues: {
       fulfillment: "delivery",
@@ -31,28 +36,31 @@ const CheckoutForm = () => {
     },
   });
 
-  // Watch streams to monitor toggle state variants live
-  // eslint-disable-next-line react-hooks/incompatible-library
   const currentFulfillment = watch("fulfillment");
   const currentPaymentMethod = watch("paymentMethod");
 
-  // Handler for form execution blocks
   const onSubmitForm = async (data: CheckoutFormData) => {
-    setIsSubmitting(true);
-
     try {
-      // Simulate API network latency delay
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // Data prints cleanly to the console for debugging
-      console.log("=== CHECKOUT DEBUG SUBMISSION ===", data);
-      reset(); // Clear input rows safely
+      await placeOrder.mutateAsync({
+        fulfillment: data.fulfillment,
+        paymentMethod: data.paymentMethod,
+        streetAddress: data.streetAddress,
+        city: data.city,
+        zipCode: data.zipCode,
+        recipientName: data.recipientName,
+        phoneNumber: data.phoneNumber,
+        notes: data.orderNotes,
+      });
+      toast.success("Order placed successfully!");
+      router.push("/orders");
     } catch (error) {
-      console.error("Submission failed:", error);
-    } finally {
-      setIsSubmitting(false);
+      toast.error(handleApiError(error));
     }
   };
+
+  useEffect(() => {
+    if (placeOrder.isSuccess) return;
+  }, [placeOrder.isSuccess]);
 
   return (
     <>
@@ -242,10 +250,10 @@ const CheckoutForm = () => {
         {/* RIGHT COLUMN: Sticky Order Summary Panel (35% width) */}
         <div className="lg:col-span-4 lg:sticky lg:top-24">
           <CheckoutSummary
-            subtotal={570}
-            deliveryFee={currentFulfillment === "delivery" ? 60 : 0}
-            savings={80}
-            isSubmitting={isSubmitting}
+            subtotal={cart?.totals.subtotal ?? 0}
+            deliveryFee={currentFulfillment === "delivery" ? (cart?.totals.deliveryCharge ?? 60) : 0}
+            savings={cart?.totals.discount ?? 0}
+            isSubmitting={placeOrder.isPending}
           />
         </div>
       </form>

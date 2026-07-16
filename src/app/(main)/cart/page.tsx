@@ -1,40 +1,71 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { CartItem } from "@/types/cart";
-import { mockCartItems } from "@/data/cart-items";
 import { CartItemCard } from "@/components/carts/cart-item-card";
 import { OrderSummary } from "@/components/carts/order-summary";
+import { useCart, useRemoveFromCart, useUpdateCartItem, useClearCart } from "@/hooks/use-cart";
+import { handleApiError } from "@/lib/api-error";
+import type { CartItem as CartItemType } from "@/types/cart";
+import { Loader2 } from "lucide-react";
 
 export default function CartPageView() {
-  const [cartItems, setCartItems] = useState<CartItem[]>(mockCartItems);
+  const { data: cart, isLoading, error } = useCart();
+  const updateItem = useUpdateCartItem();
+  const removeItem = useRemoveFromCart();
+  const clearCart = useClearCart();
 
-  // Updates row numbers and handles reactive totals
-  const handleUpdateQuantity = (id: string, newQty: number) => {
-    setCartItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, quantity: newQty } : item)),
+  if (isLoading) {
+    return (
+      <main className="flex-1 py-12">
+        <div className="wrapper flex items-center justify-center min-h-[40vh]">
+          <Loader2 className="size-6 animate-spin text-muted-foreground" />
+        </div>
+      </main>
     );
+  }
+
+  if (error) {
+    return (
+      <main className="flex-1 py-12">
+        <div className="wrapper">
+          <div className="py-16 text-center border border-dashed border-border rounded-[32px] bg-white dark:bg-card">
+            <p className="font-sans text-sm text-red-600">{handleApiError(error)}</p>
+            <Link
+              href="/menu"
+              className="mt-4 inline-flex h-10 items-center rounded-xl bg-[#CEA359] px-5 font-sans text-xs font-semibold text-[#1B0E08]"
+            >
+              Return to Menu
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  const items: CartItemType[] = (cart?.items ?? []).map((item) => ({
+    id: item.id,
+    title: item.name,
+    price: item.price,
+    quantity: item.quantity,
+    thumbnail: item.thumbnail,
+    itemsSold: 0,
+  }));
+
+  const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
+  const subtotalValue = cart?.totals.subtotal ?? 0;
+  const deliveryCost = cart?.totals.deliveryCharge ?? 0;
+
+  const handleUpdateQuantity = (id: string, newQty: number) => {
+    updateItem.mutate({ itemId: id, quantity: newQty });
   };
 
-  // Line element evacuation handler
   const handleRemoveItem = (id: string) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+    removeItem.mutate(id);
   };
-
-  // Structural aggregates calculated programmatically
-  const subtotalValue = cartItems.reduce(
-    (acc, item) => acc + (item.oldPrice || item.price) * item.quantity,
-    0,
-  );
-  const totalCurrentValue = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const totalSavings = subtotalValue - totalCurrentValue;
-  const itemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <main className="flex-1 py-12">
       <div className="wrapper">
-        {/* Main Context Headline Header */}
         <div className="mb-8">
           <h1 className="font-fraunces text-4xl font-normal text-secondary-foreground tracking-tight">
             Your Cart
@@ -44,12 +75,10 @@ export default function CartPageView() {
           </p>
         </div>
 
-        {/* Dual Multi-Column Workspace Segment */}
-        {cartItems.length > 0 ? (
+        {items.length > 0 ? (
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-start">
-            {/* Left Row Loop Stream Column */}
             <div className="flex flex-col gap-4 lg:col-span-8">
-              {cartItems.map((item) => (
+              {items.map((item) => (
                 <CartItemCard
                   key={item.id}
                   item={item}
@@ -59,15 +88,13 @@ export default function CartPageView() {
               ))}
             </div>
 
-            {/* Right Side Sticky Aggregate Interface Panel */}
             <div className="lg:col-span-4 lg:sticky lg:top-24">
               <OrderSummary
                 subtotal={subtotalValue}
-                savings={totalSavings}
-                deliveryCharges="free"
+                savings={0}
+                deliveryCharges={deliveryCost || "free"}
               />
 
-              {/* Secondary navigation hook to go back to shop */}
               <Link
                 href="/menu"
                 className="mt-4 flex w-full h-11 items-center justify-center rounded-full bg-white border border-border font-sans text-xs font-semibold text-secondary-foreground transition-colors hover:bg-muted"

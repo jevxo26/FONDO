@@ -1,79 +1,45 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { usePathname, useSearchParams } from "next/navigation";
 
-interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-}
-
-export default function Pagination({
-  currentPage,
-  totalPages,
-}: PaginationProps) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  if (totalPages <= 1) return null;
-
-  const createPageLink = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    params.set("page", page.toString());
-
-    return `${pathname}?${params.toString()}`;
-  };
+export default function Pagination() {
+  const [page, setPage] = useState(1);
+  const totalPages = 5;
 
   return (
-    <div className="wrapper flex items-center justify-center gap-2 py-10">
-      {/* Previous */}
-      <Link
-        href={createPageLink(Math.max(currentPage - 1, 1))}
-        className={`flex h-10 w-10 items-center justify-center rounded-xl border transition
-          ${
-            currentPage === 1
-              ? "pointer-events-none opacity-40"
-              : "hover:bg-muted"
-          }`}
+    <div className="wrapper flex items-center justify-center gap-2 pt-10 pb-4">
+      <button
+        onClick={() => setPage((p) => Math.max(1, p - 1))}
+        className="flex size-10 items-center justify-center rounded-xl border border-border bg-white text-muted-foreground hover:bg-muted"
       >
-        <ChevronLeft className="h-4 w-4" />
-      </Link>
+        <ChevronLeft className="size-4" />
+      </button>
 
-      {/* Page Numbers */}
-      {Array.from({ length: totalPages }, (_, index) => {
-        const page = index + 1;
-        const active = page === currentPage;
-
+      {[1, 2, 3, 4, 5].map((num) => {
+        const isActive = page === num;
         return (
-          <Link
-            key={page}
-            href={createPageLink(page)}
-            className={`flex h-10 w-10 items-center justify-center rounded-xl border text-sm font-medium transition
+          <button
+            key={num}
+            onClick={() => setPage(num)}
+            className={`flex size-10 items-center justify-center rounded-xl font-sans text-sm font-medium border transition-colors
               ${
-                active
-                  ? "border-[#CEA359] bg-[#CEA359] text-[#1B0E08]"
-                  : "border-border bg-background hover:bg-muted"
+                isActive
+                  ? "bg-[#CEA359] border-[#CEA359] text-[#1B0E08]"
+                  : "bg-white border-border text-foreground hover:bg-muted"
               }`}
           >
-            {page}
-          </Link>
+            {num}
+          </button>
         );
       })}
 
-      {/* Next */}
-      <Link
-        href={createPageLink(Math.min(currentPage + 1, totalPages))}
-        className={`flex h-10 w-10 items-center justify-center rounded-xl border transition
-          ${
-            currentPage === totalPages
-              ? "pointer-events-none opacity-40"
-              : "hover:bg-muted"
-          }`}
+      <button
+        onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+        className="flex size-10 items-center justify-center rounded-xl border border-border bg-white text-muted-foreground hover:bg-muted"
       >
-        <ChevronRight className="h-4 w-4" />
-      </Link>
+        <ChevronRight className="size-4" />
+      </button>
     </div>
   );
 }

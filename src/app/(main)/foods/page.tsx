@@ -1,22 +1,11 @@
 import Categories from "@/components/foods/components/categories";
 import FoodGrid from "@/components/foods/components/food-grid";
 import Pagination from "@/components/foods/components/pagination";
-import { getFoods } from "@/services/food.service";
+import { FOOD_ITEMS } from "@/data/foodsdata";
 
-
-interface Props {
-  searchParams: Promise<{
-    page?: string;
-  }>;
-}
-
-export default async function FoodsPage({
-  searchParams,
-}: Props) {
-  const { page = "1" } = await searchParams;
-
-  const data = await getFoods(Number(page), 6);
-  const foods = data.items;
+export default async function CategoriesPage() {
+  const allfoods = FOOD_ITEMS;
+  const foods = allfoods.slice(0, 6); // Get the first 6 foods for the current page
   return (
     <main className="min-h-screen bg-background pb-16">
       <section className="py-12 lg:py-16">
@@ -39,10 +28,7 @@ export default async function FoodsPage({
 
       <Categories />
       <FoodGrid foods={foods} />
-       <Pagination
-        currentPage={Number(page)}
-        totalPages={data.totalPages}
-      />
+      <Pagination />
     </main>
   );
 }

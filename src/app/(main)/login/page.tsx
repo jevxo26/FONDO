@@ -4,26 +4,20 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { useForm, FormProvider } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { CoreLayoutWrapper } from "@/components/auth/core-layout-wrapper";
 import { LoginForm } from "@/components/auth/login/login-form";
 import { useAuth } from "@/hooks/useAuth";
+import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 
-const ROLE_ROUTES: Record<string, string> = {
-  CUSTOMER: "/",
-  ADMIN: "/dashboard/admin",
-  SUPER_ADMIN: "/dashboard/admin",
-  VENDOR: "/dashboard/vendor",
-  VENDOR_STAFF: "/dashboard/vendor",
-  KITCHEN_STAFF: "/dashboard/kitchen",
-  RIDER: "/dashboard/rider",
-  SUPPORT_AGENT: "/dashboard/admin",
-};
+import { ROLE_DASHBOARD } from "@/data/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
   const { login, user, isAuthenticated, loading, error } = useAuth();
 
-  const methods = useForm({
+  const methods = useForm<LoginInput>({
+    resolver: yupResolver(loginSchema),
     defaultValues: { identity: "", password: "" },
   });
 
@@ -39,7 +33,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      const route = ROLE_ROUTES[user.role] || "/";
+      const route = ROLE_DASHBOARD[user.role] || "/";
       router.push(route);
     }
   }, [isAuthenticated, user, router]);

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import Link from "next/link";
@@ -11,7 +13,7 @@ interface LoginFormProps {
 
 export function LoginForm({ onSubmit, loading }: LoginFormProps) {
   const [showPass, setShowPass] = useState(false);
-  const { register, handleSubmit } = useFormContext();
+  const { register, handleSubmit, formState: { errors } } = useFormContext();
 
   return (
     <div className="flex flex-col gap-6 animate-fadeIn w-full max-w-md mx-auto">
@@ -30,6 +32,11 @@ export function LoginForm({ onSubmit, loading }: LoginFormProps) {
           icon={<Mail className="size-4" />}
           {...register("identity", { required: true })}
         />
+        {errors.identity?.message && (
+          <span className="text-[11px] text-red-600 font-sans mt-[-8px] ml-1">
+            {String(errors.identity.message)}
+          </span>
+        )}
 
         <div className="flex flex-col gap-1">
           <FormInput
@@ -56,6 +63,11 @@ export function LoginForm({ onSubmit, loading }: LoginFormProps) {
               Forgot Password?
             </Link>
           </div>
+          {errors.password?.message && (
+            <span className="text-[11px] text-red-600 font-sans mt-[-8px] ml-1">
+              {String(errors.password.message)}
+            </span>
+          )}
         </div>
 
         <button

@@ -1,24 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { api } from "@/lib/api-client";
 import { getToken, setToken, clearToken } from "@/lib/token";
-
-export interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  email: string;
-  avatar: string | null;
-  gender: string | null;
-  dateOfBirth: string | null;
-  role: string;
-  status: string;
-  isPhoneVerified: boolean;
-  isEmailVerified: boolean;
-  lastLoginAt: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { User } from "@/types/auth";
 
 interface LoginResponse {
   user: User;
@@ -142,13 +125,17 @@ const authSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchMe.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.accessToken = null;
         state.isAuthenticated = false;
         state.loading = false;
+        state.error = null;
         clearToken();
       })
-      .addCase(logoutUser.fulfilled, (state) => {
+      .addCase(logoutUser.rejected, (state) => {
         state.user = null;
         state.accessToken = null;
         state.isAuthenticated = false;

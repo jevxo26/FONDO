@@ -14,6 +14,16 @@ import {
 } from "lucide-react";
 import type { ComponentType } from "react";
 
+export const ROLE_DASHBOARD: Record<string, string> = {
+  ADMIN: "/dashboard/admin",
+  SUPER_ADMIN: "/dashboard/admin",
+  VENDOR: "/dashboard/vendor",
+  VENDOR_STAFF: "/dashboard/vendor",
+  KITCHEN_STAFF: "/dashboard/kitchen",
+  RIDER: "/dashboard/rider",
+  SUPPORT_AGENT: "/dashboard/admin",
+};
+
 interface NavLink {
   href?: string;
   label: string;

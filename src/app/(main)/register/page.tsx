@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CoreLayoutWrapper } from "@/components/auth/core-layout-wrapper";
-import { RegistrationForm } from "@/components/auth/register/registratiom-form";
+import { RegistrationForm } from "@/components/auth/register/registration-form";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function RegisterPage() {

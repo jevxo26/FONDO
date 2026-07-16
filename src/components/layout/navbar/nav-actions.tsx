@@ -18,16 +18,7 @@ import { useAppDispatch } from "@/store/store";
 import { fetchMe } from "@/store/slices/authSlice";
 import { getToken } from "@/lib/token";
 import { useAuth } from "@/hooks/useAuth";
-
-const ROLE_DASHBOARD: Record<string, string> = {
-  ADMIN: "/dashboard/admin",
-  SUPER_ADMIN: "/dashboard/admin",
-  VENDOR: "/dashboard/vendor",
-  VENDOR_STAFF: "/dashboard/vendor",
-  KITCHEN_STAFF: "/dashboard/kitchen",
-  RIDER: "/dashboard/rider",
-  SUPPORT_AGENT: "/dashboard/admin",
-};
+import { ROLE_DASHBOARD } from "@/data/navigation";
 
 export function NavActions() {
   const dispatch = useAppDispatch();

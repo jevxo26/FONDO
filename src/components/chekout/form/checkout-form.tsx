@@ -2,7 +2,7 @@
 import { FormField } from "@/components/common/form-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { CheckoutFormData, PaymentMethodType } from "@/types/chekout-type";
+import { CheckoutFormData, PaymentMethodType } from "@/types/checkout-type";
 import { Check, CreditCard, ShoppingBag, Truck } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";

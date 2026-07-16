@@ -9,17 +9,8 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { closeMobileMenu } from "@/store/slices/uiSlice";
 import { mainNavLinks, childIcons } from "@/data/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { ROLE_DASHBOARD } from "@/data/navigation";
 import { useState } from "react";
-
-const ROLE_DASHBOARD: Record<string, string> = {
-  ADMIN: "/dashboard/admin",
-  SUPER_ADMIN: "/dashboard/admin",
-  VENDOR: "/dashboard/vendor",
-  VENDOR_STAFF: "/dashboard/vendor",
-  KITCHEN_STAFF: "/dashboard/kitchen",
-  RIDER: "/dashboard/rider",
-  SUPPORT_AGENT: "/dashboard/admin",
-};
 
 function MobileAuthSection({ closeAndClear }: { closeAndClear: () => void }) {
   const router = useRouter();

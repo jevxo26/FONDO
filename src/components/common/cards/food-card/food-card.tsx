@@ -6,9 +6,10 @@ import Link from "next/link";
 import AddToCartButton from "./add-to-cart-button";
 
 export default function FoodCard({ food }: { food: Food }) {
+const defaultVariant = food.variants?.[0];
   return (
     <div className="group flex flex-col overflow-hidden rounded-4xl bg-white p-4 shadow-[var(--shadow-card)] border border-border/40 dark:bg-card active:scale-[0.98] transition-transform duration-200">
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-muted">
+      <div className="relative aspect-4/3 w-full overflow-hidden rounded-2xl bg-muted">
         <Image
           src={food.thumbnail}
           alt={food.name}
@@ -33,7 +34,7 @@ export default function FoodCard({ food }: { food: Food }) {
             <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-primary">
               <ShoppingBag className="size-4 text-foreground" />
             </div>{" "}
-            <span className="font-sans text-xs font-medium">2 items &middot; ৳520</span>
+            <span className="font-sans text-xs font-medium">{food.servingSize} - ৳{defaultVariant?.price}</span>
             <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-white/20">
               <Link href={`/foods/${food.slug}`}>
                 <ArrowUpRight className="size-5 text-white" />
@@ -49,18 +50,18 @@ export default function FoodCard({ food }: { food: Food }) {
             {food.name}
           </h3>
           <span className="font-sans text-lg font-bold text-secondary-foreground whitespace-nowrap">
-            ৳{food.price}
+            ৳{defaultVariant?.price}
           </span>
         </div>
 
         <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
             <Star className="size-3.5 fill-primary text-primary" />
-            <span className="font-semibold text-foreground">4.9</span>
+            <span className="font-semibold text-foreground">{food.rating.averageRating}</span>
           </div>
           <div className="flex items-center gap-1">
             <Clock className="size-3.5" />
-            <span>35 min</span>
+            <span>{food.preparationTime} min</span>
           </div>
         </div>
 

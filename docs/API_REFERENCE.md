@@ -122,13 +122,23 @@ All mounted at `/api/admin` prefix. Require JWT (Admin | SuperAdmin).
 
 | Method | Endpoint | Auth | Status |
 |--------|----------|------|--------|
-| GET | `/cart` | JWT (Customer) | ⚪ Planned |
-| POST | `/cart/items` | JWT (Customer) | ⚪ Planned |
-| PATCH | `/cart/items/:id` | JWT (Customer) | ⚪ Planned |
-| DELETE | `/cart/items/:id` | JWT (Customer) | ⚪ Planned |
-| POST | `/cart/coupon` | JWT (Customer) | ⚪ Planned |
-| DELETE | `/cart/coupon` | JWT (Customer) | ⚪ Planned |
-| POST | `/cart/checkout` | JWT (Customer) | ⚪ Planned |
+| GET | `/cart` | JWT (Customer) | 🟢 Built |
+| POST | `/cart` | JWT (Customer) | 🟢 Built |
+| DELETE | `/cart` | JWT (Customer) | 🟢 Built |
+| POST | `/cart/items` | JWT (Customer) | 🟢 Built |
+| PATCH | `/cart/items/:id` | JWT (Customer) | 🟢 Built |
+| DELETE | `/cart/items/:id` | JWT (Customer) | 🟢 Built |
+| POST | `/cart/items/:itemId/addons` | JWT (Customer) | 🟢 Built |
+| DELETE | `/cart/addons/:id` | JWT (Customer) | 🟢 Built |
+| POST | `/cart/meals` | JWT (Customer) | 🟢 Built |
+| DELETE | `/cart/meals/:id` | JWT (Customer) | 🟢 Built |
+| POST | `/cart/meals/:mealId/foods` | JWT (Customer) | 🟢 Built |
+| DELETE | `/cart/meals/:mealId/foods/:foodId` | JWT (Customer) | 🟢 Built |
+| POST | `/cart/checkout` | JWT (Customer) | 🟢 Built |
+| POST | `/cart/checkout/apply-coupon` | JWT (Customer) | 🟢 Built |
+| DELETE | `/cart/checkout/remove-coupon` | JWT (Customer) | 🟢 Built |
+| POST | `/cart/checkout/select-address` | JWT (Customer) | 🟢 Built |
+| POST | `/cart/checkout/place-order` | JWT (Customer) | 🟢 Built |
 
 ---
 
@@ -136,14 +146,21 @@ All mounted at `/api/admin` prefix. Require JWT (Admin | SuperAdmin).
 
 | Method | Endpoint | Auth | Status |
 |--------|----------|------|--------|
-| GET | `/orders` | JWT (Customer/Admin) | ⚪ Planned |
-| GET | `/orders/:id` | JWT (Customer/Admin) | ⚪ Planned |
-| POST | `/orders` | JWT (Customer) | ⚪ Planned |
-| PATCH | `/orders/:id/status` | JWT (Admin) | ⚪ Planned |
-| POST | `/orders/:id/cancel` | JWT (Customer/Admin) | ⚪ Planned |
-| POST | `/orders/:id/refund` | JWT (Admin) | ⚪ Planned |
-| POST | `/orders/:id/feedback` | JWT (Customer) | ⚪ Planned |
-| GET | `/orders/:id/invoice` | JWT (Customer/Admin) | ⚪ Planned |
+| GET | `/api/orders` | JWT (Customer) | 🟢 Built |
+| GET | `/api/orders/:id` | JWT (Customer/Admin/Vendor) | 🟢 Built |
+| PATCH | `/api/orders/:id` | JWT (Customer/Admin) | 🟢 Built |
+| DELETE | `/api/orders/:id` | JWT (SuperAdmin) | 🟢 Built |
+| POST | `/api/orders/:id/cancel` | JWT (Customer/Admin) | 🟢 Built |
+| PATCH | `/api/orders/:id/status` | JWT (Admin/Vendor) | 🟢 Built |
+| PATCH | `/api/orders/:id/assign-vendor` | JWT (Admin) | 🟢 Built |
+| PATCH | `/api/orders/:id/assign-rider` | JWT (Admin/Vendor) | 🟢 Built |
+| GET | `/api/admin/orders` | JWT (Admin/SuperAdmin) | 🟢 Built |
+| GET | `/api/vendors/:vendorId/orders` | JWT (Vendor) | 🟢 Built |
+| POST | `/api/orders/:orderId/refund` | JWT (Admin) | 🟢 Built |
+| GET | `/api/orders/:orderId/refunds` | JWT (Admin) | 🟢 Built |
+| POST | `/api/orders/:orderId/feedback` | JWT (Customer) | 🟢 Built |
+| GET | `/api/orders/:orderId/invoice` | JWT (Customer/Admin) | 🟢 Built |
+| PATCH | `/api/order-meals/:id/status` | JWT (Admin/Vendor) | 🟢 Built |
 
 ---
 

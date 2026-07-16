@@ -25,8 +25,8 @@
 | 🟢 | [Users & Profile](#2-users--profile) | Module 1 |
 | 🟢 | [Food Catalog (Customer)](#3-food-catalog-customer) | Module 4 |
 | 🟢 | [Food Admin (CRUD)](#4-food-admin-crud) | Module 4 |
-| ⚪ | [Cart & Checkout](#5-cart--checkout) | Module 7 |
-| ⚪ | [Orders](#6-orders) | Module 7 |
+| 🟢 | [Cart & Checkout](#5-cart--checkout) | Module 7 |
+| 🟢 | [Orders](#6-orders) | Module 7 |
 | ⚪ | [Customers (Admin)](#7-customers-admin) | Module 1 |
 | ⚪ | [Vendors](#8-vendors) | Module 3 |
 | ⚪ | [Packages & Meal Plans](#9-packages--meal-plans) | Module 6 |
@@ -904,20 +904,20 @@ Get nutrition info.
 
 ## 5. Cart & Checkout
 
-⚪ **Planned** — not started.
+🟢 **Built** — 20 endpoints live at `/api/cart`.
 
-### `GET /cart`
+### 🟢 `GET /cart`
 Get current user's active cart.
 
 **Auth:** JWT (Customer)  
 **Response**
 ```json
 {
-  "id": "Int",
-  "customerId": "Int",
-  "packageId": "Int",
-  "customMealPlanId": "Int",
-  "couponId": "Int",
+  "id": "String (UUID)",
+  "customerId": "String (UUID)",
+  "packageId": "String (UUID)",
+  "customMealPlanId": "String (UUID)",
+  "couponId": "String (UUID)",
   "subtotal": "Float",
   "discount": "Float",
   "deliveryCharge": "Float",
@@ -926,8 +926,8 @@ Get current user's active cart.
   "status": "String",
   "items": [
     {
-      "id": "Int",
-      "foodId": "Int",
+      "id": "String (UUID)",
+      "foodId": "String (UUID)",
       "foodName": "String",
       "foodImage": "String",
       "quantity": "Int",
@@ -941,35 +941,35 @@ Get current user's active cart.
       "dayNumber": "Int",
       "mealType": "String",
       "mealTime": "String",
-      "foods": [ { "foodId": "Int", "foodName": "String", "quantity": "Int", "isReplacement": "Boolean" } ]
+      "foods": [ { "foodId": "String (UUID)", "foodName": "String", "quantity": "Int", "isReplacement": "Boolean" } ]
     }
   ]
 }
 ```
 
-### `POST /cart`
+### 🟢 `POST /cart`
 Initialize cart with a package or custom meal plan.
 
 **Auth:** JWT (Customer)  
 **Request**
 ```json
-{ "packageId": "Int (or customMealPlanId)", "customMealPlanId": "Int" }
+{ "packageId": "String (UUID)", "customMealPlanId": "String (UUID)" }
 ```
 
 **Response** `201` — cart object
 
-### `DELETE /cart`
+### 🟢 `DELETE /cart`
 Clear cart.
 
-### `POST /cart/items`
+### 🟢 `POST /cart/items`
 Add food item to cart.
 
 **Request**
 ```json
-{ "foodId": "*Int", "packageMealId": "Int", "quantity": "*Int (default 1)", "unitPrice": "*Float" }
+{ "foodId": "*String (UUID)", "packageMealId": "String (UUID)", "quantity": "*Int (default 1)", "unitPrice": "*Float" }
 ```
 
-### `PATCH /cart/items/:id`
+### 🟢 `PATCH /cart/items/:id`
 Update item quantity.
 
 **Request**
@@ -977,21 +977,21 @@ Update item quantity.
 { "quantity": "*Int" }
 ```
 
-### `DELETE /cart/items/:id`
+### 🟢 `DELETE /cart/items/:id`
 Remove item from cart.
 
-### `POST /cart/items/:itemId/addons`
+### 🟢 `POST /cart/items/:itemId/addons`
 Add addon to cart item.
 
 **Request**
 ```json
-{ "addonItemId": "*Int", "quantity": "*Int", "price": "*Float" }
+{ "addonItemId": "*String (UUID)", "quantity": "*Int", "price": "*Float" }
 ```
 
-### `DELETE /cart/addons/:id`
+### 🟢 `DELETE /cart/addons/:id`
 Remove addon.
 
-### `POST /cart/meals`
+### 🟢 `POST /cart/meals`
 Add meal to cart (package flow).
 
 **Request**
@@ -999,23 +999,23 @@ Add meal to cart (package flow).
 { "dayNumber": "*Int", "mealType": "*String", "mealTime": "String" }
 ```
 
-### `DELETE /cart/meals/:id`
+### 🟢 `DELETE /cart/meals/:id`
 Remove meal from cart.
 
-### `POST /cart/meals/:mealId/foods`
+### 🟢 `POST /cart/meals/:mealId/foods`
 Select food for a meal.
 
 **Request**
 ```json
-{ "foodId": "*Int", "quantity": "Int", "isReplacement": "Boolean" }
+{ "foodId": "*String (UUID)", "quantity": "Int", "isReplacement": "Boolean" }
 ```
 
-### `DELETE /cart/meals/:mealId/foods/:foodId`
+### 🟢 `DELETE /cart/meals/:mealId/foods/:foodId`
 Remove food from meal.
 
 ### --- Checkout ---
 
-### `POST /cart/checkout`
+### 🟢 `POST /cart/checkout`
 Get checkout summary.
 
 **Auth:** JWT (Customer)  
@@ -1030,12 +1030,12 @@ Get checkout summary.
   "itemCount": "Int",
   "mealCount": "Int",
   "appliedCoupon": { "code": "String", "discountAmount": "Float" },
-  "deliveryAddress": { "id": "Int", "label": "String", "address": "String" },
-  "availablePaymentMethods": [ { "id": "Int", "name": "String", "logo": "String", "isDefault": "Boolean" } ]
+  "deliveryAddress": { "id": "String (UUID)", "label": "String", "address": "String" },
+  "availablePaymentMethods": [ { "id": "String (UUID)", "name": "String", "logo": "String", "isDefault": "Boolean" } ]
 }
 ```
 
-### `POST /cart/checkout/apply-coupon`
+### 🟢 `POST /cart/checkout/apply-coupon`
 **Request**
 ```json
 { "couponCode": "*String" }
@@ -1046,200 +1046,114 @@ Get checkout summary.
 { "valid": true, "discountAmount": "Float", "newTotal": "Float" }
 ```
 
-### `DELETE /cart/checkout/remove-coupon`
+### 🟢 `DELETE /cart/checkout/remove-coupon`
+Remove applied coupon from cart.
 
-### `POST /cart/checkout/select-address`
+### 🟢 `POST /cart/checkout/select-address`
 **Request**
 ```json
-{ "addressId": "*Int" }
+{ "addressId": "*String (UUID)" }
 ```
 
-### `POST /orders`
+### 🟢 `POST /cart/checkout/place-order`
 Place order from cart.
 
 **Auth:** JWT (Customer)  
 **Request**
 ```json
 {
-  "cartId": "*Int",
-  "addressId": "*Int",
-  "paymentMethodId": "*Int",
-  "notes": "Text",
-  "deliverySchedule": { "deliveryDate": "*Date", "deliverySlot": "String" }
+  "cartId": "*String (UUID)",
+  "addressId": "*String (UUID)",
+  "paymentMethodId": "*String (UUID)",
+  "notes": "String",
+  "deliverySchedule": { "deliveryDate": "*Date (ISO)", "deliverySlot": "String" }
 }
 ```
 
 **Response** `201`
 ```json
-{ "orderId": "Int", "orderNumber": "String", "totalAmount": "Float", "paymentUrl": "String" }
+{ "orderId": "String (UUID)", "orderNumber": "String", "totalAmount": "Float", "paymentUrl": "String" }
 ```
 
 ---
 
 ## 6. Orders
 
-⚪ **Planned** — not started.
+🟢 **Completed** — 16 endpoints live.
 
 ### `GET /orders`
 List current customer's orders.
 
 **Auth:** JWT (Customer)  
 **Query:** `?page=1&limit=10&status=CONFIRMED|PREPARING|DELIVERED|CANCELLED`  
-**Response**
+**Response** (paginated)
 ```json
 {
-  "items": [
-    {
-      "id": "Int",
-      "orderNumber": "String",
-      "status": "String",
-      "totalAmount": "Float",
-      "paymentStatus": "String",
-      "itemsCount": "Int",
-      "placedAt": "DateTime",
-      "nextDeliveryDate": "Date",
-      "deliveryStatus": "String"
-    }
-  ],
-  "pagination": {}
+  "items": [ { "id": "UUID", "orderNumber": "String", "orderStatus": "String", "totalAmount": "Float", "paymentStatus": "String", "deliveryStatus": "String", "placedAt": "DateTime", "items": [...] } ],
+  "total": "Int", "page": "Int", "limit": "Int", "totalPages": "Int"
 }
 ```
 
 ### `GET /orders/:id`
-Get full order details.
+Get full order detail.
 
-**Auth:** JWT (Customer, Admin, Vendor)  
-**Response**
-```json
-{
-  "id": "Int",
-  "orderNumber": "String",
-  "customer": { "id": "Int", "fullName": "String", "phone": "String" },
-  "address": { "label": "String", "receiverName": "String", "receiverPhone": "String", "address": "String" },
-  "subtotal": "Float",
-  "discount": "Float",
-  "deliveryCharge": "Float",
-  "vat": "Float",
-  "totalAmount": "Float",
-  "paymentStatus": "String",
-  "orderStatus": "String",
-  "deliveryStatus": "String",
-  "notes": "Text",
-  "placedAt": "DateTime",
-  "confirmedAt": "DateTime",
-  "completedAt": "DateTime",
-  "items": [
-    { "id": "Int", "foodName": "String", "quantity": "Int", "unitPrice": "Float", "totalPrice": "Float", "status": "String" }
-  ],
-  "meals": [
-    { "dayNumber": "Int", "deliveryDate": "Date", "mealType": "String", "mealTime": "String", "status": "String", "foods": [ { "foodName": "String", "quantity": "Int", "status": "String" } ] }
-  ],
-  "schedule": { "deliveryDate": "Date", "deliverySlot": "String", "estimatedDeliveryTime": "String", "status": "String" },
-  "statusHistory": [ { "previousStatus": "String", "currentStatus": "String", "changedBy": "String", "remarks": "String", "createdAt": "DateTime" } ],
-  "timeline": [ { "title": "String", "description": "String", "status": "String", "createdAt": "DateTime" } ],
-  "invoice": { "invoiceNumber": "String", "invoiceDate": "Date", "grandTotal": "Float", "pdfUrl": "String" },
-  "cancellation": { "reason": "String", "cancelledAt": "DateTime" },
-  "feedback": { "rating": "Int", "review": "Text" },
-  "rider": { "id": "Int", "fullName": "String", "phone": "String" }
-}
-```
+**Auth:** JWT (Customer → own only, Admin, Vendor)  
+**Response** — deep include: items→food, meals→foods, schedules, statusHistories, timeline, cancellation, refunds, feedback, invoice, delivery→rider, payment, customer, vendor
 
 ### `PATCH /orders/:id`
-Update order (notes or schedule).
-
-**Auth:** JWT (Customer, Admin)  
-**Request**
-```json
-{ "notes": "String", "deliverySchedule": { "deliveryDate": "Date", "deliverySlot": "String" } }
-```
+Update notes / delivery schedule. **Auth:** JWT (Customer → own only, Admin)
 
 ### `DELETE /orders/:id`
-Soft-delete order. **Auth:** JWT (SuperAdmin)
+Soft-delete. **Auth:** JWT (SuperAdmin)
 
 ### `POST /orders/:id/cancel`
-Cancel order.
+Cancel order. Valid transitions: PENDING/CONFIRMED → CANCELLED. Creates cancellation record + status history + timeline + marks payment REFUNDED.
 
-**Auth:** JWT (Customer, Admin)  
-**Request**
-```json
-{ "reason": "*String", "cancelledBy": "*String (customer|admin)" }
-```
-
-**Response**
-```json
-{ "id": "Int", "status": "CANCELLED", "refundStatus": "PENDING", "refundAmount": "Float" }
-```
+**Auth:** JWT (Customer → own only, Admin)  
+**Request:** `{ "reason": "*string", "cancelledBy": "*string (customer|admin)" }`  
+**Response:** `{ "orderId": "UUID", "status": "CANCELLED" }`
 
 ### `PATCH /orders/:id/status`
-Update order status.
+Transition order status: PENDING→CONFIRMED→PREPARING→READY_FOR_PICKUP→PICKED_UP→ON_THE_WAY→DELIVERED→COMPLETED. Any state → CANCELLED (where allowed). Creates status history + timeline.
 
 **Auth:** JWT (Admin, Vendor)  
-**Request**
-```json
-{ "status": "*String (CONFIRMED|PREPARING|READY_FOR_PICKUP|DELIVERED|CANCELLED)", "remarks": "String" }
-```
+**Request:** `{ "status": "*string", "remarks": "string?" }`
 
 ### `PATCH /orders/:id/assign-vendor`
-Assign vendor to order (hidden from customer).
-
-**Auth:** JWT (Admin)  
-**Request**
-```json
-{ "vendorId": "*Int" }
-```
+Assign vendor. **Auth:** JWT (Admin)  
+**Request:** `{ "vendorId": "*UUID" }`
 
 ### `PATCH /orders/:id/assign-rider`
-Assign rider for delivery.
-
-**Auth:** JWT (Admin, Vendor)  
-**Request**
-```json
-{ "riderId": "*Int" }
-```
+Assign rider — creates/updates Delivery record. **Auth:** JWT (Admin, Vendor)  
+**Request:** `{ "riderId": "*UUID" }`
 
 ### `GET /admin/orders`
-List all orders (admin).
-
-**Auth:** JWT (SuperAdmin, Admin)  
-**Query:** `?page=1&limit=20&status=&paymentStatus=&vendorId=&customerId=&from=&to=`
+List all orders with advanced filters. **Auth:** JWT (Admin, SuperAdmin)  
+**Query:** `?page=1&limit=20&status=&paymentStatus=&vendorId=&customerId=&dateFrom=&dateTo=`
 
 ### `GET /vendors/:vendorId/orders`
-List vendor orders.
-
-**Auth:** JWT (Vendor)
+List vendor orders. **Auth:** JWT (Vendor)  
+**Query:** `?page=1&limit=20&status=`
 
 ### `POST /orders/:orderId/refund`
-Process refund.
+Process refund — creates OrderRefund + updates Payment status (REFUNDED/PARTIALLY_REFUNDED) + sets order REFUNDED.
 
 **Auth:** JWT (Admin)  
-**Request**
-```json
-{ "amount": "*Float", "refundMethod": "String", "reason": "*String" }
-```
+**Request:** `{ "amount": "*number", "refundMethod": "string?", "reason": "*string" }`
 
 ### `GET /orders/:orderId/refunds`
-List refunds for an order.
+List refunds for order. **Auth:** JWT (Admin)
 
 ### `POST /orders/:orderId/feedback`
-Submit feedback.
-
-**Auth:** JWT (Customer)  
-**Request**
-```json
-{ "rating": "*Int (1-5)", "review": "String" }
-```
+Upsert feedback (rating 1-5 + review). **Auth:** JWT (Customer — only delivered/completed orders)  
+**Request:** `{ "rating": "*number (1-5)", "review": "string?" }`
 
 ### `GET /orders/:orderId/invoice`
-Get invoice.
+Get or auto-generate invoice. **Auth:** JWT (Customer, Admin)
 
 ### `PATCH /order-meals/:id/status`
-Update individual meal status.
-
-**Auth:** JWT (Admin, Vendor)  
-**Request**
-```json
-{ "status": "*String" }
-```
+Update individual meal status. **Auth:** JWT (Admin, Vendor)  
+**Request:** `{ "status": "*string" }`
 
 ---
 

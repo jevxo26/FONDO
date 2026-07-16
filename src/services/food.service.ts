@@ -1,14 +1,9 @@
 import { apiFetch } from "@/lib/api";
 import { API } from "@/lib/endpoints";
-import { FoodResponse, Food } from "@/types/food";
+import { Food, FoodResponse } from "@/types/food";
 
-export async function getFoods(
-  page = 1,
-  limit = 12
-): Promise<FoodResponse> {
-  return apiFetch<FoodResponse>(
-    `${API.FOODS}?page=${page}&limit=${limit}`
-  );
+export async function getFoods(page = 1, limit = 12): Promise<FoodResponse> {
+  return apiFetch<FoodResponse>(`${API.FOODS}?page=${page}&limit=${limit}`);
 }
 
 export async function getFood(id: string) {

@@ -1,4 +1,5 @@
 import apiClient from "./axios";
+import { ApiError } from "./api-error";
 
 interface ApiResponse<T> {
   success: boolean;
@@ -18,8 +19,9 @@ async function request<T>(method: string, url: string, data?: unknown): Promise<
     const axiosError = error as {
       response?: { data?: { message?: string }; status?: number };
     };
+    const status = axiosError.response?.status ?? 0;
     const message = axiosError.response?.data?.message || "Something went wrong";
-    throw new Error(message);
+    throw new ApiError(status, message);
   }
 }
 

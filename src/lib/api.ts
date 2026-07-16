@@ -1,3 +1,5 @@
+import { ApiError } from "./api-error";
+
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
@@ -7,25 +9,32 @@ interface ApiResponse<T> {
   data: T;
 }
 
+interface ServerFetchOptions extends RequestInit {
+  revalidate?: number;
+  tags?: string[];
+}
+
 export async function apiFetch<T>(
   endpoint: string,
-  options?: RequestInit
+  options?: ServerFetchOptions,
 ): Promise<T> {
-  const res = await fetch(`${BASE_URL}${endpoint}`, {
-    ...options,
+  const { revalidate = 60, tags, ...fetchOptions } = options ?? {};
 
+  const res = await fetch(`${BASE_URL}${endpoint}`, {
+    ...fetchOptions,
     headers: {
       "Content-Type": "application/json",
       ...(options?.headers || {}),
     },
-
     next: {
-      revalidate: 60,
+      revalidate,
+      tags,
     },
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    const body = await res.json().catch(() => ({}));
+    throw new ApiError(res.status, body.message || "Failed to fetch data");
   }
 
   const result: ApiResponse<T> = await res.json();

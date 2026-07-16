@@ -1,15 +1,34 @@
 # FONDO — API Reference
 
 > **Base URL:** `http://localhost:3000/api`  
-> **Response Envelope:** `{ success: boolean, message: string, data: object | array | null }`  
-> **Auth:** JWT Bearer in `Authorization` header  
+> **Response Envelope:**
+> ```json
+> { "success": true, "message": "string", "data": { … } }
+> ```
+> **Error Response:**
+> ```json
+> { "success": false, "message": "string", "error": { "code": "string?", "details": "any?" } }
+> ```
+> **Auth:** JWT Bearer in `Authorization: Bearer <token>` header  
+> **Refresh:** httpOnly cookie named `refreshToken` (set by login, read by /auth/refresh)  
 > **Request body:** JSON. `*` = required. Omitted fields = optional.
+
+### Auth Flow
+
+```
+POST /auth/register → user object (no tokens)
+POST /auth/login    → { token, user } + refreshToken cookie
+  ↓
+Use Authorization: Bearer <token> for all [JWT] endpoints
+  ↓
+POST /auth/refresh  → { token } (reads refreshToken from cookie)
+POST /auth/logout   → clears cookie, invalidates session
+```
 
 **Status Legend**
 | | Meaning |
 |---|---------|
 | 🟢 | Built and working |
-| 🟡 | Partial (route exists, incomplete) |
 | ⚪ | Planned (not started) |
 
 **Quick reference:** [`API_REFERENCE.md`](./API_REFERENCE.md) — one-page route table.
@@ -27,7 +46,7 @@
 | 🟢 | [Food Admin (CRUD)](#4-food-admin-crud) | Module 4 |
 | 🟢 | [Cart & Checkout](#5-cart--checkout) | Module 7 |
 | 🟢 | [Orders](#6-orders) | Module 7 |
-| ⚪ | [Customers (Admin)](#7-customers-admin) | Module 1 |
+| 🟢 | [Customers (Admin)](#7-customers-admin) | Module 1 |
 | ⚪ | [Vendors](#8-vendors) | Module 3 |
 | ⚪ | [Packages & Meal Plans](#9-packages--meal-plans) | Module 6 |
 | ⚪ | [Subscriptions](#10-subscriptions) | Module 12 |
@@ -59,11 +78,11 @@
 ### Pagination
 `GET` list endpoints accept `?page=1&limit=20`. Response:
 ```json
-{ "items": [], "total": 100, "page": 1, "limit": 20, "totalPages": 5 }
+{ "items": [], "total": "Int", "page": "Int", "limit": "Int", "totalPages": "Int" }
 ```
 
 ### Soft Delete
-Models with `deletedAt` in the workflow doc use soft delete. Send `DELETE` request as normal; the record is marked deleted, not removed.
+Models with `deletedAt` use soft delete. `DELETE` marks record as deleted, not removed.
 
 ### Standard CRUD
 `GET /resource` — list all (paginated)  
@@ -76,10 +95,325 @@ Models with `deletedAt` in the workflow doc use soft delete. Send `DELETE` reque
 
 ## 1. Auth
 
-🟢 **All 10 endpoints built.**
+🟢 **All 10 endpoints built. No auth required unless marked `[JWT]`.**
 
 ### 🟢 `POST /auth/register`
-Create a new customer account.
+
+Create customer account. Sets `refreshToken` as httpOnly cookie.
+
+**Request `*` = required**
+```json
+{
+  "firstName": "*String",
+  "lastName": "*String",
+  "phone": "*String (+8801XXXXXXXXX)",
+  "email": "*String (valid email)",
+  "password": "*String (min 6 chars)",
+  "gender": "String (MALE|FEMALE|OTHER)",
+  "avatar": "String (URL)",
+  "dateOfBirth": "Date (ISO)"
+}
+```
+
+**Response `201`**
+```json
+{
+  "id": "UUID",
+  "firstName": "String",
+  "lastName": "String",
+  "phone": "String",
+  "email": "String",
+  "avatar": "String?",
+  "gender": "String?",
+  "dateOfBirth": "String?",
+  "role": "CUSTOMER",
+  "status": "ACTIVE",
+  "isPhoneVerified": false,
+  "isEmailVerified": false,
+  "lastLoginAt": null,
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
+```
+
+### 🟢 `POST /auth/login`
+
+Provide **either** email or phone + password. Sets `refreshToken` as httpOnly cookie.
+
+**Request**
+```json
+{
+  "email": "String (if no phone)",
+  "phone": "String (if no email)",
+  "password": "*String"
+}
+```
+
+**Response `200`**
+```json
+{
+  "token": "String (JWT access token)",
+  "user": {
+    "id": "UUID",
+    "firstName": "String",
+    "lastName": "String",
+    "phone": "String",
+    "email": "String",
+    "avatar": "String?",
+    "gender": "String?",
+    "dateOfBirth": "String?",
+    "role": "String",
+    "status": "String",
+    "isPhoneVerified": false,
+    "isEmailVerified": false,
+    "lastLoginAt": "DateTime?",
+    "createdAt": "DateTime",
+    "updatedAt": "DateTime"
+  }
+}
+```
+
+### 🟢 `POST /auth/otp/send`
+
+**Request**
+```json
+{
+  "phone": "String (if no email)",
+  "email": "String (if no phone)",
+  "purpose": "*String (LOGIN|REGISTER|FORGOT_PASSWORD|PHONE_VERIFY|EMAIL_VERIFY)"
+}
+```
+
+**Response `200`**
+```json
+{
+  "otp": "String (6-digit, dev only)",
+  "message": "OTP sent successfully"
+}
+```
+
+### 🟢 `POST /auth/otp/verify`
+
+**Request**
+```json
+{
+  "phone": "String (if no email)",
+  "email": "String (if no phone)",
+  "otp": "*String (6 digits)",
+  "purpose": "*String (LOGIN|REGISTER|FORGOT_PASSWORD|PHONE_VERIFY|EMAIL_VERIFY)"
+}
+```
+
+**Response `200`**
+```json
+{ "message": "OTP verified successfully" }
+```
+
+### 🟢 `POST /auth/refresh`
+
+Reads `refreshToken` from httpOnly cookie first. Falls back to request body.
+
+**Request**
+```json
+{ "refreshToken": "String (only if not in cookie)" }
+```
+
+**Response `200`**
+```json
+{ "token": "String (new JWT access token)" }
+```
+
+### 🟢 `POST /auth/logout`
+
+Clears `refreshToken` cookie. Reads token from cookie automatically.
+
+**Request** — none
+**Response `200`**
+```json
+{ "message": "Logged out successfully" }
+```
+
+### 🟢 `POST /auth/forgot-password`
+
+Sends reset token. **Dev only** — returns token directly.
+
+**Request**
+```json
+{ "email": "*String" }
+```
+
+**Response `200`**
+```json
+{ "resetToken": "String (32-byte hex)", "expiresIn": 3600 }
+```
+
+### 🟢 `POST /auth/reset-password`
+
+**Request**
+```json
+{
+  "token": "*String (from forgot-password)",
+  "password": "*String (min 6 chars)"
+}
+```
+
+**Response `200`**
+```json
+{ "message": "Password reset successful" }
+```
+
+### 🟢 `PATCH /auth/change-password`
+
+**[JWT]**
+
+**Request**
+```json
+{
+  "currentPassword": "*String",
+  "newPassword": "*String (min 6 chars)"
+}
+```
+
+**Response `200`**
+```json
+{ "message": "Password changed successfully" }
+```
+
+### 🟢 `GET /auth/me`
+
+**[JWT]** Returns full profile with addresses and notification settings.
+
+**Response `200`**
+```json
+{
+  "id": "UUID",
+  "firstName": "String",
+  "lastName": "String",
+  "phone": "String",
+  "email": "String",
+  "avatar": "String?",
+  "gender": "String?",
+  "dateOfBirth": "String?",
+  "role": "String",
+  "status": "String",
+  "isPhoneVerified": false,
+  "isEmailVerified": false,
+  "lastLoginAt": "DateTime?",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime",
+  "profile": {
+    "profession": "String?",
+    "occupation": "String?",
+    "company": "String?",
+    "bio": "String?",
+    "preferredLanguage": "String?",
+    "timezone": "String?",
+    "profileCompletionPercentage": "Float?"
+  },
+  "addresses": [
+    {
+      "id": "UUID",
+      "label": "String?",
+      "receiverName": "String",
+      "receiverPhone": "String",
+      "area": "String",
+      "district": "String",
+      "division": "String",
+      "isDefault": false,
+      "createdAt": "DateTime",
+      "updatedAt": "DateTime"
+    }
+  ],
+  "notificationSetting": {
+    "pushNotification": false,
+    "emailNotification": false,
+    "smsNotification": false,
+    "orderNotification": false,
+    "paymentNotification": false,
+    "promotionNotification": false,
+    "chatNotification": false,
+    "marketingNotification": false,
+    "systemNotification": false
+  }
+}
+```
+
+---
+
+## 2. Users & Profile
+
+🟢 **All 14 endpoints built.**
+
+### Own Profile
+
+#### 🟢 `PATCH /users/me`
+
+**[JWT]** Update own profile. Only sends changed fields.
+
+**Request**
+```json
+{
+  "firstName": "String",
+  "lastName": "String",
+  "phone": "String",
+  "email": "String",
+  "avatar": "String (URL)",
+  "gender": "String (MALE|FEMALE|OTHER)",
+  "dateOfBirth": "Date (ISO)"
+}
+```
+
+**Response `200`** — same shape as `GET /auth/me` user object (without profile/addresses/nested)
+
+#### 🟢 `DELETE /users/me`
+
+**[JWT]** Soft-delete own account.
+
+**Response `200`**
+```json
+{ "id": "UUID", "status": "INACTIVE", "deletedAt": "DateTime" }
+```
+
+### Admin: User Management
+
+#### 🟢 `GET /users`
+
+**[JWT] [ADMIN|SUPER_ADMIN]** List all users.
+
+**Query**: `?page=1&limit=20&role=CUSTOMER&search=&status=`
+
+**Response `200`**
+```json
+{
+  "items": [
+    {
+      "id": "UUID",
+      "firstName": "String",
+      "lastName": "String",
+      "phone": "String",
+      "email": "String",
+      "avatar": "String?",
+      "gender": "String?",
+      "dateOfBirth": "String?",
+      "role": "String",
+      "status": "String",
+      "isPhoneVerified": false,
+      "isEmailVerified": false,
+      "lastLoginAt": "DateTime?",
+      "createdAt": "DateTime",
+      "updatedAt": "DateTime"
+    }
+  ],
+  "total": "Int",
+  "page": "Int",
+  "limit": "Int",
+  "totalPages": "Int"
+}
+```
+
+#### 🟢 `POST /users`
+
+**[JWT] [ADMIN|SUPER_ADMIN]** Create a user.
 
 **Request**
 ```json
@@ -88,307 +422,58 @@ Create a new customer account.
   "lastName": "*String",
   "phone": "*String",
   "email": "*String",
-  "password": "*String (min 6 chars)",
-  "gender": "String (MALE|FEMALE|OTHER)",
+  "password": "String (min 6, auto-generated if omitted)",
+  "gender": "*String (MALE|FEMALE|OTHER)",
   "avatar": "String (URL)",
-  "dateOfBirth": "Date"
+  "dateOfBirth": "Date (ISO)"
 }
 ```
 
-**Response** `201`
-```json
-{
-  "id": "String",
-  "firstName": "String",
-  "lastName": "String",
-  "phone": "String",
-  "email": "String",
-  "avatar": "String",
-  "gender": "String",
-  "dateOfBirth": "Date",
-  "role": "String",
-  "status": "String",
-  "isPhoneVerified": false,
-  "isEmailVerified": false,
-  "lastLoginAt": "DateTime",
-  "createdAt": "DateTime",
-  "updatedAt": "DateTime"
-}
-```
+**Response `201`** — created user (same shape as GET /users item)
 
-### 🟢 `POST /auth/login`
-Login with phone/email and password. Sets `refreshToken` as httpOnly cookie.
+#### 🟢 `GET /users/:id`
 
-**Request**
-```json
-{
-  "email": "String (or phone)",
-  "phone": "String (or email)",
-  "password": "*String"
-}
-```
+**[JWT] [self|ADMIN|SUPER_ADMIN]**
 
-**Response**
-```json
-{
-  "token": "String",
-  "user": {
-    "id": "String",
-    "firstName": "String",
-    "lastName": "String",
-    "phone": "String",
-    "email": "String",
-    "avatar": "String",
-    "gender": "String",
-    "dateOfBirth": "Date",
-    "role": "String",
-    "status": "String",
-    "isPhoneVerified": "Boolean",
-    "isEmailVerified": "Boolean",
-    "lastLoginAt": "DateTime",
-    "createdAt": "DateTime",
-    "updatedAt": "DateTime"
-  }
-}
-```
+**Response `200`** — full user object (same shape as GET /users item)
 
-### 🟢 `POST /auth/otp/send`
-Send OTP for a specific purpose.
+#### 🟢 `PATCH /users/:id`
 
-**Request**
-```json
-{
-  "phone": "String (or email)",
-  "email": "String (or phone)",
-  "purpose": "*String (LOGIN|REGISTER|FORGOT_PASSWORD|PHONE_VERIFY|EMAIL_VERIFY)"
-}
-```
+**[JWT] [ADMIN|SUPER_ADMIN]** Update any user.
 
-**Response**
-```json
-{ "otp": "String (6-digit code)", "message": "OTP sent successfully" }
-```
+**Request** — same shape as `PATCH /users/me`
+**Response `200`** — updated user object
 
-### 🟢 `POST /auth/otp/verify`
-Verify OTP and log in.
+### Addresses
 
-**Request**
-```json
-{ "phone": "*String", "otp": "*String", "purpose": "*Enum (LOGIN|REGISTER|FORGOT_PASSWORD|PHONE_VERIFY|EMAIL_VERIFY)" }
-```
+All **[JWT]** — user's own addresses only.
 
-**Response**
-```json
-{ "message": "OTP verified successfully" }
-```
+#### 🟢 `GET /users/me/addresses`
 
-### 🟢 `POST /auth/refresh`
-Exchange refresh token for a new access token. Refresh token from httpOnly cookie or request body.
-
-**Request**
-```json
-{ "refreshToken": "String (if not in cookie)" }
-```
-
-**Response**
-```json
-{ "token": "String (new access token)" }
-```
-
-### 🟢 `POST /auth/logout`
-Invalidate current session. Clears `refreshToken` cookie. Reads refresh token from httpOnly cookie (or request body).
-
-**Request**
-```json
-{ "refreshToken": "String (if not in cookie)" }
-```
-
-**Response**
-```json
-{ "message": "Logged out successfully" }
-```
-
-### 🟢 `POST /auth/forgot-password`
-Request password reset link. Sends reset token to the registered email.
-
-**Request**
-```json
-{ "email": "*String" }
-```
-
-**Response**
-```json
-{ "resetToken": "String", "expiresIn": 600 }
-```
-
-### 🟢 `POST /auth/reset-password`
-Reset password using token from forgot-password.
-
-**Request**
-```json
-{ "token": "*String", "password": "*String (min 6 chars)" }
-```
-
-**Response**
-```json
-{ "message": "Password reset successful" }
-```
-
-### 🟢 `PATCH /auth/change-password`
-Change password while logged in.
-
-**Auth:** JWT  
-**Request**
-```json
-{ "currentPassword": "*String", "newPassword": "*String (min 6 chars)" }
-```
-
-**Response**
-```json
-{ "message": "Password changed successfully" }
-```
-
----
-
-## 2. Users & Profile
-
-🟢 **All 14 endpoints built. Admin user list/create/get/update also built.**
-
-### 🟢 `GET /users/me`
-Get current user profile.
-
-**Auth:** JWT  
-**Response**
-```json
-{
-  "id": "String",
-  "firstName": "String",
-  "lastName": "String",
-  "phone": "String",
-  "email": "String",
-  "avatar": "String",
-  "gender": "String",
-  "dateOfBirth": "Date",
-  "role": "String",
-  "status": "String",
-  "isPhoneVerified": "Boolean",
-  "isEmailVerified": "Boolean",
-  "lastLoginAt": "DateTime",
-  "createdAt": "DateTime",
-  "updatedAt": "DateTime",
-  "profile": {
-    "profession": "String",
-    "occupation": "String",
-    "company": "String",
-    "bio": "Text",
-    "preferredLanguage": "String",
-    "timezone": "String",
-    "profileCompletionPercentage": "Float"
-  },
-  "addresses": [
-    {
-      "id": "String",
-      "label": "String",
-      "receiverName": "String",
-      "receiverPhone": "String",
-      "area": "String",
-      "district": "String",
-      "division": "String",
-      "isDefault": "Boolean"
-    }
-  ],
-  "notificationSetting": {
-    "pushNotification": "Boolean",
-    "emailNotification": "Boolean",
-    "smsNotification": "Boolean",
-    "orderNotification": "Boolean",
-    "paymentNotification": "Boolean",
-    "promotionNotification": "Boolean",
-    "chatNotification": "Boolean",
-    "marketingNotification": "Boolean",
-    "systemNotification": "Boolean"
-  }
-}
-```
-
-### 🟢 `PATCH /users/me`
-Update own profile.
-
-**Auth:** JWT  
-**Request**
-```json
-{
-  "firstName": "String",
-  "lastName": "String",
-  "phone": "String",
-  "email": "String",
-  "avatar": "String",
-  "gender": "String (MALE|FEMALE|OTHER)",
-  "dateOfBirth": "Date"
-}
-```
-
-**Response** `200` — updated user object
-
-### 🟢 `DELETE /users/me`
-Delete own account.
-
-**Auth:** JWT (Customer)  
-**Response** `200`
-
-### 🟢 `GET /users`
-List users (admin).
-
-**Auth:** JWT (SuperAdmin, Admin)  
-**Query:** `?page=1&limit=20&role=CUSTOMER&search=&status=`  
-**Response** — paginated list of user objects
-
-### 🟢 `POST /users`
-Create user (admin).
-
-**Auth:** None (used for initial setup)
-
-### 🟢 `GET /users/:id`
-Get single user.
-
-**Auth:** JWT (Self, SuperAdmin, Admin)  
-**Response** — full user object
-
-### 🟢 `PATCH /users/:id`
-Update any user (admin).
-
-**Auth:** JWT (SuperAdmin, Admin)  
-**Request** — same as PATCH /users/me
-
-### --- Addresses ---
-
-### 🟢 `GET /users/me/addresses`
-List user addresses.
-
-**Response**
+**Response `200`**
 ```json
 {
   "items": [
     {
-      "id": "String",
-      "label": "String",
+      "id": "UUID",
+      "label": "String? (Home|Office|Other)",
       "receiverName": "String",
       "receiverPhone": "String",
-      "country": "String",
+      "country": "String?",
       "division": "String",
       "district": "String",
-      "upazila": "String",
+      "upazila": "String?",
       "area": "String",
-      "road": "String",
-      "house": "String",
-      "floor": "String",
-      "apartment": "String",
-      "landmark": "String",
-      "postalCode": "String",
-      "latitude": "Float",
-      "longitude": "Float",
-      "deliveryInstruction": "Text",
-      "isDefault": "Boolean",
+      "road": "String?",
+      "house": "String?",
+      "floor": "String?",
+      "apartment": "String?",
+      "landmark": "String?",
+      "postalCode": "String?",
+      "latitude": "Float?",
+      "longitude": "Float?",
+      "deliveryInstruction": "String?",
+      "isDefault": false,
       "createdAt": "DateTime",
       "updatedAt": "DateTime"
     }
@@ -396,13 +481,12 @@ List user addresses.
 }
 ```
 
-### 🟢 `POST /users/me/addresses`
-Add address.
+#### 🟢 `POST /users/me/addresses`
 
 **Request**
 ```json
 {
-  "label": "*String (Home|Office|Other)",
+  "label": "String (Home|Office|Other)",
   "receiverName": "*String",
   "receiverPhone": "*String",
   "country": "String",
@@ -418,116 +502,129 @@ Add address.
   "postalCode": "String",
   "latitude": "Float",
   "longitude": "Float",
-  "deliveryInstruction": "Text",
-  "isDefault": "Boolean"
+  "deliveryInstruction": "String",
+  "isDefault": false
 }
 ```
 
-**Response** `201` — address object
+**Response `201`** — created address (same shape as GET items)
 
-### 🟢 `PATCH /users/me/addresses/:id`
-Update address.
+#### 🟢 `PATCH /users/me/addresses/:id`
 
-### 🟢 `DELETE /users/me/addresses/:id`
-Soft-delete address.
+**Request** — partial subset of POST body
+**Response `200`** — updated address object
 
-### 🟢 `PATCH /users/me/addresses/:id/default`
-Set as default address.
+#### 🟢 `DELETE /users/me/addresses/:id`
 
-### --- Devices ---
+**Response `200`** — soft-deleted address object (`deletedAt` set)
 
-### 🟢 `GET /users/me/devices`
-List registered devices.
+#### 🟢 `PATCH /users/me/addresses/:id/default`
 
-### 🟢 `POST /users/me/devices`
-Register device for push notifications.
+**Request** — none
+**Response `200`** — updated address with `isDefault: true`
+
+### Devices
+
+All **[JWT]**
+
+#### 🟢 `GET /users/me/devices`
+
+**Response `200`**
+```json
+{
+  "items": [
+    {
+      "id": "UUID",
+      "deviceId": "String",
+      "deviceType": "String",
+      "deviceName": "String?",
+      "operatingSystem": "String?",
+      "osVersion": "String?",
+      "appVersion": "String?",
+      "browser": "String?",
+      "pushToken": "String",
+      "ipAddress": "String?",
+      "lastActiveAt": "DateTime?",
+      "createdAt": "DateTime",
+      "updatedAt": "DateTime"
+    }
+  ]
+}
+```
+
+#### 🟢 `POST /users/me/devices`
 
 **Request**
 ```json
 {
   "deviceId": "*String",
+  "deviceType": "*String (ios|android|web)",
+  "pushToken": "*String",
   "deviceName": "String",
-  "deviceType": "*String (mobile|tablet|desktop)",
   "operatingSystem": "String",
   "osVersion": "String",
   "appVersion": "String",
   "browser": "String",
-  "pushToken": "*String",
   "ipAddress": "String"
 }
 ```
 
-**Response** `201`
+**Response `201`** — created device (same shape as GET items)
+
+#### 🟢 `DELETE /users/me/devices/:id`
+
+**Response `200`** — deleted device object
+
+### Notification Settings
+
+All **[JWT]**
+
+#### 🟢 `GET /users/me/notification-settings`
+
+**Response `200`**
 ```json
 {
-  "id": "String",
-  "userId": "String",
-  "deviceId": "String",
-  "deviceName": "String",
-  "deviceType": "String",
-  "operatingSystem": "String",
-  "osVersion": "String",
-  "appVersion": "String",
-  "browser": "String",
-  "pushToken": "String",
-  "ipAddress": "String",
-  "lastActiveAt": "DateTime",
-  "createdAt": "DateTime",
-  "updatedAt": "DateTime"
+  "pushNotification": false,
+  "emailNotification": false,
+  "smsNotification": false,
+  "orderNotification": false,
+  "paymentNotification": false,
+  "promotionNotification": false,
+  "chatNotification": false,
+  "marketingNotification": false,
+  "systemNotification": false
 }
 ```
 
-### 🟢 `DELETE /users/me/devices/:id`
-Unregister device.
+#### 🟢 `PATCH /users/me/notification-settings`
 
-### --- Notification Settings ---
+**Request** — same shape as GET response (partial allowed)
+**Response `200`** — updated settings
 
-### 🟢 `GET /users/me/notification-settings`
-Get preferences.
+### Login History
 
-### 🟢 `PATCH /users/me/notification-settings`
-Update preferences.
+#### 🟢 `GET /users/me/login-history`
 
-**Request**
-```json
-{
-  "pushNotification": "Boolean",
-  "emailNotification": "Boolean",
-  "smsNotification": "Boolean",
-  "orderNotification": "Boolean",
-  "paymentNotification": "Boolean",
-  "promotionNotification": "Boolean",
-  "chatNotification": "Boolean",
-  "marketingNotification": "Boolean",
-  "systemNotification": "Boolean"
-}
-```
+**[JWT]** Paginated.
 
-**Response** — same shape as request with defaults applied.
+**Query**: `?page=1&limit=20`
 
-### --- Login History ---
-
-### 🟢 `GET /users/me/login-history`
-List login attempts (paginated). **Auth:** JWT (Self)
-
-**Query:** `?page=1&limit=20`
-
-**Response**
+**Response `200`**
 ```json
 {
   "items": [
     {
-      "id": "String",
-      "deviceId": "String",
-      "ipAddress": "String",
-      "browser": "String",
-      "platform": "String",
-      "country": "String",
-      "city": "String",
-      "loginMethod": "String",
-      "loginStatus": "String",
-      "loggedInAt": "DateTime",
-      "loggedOutAt": "DateTime",
+      "id": "UUID",
+      "deviceId": "String?",
+      "ipAddress": "String?",
+      "browser": "String?",
+      "platform": "String?",
+      "country": "String?",
+      "city": "String?",
+      "loginMethod": "String (email|phone)",
+      "loginStatus": "String (success|failed)",
+      "loggedInAt": "DateTime?",
+      "loggedOutAt": "DateTime?",
       "createdAt": "DateTime"
     }
   ],
@@ -542,15 +639,16 @@ List login attempts (paginated). **Auth:** JWT (Self)
 
 ## 3. Food Catalog (Customer)
 
-🟢 **All 10 endpoints built. Public — no auth required except favorites/reviews.**
+🟢 **All 10 endpoints built. Public unless marked `[JWT]`.**
 
 ### 🟢 `GET /foods`
+
 Browse foods with filters and pagination. Public.
 
 **Query**
 ```
 ?page=1&limit=20
-&categoryId=Int
+&categoryId=UUID
 &foodType=VEG|NON_VEG|VEGAN|SEAFOOD
 &spiceLevel=MILD|MEDIUM|HOT|EXTRA_HOT
 &dietType=String (e.g. Keto, Diabetic)
@@ -561,41 +659,43 @@ Browse foods with filters and pagination. Public.
 &sortOrder=asc|desc
 ```
 
-**Response**
+**Response `200`**
 ```json
 {
   "items": [
     {
-      "id": "String",
+      "id": "UUID",
       "name": "String",
       "slug": "String",
-      "shortDescription": "String",
-      "thumbnail": "String (URL)",
-      "coverImage": "String (URL)",
+      "shortDescription": "String?",
+      "thumbnail": "String (URL)?",
+      "coverImage": "String (URL)?",
       "foodType": "Enum (VEG|NON_VEG|VEGAN|SEAFOOD)",
-      "spiceLevel": "String",
-      "preparationTime": "Int (minutes)",
-      "calories": "Float",
-      "protein": "Float",
-      "fat": "Float",
-      "carbohydrate": "Float",
-      "servingSize": "String",
-      "isFeatured": "Boolean",
-      "isPopular": "Boolean",
-      "isRecommended": "Boolean",
-      "status": "String",
-      "category": { "id": "String", "name": "String", "slug": "String" },
+      "spiceLevel": "String?",
+      "preparationTime": "Int (minutes)?",
+      "calories": "Float?",
+      "protein": "Float?",
+      "fat": "Float?",
+      "carbohydrate": "Float?",
+      "servingSize": "String?",
+      "isFeatured": false,
+      "isPopular": false,
+      "isRecommended": false,
+      "category": { "id": "UUID", "name": "String", "slug": "String" },
       "variants": [
-        { "id": "String", "name": "String", "price": "Float", "discountPrice": "Float", "servingSize": "String" }
+        { "id": "UUID", "name": "String", "price": "Float", "discountPrice": "Float?", "servingSize": "String?" }
       ],
       "addons": [
-        { "id": "String", "name": "String", "isRequired": "Boolean", "items": [ { "id": "String", "name": "String", "price": "Float" } ] }
+        {
+          "id": "UUID", "name": "String", "isRequired": false, "maxSelection": "Int?",
+          "items": [ { "id": "UUID", "name": "String", "price": "Float", "image": "String?", "status": "String" } ]
+        }
       ],
       "rating": { "averageRating": "Float", "totalReview": "Int" },
-      "labels": [ { "label": "String", "color": "String" } ],
+      "labels": [ { "id": "UUID", "label": "String", "color": "String?" } ],
       "tags": [ { "name": "String" } ],
       "diets": [ { "dietType": "String" } ],
-      "discount": { "discountType": "String", "discountValue": "Float" }
+      "discount": { "discountType": "PERCENTAGE|FLAT", "discountValue": "Float" } | null
     }
   ],
   "total": "Int",
@@ -606,81 +706,123 @@ Browse foods with filters and pagination. Public.
 ```
 
 ### 🟢 `GET /foods/:id`
-Get single food by ID.
 
-**Response** — same item shape as above, plus:
+Get single food by ID. Public.
+
+**Response `200`** — same item shape as list, plus:
 ```json
 {
-  "subCategory": { "id": "String", "name": "String", "slug": "String" },
-  "nutrition": { "calories": "Float", "protein": "Float", "fat": "Float", "carbohydrate": "Float", "fiber": "Float", "sugar": "Float", "sodium": "Float", "cholesterol": "Float", "servingSize": "String" },
-  "ingredients": [ { "id": "String", "ingredientName": "String", "quantity": "String", "unit": "String", "isOptional": "Boolean" } ],
-  "allergens": [ { "id": "String", "allergen": "String", "description": "String" } ],
-  "schedules": [ { "id": "String", "mealType": "Enum (BREAKFAST|LUNCH|DINNER|SNACKS)", "startTime": "String", "endTime": "String", "status": "String" } ],
-  "gallery": [ { "id": "String", "image": "String (URL)", "sortOrder": "Int" } ],
-  "availability": [ { "id": "String", "isAvailable": "Boolean", "availableFrom": "String", "availableTo": "String", "availableDays": "[String]" } ],
-  "preparation": { "id": "String", "preparationTime": "Int", "cookTime": "Int", "packingTime": "Int" },
-  "prices": [ { "id": "String", "basePrice": "Float", "salePrice": "Float", "currency": "String", "status": "String" } ],
-  "discounts": [ { "id": "String", "discountType": "String", "discountValue": "Float", "status": "String" } ],
-  "images": [ { "id": "String", "image": "String (URL)", "sortOrder": "Int" } ],
-  "tags": [ { "id": "String", "name": "String", "slug": "String" } ]
+  "...": "(all fields from list item)",
+  "subCategory": { "id": "UUID", "name": "String", "slug": "String" } | null,
+  "nutrition": {
+    "calories": "Float?", "protein": "Float?", "fat": "Float?",
+    "carbohydrate": "Float?", "fiber": "Float?", "sugar": "Float?",
+    "sodium": "Float?", "cholesterol": "Float?", "servingSize": "String?"
+  } | null,
+  "ingredients": [
+    { "id": "UUID", "ingredientName": "String", "quantity": "String?", "unit": "String?", "isOptional": false }
+  ],
+  "allergens": [
+    { "id": "UUID", "allergen": "String", "description": "String?" }
+  ],
+  "schedules": [
+    { "id": "UUID", "mealType": "BREAKFAST|LUNCH|DINNER|SNACKS", "startTime": "String", "endTime": "String", "status": "String?" }
+  ],
+  "gallery": [ { "id": "UUID", "image": "String", "sortOrder": 0 } ],
+  "availability": { "id": "UUID", "isAvailable": true, "availableFrom": "String?", "availableTo": "String?", "availableDays": ["String"] } | null,
+  "preparation": { "id": "UUID", "preparationTime": "Int?", "cookTime": "Int?", "packingTime": "Int?" } | null,
+  "prices": [ { "id": "UUID", "basePrice": "Float", "salePrice": "Float?", "currency": "String?", "status": "String?" } ],
+  "discounts": [ { "id": "UUID", "discountType": "String", "discountValue": "Float", "status": "String?" } ],
+  "images": [ { "id": "UUID", "image": "String", "sortOrder": 0 } ],
+  "tags": [ { "id": "UUID", "name": "String", "slug": "String" } ]
 }
 ```
 
 ### 🟢 `GET /foods/slug/:slug`
-Get food by slug — same response as `/:id`.
+
+Get food by slug. Public.
+
+**Response `200`** — same shape as `GET /foods/:id`
 
 ### 🟢 `GET /foods/categories/list`
-List all food categories with subcategories and food counts.
 
-**Response**
-```json
-{ "items": [ { "id": "Int", "name": "String", "slug": "String", "description": "String", "icon": "String", "image": "String (URL)", "sortOrder": "Int", "foodCount": "Int", "subCategories": [ { "id": "Int", "name": "String", "slug": "String", "foodCount": "Int" } ] } ] }
-```
+List all food categories with subcategories and food counts. Public.
 
-### 🟢 `GET /foods/categories/:id`
-Get category with subcategories and food count.
-
-### 🟢 `GET /foods/tags/list`
-List all food tags with usage counts (e.g. Healthy, High Protein, Keto, Popular).
-
-**Response**
-```json
-{ "items": [ { "id": "Int", "name": "String", "slug": "String", "foodCount": "Int" } ] }
-```
-
-### 🟢 `POST /foods/:foodId/favorite`
-Add food to favorites for current user.
-
-**Auth:** JWT (Customer)  
-**Response**
-```json
-{ "isFavorited": true }
-```
-
-### 🟢 `DELETE /foods/:foodId/favorite`
-Remove food from favorites for current user.
-
-**Auth:** JWT (Customer)  
-**Response**
-```json
-{ "isFavorited": false }
-```
-
-### 🟢 `GET /foods/:foodId/reviews`
-List reviews for a food.
-
-**Query:** `?page=1&limit=10`  
-**Response**
+**Response `200`**
 ```json
 {
   "items": [
     {
-      "id": "String",
-      "rating": "Int",
-      "review": "Text",
-      "status": "String",
+      "id": "UUID",
+      "name": "String",
+      "slug": "String",
+      "description": "String?",
+      "icon": "String?",
+      "image": "String?",
+      "sortOrder": 0,
+      "status": "String?",
+      "_count": { "foods": "Int" },
+      "subCategories": [
+        { "id": "UUID", "name": "String", "slug": "String", "status": "String?" }
+      ]
+    }
+  ]
+}
+```
+
+### 🟢 `GET /foods/categories/:id`
+
+Get category with subcategories and food count. Public.
+
+**Response `200`** — single category object (same shape as list item)
+
+### 🟢 `GET /foods/tags/list`
+
+List all food tags with usage counts. Public.
+
+**Response `200`**
+```json
+{
+  "items": [
+    { "id": "UUID", "name": "String", "slug": "String", "_count": { "tagMappings": "Int" } }
+  ]
+}
+```
+
+### 🟢 `POST /foods/:foodId/favorite`
+
+**[JWT] [CUSTOMER]**
+
+**Request** — none
+**Response `200`** — favorite object
+```json
+{ "id": "UUID", "userId": "UUID", "foodId": "UUID", "createdAt": "DateTime" }
+```
+
+### 🟢 `DELETE /foods/:foodId/favorite`
+
+**[JWT] [CUSTOMER]**
+
+**Request** — none
+**Response `200`** — deleted favorite object
+
+### 🟢 `GET /foods/:foodId/reviews`
+
+List approved reviews. Public.
+
+**Query**: `?page=1&limit=10`
+
+**Response `200`**
+```json
+{
+  "items": [
+    {
+      "id": "UUID",
+      "rating": "Int (1-5)",
+      "review": "String?",
+      "status": "approved",
       "createdAt": "DateTime",
-      "customer": { "id": "String", "firstName": "String", "lastName": "String", "avatar": "String" }
+      "customer": { "id": "UUID", "firstName": "String", "lastName": "String", "avatar": "String?" }
     }
   ],
   "total": "Int",
@@ -691,23 +833,26 @@ List reviews for a food.
 ```
 
 ### 🟢 `POST /foods/:foodId/reviews`
-Submit a review.
 
-**Auth:** JWT (Customer)  
+**[JWT] [CUSTOMER]**
+
 **Request**
 ```json
-{ "rating": "*Int (1-5)", "review": "String" }
+{
+  "rating": "*Int (1-5)",
+  "review": "String"
+}
 ```
 
-**Response** `201`
+**Response `201`**
 ```json
 {
-  "id": "String",
-  "foodId": "String",
-  "customerId": "String",
+  "id": "UUID",
+  "foodId": "UUID",
+  "customerId": "UUID",
   "rating": "Int",
-  "review": "Text",
-  "status": "String",
+  "review": "String?",
+  "status": "approved",
   "createdAt": "DateTime",
   "updatedAt": "DateTime"
 }
@@ -718,21 +863,21 @@ Submit a review.
 ## 4. Food Admin (CRUD)
 
 🟢 **All 34 endpoints built. Mounted at `/api/admin` prefix.**
+**[JWT] [ADMIN|SUPER_ADMIN]** unless noted.
 
-All endpoints in this section require **Auth:** JWT (Admin | SuperAdmin) unless noted.
+### Food CRUD
 
-### 🟢 `POST /foods`
-Create a new food item.
+#### 🟢 `POST /admin/foods`
 
 **Request**
 ```json
 {
-  "categoryId": "*String",
-  "subCategoryId": "String",
+  "categoryId": "*UUID",
+  "subCategoryId": "UUID",
   "name": "*String",
   "slug": "*String (unique)",
   "shortDescription": "String",
-  "description": "Text",
+  "description": "String",
   "thumbnail": "String (URL)",
   "coverImage": "String (URL)",
   "preparationTime": "Int (minutes)",
@@ -743,472 +888,1419 @@ Create a new food item.
   "servingSize": "String",
   "foodType": "*Enum (VEG|NON_VEG|VEGAN|SEAFOOD)",
   "spiceLevel": "String",
-  "isFeatured": "Boolean",
-  "isPopular": "Boolean",
-  "isRecommended": "Boolean",
+  "isFeatured": false,
+  "isPopular": false,
+  "isRecommended": false,
   "status": "String (draft|active|archived)"
 }
 ```
 
-**Response** `201` — food object with category, nutrition, rating, visibility
-
-### 🟢 `PUT /foods/:id`
-Update food — same body as POST (PUT = full replace).
-
-### 🟢 `DELETE /foods/:id`
-Soft-delete food.
-
-### --- Category CRUD ---
-
-### 🟢 `POST /categories`
+**Response `201`**
 ```json
-{ "name": "*String", "slug": "*String (unique)", "description": "String", "icon": "String", "image": "String (URL)", "sortOrder": "Int", "status": "String" }
+{
+  "id": "UUID",
+  "foodCode": "String",
+  "categoryId": "UUID",
+  "subCategoryId": "UUID?",
+  "name": "String",
+  "slug": "String",
+  "shortDescription": "String?",
+  "description": "String?",
+  "thumbnail": "String?",
+  "coverImage": "String?",
+  "preparationTime": "Int?",
+  "calories": "Float?",
+  "protein": "Float?",
+  "fat": "Float?",
+  "carbohydrate": "Float?",
+  "servingSize": "String?",
+  "foodType": "String",
+  "spiceLevel": "String?",
+  "isFeatured": false,
+  "isPopular": false,
+  "isRecommended": false,
+  "status": "draft",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime",
+  "category": { "id": "UUID", "name": "String", "slug": "String" },
+  "nutrition": { "foodId": "UUID", "calories": null, "protein": null, "fat": null, "carbohydrate": null, "fiber": null, "sugar": null, "sodium": null, "cholesterol": null, "servingSize": null },
+  "rating": { "foodId": "UUID", "averageRating": 0, "totalReview": 0, "fiveStar": 0, "fourStar": 0, "threeStar": 0, "twoStar": 0, "oneStar": 0 },
+  "visibility": { "foodId": "UUID", "isVisible": false, "isFeatured": false, "isRecommended": false, "displayOrder": 0 }
+}
 ```
 
-### 🟢 `PUT /categories/:id`
-Update category.
+#### 🟢 `PUT /admin/foods/:id`
 
-### 🟢 `DELETE /categories/:id`
-Soft-delete category.
+**Request** — same shape as POST (all fields optional for update)
+**Response `200`** — updated food object (flat, no includes)
 
-### 🟢 `POST /categories/:categoryId/subcategories`
-```json
-{ "name": "*String", "slug": "*String (unique)", "description": "String", "icon": "String", "image": "String (URL)", "sortOrder": "Int", "status": "String" }
-```
+#### 🟢 `DELETE /admin/foods/:id`
 
-### 🟢 `PUT /subcategories/:id`
-Update subcategory.
+Soft-delete (sets `deletedAt` + `status: archived`).
 
-### 🟢 `DELETE /subcategories/:id`
-Soft-delete subcategory.
+**Response `200`** — updated food object
 
-### --- Variant CRUD ---
+### Category CRUD
 
-### 🟢 `POST /foods/:foodId/variants`
+#### 🟢 `POST /admin/categories`
+
 **Request**
 ```json
-{ "name": "*String", "description": "String", "price": "*Float", "discountPrice": "Float", "weight": "String", "servingSize": "String", "status": "String (active|deleted)" }
+{
+  "name": "*String",
+  "slug": "*String (unique)",
+  "description": "String",
+  "icon": "String",
+  "image": "String (URL)",
+  "sortOrder": "Int",
+  "status": "String (active|inactive)"
+}
 ```
 
-**Response** `201` — variant object
+**Response `201`** — created category with all fields
 
-### 🟢 `PUT /variants/:id`
-Update variant.
+#### 🟢 `PUT /admin/categories/:id`
 
-### 🟢 `DELETE /variants/:id`
-Delete variant.
+**Request** — partial subset of POST body
+**Response `200`** — updated category
 
-### --- Addon CRUD ---
+#### 🟢 `DELETE /admin/categories/:id`
 
-### 🟢 `POST /foods/:foodId/addons`
+Soft-delete (sets `deletedAt` + `status: inactive`).
+
+**Response `200`** — updated category
+
+### SubCategory CRUD
+
+#### 🟢 `POST /admin/categories/:categoryId/subcategories`
+
+**Request**
 ```json
-{ "name": "*String", "isRequired": "Boolean", "maxSelection": "Int", "status": "String" }
+{
+  "name": "*String",
+  "slug": "*String (unique)",
+  "description": "String",
+  "icon": "String",
+  "image": "String (URL)",
+  "sortOrder": "Int",
+  "status": "String (active|inactive)"
+}
 ```
 
-### 🟢 `PUT /addons/:id`
-Update addon group.
+**Response `201`** — created subcategory
 
-### 🟢 `DELETE /addons/:id`
-Delete addon group.
+#### 🟢 `PUT /admin/subcategories/:id`
 
-### 🟢 `POST /addons/:addonId/items`
+**Request** — partial subset of POST body
+**Response `200`** — updated subcategory
+
+#### 🟢 `DELETE /admin/subcategories/:id`
+
+Soft-delete (sets `deletedAt` + `status: inactive`).
+
+**Response `200`** — updated subcategory
+
+### Variant CRUD
+
+#### 🟢 `POST /admin/foods/:foodId/variants`
+
+**Request**
 ```json
-{ "name": "*String", "price": "*Float", "image": "String (URL)", "status": "String" }
+{
+  "name": "*String",
+  "description": "String",
+  "price": "*Float",
+  "discountPrice": "Float",
+  "weight": "String",
+  "servingSize": "String",
+  "status": "String (active|deleted)"
+}
 ```
 
-### 🟢 `PUT /addon-items/:id`
-Update addon item.
-
-### 🟢 `DELETE /addon-items/:id`
-Delete addon item.
-
-### --- Nutrition, Ingredients, Allergens ---
-
-### 🟢 `GET /foods/:foodId/nutrition`
-Get nutrition info.
-
-### 🟢 `PATCH /foods/:foodId/nutrition`
+**Response `201`**
 ```json
-{ "calories": "Float", "protein": "Float", "fat": "Float", "carbohydrate": "Float", "fiber": "Float", "sugar": "Float", "sodium": "Float", "cholesterol": "Float", "servingSize": "String" }
+{
+  "id": "UUID",
+  "foodId": "UUID",
+  "name": "String",
+  "description": "String?",
+  "price": "Float",
+  "discountPrice": "Float?",
+  "weight": "String?",
+  "servingSize": "String?",
+  "status": "active",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
 ```
 
-### 🟢 `POST /foods/:foodId/ingredients`
+#### 🟢 `PUT /admin/variants/:id`
+
+**Request** — partial subset of POST body
+**Response `200`** — updated variant
+
+#### 🟢 `DELETE /admin/variants/:id`
+
+Soft-delete (sets `status: deleted`).
+
+**Response `200`** — updated variant
+
+### Addon CRUD
+
+#### 🟢 `POST /admin/foods/:foodId/addons`
+
+**Request**
 ```json
-{ "ingredientName": "*String", "quantity": "String", "unit": "String", "isOptional": "Boolean" }
+{
+  "name": "*String",
+  "isRequired": false,
+  "maxSelection": "Int (null = unlimited)",
+  "status": "String (active|deleted)"
+}
 ```
 
-### 🟢 `DELETE /ingredients/:id`
-
-### 🟢 `POST /foods/:foodId/allergens`
+**Response `201`**
 ```json
-{ "allergen": "*String", "description": "String" }
+{
+  "id": "UUID",
+  "foodId": "UUID",
+  "name": "String",
+  "isRequired": false,
+  "maxSelection": "Int?",
+  "status": "active",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
 ```
 
-### 🟢 `DELETE /allergens/:id`
+#### 🟢 `PUT /admin/addons/:id`
 
-### --- Pricing & Discounts ---
+**Request** — partial subset of POST body
+**Response `200`** — updated addon
 
-### 🟢 `POST /foods/:foodId/prices`
+#### 🟢 `DELETE /admin/addons/:id`
+
+Soft-delete (also marks all items as `status: deleted`).
+
+**Response `200`** — updated addon
+
+### Addon Item CRUD
+
+#### 🟢 `POST /admin/addons/:addonId/items`
+
+**Request**
 ```json
-{ "basePrice": "*Float", "salePrice": "Float", "currency": "String", "effectiveFrom": "Date", "effectiveTo": "Date" }
+{
+  "name": "*String",
+  "price": "*Float",
+  "image": "String (URL)",
+  "status": "String (active|deleted)"
+}
 ```
 
-### 🟢 `POST /foods/:foodId/discounts`
+**Response `201`**
 ```json
-{ "discountType": "*Enum (PERCENTAGE|FLAT)", "discountValue": "*Float", "startDate": "Date", "endDate": "Date" }
+{
+  "id": "UUID",
+  "addonId": "UUID",
+  "name": "String",
+  "price": "Float",
+  "image": "String?",
+  "status": "active",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
 ```
 
-### 🟢 `DELETE /discounts/:id`
+#### 🟢 `PUT /admin/addon-items/:id`
 
-### --- Tags & Labels ---
+**Request** — partial subset of POST body
+**Response `200`** — updated addon item
 
-### 🟢 `POST /foods/:foodId/tags`
+#### 🟢 `DELETE /admin/addon-items/:id`
+
+Soft-delete (sets `status: deleted`).
+
+**Response `200`** — updated addon item
+
+### Nutrition
+
+#### 🟢 `GET /admin/foods/:foodId/nutrition`
+
+**Response `200`**
 ```json
-{ "tagIds": "*[Int]" }
+{
+  "id": "UUID",
+  "foodId": "UUID",
+  "calories": "Float?",
+  "protein": "Float?",
+  "fat": "Float?",
+  "carbohydrate": "Float?",
+  "fiber": "Float?",
+  "sugar": "Float?",
+  "sodium": "Float?",
+  "cholesterol": "Float?",
+  "servingSize": "String?",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
 ```
 
-### 🟢 `DELETE /foods/:foodId/tags/:tagId`
+#### 🟢 `PATCH /admin/foods/:foodId/nutrition`
 
-### 🟢 `POST /tags`
+Upserts nutrition record for the food.
+
+**Request**
 ```json
-{ "name": "*String", "slug": "*String" }
+{
+  "calories": "Float",
+  "protein": "Float",
+  "fat": "Float",
+  "carbohydrate": "Float",
+  "fiber": "Float",
+  "sugar": "Float",
+  "sodium": "Float",
+  "cholesterol": "Float",
+  "servingSize": "String"
+}
 ```
 
-### 🟢 `POST /foods/:foodId/labels`
+**Response `200`** — nutrition object (same shape as GET)
+
+### Ingredients
+
+#### 🟢 `POST /admin/foods/:foodId/ingredients`
+
+**Request**
 ```json
-{ "label": "*String", "color": "String" }
+{
+  "ingredientName": "*String",
+  "quantity": "String",
+  "unit": "String",
+  "isOptional": false
+}
 ```
 
-### 🟢 `DELETE /labels/:id`
-
-### --- Schedule & Availability ---
-
-### 🟢 `PATCH /foods/:foodId/availability`
+**Response `201`**
 ```json
-{ "isAvailable": "Boolean", "availableFrom": "Time", "availableTo": "Time", "availableDays": "[String]" }
+{
+  "id": "UUID",
+  "foodId": "UUID",
+  "ingredientName": "String",
+  "quantity": "String?",
+  "unit": "String?",
+  "isOptional": false,
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
 ```
 
-### 🟢 `POST /foods/:foodId/schedules`
+#### 🟢 `DELETE /admin/ingredients/:id`
+
+Hard-deletes ingredient.
+
+**Response `200`** — deleted ingredient object
+
+### Allergens
+
+#### 🟢 `POST /admin/foods/:foodId/allergens`
+
+**Request**
 ```json
-{ "mealType": "*Enum (BREAKFAST|LUNCH|DINNER|SNACKS)", "startTime": "String (HH:mm)", "endTime": "String (HH:mm)", "status": "String" }
+{
+  "allergen": "*String",
+  "description": "String"
+}
 ```
 
-### 🟢 `DELETE /schedules/:id`
-
-### 🟢 `PATCH /foods/:foodId/visibility`
+**Response `201`**
 ```json
-{ "isFeatured": "Boolean", "isRecommended": "Boolean", "displayOrder": "Int" }
+{
+  "id": "UUID",
+  "foodId": "UUID",
+  "allergen": "String",
+  "description": "String?",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
+```
+
+#### 🟢 `DELETE /admin/allergens/:id`
+
+Hard-deletes allergen.
+
+**Response `200`** — deleted allergen object
+
+### Prices
+
+#### 🟢 `POST /admin/foods/:foodId/prices`
+
+**Request**
+```json
+{
+  "basePrice": "*Float",
+  "salePrice": "Float",
+  "currency": "String (default BDT)",
+  "effectiveFrom": "Date (ISO)",
+  "effectiveTo": "Date (ISO)",
+  "status": "String (active|inactive)"
+}
+```
+
+**Response `201`**
+```json
+{
+  "id": "UUID",
+  "foodId": "UUID",
+  "basePrice": "Float",
+  "salePrice": "Float?",
+  "currency": "BDT",
+  "effectiveFrom": "DateTime?",
+  "effectiveTo": "DateTime?",
+  "status": "active",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
+```
+
+### Discounts
+
+#### 🟢 `POST /admin/foods/:foodId/discounts`
+
+**Request**
+```json
+{
+  "discountType": "*Enum (PERCENTAGE|FLAT)",
+  "discountValue": "*Float",
+  "startDate": "Date (ISO)",
+  "endDate": "Date (ISO)",
+  "status": "String (active|inactive)"
+}
+```
+
+**Response `201`**
+```json
+{
+  "id": "UUID",
+  "foodId": "UUID",
+  "discountType": "PERCENTAGE|FLAT",
+  "discountValue": "Float",
+  "startDate": "DateTime?",
+  "endDate": "DateTime?",
+  "status": "active",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
+```
+
+#### 🟢 `DELETE /admin/discounts/:id`
+
+Soft-delete (sets `status: inactive`).
+
+**Response `200`** — updated discount object
+
+### Tags
+
+#### 🟢 `POST /admin/foods/:foodId/tags`
+
+**Request**
+```json
+{ "tagIds": "*[UUID] (at least 1)" }
+```
+
+**Response `200`**
+```json
+{ "count": "Int (newly added)" }
+```
+
+#### 🟢 `DELETE /admin/foods/:foodId/tags/:tagId`
+
+**Response `200`** — deleted tag mapping
+
+#### 🟢 `POST /admin/tags`
+
+Create a new food tag.
+
+**Request**
+```json
+{
+  "name": "*String",
+  "slug": "*String (unique)"
+}
+```
+
+**Response `201`**
+```json
+{
+  "id": "UUID",
+  "name": "String",
+  "slug": "String",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
+```
+
+### Labels
+
+#### 🟢 `POST /admin/foods/:foodId/labels`
+
+**Request**
+```json
+{
+  "label": "*String",
+  "color": "String (hex code)"
+}
+```
+
+**Response `201`**
+```json
+{
+  "id": "UUID",
+  "foodId": "UUID",
+  "label": "String",
+  "color": "String?",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
+```
+
+#### 🟢 `DELETE /admin/labels/:id`
+
+Hard-deletes label.
+
+**Response `200`** — deleted label object
+
+### Availability
+
+#### 🟢 `PATCH /admin/foods/:foodId/availability`
+
+Upserts availability record.
+
+**Request**
+```json
+{
+  "isAvailable": true,
+  "availableFrom": "String (HH:mm)",
+  "availableTo": "String (HH:mm)",
+  "availableDays": ["String (Monday|Tuesday|...)"]
+}
+```
+
+**Response `200`**
+```json
+{
+  "id": "UUID",
+  "foodId": "UUID",
+  "isAvailable": true,
+  "availableFrom": "String?",
+  "availableTo": "String?",
+  "availableDays": ["String"],
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
+```
+
+### Schedules
+
+#### 🟢 `POST /admin/foods/:foodId/schedules`
+
+**Request**
+```json
+{
+  "mealType": "*Enum (BREAKFAST|LUNCH|DINNER|SNACKS)",
+  "startTime": "*String (HH:mm)",
+  "endTime": "*String (HH:mm)",
+  "status": "String (active|deleted)"
+}
+```
+
+**Response `201`**
+```json
+{
+  "id": "UUID",
+  "foodId": "UUID",
+  "mealType": "String",
+  "startTime": "String",
+  "endTime": "String",
+  "status": "active",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
+```
+
+#### 🟢 `DELETE /admin/schedules/:id`
+
+Soft-delete (sets `status: deleted`).
+
+**Response `200`** — updated schedule
+
+### Visibility
+
+#### 🟢 `PATCH /admin/foods/:foodId/visibility`
+
+Upserts visibility record.
+
+**Request**
+```json
+{
+  "isVisible": true,
+  "isFeatured": true,
+  "isRecommended": true,
+  "displayOrder": "Int"
+}
+```
+
+**Response `200`**
+```json
+{
+  "id": "UUID",
+  "foodId": "UUID",
+  "isVisible": false,
+  "isFeatured": false,
+  "isRecommended": false,
+  "displayOrder": 0,
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
 ```
 
 ---
 
 ## 5. Cart & Checkout
 
-🟢 **Built** — 20 endpoints live at `/api/cart`.
+🟢 **All 20 endpoints built. Mounted at `/api/cart`.**
+All require **[JWT] [CUSTOMER]**.
 
-### 🟢 `GET /cart`
-Get current user's active cart.
+All cart mutation endpoints return the full cart object (see GET /cart response).
 
-**Auth:** JWT (Customer)  
-**Response**
+### Cart Object (returned by all cart endpoints)
+
 ```json
 {
-  "id": "String (UUID)",
-  "customerId": "String (UUID)",
-  "packageId": "String (UUID)",
-  "customMealPlanId": "String (UUID)",
-  "couponId": "String (UUID)",
-  "subtotal": "Float",
-  "discount": "Float",
-  "deliveryCharge": "Float",
-  "vat": "Float",
-  "totalAmount": "Float",
-  "status": "String",
+  "id": "UUID",
+  "customerId": "UUID",
+  "packageId": "UUID?",
+  "customMealPlanId": "UUID?",
+  "couponId": "UUID?",
+  "subtotal": 0.00,
+  "discount": 0.00,
+  "deliveryCharge": 50.00,
+  "vat": 0.00,
+  "totalAmount": 0.00,
+  "status": "active",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime",
   "items": [
     {
-      "id": "String (UUID)",
-      "foodId": "String (UUID)",
-      "foodName": "String",
-      "foodImage": "String",
-      "quantity": "Int",
-      "unitPrice": "Float",
-      "totalPrice": "Float",
-      "addons": [ { "name": "String", "price": "Float", "quantity": "Int" } ]
+      "id": "UUID",
+      "cartId": "UUID",
+      "foodId": "UUID",
+      "packageMealId": "UUID?",
+      "quantity": 1,
+      "unitPrice": 0.00,
+      "totalPrice": 0.00,
+      "createdAt": "DateTime",
+      "updatedAt": "DateTime",
+      "food": { "id": "UUID", "name": "String", "thumbnail": "String?" },
+      "addons": [
+        { "id": "UUID", "cartItemId": "UUID", "addonItemId": "UUID", "quantity": 1, "price": 0.00, "createdAt": "DateTime" }
+      ]
     }
   ],
   "meals": [
     {
-      "dayNumber": "Int",
+      "id": "UUID",
+      "cartId": "UUID",
+      "dayNumber": 1,
       "mealType": "String",
-      "mealTime": "String",
-      "foods": [ { "foodId": "String (UUID)", "foodName": "String", "quantity": "Int", "isReplacement": "Boolean" } ]
+      "mealTime": "String?",
+      "createdAt": "DateTime",
+      "updatedAt": "DateTime",
+      "foods": [
+        { "id": "UUID", "cartMealId": "UUID", "foodId": "UUID", "quantity": 1, "isReplacement": false, "food": { "id": "UUID", "name": "String" } }
+      ]
     }
-  ]
+  ],
+  "summary": {
+    "id": "UUID",
+    "cartId": "UUID",
+    "itemCount": 0,
+    "mealCount": 0,
+    "subtotal": 0.00,
+    "discount": 0.00,
+    "deliveryCharge": 50.00,
+    "vat": 0.00,
+    "grandTotal": 0.00,
+    "createdAt": "DateTime",
+    "updatedAt": "DateTime"
+  }
 }
 ```
 
+### 🟢 `GET /cart`
+
+Get current user's active cart. Auto-creates empty cart if none exists.
+
+**Request** — none
+**Response `200`** — full cart object
+
 ### 🟢 `POST /cart`
+
 Initialize cart with a package or custom meal plan.
 
-**Auth:** JWT (Customer)  
 **Request**
 ```json
-{ "packageId": "String (UUID)", "customMealPlanId": "String (UUID)" }
+{
+  "packageId": "UUID (if no customMealPlanId)",
+  "customMealPlanId": "UUID (if no packageId)"
+}
 ```
 
-**Response** `201` — cart object
+**Response `200`** — full cart object (with package meals pre-populated)
 
 ### 🟢 `DELETE /cart`
-Clear cart.
+
+Clear all items, meals, addons, coupons from cart.
+
+**Request** — none
+**Response `200`** — full cart object (empty)
 
 ### 🟢 `POST /cart/items`
-Add food item to cart.
+
+Add food item to cart. If same food+packageMeal exists, increments quantity.
 
 **Request**
 ```json
-{ "foodId": "*String (UUID)", "packageMealId": "String (UUID)", "quantity": "*Int (default 1)", "unitPrice": "*Float" }
+{
+  "foodId": "*UUID",
+  "packageMealId": "UUID",
+  "quantity": "Int (default 1)",
+  "unitPrice": "*Float"
+}
 ```
 
+**Response `200`** — full cart object
+
 ### 🟢 `PATCH /cart/items/:id`
+
 Update item quantity.
 
 **Request**
 ```json
-{ "quantity": "*Int" }
+{ "quantity": "*Int (min 1)" }
 ```
+
+**Response `200`** — full cart object
 
 ### 🟢 `DELETE /cart/items/:id`
-Remove item from cart.
+
+Remove item + its addons.
+
+**Response `200`** — full cart object
 
 ### 🟢 `POST /cart/items/:itemId/addons`
-Add addon to cart item.
+
+Add addon to a cart item.
 
 **Request**
 ```json
-{ "addonItemId": "*String (UUID)", "quantity": "*Int", "price": "*Float" }
+{
+  "addonItemId": "*UUID",
+  "quantity": "Int (default 1)",
+  "price": "*Float"
+}
 ```
+
+**Response `200`** — full cart object
 
 ### 🟢 `DELETE /cart/addons/:id`
-Remove addon.
+
+Remove addon from item.
+
+**Response `200`** — full cart object
 
 ### 🟢 `POST /cart/meals`
-Add meal to cart (package flow).
+
+Add a meal slot (package flow).
 
 **Request**
 ```json
-{ "dayNumber": "*Int", "mealType": "*String", "mealTime": "String" }
+{
+  "dayNumber": "*Int",
+  "mealType": "*String",
+  "mealTime": "String"
+}
 ```
 
+**Response `200`** — full cart object
+
 ### 🟢 `DELETE /cart/meals/:id`
-Remove meal from cart.
+
+Remove meal + its foods.
+
+**Response `200`** — full cart object
 
 ### 🟢 `POST /cart/meals/:mealId/foods`
+
 Select food for a meal.
 
 **Request**
 ```json
-{ "foodId": "*String (UUID)", "quantity": "Int", "isReplacement": "Boolean" }
+{
+  "foodId": "*UUID",
+  "quantity": "Int (default 1)",
+  "isReplacement": false
+}
 ```
 
+**Response `200`** — full cart object
+
 ### 🟢 `DELETE /cart/meals/:mealId/foods/:foodId`
+
 Remove food from meal.
+
+**Response `200`** — full cart object
 
 ### --- Checkout ---
 
 ### 🟢 `POST /cart/checkout`
-Get checkout summary.
 
-**Auth:** JWT (Customer)  
-**Response**
+Get checkout summary for current cart.
+
+**Request** — none
+
+**Response `200`**
 ```json
 {
-  "subtotal": "Float",
-  "discount": "Float",
-  "deliveryCharge": "Float",
-  "vat": "Float",
-  "grandTotal": "Float",
-  "itemCount": "Int",
-  "mealCount": "Int",
-  "appliedCoupon": { "code": "String", "discountAmount": "Float" },
-  "deliveryAddress": { "id": "String (UUID)", "label": "String", "address": "String" },
-  "availablePaymentMethods": [ { "id": "String (UUID)", "name": "String", "logo": "String", "isDefault": "Boolean" } ]
+  "subtotal": 0.00,
+  "discount": 0.00,
+  "deliveryCharge": 50.00,
+  "vat": 0.00,
+  "grandTotal": 0.00,
+  "itemCount": 0,
+  "mealCount": 0,
+  "appliedCoupon": { "code": "String", "discountAmount": 0.00 } | null,
+  "deliveryAddress": {
+    "id": "UUID",
+    "label": "String?",
+    "area": "String",
+    "district": "String",
+    "division": "String",
+    "road": "String?",
+    "house": "String?",
+    "isDefault": false
+  } | null,
+  "availablePaymentMethods": [
+    { "id": "UUID", "name": "String", "logo": "String?", "isDefault": false }
+  ]
 }
 ```
 
 ### 🟢 `POST /cart/checkout/apply-coupon`
+
 **Request**
 ```json
 { "couponCode": "*String" }
 ```
 
-**Response**
+**Response `200`**
 ```json
-{ "valid": true, "discountAmount": "Float", "newTotal": "Float" }
+{ "valid": true, "discountAmount": 0.00, "newTotal": 0.00 }
 ```
 
 ### 🟢 `DELETE /cart/checkout/remove-coupon`
-Remove applied coupon from cart.
+
+**Request** — none
+**Response `200`**
+```json
+{ "message": "Coupon removed" }
+```
 
 ### 🟢 `POST /cart/checkout/select-address`
+
 **Request**
 ```json
-{ "addressId": "*String (UUID)" }
+{ "addressId": "*UUID" }
+```
+
+**Response `200`**
+```json
+{ "message": "Address selected", "addressId": "UUID" }
 ```
 
 ### 🟢 `POST /cart/checkout/place-order`
-Place order from cart.
 
-**Auth:** JWT (Customer)  
+Converts cart to order. Cart becomes `converted`.
+
 **Request**
 ```json
 {
-  "cartId": "*String (UUID)",
-  "addressId": "*String (UUID)",
-  "paymentMethodId": "*String (UUID)",
+  "cartId": "*UUID",
+  "addressId": "*UUID",
+  "paymentMethodId": "*UUID",
   "notes": "String",
-  "deliverySchedule": { "deliveryDate": "*Date (ISO)", "deliverySlot": "String" }
+  "deliverySchedule": {
+    "deliveryDate": "*Date (ISO)",
+    "deliverySlot": "String"
+  }
 }
 ```
 
-**Response** `201`
+**Response `201`**
 ```json
-{ "orderId": "String (UUID)", "orderNumber": "String", "totalAmount": "Float", "paymentUrl": "String" }
+{
+  "orderId": "UUID",
+  "orderNumber": "String (FND-YYYYMMDD-XXXXX)",
+  "totalAmount": 0.00,
+  "paymentUrl": "String"
+}
 ```
 
 ---
 
 ## 6. Orders
 
-🟢 **Completed** — 16 endpoints live.
+🟢 **All 16 endpoints built. Mounted at `/api` prefix.**
 
-### `GET /orders`
-List current customer's orders.
+### 🟢 `GET /orders`
 
-**Auth:** JWT (Customer)  
-**Query:** `?page=1&limit=10&status=CONFIRMED|PREPARING|DELIVERED|CANCELLED`  
-**Response** (paginated)
+**[JWT] [CUSTOMER]** List current customer's orders. Paginated.
+
+**Query**: `?page=1&limit=10&status=CONFIRMED|PREPARING|DELIVERED|CANCELLED`
+
+**Response `200`**
 ```json
 {
-  "items": [ { "id": "UUID", "orderNumber": "String", "orderStatus": "String", "totalAmount": "Float", "paymentStatus": "String", "deliveryStatus": "String", "placedAt": "DateTime", "items": [...] } ],
+  "items": [
+    {
+      "id": "UUID",
+      "orderNumber": "String",
+      "orderStatus": "String",
+      "totalAmount": 0.00,
+      "paymentStatus": "String",
+      "deliveryStatus": "String",
+      "placedAt": "DateTime",
+      "items": [
+        { "id": "UUID", "foodId": "UUID", "quantity": 1, "unitPrice": 0.00, "totalPrice": 0.00 }
+      ],
+      "payment": { "id": "UUID", "paymentNumber": "String", "status": "String", "amount": 0.00 }
+    }
+  ],
+  "total": "Int",
+  "page": "Int",
+  "limit": "Int",
+  "totalPages": "Int"
+}
+```
+
+### 🟢 `GET /orders/:id`
+
+**[JWT] [CUSTOMER|ADMIN|VENDOR]** Full order detail with all nested relations.
+
+**Response `200`**
+```json
+{
+  "id": "UUID",
+  "orderNumber": "String",
+  "customerId": "UUID",
+  "vendorId": "UUID?",
+  "packageId": "UUID?",
+  "customMealPlanId": "UUID?",
+  "addressId": "UUID",
+  "couponId": "UUID?",
+  "subtotal": 0.00,
+  "discount": 0.00,
+  "deliveryCharge": 50.00,
+  "vat": 0.00,
+  "totalAmount": 0.00,
+  "paymentStatus": "PENDING",
+  "orderStatus": "PENDING",
+  "deliveryStatus": "PENDING",
+  "notes": "String?",
+  "placedAt": "DateTime",
+  "confirmedAt": "DateTime?",
+  "completedAt": "DateTime?",
+  "cancelledAt": "DateTime?",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime",
+
+  "customer": { "id": "UUID", "fullName": "String", "email": "String", "phone": "String" },
+  "vendor": { "id": "UUID", "businessName": "String", "phone": "String", "email": "String" } | null,
+
+  "items": [
+    {
+      "id": "UUID", "orderId": "UUID", "foodId": "UUID",
+      "quantity": 1, "unitPrice": 0.00, "totalPrice": 0.00,
+      "food": { "id": "UUID", "name": "String", "slug": "String", "thumbnail": "String?", "foodType": "String", "preparationTime": "Int?", "calories": "Float?", "protein": "Float?", "fat": "Float?", "carbohydrate": "Float?", "servingSize": "String?", "status": "String" }
+    }
+  ],
+
+  "meals": [
+    {
+      "id": "UUID", "orderId": "UUID", "dayNumber": 1, "mealType": "String", "mealTime": "String?", "deliveryDate": "DateTime?", "status": "String?",
+      "foods": [
+        { "id": "UUID", "orderMealId": "UUID", "foodId": "UUID", "quantity": 1 }
+      ]
+    }
+  ],
+
+  "schedules": [
+    { "id": "UUID", "orderId": "UUID", "deliveryDate": "DateTime", "deliverySlot": "String?" }
+  ],
+
+  "statusHistories": [
+    { "id": "UUID", "orderId": "UUID", "previousStatus": "String?", "currentStatus": "String", "changedBy": "String", "remarks": "String?", "createdAt": "DateTime" }
+  ],
+
+  "timeline": [
+    { "id": "UUID", "orderId": "UUID", "title": "String", "description": "String?", "status": "String", "createdAt": "DateTime" }
+  ],
+
+  "cancellation": {
+    "id": "UUID", "orderId": "UUID", "cancelledBy": "String", "reason": "String", "createdAt": "DateTime"
+  } | null,
+
+  "refunds": [
+    { "id": "UUID", "orderId": "UUID", "paymentId": "UUID", "refundAmount": 0.00, "refundMethod": "String?", "refundStatus": "String", "processedBy": "UUID", "processedAt": "DateTime", "createdAt": "DateTime" }
+  ],
+
+  "feedback": {
+    "id": "UUID", "orderId": "UUID", "customerId": "UUID", "rating": 5, "review": "String?", "createdAt": "DateTime", "updatedAt": "DateTime"
+  } | null,
+
+  "invoice": {
+    "id": "UUID", "orderId": "UUID", "invoiceNumber": "String", "subtotal": 0.00, "discount": 0.00, "vat": 0.00, "deliveryCharge": 0.00, "grandTotal": 0.00, "createdAt": "DateTime", "updatedAt": "DateTime"
+  } | null,
+
+  "delivery": {
+    "id": "UUID", "orderId": "UUID", "deliveryCode": "String", "deliveryStatus": "String",
+    "rider": { "id": "UUID", "fullName": "String", "phone": "String" } | null
+  } | null,
+
+  "payment": {
+    "id": "UUID", "paymentNumber": "String", "orderId": "UUID", "customerId": "UUID", "paymentMethodId": "UUID", "amount": 0.00, "status": "String", "createdAt": "DateTime", "updatedAt": "DateTime"
+  } | null
+}
+```
+
+### 🟢 `PATCH /orders/:id`
+
+**[JWT] [CUSTOMER|ADMIN]** Update notes or delivery schedule. Only allowed when order is PENDING or CONFIRMED.
+
+**Request**
+```json
+{
+  "notes": "String",
+  "deliverySchedule": {
+    "deliveryDate": "*Date (ISO)",
+    "deliverySlot": "String"
+  }
+}
+```
+
+**Response `200`** — updated order (flat, no includes)
+
+### 🟢 `DELETE /orders/:id`
+
+**[JWT] [SUPER_ADMIN]** Soft-delete.
+
+**Response `200`** — updated order with `deletedAt` set
+
+### 🟢 `POST /orders/:id/cancel`
+
+**[JWT] [CUSTOMER|ADMIN]** Cancel order. Valid from PENDING, CONFIRMED, PAYMENT_PENDING. Marks payment as REFUNDED.
+
+**Request**
+```json
+{
+  "reason": "*String",
+  "cancelledBy": "*String (customer|admin)"
+}
+```
+
+**Response `200`**
+```json
+{ "orderId": "UUID", "status": "CANCELLED" }
+```
+
+### 🟢 `PATCH /orders/:id/status`
+
+**[JWT] [ADMIN|VENDOR]** Transition order status. Valid flow:
+
+```
+PENDING → CONFIRMED → PREPARING → READY_FOR_PICKUP → PICKED_UP → ON_THE_WAY → DELIVERED → COMPLETED
+```
+
+Any active status → CANCELLED (where allowed). Creates status history + timeline entry.
+
+**Request**
+```json
+{
+  "status": "*String (CONFIRMED|PREPARING|READY_FOR_PICKUP|PICKED_UP|ON_THE_WAY|DELIVERED|CANCELLED)",
+  "remarks": "String"
+}
+```
+
+**Response `200`** — no data (status history + timeline created)
+
+### 🟢 `PATCH /orders/:id/assign-vendor`
+
+**[JWT] [ADMIN]**
+
+**Request**
+```json
+{ "vendorId": "*UUID" }
+```
+
+**Response `200`** — updated order (flat)
+
+### 🟢 `PATCH /orders/:id/assign-rider`
+
+**[JWT] [ADMIN|VENDOR]** Creates/updates Delivery record + sets order `deliveryStatus: ASSIGNED`.
+
+**Request**
+```json
+{ "riderId": "*UUID" }
+```
+
+**Response `200`** — no data (side effects only)
+
+### 🟢 `GET /admin/orders`
+
+**[JWT] [ADMIN|SUPER_ADMIN]** List all orders with advanced filters. Paginated.
+
+**Query**: `?page=1&limit=20&status=&paymentStatus=&vendorId=&customerId=&dateFrom=&dateTo=`
+
+**Response `200`**
+```json
+{
+  "items": [
+    {
+      "id": "UUID", "orderNumber": "String", "orderStatus": "String", "totalAmount": 0.00, "paymentStatus": "String", "placedAt": "DateTime",
+      "customer": { "id": "UUID", "fullName": "String", "phone": "String" },
+      "items": [ { "id": "UUID", "foodId": "UUID", "quantity": 1, "totalPrice": 0.00, "food": { "id": "UUID", "name": "String", "thumbnail": "String?" } } ],
+      "payment": { "id": "UUID", "paymentNumber": "String", "status": "String", "amount": 0.00 }
+    }
+  ],
   "total": "Int", "page": "Int", "limit": "Int", "totalPages": "Int"
 }
 ```
 
-### `GET /orders/:id`
-Get full order detail.
+### 🟢 `GET /vendors/:vendorId/orders`
 
-**Auth:** JWT (Customer → own only, Admin, Vendor)  
-**Response** — deep include: items→food, meals→foods, schedules, statusHistories, timeline, cancellation, refunds, feedback, invoice, delivery→rider, payment, customer, vendor
+**[JWT] [VENDOR]** List orders assigned to vendor. Paginated.
 
-### `PATCH /orders/:id`
-Update notes / delivery schedule. **Auth:** JWT (Customer → own only, Admin)
+**Query**: `?page=1&limit=20&status=`
 
-### `DELETE /orders/:id`
-Soft-delete. **Auth:** JWT (SuperAdmin)
+**Response `200`**
+```json
+{
+  "items": [
+    {
+      "id": "UUID", "orderNumber": "String", "orderStatus": "String", "totalAmount": 0.00, "placedAt": "DateTime",
+      "customer": { "id": "UUID", "fullName": "String" },
+      "items": [ { "id": "UUID", "foodId": "UUID", "quantity": 1, "food": { "id": "UUID", "name": "String" } } ]
+    }
+  ],
+  "total": "Int", "page": "Int", "limit": "Int", "totalPages": "Int"
+}
+```
 
-### `POST /orders/:id/cancel`
-Cancel order. Valid transitions: PENDING/CONFIRMED → CANCELLED. Creates cancellation record + status history + timeline + marks payment REFUNDED.
+### 🟢 `POST /orders/:orderId/refund`
 
-**Auth:** JWT (Customer → own only, Admin)  
-**Request:** `{ "reason": "*string", "cancelledBy": "*string (customer|admin)" }`  
-**Response:** `{ "orderId": "UUID", "status": "CANCELLED" }`
+**[JWT] [ADMIN]** Process refund for cancelled order. Creates OrderRefund → updates Payment status → sets order REFUNDED.
 
-### `PATCH /orders/:id/status`
-Transition order status: PENDING→CONFIRMED→PREPARING→READY_FOR_PICKUP→PICKED_UP→ON_THE_WAY→DELIVERED→COMPLETED. Any state → CANCELLED (where allowed). Creates status history + timeline.
+**Request**
+```json
+{
+  "amount": "*Float",
+  "refundMethod": "String",
+  "reason": "*String"
+}
+```
 
-**Auth:** JWT (Admin, Vendor)  
-**Request:** `{ "status": "*string", "remarks": "string?" }`
+**Response `201`**
+```json
+{
+  "id": "UUID",
+  "orderId": "UUID",
+  "paymentId": "UUID",
+  "refundAmount": 0.00,
+  "refundMethod": "String?",
+  "refundStatus": "completed",
+  "processedBy": "UUID",
+  "processedAt": "DateTime"
+}
+```
 
-### `PATCH /orders/:id/assign-vendor`
-Assign vendor. **Auth:** JWT (Admin)  
-**Request:** `{ "vendorId": "*UUID" }`
+### 🟢 `GET /orders/:orderId/refunds`
 
-### `PATCH /orders/:id/assign-rider`
-Assign rider — creates/updates Delivery record. **Auth:** JWT (Admin, Vendor)  
-**Request:** `{ "riderId": "*UUID" }`
+**[JWT] [ADMIN]** List all refunds for order.
 
-### `GET /admin/orders`
-List all orders with advanced filters. **Auth:** JWT (Admin, SuperAdmin)  
-**Query:** `?page=1&limit=20&status=&paymentStatus=&vendorId=&customerId=&dateFrom=&dateTo=`
+**Response `200`**
+```json
+{
+  "items": [
+    {
+      "id": "UUID", "orderId": "UUID", "paymentId": "UUID",
+      "refundAmount": 0.00, "refundMethod": "String?", "refundStatus": "String",
+      "processedBy": "UUID", "processedAt": "DateTime", "createdAt": "DateTime"
+    }
+  ]
+}
+```
 
-### `GET /vendors/:vendorId/orders`
-List vendor orders. **Auth:** JWT (Vendor)  
-**Query:** `?page=1&limit=20&status=`
+### 🟢 `POST /orders/:orderId/feedback`
 
-### `POST /orders/:orderId/refund`
-Process refund — creates OrderRefund + updates Payment status (REFUNDED/PARTIALLY_REFUNDED) + sets order REFUNDED.
+**[JWT] [CUSTOMER]** Submit or update feedback. Only for DELIVERED / COMPLETED orders. Upserts — calling again updates rating/review.
 
-**Auth:** JWT (Admin)  
-**Request:** `{ "amount": "*number", "refundMethod": "string?", "reason": "*string" }`
+**Request**
+```json
+{
+  "rating": "*Int (1-5)",
+  "review": "String"
+}
+```
 
-### `GET /orders/:orderId/refunds`
-List refunds for order. **Auth:** JWT (Admin)
+**Response `201`**
+```json
+{
+  "id": "UUID",
+  "orderId": "UUID",
+  "customerId": "UUID",
+  "rating": 5,
+  "review": "String?",
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
+```
 
-### `POST /orders/:orderId/feedback`
-Upsert feedback (rating 1-5 + review). **Auth:** JWT (Customer — only delivered/completed orders)  
-**Request:** `{ "rating": "*number (1-5)", "review": "string?" }`
+### 🟢 `GET /orders/:orderId/invoice`
 
-### `GET /orders/:orderId/invoice`
-Get or auto-generate invoice. **Auth:** JWT (Customer, Admin)
+**[JWT] [CUSTOMER|ADMIN]** Get or auto-generate invoice.
 
-### `PATCH /order-meals/:id/status`
-Update individual meal status. **Auth:** JWT (Admin, Vendor)  
-**Request:** `{ "status": "*string" }`
+**Response `200`**
+```json
+{
+  "id": "UUID",
+  "orderId": "UUID",
+  "invoiceNumber": "String (INV-FND-YYYYMMDD-XXXXX)",
+  "subtotal": 0.00,
+  "discount": 0.00,
+  "vat": 0.00,
+  "deliveryCharge": 50.00,
+  "grandTotal": 0.00,
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
+}
+```
+
+### 🟢 `PATCH /order-meals/:id/status`
+
+**[JWT] [ADMIN|VENDOR]** Update individual meal status.
+
+**Request**
+```json
+{ "status": "*String" }
+```
+
+**Response `200`** — updated order meal
+```json
+{
+  "id": "UUID",
+  "orderId": "UUID",
+  "dayNumber": 1,
+  "mealType": "String",
+  "mealTime": "String?",
+  "deliveryDate": "DateTime?",
+  "status": "updated-status"
+}
+```
 
 ---
 
 ## 7. Customers (Admin)
 
-⚪ **Planned** — not started.
+🟢 **All 6 endpoints built. Mounted at `/api/admin/customers`.**
+**[JWT] [ADMIN|SUPER_ADMIN]**
 
-### `GET /api/admin/customers`
-List all customers.
+### 🟢 `GET /api/admin/customers`
 
-**Auth:** JWT (Admin)  
-**Query:** `?page=1&limit=20&search=&status=`  
-**Response**
+List all customers with aggregates. Paginated.
+
+**Query:** `?page=1&limit=20&search=String (firstName|lastName|email|phone)&status=ACTIVE|INACTIVE|SUSPENDED|BANNED`
+
+**Response `200`**
 ```json
 {
   "items": [
     {
-      "id": "Int",
+      "id": "UUID",
       "fullName": "String",
       "phone": "String",
       "email": "String",
+      "status": "String",
       "totalOrders": "Int",
       "totalSpent": "Float",
       "subscriptionCount": "Int",
       "walletBalance": "Float",
-      "status": "String",
-      "lastOrderDate": "Date",
+      "lastOrderDate": "DateTime?",
       "joinedAt": "DateTime"
     }
   ],
-  "pagination": {}
+  "total": "Int",
+  "page": "Int",
+  "limit": "Int",
+  "totalPages": "Int"
 }
 ```
 
-### `GET /api/admin/customers/:id`
-Get customer details.
+### 🟢 `GET /api/admin/customers/:id`
 
-**Response** — customer object + recent orders, subscription info, wallet balance
+Get full customer detail — profile, addresses, wallet, last order, aggregates.
 
-### `GET /api/admin/customers/:id/orders`
-List customer orders.
-
-### `GET /api/admin/customers/:id/subscriptions`
-List customer subscriptions.
-
-### `GET /api/admin/customers/:id/wallet`
-Get customer wallet details.
-
-**Response**
+**Response `200`**
 ```json
-{ "balance": "Float", "holdBalance": "Float", "transactions": [ ... ] }
+{
+  "id": "UUID",
+  "fullName": "String",
+  "phone": "String",
+  "email": "String",
+  "avatar": "String?",
+  "gender": "String?",
+  "dateOfBirth": "DateTime?",
+  "status": "String",
+  "isPhoneVerified": false,
+  "isEmailVerified": false,
+  "lastLoginAt": "DateTime?",
+  "joinedAt": "DateTime",
+  "profile": {
+    "profession": "String?", "occupation": "String?", "company": "String?",
+    "bio": "String?", "preferredLanguage": "String?", "timezone": "String?",
+    "profileCompletionPercentage": "Float?"
+  } | null,
+  "addresses": [
+    {
+      "id": "UUID", "label": "String?", "receiverName": "String", "receiverPhone": "String",
+      "area": "String", "district": "String", "division": "String",
+      "road": "String?", "house": "String?", "isDefault": false,
+      "createdAt": "DateTime", "updatedAt": "DateTime"
+    }
+  ],
+  "wallet": {
+    "id": "UUID", "customerId": "UUID", "walletNumber": "String",
+    "balance": "Float", "holdBalance": "Float", "currency": "String", "status": "String",
+    "transactions": [
+      {
+        "id": "UUID", "walletId": "UUID",
+        "transactionType": "CREDIT|DEBIT", "amount": "Float",
+        "balanceBefore": "Float", "balanceAfter": "Float",
+        "referenceType": "String?", "referenceId": "String?",
+        "remarks": "String?", "createdAt": "DateTime"
+      }
+    ]
+  } | null,
+  "totalOrders": "Int",
+  "totalSubscriptions": "Int",
+  "totalPayments": "Int",
+  "totalSpent": "Float",
+  "lastOrder": {
+    "placedAt": "DateTime", "orderStatus": "String", "totalAmount": "Float"
+  } | null
+}
 ```
 
-### `GET /api/admin/customers/:id/payments`
-List customer payment history.
+### 🟢 `GET /api/admin/customers/:id/orders`
+
+Paginated list of customer's orders.
+
+**Query:** `?page=1&limit=20&status=`
+
+**Response `200`**
+```json
+{
+  "items": [
+    {
+      "id": "UUID", "orderNumber": "String", "orderStatus": "String", "totalAmount": 0.00, "placedAt": "DateTime",
+      "items": [
+        { "id": "UUID", "foodId": "UUID", "quantity": 1, "food": { "id": "UUID", "name": "String", "image": "String?" } }
+      ],
+      "payment": { "status": "String", "amount": "Float" }
+    }
+  ],
+  "total": "Int", "page": "Int", "limit": "Int", "totalPages": "Int"
+}
+```
+
+### 🟢 `GET /api/admin/customers/:id/subscriptions`
+
+Paginated list of customer's subscriptions.
+
+**Query:** `?page=1&limit=20`
+
+**Response `200`**
+```json
+{
+  "items": [
+    {
+      "id": "UUID", "subscriptionNumber": "String", "status": "String",
+      "startDate": "DateTime", "endDate": "DateTime?",
+      "totalAmount": "Float", "paidAmount": "Float",
+      "autoRenew": false, "createdAt": "DateTime", "updatedAt": "DateTime"
+    }
+  ],
+  "total": "Int", "page": "Int", "limit": "Int", "totalPages": "Int"
+}
+```
+
+### 🟢 `GET /api/admin/customers/:id/wallet`
+
+Get customer's wallet with paginated transactions.
+
+**Query:** `?page=1&limit=20`
+
+**Response `200`**
+```json
+{
+  "wallet": {
+    "id": "UUID", "customerId": "UUID", "walletNumber": "String",
+    "balance": "Float", "holdBalance": "Float",
+    "currency": "String", "status": "String",
+    "createdAt": "DateTime", "updatedAt": "DateTime"
+  } | null,
+  "transactions": {
+    "items": [
+      {
+        "id": "UUID", "walletId": "UUID",
+        "transactionType": "CREDIT|DEBIT", "amount": "Float",
+        "balanceBefore": "Float", "balanceAfter": "Float",
+        "referenceType": "String?", "referenceId": "String?",
+        "remarks": "String?", "createdAt": "DateTime"
+      }
+    ],
+    "total": "Int", "page": "Int", "limit": "Int", "totalPages": "Int"
+  }
+}
+```
+
+### 🟢 `GET /api/admin/customers/:id/payments`
+
+Paginated list of customer's payments.
+
+**Query:** `?page=1&limit=20`
+
+**Response `200`**
+```json
+{
+  "items": [
+    {
+      "id": "UUID", "paymentNumber": "String", "amount": "Float",
+      "status": "String", "createdAt": "DateTime",
+      "order": { "orderNumber": "String" }
+    }
+  ],
+  "total": "Int", "page": "Int", "limit": "Int", "totalPages": "Int"
+}
 
 ---
 
@@ -1236,7 +2328,7 @@ Get current vendor's full profile.
 **Response**
 ```json
 {
-  "id": "Int",
+  "id": "UUID",
   "vendorCode": "String",
   "businessName": "String",
   "ownerName": "String",
@@ -1252,7 +2344,7 @@ Get current vendor's full profile.
   "commissionValue": "Float",
   "openingTime": "String",
   "closingTime": "String",
-  "branches": [ { "id": "Int", "branchName": "String", "area": "String", "isMainBranch": "Boolean" } ],
+  "branches": [ { "id": "UUID", "branchName": "String", "area": "String", "isMainBranch": "Boolean" } ],
   "address": { "area": "String", "district": "String", "division": "String", ... }
 }
 ```
@@ -1283,7 +2375,7 @@ Toggle online/offline status.
 
 **Request**
 ```json
-{ "branchId": "*Int", "kitchenName": "*String", "kitchenCode": "*String", "capacity": "Int", "preparationTime": "Int" }
+{ "branchId": "*UUID", "kitchenName": "*String", "kitchenCode": "*String", "capacity": "Int", "preparationTime": "Int" }
 ```
 
 ### `PATCH /kitchens/:id`
@@ -1296,7 +2388,7 @@ Toggle online/offline status.
 
 **Request**
 ```json
-{ "userId": "*Int", "branchId": "Int", "designation": "*String", "phone": "*String", "email": "String", "salary": "Float" }
+{ "userId": "*UUID", "branchId": "UUID", "designation": "*String", "phone": "*String", "email": "String", "salary": "Float" }
 ```
 
 ### `PATCH /staff/:id`
@@ -1375,7 +2467,7 @@ Map a food to this vendor.
 
 **Request**
 ```json
-{ "foodId": "*Int", "vendorFoodCode": "String", "vendorSku": "String", "kitchenId": "Int", "priority": "Int", "isPrimary": "Boolean" }
+{ "foodId": "*UUID", "vendorFoodCode": "String", "vendorSku": "String", "kitchenId": "UUID", "priority": "Int", "isPrimary": "Boolean" }
 ```
 
 ### `PATCH /vendor-foods/:id`
@@ -1402,6 +2494,7 @@ Unlink food from vendor.
 
 ### `GET /vendor-foods/:id/recipes`
 ### `POST /vendor-foods/:id/recipes`
+
 ```json
 { "recipeName": "*String", "description": "Text", "yieldQuantity": "Int" }
 ```
@@ -1421,7 +2514,7 @@ Register new vendor.
 
 **Request**
 ```json
-{ "userId": "*Int", "businessName": "*String", "ownerName": "*String", "phone": "*String", "email": "String", "tradeLicenseNumber": "*String", "tinNumber": "String", "binNumber": "String", "description": "Text", "commissionType": "String", "commissionValue": "Float" }
+{ "userId": "*UUID", "businessName": "*String", "ownerName": "*String", "phone": "*String", "email": "String", "tradeLicenseNumber": "*String", "tinNumber": "String", "binNumber": "String", "description": "Text", "commissionType": "String", "commissionValue": "Float" }
 ```
 
 ### `PATCH /vendors/:id`
@@ -1468,7 +2561,7 @@ List which vendors serve a given food.
 
 **Request**
 ```json
-{ "vendorId": "*Int", "priority": "Int", "allocationPercentage": "Float", "isDefault": "Boolean", "effectiveFrom": "Date", "effectiveTo": "Date" }
+{ "vendorId": "*UUID", "priority": "Int", "allocationPercentage": "Float", "isDefault": "Boolean", "effectiveFrom": "Date", "effectiveTo": "Date" }
 ```
 
 ### `PATCH /vendor-assignments/:id`
@@ -1491,7 +2584,7 @@ List available packages.
 {
   "items": [
     {
-      "id": "Int",
+      "id": "UUID",
       "packageCode": "String",
       "name": "String",
       "slug": "String",
@@ -1505,7 +2598,7 @@ List available packages.
       "discountPrice": "Float",
       "currency": "String",
       "isCustomizable": "Boolean",
-      "category": { "id": "Int", "name": "String" },
+      "category": { "id": "UUID", "name": "String" },
       "tags": [ "String" ],
       "benefits": [ { "title": "String", "description": "String", "icon": "String" } ],
       "nutrition": { "dailyCalories": "Float", "dailyProtein": "Float", "dailyCarb": "Float", "dailyFat": "Float" },
@@ -1522,7 +2615,7 @@ Get package with full detail — days, meals, foods, schedule, rules.
 **Response**
 ```json
 {
-  "id": "Int",
+  "id": "UUID",
   "...": "...",
   "rules": { "minimumOrderDays": "Int", "maximumOrderDays": "Int", "minimumMealsPerDay": "Int", "allowPause": "Boolean", "allowSkipMeal": "Boolean", "allowCancellation": "Boolean", "advancePaymentRequired": "Boolean" },
   "schedule": { "deliveryDays": "[String]", "deliveryTimeStart": "String", "deliveryTimeEnd": "String", "mealCutoffTime": "String" },
@@ -1531,7 +2624,7 @@ Get package with full detail — days, meals, foods, schedule, rules.
       "dayNumber": "Int",
       "title": "String",
       "meals": [
-        { "mealType": "String", "mealTime": "String", "calories": "Float", "foods": [ { "foodId": "Int", "foodName": "String", "thumbnail": "String", "quantity": "Int", "isOptional": "Boolean" } ] }
+        { "mealType": "String", "mealTime": "String", "calories": "Float", "foods": [ { "foodId": "UUID", "foodName": "String", "thumbnail": "String", "quantity": "Int", "isOptional": "Boolean" } ] }
       ]
     }
   ]
@@ -1566,7 +2659,7 @@ Get package with full detail — days, meals, foods, schedule, rules.
 ### `POST /package-meals/:mealId/foods`
 **Request**
 ```json
-{ "foodId": "*Int", "quantity": "Int", "isOptional": "Boolean", "sortOrder": "Int" }
+{ "foodId": "*UUID", "quantity": "Int", "isOptional": "Boolean", "sortOrder": "Int" }
 ```
 
 ### `DELETE /package-meal-foods/:id`
@@ -1607,7 +2700,7 @@ Get package with full detail — days, meals, foods, schedule, rules.
 ### `POST /packages/:packageId/reviews`
 **Auth:** JWT (Customer)
 ```json
-{ "rating": "*Int (1-5)", "review": "String", "orderId": "Int" }
+{ "rating": "*Int (1-5)", "review": "String", "orderId": "UUID" }
 ```
 
 ### --- Custom Meal Plans ---
@@ -1620,7 +2713,7 @@ List custom meal plans.
 ### `POST /customers/me/meal-plans`
 **Request**
 ```json
-{ "packageId": "*Int", "name": "*String", "totalDays": "*Int" }
+{ "packageId": "*UUID", "name": "*String", "totalDays": "*Int" }
 ```
 
 ### `GET /meal-plans/:id`
@@ -1635,7 +2728,7 @@ Get plan with days and meals.
 
 ### `POST /meal-plans/:planId/meal-foods`
 ```json
-{ "customMealId": "*Int", "foodId": "*Int", "quantity": "Int" }
+{ "customMealId": "*UUID", "foodId": "*UUID", "quantity": "Int" }
 ```
 
 ### --- Preferences & Restrictions ---
@@ -1670,12 +2763,12 @@ Subscribe to a package.
 **Auth:** JWT (Customer)  
 **Request**
 ```json
-{ "packageId": "*Int (or customMealPlanId)", "customMealPlanId": "Int", "startDate": "*Date", "endDate": "*Date", "duration": "*Int", "autoRenew": "Boolean" }
+{ "packageId": "*UUID (or customMealPlanId)", "customMealPlanId": "UUID", "startDate": "*Date", "endDate": "*Date", "duration": "*Int", "autoRenew": "Boolean" }
 ```
 
-**Response** `201`
+**Response `201`**
 ```json
-{ "id": "Int", "subscriptionNumber": "String", "status": "ACTIVE", "startDate": "Date", "endDate": "Date" }
+{ "id": "UUID", "subscriptionNumber": "String", "status": "ACTIVE", "startDate": "Date", "endDate": "Date" }
 ```
 
 ### `GET /subscriptions`
@@ -1688,7 +2781,7 @@ List customer's subscriptions.
 {
   "items": [
     {
-      "id": "Int",
+      "id": "UUID",
       "subscriptionNumber": "String",
       "package": { "name": "String", "thumbnail": "String" },
       "status": "String",
@@ -1712,10 +2805,10 @@ Get full subscription detail.
 **Response**
 ```json
 {
-  "id": "Int",
+  "id": "UUID",
   "subscriptionNumber": "String",
-  "customer": { "id": "Int", "fullName": "String", "phone": "String" },
-  "package": { "id": "Int", "name": "String", "slug": "String" },
+  "customer": { "id": "UUID", "fullName": "String", "phone": "String" },
+  "package": { "id": "UUID", "name": "String", "slug": "String" },
   "status": "String",
   "startDate": "Date",
   "endDate": "Date",
@@ -1768,25 +2861,25 @@ Cancel subscription.
 ### `POST /subscriptions/:id/skip-meal`
 **Request**
 ```json
-{ "subscriptionMealId": "*Int", "skipDate": "*Date", "reason": "String", "replacementMealId": "Int" }
+{ "subscriptionMealId": "*UUID", "skipDate": "*Date", "reason": "String", "replacementMealId": "UUID" }
 ```
 
 ### `POST /subscriptions/:id/renew`
 **Request**
 ```json
-{ "paymentMethodId": "*Int" }
+{ "paymentMethodId": "*UUID" }
 ```
 
 ### `POST /subscriptions/:id/upgrade`
 **Request**
 ```json
-{ "newPackageId": "*Int", "paymentMethodId": "Int (for price difference)" }
+{ "newPackageId": "*UUID", "paymentMethodId": "UUID (for price difference)" }
 ```
 
 ### `POST /subscriptions/:id/downgrade`
 **Request**
 ```json
-{ "newPackageId": "*Int" }
+{ "newPackageId": "*UUID" }
 ```
 
 ### --- Subscription Admin ---
@@ -1817,7 +2910,7 @@ Override a day's status.
 
 ### `POST /subscription-meals/:mealId/replace`
 ```json
-{ "newFoodId": "*Int", "reason": "String" }
+{ "newFoodId": "*UUID", "reason": "String" }
 ```
 
 ### --- Admin Issue Management ---
@@ -1829,7 +2922,7 @@ List all reported issues.
 
 ### `PATCH /meal-issues/:id/resolve`
 ```json
-{ "resolution": "*String", "resolvedBy": "*Int" }
+{ "resolution": "*String", "resolvedBy": "*UUID" }
 ```
 
 ### --- Invoices & History ---
@@ -1859,7 +2952,7 @@ List available methods. **Auth:** None
 
 **Response**
 ```json
-{ "items": [ { "id": "Int", "name": "String (bKash|Visa|Cash)", "code": "String", "logo": "String", "type": "String", "isDefault": "Boolean" } ] }
+{ "items": [ { "id": "UUID", "name": "String (bKash|Visa|Cash)", "code": "String", "logo": "String", "type": "String", "isDefault": "Boolean" } ] }
 ```
 
 ### `POST /payments/initiate`
@@ -1868,12 +2961,12 @@ Start a payment.
 **Auth:** JWT (Customer)  
 **Request**
 ```json
-{ "orderId": "*Int", "paymentMethodId": "*Int", "gatewayId": "*Int", "amount": "*Float", "currency": "String" }
+{ "orderId": "*UUID", "paymentMethodId": "*UUID", "gatewayId": "*UUID", "amount": "*Float", "currency": "String" }
 ```
 
-**Response** `201`
+**Response `201`**
 ```json
-{ "paymentId": "Int", "gatewayUrl": "String", "transactionId": "String" }
+{ "paymentId": "UUID", "gatewayUrl": "String", "transactionId": "String" }
 ```
 
 ### `POST /payments/confirm`
@@ -1896,7 +2989,7 @@ Process refund.
 **Auth:** JWT (Admin)  
 **Request**
 ```json
-{ "amount": "*Float", "reason": "*String", "processedBy": "*Int" }
+{ "amount": "*Float", "reason": "*String", "processedBy": "*UUID" }
 ```
 
 ### `POST /payments/:id/adjust`
@@ -1918,9 +3011,9 @@ Get payment details.
 **Response**
 ```json
 {
-  "id": "Int",
+  "id": "UUID",
   "paymentNumber": "String",
-  "orderId": "Int",
+  "orderId": "UUID",
   "orderNumber": "String",
   "customerName": "String",
   "paymentMethod": "String",
@@ -1946,7 +3039,7 @@ Get current customer's wallet.
 **Auth:** JWT (Customer)  
 **Response**
 ```json
-{ "id": "Int", "walletNumber": "String", "balance": "Float", "holdBalance": "Float", "currency": "String", "status": "String" }
+{ "id": "UUID", "walletNumber": "String", "balance": "Float", "holdBalance": "Float", "currency": "String", "status": "String" }
 ```
 
 ### `GET /wallet/transactions`
@@ -1957,7 +3050,7 @@ List wallet transactions.
 ```json
 {
   "items": [
-    { "id": "Int", "transactionType": "Enum (CREDIT|DEBIT)", "amount": "Float", "balanceBefore": "Float", "balanceAfter": "Float", "referenceType": "String (order|topup|cashback|refund)", "referenceId": "Int", "remarks": "String", "createdAt": "DateTime" }
+    { "id": "UUID", "transactionType": "Enum (CREDIT|DEBIT)", "amount": "Float", "balanceBefore": "Float", "balanceAfter": "Float", "referenceType": "String (order|topup|cashback|refund)", "referenceId": "UUID", "remarks": "String", "createdAt": "DateTime" }
   ],
   "pagination": {}
 }
@@ -1969,12 +3062,12 @@ Add funds via payment gateway.
 **Auth:** JWT (Customer)  
 **Request**
 ```json
-{ "amount": "*Float", "paymentMethodId": "*Int" }
+{ "amount": "*Float", "paymentMethodId": "*UUID" }
 ```
 
 **Response**
 ```json
-{ "paymentId": "Int", "gatewayUrl": "String" }
+{ "paymentId": "UUID", "gatewayUrl": "String" }
 ```
 
 ### `POST /wallet/withdraw`
@@ -2005,12 +3098,13 @@ Get vendor wallet.
 ```
 
 ### `GET /vendors/:vendorId/wallet/transactions`
+
 ### `GET /vendors/:vendorId/settlements`
 List settlements. **Response**
 ```json
 {
   "items": [
-    { "id": "Int", "settlementNumber": "String", "settlementPeriodStart": "Date", "settlementPeriodEnd": "Date", "totalOrders": "Int", "grossAmount": "Float", "commissionAmount": "Float", "adjustmentAmount": "Float", "netAmount": "Float", "paymentStatus": "String", "paymentDate": "DateTime" }
+    { "id": "UUID", "settlementNumber": "String", "settlementPeriodStart": "Date", "settlementPeriodEnd": "Date", "totalOrders": "Int", "grossAmount": "Float", "commissionAmount": "Float", "adjustmentAmount": "Float", "netAmount": "Float", "paymentStatus": "String", "paymentDate": "DateTime" }
   ]
 }
 ```
@@ -2023,7 +3117,7 @@ Create settlement batch. **Auth:** JWT (Admin)
 
 **Request**
 ```json
-{ "vendorId": "*Int", "settlementPeriodStart": "*Date", "settlementPeriodEnd": "*Date" }
+{ "vendorId": "*UUID", "settlementPeriodStart": "*Date", "settlementPeriodEnd": "*Date" }
 ```
 
 ### `POST /settlements/:id/process`
@@ -2059,7 +3153,7 @@ List riders. **Auth:** JWT (Admin, Vendor)
 {
   "items": [
     {
-      "id": "Int",
+      "id": "UUID",
       "riderCode": "String",
       "fullName": "String",
       "phone": "String",
@@ -2084,7 +3178,7 @@ List riders. **Auth:** JWT (Admin, Vendor)
 **Auth:** JWT (Admin, Vendor)  
 **Request**
 ```json
-{ "userId": "*Int", "vendorId": "Int", "branchId": "Int", "fullName": "*String", "phone": "*String", "email": "String", "nidNumber": "*String", "licenseNumber": "*String", "licenseExpiryDate": "Date", "joiningDate": "Date", "employmentType": "String (fulltime|parttime|contract)" }
+{ "userId": "*UUID", "vendorId": "UUID", "branchId": "UUID", "fullName": "*String", "phone": "*String", "email": "String", "nidNumber": "*String", "licenseNumber": "*String", "licenseExpiryDate": "Date", "joiningDate": "Date", "employmentType": "String (fulltime|parttime|contract)" }
 ```
 
 ### `GET /riders/:id`
@@ -2179,16 +3273,16 @@ Create delivery for an order.
 { "deliveryType": "String (standard|express|scheduled)", "priority": "Int" }
 ```
 
-**Response** `201`
+**Response `201`**
 ```json
-{ "id": "Int", "deliveryCode": "String", "deliveryStatus": "PENDING" }
+{ "id": "UUID", "deliveryCode": "String", "deliveryStatus": "PENDING" }
 ```
 
 ### `PATCH /deliveries/:id/assign-rider`
 **Auth:** JWT (Admin, Vendor)  
 **Request**
 ```json
-{ "riderId": "*Int" }
+{ "riderId": "*UUID" }
 ```
 
 ### `PATCH /deliveries/:id/status`
@@ -2233,12 +3327,12 @@ Generate optimized delivery route.
 **Auth:** JWT (Admin)  
 **Request**
 ```json
-{ "riderId": "*Int", "deliveryIds": "*[Int]" }
+{ "riderId": "*UUID", "deliveryIds": "*[UUID]" }
 ```
 
 **Response**
 ```json
-{ "id": "Int", "routeCode": "String", "totalDistance": "Float", "estimatedDuration": "Int", "stops": [ { "stopNumber": "Int", "deliveryId": "Int", "customerAddress": "String", "latitude": "Float", "longitude": "Float", "estimatedArrivalTime": "DateTime" } ] }
+{ "id": "UUID", "routeCode": "String", "totalDistance": "Float", "estimatedDuration": "Int", "stops": [ { "stopNumber": "Int", "deliveryId": "UUID", "customerAddress": "String", "latitude": "Float", "longitude": "Float", "estimatedArrivalTime": "DateTime" } ] }
 ```
 
 ### `GET /routes/:id`
@@ -2247,7 +3341,7 @@ Get route with stops.
 ### `PATCH /routes/:id/assign-rider`
 **Request**
 ```json
-{ "riderId": "*Int" }
+{ "riderId": "*UUID" }
 ```
 
 ### --- Live Tracking ---
@@ -2257,12 +3351,12 @@ Start tracking. **Auth:** JWT (Rider)
 
 **Request**
 ```json
-{ "deliveryId": "*Int" }
+{ "deliveryId": "*UUID" }
 ```
 
 **Response**
 ```json
-{ "id": "Int", "trackingCode": "String", "sessionId": "String" }
+{ "id": "UUID", "trackingCode": "String", "sessionId": "String" }
 ```
 
 ### `PATCH /tracking/session/:id/end`
@@ -2313,7 +3407,7 @@ List current user's notifications.
 ```json
 {
   "items": [
-    { "id": "Int", "title": "String", "message": "String", "type": "String", "referenceType": "String", "referenceId": "Int", "isRead": "Boolean", "createdAt": "DateTime" }
+    { "id": "UUID", "title": "String", "message": "String", "type": "String", "referenceType": "String", "referenceId": "UUID", "isRead": "Boolean", "createdAt": "DateTime" }
   ],
   "pagination": {},
   "unreadCount": "Int"
@@ -2340,7 +3434,7 @@ Send push/email/SMS to targeted users.
 **Auth:** JWT (Admin)  
 **Request**
 ```json
-{ "title": "*String", "message": "*String", "targetType": "*String (all|customers|vendors|riders|custom_segment)", "segmentId": "Int", "channels": ["push", "email", "sms"], "scheduledAt": "DateTime" }
+{ "title": "*String", "message": "*String", "targetType": "*String (all|customers|vendors|riders|custom_segment)", "segmentId": "UUID", "channels": ["push", "email", "sms"], "scheduledAt": "DateTime" }
 ```
 
 ### `GET /admin/announcements`
@@ -2370,7 +3464,7 @@ Public.
 
 ### `POST /admin/faq`
 ```json
-{ "categoryId": "*Int", "question": "*String", "answer": "*Text", "sortOrder": "Int" }
+{ "categoryId": "*UUID", "question": "*String", "answer": "*Text", "sortOrder": "Int" }
 ```
 
 ### `PATCH /admin/faq/:id`
@@ -2388,12 +3482,12 @@ Create ticket.
 **Auth:** JWT (Customer)  
 **Request**
 ```json
-{ "orderId": "Int", "categoryId": "*Int", "subject": "*String", "description": "*String", "priority": "String (low|medium|high|urgent)" }
+{ "orderId": "UUID", "categoryId": "*UUID", "subject": "*String", "description": "*String", "priority": "String (low|medium|high|urgent)" }
 ```
 
-**Response** `201`
+**Response `201`**
 ```json
-{ "id": "Int", "ticketNumber": "String", "status": "OPEN" }
+{ "id": "UUID", "ticketNumber": "String", "status": "OPEN" }
 ```
 
 ### `GET /support/tickets`
@@ -2407,7 +3501,7 @@ Update. **Auth:** JWT (SupportAgent)
 
 **Request**
 ```json
-{ "status": "String (OPEN|IN_PROGRESS|WAITING|RESOLVED|CLOSED)", "assignedTo": "Int", "priority": "String" }
+{ "status": "String (OPEN|IN_PROGRESS|WAITING|RESOLVED|CLOSED)", "assignedTo": "UUID", "priority": "String" }
 ```
 
 ### `POST /support/tickets/:id/replies`
@@ -2443,7 +3537,7 @@ List all tickets. **Auth:** JWT (SupportAgent)
 List active banners. **Auth:** None  
 **Response**
 ```json
-{ "items": [ { "id": "Int", "title": "String", "subtitle": "String", "image": "String (URL)", "redirectType": "String (food|package|category|url)", "redirectId": "String", "displayOrder": "Int" } ] }
+{ "items": [ { "id": "UUID", "title": "String", "subtitle": "String", "image": "String (URL)", "redirectType": "String (food|package|category|url)", "redirectId": "String", "displayOrder": "Int" } ] }
 ```
 
 ### `POST /cms/banners`
@@ -2471,7 +3565,7 @@ Public, paginated.
 ### `POST /cms/blogs`
 **Auth:** JWT (Admin)
 ```json
-{ "title": "*String", "slug": "*String", "thumbnail": "String (URL)", "content": "*Text", "categoryId": "Int" }
+{ "title": "*String", "slug": "*String", "thumbnail": "String (URL)", "content": "*Text", "categoryId": "UUID" }
 ```
 
 ### `PATCH /cms/blogs/:id`
@@ -2553,7 +3647,7 @@ Schedule recurring report.
 
 **Request**
 ```json
-{ "reportTemplateId": "*Int", "frequency": "*String (daily|weekly|monthly)", "nextRun": "*Date", "emailTo": "*[String]" }
+{ "reportTemplateId": "*UUID", "frequency": "*String (daily|weekly|monthly)", "nextRun": "*Date", "emailTo": "*[String]" }
 ```
 
 ### `GET /reports/templates`
@@ -2604,7 +3698,7 @@ List all roles.
 **Auth:** JWT (SuperAdmin, Admin)  
 **Response**
 ```json
-{ "items": [ { "id": "Int", "name": "String", "slug": "String", "description": "String", "isDefault": "Boolean", "status": "String" } ] }
+{ "items": [ { "id": "UUID", "name": "String", "slug": "String", "description": "String", "isDefault": "Boolean", "status": "String" } ] }
 ```
 
 ### `POST /roles`
@@ -2640,7 +3734,7 @@ Assign permissions.
 
 **Request**
 ```json
-{ "permissionIds": "*[Int]" }
+{ "permissionIds": "*[UUID]" }
 ```
 
 ### `DELETE /roles/:roleId/permissions/:permissionId`
@@ -2655,7 +3749,7 @@ Assign role to user.
 **Auth:** JWT (SuperAdmin)  
 **Request**
 ```json
-{ "roleId": "*Int", "expiresAt": "DateTime" }
+{ "roleId": "*UUID", "expiresAt": "DateTime" }
 ```
 
 ### `DELETE /users/:userId/roles/:userRoleId`
@@ -2756,6 +3850,6 @@ Basic health check. **Auth:** None
 
 ---
 
-> **Document version:** 2.0.0  
+> **Document version:** 3.0.0  
 > **Field reference:** See `docs/FONDO – Complete System Workflow.md` Modules 1–15 for all model field definitions  
-> **Last updated:** 2026-07-14
+> **Last updated:** 2026-07-16

@@ -168,11 +168,12 @@ All mounted at `/api/admin` prefix. Require JWT (Admin | SuperAdmin).
 
 | Method | Endpoint | Auth | Status |
 |--------|----------|------|--------|
-| GET | `/customers` | JWT (Admin) | ⚪ Planned |
-| GET | `/customers/:id` | JWT (Admin) | ⚪ Planned |
-| GET | `/customers/:id/orders` | JWT (Admin) | ⚪ Planned |
-| GET | `/customers/:id/subscriptions` | JWT (Admin) | ⚪ Planned |
-| GET | `/customers/:id/wallet` | JWT (Admin) | ⚪ Planned |
+| GET | `/api/admin/customers` | JWT (Admin/SuperAdmin) | 🟢 Built |
+| GET | `/api/admin/customers/:id` | JWT (Admin/SuperAdmin) | 🟢 Built |
+| GET | `/api/admin/customers/:id/orders` | JWT (Admin/SuperAdmin) | 🟢 Built |
+| GET | `/api/admin/customers/:id/subscriptions` | JWT (Admin/SuperAdmin) | 🟢 Built |
+| GET | `/api/admin/customers/:id/wallet` | JWT (Admin/SuperAdmin) | 🟢 Built |
+| GET | `/api/admin/customers/:id/payments` | JWT (Admin/SuperAdmin) | 🟢 Built |
 
 ---
 

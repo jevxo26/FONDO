@@ -11,14 +11,17 @@ import {
   Testimonials,
   TrustBar,
 } from "@/components/home";
+import { getFoods } from "@/services/food.service";
 
-export default function Home() {
+export default async function Home() {
+  const data = await getFoods(1, 6, "popularity");
+
   return (
     <main className="flex flex-col gap-12 lg:gap-[5rem] pb-[3rem] lg:pb-[5rem]">
       <Hero />
       <TrustBar />
       <PopularCategories />
-      <BestSellers />
+      <BestSellers foods={data.items} />
       <SignatureDish />
       <Combos />
       <BlogReviews />

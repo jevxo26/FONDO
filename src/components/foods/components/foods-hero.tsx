@@ -4,7 +4,7 @@ import { useFoods } from "./foods-provider";
 import { useFoodCategories } from "@/hooks/useFoodCategories";
 
 export default function FoodsHero() {
-  const { searchQuery, setSearchQuery, foodTypeFilter, setFoodTypeFilter } = useFoods();
+  const { searchQuery, setSearchQuery} = useFoods();
   const { data: CategoriesData = [], isLoading } = useFoodCategories();
   if(isLoading) return <h2>Data loading</h2>
 
@@ -35,23 +35,6 @@ export default function FoodsHero() {
               placeholder="Search dishes (e.g., Fish Curry, Rosogolla)..."
               className="w-full bg-white border border-[#16100C]/10 rounded-2xl pl-11 pr-4 py-3.5 text-xs text-[#16100C] focus:outline-none focus:ring-1 focus:ring-[#CEA359] shadow-sm"
             />
-          </div>
-          
-          {/* Food Type Quick Toggles */}
-          <div className="flex bg-white p-1 rounded-2xl border border-[#16100C]/10 shadow-sm shrink-0">
-            {categories.map((cat, index) => (
-              <button
-                key={index}
-                onClick={() => setFoodTypeFilter(cat.name)}
-                className={`px-4 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all ${
-                  foodTypeFilter === cat.name
-                    ? "bg-[#16100C] text-[#FAF5EB]"
-                    : "text-[#16100C]/60 hover:text-[#16100C]"
-                }`}
-              >
-                {cat.name}
-              </button>
-            ))}
           </div>
         </div>
       </div>

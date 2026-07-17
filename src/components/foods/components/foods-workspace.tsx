@@ -3,35 +3,66 @@
 import React, { useState } from "react";
 import { useFoods } from "./foods-provider";
 import { Clock, Star, Award, ChevronDown } from "lucide-react";
-import { BACKEND_CATEGORIES, BACKEND_FOODS } from "@/data/foodsdata";
+import { useFoodCategories } from "@/hooks/useFoodCategories";
+import { FoodCategory } from "@/types/category";
+import Image from "next/image";
+import { useGetFoods } from "@/hooks/use-foods";
 
 export default function FoodsWorkspace() {
-  const { activeCategory, setActiveCategory, searchQuery, foodTypeFilter, sortBy, setSortBy } = useFoods();
+  const { activeCategory, setActiveCategory, searchQuery, setActiveSubCategory, activeSubCategory, sortBy, setSortBy } = useFoods();
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
 
   const handleVariantChange = (foodId: string, variantId: string) => {
     setSelectedVariants(prev => ({ ...prev, [foodId]: variantId }));
   };
+  const { data: CategoriesData = [], isLoading } = useFoodCategories();
 
-  // Advanced Processing Pipeline
-  const filteredFoods = BACKEND_FOODS.filter((food) => {
-    const matchesCategory = activeCategory === "All" || food.category.name === activeCategory;
-    const matchesType = foodTypeFilter === "ALL" || food.foodType === foodTypeFilter;
-    const matchesSearch = food.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          food.shortDescription.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          food.tags.some(t => t.name.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesType && matchesSearch;
-  }).sort((a, b) => {
-    if (sortBy === "price-low") return Number(a.variants[0].price) - Number(b.variants[0].price);
-    if (sortBy === "price-high") return Number(b.variants[0].price) - Number(a.variants[0].price);
-    if (sortBy === "rating") return b.rating.averageRating - a.rating.averageRating;
-    return 0; // default order framework
+  const { data } = useGetFoods({
+
+    limit: 12,
+    search: searchQuery,
+    category: activeCategory === "All" ? undefined : activeCategory,
   });
+
+  if (isLoading) return <h2 className="text-center py-10 font-sans text-sm">Data loading...</h2>
+  console.log(data)
+  const categories: FoodCategory[] = CategoriesData?.items ?? [];
+  // Advanced Processing Pipeline
+  const foods = data?.items ?? [];
+  const filteredFoods = foods
+    .filter((food) => {
+      if (activeCategory === "All") return true;
+
+      if (activeSubCategory !== "All") {
+
+        const keyword = activeSubCategory.toLowerCase();
+
+        return (
+          food.category.name === activeCategory &&
+          (
+            food.name.toLowerCase().includes(keyword) ||
+            food.shortDescription.toLowerCase().includes(keyword)
+          )
+        );
+      }
+    })
+    .sort((a, b) => {
+      if (sortBy === "price-low")
+        return Number(a.variants[0].price) - Number(b.variants[0].price);
+
+      if (sortBy === "price-high")
+        return Number(b.variants[0].price) - Number(a.variants[0].price);
+
+      if (sortBy === "rating")
+        return b.rating.averageRating - a.rating.averageRating;
+
+      return 0;
+    });
 
   return (
     <section className="py-12 bg-[#FAF5EB]">
       <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
+
         {/* Left Side Hierarchy Filter Layout */}
         <div className="lg:col-span-3 space-y-6">
           <div className="bg-white border border-[#16100C]/10 rounded-2xl p-5 shadow-sm space-y-4">
@@ -39,28 +70,36 @@ export default function FoodsWorkspace() {
             <div className="flex flex-col gap-1">
               <button
                 onClick={() => setActiveCategory("All")}
-                className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                  activeCategory === "All" ? "bg-[#CEA359]/10 text-[#CEA359] font-bold" : "text-[#16100C]/70 hover:bg-[#16100C]/5"
-                }`}
+                className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all ${activeCategory === "All" ? "bg-[#CEA359]/10 text-[#CEA359] font-bold" : "text-[#16100C]/70 hover:bg-[#16100C]/5"
+                  }`}
               >
                 All Menu Categories
               </button>
-              {BACKEND_CATEGORIES.map((cat) => (
+
+              {categories.map((cat) => (
                 <div key={cat.id} className="space-y-1">
                   <button
-                    onClick={() => setActiveCategory(cat.name)}
-                    className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                      activeCategory === cat.name ? "bg-[#CEA359]/10 text-[#CEA359] font-bold" : "text-[#16100C]/70 hover:bg-[#16100C]/5"
-                    }`}
+                    onClick={() => {
+                      setActiveCategory(cat.name);
+                      setActiveSubCategory("All");
+                    }} className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all ${activeCategory === cat.name ? "bg-[#CEA359]/10 text-[#CEA359] font-bold" : "text-[#16100C]/70 hover:bg-[#16100C]/5"
+                      }`}
                   >
                     {cat.name}
                   </button>
-                  {cat.subCategories.length > 0 && (
-                    <div className="pl-4 flex flex-col border-l border-[#16100C]/5 ml-3 gap-0.5">
+                  {activeCategory === cat.name && cat.subCategories && cat.subCategories.length > 0 && (
+                    <div className="pl-4 flex flex-col border-l border-[#16100C]/5 ml-3 gap-0.5 animate-in fade-in slide-in-from-top-1 duration-200">
                       {cat.subCategories.map(sub => (
-                        <span key={sub.id} className="text-[10px] text-[#16100C]/50 py-1 hover:text-[#CEA359] cursor-pointer">
+                        <button
+                          key={sub.id}
+                          onClick={() => setActiveSubCategory(sub.name)}
+                          className={`text-[10px] py-1 text-left transition-colors ${activeSubCategory === sub.name
+                              ? "text-[#CEA359] font-bold"
+                              : "text-[#16100C]/50 hover:text-[#CEA359]"
+                            }`}
+                        >
                           {sub.name}
-                        </span>
+                        </button>
                       ))}
                     </div>
                   )}
@@ -104,9 +143,11 @@ export default function FoodsWorkspace() {
                     <div>
                       {/* Image Module */}
                       <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#16100C]/5">
-                        <img
+                        <Image
                           src={food.thumbnail}
                           alt={food.name}
+                          width={200}
+                          height={200}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                         {food.labels.map((lbl) => (

@@ -1,0 +1,1048 @@
+[33mcommit ef805866eec955424cc06ea4e6e316cc47f292b8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnazrul[m[33m, [m[1;31morigin/development[m[33m)[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 16 21:44:58 2026 +0600
+
+    feat: mock data to live API migration (phase 4)
+    
+    - Cart page wired to useCart() hook
+    - Checkout form wired to useCart() + usePlaceOrder()
+    - Track-order page wired to useOrder(orderId)
+    - Foods page gets error/loading boundaries
+    - Foods/[slug] uses server-side apiFetch
+    - Cleanup: delete traking.ts, tracking.ts (unused mock data)
+    - Rich Order type for API response shape
+    - 404 not-found page added
+
+[33mcommit 232fd6976a2e59707523ae22f53930399e3d720f[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 16 21:37:01 2026 +0600
+
+    feat(api): add ApiError, consolidate lib files, create TanStack Query hooks
+
+[33mcommit 72cdbc99afd2b2569a69c6bba61c1a50a9de5b29[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 16 21:19:42 2026 +0600
+
+    fix(auth): stabilize auth, wire Yup, fix typos
+
+[33mcommit e93fee8c8118e072aa57d3fb6f9d31817ab042d7[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 16 20:32:46 2026 +0600
+
+    feat(customers): 6 admin customer endpoints — list with aggregates, detail, orders, subs, wallet, payments
+
+[33mcommit 688feda5cd21f4592923db1ab46ab545a3ecabde[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 16 17:05:32 2026 +0600
+
+    feat(orders): 16 order endpoints — CRUD, status flow, vendor/rider assign, refund, feedback, invoice
+
+[33mcommit df782552cd621c6615a8534814b451e2cd4ffff0[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 16 16:29:35 2026 +0600
+
+    Reapply "Merge branch 'nazrul' into development"
+    
+    This reverts commit 945bc1f397a2c52a7557db551c58835adf466305.
+
+[33mcommit 945bc1f397a2c52a7557db551c58835adf466305[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 16 16:09:34 2026 +0600
+
+    Revert "Merge branch 'nazrul' into development"
+    
+    This reverts commit ecc11017f7fa263bfde50209cc04ea18f18711dc, reversing
+    changes made to 8cf28d2896758a273b2147fdd0d9b6709fb102d2.
+
+[33mcommit ecc11017f7fa263bfde50209cc04ea18f18711dc[m
+Merge: 8cf28d2 88081c2
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 16 15:55:35 2026 +0600
+
+    Merge branch 'nazrul' into development
+
+[33mcommit 88081c21dd5e5bff9247015036a8c9c885efe1f3[m
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Thu Jul 16 15:54:49 2026 +0600
+
+    foods page data fetch
+
+[33mcommit 8cf28d2896758a273b2147fdd0d9b6709fb102d2[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 15 21:37:09 2026 +0600
+
+    feat(api): cart & checkout backend
+
+[33mcommit 53d6454ebfd6618cc70f5bbf7fd96c9abac12748[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 15 21:05:50 2026 +0600
+
+    feat: quick login, logout dropdown menu, protected dashboard works fine
+
+[33mcommit a10bb3ce2f387d18ddc1bc7ca67fc167850f6cf5[m
+Merge: 0405ce2 6e0075d
+Author: Jahid Hasan <jahidhasan.webdev01@gmail.com>
+Date:   Wed Jul 15 15:53:14 2026 +0600
+
+    Merge pull request #5 from jevxo26/jahid_hasan
+    
+    solve conflit and implement all possible route of vendors
+
+[33mcommit 6e0075d1d3de03d3f808e79a9aa74b9a1fecf118[m
+Author: jahidhasan-webdev01 <jahidhasan.webdev01@gmail.com>
+Date:   Wed Jul 15 15:43:23 2026 +0600
+
+    solve conflit and implement all possible route of vendors
+
+[33mcommit 0405ce2f6bf205cfc26f8ed01632a44a4e6468af[m
+Merge: 9508423 f8187aa
+Author: Jahid Hasan <jahidhasan.webdev01@gmail.com>
+Date:   Wed Jul 15 12:35:12 2026 +0600
+
+    Merge pull request #3 from jevxo26/jahid_hasan
+    
+    create a new branch and push
+
+[33mcommit f8187aac075bdf9caa2fb776290c565c709ff56b[m
+Author: jahidhasan-webdev01 <jahidhasan.webdev01@gmail.com>
+Date:   Wed Jul 15 12:34:29 2026 +0600
+
+    create a new branch and push
+
+[33mcommit 60ce5fadce21f2e8e4d76834ff3bc14c7eb892c6[m
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Tue Jul 14 21:47:46 2026 +0600
+
+    dev update
+
+[33mcommit 9508423d1ba311aa28b9e2a534d6aed6db408775[m
+Merge: 79d61ef 5e59bca
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 20:57:57 2026 +0600
+
+    Merge branch 'nazrul' into development
+
+[33mcommit 79d61ef8ffcb06ae765d25a38e7d1d54b73ff126[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 20:55:04 2026 +0600
+
+    feat: implement authentication. create proxy middleware, hooks, query provider & auth slice
+
+[33mcommit 532460f26bfcf2f3be7419d6d1e34984fe174539[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 19:05:29 2026 +0600
+
+    fix: type issue in services and update docs
+
+[33mcommit 89f1a24d38a3f79e877ccafb1aa4e7b7a55d2ea7[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 18:34:03 2026 +0600
+
+    feat(admin): Food Admin CRUD - 34 endpoints for food, category, subcategory, variant, addon, nutrition, ingredients, allergens, prices, discounts, tags, labels, availability, schedule, visibility management
+
+[33mcommit 5e59bca32e3564b5b58edb7611a7a6a90290284d[m
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Tue Jul 14 17:01:47 2026 +0600
+
+    improve about page design and impliment package page
+
+[33mcommit 8101575b62468d288c0149006b60f5231d03cc59[m
+Merge: a2c2293 6f32528
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 16:39:24 2026 +0600
+
+    Merge branch 'nazrul' into development
+
+[33mcommit a2c229305095d33cf25b7a75660cd6adf4b46406[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 16:38:49 2026 +0600
+
+    feat(food): seed data + Food Catalog API — browse, filter, detail, categories, tags, favorites, reviews
+
+[33mcommit 6f325287ea5c80f524433c234155b5567de5247f[m
+Merge: 95f31db d2c911d
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Tue Jul 14 16:25:53 2026 +0600
+
+    food review page done
+
+[33mcommit 92136e3c21eaf8219b7aeb2ae3662c932f08b74d[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 16:15:41 2026 +0600
+
+    feat(users): full User Profile API — addresses, devices, notification-settings, login-history, /me CRUD
+
+[33mcommit 413740743b70ff64fb0ffff66b3f5f2cdacfd843[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 15:57:48 2026 +0600
+
+    feat(auth): full Auth API — login, register, OTP, refresh, logout, forgot/reset, change-password, me with Yup validation
+
+[33mcommit 0f9c50e66538fbc2b9d6990674deeac9953a8bd4[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 15:38:59 2026 +0600
+
+    feat(schema): full Prisma schema (100 models) & API docs
+
+[33mcommit f1b4664b1631ea257e280d4ae1ffd4dcfd80a29a[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 14:06:41 2026 +0600
+
+    feat: setup the backend for configuration
+
+[33mcommit f8982336d3987f1509e50452f27647baa03437ed[m
+Merge: 108e250 95f31db
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 13:43:21 2026 +0600
+
+    Merge branch 'nazrul' into development
+
+[33mcommit 108e250b6e8249ad3eb74cafa163d2ded05bf285[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 13:40:08 2026 +0600
+
+    refactor: full admin dashboard. solve layout issue, folder structure
+
+[33mcommit 6f53c8734bd7d202468630ced36b72181be63b9e[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 12:03:03 2026 +0600
+
+    refactor: update folder structure payments, reports, riders into feature subdirectories
+
+[33mcommit 95f31dbc29ac6039d0e4a34c0ae4675a45269a19[m
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Tue Jul 14 04:11:47 2026 +0600
+
+    auth page and package done
+
+[33mcommit d2c911dd7c2722cce062e00fe1b45a9f798d3d38[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 00:33:58 2026 +0600
+
+    Revert "Merge branch 'saima' into development"
+    
+    This reverts commit e8117b124f921b1aadbe0b600d8f2a8be6b3561a, reversing
+    changes made to cea960259df55bb85cda3b3440e4340be72af854.
+
+[33mcommit 4d223a85f135c265037e9576aca6fbccc4034414[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 00:28:17 2026 +0600
+
+    Reapply "Merge branch 'saima' into development"
+    
+    This reverts commit 0bbda21917728add655821710ecfd0da7f8a782e.
+
+[33mcommit 0bbda21917728add655821710ecfd0da7f8a782e[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 14 00:06:51 2026 +0600
+
+    Revert "Merge branch 'saima' into development"
+    
+    This reverts commit e8117b124f921b1aadbe0b600d8f2a8be6b3561a, reversing
+    changes made to cea960259df55bb85cda3b3440e4340be72af854.
+
+[33mcommit a561a4505c759b42f90923d2524f19efff0ffe8e[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 23:47:24 2026 +0600
+
+    Update package-lock.json
+
+[33mcommit cc2cc7b42f8047f6d794a916b2e57faee7c038f3[m
+Merge: e8117b1 42955aa
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 23:47:13 2026 +0600
+
+    Merge branch 'nazrul' into development
+
+[33mcommit e8117b124f921b1aadbe0b600d8f2a8be6b3561a[m
+Merge: cea9602 e12982e
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 23:46:17 2026 +0600
+
+    Merge branch 'saima' into development
+
+[33mcommit cea960259df55bb85cda3b3440e4340be72af854[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 23:45:13 2026 +0600
+
+    style: solve some pages card layout issue
+
+[33mcommit e12982e390e437b19dd4e139fdffe8da7665ba7f[m
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Mon Jul 13 23:20:08 2026 +0600
+
+    feat(admin): implement DataTable for cancelled, completed, and delivery orders with sorting and filtering capabilities
+
+[33mcommit a5d17c3773bf420add0a9668194401235b314cf6[m
+Merge: b12c532 93c690a
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Mon Jul 13 23:06:20 2026 +0600
+
+    fixed confirm and Kitchen queue page
+
+[33mcommit 42955aac02124098012f4cf31bfb19eacbdc4fbb[m
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Mon Jul 13 22:54:17 2026 +0600
+
+    Auth Page ui Fixing Design
+
+[33mcommit b12c5328f179dffc914b78236be9f50cc3e4c2b2[m
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Mon Jul 13 21:41:43 2026 +0600
+
+    Refactor orders management with new components and enhance PendingOrdersPage layout
+
+[33mcommit 93c690a2ab0908516c91cad78c227a6f3adb5c4c[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 10:33:49 2026 +0600
+
+    refactor: replace StatCard rows with SummaryCards on some pages
+
+[33mcommit b95eea5255ede7c88d161aa55952c3dd3356654b[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 09:46:34 2026 +0600
+
+    refactor(admin): rebuild payments, riders, reports with DataTable infrastructure
+    
+    - Replace raw <table> elements with TanStack DataTable (sortable, filterable, searchable, paginated)
+    - Add typed data files: riders.ts, reports.ts; extend payments.ts with refund/coupon/settlement types
+    - Create status badge components with consistent dot+ring styling
+    - Add 2+ faceted filters per table (status, method, zone, channel, category, segment)
+    - Add row action dropdowns (View Details + domain-specific actions with destructive variants)
+    - Use StatCard with varied accent positions per section (right→payments, bottom→riders, left→reports)
+    - Add DarkCard/GlassCard information panels per page following customers/foods patterns
+    - 15 new components, 15 deleted, 15 page.tsx rewritten
+
+[33mcommit c41e2f0b648a2e4f465461f4023dcae24ad6d178[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 09:13:48 2026 +0600
+
+    feat(admin): populate reports sub-pages (sales, revenue, vendors, riders, customers, subscriptions, inventory)
+    
+    - Add ReportSales with daily breakdown, KPI cards, pagination
+    - Add ReportRevenue with revenue source breakdown and share bars
+    - Add ReportVendors with vendor performance metrics
+    - Add ReportRiders with delivery success tracking
+    - Add ReportCustomers with LTV and status segmentation
+    - Add ReportSubscriptions with churn and renewal analytics
+    - Add ReportInventory with stock level monitoring
+    - Wire up all 7 report page.tsx files
+
+[33mcommit 93428220dcfe0d0a45ea68a767b6ee28cd503425[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 09:10:57 2026 +0600
+
+    feat(admin): populate riders sub-pages (all, live, performance, earnings)
+    
+    - Add RidersAll component with search, zone/status filter, pagination
+    - Add RidersLive component with real-time feed, status badges, refresh
+    - Add RidersPerformance component with sortable KPI table
+    - Add RidersEarnings component with payout tracking
+    - Wire up 4 rider page.tsx files to new components
+
+[33mcommit 15af51f65bb66dd0bc166041d6c0dd505fc31ff3[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 09:08:22 2026 +0600
+
+    feat(admin): populate payments sub-pages (transactions, refunds, coupons, settlements)
+    
+    - Add PaymentTransactions component with search, filter, sort, pagination
+    - Add PaymentRefunds component with status tracking
+    - Add PaymentCoupons component with usage progress bars
+    - Add PaymentSettlements component with ledger table
+    - Wire up 4 payment page.tsx files to new components
+
+[33mcommit bd57f84c9a2cec2da8b0aeec4f801be590340d17[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 09:00:18 2026 +0600
+
+    refactor: restructure dashboard components by role
+
+[33mcommit 6862d8e1222acaf7f67e10d0427a9e9e332cff08[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 08:59:47 2026 +0600
+
+    refactor: split oversized dashboard components, restructure by role
+
+[33mcommit 4233444b7ab14ffcd3f95b1b80301457ce7b0dbd[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 08:49:26 2026 +0600
+
+    feat: flesh out vendor/kitchen/rider dashboards, fix footer paths
+
+[33mcommit 4d0bea0ab140b65633b3a49ac348bead8ed7ae41[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 08:44:03 2026 +0600
+
+    refactor: create dashboard routes under /dashboard/ & create other dashboard layout
+
+[33mcommit 22717fb9b3900e91c16e23496659440dc4225f90[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 00:40:53 2026 +0600
+
+    fix: import PageHeader
+
+[33mcommit d1b33dd92455350e54a83b8da9d59533b97ec5af[m
+Merge: 50131be f2b42bb
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 00:40:08 2026 +0600
+
+    Merge branch 'development' into taher
+
+[33mcommit f2b42bb39aaae1b0bf066e828b1ccc52b3c76051[m
+Merge: b2a5bc7 2542c27
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 00:36:47 2026 +0600
+
+    Merge branch 'saima' into development
+
+[33mcommit 50131becba6fccab6c703df13edf12fe5629440e[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 00:32:05 2026 +0600
+
+    feat: create approval queue page & food details page
+
+[33mcommit ab7a4f925bd0a7f110ea081ee43d27cbaa0d4324[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 00:23:11 2026 +0600
+
+    feat: implement nutrition page
+
+[33mcommit 38c0e91ffb38f64e64ce960d41fecc7cd2753d22[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 13 00:06:52 2026 +0600
+
+    feat: implement foods categories page
+
+[33mcommit 2542c272dc411b1d54d3fc4f84cd16e3281a702b[m
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Sun Jul 12 23:47:06 2026 +0600
+
+    Implement PendingOrdersTable component and update PendingOrdersPage to display pending orders
+
+[33mcommit 60cd80926a93c2fe53c8f0cef8f58822d126ab49[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sun Jul 12 19:46:27 2026 +0600
+
+    feat: create inventory page with cards & table
+
+[33mcommit 9bd0506274a73b0776d5ff03db6c1002f9bed50a[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sun Jul 12 19:33:28 2026 +0600
+
+    feat: create packages page in foods
+
+[33mcommit e7075e6a732c035899b0be32ec2c1b54238b72cf[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sun Jul 12 19:24:11 2026 +0600
+
+    feat: add new meal plan sub page in foods
+
+[33mcommit 208245a8b19bda602b51d72af91a678eb140bcf5[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sun Jul 12 18:24:09 2026 +0600
+
+    refactor: update reusable table in dashboard
+
+[33mcommit 75483d5562f4c6a7af414eed0fc913d6cf161aa2[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sun Jul 12 18:02:35 2026 +0600
+
+    style: make dashboard more premium with upgrade sidebar, header & content
+
+[33mcommit b2a5bc79b26b29a07879a852bbe426891d192ac7[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sat Jul 11 21:08:56 2026 +0600
+
+    refactor: dashboard foods page and move file for overview page
+
+[33mcommit 8353147da1c950bc1e2f24379a39e847d5a9e0ba[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sat Jul 11 20:45:15 2026 +0600
+
+    refactor: the reusable table & update customer table
+
+[33mcommit 7aef8a26b7851fe86494d68d55400e798f1bf5a1[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sat Jul 11 20:05:29 2026 +0600
+
+    style: add premium design for our dashboard cards
+
+[33mcommit b94fca38f7744e0371333471d67324b79c90008a[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sat Jul 11 17:54:37 2026 +0600
+
+    style: working on dashboard premium & stat-card premium design
+
+[33mcommit 6f860135b497069090d7d161bd77251488462d7b[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sat Jul 11 13:58:19 2026 +0600
+
+    fix: eslint error, type error
+
+[33mcommit 0bd68e682bddbd44bbb4386483323acb603f5165[m
+Merge: 7dd16d2 ff5666d
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sat Jul 11 13:32:40 2026 +0600
+
+    Merge branch 'nazrul' into taher
+
+[33mcommit 7dd16d232df329729dbb28e94e058ef8fdcfd845[m
+Merge: 284a3f4 4b1da56
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sat Jul 11 13:32:08 2026 +0600
+
+    Merge branch 'saima' into taher
+
+[33mcommit 284a3f46ac1e876c69e723d7378c315189af04f6[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sat Jul 11 13:25:44 2026 +0600
+
+    fix: eslint issue & prettier format
+
+[33mcommit 88f00cf2e0e9ad1797ba2ff6d6a504604108ee88[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sat Jul 11 13:19:04 2026 +0600
+
+    feat: add reveal animation in homepage sections
+
+[33mcommit ff5666d6cf132f452a76e2f359abdc8df54a8b3d[m
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Sat Jul 11 12:33:17 2026 +0600
+
+    about page ui done
+
+[33mcommit 9a81d425c20dc4a059e1702ab7cb8b24a3101f1d[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sat Jul 11 11:59:19 2026 +0600
+
+    style: add navigation menu and responsive navbar
+
+[33mcommit defe48b835295335b2a6a3a5232f2c591419da6e[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Sat Jul 11 09:23:33 2026 +0600
+
+    style: implement auto-scroll in combos, reviews & testimonials section
+
+[33mcommit 4b1da5688f06b7d59a6b68731a2b609f3556158c[m
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Sat Jul 11 04:35:55 2026 +0600
+
+    settlement page fixed with reusable table component and filter , sorting implementation
+
+[33mcommit 825e5770a49f53c1c2d58f97d73e960a4d999a53[m
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Sat Jul 11 04:26:47 2026 +0600
+
+    performance page export button ui fix
+
+[33mcommit ae93ed740555ba0f21f5b1342cbd5a4a77d77a38[m
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Sat Jul 11 04:24:43 2026 +0600
+
+    fix vendor approval queue page with resuable table and modal fix
+
+[33mcommit 55bc4b33453ff1bf457363768071352473593aa9[m
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Fri Jul 10 23:00:28 2026 +0600
+
+    Added VendorPerformance component and integrate into VendorsPerformancePage
+
+[33mcommit aeadcaec9503d0d7b69df049a686fe33f8731a2c[m
+Merge: 4bb00da 7e49391
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Fri Jul 10 22:23:41 2026 +0600
+
+    Removed duplicate imports, fixed syntax errors
+
+[33mcommit 4bb00da29346e704578bad35fe35c80c095a58b7[m
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Fri Jul 10 21:33:05 2026 +0600
+
+    implement VendorFinancialSettlement component and integrate into VendorsSettlementPage
+
+[33mcommit 77da971b305d12241923551961042238fd7802b1[m
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Fri Jul 10 20:57:30 2026 +0600
+
+    added new registration fields to RegisterVendorModal
+
+[33mcommit 2a0699e4eebbaf33852b60636652d5dafa6626d6[m
+Merge: a993838 b12c239
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Fri Jul 10 00:15:55 2026 +0600
+
+    implement vendor approval queue system
+
+[33mcommit 7e493912c7f845df95f47ecb6664f6e5d42927ff[m
+Merge: 917ae46 367fd3a
+Author: Jahid Hasan <jahidhasan.webdev01@gmail.com>
+Date:   Fri Jul 10 00:03:58 2026 +0600
+
+    Merge pull request #2 from jevxo26/jahid
+    
+    create vendor schema and a vendor to db
+
+[33mcommit 367fd3ac198c9c6837664c0617c6649f6f3b5d7f[m
+Author: jahidhasan-webdev01 <jahidhasan.webdev01@gmail.com>
+Date:   Fri Jul 10 00:03:22 2026 +0600
+
+    create vendor schema and a vendor to db
+
+[33mcommit 917ae467230ed684549a020200f3e5c7bc4cb843[m
+Merge: cce32a9 1f1aca1
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 9 23:59:30 2026 +0600
+
+    Merge branch 'jahid' into development
+
+[33mcommit cce32a91d83c3074cde816947c389b612c4997e7[m
+Merge: d39114a c02600d
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 9 23:57:16 2026 +0600
+
+    Merge branch 'nazrul' into development
+
+[33mcommit d39114ad52e737cde9b2feabbb8faed954ceb8f1[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 9 23:55:06 2026 +0600
+
+    refactor: dashboard food page
+
+[33mcommit 235df6e769901e19a9f1b3ef7227c971cfdf873e[m
+Merge: c02600d a4d24fe
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Thu Jul 9 23:41:28 2026 +0600
+
+    Merge branch 'development' of https://github.com/jevxo26/FONDO into nazrul
+
+[33mcommit c02600db8850549d6fb2ba331dd5d64932843b25[m
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Thu Jul 9 23:39:14 2026 +0600
+
+    home page duplicate component remove
+
+[33mcommit f3023e94c52a824f9ff7bf20358d17dd91062e75[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 9 23:13:48 2026 +0600
+
+    feat: create dashboard foods with table
+
+[33mcommit fe9291d7c7fa0496aba7d9f8c34fb7a33f6fa053[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 9 22:43:42 2026 +0600
+
+    migrate: convert raw elements to shadcn/ui
+
+[33mcommit f916b6871918b566f75061e88e2a097a9eea74a7[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 9 20:59:21 2026 +0600
+
+    style: update shadcn Input/Button to match design system & migrate
+
+[33mcommit e6b8f77441f6bf7eae48605fec3bdc568e42fbb6[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 9 20:20:32 2026 +0600
+
+    docs: update docs, create API.md & BUILD_PLAN.md
+
+[33mcommit 1f1aca1cad3570e03ae1d6e8bf306d5f75987add[m
+Author: jahidhasan-webdev01 <jahidhasan.webdev01@gmail.com>
+Date:   Thu Jul 9 17:56:34 2026 +0600
+
+    verfity user and admin by using jwt
+
+[33mcommit d64af7e1faaa1c17f792100098f0bb140a195dd1[m
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Thu Jul 9 17:26:36 2026 +0600
+
+    All Page ui done
+
+[33mcommit 4b0db16dd2cd100b68838fe6763a1142e6235229[m
+Author: jahidhasan-webdev01 <jahidhasan.webdev01@gmail.com>
+Date:   Thu Jul 9 15:03:50 2026 +0600
+
+    handle login with access token and refresh token
+
+[33mcommit 710d473516e1862b812185d507cde3bb1324df13[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 9 14:10:26 2026 +0600
+
+    refactor: footer and navbar components, add footer data
+
+[33mcommit a4d24fe84f7b851b7b3b9f5c904ba73159d0ab2e[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 9 14:01:27 2026 +0600
+
+    fix: remove duplicate food/id page and solve type error
+
+[33mcommit 0ef38f5e233b641de80ce960908864bdb6c1ba93[m
+Merge: c28ffa0 f4bc2b7
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 9 13:32:12 2026 +0600
+
+    Merge branch 'nazrul' into development
+
+[33mcommit c28ffa0454d25f62bce5b6f88603bdb7815f12ae[m
+Merge: ad3c59e a993838
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 9 13:29:14 2026 +0600
+
+    Merge branch 'saima' into development
+
+[33mcommit f4bc2b707eb139fd594b683a8b7a3bb7f295e7e1[m
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Thu Jul 9 13:27:36 2026 +0600
+
+    Food Checkout page Ui done
+
+[33mcommit ad3c59ebb58250d3e4dfd6150051ec854aea45fe[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 9 13:08:22 2026 +0600
+
+    style: make homepage fully responsive
+
+[33mcommit f1d81b7b40de66da762cd0b1a1cafdd3d8098e63[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 9 12:10:46 2026 +0600
+
+    feat: add footer in layout
+
+[33mcommit 5b317c3fde3e4d580883b4e7b4863d72e4cabeb3[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Thu Jul 9 11:37:06 2026 +0600
+
+    feat: add kitchen-dining section & service-banner section in homepage
+
+[33mcommit c5b9adc3429bba61c25747cd9487fbcbf2fb5085[m
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Thu Jul 9 04:06:17 2026 +0600
+
+    order page ui done
+
+[33mcommit a99383835a479f226bbac57308f843f9a019ffd8[m
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Thu Jul 9 00:49:09 2026 +0600
+
+     added vendor registration modal and vendor details page
+
+[33mcommit 66f43b486d885f98aea1b85a6771d955e7348307[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 23:43:44 2026 +0600
+
+    feat: add blog review section in homepage
+
+[33mcommit 33106df6c580c945829b6aa262840ca62622355c[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 23:23:42 2026 +0600
+
+    style: redesign Combos, Chef Story, Testimonials to match Figma
+
+[33mcommit 58b018417a1e64fe2c4277ae3b1f12ddf8b43216[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 19:05:42 2026 +0600
+
+    fix: update homepage sections to match Figma design
+
+[33mcommit 6f4b1353dbc4c559af9e29896663e97b887b1f86[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 18:01:02 2026 +0600
+
+    feat: implement full homepage with all sections & add images
+
+[33mcommit d6a55ad8d2067fe992d701cdba3400312c042bbb[m
+Merge: ceaed31 b12c239
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Wed Jul 8 16:28:31 2026 +0600
+
+    Merge branch 'development' of https://github.com/jevxo26/FONDO into nazrul
+
+[33mcommit ceaed31ea4ecb4e693d6717803bb71c55ce59e65[m
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Wed Jul 8 16:15:40 2026 +0600
+
+    single page done
+
+[33mcommit b12c2393e3f213a8dfa53a507d617d1be9bfa9b4[m[33m ([m[1;31morigin/taher[m[33m, [m[1;31morigin/abdul_ahad[m[33m, [m[1;32mdevelopment[m[33m)[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 15:39:44 2026 +0600
+
+    fix: food api working
+
+[33mcommit 569219bf1bad755fad4d4e133c35219ea078822b[m
+Merge: 32ab726 52530ca
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 15:26:55 2026 +0600
+
+    Merge branch 'development' into abdul_ahad
+
+[33mcommit 52530ca08a3338a024f6bd0e24d73b0140092c92[m[33m ([m[1;31morigin/saima[m[33m, [m[1;31morigin/jahid[m[33m)[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 15:20:10 2026 +0600
+
+    fix: internal server error
+
+[33mcommit 32ab7267e8c1464bc53b47b65ba468d30230aa03[m
+Author: Md Abdul Ahad <abd.me7@gmail.com>
+Date:   Wed Jul 8 14:53:49 2026 +0600
+
+    feat(api): add CRUD endpoints for Category/Food/Variant/Addons/AddonItems and tags; support food filtering, pagination, and slug lookup
+
+[33mcommit 73fa4754eae8caf25d02035ef4d5cabee52312c7[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 11:45:47 2026 +0600
+
+    feat: add tabbed layouts, stub sub-pages
+
+[33mcommit f1ecbe07aaeec662c908d15f6fcf2ff59dccac5e[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 11:45:32 2026 +0600
+
+    feat: in dashboard add tabbed layouts, stub sub-pages
+
+[33mcommit 02388331a12c6bdd9048662cf10cb6e3ffc6064c[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 11:04:14 2026 +0600
+
+    chore: remove outdated design documentation and HTML code
+
+[33mcommit 33c0b03be8b59882b863e87f001e4644f41f7f15[m
+Merge: 666b1e0 29f4346
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 11:01:40 2026 +0600
+
+    Merge remote-tracking branch 'origin/jahid' into taher
+
+[33mcommit 666b1e0141da9ba8eb5ce4f58eeeb62068ab54f2[m
+Merge: d87f4ea aa82e3b
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 10:58:46 2026 +0600
+
+    Merge remote-tracking branch 'origin/nazrul' into taher
+
+[33mcommit d87f4eaa35438e29c8755b1fc92d879df825e263[m
+Merge: 44b6541 9fa00b8
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 10:56:41 2026 +0600
+
+    Merge branch 'saima' into taher
+
+[33mcommit 44b65419de87b6216ba747d9f4f5c9c1ac8c6c2e[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 10:39:13 2026 +0600
+
+    refactor: use reusable card components in customer dashboard
+
+[33mcommit f069320fefccaaf9bdc4f032cf2c2e9d3036d6aa[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 10:15:22 2026 +0600
+
+    refactor: make responsive dashboard layout & add more shadcn component
+
+[33mcommit aa82e3b3024b634ffe234fa4bb661b7fc7645d0e[m
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Wed Jul 8 03:25:07 2026 +0600
+
+    Food Page Design with real data
+
+[33mcommit 3d306eb1291aa9ea0646d396bdb2c7228d93ac13[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Wed Jul 8 00:15:37 2026 +0600
+
+    style: responsive dashboard layout
+
+[33mcommit a89d1d6dad167eadba881a94fc99d978d70a7a00[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 7 22:20:27 2026 +0600
+
+    refactor: folder structure for payments, profiles, subscriptions components
+
+[33mcommit 29f4346b1dea739e791d92d6d3b39c873630cb77[m
+Author: jahidhasan-webdev01 <jahidhasan.webdev01@gmail.com>
+Date:   Tue Jul 7 20:56:20 2026 +0600
+
+    make api of user create, get, update and delete also get all users
+
+[33mcommit 9fa00b8eef2e05163bf599a48fb7b0a1abf3659a[m
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Tue Jul 7 20:33:54 2026 +0600
+
+    feat: restructure VendorsPage with new components and enhance UI elements
+
+[33mcommit 90c3b5da1e6b8759604d2b999cc81e4a6d7d7be5[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 7 20:28:04 2026 +0600
+
+    style: fix color payments summary card
+
+[33mcommit f386a4145be8f9d798f68dc51aaca3b8613e4edc[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 7 20:27:08 2026 +0600
+
+    feat: add customer wallets page with cards and table
+
+[33mcommit 1f95d8f66e6eaba505d443d4a4a93177a5d10514[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Tue Jul 7 19:32:07 2026 +0600
+
+    chore: cleanup deps, add prettier/eslint, update prisma 7, enable turbopack
+
+[33mcommit 5360b42ccd6f07707b3694b0b52fdea1628b2d0e[m
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Tue Jul 7 13:51:08 2026 +0600
+
+    refractor vendor table with common table
+
+[33mcommit cd551064733436a40637e90609368b2628f19844[m
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Tue Jul 7 13:30:42 2026 +0600
+
+    foods page ui done
+
+[33mcommit 397ec5e8317865b8a3c5ba3b5bd77a1f012d65af[m
+Merge: 26c2738 5b26a64
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Tue Jul 7 13:05:39 2026 +0600
+
+    Merge branch 'development' of https://github.com/jevxo26/FONDO into saima
+
+[33mcommit 26c27387ef46a27ab19767c999fa422677966dc0[m
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Tue Jul 7 13:03:16 2026 +0600
+
+    fix: update heading font style in VendorsPage and clean up imports in VendorsTable
+
+[33mcommit 3622be07a713547b401e4b0f938e64127a4d4051[m
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Tue Jul 7 11:39:11 2026 +0600
+
+    Foods Page Design Done
+
+[33mcommit 5b26a6409c5f3ea3275cfce449d9b1a0e22a51cb[m
+Merge: 7222faf 46053fe
+Author: Jahid Hasan <jahidhasan.webdev01@gmail.com>
+Date:   Tue Jul 7 00:39:33 2026 +0600
+
+    Merge pull request #1 from jevxo26/jahid
+    
+    create user schema and controller for create user and get all user
+
+[33mcommit 46053fea6c0dfd6f257b76c79749ddd1d6d97777[m
+Author: jahidhasan-webdev01 <jahidhasan.webdev01@gmail.com>
+Date:   Tue Jul 7 00:38:23 2026 +0600
+
+    create user schema and controller for create user and get all user
+
+[33mcommit 7222fafa182e95bf6b57cf78b8f3bbd1b436ae53[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 23:57:05 2026 +0600
+
+    feat: add payments page with Financial Overview, summary cards, DataTable
+
+[33mcommit bc880499c50684055092225979f1609b9fbede22[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 23:29:37 2026 +0600
+
+    add: pagination/badge/skeleton shadcn and extract types from data table
+
+[33mcommit d65e0321a3ae861b514128d87a4801d35f720c35[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 21:32:17 2026 +0600
+
+    fix: console error & use shadcn dropdown for view menu in table
+
+[33mcommit 1486b539ccb9b92cd99ef67d2fa411d0c5280ae0[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 21:17:43 2026 +0600
+
+    feat: add DataTable row actions & status filter, remove subscription status tab
+
+[33mcommit 7ea40f66996d3f626342d7c94a3bbf1cf76701ef[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 21:01:57 2026 +0600
+
+    add: dropdown menu & popover from shadcn/ui
+
+[33mcommit 8b45fab8926e9dbd26a167441cb5f98fb6f632a5[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 20:44:05 2026 +0600
+
+    feat: subscription management with table, status
+
+[33mcommit 3335796cdf4e690b82a84ad02485d76645ca0d22[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 20:29:31 2026 +0600
+
+    refactor: refactor orders page to use reusable table
+
+[33mcommit a6bf22dd0668dc40c6397e82b232356a9b9a7cd8[m
+Author: developersaima <saimasattar6040@gmail.com>
+Date:   Mon Jul 6 20:27:44 2026 +0600
+
+    update vendor table
+
+[33mcommit 41d5b8b08ce5e534d58b0bb8a8f9b4f6fbc32d71[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 20:13:31 2026 +0600
+
+    feat: create a reusable table with search, pagination
+
+[33mcommit b2d511800c831cdb1ca80c7f8af1bb3cff0b711a[m
+Author: Nazrul Islam <nazrulislamtube@gmail.com>
+Date:   Mon Jul 6 20:09:37 2026 +0600
+
+    categories page created
+
+[33mcommit 17ba7c6a0f2ab003455dbf207b6b385f8d810c4a[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 19:26:10 2026 +0600
+
+    docs: provide FONDO markdown file
+
+[33mcommit 3589e31fa424d43eebed5b3644f92588b2f55a39[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 19:24:25 2026 +0600
+
+    style: redesign customer orders page
+
+[33mcommit b82aaa148e789fed0a5eeb8d364f2192aba87e92[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 14:47:53 2026 +0600
+
+    feat: add customer orders page with shadcn table and pagination
+
+[33mcommit 4f5132a327200db8f594fd5f8c360ed898500e90[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 09:54:56 2026 +0600
+
+    feat: add customer management profiles page with cards, wallet stats, and tab navigation
+
+[33mcommit 6c3e5643d945fef164893ba37c25814618854be6[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 09:47:57 2026 +0600
+
+    feat: add admin dashboard layout with sidebar, header, and route groups
+
+[33mcommit 03ac4ec64b7806879e1a71f652b04a56b2d168d0[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 09:19:23 2026 +0600
+
+    feat: add hero section
+
+[33mcommit dc14a6b338d5a86fc9eadf6f3040a8ba17eb858a[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 09:02:33 2026 +0600
+
+    feat: add responsive navbar
+
+[33mcommit dfaca66bcfedbdb392e85aa02ded8f4f88bae705[m
+Author: Abu Taher <writerabutaher@gmail.com>
+Date:   Mon Jul 6 08:06:39 2026 +0600
+
+    setup frontend and globals.css file
+
+[33mcommit 17309b34656f08346b33a4a00ab30bcb4b3d18e8[m[33m ([m[1;32mmain[m[33m)[m
+Author: Jevxo <jevxo26@gmail.com>
+Date:   Thu Jul 2 21:31:07 2026 +0600
+
+    Initial commit

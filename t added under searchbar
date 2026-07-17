@@ -1,0 +1,115 @@
+[33mef80586[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnazrul[m[33m, [m[1;31morigin/development[m[33m)[m feat: mock data to live API migration (phase 4)
+[33m232fd69[m feat(api): add ApiError, consolidate lib files, create TanStack Query hooks
+[33m72cdbc9[m fix(auth): stabilize auth, wire Yup, fix typos
+[33me93fee8[m feat(customers): 6 admin customer endpoints — list with aggregates, detail, orders, subs, wallet, payments
+[33m688feda[m feat(orders): 16 order endpoints — CRUD, status flow, vendor/rider assign, refund, feedback, invoice
+[33mdf78255[m Reapply "Merge branch 'nazrul' into development"
+[33m945bc1f[m Revert "Merge branch 'nazrul' into development"
+[33mecc1101[m Merge branch 'nazrul' into development
+[33m88081c2[m foods page data fetch
+[33m8cf28d2[m feat(api): cart & checkout backend
+[33m53d6454[m feat: quick login, logout dropdown menu, protected dashboard works fine
+[33ma10bb3c[m Merge pull request #5 from jevxo26/jahid_hasan
+[33m6e0075d[m solve conflit and implement all possible route of vendors
+[33m0405ce2[m Merge pull request #3 from jevxo26/jahid_hasan
+[33mf8187aa[m create a new branch and push
+[33m60ce5fa[m dev update
+[33m9508423[m Merge branch 'nazrul' into development
+[33m79d61ef[m feat: implement authentication. create proxy middleware, hooks, query provider & auth slice
+[33m532460f[m fix: type issue in services and update docs
+[33m89f1a24[m feat(admin): Food Admin CRUD - 34 endpoints for food, category, subcategory, variant, addon, nutrition, ingredients, allergens, prices, discounts, tags, labels, availability, schedule, visibility management
+[33m5e59bca[m improve about page design and impliment package page
+[33m8101575[m Merge branch 'nazrul' into development
+[33ma2c2293[m feat(food): seed data + Food Catalog API — browse, filter, detail, categories, tags, favorites, reviews
+[33m6f32528[m food review page done
+[33m92136e3[m feat(users): full User Profile API — addresses, devices, notification-settings, login-history, /me CRUD
+[33m4137407[m feat(auth): full Auth API — login, register, OTP, refresh, logout, forgot/reset, change-password, me with Yup validation
+[33m0f9c50e[m feat(schema): full Prisma schema (100 models) & API docs
+[33mf1b4664[m feat: setup the backend for configuration
+[33mf898233[m Merge branch 'nazrul' into development
+[33m108e250[m refactor: full admin dashboard. solve layout issue, folder structure
+[33m6f53c87[m refactor: update folder structure payments, reports, riders into feature subdirectories
+[33m95f31db[m auth page and package done
+[33md2c911d[m Revert "Merge branch 'saima' into development"
+[33m4d223a8[m Reapply "Merge branch 'saima' into development"
+[33m0bbda21[m Revert "Merge branch 'saima' into development"
+[33ma561a45[m Update package-lock.json
+[33mcc2cc7b[m Merge branch 'nazrul' into development
+[33me8117b1[m Merge branch 'saima' into development
+[33mcea9602[m style: solve some pages card layout issue
+[33me12982e[m feat(admin): implement DataTable for cancelled, completed, and delivery orders with sorting and filtering capabilities
+[33ma5d17c3[m fixed confirm and Kitchen queue page
+[33m42955aa[m Auth Page ui Fixing Design
+[33mb12c532[m Refactor orders management with new components and enhance PendingOrdersPage layout
+[33m93c690a[m refactor: replace StatCard rows with SummaryCards on some pages
+[33mb95eea5[m refactor(admin): rebuild payments, riders, reports with DataTable infrastructure
+[33mc41e2f0[m feat(admin): populate reports sub-pages (sales, revenue, vendors, riders, customers, subscriptions, inventory)
+[33m9342822[m feat(admin): populate riders sub-pages (all, live, performance, earnings)
+[33m15af51f[m feat(admin): populate payments sub-pages (transactions, refunds, coupons, settlements)
+[33mbd57f84[m refactor: restructure dashboard components by role
+[33m6862d8e[m refactor: split oversized dashboard components, restructure by role
+[33m4233444[m feat: flesh out vendor/kitchen/rider dashboards, fix footer paths
+[33m4d0bea0[m refactor: create dashboard routes under /dashboard/ & create other dashboard layout
+[33m22717fb[m fix: import PageHeader
+[33md1b33dd[m Merge branch 'development' into taher
+[33mf2b42bb[m Merge branch 'saima' into development
+[33m50131be[m feat: create approval queue page & food details page
+[33mab7a4f9[m feat: implement nutrition page
+[33m38c0e91[m feat: implement foods categories page
+[33m2542c27[m Implement PendingOrdersTable component and update PendingOrdersPage to display pending orders
+[33m60cd809[m feat: create inventory page with cards & table
+[33m9bd0506[m feat: create packages page in foods
+[33me7075e6[m feat: add new meal plan sub page in foods
+[33m208245a[m refactor: update reusable table in dashboard
+[33m75483d5[m style: make dashboard more premium with upgrade sidebar, header & content
+[33mb2a5bc7[m refactor: dashboard foods page and move file for overview page
+[33m8353147[m refactor: the reusable table & update customer table
+[33m7aef8a2[m style: add premium design for our dashboard cards
+[33mb94fca3[m style: working on dashboard premium & stat-card premium design
+[33m6f86013[m fix: eslint error, type error
+[33m0bd68e6[m Merge branch 'nazrul' into taher
+[33m7dd16d2[m Merge branch 'saima' into taher
+[33m284a3f4[m fix: eslint issue & prettier format
+[33m88f00cf[m feat: add reveal animation in homepage sections
+[33mff5666d[m about page ui done
+[33m9a81d42[m style: add navigation menu and responsive navbar
+[33mdefe48b[m style: implement auto-scroll in combos, reviews & testimonials section
+[33m4b1da56[m settlement page fixed with reusable table component and filter , sorting implementation
+[33m825e577[m performance page export button ui fix
+[33mae93ed7[m fix vendor approval queue page with resuable table and modal fix
+[33m55bc4b3[m Added VendorPerformance component and integrate into VendorsPerformancePage
+[33maeadcae[m Removed duplicate imports, fixed syntax errors
+[33m4bb00da[m implement VendorFinancialSettlement component and integrate into VendorsSettlementPage
+[33m77da971[m added new registration fields to RegisterVendorModal
+[33m2a0699e[m implement vendor approval queue system
+[33m7e49391[m Merge pull request #2 from jevxo26/jahid
+[33m367fd3a[m create vendor schema and a vendor to db
+[33m917ae46[m Merge branch 'jahid' into development
+[33mcce32a9[m Merge branch 'nazrul' into development
+[33md39114a[m refactor: dashboard food page
+[33m235df6e[m Merge branch 'development' of https://github.com/jevxo26/FONDO into nazrul
+[33mc02600d[m home page duplicate component remove
+[33mf3023e9[m feat: create dashboard foods with table
+[33mfe9291d[m migrate: convert raw elements to shadcn/ui
+[33mf916b68[m style: update shadcn Input/Button to match design system & migrate
+[33me6b8f77[m docs: update docs, create API.md & BUILD_PLAN.md
+[33m1f1aca1[m verfity user and admin by using jwt
+[33md64af7e[m All Page ui done
+[33m4b0db16[m handle login with access token and refresh token
+[33m710d473[m refactor: footer and navbar components, add footer data
+[33ma4d24fe[m fix: remove duplicate food/id page and solve type error
+[33m0ef38f5[m Merge branch 'nazrul' into development
+[33mc28ffa0[m Merge branch 'saima' into development
+[33mf4bc2b7[m Food Checkout page Ui done
+[33mad3c59e[m style: make homepage fully responsive
+[33mf1d81b7[m feat: add footer in layout
+[33m5b317c3[m feat: add kitchen-dining section & service-banner section in homepage
+[33mc5b9adc[m order page ui done
+[33ma993838[m  added vendor registration modal and vendor details page
+[33m66f43b4[m feat: add blog review section in homepage
+[33m33106df[m style: redesign Combos, Chef Story, Testimonials to match Figma
+[33m58b0184[m fix: update homepage sections to match Figma design
+[33m6f4b135[m feat: implement full homepage with all sections & add images
+[33md6a55ad[m Merge branch 'development' of https://github.com/jevxo26/FONDO into nazrul
+[33mceaed31[m single page done
+[33mb12c239[m[33m ([m[1;31morigin/taher[m[33m, [m[1;31morigin/abdul_ahad[m[33m, [m[1;3

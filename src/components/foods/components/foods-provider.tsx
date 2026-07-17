@@ -5,6 +5,8 @@ import React, { createContext, useContext, useState } from "react";
 type FoodsContextType = {
   activeCategory: string;
   setActiveCategory: (category: string) => void;
+  activeSubCategory: string;
+  setActiveSubCategory: (sub: string) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   foodTypeFilter: string;
@@ -20,14 +22,17 @@ export function FoodsProvider({ children }: { children: React.ReactNode }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [foodTypeFilter, setFoodTypeFilter] = useState("ALL");
   const [sortBy, setSortBy] = useState("default");
-
+  const [activeSubCategory, setActiveSubCategory] = useState("All");
   return (
-    <FoodsContext.Provider 
-      value={{ 
-        activeCategory, setActiveCategory, 
-        searchQuery, setSearchQuery, 
+    <FoodsContext.Provider
+      value={{
+        activeCategory,
+        setActiveCategory,
+        activeSubCategory,
+        setActiveSubCategory,
+        searchQuery, setSearchQuery,
         foodTypeFilter, setFoodTypeFilter,
-        sortBy, setSortBy 
+        sortBy, setSortBy
       }}
     >
       {children}

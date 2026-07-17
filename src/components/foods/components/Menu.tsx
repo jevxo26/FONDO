@@ -13,7 +13,7 @@ const CategoriesMenu = () => {
       <FoodGrid foods={FOOD_ITEMS} />
       {/* Pagination Controls */}
       <div className="wrapper">
-        <Pagination />
+        <Pagination currentPage={1} totalPages={1} />
       </div>
     </div>
   );

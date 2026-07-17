@@ -188,3 +188,189 @@ export const riderEarnings: RiderEarning[] = riderNames.slice(0, 15).flatMap((r,
     status: (wi < 2 ? "PAID" : wi === 2 ? "PROCESSING" : "PENDING") as "PAID" | "PENDING" | "PROCESSING",
   })).map((e) => ({ ...e, total: e.basePay + e.bonus + e.tips })),
 );
+
+// --- Rider-Specific Delivery ---
+
+export type DeliveryStatus =
+  | "PENDING"
+  | "ASSIGNED"
+  | "ACCEPTED"
+  | "PICKED_UP"
+  | "ON_THE_WAY"
+  | "ARRIVED"
+  | "DELIVERED"
+  | "FAILED"
+  | "CANCELLED";
+
+export interface RiderDelivery {
+  id: string;
+  deliveryCode: string;
+  orderId: string;
+  customerName: string;
+  customerPhone: string;
+  deliveryAddress: string;
+  zone: RiderZone;
+  items: string[];
+  status: DeliveryStatus;
+  estimatedDeliveryTime: string;
+  actualPickupTime: string | null;
+  actualDeliveryTime: string | null;
+  priority: number;
+  createdAt: string;
+}
+
+function generateDeliveries(count: number): RiderDelivery[] {
+  const list: RiderDelivery[] = [];
+  const customerNames = [
+    "Rahim Uddin", "Karina Begum", "Faruk Hossain", "Shamim Akhtar",
+    "Nasrin Sultana", "Jahangir Alam", "Sharmin Akhter", "Rafiq Hasan",
+    "Tanvir Ahmed", "Nusrat Jahan",
+  ];
+  const addresses = [
+    "House 12, Road 5, Gulshan 1",
+    "Flat 3A, 45/B, Banani DOHS",
+    "78 Shahid Sangbadik Sarak",
+    "14/A, Mirpur 10, Block C",
+    "House 45, Road 12, Dhanmondi 6A",
+  ];
+  const foodItems = [
+    "Chicken Biryani", "Beef Curry", "Daal + Rice", "Paratha + Egg Curry",
+    "Fish Fry + Rice", "Vegetable Khichuri", "Chicken Roast", "Polao + Beef",
+  ];
+  const statusPool: DeliveryStatus[] = [
+    "ASSIGNED", "ACCEPTED", "PICKED_UP", "ON_THE_WAY",
+    "DELIVERED", "DELIVERED", "DELIVERED", "DELIVERED",
+  ];
+
+  for (let i = 1; i <= count; i++) {
+    const itemCount = Math.floor(rand() * 3) + 1;
+    const items: string[] = [];
+    for (let j = 0; j < itemCount; j++) {
+      items.push(randomItem(foodItems));
+    }
+    const day = Math.floor(rand() * 28) + 1;
+    const hour = Math.floor(rand() * 12) + 8;
+    const min = Math.floor(rand() * 60);
+    const status = randomItem(statusPool);
+    list.push({
+      id: `DEL-${String(i).padStart(4, "0")}`,
+      deliveryCode: `FND-${String(80000 + i)}`,
+      orderId: `#FONDO-${String(90000 + i)}`,
+      customerName: randomItem(customerNames),
+      customerPhone: `+88017${String(Math.floor(rand() * 90000000) + 10000000)}`,
+      deliveryAddress: randomItem(addresses),
+      zone: randomItem(zones),
+      items,
+      status,
+      estimatedDeliveryTime: `${String(hour).padStart(2, "0")}:${String(min).padStart(2, "0")}`,
+      actualPickupTime: status !== "ASSIGNED" ? `${String(hour - 1).padStart(2, "0")}:${String(min).padStart(2, "0")}` : null,
+      actualDeliveryTime: status === "DELIVERED" ? `${String(hour + 1).padStart(2, "0")}:${String(min).padStart(2, "0")}` : null,
+      priority: Math.floor(rand() * 3),
+      createdAt: `Jul ${day}, 2026`,
+    });
+  }
+  return list;
+}
+
+export const riderDeliveries: RiderDelivery[] = generateDeliveries(25);
+
+// --- Wallet ---
+
+export interface RiderWallet {
+  balance: number;
+  holdBalance: number;
+  currency: string;
+}
+
+export interface WalletTransaction {
+  id: string;
+  type: "CREDIT" | "DEBIT" | "WITHDRAWAL";
+  amount: number;
+  balanceBefore: number;
+  balanceAfter: number;
+  description: string;
+  createdAt: string;
+}
+
+function generateTransactions(count: number): WalletTransaction[] {
+  let balance = 12500;
+  const list: WalletTransaction[] = [];
+  const days = ["Jun 28", "Jun 30", "Jul 2", "Jul 5", "Jul 8", "Jul 11", "Jul 14", "Jul 17", "Jul 19"];
+  const types: ("CREDIT" | "DEBIT" | "WITHDRAWAL")[] = ["CREDIT", "CREDIT", "CREDIT", "DEBIT", "WITHDRAWAL"];
+
+  for (let i = 0; i < count; i++) {
+    const type = randomItem(types);
+    const amount = type === "CREDIT" ? Math.floor(rand() * 3000) + 500 : Math.floor(rand() * 5000) + 1000;
+    const bBefore = balance;
+    balance = type === "CREDIT" ? balance + amount : balance - amount;
+    list.push({
+      id: `TXN-${String(i + 1).padStart(4, "0")}`,
+      type,
+      amount,
+      balanceBefore: bBefore,
+      balanceAfter: balance,
+      description: type === "CREDIT" ? "Delivery payment" : type === "DEBIT" ? "Adjustment" : "Withdrawal to bKash",
+      createdAt: randomItem(days),
+    });
+  }
+  return list;
+}
+
+export const walletBalance: RiderWallet = {
+  balance: 12500,
+  holdBalance: 3200,
+  currency: "BDT",
+};
+
+export const walletTransactions: WalletTransaction[] = generateTransactions(12);
+
+// --- Ratings ---
+
+export interface DeliveryRating {
+  id: string;
+  customerName: string;
+  rating: number;
+  review: string;
+  date: string;
+}
+
+const reviewTexts = [
+  "Fast delivery, friendly rider!",
+  "Food arrived hot and on time.",
+  "Rider was polite and helpful.",
+  "Delayed by 10 mins but good service.",
+  "Excellent service, highly recommended.",
+  "Package was handled with care.",
+  "Very professional delivery.",
+  "Called ahead to confirm address, appreciated!",
+];
+
+export const riderRatings: DeliveryRating[] = Array.from({ length: 8 }, (_, i) => ({
+  id: `RAT-${String(i + 1).padStart(4, "0")}`,
+  customerName: randomItem(["Rahim Uddin", "Karina Begum", "Faruk Hossain", "Shamim Akhtar", "Nasrin Sultana"]),
+  rating: Math.floor(rand() * 2) + 4,
+  review: randomItem(reviewTexts),
+  date: `Jul ${Math.floor(rand() * 19) + 1}, 2026`,
+}));
+
+// --- Performance Metrics (rider's own) ---
+
+export interface RiderOwnPerformance {
+  totalDeliveries: number;
+  completedDeliveries: number;
+  cancelledDeliveries: number;
+  averageDeliveryTime: string;
+  averageRating: number;
+  acceptanceRate: number;
+  completionRate: number;
+}
+
+export const myPerformance: RiderOwnPerformance = {
+  totalDeliveries: 847,
+  completedDeliveries: 812,
+  cancelledDeliveries: 12,
+  averageDeliveryTime: "24 min",
+  averageRating: 4.8,
+  acceptanceRate: 96,
+  completionRate: 95.9,
+};

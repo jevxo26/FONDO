@@ -3,16 +3,13 @@ import FoodGrid from "@/components/foods/components/food-grid";
 import Pagination from "@/components/foods/components/pagination";
 import { getFoods } from "@/services/food.service";
 
-
 interface Props {
   searchParams: Promise<{
     page?: string;
   }>;
 }
 
-export default async function FoodsPage({
-  searchParams,
-}: Props) {
+export default async function FoodsPage({ searchParams }: Props) {
   const { page = "1" } = await searchParams;
 
   const data = await getFoods(Number(page), 6);
@@ -39,10 +36,7 @@ export default async function FoodsPage({
 
       <Categories />
       <FoodGrid foods={foods} />
-       <Pagination
-        currentPage={Number(page)}
-        totalPages={data.totalPages}
-      />
+      <Pagination currentPage={Number(page)} totalPages={data.totalPages} />
     </main>
   );
 }

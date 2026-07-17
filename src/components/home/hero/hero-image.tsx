@@ -45,7 +45,7 @@ export function HeroImage({ foods }: HeroImageProps) {
     <div className="flex w-full flex-col items-center gap-4 lg:max-w-[500px] xl:max-w-[681px]">
       <Carousel setApi={setApi} className="w-full" opts={{ loop: true }}>
         <CarouselContent>
-          {foods.map((food) => (
+          {foods.filter((f) => f.thumbnail).map((food) => (
             <CarouselItem key={food.id}>
               <div className="relative aspect-square w-full lg:aspect-auto lg:h-[490px]">
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/20 to-primary/5" />

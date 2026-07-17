@@ -250,9 +250,9 @@ const CheckoutForm = () => {
         {/* RIGHT COLUMN: Sticky Order Summary Panel (35% width) */}
         <div className="lg:col-span-4 lg:sticky lg:top-24">
           <CheckoutSummary
-            subtotal={cart?.totals.subtotal ?? 0}
-            deliveryFee={currentFulfillment === "delivery" ? (cart?.totals.deliveryCharge ?? 60) : 0}
-            savings={cart?.totals.discount ?? 0}
+            subtotal={cart?.totals?.subtotal ?? 0}
+            deliveryFee={currentFulfillment === "delivery" ? (cart?.totals?.deliveryCharge ?? 60) : 0}
+            savings={cart?.totals?.discount ?? 0}
             isSubmitting={placeOrder.isPending}
           />
         </div>

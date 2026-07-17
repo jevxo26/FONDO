@@ -10,14 +10,19 @@ const defaultVariant = food.variants?.[0];
   return (
     <div className="group flex flex-col overflow-hidden rounded-4xl bg-white p-4 shadow-[var(--shadow-card)] border border-border/40 dark:bg-card active:scale-[0.98] transition-transform duration-200">
       <div className="relative aspect-4/3 w-full overflow-hidden rounded-2xl bg-muted">
-        <Image
-          src={food.thumbnail}
-          alt={food.name}
-          sizes="(max-width: 768px) 100vw, 33vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="eager"
-          fill
-        />
+        {food.thumbnail ? (
+          <Image
+            src={food.thumbnail}
+            alt={food.name}
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="eager"
+            fill
+            unoptimized
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full text-muted-foreground text-xs" />
+        )}
         <Button
           variant="ghost"
           size="icon"

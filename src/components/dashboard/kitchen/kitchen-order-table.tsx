@@ -15,12 +15,18 @@ interface KitchenOrderTableProps {
 }
 
 export function KitchenOrderTable({ data, isLoading, onStartPrep, onMarkReady, onMarkPacked }: KitchenOrderTableProps) {
-  const statusFilters: FacetedFilter[] = [
+  const filters: FacetedFilter[] = [
     { columnId: "status", title: "Status", options: [
       { label: "Queued", value: "QUEUED" },
       { label: "Preparing", value: "PREPARING" },
       { label: "Ready", value: "READY" },
       { label: "Packed", value: "PACKED" },
+    ]},
+    { columnId: "mealType", title: "Meal", options: [
+      { label: "Breakfast", value: "BREAKFAST" },
+      { label: "Lunch", value: "LUNCH" },
+      { label: "Dinner", value: "DINNER" },
+      { label: "Snacks", value: "SNACKS" },
     ]},
   ];
 
@@ -36,7 +42,7 @@ export function KitchenOrderTable({ data, isLoading, onStartPrep, onMarkReady, o
       data={data}
       isLoading={isLoading}
       pageSize={10}
-      filters={statusFilters}
+      filters={filters}
       rowActions={rowActions}
       emptyMessage="No kitchen orders found."
     />

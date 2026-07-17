@@ -58,8 +58,8 @@ export function SidebarNav({ items, sections: sectionConfig, basePath, onNavigat
             <SidebarMenu className="group-data-[collapsible=icon]:gap-2">
               {section.items.map((item) => {
                 const Icon = item.icon;
-                const href = `${basePath}${item.href}`;
-                const isActive = pathname.startsWith(href);
+                const href = `${basePath}${item.href}`.replace(/\/+$/, '');
+                const isActive = pathname === href || (href !== basePath && pathname.startsWith(href + '/'));
 
                 return (
                   <SidebarMenuItem key={item.href}>

@@ -16,7 +16,7 @@ export function ProductHero({ food }: { food: Food }) {
           {/* Left: Main Showcase Image */}
           <div className="lg:col-span-6">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[32px] bg-muted shadow-[var(--shadow-card)] border border-border/40">
-              <Image src={food.coverImage} alt={food.name} fill priority className="object-cover" />
+              <Image src={food.coverImage} alt={food.name} fill priority unoptimized className="object-cover" />
             </div>
           </div>
 

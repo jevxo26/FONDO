@@ -1,20 +1,35 @@
+"use client";
+
+import { useState } from "react";
+import { toast } from "sonner";
+import { ClipboardList } from "lucide-react";
+import { kitchenOrders, type KitchenOrder } from "@/data/kitchen";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { StatCard } from "@/components/dashboard/common/stat-card";
-import { ClipboardList, Clock, ChefHat, CheckCircle2 } from "lucide-react";
+import { KitchenSummaryCards } from "@/components/dashboard/kitchen/kitchen-summary-cards";
+import { KitchenOrderTable } from "@/components/dashboard/kitchen/kitchen-order-table";
 
 export default function KitchenOrdersPage() {
+  const [orders, setOrders] = useState(kitchenOrders);
+
+  const updateStatus = (id: string, status: KitchenOrder["status"]) => {
+    setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status } : o)));
+  };
+
+  const queued = orders.filter((o) => o.status === "QUEUED").length;
+  const preparing = orders.filter((o) => o.status === "PREPARING").length;
+  const ready = orders.filter((o) => o.status === "READY").length;
+
   return (
     <div>
-      <PageHeader
-        title="Order Queue"
-        description="View and manage incoming meal orders."
-        icon={ClipboardList}
-      />
-      <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Pending" value="12" variant="warning" icon={Clock} accent="right" />
-        <StatCard label="Preparing" value="8" icon={ChefHat} accent="right" />
-        <StatCard label="Ready" value="5" variant="success" icon={CheckCircle2} accent="right" />
-        <StatCard label="Total Today" value="35" variant="default" icon={ClipboardList} accent="right" />
+      <PageHeader title="Order Queue" description="View and manage incoming meal orders." icon={ClipboardList} />
+      <KitchenSummaryCards queued={queued} preparing={preparing} ready={ready} total={orders.length} />
+      <div className="mt-8">
+        <KitchenOrderTable
+          data={orders}
+          onStartPrep={(o) => { updateStatus(o.id, "PREPARING"); toast.success(`${o.orderNumber} started`); }}
+          onMarkReady={(o) => { updateStatus(o.id, "READY"); toast.success(`${o.orderNumber} marked ready`); }}
+          onMarkPacked={(o) => { updateStatus(o.id, "PACKED"); toast.success(`${o.orderNumber} packed`); }}
+        />
       </div>
     </div>
   );

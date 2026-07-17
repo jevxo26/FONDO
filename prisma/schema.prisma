@@ -518,6 +518,7 @@ model Vendor {
   suppliers           Supplier[]
   purchases           Purchase[]
   orders              Order[]
+  platformRevenues    PlatformRevenue[]
 
   @@map("vendors")
 }
@@ -2182,9 +2183,10 @@ model Order {
   cancellation  OrderCancellation?
   refunds       OrderRefund[]
   feedback      OrderFeedback?
-  payment       Payment?
-  delivery      Delivery?
-  subscriptions Subscription[]
+  payment          Payment?
+  delivery         Delivery?
+  subscriptions    Subscription[]
+  platformRevenues PlatformRevenue[]
 
   @@map("orders")
 }
@@ -2541,6 +2543,8 @@ model CustomerWallet {
 
   customer     User                       @relation(fields: [customerId], references: [id])
   transactions CustomerWalletTransaction[]
+  topups       WalletTopup[]
+  withdraws    WalletWithdraw[]
 
   @@map("customer_wallets")
 }
@@ -2560,6 +2564,55 @@ model CustomerWalletTransaction {
   wallet CustomerWallet @relation(fields: [walletId], references: [id])
 
   @@map("customer_wallet_transactions")
+}
+
+model WalletTopup {
+  id        String   @id @default(uuid())
+  walletId  String
+  paymentId String?
+  amount    Decimal  @db.Decimal(10, 2)
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  wallet CustomerWallet @relation(fields: [walletId], references: [id])
+
+  @@map("wallet_topups")
+}
+
+model WalletWithdraw {
+  id            String   @id @default(uuid())
+  walletId      String
+  amount        Decimal  @db.Decimal(10, 2)
+  withdrawMethod String
+  accountNumber String
+  status        String   @default("pending")
+  approvedBy    String?
+  processedAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  wallet CustomerWallet @relation(fields: [walletId], references: [id])
+
+  @@map("wallet_withdraws")
+}
+
+model PlatformRevenue {
+  id               String  @id @default(uuid())
+  orderId          String
+  vendorId         String?
+  commissionAmount Decimal  @default(0) @db.Decimal(10, 2)
+  deliveryCharge   Decimal  @default(0) @db.Decimal(10, 2)
+  serviceCharge    Decimal  @default(0) @db.Decimal(10, 2)
+  vat              Decimal  @default(0) @db.Decimal(10, 2)
+  netRevenue       Decimal  @default(0) @db.Decimal(10, 2)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  order  Order  @relation(fields: [orderId], references: [id])
+  vendor Vendor? @relation(fields: [vendorId], references: [id])
+
+  @@map("platform_revenues")
 }
 
 // ============================================================

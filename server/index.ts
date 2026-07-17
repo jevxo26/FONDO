@@ -17,6 +17,7 @@ import orderRoutes from "./routes/orderRoutes";
 import customerRoutes from "./routes/customerRoutes";
 import couponRoutes from "./routes/couponRoutes";
 import paymentRoutes from "./routes/paymentRoutes";
+import walletRoutes from "./routes/walletRoutes";
 import prisma from "./lib/prisma";
 
 const dev = env.NODE_ENV !== "production";
@@ -81,6 +82,7 @@ app
     server.use("/api/admin/customers", customerRoutes);
     server.use("/api/admin/coupons", couponRoutes);
     server.use("/api", paymentRoutes);
+    server.use("/api", walletRoutes);
     server.use("/api", orderRoutes);
 
     // Next.js handler for all other routes

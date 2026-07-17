@@ -12,16 +12,28 @@ import {
   TrustBar,
 } from "@/components/home";
 import { getFoods } from "@/services/food.service";
+import { apiFetch } from "@/lib/api";
+
+interface CategoryItem {
+  id: string;
+  name: string;
+  image: string | null;
+}
 
 export default async function Home() {
-  const data = await getFoods(1, 6, "popularity");
+  const [foodsData, catData] = await Promise.all([
+    getFoods(1, 6, "popularity"),
+    apiFetch<{ items: CategoryItem[] }>("/api/foods/categories/list"),
+  ]);
+
+  const categories = catData.items.map((c) => ({ id: c.id, label: c.name, image: c.image ?? "" }));
 
   return (
     <main className="flex flex-col gap-12 lg:gap-[5rem] pb-[3rem] lg:pb-[5rem]">
-      <Hero />
+      <Hero foods={foodsData.items} />
       <TrustBar />
-      <PopularCategories />
-      <BestSellers foods={data.items} />
+      <PopularCategories categories={categories} />
+      <BestSellers foods={foodsData.items} />
       <SignatureDish />
       <Combos />
       <BlogReviews />

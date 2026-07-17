@@ -1,17 +1,21 @@
 "use client";
 
+import type { Food } from "@/types/food";
 import {
   type CarouselApi,
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { BEST_SELLERS } from "@/data/homepage";
 import { Star, Timer } from "lucide-react";
 import Image from "next/image";
 import { startTransition, useCallback, useEffect, useState } from "react";
 
-export function HeroImage() {
+interface HeroImageProps {
+  foods: Food[];
+}
+
+export function HeroImage({ foods }: HeroImageProps) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
 
@@ -35,21 +39,24 @@ export function HeroImage() {
     return () => clearInterval(interval);
   }, [api]);
 
+  if (foods.length === 0) return null;
+
   return (
     <div className="flex w-full flex-col items-center gap-4 lg:max-w-[500px] xl:max-w-[681px]">
       <Carousel setApi={setApi} className="w-full" opts={{ loop: true }}>
         <CarouselContent>
-          {BEST_SELLERS.map((item) => (
-            <CarouselItem key={item.id}>
+          {foods.map((food) => (
+            <CarouselItem key={food.id}>
               <div className="relative aspect-square w-full lg:aspect-auto lg:h-[490px]">
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/20 to-primary/5" />
                 <div className="absolute inset-0 overflow-hidden rounded-3xl">
                   <Image
-                    src={item.thumbnail}
-                    alt={item.title}
+                    src={food.thumbnail}
+                    alt={food.name}
                     fill
                     sizes="(max-width: 1024px) 100vw, 681px"
                     className="object-cover"
+                    unoptimized
                   />
                 </div>
                 <div className="absolute left-3 top-3 flex w-fit items-center gap-2.5 rounded-2xl bg-white p-2.5 shadow-[var(--shadow-badge)] sm:left-4 sm:top-4">
@@ -61,7 +68,7 @@ export function HeroImage() {
                       Best Seller
                     </span>
                     <span className="font-sans text-sm font-normal leading-tight text-secondary-foreground">
-                      {item.title}
+                      {food.name}
                     </span>
                   </div>
                 </div>
@@ -70,7 +77,7 @@ export function HeroImage() {
                     <Timer className="size-4 text-primary" />
                   </div>
                   <span className="inline-flex items-center gap-1 font-sans text-xs font-semibold leading-snug text-foreground">
-                    {item.time} &middot; {item.rating}
+                    {food.preparationTime} min &middot; {food.rating.averageRating}
                     <Star className="size-3 fill-foreground flex items-center" />
                   </span>
                 </div>
@@ -81,7 +88,7 @@ export function HeroImage() {
       </Carousel>
 
       <div className="flex items-center gap-3">
-        {BEST_SELLERS.map((_, index) => (
+        {foods.map((_, index) => (
           <button
             key={index}
             onClick={() => api?.scrollTo(index)}

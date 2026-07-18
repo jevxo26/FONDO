@@ -5,11 +5,10 @@ import { useFoods } from "./foods-provider";
 
 export default function FoodsHero() {
   const { searchQuery, setSearchQuery } = useFoods();
-  const { data: CategoriesData = [], isLoading } = useFoodCategories();
+  const { data: categoriesData, isLoading } = useFoodCategories();
   if (isLoading) return <h2>Data loading</h2>;
 
-  const categories = CategoriesData.items;
-  console.log("this is categories data", CategoriesData);
+  const categories = categoriesData?.items ?? [];
   console.log("this is categories", categories);
   return (
     <section className="bg-[#FAF5EB] pt-24 pb-12 border-b border-[#16100C]/5">

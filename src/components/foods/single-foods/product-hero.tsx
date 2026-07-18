@@ -2,10 +2,15 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Heart, Star, Share2, Plus, Minus, ShoppingCart, MessageSquare } from "lucide-react";
+import { Heart, Star, Share2, Plus, Minus, ShoppingCart, MessageSquare, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Food } from "@/types/food";
+import { useAddToCart } from "@/hooks/use-cart";
+import { useFavorites, useToggleFavorite, useRemoveFavorite } from "@/hooks/use-favorites";
+import { toast } from "sonner";
+import { handleApiError } from "@/lib/api-error";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -36,6 +41,51 @@ const contentVariants = {
 
 export function ProductHero({ food }: { food: Food }) {
   const [quantity, setQuantity] = useState(1);
+  const router = useRouter();
+  const addToCart = useAddToCart();
+  const { data: favorites = [] } = useFavorites();
+  const toggleFavorite = useToggleFavorite();
+  const removeFavorite = useRemoveFavorite();
+
+  const isFavorited = favorites.some((f) => f.id === food.id);
+
+  const currentPrice = Number(food.variants[0]?.discountPrice ?? food.variants[0]?.price ?? 0);
+
+  const handleAddToCart = () => {
+    addToCart.mutate(
+      { foodId: food.id, quantity, unitPrice: currentPrice },
+      {
+        onSuccess: () => toast.success("Added to cart"),
+        onError: (err) => toast.error(handleApiError(err)),
+      },
+    );
+  };
+
+  const handleBuyNow = () => {
+    addToCart.mutate(
+      { foodId: food.id, quantity, unitPrice: currentPrice },
+      {
+        onSuccess: () => router.push("/checkout"),
+        onError: (err) => toast.error(handleApiError(err)),
+      },
+    );
+  };
+
+  const handleFavorite = () => {
+    if (isFavorited) {
+      removeFavorite.mutate(food.id, {
+        onError: (err) => toast.error(handleApiError(err)),
+      });
+    } else {
+      toggleFavorite.mutate(food.id, {
+        onError: (err) => toast.error(handleApiError(err)),
+      });
+    }
+  };
+
+  const discountPercent = food.variants[0]?.discountPrice
+    ? Math.round(((Number(food.variants[0].price) - Number(food.variants[0].discountPrice)) / Number(food.variants[0].price)) * 100)
+    : null;
 
   return (
     <section className="py-8 lg:py-12 bg-background">
@@ -46,26 +96,26 @@ export function ProductHero({ food }: { food: Food }) {
           initial="hidden"
           animate="visible"
         >
-          {/* Left: Main Showcase Image */}
           <motion.div variants={imageVariants} className="lg:col-span-6">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[32px] bg-muted shadow-[var(--shadow-card)] border border-border/40">
               <Image src={food.coverImage} alt={food.name} fill priority unoptimized className="object-cover" />
             </div>
           </motion.div>
 
-          {/* Right: Product Meta Data & Purchase Controls */}
           <motion.div variants={contentVariants} className="lg:col-span-6 flex flex-col justify-center">
             <div className="flex items-center justify-between">
-              <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
+              <span className="inline-flex items-center rounded-full bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success">
                 &middot; In stock
               </span>
 
               <Button
                 variant="ghost"
                 size="icon"
+                onClick={handleFavorite}
+                disabled={toggleFavorite.isPending || removeFavorite.isPending}
                 className="rounded-full border border-border bg-white shadow-sm hover:text-destructive dark:bg-card"
               >
-                <Heart className="size-4" />
+                <Heart className={`size-4 ${isFavorited ? "fill-destructive text-destructive" : ""}`} />
               </Button>
             </div>
 
@@ -79,14 +129,13 @@ export function ProductHero({ food }: { food: Food }) {
                   <Star key={i} className="size-3.5 fill-primary text-primary" />
                 ))}
                 <span className="ml-1 font-semibold text-foreground">
-                  {food.isPopular ? "4.9" : "4.7"}
+                  {food.rating?.averageRating ?? "4.9"}
                 </span>
-                <span>(892 reviews)</span>
+                <span>({food.rating?.totalReview ?? 892} reviews)</span>
               </div>
 
               <span>&middot;</span>
-
-              <span>{food.id}</span>
+              <span>#{food.id.slice(0, 8)}</span>
 
               <span>&middot;</span>
 
@@ -106,9 +155,11 @@ export function ProductHero({ food }: { food: Food }) {
               </span>
               )}
 
-              <span className="rounded-md bg-rose-100 px-2 py-0.5 text-xs font-semibold text-rose-600 dark:bg-rose-950/50 dark:text-rose-400">
-                25% discount
-              </span>
+              {discountPercent && (
+                <span className="rounded-md bg-destructive/10 px-2 py-0.5 text-xs font-semibold text-destructive">
+                  {discountPercent}% off
+                </span>
+              )}
             </div>
 
             <p className="mt-1 text-xs text-muted-foreground">Free delivery on orders of ৳2,000+</p>
@@ -122,37 +173,30 @@ export function ProductHero({ food }: { food: Food }) {
                 <span className="text-muted-foreground">Preparation:</span>
                 <p className="font-medium">{food.preparationTime} min</p>
               </div>
-
               <div>
                 <span className="text-muted-foreground">Serving:</span>
                 <p className="font-medium">{food.servingSize}</p>
               </div>
-
               <div>
                 <span className="text-muted-foreground">Calories:</span>
                 <p className="font-medium">{food.calories} kcal</p>
               </div>
-
               <div>
                 <span className="text-muted-foreground">Food Type:</span>
                 <p className="font-medium capitalize">{food.foodType}</p>
               </div>
-
               <div>
                 <span className="text-muted-foreground">Spice Level:</span>
                 <p className="font-medium capitalize">{food.spiceLevel}</p>
               </div>
-
               <div>
                 <span className="text-muted-foreground">Protein:</span>
                 <p className="font-medium">{food.protein}g</p>
               </div>
             </div>
 
-            {/* Quantity Selector */}
             <div className="mt-6 flex items-center gap-4">
               <span className="font-sans text-sm font-medium text-muted-foreground">Quantity:</span>
-
               <div className="flex items-center border border-border bg-white rounded-xl overflow-hidden dark:bg-card">
                 <Button
                   variant="ghost"
@@ -162,11 +206,9 @@ export function ProductHero({ food }: { food: Food }) {
                 >
                   <Minus className="size-3.5" />
                 </Button>
-
                 <span className="w-10 text-center font-sans text-sm font-semibold text-foreground select-none">
                   {quantity}
                 </span>
-
                 <Button
                   variant="ghost"
                   size="icon"
@@ -176,24 +218,32 @@ export function ProductHero({ food }: { food: Food }) {
                   <Plus className="size-3.5" />
                 </Button>
               </div>
-
-              <span className="text-xs text-muted-foreground">
-                (Available)
-              </span>
+              <span className="text-xs text-muted-foreground">(Available)</span>
             </div>
 
-            {/* Core Page Primary Action Group */}
             <div className="mt-8 grid grid-cols-2 gap-4">
               <Button
                 variant="outline"
                 size="xl"
+                onClick={handleAddToCart}
+                disabled={addToCart.isPending}
                 className="gap-2 rounded-2xl border-primary bg-primary/5 text-primary hover:bg-primary/10"
               >
-                <ShoppingCart className="size-4" />
-                Add to cart
+                {addToCart.isPending ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <ShoppingCart className="size-4" />
+                )}
+                {addToCart.isPending ? "Adding..." : "Add to cart"}
               </Button>
 
-              <Button variant="default" size="xl" className="rounded-2xl">
+              <Button
+                variant="default"
+                size="xl"
+                onClick={handleBuyNow}
+                disabled={addToCart.isPending}
+                className="rounded-2xl"
+              >
                 Buy Now
               </Button>
             </div>

@@ -22,8 +22,8 @@ interface CategoryItem {
 
 export default async function Home() {
   const [foodsData, catData] = await Promise.all([
-    getFoods(1, 6, "popularity"),
-    apiFetch<{ items: CategoryItem[] }>("/api/foods/categories/list"),
+    getFoods(1, 6, "popularity").catch(() => ({ items: [] })),
+    apiFetch<{ items: CategoryItem[] }>("/api/foods/categories/list").catch(() => ({ items: [] })),
   ]);
 
   const categories = catData.items.map((c) => ({

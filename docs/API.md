@@ -2314,26 +2314,76 @@ Paginated list of customer's payments.
 <a id="8-vendors"></a>
 ## 8. Vendors
 
-⚪ **Planned** — not started.
+🟢 **Built** — see [source](../../server/routes/vendorRoutes.ts), [controller](../../server/controllers/vendorController.ts)
 
-### Public Endpoints
+All endpoints are mounted at `/api`. Routes marked ⚠️ have **no auth middleware** yet (see [source](../../server/routes/vendorRoutes.ts)).
 
-### `GET /vendors`
-List vendors. **Auth:** None  
-**Query:** `?page=1&limit=20&status=active&search=`  
-**Response** — paginated list of basic vendor info
+---
 
-### `GET /vendors/:id`
-Get vendor info. **Auth:** None — only public info returned
+### Core Vendor Lifecycle ⚠️
 
-### --- Vendor Self-Service (Vendor Dashboard) ---
+**Auth:** None currently — routes lack `verifyToken` + `authorize()` middleware
 
-All endpoints below require **Auth:** JWT (Vendor)
+### `POST /api/vendor/add`
+Create vendor + user in a single transaction. Auto-generates `vendorCode` and creates wallet + settings.
 
-### `GET /vendors/me`
-Get current vendor's full profile.
+**Request**
+```json
+{
+  "firstName": "*String",
+  "lastName": "*String",
+  "email": "*String",
+  "phone": "*String",
+  "password": "*String",
+  "businessName": "*String",
+  "ownerName": "*String",
+  "tradeLicenseNumber": "*String",
+  "tinNumber": "String",
+  "binNumber": "String"
+}
+```
 
-**Response**
+**Response `201`**
+```json
+{
+  "user": { "id": "UUID", "email": "String", "role": "VENDOR" },
+  "vendor": { "id": "UUID", "vendorCode": "String", "businessName": "String", "ownerName": "String", "email": "String", "phone": "String", "tradeLicenseNumber": "String", "tinNumber": "String", "binNumber": "String", "status": "PENDING", "verificationStatus": "UNVERIFIED", "isActive": true, "isOnline": false, "createdAt": "DateTime" }
+}
+```
+
+### `GET /api/vendor/all`
+List vendors. Returns each vendor with `profile` and `_count.branches`.
+
+**Query:** `?status=ACTIVE&verificationStatus=VERIFIED&isActive=true`
+
+**Response `200`**
+```json
+{
+  "success": true,
+  "message": "Vendors extracted successfully",
+  "data": [
+    {
+      "id": "UUID",
+      "vendorCode": "String",
+      "businessName": "String",
+      "ownerName": "String",
+      "phone": "String",
+      "email": "String",
+      "status": "VendorStatus",
+      "verificationStatus": "VerificationStatus",
+      "isActive": "Boolean",
+      "isOnline": "Boolean",
+      "profile": { "about": "String", "logo": "String", "website": "String" },
+      "_count": { "branches": "Int" }
+    }
+  ]
+}
+```
+
+### `GET /api/vendor/:vendorCode`
+Get vendor by `vendorCode`. Includes `profile`, `settings`, `wallet`, `branches` (each with `kitchens`).
+
+**Response `200`**
 ```json
 {
   "id": "UUID",
@@ -2342,238 +2392,238 @@ Get current vendor's full profile.
   "ownerName": "String",
   "phone": "String",
   "email": "String",
+  "tradeLicenseNumber": "String",
+  "tinNumber": "String",
+  "binNumber": "String",
   "logo": "String",
   "coverImage": "String",
   "description": "Text",
-  "status": "String",
-  "verificationStatus": "String",
+  "status": "VendorStatus",
+  "verificationStatus": "VerificationStatus",
+  "isActive": "Boolean",
   "isOnline": "Boolean",
   "commissionType": "String",
   "commissionValue": "Float",
   "openingTime": "String",
   "closingTime": "String",
-  "branches": [ { "id": "UUID", "branchName": "String", "area": "String", "isMainBranch": "Boolean" } ],
-  "address": { "area": "String", "district": "String", "division": "String", ... }
+  "profile": { "about": "String", "mission": "String", "story": "String", "foundedYear": "Int" },
+  "settings": { "autoAcceptOrder": "Boolean", "autoAssignRider": "Boolean", "allowCustomMeal": "Boolean", "notificationEnabled": "Boolean" },
+  "wallet": { "balance": "Decimal", "holdBalance": "Decimal", "currency": "String", "status": "String" },
+  "branches": [
+    {
+      "id": "UUID",
+      "branchCode": "String",
+      "branchName": "String",
+      "phone": "String",
+      "email": "String",
+      "division": "String",
+      "district": "String",
+      "area": "String",
+      "road": "String",
+      "house": "String",
+      "latitude": "Float",
+      "longitude": "Float",
+      "isMainBranch": "Boolean",
+      "kitchens": [
+        { "id": "UUID", "kitchenCode": "String", "kitchenName": "String", "capacity": "Int", "preparationTime": "Int", "status": "String" }
+      ]
+    }
+  ],
+  "createdAt": "DateTime",
+  "updatedAt": "DateTime"
 }
 ```
 
-### `PATCH /vendors/me`
-Update own vendor info.
-
-### `PATCH /vendors/me/online`
-Toggle online/offline status.
-
-### --- Branches ---
-
-### `GET /vendors/me/branches`
-### `POST /vendors/me/branches`
+### `PATCH /api/vendor/:vendorCode`
+Update vendor fields. Protected fields (`id`, `vendorCode`, `email`, `phone`, `tradeLicenseNumber`, `tinNumber`, `binNumber`, `createdAt`, `updatedAt`) are stripped from the request body.
 
 **Request**
 ```json
-{ "branchName": "*String", "branchCode": "*String", "phone": "String", "email": "String", "division": "String", "district": "String", "area": "String", "road": "String", "house": "String", "latitude": "Float", "longitude": "Float", "isMainBranch": "Boolean" }
+{ "businessName": "String", "ownerName": "String", "logo": "String", "coverImage": "String", "description": "Text", "status": "VendorStatus", "isActive": "Boolean", "isOnline": "Boolean" }
 ```
 
-### `PATCH /branches/:id`
-### `DELETE /branches/:id`
+### `DELETE /api/vendor/:vendorCode`
+Soft-delete — sets `deletedAt` and `isActive = false`.
 
-### --- Kitchens ---
+---
 
-### `GET /vendors/me/kitchens`
-### `POST /vendors/me/kitchens`
+### Profile
+
+### `PUT /api/vendor/:vendorCode/profile`
+Upsert vendor profile. Creates if not exists, updates if exists.
 
 **Request**
 ```json
-{ "branchId": "*UUID", "kitchenName": "*String", "kitchenCode": "*String", "capacity": "Int", "preparationTime": "Int" }
+{ "about": "Text", "mission": "Text", "story": "Text", "foundedYear": "Int", "website": "String", "facebook": "String", "instagram": "String", "youtube": "String" }
 ```
 
-### `PATCH /kitchens/:id`
-### `DELETE /kitchens/:id`
+---
 
-### --- Staff ---
+### Branches
 
-### `GET /vendors/me/staff`
-### `POST /vendors/me/staff`
+### `POST /api/vendor/:vendorCode/branches`
+Add a branch. Auto-generates `branchCode`.
 
 **Request**
 ```json
-{ "userId": "*UUID", "branchId": "UUID", "designation": "*String", "phone": "*String", "email": "String", "salary": "Float" }
+{ "branchName": "*String", "phone": "String", "email": "String", "division": "String", "district": "String", "area": "String", "road": "String", "house": "String", "latitude": "Float", "longitude": "Float", "isMainBranch": "Boolean" }
 ```
 
-### `PATCH /staff/:id`
-### `DELETE /staff/:id`
-### `POST /staff/:id/roles`
+### `GET /api/vendor/:vendorCode/branches`
+List all branches for a vendor. Each branch includes its `kitchens`.
+
+---
+
+### Kitchens
+
+### `POST /api/vendor/branches/:branchId/kitchens`
+Add a kitchen to a branch. Auto-generates `kitchenCode`. Resolves vendor mapping from the branch.
 
 **Request**
 ```json
-{ "role": "*String (KitchenManager|Chef|Cook|Packing)", "permissions": "[String]" }
+{ "kitchenName": "*String", "capacity": "Int", "preparationTime": "Int" }
 ```
 
-### --- Documents ---
+---
 
-### `GET /vendors/me/documents`
-### `POST /vendors/me/documents`
+### Documents
+
+### `POST /api/vendor/:vendorCode/documents`
+Upload a compliance document.
 
 **Request**
 ```json
-{ "documentType": "*String (Trade License|NID|Food License|etc.)", "documentNumber": "*String", "documentFile": "*String (URL)", "issueDate": "Date", "expiryDate": "Date" }
+{ "documentType": "*String (Trade License|NID|Food License)", "documentNumber": "*String", "documentFile": "*String (URL)", "issueDate": "Date", "expiryDate": "Date" }
 ```
 
-### --- Bank Accounts ---
-
-### `GET /vendors/me/bank-accounts`
-### `POST /vendors/me/bank-accounts`
+### `PATCH /api/vendor/documents/:docId/verify`
+Verify or reject a document. **Auth:** JWT (Admin)
 
 **Request**
 ```json
-{ "bankName": "*String", "branchName": "String", "accountName": "*String", "accountNumber": "*String", "routingNumber": "String", "mobileBankingType": "String (bKash|Nagad|Rocket)", "mobileBankingNumber": "String", "isPrimary": "Boolean" }
+{ "status": "*String (VERIFIED|REJECTED)", "verifiedBy": "String (userId)" }
 ```
 
-### `PATCH /bank-accounts/:id`
-### `DELETE /bank-accounts/:id`
+---
 
-### --- Operating Hours ---
+### Wallet & Settlements
 
-### `GET /vendors/me/operating-hours`
-### `POST /vendors/me/operating-hours`
+### `GET /api/vendor/:vendorCode/wallet`
+Get vendor wallet with transaction history.
+
+**Response**
+```json
+{
+  "id": "UUID",
+  "vendorId": "UUID",
+  "balance": "Decimal",
+  "holdBalance": "Decimal",
+  "currency": "BDT",
+  "status": "active",
+  "transactions": [
+    { "id": "UUID", "transactionType": "CREDIT|DEBIT", "amount": "Decimal", "balanceBefore": "Decimal", "balanceAfter": "Decimal", "referenceId": "String", "remarks": "String", "createdAt": "DateTime" }
+  ]
+}
+```
+
+### `GET /api/vendor/:vendorCode/settlements`
+List settlement history for vendor.
+
+**Response**
+```json
+[
+  {
+    "id": "UUID",
+    "vendorId": "UUID",
+    "settlementNumber": "String",
+    "settlementPeriodStart": "DateTime",
+    "settlementPeriodEnd": "DateTime",
+    "totalOrders": "Int",
+    "grossAmount": "Decimal",
+    "totalCommission": "Decimal",
+    "vatAmount": "Decimal",
+    "adjustmentAmount": "Decimal",
+    "totalPayable": "Decimal",
+    "netAmount": "Decimal",
+    "paymentStatus": "String (pending|paid)",
+    "paymentDate": "DateTime"
+  }
+]
+```
+
+### `POST /api/vendor/:vendorCode/settlements/trigger`
+Generate a settlement invoice manually.
 
 **Request**
 ```json
-{ "day": "*String (Monday|Tuesday|...|Sunday)", "openingTime": "*String (HH:mm)", "closingTime": "*String (HH:mm)", "isClosed": "Boolean" }
+{ "grossAmount": "*Float", "totalCommission": "*Float", "totalPayable": "*Float" }
 ```
 
-### `PATCH /operating-hours/:id`
+---
 
-### --- Service Areas ---
+### Settings & Hours
 
-### `GET /vendors/me/service-areas`
-### `POST /vendors/me/service-areas`
-
-**Request**
-```json
-{ "division": "*String", "district": "*String", "area": "*String", "deliveryCharge": "Float", "minimumOrderAmount": "Float", "estimatedDeliveryTime": "Int" }
-```
-
-### `DELETE /service-areas/:id`
-
-### --- Settings ---
-
-### `GET /vendors/me/settings`
-### `PATCH /vendors/me/settings`
+### `PATCH /api/vendor/:vendorCode/settings`
+Update vendor operational flags.
 
 **Request**
 ```json
 { "autoAcceptOrder": "Boolean", "autoAssignRider": "Boolean", "allowCustomMeal": "Boolean", "notificationEnabled": "Boolean" }
 ```
 
-### --- Vendor Food Mapping ---
-
-### `GET /vendors/me/foods`
-List foods mapped to this vendor.
-
-### `POST /vendors/me/foods`
-Map a food to this vendor.
+### `PUT /api/vendor/:vendorCode/operating-hours`
+Replace all operating hours for vendor (deletes existing, inserts new).
 
 **Request**
 ```json
-{ "foodId": "*UUID", "vendorFoodCode": "String", "vendorSku": "String", "kitchenId": "UUID", "priority": "Int", "isPrimary": "Boolean" }
+{ "hours": [
+  { "day": "*String (Monday|Tuesday|...|Sunday)", "openingTime": "*String (HH:mm)", "closingTime": "*String (HH:mm)" }
+] }
 ```
 
-### `PATCH /vendor-foods/:id`
-Update vendor food config.
+---
 
-### `DELETE /vendor-foods/:id`
-Unlink food from vendor.
+### Vendor Finance (ID-based)
 
-### `GET /vendor-foods/:id/price`
-### `POST /vendor-foods/:id/price`
+**Auth:** JWT (Vendor, Admin, SuperAdmin)
+
+### `GET /api/vendors/:vendorId/wallet`
+Get vendor wallet by ID. Auto-creates wallet if missing.
+
+### `GET /api/vendors/:vendorId/wallet/transactions`
+List wallet transactions for vendor. Paginated.
+
+**Query:** `?page=1&limit=20`
+
+### `GET /api/vendors/:vendorId/settlements`
+List settlements for vendor. Paginated.
+
+**Query:** `?page=1&limit=20`
+
+---
+
+### Vendor Orders
+
+**Auth:** JWT (Vendor)
+
+### `GET /api/vendors/:vendorId/orders`
+List orders assigned to vendor. Paginated. Delegates to `GET /api/orders` with vendor filter.
+
+**Query:** `?page=1&limit=20&status=`
+
+---
+
+### Admin Order Assignment
+
+**Auth:** JWT (Admin)
+
+### `PATCH /api/orders/:id/assign-vendor`
+Assign or reassign a vendor to an order. Overrides `CartOrderAllocation` logic.
 
 **Request**
 ```json
-{ "costPrice": "*Float", "sellingPrice": "*Float", "discountPrice": "Float", "effectiveFrom": "Date", "effectiveTo": "Date" }
+{ "vendorId": "*UUID" }
 ```
-
-### `GET /vendor-foods/:id/stock`
-### `PATCH /vendor-foods/:id/stock`
-
-**Request**
-```json
-{ "availableQuantity": "Int", "reservedQuantity": "Int", "minimumStock": "Int", "stockStatus": "String (IN_STOCK|LOW_STOCK|OUT_OF_STOCK)" }
-```
-
-### `GET /vendor-foods/:id/recipes`
-### `POST /vendor-foods/:id/recipes`
-
-```json
-{ "recipeName": "*String", "description": "Text", "yieldQuantity": "Int" }
-```
-
-### `GET /vendor-foods/:id/cost`
-### `PATCH /vendor-foods/:id/cost`
-```json
-{ "ingredientCost": "Float", "packagingCost": "Float", "labourCost": "Float", "overheadCost": "Float" }
-```
-
-### --- Vendor Admin Endpoints ---
-
-**Auth:** JWT (Admin, SuperAdmin)
-
-### `POST /vendors`
-Register new vendor.
-
-**Request**
-```json
-{ "userId": "*UUID", "businessName": "*String", "ownerName": "*String", "phone": "*String", "email": "String", "tradeLicenseNumber": "*String", "tinNumber": "String", "binNumber": "String", "description": "Text", "commissionType": "String", "commissionValue": "Float" }
-```
-
-### `PATCH /vendors/:id`
-Update vendor.
-
-### `DELETE /vendors/:id`
-Soft-delete vendor.
-
-### `PATCH /vendors/:id/status`
-Verify or reject vendor.
-
-**Request**
-```json
-{ "verificationStatus": "*String (verified|rejected)", "rejectionReason": "String" }
-```
-
-### `GET /vendors/:vendorId/documents`
-List vendor documents.
-
-### `PATCH /documents/:id/verify`
-
-**Request**
-```json
-{ "verificationStatus": "*String (verified|rejected)" }
-```
-
-### `POST /vendors/:vendorId/commissions`
-Set commission rule.
-
-**Request**
-```json
-{ "commissionType": "*String (percentage|flat)", "commissionPercentage": "Float", "flatAmount": "Float", "effectiveFrom": "*Date", "effectiveTo": "Date" }
-```
-
-### `GET /vendors/:vendorId/earnings`
-### `GET /vendors/:vendorId/activity`
-
-### --- Vendor-Food Assignment (Admin) ---
-
-### `GET /foods/:foodId/vendor-assignments`
-List which vendors serve a given food.
-
-### `POST /foods/:foodId/vendor-assignments`
-
-**Request**
-```json
-{ "vendorId": "*UUID", "priority": "Int", "allocationPercentage": "Float", "isDefault": "Boolean", "effectiveFrom": "Date", "effectiveTo": "Date" }
-```
-
-### `PATCH /vendor-assignments/:id`
-### `DELETE /vendor-assignments/:id`
 
 ---
 

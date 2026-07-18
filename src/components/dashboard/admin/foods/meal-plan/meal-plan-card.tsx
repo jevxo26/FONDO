@@ -1,8 +1,8 @@
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import type { MealPlan } from "@/data/meal-plans";
-import { Users, BarChart3, Eye, Edit } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { BarChart3, Edit, Eye, Users } from "lucide-react";
+import Image from "next/image";
 
 interface MealPlanCardProps {
   plan: MealPlan;
@@ -19,7 +19,7 @@ export function MealPlanCard({ plan }: MealPlanCardProps) {
       <div className="relative z-10">
         <div className="relative h-40 overflow-hidden">
           <Image
-            src={plan.thumbnail}
+            src={"/images/home/card_2.png"}
             alt={plan.name}
             fill
             className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -75,18 +75,34 @@ export function MealPlanCard({ plan }: MealPlanCardProps) {
             ))}
           </div>
 
-          <div className={cn("mt-5 h-px w-full bg-gradient-to-r from-primary/40 via-primary/30 to-transparent")} />
+          <div
+            className={cn(
+              "mt-5 h-px w-full bg-gradient-to-r from-primary/40 via-primary/30 to-transparent",
+            )}
+          />
 
           <div className="mt-4 flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8"
+            >
               <Eye className="mr-1.5 size-[15px]" />
               View
             </Button>
-            <Button variant="ghost" size="sm" className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8"
+            >
               <Edit className="mr-1.5 size-[15px]" />
               Edit
             </Button>
-            <Button variant="ghost" size="sm" className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8"
+            >
               <BarChart3 className="mr-1.5 size-[15px]" />
               Analytics
             </Button>

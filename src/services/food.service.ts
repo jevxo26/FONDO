@@ -1,20 +1,9 @@
 import api from "@/lib/axios";
 
-export interface GetFoodsParams {
-  page?: number;
-  limit?: number;
-  search?: string;
-  category?: string;
-  sort?: string;
-}
-
 export const foodService = {
   // Get all foods
-  async getFoods(params: GetFoodsParams) {
-    const { data } = await api.get("/foods", {
-      params,
-    });
-
+  async getFoods() {
+    const { data } = await api.get("/foods");
     return data.data;
   },
 

@@ -1,10 +1,9 @@
-import { foodService, GetFoodsParams } from "@/services/food.service";
+import { foodService } from "@/services/food.service";
 import { useQuery } from "@tanstack/react-query";
-
-export function useGetFoods(params: GetFoodsParams) {
+export function useGetFoods() {
   return useQuery({
-    queryKey: ["foods", params],
-    queryFn: () => foodService.getFoods(params),
-    placeholderData: (previousData) => previousData,
+    queryKey: ["foods"],
+    queryFn: foodService.getFoods,
+    staleTime: 1000 * 60 * 5,
   });
 }

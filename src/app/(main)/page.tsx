@@ -11,8 +11,8 @@ import {
   Testimonials,
   TrustBar,
 } from "@/components/home";
-import { apiFetch } from "@/lib/api";
 import { getFoods } from "@/services/food.service";
+import { apiFetch } from "@/lib/api";
 
 interface CategoryItem {
   id: string;
@@ -26,9 +26,11 @@ export default async function Home() {
     apiFetch<{ items: CategoryItem[] }>("/api/foods/categories/list"),
   ]);
 
-  const categories = catData.items
-    .filter((c) => c.image)
-    .map((c) => ({ id: c.id, label: c.name, image: c.image! }));
+  const categories = catData.items.map((c) => ({
+    id: c.id,
+    label: c.name,
+    image: c.image ?? "/images/home/card_1.png",
+  }));
 
   return (
     <main className="flex flex-col gap-12 lg:gap-[5rem] pb-[3rem] lg:pb-[5rem]">

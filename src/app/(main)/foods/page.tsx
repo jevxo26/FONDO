@@ -3,7 +3,6 @@
 import FoodsHero from "@/components/foods/components/foods-hero";
 import { FoodsProvider } from "@/components/foods/components/foods-provider";
 import FoodsWorkspace from "@/components/foods/components/foods-workspace";
-import React from "react";
 
 export default function AllFoodsPage() {
   return (

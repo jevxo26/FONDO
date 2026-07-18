@@ -1,10 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { CATEGORY_CARDS } from "@/data/homepage";
 
 interface CategoryCardProps {
-  category: (typeof CATEGORY_CARDS)[number];
+  category: { id: string; label: string; image: string };
   className?: string;
 }
 

@@ -47,7 +47,7 @@ POST /auth/logout   → clears cookie, invalidates session
 | 🟢 | [Cart & Checkout](#5-cart--checkout) | Module 7 |
 | 🟢 | [Orders](#6-orders) | Module 7 |
 | 🟢 | [Customers (Admin)](#7-customers-admin) | Module 1 |
-| ⚪ | [Vendors](#8-vendors) | Module 3 |
+| 🟢 | [Vendors](#8-vendors) | Module 3 |
 | ⚪ | [Packages & Meal Plans](#9-packages--meal-plans) | Module 6 |
 | ⚪ | [Subscriptions](#10-subscriptions) | Module 12 |
 
@@ -56,9 +56,9 @@ POST /auth/logout   → clears cookie, invalidates session
 
 | | Feature | Workflow Module |
 |---|---|---|
-| ⚪ | [Payments](#11-payments) | Module 8 |
-| ⚪ | [Customer Wallet](#12-customer-wallet) | Module 8 |
-| ⚪ | [Vendor Settlements](#13-vendor-settlements) | Module 8 |
+| 🟢 | [Payments](#11-payments) | Module 8 |
+| 🟢 | [Customer Wallet](#12-customer-wallet) | Module 8 |
+| 🟢 | [Vendor Settlements](#13-vendor-settlements) | Module 8 |
 | ⚪ | [Riders](#14-riders) | Module 9 |
 | ⚪ | [Deliveries & Tracking](#15-deliveries--live-tracking) | Module 9 |
 | ⚪ | [Notifications](#16-notifications) | Module 10 |
@@ -93,6 +93,7 @@ Models with `deletedAt` use soft delete. `DELETE` marks record as deleted, not r
 
 ---
 
+<a id="1-auth"></a>
 ## 1. Auth
 
 🟢 **All 10 endpoints built. No auth required unless marked `[JWT]`.**
@@ -340,6 +341,7 @@ Sends reset token. **Dev only** — returns token directly.
 
 ---
 
+<a id="2-users--profile"></a>
 ## 2. Users & Profile
 
 🟢 **All 14 endpoints built.**
@@ -637,6 +639,7 @@ All **[JWT]**
 
 ---
 
+<a id="3-food-catalog-customer"></a>
 ## 3. Food Catalog (Customer)
 
 🟢 **All 10 endpoints built. Public unless marked `[JWT]`.**
@@ -860,6 +863,7 @@ List approved reviews. Public.
 
 ---
 
+<a id="4-food-admin-crud"></a>
 ## 4. Food Admin (CRUD)
 
 🟢 **All 34 endpoints built. Mounted at `/api/admin` prefix.**
@@ -1466,6 +1470,7 @@ Upserts visibility record.
 
 ---
 
+<a id="5-cart--checkout"></a>
 ## 5. Cart & Checkout
 
 🟢 **All 20 endpoints built. Mounted at `/api/cart`.**
@@ -1758,6 +1763,7 @@ Converts cart to order. Cart becomes `converted`.
 
 ---
 
+<a id="6-orders"></a>
 ## 6. Orders
 
 🟢 **All 16 endpoints built. Mounted at `/api` prefix.**
@@ -2119,6 +2125,7 @@ Any active status → CANCELLED (where allowed). Creates status history + timeli
 
 ---
 
+<a id="7-customers-admin"></a>
 ## 7. Customers (Admin)
 
 🟢 **All 6 endpoints built. Mounted at `/api/admin/customers`.**
@@ -2304,6 +2311,7 @@ Paginated list of customer's payments.
 
 ---
 
+<a id="8-vendors"></a>
 ## 8. Vendors
 
 ⚪ **Planned** — not started.
@@ -2569,6 +2577,7 @@ List which vendors serve a given food.
 
 ---
 
+<a id="9-packages--meal-plans"></a>
 ## 9. Packages & Meal Plans
 
 ⚪ **Planned** — not started.
@@ -2753,6 +2762,7 @@ Get plan with days and meals.
 
 ---
 
+<a id="10-subscriptions"></a>
 ## 10. Subscriptions
 
 ⚪ **Planned** — not started.
@@ -2943,9 +2953,10 @@ List subscription invoices.
 
 ---
 
+<a id="11-payments"></a>
 ## 11. Payments
 
-⚪ **Planned** — not started.
+🟢 **Built** — see [source](../../server/controllers/paymentController.ts)
 
 ### `GET /payment-methods`
 List available methods. **Auth:** None
@@ -3029,6 +3040,7 @@ Get payment details.
 
 ---
 
+<a id="12-customer-wallet"></a>
 ## 12. Customer Wallet
 
 ⚪ **Planned** — not started.
@@ -3084,6 +3096,7 @@ Approve withdrawal. **Auth:** JWT (Admin)
 
 ---
 
+<a id="13-vendor-settlements"></a>
 ## 13. Vendor Settlements
 
 ⚪ **Planned** — not started.
@@ -3138,6 +3151,7 @@ Platform revenue summary. **Auth:** JWT (Admin)
 
 ---
 
+<a id="14-riders"></a>
 ## 14. Riders
 
 ⚪ **Planned** — not started.
@@ -3260,6 +3274,7 @@ Change status. **Auth:** JWT (Admin)
 
 ---
 
+<a id="15-deliveries--live-tracking"></a>
 ## 15. Deliveries & Live Tracking
 
 ⚪ **Planned** — not started.
@@ -3394,6 +3409,7 @@ Get ETA only. **Auth:** JWT (Customer)
 
 ---
 
+<a id="16-notifications"></a>
 ## 16. Notifications
 
 ⚪ **Planned** — not started.
@@ -3472,6 +3488,7 @@ Public.
 
 ---
 
+<a id="17-support-tickets"></a>
 ## 17. Support Tickets
 
 ⚪ **Planned** — not started.
@@ -3529,6 +3546,7 @@ List all tickets. **Auth:** JWT (SupportAgent)
 
 ---
 
+<a id="18-cms"></a>
 ## 18. CMS
 
 ⚪ **Planned** — not started.
@@ -3576,6 +3594,7 @@ Get static page (About, Privacy, Terms, etc.).
 
 ---
 
+<a id="19-reports--analytics"></a>
 ## 19. Reports & Analytics
 
 ⚪ **Planned** — not started.
@@ -3688,6 +3707,7 @@ Get user's dashboard layout.
 
 ---
 
+<a id="20-roles--permissions"></a>
 ## 20. Roles & Permissions
 
 ⚪ **Planned** — not started.
@@ -3757,6 +3777,7 @@ Remove role from user.
 
 ---
 
+<a id="21-system-settings"></a>
 ## 21. System Settings
 
 ⚪ **Planned** — not started.

@@ -20,7 +20,7 @@ export default function KitchenDashboardLayout({
         basePath="/dashboard/kitchen"
         panelLabel="Kitchen"
         logoIcon={ChefHat}
-        showOverview={false}
+        showOverview={true}
         userName="Kitchen A"
         userRole="Kitchen Staff"
         userInitials="KC"

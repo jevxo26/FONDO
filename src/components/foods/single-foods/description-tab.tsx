@@ -11,7 +11,7 @@ const DescriptionTab = ({ food }: DescriptionTabProps) => {
         <h3 className="font-sans text-base font-semibold text-secondary-foreground">{food.name}</h3>
 
         <p className="font-sans text-sm leading-relaxed text-muted-foreground">
-          {food.description}
+          {food.shortDescription}
         </p>
 
         <h4 className="font-sans text-sm font-semibold text-secondary-foreground mt-2">
@@ -19,8 +19,7 @@ const DescriptionTab = ({ food }: DescriptionTabProps) => {
         </h4>
 
         <ul className="list-inside space-y-1.5 font-sans text-sm text-muted-foreground">
-          <li>&middot; Food Code: {food.foodCode}</li>
-          <li>&middot; Category: {food.categoryId}</li>
+          <li>&middot; Category: {food.category.name}</li>
           <li>&middot; Preparation Time: {food.preparationTime} minutes</li>
           <li>&middot; Serving Size: {food.servingSize}</li>
           <li>&middot; Calories: {food.calories} kcal</li>
@@ -29,7 +28,6 @@ const DescriptionTab = ({ food }: DescriptionTabProps) => {
           <li>&middot; Carbohydrate: {food.carbohydrate}g</li>
           <li>&middot; Food Type: {food.foodType}</li>
           <li>&middot; Spice Level: {food.spiceLevel}</li>
-          <li>&middot; Status: {food.status}</li>
         </ul>
       </div>
     </div>

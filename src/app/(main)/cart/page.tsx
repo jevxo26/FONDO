@@ -52,8 +52,8 @@ export default function CartPageView() {
   }));
 
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
-  const subtotalValue = cart?.totals.subtotal ?? 0;
-  const deliveryCost = cart?.totals.deliveryCharge ?? 0;
+  const subtotalValue = cart?.totals?.subtotal ?? 0;
+  const deliveryCost = cart?.totals?.deliveryCharge ?? 0;
 
   const handleUpdateQuantity = (id: string, newQty: number) => {
     updateItem.mutate({ itemId: id, quantity: newQty });

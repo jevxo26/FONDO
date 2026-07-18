@@ -16,7 +16,7 @@ export function ProductHero({ food }: { food: Food }) {
           {/* Left: Main Showcase Image */}
           <div className="lg:col-span-6">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[32px] bg-muted shadow-[var(--shadow-card)] border border-border/40">
-              <Image src={food.coverImage} alt={food.name} fill priority className="object-cover" />
+              <Image src={food.coverImage} alt={food.name} fill priority unoptimized className="object-cover" />
             </div>
           </div>
 
@@ -24,7 +24,7 @@ export function ProductHero({ food }: { food: Food }) {
           <div className="lg:col-span-6 flex flex-col justify-center">
             <div className="flex items-center justify-between">
               <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
-                &middot; {food.status === "active" ? "In stock" : "Out of stock"}
+                &middot; In stock
               </span>
 
               <Button
@@ -53,7 +53,7 @@ export function ProductHero({ food }: { food: Food }) {
 
               <span>&middot;</span>
 
-              <span>{food.foodCode}</span>
+              <span>{food.id}</span>
 
               <span>&middot;</span>
 
@@ -64,12 +64,14 @@ export function ProductHero({ food }: { food: Food }) {
 
             <div className="mt-6 flex items-baseline gap-3">
               <span className="font-sans text-3xl font-bold text-secondary-foreground">
-                ৳{food.price}
+                ৳{food.variants[0]?.discountPrice ?? food.variants[0]?.price ?? 0}
               </span>
 
+              {food.variants[0]?.discountPrice && (
               <span className="font-sans text-lg text-muted-foreground line-through">
-                ৳{Math.round(food.price * 1.25)}
+                ৳{food.variants[0].price}
               </span>
+              )}
 
               <span className="rounded-md bg-rose-100 px-2 py-0.5 text-xs font-semibold text-rose-600 dark:bg-rose-950/50 dark:text-rose-400">
                 25% discount
@@ -143,7 +145,7 @@ export function ProductHero({ food }: { food: Food }) {
               </div>
 
               <span className="text-xs text-muted-foreground">
-                ({food.status === "active" ? "Available" : "Unavailable"})
+                (Available)
               </span>
             </div>
 

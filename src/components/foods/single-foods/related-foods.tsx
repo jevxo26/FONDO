@@ -1,9 +1,15 @@
+import type { Food } from "@/types/food";
 import FoodCard from "@/components/common/cards/food-card/food-card";
-import { FOOD_ITEMS } from "@/data/foodsdata";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
-export function RelatedFoods() {
+interface RelatedFoodsProps {
+  foods: Food[];
+}
+
+export function RelatedFoods({ foods }: RelatedFoodsProps) {
+  if (foods.length === 0) return null;
+
   return (
     <section className="py-12 bg-background">
       <div className="wrapper">
@@ -20,8 +26,8 @@ export function RelatedFoods() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {FOOD_ITEMS.slice(0, 4).map((food, index) => (
-            <FoodCard key={index} food={food} />
+          {foods.map((food) => (
+            <FoodCard key={food.id} food={food} />
           ))}
         </div>
       </div>

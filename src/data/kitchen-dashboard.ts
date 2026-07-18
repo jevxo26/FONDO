@@ -1,9 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import {
-  ClipboardList,
-  ListOrdered,
-  UtensilsCrossed,
-} from "lucide-react";
+import { ClipboardList, UtensilsCrossed } from "lucide-react";
 
 export interface SidebarItem {
   label: string;

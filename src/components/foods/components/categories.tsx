@@ -1,48 +1,55 @@
-"use client";
+import React from 'react';
 
-import { cn } from "@/lib/utils";
-
-const CATEGORIES = [
-  { id: "all", label: "All" },
-  { id: "kacchi", label: "Kacchi" },
-  { id: "tehari", label: "Tehari" },
-  { id: "roast", label: "Roast" },
-  { id: "kebab", label: "Kebab" },
-  { id: "borhani", label: "Borhani" },
-  { id: "dessert", label: "Dessert" },
-  { id: "drinks", label: "Drinks" },
-] as const;
+interface Category {
+  id: string;
+  name: string;
+  subCategories?: Category[];
+}
 
 interface CategoriesProps {
+  cat: Category;
   activeCategory: string;
-  onCategoryChange: (id: string) => void;
+  setActiveCategory: (name: string) => void;
+  setActiveSubCategory: (name: string) => void;
+  setCurrentPage: (page: number) => void;
+  activeSubCategory: string;
 }
-
-export function Categories({ activeCategory, onCategoryChange }: CategoriesProps) {
+const categories = ({cat, activeCategory, setActiveCategory, setActiveSubCategory, setCurrentPage, activeSubCategory}: CategoriesProps) => {
   return (
-    <section className="w-full border-y border-border/60 bg-secondary/30 py-5">
-      <div className="wrapper">
-        {/* Horizontal scroll wrapper for mobile, normal flex wrapping on desktop */}
-        <div className="scrollbar-none flex items-center gap-3 overflow-x-auto pb-1 sm:pb-0 md:flex-wrap">
-          {CATEGORIES.map((category) => {
-            const isActive = activeCategory === category.id;
-            return (
-              <button
-                key={category.id}
-                onClick={() => onCategoryChange(category.id)}
-                className={cn(
-                  "inline-flex h-10 items-center justify-center rounded-full px-6 font-sans text-sm font-medium transition-all duration-200 select-none border whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                  isActive
-                    ? "bg-[#16100C] border-[#16100C] text-white dark:bg-foreground dark:border-foreground dark:text-background"
-                    : "bg-white border-border text-foreground hover:bg-muted/60 dark:bg-card"
-                )}
-              >
-                {category.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </section>
+    <div>
+       <div key={cat.id} className="space-y-1">
+                  <button
+                    onClick={() => {
+                      setActiveCategory(cat.name);
+                      setActiveSubCategory("All");
+                      setCurrentPage(1);
+                    }} className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all ${activeCategory === cat.name ? "bg-[#CEA359]/10 text-[#CEA359] font-bold" : "text-[#16100C]/70 hover:bg-[#16100C]/5"
+                      }`}
+                  >
+                    {cat.name}
+                  </button>
+                  {activeCategory === cat.name && cat.subCategories && cat.subCategories.length > 0 && (
+                    <div className="pl-4 flex flex-col border-l border-[#16100C]/5 ml-3 gap-0.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                      {cat.subCategories.map(sub => (
+                        <button
+                          key={sub.id}
+                          onClick={() => {
+                            setActiveSubCategory(sub.name);
+                            setCurrentPage(1);
+                          }}
+                          className={`text-[10px] py-1 text-left transition-colors ${activeSubCategory === sub.name
+                            ? "text-[#CEA359] font-bold"
+                            : "text-[#16100C]/50 hover:text-[#CEA359]"
+                            }`}
+                        >
+                          {sub.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+    </div>
   );
-}
+};
+
+export default categories;

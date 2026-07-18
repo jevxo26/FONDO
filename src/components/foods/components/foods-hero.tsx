@@ -3,14 +3,10 @@ import { Search } from "lucide-react";
 import { useFoods } from "./foods-provider";
 import { useFoodCategories } from "@/hooks/useFoodCategories";
 
-export default function FoodsHero({ setCurrentPage }: { setCurrentPage: (page: number) => void }) {
+export default function FoodsHero() {
   const { searchQuery, setSearchQuery} = useFoods();
-  const { data: CategoriesData = [], isLoading } = useFoodCategories();
+  const {isLoading } = useFoodCategories();
   if(isLoading) return <h2>Data loading</h2>
-
-  const categories = CategoriesData.items
-  console.log("this is categories data", CategoriesData)
-  console.log("this is categories",categories)
   return (
     <section className="bg-[#FAF5EB] pt-24 pb-12 border-b border-[#16100C]/5">
       <div className="max-w-5xl mx-auto px-4 text-center space-y-6">
@@ -32,7 +28,7 @@ export default function FoodsHero({ setCurrentPage }: { setCurrentPage: (page: n
               type="text"
               value={searchQuery}
               onChange={(e) => {setSearchQuery(e.target.value);
-                setCurrentPage(1);
+                
               }}
               placeholder="Search dishes (e.g., Fish Curry, Rosogolla)..."
               className="w-full bg-white border border-[#16100C]/10 rounded-2xl pl-11 pr-4 py-3.5 text-xs text-[#16100C] focus:outline-none focus:ring-1 focus:ring-[#CEA359] shadow-sm"

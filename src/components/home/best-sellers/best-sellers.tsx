@@ -31,6 +31,7 @@ export function BestSellers({ foods }: BestSellersProps) {
           }
         />
         <SectionReveal
+          variant="perspectiveReveal"
           stagger
           staggerDelay={0.08}
           className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"

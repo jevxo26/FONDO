@@ -2,9 +2,37 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { Heart, Star, Share2, Plus, Minus, ShoppingCart, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Food } from "@/types/food";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0 },
+  },
+};
+
+const imageVariants = {
+  hidden: { opacity: 0, filter: "blur(8px)", scale: 0.95 },
+  visible: {
+    opacity: 1,
+    filter: "blur(0px)",
+    scale: 1,
+    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
+
+const contentVariants = {
+  hidden: { opacity: 0, x: 30 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
 
 export function ProductHero({ food }: { food: Food }) {
   const [quantity, setQuantity] = useState(1);
@@ -12,16 +40,21 @@ export function ProductHero({ food }: { food: Food }) {
   return (
     <section className="py-8 lg:py-12 bg-background">
       <div className="wrapper">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
+        <motion.div
+          className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           {/* Left: Main Showcase Image */}
-          <div className="lg:col-span-6">
+          <motion.div variants={imageVariants} className="lg:col-span-6">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[32px] bg-muted shadow-[var(--shadow-card)] border border-border/40">
               <Image src={food.coverImage} alt={food.name} fill priority unoptimized className="object-cover" />
             </div>
-          </div>
+          </motion.div>
 
           {/* Right: Product Meta Data & Purchase Controls */}
-          <div className="lg:col-span-6 flex flex-col justify-center">
+          <motion.div variants={contentVariants} className="lg:col-span-6 flex flex-col justify-center">
             <div className="flex items-center justify-between">
               <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
                 &middot; In stock
@@ -173,8 +206,8 @@ export function ProductHero({ food }: { food: Food }) {
               <MessageSquare className="size-4 text-primary" />
               Order Directly via WhatsApp
             </Button>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

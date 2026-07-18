@@ -71,7 +71,6 @@ function MobileAuthSection({ closeAndClear }: { closeAndClear: () => void }) {
 
 const parentIcon: Record<string, typeof House> = {
   Home: House,
-  "Our Story": BookOpen,
 };
 
 export function MobileNav() {

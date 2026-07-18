@@ -5,7 +5,7 @@ export function KitchenDining() {
   return (
     <section>
       <div className="wrapper">
-        <SectionReveal distance={20}>
+        <SectionReveal variant="fadeScale" distance={20}>
           <div className="mx-auto flex max-w-2xl flex-col items-center gap-2">
             <span className="text-[11.5px] font-semibold uppercase tracking-[2.534px] text-foreground/60">
               Behind the pass

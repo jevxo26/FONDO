@@ -5,7 +5,7 @@ export const FOOTER_LINKS = {
     title: "Visit",
     links: [
       { label: "Menu", href: "/foods" },
-      { label: "Our Story", href: "/about" },
+      { label: "Our Story", href: "/our-story" },
       { label: "Contact", href: "/contact" },
       { label: "Track Order", href: "/track" },
       { label: "Blog", href: "/blog" },

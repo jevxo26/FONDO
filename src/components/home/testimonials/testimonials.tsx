@@ -7,7 +7,7 @@ export function Testimonials() {
   return (
     <section>
       <div className="wrapper">
-        <SectionReveal distance={20}>
+        <SectionReveal variant="blurReveal" distance={20}>
           <h2 className="text-center font-sans font-semibold text-3xl text-foreground sm:text-4xl lg:text-[40px]">
             What Dhaka is saying
           </h2>

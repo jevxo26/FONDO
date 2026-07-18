@@ -10,7 +10,7 @@ export function Combos() {
   return (
     <section>
       <div className="wrapper">
-        <SectionReveal distance={20}>
+        <SectionReveal variant="blurReveal" distance={20}>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="flex flex-col gap-2">
               <span className="text-[11px] font-semibold uppercase tracking-[2.534px] text-foreground/60">

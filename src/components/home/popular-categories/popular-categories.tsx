@@ -15,6 +15,7 @@ export function PopularCategories({ categories }: PopularCategoriesProps) {
           description="Open right now and delivering to your area."
         />
         <SectionReveal
+          variant="maskReveal"
           stagger
           staggerDelay={0.06}
           className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 lg:gap-4"

@@ -16,7 +16,7 @@ export function ServiceBanner() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-primary-foreground/85 via-primary-foreground/55 to-transparent" />
 
-          <SectionReveal distance={20}>
+          <SectionReveal variant="blurReveal" distance={20}>
             <div className="relative z-10 flex w-full max-w-full flex-col gap-4 p-6 sm:max-w-[730px] sm:gap-6 sm:p-8 lg:p-10">
               <div className="inline-flex w-fit items-center rounded-full border border-primary/40 bg-primary/15 px-3 py-1.5">
                 <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.275px] text-background">

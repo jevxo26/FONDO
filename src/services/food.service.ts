@@ -18,7 +18,7 @@ export async function getFoodBySlug(slug: string) {
 }
 
 export const foodService = {
-  getFoods: () => getFoods(),
+  getFoods: () => getFoods(1, 100),
   getFood: (slug: string) => getFoodBySlug(slug),
   getCategories: () => apiFetch<FoodCategoriesData>(API.FOOD_CATEGORIES),
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFoods } from "./foods-provider";
 import { useFoodCategories } from "@/hooks/useFoodCategories";
 import { useGetFoods } from "@/hooks/use-foods";
@@ -90,6 +90,17 @@ export default function FoodsWorkspace() {
     searchQuery,
     sortBy,
   ]);
+
+  // Reset to page 1 when filters change
+  const filterKey = `${activeCategory}-${activeSubCategory}-${searchQuery}-${sortBy}`;
+  const prevFilterKey = useRef(filterKey);
+
+  useEffect(() => {
+    if (prevFilterKey.current !== filterKey) {
+      setCurrentPage(1);
+      prevFilterKey.current = filterKey;
+    }
+  }, [filterKey, setCurrentPage]);
 
   // Pagination
   const totalPages = Math.ceil(filteredFoods.length / ITEMS_PER_PAGE);

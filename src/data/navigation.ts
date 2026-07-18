@@ -58,6 +58,7 @@ export const mainNavLinks: NavLink[] = [
       { href: "/foods#new-arrivals", label: "New Arrivals" },
     ],
   },
+  { href: "/packages", label: "Packages" },
   { href: "/our-story", label: "Our Story" },
   { href: "/about", label: "About" },
   {

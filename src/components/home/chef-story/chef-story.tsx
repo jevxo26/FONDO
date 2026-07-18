@@ -20,7 +20,7 @@ export function ChefStory() {
   return (
     <section>
       <div className="wrapper">
-        <SectionReveal variant="clipReveal" direction="left" distance={20}>
+        <SectionReveal variant="blurReveal" distance={20}>
           <div className="flex flex-col items-center gap-8 lg:flex-row lg:justify-between lg:gap-16">
             {/* Image */}
             <div className="relative flex-1">

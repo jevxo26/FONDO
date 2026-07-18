@@ -1,90 +1,157 @@
-import React, { useState } from "react";
-import { Trash2, Plus, Laptop, LogOut } from "lucide-react";
+"use client";
 
-// Addresses Manager Component
+import { useState } from "react";
+import { Trash2, Plus, Star } from "lucide-react";
+import { useAddresses, useCreateAddress, useDeleteAddress, useSetDefaultAddress } from "@/hooks/use-addresses";
+import { handleApiError } from "@/lib/api-error";
+import { toast } from "sonner";
+
 export function AddressManager() {
-  const [addresses, setAddresses] = useState([
-    { id: "1", title: "Home", address: "House 42, Road 11, Banani, Dhaka" },
-    { id: "2", title: "Office", address: "Level 8, Tower B, Kawran Bazar, Dhaka" }
-  ]);
-  const [title, setTitle] = useState("");
-  const [text, setText] = useState("");
+  const { data: addresses = [], isLoading } = useAddresses();
+  const createAddress = useCreateAddress();
+  const deleteAddress = useDeleteAddress();
+  const setDefault = useSetDefaultAddress();
 
-  const handleAdd = (e: React.FormEvent) => {
+  const [label, setLabel] = useState("");
+  const [streetAddress, setStreetAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [zipCode, setZipCode] = useState("");
+
+  const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !text) return;
-    setAddresses([...addresses, { id: Date.now().toString(), title, address: text }]);
-    setTitle("");
-    setText("");
+    if (!label || !streetAddress || !city) return;
+    try {
+      await createAddress.mutateAsync({ label, streetAddress, city, zipCode });
+      setLabel("");
+      setStreetAddress("");
+      setCity("");
+      setZipCode("");
+      toast.success("Address added");
+    } catch (error) {
+      toast.error(handleApiError(error));
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteAddress.mutateAsync(id);
+      toast.success("Address removed");
+    } catch (error) {
+      toast.error(handleApiError(error));
+    }
+  };
+
+  const handleSetDefault = async (id: string) => {
+    try {
+      await setDefault.mutateAsync(id);
+      toast.success("Default address updated");
+    } catch (error) {
+      toast.error(handleApiError(error));
+    }
   };
 
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="font-fraunces text-xl font-normal text-[#16100C]">Shipping & Logistics Nodes</h3>
-        <p className="font-sans text-[11px] text-[#16100C]/50 mt-1">Manage multiple addresses for faster routing and checkout execution.</p>
+        <h3 className="font-fraunces text-xl font-normal text-foreground">My Addresses</h3>
+        <p className="font-sans text-[11px] text-muted-foreground/70 mt-1">Manage multiple addresses for faster checkout.</p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {addresses.map(addr => (
-          <div key={addr.id} className="border border-[#16100C]/10 p-4 rounded-xl bg-[#FAF5EB]/30 flex flex-col justify-between group">
-            <div>
-              <span className="text-[10px] uppercase font-bold text-[#CEA359] bg-[#CEA359]/10 px-2 py-0.5 rounded-md inline-block mb-2">{addr.title}</span>
-              <p className="font-sans text-xs text-[#16100C] font-light leading-relaxed">{addr.address}</p>
+
+      {isLoading ? (
+        <p className="text-xs text-muted-foreground">Loading addresses...</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {addresses.map(addr => (
+            <div key={addr.id} className="border border-border p-4 rounded-xl bg-card flex flex-col justify-between group">
+              <div>
+                <span className="flex items-center gap-1 text-[10px] uppercase font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-md inline-block mb-2">
+                  {addr.isDefault && <Star className="size-3 fill-primary" />}
+                  {addr.label}
+                </span>
+                <p className="font-sans text-xs text-foreground/80 leading-relaxed">{addr.streetAddress}, {addr.city} {addr.zipCode}</p>
+              </div>
+              <div className="flex justify-between items-center mt-4 pt-2 border-t border-border">
+                {!addr.isDefault && (
+                  <button
+                    onClick={() => handleSetDefault(addr.id)}
+                    className="text-[10px] font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors"
+                  >
+                    Set default
+                  </button>
+                )}
+                <button
+                  onClick={() => handleDelete(addr.id)}
+                  className="p-1.5 text-destructive hover:bg-destructive/10 rounded-lg transition-colors ml-auto"
+                >
+                  <Trash2 className="size-3.5" />
+                </button>
+              </div>
             </div>
-            <div className="flex justify-end mt-4 pt-2 border-t border-[#16100C]/5">
-              <button onClick={() => setAddresses(addresses.filter(a => a.id !== addr.id))} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"><Trash2 className="size-3.5" /></button>
-            </div>
-          </div>
-        ))}
-      </div>
-      <form onSubmit={handleAdd} className="border border-[#16100C]/10 rounded-xl p-4 grid grid-cols-1 md:grid-cols-3 gap-3 items-end bg-white">
-        <div className="space-y-1">
-          <label className="text-[9px] uppercase tracking-wider font-bold text-[#16100C]/50">Card Label</label>
-          <input type="text" placeholder="e.g. Gym" value={title} onChange={e => setTitle(e.target.value)} className="w-full bg-[#FAF5EB] border border-[#16100C]/10 rounded-xl px-3 py-2 text-xs focus:outline-none text-[#16100C]" />
+          ))}
         </div>
-        <div className="space-y-1 md:col-span-2 flex gap-2 items-end">
-          <div className="flex-1 space-y-1">
-            <label className="text-[9px] uppercase tracking-wider font-bold text-[#16100C]/50">Detailed Address</label>
-            <input type="text" placeholder="Full Area Info" value={text} onChange={e => setText(e.target.value)} className="w-full bg-[#FAF5EB] border border-[#16100C]/10 rounded-xl px-3 py-2 text-xs focus:outline-none text-[#16100C]" />
-          </div>
-          <button type="submit" className="px-4 py-2 bg-[#16100C] text-white text-xs font-bold font-sans uppercase rounded-xl h-[38px]">Inject</button>
+      )}
+
+      <form onSubmit={handleAdd} className="border border-border rounded-xl p-4 grid grid-cols-1 md:grid-cols-2 gap-3 items-end bg-card">
+        <div className="space-y-1">
+          <label className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground/70">Label</label>
+          <input type="text" placeholder="e.g. Home, Office" value={label} onChange={e => setLabel(e.target.value)} className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground" />
+        </div>
+        <div className="space-y-1">
+          <label className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground/70">City</label>
+          <input type="text" placeholder="e.g. Dhaka" value={city} onChange={e => setCity(e.target.value)} className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground" />
+        </div>
+        <div className="space-y-1">
+          <label className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground/70">Street Address</label>
+          <input type="text" placeholder="House, road, area" value={streetAddress} onChange={e => setStreetAddress(e.target.value)} className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground" />
+        </div>
+        <div className="space-y-1">
+          <label className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground/70">ZIP Code</label>
+          <input type="text" placeholder="1213" value={zipCode} onChange={e => setZipCode(e.target.value)} className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground" />
+        </div>
+        <div className="md:col-span-2">
+          <button
+            type="submit"
+            disabled={createAddress.isPending}
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-xs font-bold font-sans uppercase rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            <Plus className="size-3.5" /> Add Address
+          </button>
         </div>
       </form>
     </div>
   );
 }
 
-// Login History Table (Read-Only)
 export function LoginHistoryTable() {
-  const history = [
-    { id: "1", browser: "Chrome on Windows", ip: "103.230.104.12", location: "Dhaka, BD", time: "2026-07-18 14:32" },
-    { id: "2", browser: "Safari on iPhone", ip: "103.230.105.45", location: "Chittagong, BD", time: "2026-07-15 09:12" }
-  ];
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="font-fraunces text-xl font-normal text-[#16100C]">Security Logs</h3>
-        <p className="font-sans text-[11px] text-[#16100C]/50 mt-1">Audit log detailing recent system logins. Read-only structural table.</p>
+        <h3 className="font-fraunces text-xl font-normal text-foreground">Security Logs</h3>
+        <p className="font-sans text-[11px] text-muted-foreground/70 mt-1">Recent system logins. Read-only audit.</p>
       </div>
-      <div className="overflow-x-auto rounded-xl border border-[#16100C]/10">
+      <div className="overflow-x-auto rounded-xl border border-border">
         <table className="w-full text-left border-collapse text-xs">
           <thead>
-            <tr className="bg-[#FAF5EB] border-b border-[#16100C]/10 text-[9px] uppercase tracking-wider font-bold text-[#16100C]/60">
-              <th className="p-3">Platform Browser</th>
+            <tr className="bg-muted border-b border-border text-[9px] uppercase tracking-wider font-bold text-muted-foreground/70">
+              <th className="p-3">Platform</th>
               <th className="p-3">IP Address</th>
-              <th className="p-3">Geo Location</th>
+              <th className="p-3">Location</th>
               <th className="p-3">Timestamp</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#16100C]/5 font-light text-[#16100C]">
-            {history.map(log => (
-              <tr key={log.id} className="hover:bg-[#FAF5EB]/30 transition-colors">
-                <td className="p-3 font-medium">{log.browser}</td>
-                <td className="p-3 font-mono text-[11px]">{log.ip}</td>
-                <td className="p-3">{log.location}</td>
-                <td className="p-3 text-[#16100C]/60">{log.time}</td>
-              </tr>
-            ))}
+          <tbody className="divide-y divide-border text-foreground/80">
+            <tr className="hover:bg-muted/30 transition-colors">
+              <td className="p-3 font-medium">Chrome on Windows</td>
+              <td className="p-3 font-mono text-[11px]">103.230.104.12</td>
+              <td className="p-3">Dhaka, BD</td>
+              <td className="p-3 text-muted-foreground">2026-07-18 14:32</td>
+            </tr>
+            <tr className="hover:bg-muted/30 transition-colors">
+              <td className="p-3 font-medium">Safari on iPhone</td>
+              <td className="p-3 font-mono text-[11px]">103.230.105.45</td>
+              <td className="p-3">Chittagong, BD</td>
+              <td className="p-3 text-muted-foreground">2026-07-15 09:12</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -92,35 +159,38 @@ export function LoginHistoryTable() {
   );
 }
 
-// Active Devices Registry
 export function DeviceRegistry() {
-  const [devices, setDevices] = useState([
-    { id: "1", name: "Windows PC - Chrome", current: true },
-    { id: "2", name: "iPhone 15 Pro - Safari", current: false }
-  ]);
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="font-fraunces text-xl font-normal text-[#16100C]">Device Registry</h3>
-        <p className="font-sans text-[11px] text-[#16100C]/50 mt-1">Review sessions running on active devices and revoke access if suspicious activity occurs.</p>
+        <h3 className="font-fraunces text-xl font-normal text-foreground">Active Devices</h3>
+        <p className="font-sans text-[11px] text-muted-foreground/70 mt-1">Review active sessions and revoke access if suspicious.</p>
       </div>
       <div className="space-y-3">
-        {devices.map(dev => (
-          <div key={dev.id} className="flex items-center justify-between p-4 border border-[#16100C]/10 rounded-xl bg-[#FAF5EB]/20">
-            <div className="flex items-center gap-3">
-              <Laptop className="size-5 text-[#CEA359]" />
-              <div>
-                <h4 className="font-sans text-xs font-bold text-[#16100C]">{dev.name}</h4>
-                {dev.current && <span className="text-[8px] bg-green-100 text-green-700 font-bold tracking-wider uppercase px-1.5 py-0.5 rounded mt-0.5 inline-block">Active Node Session</span>}
-              </div>
+        <div className="flex items-center justify-between p-4 border border-border rounded-xl bg-card">
+          <div className="flex items-center gap-3">
+            <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <span className="text-[10px] font-bold text-primary">PC</span>
             </div>
-            {!dev.current && (
-              <button onClick={() => setDevices(devices.filter(d => d.id !== dev.id))} className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
-                <LogOut className="size-3" /> Revoke
-              </button>
-            )}
+            <div>
+              <h4 className="font-sans text-xs font-bold text-foreground">Windows PC - Chrome</h4>
+              <span className="text-[8px] bg-success/10 text-success font-bold tracking-wider uppercase px-1.5 py-0.5 rounded mt-0.5 inline-block">Current Session</span>
+            </div>
           </div>
-        ))}
+        </div>
+        <div className="flex items-center justify-between p-4 border border-border rounded-xl bg-card">
+          <div className="flex items-center gap-3">
+            <div className="size-8 rounded-full bg-muted flex items-center justify-center">
+              <span className="text-[10px] font-bold text-muted-foreground">IP</span>
+            </div>
+            <div>
+              <h4 className="font-sans text-xs font-bold text-foreground">iPhone 15 Pro - Safari</h4>
+            </div>
+          </div>
+          <button className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 text-destructive border border-destructive/20 rounded-lg hover:bg-destructive/10 transition-colors">
+            Revoke
+          </button>
+        </div>
       </div>
     </div>
   );

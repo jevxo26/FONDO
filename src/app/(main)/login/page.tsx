@@ -1,14 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { toast } from "sonner";
-import { useForm, FormProvider } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { CoreLayoutWrapper } from "@/components/auth/core-layout-wrapper";
 import { LoginForm } from "@/components/auth/login/login-form";
 import { useAuth } from "@/hooks/useAuth";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { ROLE_DASHBOARD } from "@/data/navigation";
 
@@ -59,10 +59,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#F5EFE6] flex items-center justify-center py-10 px-4">
       <FormProvider {...methods}>
-        <form
-          onSubmit={methods.handleSubmit(onLoginSubmit)}
-          className="w-full max-w-6xl"
-        >
+        <form onSubmit={methods.handleSubmit(onLoginSubmit)} className="w-full max-w-6xl">
           <CoreLayoutWrapper currentStep={3}>
             <LoginForm onSubmit={onLoginSubmit} loading={loading} />
           </CoreLayoutWrapper>

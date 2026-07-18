@@ -1,7 +1,6 @@
 "use client";
 
-import { Ticket, ArrowUpRight, ShieldCheck, Truck } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { ArrowUpRight, ShieldCheck, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface OrderSummaryProps {
@@ -38,25 +37,7 @@ export function OrderSummary({ subtotal, savings, deliveryCharges }: OrderSummar
         </div>
       </div>
 
-      {/* Integrated Promo Input Bar */}
-      <div className="relative w-full">
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground flex items-center">
-          <Ticket className="size-4 stroke-[1.8]" />
-        </div>
-        <Input
-          type="text"
-          placeholder="Coupon code"
-          className="rounded-full pl-11 pr-24 bg-muted/20 dark:bg-muted/5"
-        />
-        <Button
-          variant="default"
-          className="absolute right-1 top-1 h-9 rounded-full px-5 text-xs font-semibold"
-        >
-          Apply
-        </Button>
-      </div>
-
-      {/* Total Aggregate Row */}
+{/* Total Aggregate Row */}
       <div className="flex items-center justify-between border-t border-border/40 pt-5">
         <span className="font-sans text-sm font-medium text-secondary-foreground">Total</span>
         <span className="font-sans text-xl font-bold text-secondary-foreground">

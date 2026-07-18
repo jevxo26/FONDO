@@ -200,6 +200,24 @@ const addFavorite = catchServiceAsync(async (userId: string, foodId: string) => 
   });
 });
 
+const listFavorites = catchServiceAsync(async (userId: string) => {
+  const favorites = await prisma.foodFavorite.findMany({
+    where: { userId },
+    include: {
+      food: {
+        include: {
+          variants: true,
+          images: true,
+          rating: true,
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return favorites.map((f) => f.food);
+});
+
 const removeFavorite = catchServiceAsync(async (userId: string, foodId: string) => {
   const existing = await prisma.foodFavorite.findFirst({
     where: { userId, foodId },
@@ -303,6 +321,7 @@ export const FoodService = {
   listTags,
   addFavorite,
   removeFavorite,
+  listFavorites,
   listReviews,
   createReview,
 };

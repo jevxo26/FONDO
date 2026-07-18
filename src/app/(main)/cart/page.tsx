@@ -32,7 +32,7 @@ export default function CartPageView() {
             <p className="font-sans text-sm text-red-600">{handleApiError(error)}</p>
             <Link
               href="/menu"
-              className="mt-4 inline-flex h-10 items-center rounded-xl bg-[#CEA359] px-5 font-sans text-xs font-semibold text-[#1B0E08]"
+              className="mt-4 inline-flex h-10 items-center rounded-xl bg-primary px-5 font-sans text-xs font-semibold text-primary-foreground"
             >
               Return to Menu
             </Link>
@@ -44,16 +44,16 @@ export default function CartPageView() {
 
   const items: CartItemType[] = (cart?.items ?? []).map((item) => ({
     id: item.id,
-    title: item.name,
-    price: item.price,
+    title: item.food?.name ?? "Item",
+    price: item.unitPrice,
     quantity: item.quantity,
-    thumbnail: item.thumbnail,
+    thumbnail: item.food?.thumbnail ?? "",
     itemsSold: 0,
   }));
 
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
-  const subtotalValue = cart?.totals?.subtotal ?? 0;
-  const deliveryCost = cart?.totals?.deliveryCharge ?? 0;
+  const subtotalValue = cart?.subtotal ?? 0;
+  const deliveryCost = cart?.deliveryCharge ?? 0;
 
   const handleUpdateQuantity = (id: string, newQty: number) => {
     updateItem.mutate({ itemId: id, quantity: newQty });
@@ -108,7 +108,7 @@ export default function CartPageView() {
             <p className="font-sans text-sm text-muted-foreground">Your active cart is empty.</p>
             <Link
               href="/menu"
-              className="mt-4 inline-flex h-10 items-center rounded-xl bg-[#CEA359] px-5 font-sans text-xs font-semibold text-[#1B0E08]"
+              className="mt-4 inline-flex h-10 items-center rounded-xl bg-primary px-5 font-sans text-xs font-semibold text-primary-foreground"
             >
               Return to Menu
             </Link>

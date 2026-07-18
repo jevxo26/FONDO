@@ -1,9 +1,11 @@
 "use client";
+
+import { useState } from "react";
 import { FormField } from "@/components/common/form-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { CheckoutFormData, PaymentMethodType } from "@/types/checkout-type";
-import { Check, CreditCard, ShoppingBag, Truck } from "lucide-react";
+import { Check, CreditCard, ShoppingBag, Truck, Ticket, X, Loader2, MapPin } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -11,10 +13,21 @@ import { toast } from "sonner";
 import { CheckoutSummary } from "../checkout-summary-right";
 import { useCart } from "@/hooks/use-cart";
 import { usePlaceOrder } from "@/hooks/use-orders";
+import { useAddresses } from "@/hooks/use-addresses";
+import { useApplyCoupon, useRemoveCoupon, useSelectAddress } from "@/hooks/use-coupon";
 import { handleApiError } from "@/lib/api-error";
+
 const CheckoutForm = () => {
   const { data: cart, isLoading: cartLoading } = useCart();
+  const { data: addresses = [] } = useAddresses();
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+  const [couponInput, setCouponInput] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+
   const placeOrder = usePlaceOrder();
+  const applyCoupon = useApplyCoupon();
+  const removeCoupon = useRemoveCoupon();
+  const selectAddress = useSelectAddress();
   const router = useRouter();
 
   const {
@@ -39,11 +52,45 @@ const CheckoutForm = () => {
   const currentFulfillment = watch("fulfillment");
   const currentPaymentMethod = watch("paymentMethod");
 
+  const handleAddressSelect = async (addressId: string) => {
+    setSelectedAddressId(addressId);
+    try {
+      await selectAddress.mutateAsync(addressId);
+      toast.success("Delivery address selected");
+    } catch (error) {
+      toast.error(handleApiError(error));
+      setSelectedAddressId(null);
+    }
+  };
+
+  const handleApplyCoupon = async () => {
+    if (!couponInput.trim()) return;
+    try {
+      await applyCoupon.mutateAsync(couponInput.trim());
+      setAppliedCoupon(couponInput.trim());
+      setCouponInput("");
+      toast.success("Coupon applied");
+    } catch (error) {
+      toast.error(handleApiError(error));
+    }
+  };
+
+  const handleRemoveCoupon = async () => {
+    try {
+      await removeCoupon.mutateAsync();
+      setAppliedCoupon(null);
+      toast.success("Coupon removed");
+    } catch (error) {
+      toast.error(handleApiError(error));
+    }
+  };
+
   const onSubmitForm = async (data: CheckoutFormData) => {
     try {
       await placeOrder.mutateAsync({
         fulfillment: data.fulfillment,
         paymentMethod: data.paymentMethod,
+        addressId: selectedAddressId ?? undefined,
         streetAddress: data.streetAddress,
         city: data.city,
         zipCode: data.zipCode,
@@ -62,21 +109,20 @@ const CheckoutForm = () => {
     if (placeOrder.isSuccess) return;
   }, [placeOrder.isSuccess]);
 
+  const savings = cart?.discount ?? 0;
+
   return (
     <>
       <form
         onSubmit={handleSubmit(onSubmitForm)}
         className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
       >
-        {/* LEFT COLUMN: Main Order Form (65% width) */}
         <div className="lg:col-span-8 flex flex-col gap-6">
-          {/* 1. FULFILLMENT METHOD SECTION */}
           <div className="bg-white rounded-[24px] border border-border/40 p-6 shadow-sm">
             <h2 className="font-sans text-base font-semibold text-foreground mb-4">
               How would you like your order?
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Delivery Selector */}
               <button
                 type="button"
                 onClick={() => setValue("fulfillment", "delivery")}
@@ -103,7 +149,6 @@ const CheckoutForm = () => {
                 </div>
               </button>
 
-              {/* Pickup Selector */}
               <button
                 type="button"
                 onClick={() => setValue("fulfillment", "pickup")}
@@ -132,44 +177,85 @@ const CheckoutForm = () => {
             </div>
           </div>
 
-          {/* 2. DELIVERY ADDRESS SECTION */}
           {currentFulfillment === "delivery" && (
             <div className="bg-white rounded-[24px] border border-border/40 p-6 shadow-sm flex flex-col gap-4">
               <h2 className="font-sans text-base font-semibold text-foreground">
                 Delivery Address
               </h2>
 
-              <FormField label="Street Address" error={errors.streetAddress}>
-                <Input
-                  type="text"
-                  placeholder="House number, road number, area line..."
-                  {...register("streetAddress", { required: currentFulfillment === "delivery" })}
-                  className={errors.streetAddress ? "border-rose-400 focus:ring-rose-400" : ""}
-                />
-              </FormField>
+              {addresses.length > 0 && (
+                <div className="flex flex-col gap-3">
+                  <p className="text-xs text-muted-foreground font-medium">Saved addresses</p>
+                  {addresses.map((addr) => (
+                    <button
+                      key={addr.id}
+                      type="button"
+                      onClick={() => handleAddressSelect(addr.id)}
+                      className={`flex items-center gap-3 p-4 rounded-xl border text-left transition-all ${
+                        selectedAddressId === addr.id
+                          ? "border-primary bg-primary/5"
+                          : "border-border bg-background hover:border-border/80"
+                      }`}
+                    >
+                      <MapPin className={`size-4 ${selectedAddressId === addr.id ? "text-primary" : "text-muted-foreground"}`} />
+                      <div className="flex-1">
+                        <p className="font-sans text-xs font-semibold text-foreground">
+                          {addr.label}
+                          {addr.isDefault && (
+                            <span className="ml-2 text-[9px] uppercase tracking-wider text-primary bg-primary/10 px-1.5 py-0.5 rounded">
+                              Default
+                            </span>
+                          )}
+                        </p>
+                        <p className="font-sans text-[11px] text-muted-foreground mt-0.5">
+                          {addr.streetAddress}, {addr.city} {addr.zipCode}
+                        </p>
+                      </div>
+                      {selectedAddressId === addr.id && (
+                        <Check className="size-4 text-primary" />
+                      )}
+                    </button>
+                  ))}
+                  <div className="border-t border-border/40 pt-3 mt-1">
+                    <p className="text-[10px] text-muted-foreground mb-2">Or enter a new address:</p>
+                  </div>
+                </div>
+              )}
 
-              <div className="grid grid-cols-2 gap-4">
-                <FormField label="City" error={errors.city}>
-                  <Input
-                    type="text"
-                    placeholder="e.g. Dhaka"
-                    {...register("city", { required: currentFulfillment === "delivery" })}
-                    className={errors.city ? "border-rose-400 focus:ring-rose-400" : ""}
-                  />
-                </FormField>
-                <FormField label="ZIP / Postal Code" error={errors.zipCode}>
-                  <Input
-                    type="text"
-                    placeholder="1213"
-                    {...register("zipCode", { required: currentFulfillment === "delivery" })}
-                    className={errors.zipCode ? "border-rose-400 focus:ring-rose-400" : ""}
-                  />
-                </FormField>
-              </div>
+              {!selectedAddressId && (
+                <>
+                  <FormField label="Street Address" error={errors.streetAddress}>
+                    <Input
+                      type="text"
+                      placeholder="House number, road number, area line..."
+                      {...register("streetAddress", { required: currentFulfillment === "delivery" && !selectedAddressId })}
+                      className={errors.streetAddress ? "border-rose-400 focus:ring-rose-400" : ""}
+                    />
+                  </FormField>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField label="City" error={errors.city}>
+                      <Input
+                        type="text"
+                        placeholder="e.g. Dhaka"
+                        {...register("city", { required: currentFulfillment === "delivery" && !selectedAddressId })}
+                        className={errors.city ? "border-rose-400 focus:ring-rose-400" : ""}
+                      />
+                    </FormField>
+                    <FormField label="ZIP / Postal Code" error={errors.zipCode}>
+                      <Input
+                        type="text"
+                        placeholder="1213"
+                        {...register("zipCode", { required: currentFulfillment === "delivery" && !selectedAddressId })}
+                        className={errors.zipCode ? "border-rose-400 focus:ring-rose-400" : ""}
+                      />
+                    </FormField>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
-          {/* 3. CONTACT DETAILS SECTION */}
           <div className="bg-white rounded-[24px] border border-border/40 p-6 shadow-sm flex flex-col gap-4">
             <h2 className="font-sans text-base font-semibold text-foreground">
               Contact Information
@@ -194,7 +280,6 @@ const CheckoutForm = () => {
             </div>
           </div>
 
-          {/* 4. PAYMENT METHOD SECTION */}
           <div className="bg-white rounded-[24px] border border-border/40 p-6 shadow-sm">
             <h2 className="font-sans text-base font-semibold text-foreground mb-4">
               Payment Method
@@ -235,7 +320,52 @@ const CheckoutForm = () => {
             </div>
           </div>
 
-          {/* 5. ORDER NOTES SECTION */}
+          <div className="bg-white rounded-[24px] border border-border/40 p-6 shadow-sm flex flex-col gap-4">
+            <h2 className="font-sans text-base font-semibold text-foreground">Coupon Code</h2>
+            {appliedCoupon ? (
+              <div className="flex items-center justify-between p-3 rounded-xl bg-primary/5 border border-primary/20">
+                <div className="flex items-center gap-2">
+                  <Ticket className="size-4 text-primary" />
+                  <span className="font-sans text-sm font-semibold text-foreground">{appliedCoupon}</span>
+                  {savings > 0 && (
+                    <span className="text-xs text-success font-medium">-৳{savings}</span>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRemoveCoupon}
+                  disabled={removeCoupon.isPending}
+                  className="p-1 hover:bg-destructive/10 rounded-lg transition-colors"
+                >
+                  <X className="size-4 text-destructive" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Input
+                  type="text"
+                  placeholder="Enter coupon code"
+                  value={couponInput}
+                  onChange={(e) => setCouponInput(e.target.value)}
+                  className="flex-1"
+                />
+                <button
+                  type="button"
+                  onClick={handleApplyCoupon}
+                  disabled={applyCoupon.isPending || !couponInput.trim()}
+                  className="px-5 py-2 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-1.5"
+                >
+                  {applyCoupon.isPending ? (
+                    <Loader2 className="size-3.5 animate-spin" />
+                  ) : (
+                    <Ticket className="size-3.5" />
+                  )}
+                  Apply
+                </button>
+              </div>
+            )}
+          </div>
+
           <div className="bg-white rounded-[24px] border border-border/40 p-6 shadow-sm flex flex-col gap-2">
             <h2 className="font-sans text-base font-semibold text-foreground">Order Notes</h2>
             <Textarea
@@ -247,12 +377,11 @@ const CheckoutForm = () => {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Sticky Order Summary Panel (35% width) */}
         <div className="lg:col-span-4 lg:sticky lg:top-24">
           <CheckoutSummary
-            subtotal={cart?.totals?.subtotal ?? 0}
-            deliveryFee={currentFulfillment === "delivery" ? (cart?.totals?.deliveryCharge ?? 60) : 0}
-            savings={cart?.totals?.discount ?? 0}
+            subtotal={cart?.subtotal ?? 0}
+            deliveryFee={currentFulfillment === "delivery" ? (cart?.deliveryCharge ?? 60) : 0}
+            savings={savings}
             isSubmitting={placeOrder.isPending}
           />
         </div>

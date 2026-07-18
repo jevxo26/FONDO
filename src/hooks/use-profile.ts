@@ -15,7 +15,7 @@ export function useUpdateProfile() {
       phone?: string;
       gender?: string;
       dateOfBirth?: string;
-    }) => api.patch("/api/users/me", data),
+    }) => api.patch("/users/me", data),
     onSuccess: () => dispatch(fetchMe()),
   });
 }
@@ -26,6 +26,6 @@ export function useChangePassword() {
       currentPassword: string;
       newPassword: string;
       confirmPassword: string;
-    }) => api.post("/api/auth/change-password", data),
+    }) => api.post("/auth/change-password", data),
   });
 }

@@ -16,7 +16,7 @@ export interface Address {
 export function useAddresses() {
   return useQuery({
     queryKey: queryKeys.addresses.all,
-    queryFn: () => api.get<Address[]>("/api/users/me/addresses"),
+    queryFn: () => api.get<Address[]>("/users/me/addresses"),
   });
 }
 
@@ -24,7 +24,7 @@ export function useCreateAddress() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (data: Omit<Address, "id" | "isDefault">) =>
-      api.post<Address>("/api/users/me/addresses", data),
+      api.post<Address>("/users/me/addresses", data),
     onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addresses.all }),
   });
 }
@@ -33,7 +33,7 @@ export function useUpdateAddress() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Address> }) =>
-      api.patch<Address>(`/api/users/me/addresses/${id}`, data),
+      api.patch<Address>(`/users/me/addresses/${id}`, data),
     onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addresses.all }),
   });
 }
@@ -41,7 +41,7 @@ export function useUpdateAddress() {
 export function useDeleteAddress() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => api.delete(`/api/users/me/addresses/${id}`),
+    mutationFn: (id: string) => api.delete(`/users/me/addresses/${id}`),
     onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addresses.all }),
   });
 }
@@ -50,7 +50,7 @@ export function useSetDefaultAddress() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) =>
-      api.patch(`/api/users/me/addresses/${id}/default`),
+      api.patch(`/users/me/addresses/${id}/default`),
     onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addresses.all }),
   });
 }

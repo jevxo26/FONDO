@@ -8,7 +8,7 @@ import type { Food } from "@/types/food";
 export function useFavorites() {
   return useQuery({
     queryKey: queryKeys.favorites.all,
-    queryFn: () => api.get<Food[]>("/api/foods/favorites"),
+    queryFn: () => api.get<Food[]>("/foods/favorites"),
   });
 }
 
@@ -17,7 +17,7 @@ export function useToggleFavorite() {
 
   return useMutation({
     mutationFn: (foodId: string) =>
-      api.post(`/api/foods/${foodId}/favorite`),
+      api.post(`/foods/${foodId}/favorite`),
     onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.favorites.all }),
   });
 }
@@ -27,7 +27,7 @@ export function useRemoveFavorite() {
 
   return useMutation({
     mutationFn: (foodId: string) =>
-      api.delete(`/api/foods/${foodId}/favorite`),
+      api.delete(`/foods/${foodId}/favorite`),
     onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.favorites.all }),
   });
 }

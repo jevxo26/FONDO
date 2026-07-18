@@ -15,6 +15,7 @@ router.get("/categories/:id", FoodController.getCategory);
 router.get("/tags/list", FoodController.listTags);
 
 // Authenticated
+router.get("/favorites", verifyToken, FoodController.listFavorites);
 router.post("/:foodId/favorite", verifyToken, FoodController.addFavorite);
 router.delete("/:foodId/favorite", verifyToken, FoodController.removeFavorite);
 router.get("/:foodId/reviews", FoodController.listReviews);

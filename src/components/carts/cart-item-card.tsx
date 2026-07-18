@@ -16,12 +16,18 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove }: CartItemCardP
     <div className="group relative flex flex-col sm:flex-row gap-5 rounded-[28px] bg-white p-5 border border-border/40 shadow-[var(--shadow-card)] dark:bg-card transition-all hover:border-border/80">
       {/* Left Area: Product Square Media Box */}
       <div className="relative aspect-square w-full sm:w-28 shrink-0 overflow-hidden rounded-2xl bg-muted">
-        <Image
-          src={item.thumbnail}
-          alt={item.title}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-102"
-        />
+        {item.thumbnail ? (
+          <Image
+            src={item.thumbnail}
+            alt={item.title}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-102"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center text-muted-foreground text-xs">
+            No Image
+          </div>
+        )}
       </div>
 
       {/* Middle/Right Area: Details & Actions Grid */}

@@ -10,7 +10,7 @@ export function SignatureDish() {
   return (
     <section className="bg-foreground py-12 lg:py-16">
       <div className="wrapper">
-        <SectionReveal variant="clipReveal" direction="left" distance={20}>
+        <SectionReveal variant="blurReveal" distance={20}>
           <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
             <div className="flex-1">
               <div className="relative aspect-square w-full overflow-hidden rounded-2xl">

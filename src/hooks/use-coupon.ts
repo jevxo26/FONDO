@@ -8,7 +8,7 @@ export function useApplyCoupon() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (code: string) =>
-      api.post("/api/cart/checkout/apply-coupon", { code }),
+      api.post("/cart/checkout/apply-coupon", { code }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.cart.all });
     },
@@ -18,7 +18,7 @@ export function useApplyCoupon() {
 export function useRemoveCoupon() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: () => api.delete("/api/cart/checkout/remove-coupon"),
+    mutationFn: () => api.delete("/cart/checkout/remove-coupon"),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.cart.all });
     },
@@ -29,7 +29,7 @@ export function useSelectAddress() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (addressId: string) =>
-      api.post("/api/cart/checkout/select-address", { addressId }),
+      api.post("/cart/checkout/select-address", { addressId }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.cart.all });
     },

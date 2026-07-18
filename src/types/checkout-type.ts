@@ -3,6 +3,7 @@ export type PaymentMethodType = "online" | "bkash" | "nagad" | "cod";
 
 export interface CheckoutFormData {
   fulfillment: FulfillmentType;
+  addressId?: string;
   streetAddress: string;
   city: string;
   zipCode: string;
@@ -10,4 +11,5 @@ export interface CheckoutFormData {
   phoneNumber: string;
   paymentMethod: PaymentMethodType;
   orderNotes: string;
+  couponCode?: string;
 }

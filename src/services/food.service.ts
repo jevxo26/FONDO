@@ -1,17 +1,38 @@
-import { apiFetch } from "@/lib/api";
-import { API } from "@/lib/endpoints";
-import { Food, FoodResponse } from "@/types/food";
+import api from "@/lib/axios";
 
-export async function getFoods(page = 1, limit = 12, sortBy?: string): Promise<FoodResponse> {
-  const params = new URLSearchParams({ page: String(page), limit: String(limit) });
-  if (sortBy) params.set("sortBy", sortBy);
-  return apiFetch<FoodResponse>(`${API.FOODS}?${params}`);
-}
+export const foodService = {
+  // Get all foods
+  async getFoods() {
+    const { data } = await api.get("/foods");
+    return data.data;
+  },
 
-export async function getFood(id: string) {
-  return apiFetch<Food>(API.FOOD_DETAILS(id));
-}
+  // Get single food
+  async getFood(slug: string) {
+    const { data } = await api.get(`/foods/slug/${slug}`);
+    return data.data;
+  },
 
-export async function getFoodBySlug(slug: string) {
-  return apiFetch<Food>(API.FOOD_BY_SLUG(slug));
-}
+  // Get food categories
+  async getCategories() {
+    const { data } = await api.get("/foods/categories/list");
+    return data.data;
+  },
+
+  // Get reviews
+  async getReviews(foodId: string) {
+    const { data } = await api.get(`/foods/${foodId}/reviews`);
+    return data.data;
+  },
+
+  // Favorite
+  async addFavorite(foodId: string) {
+    const { data } = await api.post(`/foods/${foodId}/favorite`);
+    return data.data;
+  },
+
+  async removeFavorite(foodId: string) {
+    const { data } = await api.delete(`/foods/${foodId}/favorite`);
+    return data.data;
+  },
+};

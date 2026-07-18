@@ -62,7 +62,7 @@ const defaultVariant = food.variants?.[0];
         <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
             <Star className="size-3.5 fill-primary text-primary" />
-            <span className="font-semibold text-foreground">{food.rating.averageRating}</span>
+            <span className="font-semibold text-foreground">{food.rating?.averageRating}</span>
           </div>
           <div className="flex items-center gap-1">
             <Clock className="size-3.5" />

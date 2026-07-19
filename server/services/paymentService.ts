@@ -126,7 +126,7 @@ export const handleSuccess = catchServiceAsync(async (query: Record<string, stri
     await prisma.payment.update({ where: { id: payment.id }, data: { status: "FAILED", failureReason: "Validation failed" } });
   }
 
-  return { success: validation.validated };
+  return { success: validation.validated, orderId: payment.orderId, transactionId: tran_id };
 });
 
 export const handleFail = catchServiceAsync(async (query: Record<string, string>) => {
@@ -138,7 +138,7 @@ export const handleFail = catchServiceAsync(async (query: Record<string, string>
     data: { status: "FAILED", failureReason: query.error || "Gateway declined" },
   });
 
-  return { success: true };
+  return { success: true, transactionId: tran_id };
 });
 
 export const handleCancel = catchServiceAsync(async (query: Record<string, string>) => {
@@ -150,7 +150,7 @@ export const handleCancel = catchServiceAsync(async (query: Record<string, strin
     data: { status: "CANCELLED", failureReason: "User cancelled" },
   });
 
-  return { success: true };
+  return { success: true, transactionId: tran_id };
 });
 
 export const handleIpn = catchServiceAsync(async (body: Record<string, string>) => {

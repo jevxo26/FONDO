@@ -34,11 +34,11 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove, isQtyUpdating, 
 
             <div className="mt-1 flex items-baseline gap-2">
               <span className="font-sans text-base font-bold text-secondary-foreground">
-                ৳{item.price}
+                ৳{Number(item.price)}
               </span>
               {item.oldPrice && (
                 <span className="font-sans text-xs text-muted-foreground line-through">
-                  ৳{item.oldPrice}
+                  ৳{Number(item.oldPrice)}
                 </span>
               )}
             </div>
@@ -85,7 +85,7 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove, isQtyUpdating, 
           </div>
 
           <span className="font-sans text-base font-bold text-secondary-foreground">
-            ৳{item.price * item.quantity}
+            ৳{Number(item.price) * item.quantity}
           </span>
         </div>
       </div>

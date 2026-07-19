@@ -11,10 +11,14 @@ import { toast } from "sonner";
 import { CheckoutSummary } from "../checkout-summary-right";
 import { useCart } from "@/hooks/use-cart";
 import { usePlaceOrder } from "@/hooks/use-orders";
+import { useInitiatePayment } from "@/hooks/use-payments";
+import { useCreateAddress } from "@/hooks/use-addresses";
 import { handleApiError } from "@/lib/api-error";
 const CheckoutForm = () => {
   const { data: cart, isLoading: cartLoading } = useCart();
   const placeOrder = usePlaceOrder();
+  const initiatePayment = useInitiatePayment();
+  const createAddress = useCreateAddress();
   const router = useRouter();
 
   const {
@@ -41,18 +45,47 @@ const CheckoutForm = () => {
 
   const onSubmitForm = async (data: CheckoutFormData) => {
     try {
-      await placeOrder.mutateAsync({
-        fulfillment: data.fulfillment,
-        paymentMethod: data.paymentMethod,
-        streetAddress: data.streetAddress,
-        city: data.city,
-        zipCode: data.zipCode,
-        recipientName: data.recipientName,
-        phoneNumber: data.phoneNumber,
+      const cartId = cart?.id;
+      if (!cartId) {
+        toast.error("Cart not found. Please try again.");
+        return;
+      }
+
+      const address = await createAddress.mutateAsync({
+        label: "Delivery",
+        receiverName: data.recipientName,
+        receiverPhone: data.phoneNumber,
+        division: data.city || "Dhaka",
+        district: data.city || "Dhaka",
+        area: data.city || "Dhaka",
+        road: data.streetAddress,
+        postalCode: data.zipCode,
+      });
+
+      if (!address?.id) {
+        toast.error("Failed to save address. Please try again.");
+        return;
+      }
+
+      const order = await placeOrder.mutateAsync({
+        cartId,
+        addressId: address.id,
+        paymentMethodId: data.paymentMethod,
         notes: data.orderNotes,
       });
-      toast.success("Order placed successfully!");
-      router.push("/orders");
+
+      if (data.paymentMethod === "cod") {
+        toast.success("Order placed successfully!");
+        router.push("/orders");
+        return;
+      }
+
+      const payment = await initiatePayment.mutateAsync({
+        orderId: order.orderId,
+        amount: order.totalAmount,
+        paymentMethodId: data.paymentMethod,
+      });
+      window.location.href = payment.gatewayUrl;
     } catch (error) {
       toast.error(handleApiError(error));
     }
@@ -253,7 +286,7 @@ const CheckoutForm = () => {
             subtotal={cart?.subtotal ?? 0}
             deliveryFee={currentFulfillment === "delivery" ? (cart?.deliveryCharge ?? 60) : 0}
             savings={cart?.discount ?? 0}
-            isSubmitting={placeOrder.isPending}
+            isSubmitting={placeOrder.isPending || initiatePayment.isPending || createAddress.isPending}
           />
         </div>
       </form>

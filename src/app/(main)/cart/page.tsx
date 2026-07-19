@@ -98,15 +98,15 @@ export default function CartPageView() {
   const items: CartItemType[] = (cart?.items ?? []).map((item) => ({
     id: item.id,
     title: item.food.name,
-    price: item.unitPrice,
+    price: Number(item.unitPrice),
     quantity: item.quantity,
     thumbnail: item.food.thumbnail ?? "",
     itemsSold: 0,
   }));
 
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
-  const subtotalValue = cart?.subtotal ?? 0;
-  const deliveryCost = cart?.deliveryCharge ?? 0;
+  const subtotalValue = Number(cart?.subtotal ?? 0);
+  const deliveryCost = Number(cart?.deliveryCharge ?? 0);
 
   return (
     <main className="flex-1 py-12">

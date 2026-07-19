@@ -5,11 +5,22 @@ import { api } from "@/lib/api-client";
 
 export interface Address {
   id: string;
-  label: string;
-  streetAddress: string;
-  city: string;
-  zipCode: string;
-  isDefault: boolean;
+  label?: string;
+  receiverName: string;
+  receiverPhone: string;
+  country?: string;
+  division: string;
+  district: string;
+  upazila?: string;
+  area: string;
+  road?: string;
+  house?: string;
+  floor?: string;
+  apartment?: string;
+  landmark?: string;
+  postalCode?: string;
+  deliveryInstruction?: string;
+  isDefault?: boolean;
 }
 
 export function useAddresses() {
@@ -22,7 +33,7 @@ export function useAddresses() {
 export function useCreateAddress() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: Omit<Address, "id" | "isDefault">) =>
+    mutationFn: (data: Record<string, unknown>) =>
       api.post<Address>("/users/me/addresses", data),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["addresses"] }),
   });

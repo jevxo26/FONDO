@@ -18,17 +18,25 @@ export const PaymentController = {
 
   success: catchAsync(async (req: AuthRequest, res: Response) => {
     const result = await paymentService.handleSuccess(req.query as Record<string, string>);
-    res.redirect(result.success ? 302 : 302, result.success ? "/payment-success" : "/payment-failed");
+    const params = new URLSearchParams();
+    if (result.orderId) params.set("orderId", result.orderId);
+    if (result.transactionId) params.set("txId", result.transactionId);
+    const qs = params.toString();
+    res.redirect(302, result.success ? `/payment-success?${qs}` : `/payment-failed?${qs}`);
   }),
 
   fail: catchAsync(async (req: AuthRequest, res: Response) => {
-    await paymentService.handleFail(req.query as Record<string, string>);
-    res.redirect(302, "/payment-failed");
+    const result = await paymentService.handleFail(req.query as Record<string, string>);
+    const params = new URLSearchParams();
+    if (result.transactionId) params.set("txId", result.transactionId);
+    res.redirect(302, `/payment-failed?${params.toString()}`);
   }),
 
   cancel: catchAsync(async (req: AuthRequest, res: Response) => {
-    await paymentService.handleCancel(req.query as Record<string, string>);
-    res.redirect(302, "/payment-cancelled");
+    const result = await paymentService.handleCancel(req.query as Record<string, string>);
+    const params = new URLSearchParams();
+    if (result.transactionId) params.set("txId", result.transactionId);
+    res.redirect(302, `/payment-cancelled?${params.toString()}`);
   }),
 
   ipn: catchAsync(async (req: AuthRequest, res: Response) => {

@@ -26,7 +26,7 @@ export default function FoodsWorkspace() {
   } = useFoods();
 
   const { data: categoriesData } = useFoodCategories();
-  const { data, isLoading } = useGetFoods();
+  const { data } = useGetFoods();
 
   const categories: FoodCategory[] = categoriesData?.items ?? [];
   const foods: Food[] = data?.items ?? [];
@@ -110,13 +110,6 @@ export default function FoodsWorkspace() {
     currentPage * ITEMS_PER_PAGE
   );
 
-  if (isLoading) {
-    return (
-      <div className="py-20 text-center">
-        Loading...
-      </div>
-    );
-  }
 
   return (
     <section className="py-12 bg-[#FAF5EB]">

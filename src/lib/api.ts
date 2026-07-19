@@ -1,4 +1,5 @@
 import { ApiError } from "./api-error";
+import { getToken } from "./token";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
@@ -14,12 +15,17 @@ export interface ServerFetchOptions extends RequestInit {
 }
 
 export async function apiFetch<T>(endpoint: string, options?: ServerFetchOptions): Promise<T> {
-  const { revalidate = 300, tags, ...fetchOptions } = options ?? {};
+  const token = getToken();
+
+  const { revalidate = 60, tags, ...fetchOptions } = options ?? {};
 
   const res = await fetch(`${BASE_URL}${endpoint}`, {
     ...fetchOptions,
     headers: {
       "Content-Type": "application/json",
+      ...(token && {
+        Authorization: `Bearer ${token}`,
+      }),
       ...(options?.headers || {}),
     },
     next: {

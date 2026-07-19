@@ -9,10 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Food } from "@/types/food";
 import { useAddToCart } from "@/hooks/use-cart";
 import { useFavorites, useToggleFavorite, useRemoveFavorite } from "@/hooks/use-favorites";
-import { useAppDispatch } from "@/store/store";
-import { incrementCartCount, incrementFavoritesCount, decrementFavoritesCount } from "@/store/slices/counterSlice";
-import { toast } from "sonner";
-import { handleApiError } from "@/lib/api-error";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -44,59 +40,20 @@ const contentVariants = {
 export function ProductHero({ food }: { food: Food }) {
   const [quantity, setQuantity] = useState(1);
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const addToCart = useAddToCart();
   const { data: favorites = [] } = useFavorites();
   const toggleFavorite = useToggleFavorite();
   const removeFavorite = useRemoveFavorite();
 
   const isFavorited = favorites.some((f) => f.id === food.id);
+  const isFavPending = toggleFavorite.isPending || removeFavorite.isPending;
   const currentPrice = Number(food.variants[0]?.discountPrice ?? food.variants[0]?.price ?? 0);
-
-  const handleAddToCart = () => {
-    addToCart.mutate(
-      { foodId: food.id, quantity, unitPrice: currentPrice },
-      {
-        onSuccess: () => {
-          dispatch(incrementCartCount(quantity));
-          toast.success("Added to cart");
-        },
-        onError: (err) => toast.error(handleApiError(err)),
-      },
-    );
-  };
 
   const handleBuyNow = () => {
     addToCart.mutate(
       { foodId: food.id, quantity, unitPrice: currentPrice },
-      {
-        onSuccess: () => {
-          dispatch(incrementCartCount(quantity));
-          router.push("/checkout");
-        },
-        onError: (err) => toast.error(handleApiError(err)),
-      },
+      { onSuccess: () => router.push("/checkout") },
     );
-  };
-
-  const handleFavorite = () => {
-    if (isFavorited) {
-      removeFavorite.mutate(food, {
-        onSuccess: () => {
-          dispatch(decrementFavoritesCount());
-          toast.success("Removed from favorites");
-        },
-        onError: (err) => toast.error(handleApiError(err)),
-      });
-    } else {
-      toggleFavorite.mutate(food, {
-        onSuccess: () => {
-          dispatch(incrementFavoritesCount());
-          toast.success("Added to favorites");
-        },
-        onError: (err) => toast.error(handleApiError(err)),
-      });
-    }
   };
 
   const discountPercent = food.variants[0]?.discountPrice
@@ -127,8 +84,8 @@ export function ProductHero({ food }: { food: Food }) {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={handleFavorite}
-                disabled={toggleFavorite.isPending || removeFavorite.isPending}
+                onClick={() => (isFavorited ? removeFavorite : toggleFavorite).mutate(food)}
+                disabled={isFavPending}
                 className="rounded-full border border-border bg-white shadow-sm hover:text-destructive dark:bg-card"
               >
                 <Heart className={`size-4 ${isFavorited ? "fill-destructive text-destructive" : ""}`} />
@@ -241,7 +198,7 @@ export function ProductHero({ food }: { food: Food }) {
               <Button
                 variant="outline"
                 size="xl"
-                onClick={handleAddToCart}
+                onClick={() => addToCart.mutate({ foodId: food.id, quantity, unitPrice: currentPrice })}
                 disabled={addToCart.isPending}
                 className="gap-2 rounded-2xl border-primary bg-primary/5 text-primary hover:bg-primary/10"
               >

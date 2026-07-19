@@ -23,6 +23,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 | `npm run format` | `prettier --write "{src,server}/**/*.{ts,tsx,js,jsx,json}"` |
 | `npx prisma generate` | Generate Prisma client after schema changes |
 | `npx prisma migrate dev` | Run migrations against PostgreSQL |
+| `npx prisma studio` | Open Prisma Studio to browse data |
 | `npx shadcn@latest add @shadcn/<name>` | Add shadcn component (style: `base-nova`) |
 
 ## Architecture
@@ -31,29 +32,29 @@ This version has breaking changes — APIs, conventions, and file structure may 
 src/                  # Next.js 16 App Router (frontend only)
   app/                # Route groups: (main)/ = customer-facing, dashboard/ = admin
   components/{feature}/{name}/   # Feature-based, <100 lines per file
-  components/ui/      # shadcn components (22 installed)
-  components/common/  # Shared: cards, rating-stars, section-header, table/
-  data/{domain}.ts    # Static data, constants, types (never hardcode in components)
+  components/ui/      # shadcn components
+  components/common/  # Shared: cards, table/, section-header
+  data/{domain}.ts    # Static data, constants
   store/              # Redux Toolkit (store.ts, slices/)
-  lib/utils.ts        # cn() helper
-  hooks/              # Custom hooks
-  types/              # Shared TypeScript types
+  lib/                # Utilities: api-client, query-client, token, utils
+  hooks/              # Custom React hooks
+  types/              # Shared TypeScript types (one file per domain)
 
 server/               # Express 5 custom server (NOT in src/)
   index.ts            # Entrypoint: Express + Next.js hybrid, Prisma connect
   controllers/        # Route handlers
-  services/           # Business logic
-  middlewares/        # authMiddleware.ts
-  routes/             # /api/* routes (user, food, auth, addon, category, tag, variant)
-  validations/        # Input validation (express-validator)
-  utils/              # catchAsync, sendResponse, bcrypt, responseStyle
+  services/           # Business logic (Prisma queries)
+  middlewares/        # verifyToken, authorize, validate
+  routes/             # /api/* route definitions
+  validations/        # Yup/express-validator schemas (one per domain)
+  utils/              # catchAsync, sendResponse, AppError, pagination
 
 prisma/
-  schema.prisma       # PostgreSQL schema (currently: User, Category, SubCategory, Food)
-  migrations/         # 3 migrations (url_added, role_added, user_updated)
+  schema.prisma       # PostgreSQL schema (30+ models)
+  migrations/         # 9 migrations
 ```
 
-**API routes** are mounted at `/api/*` in `server/index.ts`. All other routes pass through to Next.js.
+**API routes** mounted at `/api/auth`, `/api/users`, `/api/foods`, `/api/cart`, `/api/orders`, `/api/admin/*` in `server/index.ts`. All other routes pass through to Next.js.
 
 ## Conventions
 
@@ -63,8 +64,8 @@ prisma/
 - **Server-first** — `"use client"` only for hooks, event handlers, browser APIs
 
 ### State
-- **Redux Toolkit** for global state (auth, cart, UI) — slices in `store/slices/`
-- **TanStack Query** for server state (not yet wired)
+- **Redux Toolkit** for global state (auth, cart/UI/mutations) — slices in `store/slices/`
+- **TanStack Query** for server state (Provider in `components/providers/query-provider.tsx`)
 - Typed hooks: `useAppDispatch`, `useAppSelector` from `@/store/store`
 
 ### CSS
@@ -77,15 +78,41 @@ prisma/
 ### Icons
 - **Lucide icons** — import from `lucide-react`
 
-### Data & Imports
-- Static data in `src/data/` — one file per domain (foods, orders, vendors, etc.)
-- Import with `@/` alias: `@/components/`, `@/store/`, `@/data/`, `@/lib/`
-- Sibling imports: `./file`, `../dir/file`
+### API Client
+- Axios instance at `src/lib/api-client.ts`, base URL `/api`, auto-attaches JWT Bearer token
+- Response envelope: `{ success, message, data }` — client unwraps to `data` directly
+- Methods: `api.get<T>(url)`, `api.post<T>(url, body?)`, `api.patch<T>(url, body)`, `api.delete<T>(url)`
+- `T` = response type from `src/types/` (e.g., `api.get<Cart>("/cart")`)
+- Errors throw `ApiError(statusCode, message)` — use `handleApiError(error)` for user messages
+- 401 auto-triggers `/auth/refresh`, queues concurrent failed requests
 
-### Mock Data
-- All mock data uses **seeded PRNG** — never `Math.random()`
-- Pattern: `export const rand = seededRandom(N)` → `rand()` throughout
-- Prevents SSR hydration mismatches
+### Data Fetching (TanStack Query)
+- Query keys are plain strings per domain (`["cart"]`, `["favorites"]`, `["foods"]`, `["orders"]`)
+- Use `staleTime` on infrequent-data queries to avoid connection pool exhaustion
+- Mutation hooks own `onSuccess`/`onError` — toast + Redux dispatch inside hook
+- Components only call `mutate(data)` and read `isPending` for loading
+- Do NOT pass inline `onSuccess`/`onError` to `mutate()` in components (exception: redirect)
+
+### Loading States
+- Buttons: `disabled={isPending}`, icon swaps to `<Loader2 className="animate-spin" />`
+- Click handlers: `if (isPending) return` guard prevents double-fire before re-render
+- Per-item loading: track pending IDs in `Set<string>` state
+- Full-page loading: `isLoading && !data` pattern
+
+### Types
+- All shared TypeScript types in `src/types/{domain}.ts` (e.g., `food.ts`, `cart.ts`, `order.ts`)
+- Never inline types inside hooks, components, or data files
+- Import: `import type { Food } from "@/types/food"`
+
+### Validations (Backend)
+- Yup/express-validator schemas in `server/validations/{domain}.validation.ts`
+- One file per domain (cart, order, food, user, etc.)
+- Mounted via `validate(schema)` middleware in route definitions
+
+### Data & Imports
+- Static data in `src/data/{domain}.ts` — one file per domain
+- Import with `@/` alias: `@/components/`, `@/store/`, `@/data/`, `@/lib/`, `@/types/`, `@/hooks/`
+- Sibling imports: `./file`, `../dir/file`
 
 ### Reusable Components
 - Check `src/components/ui/` (shadcn) before building custom
@@ -100,15 +127,15 @@ prisma/
 | Functions | camelCase | `generateOrders` |
 | Types | PascalCase | `CustomerOrder` |
 | Data files | camelCase | `orders.ts` |
+| Validation files | kebab-case | `cart.validation.ts` |
 | Dirs | kebab-case | `common/table/` |
 
-### Fonts (from code, not design doc)
+### Fonts
 - **Fraunces** (serif) for headings — loaded in `layout.tsx`
 - **Inter** (sans-serif) for UI
 
 ## Known Gaps
 
 - **No test framework** — no jest/vitest in `package.json`, no test files exist. Tests are not yet set up.
-- **Prisma schema is partial** — only User, Category, SubCategory, Food models exist. Full schema spec is in `docs/FONDO – Complete System Workflow.md`.
-- **TanStack Query not wired** — `@tanstack/react-query` is in deps but no QueryClientProvider found in layout.
-- **Some server routes are commented out** — auth, upload routes exist but are disabled in `server/index.ts`.
+- **Prisma needs schema sync** — `npx prisma generate` after any schema change, `npx prisma migrate dev` after model additions.
+- **Neon connection pool limit** — Free tier ~9 connections. Keep concurrent API calls low. Use `staleTime` on queries. Guard mutations with `if (isPending) return`.

@@ -1,15 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { CartItemCard } from "@/components/carts/cart-item-card";
 import { OrderSummary } from "@/components/carts/order-summary";
 import { useCart, useRemoveFromCart, useUpdateCartItem, useClearCart } from "@/hooks/use-cart";
 import { handleApiError } from "@/lib/api-error";
 import type { CartItem as CartItemType } from "@/types/cart";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { useAppDispatch } from "@/store/store";
 import { setCartCount } from "@/store/slices/counterSlice";
+import { Button } from "@/components/ui/button";
 
 export default function CartPageView() {
   const { data: cart, isLoading, error } = useCart();
@@ -18,11 +19,53 @@ export default function CartPageView() {
   const clearCart = useClearCart();
   const dispatch = useAppDispatch();
 
+  const [qtyUpdatingIds, setQtyUpdatingIds] = useState<Set<string>>(new Set());
+  const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
+
   useEffect(() => {
     if (cart?.items) {
       dispatch(setCartCount(cart.items.reduce((sum, i) => sum + i.quantity, 0)));
     }
   }, [cart, dispatch]);
+
+  const handleUpdateQuantity = (id: string, newQty: number) => {
+    if (newQty < 1) {
+      setDeletingIds((prev) => new Set(prev).add(id));
+      removeItem.mutate(id, {
+        onSettled: () =>
+          setDeletingIds((prev) => {
+            const next = new Set(prev);
+            next.delete(id);
+            return next;
+          }),
+      });
+      return;
+    }
+    setQtyUpdatingIds((prev) => new Set(prev).add(id));
+    updateItem.mutate(
+      { itemId: id, quantity: newQty },
+      {
+        onSettled: () =>
+          setQtyUpdatingIds((prev) => {
+            const next = new Set(prev);
+            next.delete(id);
+            return next;
+          }),
+      },
+    );
+  };
+
+  const handleRemoveItem = (id: string) => {
+    setDeletingIds((prev) => new Set(prev).add(id));
+    removeItem.mutate(id, {
+      onSettled: () =>
+        setDeletingIds((prev) => {
+          const next = new Set(prev);
+          next.delete(id);
+          return next;
+        }),
+    });
+  };
 
   if (isLoading && !cart) {
     return (
@@ -65,24 +108,30 @@ export default function CartPageView() {
   const subtotalValue = cart?.subtotal ?? 0;
   const deliveryCost = cart?.deliveryCharge ?? 0;
 
-  const handleUpdateQuantity = (id: string, newQty: number) => {
-    updateItem.mutate({ itemId: id, quantity: newQty });
-  };
-
-  const handleRemoveItem = (id: string) => {
-    removeItem.mutate(id);
-  };
-
   return (
     <main className="flex-1 py-12">
       <div className="wrapper">
-        <div className="mb-8">
-          <h1 className="font-heading text-4xl font-normal text-secondary-foreground tracking-tight">
-            Your Cart
-          </h1>
-          <p className="font-sans text-xs text-muted-foreground mt-1">
-            {itemCount} {itemCount === 1 ? "item" : "items"} in your cart
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="font-heading text-4xl font-normal text-secondary-foreground tracking-tight">
+              Your Cart
+            </h1>
+            <p className="font-sans text-xs text-muted-foreground mt-1">
+              {itemCount} {itemCount === 1 ? "item" : "items"} in your cart
+            </p>
+          </div>
+          {items.length > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => clearCart.mutate()}
+              disabled={clearCart.isPending}
+              className="gap-2 rounded-full text-destructive border-destructive/30 hover:bg-destructive/10"
+            >
+              <Trash2 className="size-3.5" />
+              Clear all
+            </Button>
+          )}
         </div>
 
         {items.length > 0 ? (
@@ -94,6 +143,8 @@ export default function CartPageView() {
                   item={item}
                   onUpdateQuantity={handleUpdateQuantity}
                   onRemove={handleRemoveItem}
+                  isQtyUpdating={qtyUpdatingIds.has(item.id)}
+                  isDeleting={deletingIds.has(item.id)}
                 />
               ))}
             </div>

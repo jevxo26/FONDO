@@ -47,7 +47,8 @@ export interface OrderPayment {
 
 export interface OrderCustomer {
   id: string;
-  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
 }

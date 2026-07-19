@@ -1,16 +1,34 @@
-import { customerReportData } from "@/data/reports";
+import type { AdminCustomer } from "@/hooks/use-admin-customers";
 import { DarkCard } from "@/components/dashboard/common/dark-card";
 import { GlassCard } from "@/components/dashboard/common/glass-card";
-import { Users, UserCheck, UserX, TrendingUp } from "lucide-react";
+import { Users, UserCheck, UserX } from "lucide-react";
 
-export function CustomerReportSummaryCards() {
-  const total = customerReportData.length;
-  const active = customerReportData.filter((c) => c.segment === "ACTIVE").length;
-  const churned = customerReportData.filter((c) => c.segment === "CHURNED").length;
-  const atRisk = customerReportData.filter((c) => c.segment === "AT_RISK").length;
-  const newCustomers = customerReportData.filter((c) => c.segment === "NEW").length;
+interface CustomerReportSummaryCardsProps {
+  customers: AdminCustomer[];
+}
+
+function getSegment(c: AdminCustomer): string {
+  if (c.totalOrders === 0) return "NEW";
+  if (c.lastOrderDate) {
+    const daysSince = Math.floor(
+      (Date.now() - new Date(c.lastOrderDate).getTime()) / (1000 * 60 * 60 * 24),
+    );
+    if (daysSince <= 7) return "ACTIVE";
+    if (daysSince <= 30) return "AT_RISK";
+    return "CHURNED";
+  }
+  return "NEW";
+}
+
+export function CustomerReportSummaryCards({ customers }: CustomerReportSummaryCardsProps) {
+  const segments = customers.map(getSegment);
+  const total = customers.length;
+  const active = segments.filter((s) => s === "ACTIVE").length;
+  const newCustomers = segments.filter((s) => s === "NEW").length;
+  const atRisk = segments.filter((s) => s === "AT_RISK").length;
+  const churned = segments.filter((s) => s === "CHURNED").length;
   const retentionRate = total > 0 ? Math.round(((total - churned) / total) * 100) : 0;
-  const totalSpent = customerReportData.reduce((s, c) => s + c.totalSpent, 0);
+  const totalSpent = customers.reduce((s, c) => s + c.totalSpent, 0);
 
   return (
     <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">

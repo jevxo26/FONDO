@@ -12,10 +12,10 @@ export const validate = (schema: any, source: "body" | "query" | "params" = "bod
       req[source] = validated;
       next();
     } catch (err: unknown) {
-      if (err instanceof Error && "inner" in err) {
-        const yupErr = err as { inner?: Array<{ message: string }> };
-        const messages = yupErr.inner
-          ? yupErr.inner.map((e) => e.message).join(", ")
+      if (err instanceof Error && "errors" in err) {
+        const yupErr = err as { errors?: string[] };
+        const messages = yupErr.errors?.length
+          ? yupErr.errors.join(", ")
           : err.message;
         next(new AppError(400, messages));
       } else {

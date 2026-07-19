@@ -7,39 +7,15 @@ import Image from "next/image";
 import Link from "next/link";
 import AddToCartButton from "./add-to-cart-button";
 import { useFavorites, useToggleFavorite, useRemoveFavorite } from "@/hooks/use-favorites";
-import { useAppDispatch } from "@/store/store";
-import { incrementFavoritesCount, decrementFavoritesCount } from "@/store/slices/counterSlice";
-import { toast } from "sonner";
-import { handleApiError } from "@/lib/api-error";
 
 export default function FoodCard({ food }: { food: Food }) {
   const defaultVariant = food.variants?.[0];
-  const dispatch = useAppDispatch();
   const { data: favorites = [] } = useFavorites();
   const toggleFavorite = useToggleFavorite();
   const removeFavorite = useRemoveFavorite();
 
   const isFavorited = favorites.some((f) => f.id === food.id);
-
-  const handleFavorite = () => {
-    if (isFavorited) {
-      removeFavorite.mutate(food, {
-        onSuccess: () => {
-          dispatch(decrementFavoritesCount());
-          toast.success("Removed from favorites");
-        },
-        onError: (err) => toast.error(handleApiError(err)),
-      });
-    } else {
-      toggleFavorite.mutate(food, {
-        onSuccess: () => {
-          dispatch(incrementFavoritesCount());
-          toast.success("Added to favorites");
-        },
-        onError: (err) => toast.error(handleApiError(err)),
-      });
-    }
-  };
+  const isFavPending = toggleFavorite.isPending || removeFavorite.isPending;
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-4xl bg-white p-4 shadow-[var(--shadow-card)] border border-border/40 dark:bg-card active:scale-[0.98] transition-transform duration-200">
@@ -60,8 +36,8 @@ export default function FoodCard({ food }: { food: Food }) {
         <Button
           variant="ghost"
           size="icon"
-          onClick={handleFavorite}
-          disabled={toggleFavorite.isPending || removeFavorite.isPending}
+          onClick={() => (isFavorited ? removeFavorite : toggleFavorite).mutate(food)}
+          disabled={isFavPending}
           className="absolute right-3 top-3 size-9 rounded-full bg-white/90 backdrop-blur-sm shadow-sm hover:text-destructive"
         >
           <Heart className={`size-4 ${isFavorited ? "fill-destructive text-destructive" : ""}`} />

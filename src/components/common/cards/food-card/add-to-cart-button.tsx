@@ -3,10 +3,6 @@
 import { ShoppingBag, Plus, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAddToCart } from "@/hooks/use-cart";
-import { useAppDispatch } from "@/store/store";
-import { incrementCartCount } from "@/store/slices/counterSlice";
-import { toast } from "sonner";
-import { handleApiError } from "@/lib/api-error";
 
 interface AddToCartButtonProps {
   foodId: string;
@@ -16,19 +12,10 @@ interface AddToCartButtonProps {
 
 export default function AddToCartButton({ foodId, price, quantity = 1 }: AddToCartButtonProps) {
   const addToCart = useAddToCart();
-  const dispatch = useAppDispatch();
 
   const handleClick = () => {
-    addToCart.mutate(
-      { foodId, quantity, unitPrice: price },
-      {
-        onSuccess: () => {
-          dispatch(incrementCartCount(quantity));
-          toast.success("Added to cart");
-        },
-        onError: (error) => toast.error(handleApiError(error)),
-      },
-    );
+    if (addToCart.isPending) return;
+    addToCart.mutate({ foodId, quantity, unitPrice: price });
   };
 
   return (

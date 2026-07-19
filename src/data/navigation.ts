@@ -59,11 +59,11 @@ export const mainNavLinks: NavLink[] = [
     ],
   },
   { href: "/packages", label: "Packages" },
-  { href: "/our-story", label: "Our Story" },
-  { href: "/about", label: "About" },
   {
     label: "More",
     children: [
+      { href: "/our-story", label: "Our Story" },
+      { href: "/about", label: "About" },
       { href: "/reviews", label: "Reviews" },
       { href: "/contact", label: "Contact" },
       { href: "/faq", label: "FAQ" },

@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toggleMobileMenu } from "@/store/slices/uiSlice";
-import { useAppDispatch } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { fetchMe } from "@/store/slices/authSlice";
 import { getToken } from "@/lib/token";
 import { useAuth } from "@/hooks/useAuth";
@@ -24,6 +24,8 @@ export function NavActions() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { user, isAuthenticated, logout } = useAuth();
+  const cartCount = useAppSelector((s) => s.counter.cartCount);
+  const favoritesCount = useAppSelector((s) => s.counter.favoritesCount);
 
   useEffect(() => {
     const token = getToken();
@@ -48,15 +50,25 @@ export function NavActions() {
     <div className="flex items-center gap-2">
       <Link
         href="/wishlist"
-        className="flex size-9 items-center justify-center rounded-full bg-destructive/20 transition-colors hover:bg-destructive/30"
+        className="relative flex size-9 items-center justify-center rounded-full bg-destructive/20 transition-colors hover:bg-destructive/30"
       >
         <Heart className="size-4 text-foreground" />
+        {favoritesCount > 0 && (
+          <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground leading-none">
+            {favoritesCount > 9 ? "9+" : favoritesCount}
+          </span>
+        )}
       </Link>
       <Link
         href="/cart"
-        className="flex size-9 items-center justify-center rounded-full bg-secondary transition-colors hover:bg-secondary"
+        className="relative flex size-9 items-center justify-center rounded-full bg-secondary transition-colors hover:bg-secondary"
       >
         <ShoppingCart className="size-4 text-foreground" />
+        {cartCount > 0 && (
+          <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground leading-none">
+            {cartCount > 9 ? "9+" : cartCount}
+          </span>
+        )}
       </Link>
       <Link
         href="/track-order"

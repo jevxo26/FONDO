@@ -1,27 +1,28 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api-client";
 
+export interface CartItemFood {
+  id: string;
+  name: string;
+  thumbnail: string | null;
+}
+
 export interface CartItem {
   id: string;
   foodId: string;
-  name: string;
-  price: number;
   quantity: number;
-  thumbnail: string;
-}
-
-export interface CartTotals {
-  subtotal: number;
-  deliveryCharge: number;
-  discount: number;
-  grandTotal: number;
+  unitPrice: number;
+  totalPrice: number;
+  food: CartItemFood;
 }
 
 export interface Cart {
   id: string;
   items: CartItem[];
-  totals: CartTotals;
-  itemCount: number;
+  subtotal: number;
+  deliveryCharge: number;
+  discount: number;
+  totalAmount: number;
 }
 
 export function useCart() {
@@ -34,7 +35,7 @@ export function useCart() {
 export function useAddToCart() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: { foodId: string; quantity: number }) =>
+    mutationFn: (data: { foodId: string; quantity: number; unitPrice: number }) =>
       api.post<Cart>("/cart/items", data),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["cart"] }),
   });

@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export function SignatureDish() {
   return (
-    <section className="bg-foreground py-12 lg:py-16">
+    <section className="bg-foreground py-12 lg:py-20">
       <div className="wrapper">
         <SectionReveal distance={20}>
           <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-16">

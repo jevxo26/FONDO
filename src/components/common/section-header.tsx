@@ -24,6 +24,9 @@ export function SectionHeader({
         className,
       )}
     >
+      {align === "left" && (
+        <div className="hidden h-12 w-1.5 shrink-0 rounded-full bg-gradient-to-b from-primary to-primary/60 sm:block" />
+      )}
       <div className="flex flex-col gap-2">
         <h2 className="text-3xl text-foreground sm:text-4xl lg:text-[40px] font-semibold">
           {title}

@@ -15,7 +15,7 @@ export default function CulinaryPhilosophy() {
           <span className="text-primary font-sans text-xs font-bold uppercase tracking-[0.2em]">
             Our Creed
           </span>
-          <h2 className="font-fraunces text-3xl md:text-5xl font-normal leading-tight">
+          <h2 className="font-heading text-3xl md:text-5xl font-normal leading-tight">
             The Culinary Philosophy
           </h2>
           <p className="font-sans italic text-sm md:text-base text-muted-foreground leading-relaxed">
@@ -32,7 +32,7 @@ export default function CulinaryPhilosophy() {
               <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                 <Flame className="size-6" />
               </div>
-              <h3 className="font-fraunces text-xl font-normal text-foreground">
+              <h3 className="font-heading text-xl font-normal text-foreground">
                 Slow-Cooking
               </h3>
               <p className="font-sans text-xs md:text-sm text-muted-foreground leading-relaxed">
@@ -50,7 +50,7 @@ export default function CulinaryPhilosophy() {
               <div className="size-12 rounded-xl bg-white/15 flex items-center justify-center text-primary-foreground">
                 <Compass className="size-6" />
               </div>
-              <h3 className="font-fraunces text-xl font-normal">
+              <h3 className="font-heading text-xl font-normal">
                 Artisanal Precision
               </h3>
               <p className="font-sans text-xs md:text-sm opacity-90 leading-relaxed">
@@ -68,7 +68,7 @@ export default function CulinaryPhilosophy() {
               <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                 <Sprout className="size-6" />
               </div>
-              <h3 className="font-fraunces text-xl font-normal text-foreground">
+              <h3 className="font-heading text-xl font-normal text-foreground">
                 Garden Ingredients
               </h3>
               <p className="font-sans text-xs md:text-sm text-muted-foreground leading-relaxed">
@@ -105,7 +105,7 @@ export default function CulinaryPhilosophy() {
                   The Final Touch
                 </h4>
               </div>
-              <h3 className="font-fraunces text-lg md:text-xl font-normal text-foreground">
+              <h3 className="font-heading text-lg md:text-xl font-normal text-foreground">
                 Saffron Infusion Ritual
               </h3>
               <p className="font-sans text-xs md:text-sm text-muted-foreground leading-relaxed max-w-3xl">

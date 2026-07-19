@@ -8,13 +8,13 @@ interface ApiResponse<T> {
   data: T;
 }
 
-interface ServerFetchOptions extends RequestInit {
+export interface ServerFetchOptions extends RequestInit {
   revalidate?: number;
   tags?: string[];
 }
 
 export async function apiFetch<T>(endpoint: string, options?: ServerFetchOptions): Promise<T> {
-  const { revalidate = 60, tags, ...fetchOptions } = options ?? {};
+  const { revalidate = 300, tags, ...fetchOptions } = options ?? {};
 
   const res = await fetch(`${BASE_URL}${endpoint}`, {
     ...fetchOptions,

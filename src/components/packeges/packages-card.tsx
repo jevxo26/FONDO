@@ -21,7 +21,7 @@ const PackageCard = ({ pkg }: PackageCardProps) => {
 
         <div className="p-4 flex flex-col grow gap-3">
             <div className="flex items-center justify-between gap-2">
-                <h3 className="font-fraunces text-base font-medium text-foreground line-clamp-1">{pkg.name}</h3>
+                <h3 className="font-heading text-base font-medium text-foreground line-clamp-1">{pkg.name}</h3>
                 <div className="flex items-center gap-0.5 text-[10px] bg-secondary px-1.5 py-0.5 rounded border border-border font-bold">
                     <Star className="size-3 text-warning fill-warning" /> {pkg.rating}
                 </div>

@@ -212,6 +212,28 @@ const removeFavorite = catchServiceAsync(async (userId: string, foodId: string) 
   });
 });
 
+const listFavorites = catchServiceAsync(async (userId: string) => {
+  const favorites = await prisma.foodFavorite.findMany({
+    where: { userId },
+    include: {
+      food: {
+        include: {
+          category: { select: { id: true, name: true, slug: true } },
+          variants: { where: { status: "active" }, select: { id: true, name: true, price: true, discountPrice: true, servingSize: true } },
+          addons: { where: { status: "active" }, include: { items: { where: { status: "active" } } } },
+          rating: { select: { averageRating: true, totalReview: true } },
+          labels: true,
+          tagMappings: { include: { tag: { select: { name: true } } } },
+          diets: { select: { dietType: true } },
+          discounts: { where: { status: "active" }, take: 1 },
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+  return favorites.map((f) => f.food);
+});
+
 const listReviews = catchServiceAsync(
   async (foodId: string, page: number = 1, limit: number = 20) => {
     const skip = (page - 1) * limit;
@@ -303,6 +325,7 @@ export const FoodService = {
   listTags,
   addFavorite,
   removeFavorite,
+  listFavorites,
   listReviews,
   createReview,
 };

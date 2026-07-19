@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Bai_Jamjuree, Inter } from "next/font/google";
 import "./globals.css";
 import { ReduxProvider } from "@/components/ReduxProvider";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const baiJamjuree = Bai_Jamjuree({
+  variable: "--font-heading",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const inter = Inter({
@@ -27,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${inter.variable} h-full antialiased`} >
+    <html lang="en" className={`${baiJamjuree.variable} ${inter.variable} h-full antialiased`} >
       <body className="min-h-full flex flex-col">
         <TooltipProvider delay={0}>
           <ReduxProvider>

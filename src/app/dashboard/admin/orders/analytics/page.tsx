@@ -52,7 +52,7 @@ export default function OrderAnalyticsPage() {
 
       <div className="mt-8">
         <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
-          <h2 className="mb-2 font-fraunces text-lg font-bold text-foreground">
+          <h2 className="mb-2 font-heading text-lg font-bold text-foreground">
             Order Volume (Last 30 Days)
           </h2>
           <p className="text-sm text-muted-foreground">

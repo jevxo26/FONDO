@@ -22,10 +22,10 @@ export function RevenueChart() {
       <div className="relative z-10 p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-fraunces text-lg font-semibold text-foreground">Revenue</h3>
+            <h3 className="font-heading text-lg font-semibold text-foreground">Revenue</h3>
             <p className="mt-0.5 text-sm text-muted-foreground">Last 7 days</p>
           </div>
-          <span className="font-fraunces text-2xl font-bold text-primary">৳136.4K</span>
+          <span className="font-heading text-2xl font-bold text-primary">৳136.4K</span>
         </div>
         <div className="mt-6 h-[220px]">
           <ResponsiveContainer width="100%" height="100%">

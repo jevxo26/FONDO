@@ -34,14 +34,14 @@ export function PaymentInsightCards() {
           <div className="flex gap-4">
             <div className="flex flex-1 flex-col items-center rounded-2xl bg-gradient-to-br from-primary/[0.04] via-card to-primary/[0.02] p-4 shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)]">
               <Smartphone className="mb-2 size-5 text-primary" />
-              <span className="font-fraunces text-2xl font-bold text-foreground">65%</span>
+              <span className="font-heading text-2xl font-bold text-foreground">65%</span>
               <span className="mt-1 text-[10px] uppercase tracking-widest text-muted-foreground">
                 Mobile Wallets
               </span>
             </div>
             <div className="flex flex-1 flex-col items-center rounded-2xl bg-gradient-to-br from-primary/[0.04] via-card to-primary/[0.02] p-4 shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)]">
               <CreditCard className="mb-2 size-5 text-primary" />
-              <span className="font-fraunces text-2xl font-bold text-foreground">35%</span>
+              <span className="font-heading text-2xl font-bold text-foreground">35%</span>
               <span className="mt-1 text-[10px] uppercase tracking-widest text-muted-foreground">
                 Card / Direct
               </span>

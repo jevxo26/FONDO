@@ -21,7 +21,7 @@ export function PageFooter() {
       <div className="relative z-10 px-6 py-8 md:px-10 md:py-10">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <div>
-            <h4 className="font-fraunces text-lg font-semibold tracking-tight text-foreground">
+            <h4 className="font-heading text-lg font-semibold tracking-tight text-foreground">
               FONDO
             </h4>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">

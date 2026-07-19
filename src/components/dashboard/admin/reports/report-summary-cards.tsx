@@ -24,8 +24,8 @@ export function ReportSummaryCards() {
         className="flex-1"
       >
         <div className="flex items-baseline gap-2">
-          <span className="font-fraunces text-3xl font-bold text-primary">৳</span>
-          <h2 className="font-fraunces text-3xl font-bold text-white md:text-5xl">
+          <span className="font-heading text-3xl font-bold text-primary">৳</span>
+          <h2 className="font-heading text-3xl font-bold text-white md:text-5xl">
             {totalRevenue.toLocaleString()}
           </h2>
         </div>

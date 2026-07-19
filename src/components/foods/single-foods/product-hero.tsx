@@ -81,13 +81,19 @@ export function ProductHero({ food }: { food: Food }) {
 
   const handleFavorite = () => {
     if (isFavorited) {
-      removeFavorite.mutate(food.id, {
-        onSuccess: () => dispatch(decrementFavoritesCount()),
+      removeFavorite.mutate(food, {
+        onSuccess: () => {
+          dispatch(decrementFavoritesCount());
+          toast.success("Removed from favorites");
+        },
         onError: (err) => toast.error(handleApiError(err)),
       });
     } else {
-      toggleFavorite.mutate(food.id, {
-        onSuccess: () => dispatch(incrementFavoritesCount()),
+      toggleFavorite.mutate(food, {
+        onSuccess: () => {
+          dispatch(incrementFavoritesCount());
+          toast.success("Added to favorites");
+        },
         onError: (err) => toast.error(handleApiError(err)),
       });
     }
@@ -129,7 +135,7 @@ export function ProductHero({ food }: { food: Food }) {
               </Button>
             </div>
 
-            <h1 className="mt-3 font-fraunces text-3xl font-normal tracking-tight text-secondary-foreground sm:text-4xl leading-tight">
+            <h1 className="mt-3 font-heading text-3xl font-normal tracking-tight text-secondary-foreground sm:text-4xl leading-tight">
               {food.name}
             </h1>
 

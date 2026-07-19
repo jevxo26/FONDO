@@ -4,6 +4,8 @@ import appReducer from "./slices/appSlice";
 import uiReducer from "./slices/uiSlice";
 import authReducer from "./slices/authSlice";
 import counterReducer from "./slices/counterSlice";
+import cartDataReducer from "./slices/cartDataSlice";
+import favoritesDataReducer from "./slices/favoritesDataSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +13,8 @@ export const store = configureStore({
     ui: uiReducer,
     auth: authReducer,
     counter: counterReducer,
+    cartData: cartDataReducer,
+    favoritesData: favoritesDataReducer,
   },
 });
 

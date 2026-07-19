@@ -18,8 +18,8 @@ export function RiderEarningsSummaryCards() {
         description={`${totalDeliveries} deliveries across ${riderEarnings.length} riders`}
       >
         <div className="mb-6 flex items-baseline gap-2">
-          <span className="font-fraunces text-3xl font-bold text-primary">৳</span>
-          <h2 className="font-fraunces text-3xl font-bold text-white md:text-5xl">
+          <span className="font-heading text-3xl font-bold text-primary">৳</span>
+          <h2 className="font-heading text-3xl font-bold text-white md:text-5xl">
             {paid.toLocaleString()}
           </h2>
         </div>

@@ -47,7 +47,7 @@ export default function CustomersPage() {
             <div className="pointer-events-none absolute -top-3 -left-3 z-0 size-20 rounded-full bg-primary/5 blur-2xl" />
             <div className="pointer-events-none absolute right-3 top-3 z-10 size-[7px] rotate-45 border border-primary/30" />
             <div className="relative z-10">
-              <h3 className="font-fraunces text-xl font-semibold text-foreground">Active Profiles</h3>
+              <h3 className="font-heading text-xl font-semibold text-foreground">Active Profiles</h3>
               <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
                 {customers.map((customer) => (
                   <CustomerCard key={customer.id} customer={customer} />
@@ -63,7 +63,7 @@ export default function CustomersPage() {
                 <p className="mb-1 text-xs font-bold uppercase tracking-widest text-primary">
                   Total Assets
                 </p>
-                <h4 className="font-fraunces text-2xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] md:text-4xl">
+                <h4 className="font-heading text-2xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] md:text-4xl">
                   ৳{(totalHoldings + pendingRefunds).toLocaleString()}
                 </h4>
               </div>

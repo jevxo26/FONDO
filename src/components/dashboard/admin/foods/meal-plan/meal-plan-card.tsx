@@ -27,7 +27,7 @@ export function MealPlanCard({ plan }: MealPlanCardProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
           <div className="absolute bottom-3 left-4 right-4">
             <div className="flex items-center gap-2">
-              <h3 className="font-fraunces text-lg font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
+              <h3 className="font-heading text-lg font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
                 {plan.name}
               </h3>
               {plan.isPopular && (
@@ -45,7 +45,7 @@ export function MealPlanCard({ plan }: MealPlanCardProps) {
           </p>
 
           <div className="mt-4 flex items-baseline gap-1">
-            <span className="font-fraunces text-[28px] font-bold tracking-tight text-foreground">
+            <span className="font-heading text-[28px] font-bold tracking-tight text-foreground">
               ৳{plan.price.toLocaleString()}
             </span>
             <span className="text-sm text-muted-foreground">{plan.priceLabel}</span>

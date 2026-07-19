@@ -31,7 +31,7 @@ export default function ReportsVendorsPage() {
       </div>
       <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <DarkCard icon={<Award className="size-10" />} title="Top Vendor" description={topVendor.vendorName} className="flex-1">
-          <div className="font-fraunces text-3xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">৳{topVendor.revenue.toLocaleString()}</div>
+          <div className="font-heading text-3xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">৳{topVendor.revenue.toLocaleString()}</div>
           <div className="mt-2 text-sm text-white/70">{topVendor.totalOrders} orders · {topVendor.rating} rating</div>
         </DarkCard>
         <GlassCard icon={<Award className="size-5 text-primary" />} title="Avg Rating" value={avgRating.toString()} subtitle="Across all vendors" className="flex-1">

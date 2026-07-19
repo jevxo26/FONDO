@@ -48,7 +48,7 @@ export const childIcons: Record<string, ComponentType<{ className?: string }>> =
 export const mainNavLinks: NavLink[] = [
   { href: "/", label: "Home" },
   {
-    label: "Menu",
+    label: "Foods",
     children: [
       { href: "/foods", label: "All Foods" },
       { href: "/foods#best-sellers", label: "Best Sellers" },
@@ -73,7 +73,7 @@ export const mainNavLinks: NavLink[] = [
 
 export const mobileNavLinks: { href: string; label: string }[] = [
   { href: "/", label: "Home" },
-  { href: "/foods", label: "Menu" },
+  { href: "/foods", label: "Foods" },
   { href: "/our-story", label: "Our Story" },
   { href: "/about", label: "About" },
   { href: "/reviews", label: "Reviews" },

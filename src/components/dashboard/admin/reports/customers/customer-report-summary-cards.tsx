@@ -21,7 +21,7 @@ export function CustomerReportSummaryCards() {
         className="flex-1"
       >
         <div className="mb-6">
-          <span className="font-fraunces text-5xl font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
+          <span className="font-heading text-5xl font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
             {(active + newCustomers + atRisk).toLocaleString()}
           </span>
           <p className="mt-1 text-sm text-white/70">

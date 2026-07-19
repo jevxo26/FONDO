@@ -25,7 +25,7 @@ export function PageHeader({
       )}
       <div className="flex min-w-0 flex-1 flex-col gap-2 md:flex-row md:items-end md:justify-between md:gap-3">
         <div className="min-w-0">
-          <h2 className="font-fraunces text-xl font-bold leading-tight tracking-tight text-foreground md:text-[32px]">
+          <h2 className="font-heading text-xl font-bold leading-tight tracking-tight text-foreground md:text-[32px]">
             {title}
           </h2>
           {description && (

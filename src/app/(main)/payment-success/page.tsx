@@ -22,7 +22,7 @@ export default function PaymentSuccessPage() {
           </div>
 
           {/* Celebration Headings */}
-          <h1 className="font-fraunces text-3xl text-primary font-normal tracking-tight mb-3">
+          <h1 className="font-heading text-3xl text-primary font-normal tracking-tight mb-3">
             Order Placed Successfully!
           </h1>
           <p className="font-sans text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed mb-6">
@@ -59,7 +59,7 @@ export default function PaymentSuccessPage() {
             </Link>
 
             <Link
-              href="/menu"
+              href="/foods"
               className="flex items-center justify-center gap-2 w-full h-12 rounded-full bg-white border border-border text-foreground font-sans text-sm font-semibold transition-colors hover:bg-muted"
             >
               <Home className="size-4 stroke-[2]" />

@@ -41,7 +41,7 @@ export default function ReportsRidersPage() {
           </div>
         </GlassCard>
         <DarkCard icon={<DollarSign className="size-10" />} title="Avg Earnings" description="Per rider" className="flex-1">
-          <div className="font-fraunces text-3xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">৳{avgEarnings.toLocaleString()}</div>
+          <div className="font-heading text-3xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">৳{avgEarnings.toLocaleString()}</div>
           <div className="mt-2 text-sm text-white/70">Total: ৳{totalEarnings.toLocaleString()}</div>
         </DarkCard>
         <GlassCard icon={<Award className="size-5 text-warning" />} iconBg="bg-warning/10" title="Top Rider" value={topRider.riderName} subtitle={`${topRider.deliveries} deliveries`} className="flex-1">

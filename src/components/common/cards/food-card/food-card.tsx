@@ -23,13 +23,19 @@ export default function FoodCard({ food }: { food: Food }) {
 
   const handleFavorite = () => {
     if (isFavorited) {
-      removeFavorite.mutate(food.id, {
-        onSuccess: () => dispatch(decrementFavoritesCount()),
+      removeFavorite.mutate(food, {
+        onSuccess: () => {
+          dispatch(decrementFavoritesCount());
+          toast.success("Removed from favorites");
+        },
         onError: (err) => toast.error(handleApiError(err)),
       });
     } else {
-      toggleFavorite.mutate(food.id, {
-        onSuccess: () => dispatch(incrementFavoritesCount()),
+      toggleFavorite.mutate(food, {
+        onSuccess: () => {
+          dispatch(incrementFavoritesCount());
+          toast.success("Added to favorites");
+        },
         onError: (err) => toast.error(handleApiError(err)),
       });
     }

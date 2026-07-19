@@ -13,10 +13,10 @@ export function Combos() {
         <SectionReveal distance={20}>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="flex flex-col gap-2">
-              <span className="text-[11px] font-semibold uppercase tracking-[2.534px] text-foreground/60">
+              <span className="text-xs font-semibold uppercase tracking-label text-foreground/60">
                 Combos
               </span>
-              <h2 className="font-fraunces text-3xl leading-tight tracking-[-0.96px] text-foreground sm:text-4xl lg:text-[48px]">
+              <h2 className="font-heading text-3xl leading-tight tracking-heading text-foreground sm:text-4xl lg:text-[48px]">
                 Plates built for sharing
               </h2>
               <p className="text-sm text-foreground/60 sm:text-base">

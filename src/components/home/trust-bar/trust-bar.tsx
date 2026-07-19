@@ -3,7 +3,7 @@ import { TRUST_FEATURES } from "@/data/homepage";
 
 export function TrustBar() {
   return (
-    <section className="border-y border-border/70 bg-white/40">
+    <section className="border-y border-border/70 bg-background/40">
       <div className="wrapper">
         <SectionReveal distance={20}>
           <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-4">

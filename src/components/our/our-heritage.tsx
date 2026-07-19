@@ -15,8 +15,8 @@ export default function OurHeritage() {
             <span className="text-primary font-sans text-xs font-bold uppercase tracking-[0.2em] block">
               Est. 1924
             </span>
-            {/* Primary serif section heading utilizing font-fraunces */}
-            <h2 className="font-fraunces text-3xl md:text-5xl font-normal leading-tight text-foreground">
+            {/* Primary serif section heading utilizing font-heading */}
+            <h2 className="font-heading text-3xl md:text-5xl font-normal leading-tight text-foreground">
               Our Heritage
             </h2>
           </div>

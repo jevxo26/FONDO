@@ -16,7 +16,7 @@ export default function ReviewsHero() {
         
         {/* Left Column Text Panel */}
         <div className="lg:col-span-6 space-y-6">
-          <h1 className="font-fraunces text-4xl md:text-6xl font-normal leading-tight">
+          <h1 className="font-heading text-4xl md:text-6xl font-normal leading-tight">
             Customer Reviews
           </h1>
           <p className="font-sans text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl">
@@ -27,7 +27,7 @@ export default function ReviewsHero() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-border/60">
             {summaryStats.map((stat, idx) => (
               <div key={idx} className="space-y-1">
-                <div className="font-fraunces text-xl md:text-2xl font-normal text-foreground">{stat.value}</div>
+                <div className="font-heading text-xl md:text-2xl font-normal text-foreground">{stat.value}</div>
                 <div className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground">{stat.label}</div>
               </div>
             ))}

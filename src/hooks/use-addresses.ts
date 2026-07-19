@@ -2,7 +2,6 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api-client";
-import { queryKeys } from "@/lib/query-keys";
 
 export interface Address {
   id: string;
@@ -15,7 +14,7 @@ export interface Address {
 
 export function useAddresses() {
   return useQuery({
-    queryKey: queryKeys.addresses.all,
+    queryKey: ["addresses"],
     queryFn: () => api.get<Address[]>("/users/me/addresses"),
   });
 }
@@ -25,7 +24,7 @@ export function useCreateAddress() {
   return useMutation({
     mutationFn: (data: Omit<Address, "id" | "isDefault">) =>
       api.post<Address>("/users/me/addresses", data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addresses.all }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["addresses"] }),
   });
 }
 
@@ -34,7 +33,7 @@ export function useUpdateAddress() {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Address> }) =>
       api.patch<Address>(`/users/me/addresses/${id}`, data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addresses.all }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["addresses"] }),
   });
 }
 
@@ -42,7 +41,7 @@ export function useDeleteAddress() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => api.delete(`/users/me/addresses/${id}`),
-    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addresses.all }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["addresses"] }),
   });
 }
 
@@ -51,6 +50,6 @@ export function useSetDefaultAddress() {
   return useMutation({
     mutationFn: (id: string) =>
       api.patch(`/users/me/addresses/${id}/default`),
-    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addresses.all }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["addresses"] }),
   });
 }

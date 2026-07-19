@@ -21,7 +21,7 @@ function FoodNotFound() {
       <div className="flex size-16 items-center justify-center rounded-full bg-destructive/10">
         <Eye className="size-6 text-destructive" />
       </div>
-      <h2 className="font-fraunces text-xl font-bold text-foreground">Food Not Found</h2>
+      <h2 className="font-heading text-xl font-bold text-foreground">Food Not Found</h2>
       <p className="text-sm text-muted-foreground">The food item you&apos;re looking for doesn&apos;t exist.</p>
       <Link
         href="/dashboard/admin/foods"
@@ -162,7 +162,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
               Available
             </span>
           </div>
-          <h1 className="mt-3 font-fraunces text-3xl font-bold text-white drop-shadow-lg md:text-4xl lg:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl font-bold text-white drop-shadow-lg md:text-4xl lg:text-5xl">
             {food.name}
           </h1>
         </div>
@@ -179,7 +179,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
 
       <div className="mb-8">
         <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
-          <h2 className="font-fraunces text-lg font-bold text-foreground">Description</h2>
+          <h2 className="font-heading text-lg font-bold text-foreground">Description</h2>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{detail.description}</p>
         </div>
       </div>
@@ -188,7 +188,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
         <div className="mb-8">
           <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
             <div className="flex items-center gap-3">
-              <h2 className="font-fraunces text-lg font-bold text-foreground">Nutrition</h2>
+              <h2 className="font-heading text-lg font-bold text-foreground">Nutrition</h2>
               <span className="text-xs text-muted-foreground">{nutrition.servingSize}</span>
             </div>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -210,7 +210,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
       <div className="mb-8">
         <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
           <div className="flex items-center justify-between">
-            <h2 className="font-fraunces text-lg font-bold text-foreground">Pricing</h2>
+            <h2 className="font-heading text-lg font-bold text-foreground">Pricing</h2>
             <span className="text-xs text-muted-foreground">Base price before discounts</span>
           </div>
           <div className="mt-4">
@@ -228,7 +228,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
       <div className="mb-8">
         <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
           <div className="flex items-center justify-between">
-            <h2 className="font-fraunces text-lg font-bold text-foreground">
+            <h2 className="font-heading text-lg font-bold text-foreground">
               Reviews
               <span className="ml-2 text-sm font-normal text-muted-foreground">
                 ({detail.totalReviews})

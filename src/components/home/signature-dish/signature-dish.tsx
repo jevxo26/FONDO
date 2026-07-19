@@ -13,7 +13,7 @@ export function SignatureDish() {
         <SectionReveal distance={20}>
           <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
             <div className="flex-1">
-              <div className="relative aspect-square w-full overflow-hidden rounded-2xl">
+              <div className="relative aspect-square w-full overflow-hidden rounded-3xl">
                 <Image
                   src={SIGNATURE_DISH.image}
                   alt={SIGNATURE_DISH.heading}
@@ -29,19 +29,19 @@ export function SignatureDish() {
                 {SIGNATURE_DISH.label}
               </span>
 
-              <h2 className="font-fraunces text-3xl text-white sm:text-4xl lg:text-[48px]">
+              <h2 className="font-heading text-3xl text-background sm:text-4xl lg:text-[48px]">
                 {SIGNATURE_DISH.heading}
               </h2>
 
-              <p className="text-sm leading-relaxed text-white/60 lg:text-base">
+              <p className="text-sm leading-relaxed text-background/60 lg:text-base">
                 {SIGNATURE_DISH.description}
               </p>
 
               <div className="grid grid-cols-2 gap-3">
                 {SIGNATURE_DISH.infoCards.map((card) => (
-                  <Card key={card.title} className="border-white/10 bg-white/5 p-4">
-                    <h4 className="text-sm font-semibold text-white">{card.title}</h4>
-                    <p className="text-xs text-white/50">{card.text}</p>
+                  <Card key={card.title} className="border-background/10 bg-background/5 p-4">
+                    <h4 className="text-sm font-semibold text-background">{card.title}</h4>
+                    <p className="text-xs text-background/50">{card.text}</p>
                   </Card>
                 ))}
               </div>
@@ -59,7 +59,7 @@ export function SignatureDish() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="h-auto gap-2 whitespace-nowrap rounded-full bg-transparent px-4 py-3 text-white hover:bg-white/10 hover:text-white"
+                  className="h-auto gap-2 whitespace-nowrap rounded-full bg-transparent px-4 py-3 text-background hover:bg-background/10 hover:text-background"
                   nativeButton={false}
                   render={<Link href="/foods" />}
                 >

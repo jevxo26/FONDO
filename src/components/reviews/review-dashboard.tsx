@@ -16,7 +16,7 @@ export default function ReviewsDashboard() {
         {/* Left Side: Score Distribution Progress Bar Matrix */}
         <div className="lg:col-span-4 bg-card border border-border/60 rounded-2xl p-6 shadow-[var(--shadow-card)] flex flex-col justify-between">
           <div className="text-center pb-4 border-b border-border/40">
-            <div className="text-4xl font-fraunces font-normal">4.9</div>
+            <div className="text-4xl font-heading font-normal">4.9</div>
             <div className="flex text-primary justify-center my-1.5">
               {[...Array(5)].map((_, i) => <Star key={i} className="size-4 fill-current" />)}
             </div>
@@ -47,7 +47,7 @@ export default function ReviewsDashboard() {
           {attributes.map((attr, idx) => (
             <div key={idx} className="bg-card border border-border/60 rounded-2xl p-5 flex flex-col justify-between shadow-[var(--shadow-card)] text-center">
               <div>
-                <span className="text-2xl font-fraunces font-normal text-primary block">{attr.score}</span>
+                <span className="text-2xl font-heading font-normal text-primary block">{attr.score}</span>
                 <h4 className="font-sans text-xs font-bold tracking-tight text-foreground mt-2">{attr.label}</h4>
                 <p className="font-sans text-[10px] text-muted-foreground mt-0.5">{attr.desc}</p>
               </div>

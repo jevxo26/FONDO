@@ -14,7 +14,7 @@ export default function PackagesFaq() {
     <section className="wrapper pb-20 max-w-3xl mx-auto">
       <div className="text-center mb-8 flex flex-col items-center">
         <HelpCircle className="size-6 text-primary mb-2" />
-        <h2 className="font-fraunces text-2xl text-foreground font-normal">Subscription FAQs</h2>
+        <h2 className="font-heading text-2xl text-foreground font-normal">Subscription FAQs</h2>
       </div>
 
       <div className="flex flex-col gap-3">

@@ -14,8 +14,8 @@ export default function OurMission() {
           <Compass className="size-6" />
         </div>
 
-        {/* Section Heading utilizing font-fraunces */}
-        <h2 className="font-fraunces text-3xl md:text-5xl font-normal tracking-tight text-background">
+        {/* Section Heading utilizing font-heading */}
+        <h2 className="font-heading text-3xl md:text-5xl font-normal tracking-tight text-background">
           Our Mission
         </h2>
 

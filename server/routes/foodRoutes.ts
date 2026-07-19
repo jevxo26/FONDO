@@ -8,6 +8,10 @@ const router = Router();
 
 // Public
 router.get("/", FoodController.list);
+
+// Authenticated — must be before /:id to avoid param match
+router.get("/favorites", verifyToken, FoodController.listFavorites);
+
 router.get("/:id", FoodController.getById);
 router.get("/slug/:slug", FoodController.getBySlug);
 router.get("/categories/list", FoodController.listCategories);

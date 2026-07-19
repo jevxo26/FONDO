@@ -17,7 +17,7 @@ import { toggleMobileMenu } from "@/store/slices/uiSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { fetchMe } from "@/store/slices/authSlice";
 import { getToken } from "@/lib/token";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 import { ROLE_DASHBOARD } from "@/data/navigation";
 
 export function NavActions() {

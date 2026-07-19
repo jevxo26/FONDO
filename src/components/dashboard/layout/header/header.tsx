@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { HeaderBreadcrumbs } from "./header-breadcrumbs";
 import { HeaderQuickActions } from "./header-quick-actions";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 
 export function DashboardHeader() {
   const pathname = usePathname();

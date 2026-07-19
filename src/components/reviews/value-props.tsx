@@ -17,7 +17,7 @@ export default function ValuePropsGrid() {
     <section className="py-[var(--space-section)] bg-background">
       <div className="wrapper space-y-8">
         <div className="text-center">
-          <h2 className="font-fraunces text-xl md:text-3xl font-normal text-foreground">Why We&apos;re Rated 4.9/5</h2>
+          <h2 className="font-heading text-xl md:text-3xl font-normal text-foreground">Why We&apos;re Rated 4.9/5</h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {points.map((pt, idx) => (

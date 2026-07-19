@@ -11,7 +11,7 @@ import {
   Testimonials,
   TrustBar,
 } from "@/components/home";
-import { getFoods } from "@/services/food.service";
+import { getFoods } from "@/services/foods";
 import { apiFetch } from "@/lib/api";
 
 interface CategoryItem {
@@ -22,8 +22,8 @@ interface CategoryItem {
 
 export default async function Home() {
   const [foodsData, catData] = await Promise.all([
-    getFoods(1, 6, "popularity"),
-    apiFetch<{ items: CategoryItem[] }>("/api/foods/categories/list"),
+    getFoods(1, 6, "popularity", { revalidate: 300, tags: ["foods"] }),
+    apiFetch<{ items: CategoryItem[] }>("/api/foods/categories/list", { revalidate: 300, tags: ["categories"] }),
   ]);
 
   const categories = catData.items.map((c) => ({

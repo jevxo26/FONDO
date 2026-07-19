@@ -43,7 +43,7 @@ export function DarkCard({
         <div className="pointer-events-none absolute top-1/2 left-1/2 size-32 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
         {title && (
           <div className="relative z-10">
-            <h3 className="font-fraunces text-lg leading-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)] md:text-xl">
+            <h3 className="font-heading text-lg leading-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)] md:text-xl">
               {title}
             </h3>
             {description && <p className="mt-1 text-sm text-white/70 md:mt-2">{description}</p>}

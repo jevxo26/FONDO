@@ -4,7 +4,7 @@ export const FOOTER_LINKS = {
   visit: {
     title: "Visit",
     links: [
-      { label: "Menu", href: "/foods" },
+      { label: "Foods", href: "/foods" },
       { label: "Our Story", href: "/about" },
       { label: "Contact", href: "/contact" },
       { label: "Track Order", href: "/track" },

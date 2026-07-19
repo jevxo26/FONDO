@@ -73,6 +73,12 @@ const removeFavorite = catchAsync(async (req: AuthRequest, res: Response) => {
   sendResponse(res, { statusCode: 200, message: "Removed from favorites" });
 });
 
+const listFavorites = catchAsync(async (req: AuthRequest, res: Response) => {
+  const favorites = await FoodService.listFavorites(req.user!.userId);
+
+  sendResponse(res, { statusCode: 200, data: favorites });
+});
+
 const listReviews = catchAsync(async (req: Request, res: Response) => {
   const foodId = req.params.foodId as string;
   const page = parseInt(req.query.page as string) || 1;
@@ -107,6 +113,7 @@ export const FoodController = {
   listTags,
   addFavorite,
   removeFavorite,
+  listFavorites,
   listReviews,
   createReview,
 };

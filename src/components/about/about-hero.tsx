@@ -7,7 +7,7 @@ export default function HeroSection() {
       <div className="w-full max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center py-12">
         {/* Left text column */}
         <div className="lg:col-span-6 space-y-6">
-          <h1 className="font-fraunces text-4xl md:text-6xl font-normal leading-tight text-[#16100C]">
+          <h1 className="font-heading text-4xl md:text-6xl font-normal leading-tight text-[#16100C]">
             Healthy Meals Delivered Every Day.
           </h1>
           <p className="font-sans text-sm md:text-base text-[#16100C]/70 max-w-lg leading-relaxed">

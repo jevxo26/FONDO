@@ -24,7 +24,7 @@ export default function CartPageView() {
     }
   }, [cart, dispatch]);
 
-  if (isLoading) {
+  if (isLoading && !cart) {
     return (
       <main className="flex-1 py-12">
         <div className="wrapper flex items-center justify-center min-h-[40vh]">
@@ -41,7 +41,7 @@ export default function CartPageView() {
           <div className="py-16 text-center border border-dashed border-border rounded-[32px] bg-white dark:bg-card">
             <p className="font-sans text-sm text-red-600">{handleApiError(error)}</p>
             <Link
-              href="/menu"
+              href="/foods"
               className="mt-4 inline-flex h-10 items-center rounded-xl bg-primary px-5 font-sans text-xs font-semibold text-primary-foreground"
             >
               Return to Menu
@@ -77,7 +77,7 @@ export default function CartPageView() {
     <main className="flex-1 py-12">
       <div className="wrapper">
         <div className="mb-8">
-          <h1 className="font-fraunces text-4xl font-normal text-secondary-foreground tracking-tight">
+          <h1 className="font-heading text-4xl font-normal text-secondary-foreground tracking-tight">
             Your Cart
           </h1>
           <p className="font-sans text-xs text-muted-foreground mt-1">
@@ -106,7 +106,7 @@ export default function CartPageView() {
               />
 
               <Link
-                href="/menu"
+                href="/foods"
                 className="mt-4 flex w-full h-11 items-center justify-center rounded-full bg-white border border-border font-sans text-xs font-semibold text-secondary-foreground transition-colors hover:bg-muted"
               >
                 Continue shopping
@@ -117,7 +117,7 @@ export default function CartPageView() {
           <div className="py-16 text-center border border-dashed border-border rounded-[32px] bg-white dark:bg-card">
             <p className="font-sans text-sm text-muted-foreground">Your active cart is empty.</p>
             <Link
-              href="/menu"
+              href="/foods"
               className="mt-4 inline-flex h-10 items-center rounded-xl bg-primary px-5 font-sans text-xs font-semibold text-primary-foreground"
             >
               Return to Menu

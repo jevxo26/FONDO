@@ -8,7 +8,7 @@ export function BlogReviews() {
     <section>
       <div className="wrapper">
         <SectionReveal distance={20}>
-          <h2 className="text-center font-sans text-2xl font-bold leading-[130%] text-foreground sm:text-3xl lg:text-[32px]">
+          <h2 className="text-center font-sans text-2xl font-bold leading-snug text-foreground sm:text-3xl lg:text-[32px]">
             Our BlogsReview
           </h2>
 

@@ -12,12 +12,12 @@ export default function ReviewFaq() {
     <section className="py-[var(--space-section)] bg-background border-t border-border/20">
       <div className="wrapper max-w-4xl mx-auto space-y-8">
         <div className="text-center">
-          <h2 className="font-fraunces text-xl md:text-3xl font-normal text-foreground">Common Questions About Reviews</h2>
+          <h2 className="font-heading text-xl md:text-3xl font-normal text-foreground">Common Questions About Reviews</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {faqs.map((faq, idx) => (
             <div key={idx} className="bg-card border border-border/40 rounded-xl p-5 space-y-2 shadow-sm">
-              <h4 className="font-fraunces text-sm font-medium text-foreground">{faq.q}</h4>
+              <h4 className="font-heading text-sm font-medium text-foreground">{faq.q}</h4>
               <p className="font-sans text-xs text-muted-foreground leading-relaxed">{faq.a}</p>
             </div>
           ))}

@@ -16,7 +16,7 @@ export default function CateredNeeds() {
   return (
     <section className="py-20 bg-[#FAF5EB]">
       <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-12">
-        <h2 className="font-fraunces text-2xl md:text-4xl text-center font-normal text-[#16100C]">Catered To Your Needs</h2>
+        <h2 className="font-heading text-2xl md:text-4xl text-center font-normal text-[#16100C]">Catered To Your Needs</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {needs.map((item, idx) => (
             <div key={idx} className="relative aspect-[4/3] rounded-2xl overflow-hidden group shadow-sm border border-[#16100C]/10">

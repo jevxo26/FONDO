@@ -10,7 +10,7 @@ export default function PackagesHero() {
         <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-primary bg-card px-3 py-1 rounded-full border border-border">
           Nourishment Subscriptions
         </span>
-        <h1 className="font-fraunces text-4xl sm:text-5xl lg:text-6xl mt-3 font-normal tracking-tight">
+        <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl mt-3 font-normal tracking-tight">
           Find Your Perfect <span className="italic text-primary">Meal Plan</span>
         </h1>
         <p className="font-sans text-xs sm:text-sm text-muted-foreground max-w-md mt-4 leading-relaxed">

@@ -72,7 +72,7 @@ export function StatCard({ label, value, icon: Icon, trend, trendValue, variant 
       <div className={cn('relative z-10 p-5', pos.pad)}>
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
-            <p className="font-fraunces text-[30px] font-bold leading-tight tracking-tighter text-foreground drop-shadow-[0_1px_1px_rgba(0,0,0,0.03)]">{value}</p>
+            <p className="font-heading text-[30px] font-bold leading-tight tracking-tighter text-foreground drop-shadow-[0_1px_1px_rgba(0,0,0,0.03)]">{value}</p>
             <p className="mt-1 truncate text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
           </div>
           <div className={cn('mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-xl shadow-sm ring-1', iconBgStyles[variant])}>

@@ -25,8 +25,8 @@ export default function StoryHero() {
           EST. 1924 • Traditional Hearth
         </span>
 
-        {/* Main Headline utilizing font-fraunces (Serif) and global text-background (#FAF5EB) for high contrast */}
-        <h1 className="font-fraunces text-4xl md:text-6xl lg:text-7xl font-normal leading-[1.15] text-background max-w-5xl tracking-tight">
+        {/* Main Headline utilizing font-heading (Serif) and global text-background (#FAF5EB) for high contrast */}
+        <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl font-normal leading-[1.15] text-background max-w-5xl tracking-tight">
           A Legacy of Flavor, <br />
           <span className="italic text-primary">Crafted for Today</span>
         </h1>

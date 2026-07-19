@@ -26,7 +26,7 @@ export default function KitchenQueuePage() {
 
       {preparing.length > 0 && (
         <div className="mt-10">
-          <h2 className="font-fraunces text-lg font-semibold text-foreground">In Preparation</h2>
+          <h2 className="font-heading text-lg font-semibold text-foreground">In Preparation</h2>
           <p className="text-sm text-muted-foreground">{preparing.length} orders currently being cooked</p>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {preparing.map((order) => (
@@ -42,7 +42,7 @@ export default function KitchenQueuePage() {
 
       {queued.length > 0 && (
         <div className="mt-10">
-          <h2 className="font-fraunces text-lg font-semibold text-foreground">Queued (Next to Prepare)</h2>
+          <h2 className="font-heading text-lg font-semibold text-foreground">Queued (Next to Prepare)</h2>
           <p className="text-sm text-muted-foreground">{queued.length} orders waiting</p>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {queued.slice(0, 6).map((order) => (

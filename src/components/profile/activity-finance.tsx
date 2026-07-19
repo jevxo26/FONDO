@@ -1,7 +1,7 @@
 "use client";
 
 import { useOrders } from "@/hooks/use-orders";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 import Link from "next/link";
 
 export function OrderHistory() {

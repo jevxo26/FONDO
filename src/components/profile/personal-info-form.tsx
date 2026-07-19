@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 import { useUpdateProfile, useChangePassword } from "@/hooks/use-profile";
 import { User, Edit3 } from "lucide-react";
 import { toast } from "sonner";

@@ -68,7 +68,7 @@ export function AddressManager() {
                   {addr.isDefault && <Star className="size-3 fill-primary" />}
                   {addr.label}
                 </span>
-                <p className="font-sans text-xs text-foreground/80 leading-relaxed">{addr.streetAddress}, {addr.city} {addr.zipCode}</p>
+                <p className="font-sans text-xs text-foreground/80 leading-relaxed">{addr.road || addr.area}, {addr.district} {addr.postalCode ?? ""}</p>
               </div>
               <div className="flex justify-between items-center mt-4 pt-2 border-t border-border">
                 {!addr.isDefault && (

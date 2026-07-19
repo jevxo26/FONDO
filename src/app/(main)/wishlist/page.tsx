@@ -22,8 +22,8 @@ export default function WishlistPage() {
         <div className="mb-12">
           <h1 className="font-heading text-4xl font-normal text-secondary-foreground tracking-tight">
             My Wishlist
-            {items.length > 0 && (
-              <span className="text-lg font-sans text-muted-foreground ml-3">({items.length})</span>
+            {favorites.length > 0 && (
+              <span className="text-lg font-sans text-muted-foreground ml-3">({favorites.length})</span>
             )}
           </h1>
           {!isLoading && (

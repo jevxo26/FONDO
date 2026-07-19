@@ -3,7 +3,8 @@
 import { FormField } from "@/components/common/form-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateAddress } from "@/hooks/use-addresses";
+import { useAddresses, useCreateAddress } from "@/hooks/use-addresses";
+import { useApplyCoupon, useRemoveCoupon, useSelectAddress } from "@/hooks/use-coupon";
 import { useCart } from "@/hooks/use-cart";
 import { usePlaceOrder } from "@/hooks/use-orders";
 import { useInitiatePayment } from "@/hooks/use-payments";
@@ -26,6 +27,9 @@ const CheckoutForm = () => {
   const placeOrder = usePlaceOrder();
   const initiatePayment = useInitiatePayment();
   const createAddress = useCreateAddress();
+  const selectAddress = useSelectAddress();
+  const applyCoupon = useApplyCoupon();
+  const removeCoupon = useRemoveCoupon();
   const router = useRouter();
 
   const {
@@ -236,7 +240,7 @@ const CheckoutForm = () => {
                           )}
                         </p>
                         <p className="font-sans text-[11px] text-muted-foreground mt-0.5">
-                          {addr.streetAddress}, {addr.city} {addr.zipCode}
+                          {addr.road || addr.area}, {addr.district} {addr.postalCode ?? ""}
                         </p>
                       </div>
                       {selectedAddressId === addr.id && <Check className="size-4 text-primary" />}

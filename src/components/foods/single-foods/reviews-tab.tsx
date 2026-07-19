@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 import { Review } from "@/types/food-review";
 import { useState } from "react";
 import ReviewModal from "./review-modal";

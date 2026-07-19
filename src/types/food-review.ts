@@ -20,7 +20,6 @@ export interface Review {
   rating: number;
   review: string;
   createdAt: string;
-
   customer: {
     id: string;
     firstName: string;

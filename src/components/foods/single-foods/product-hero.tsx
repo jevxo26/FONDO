@@ -46,7 +46,7 @@ export function ProductHero({ food }: { food: Food }) {
                   <Star key={i} className="size-3.5 fill-primary text-primary" />
                 ))}
                 <span className="ml-1 font-semibold text-foreground">
-                <span>{food.rating.averageRating}</span>
+                <span>{food.rating.averageRating.toFixed(1)}</span>
                 </span>
               </div>
 

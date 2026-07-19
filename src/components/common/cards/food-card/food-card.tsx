@@ -1,14 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useFavorites, useRemoveFavorite, useToggleFavorite } from "@/hooks/use-favorites";
 import { Food } from "@/types/food";
 import { ArrowUpRight, Clock, Heart, ShoppingBag, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import AddToCartButton from "./add-to-cart-button";
-import { useFavorites, useToggleFavorite, useRemoveFavorite } from "@/hooks/use-favorites";
-import { toast } from "sonner";
-import { handleApiError } from "@/lib/api-error";
 
 export default function FoodCard({ food }: { food: Food }) {
   const defaultVariant = food.variants?.[0];
@@ -17,18 +15,7 @@ export default function FoodCard({ food }: { food: Food }) {
   const removeFavorite = useRemoveFavorite();
 
   const isFavorited = favorites.some((f) => f.id === food.id);
-
-  const handleFavorite = () => {
-    if (isFavorited) {
-      removeFavorite.mutate(food.id, {
-        onError: (err) => toast.error(handleApiError(err)),
-      });
-    } else {
-      toggleFavorite.mutate(food.id, {
-        onError: (err) => toast.error(handleApiError(err)),
-      });
-    }
-  };
+  const isFavPending = toggleFavorite.isPending || removeFavorite.isPending;
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-4xl bg-white p-4 shadow-[var(--shadow-card)] border border-border/40 dark:bg-card active:scale-[0.98] transition-transform duration-200">
@@ -49,8 +36,8 @@ export default function FoodCard({ food }: { food: Food }) {
         <Button
           variant="ghost"
           size="icon"
-          onClick={handleFavorite}
-          disabled={toggleFavorite.isPending || removeFavorite.isPending}
+          onClick={() => (isFavorited ? removeFavorite : toggleFavorite).mutate(food)}
+          disabled={isFavPending}
           className="absolute right-3 top-3 size-9 rounded-full bg-white/90 backdrop-blur-sm shadow-sm hover:text-destructive"
         >
           <Heart className={`size-4 ${isFavorited ? "fill-destructive text-destructive" : ""}`} />
@@ -64,7 +51,9 @@ export default function FoodCard({ food }: { food: Food }) {
             <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-primary">
               <ShoppingBag className="size-4 text-foreground" />
             </div>{" "}
-            <span className="font-sans text-xs font-medium">{food.servingSize} - ৳{defaultVariant?.price}</span>
+            <span className="font-sans text-xs font-medium">
+              {food.servingSize} - ৳{defaultVariant?.price}
+            </span>
             <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-white/20">
               <Link href={`/foods/${food.slug}`}>
                 <ArrowUpRight className="size-5 text-white" />
@@ -98,7 +87,10 @@ export default function FoodCard({ food }: { food: Food }) {
         <p className="mt-3 font-sans text-sm leading-relaxed text-muted-foreground line-clamp-2 flex-1">
           {food.shortDescription}
         </p>
-        <AddToCartButton foodId={food.id} price={Number(defaultVariant?.discountPrice ?? defaultVariant?.price ?? 0)} />
+        <AddToCartButton
+          foodId={food.id}
+          price={Number(defaultVariant?.discountPrice ?? defaultVariant?.price ?? 0)}
+        />
       </div>
     </div>
   );

@@ -1,16 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useAddToCart } from "@/hooks/use-cart";
+import { useFavorites, useRemoveFavorite, useToggleFavorite } from "@/hooks/use-favorites";
+import { Food } from "@/types/food";
+import { motion } from "framer-motion";
+import {
+  Heart,
+  Loader2,
+  MessageSquare,
+  Minus,
+  Plus,
+  Share2,
+  ShoppingCart,
+  Star,
+} from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import { Heart, Star, Share2, Plus, Minus, ShoppingCart, MessageSquare, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Food } from "@/types/food";
-import { useAddToCart } from "@/hooks/use-cart";
-import { useFavorites, useToggleFavorite, useRemoveFavorite } from "@/hooks/use-favorites";
-import { toast } from "sonner";
-import { handleApiError } from "@/lib/api-error";
+import { useState } from "react";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -48,43 +55,22 @@ export function ProductHero({ food }: { food: Food }) {
   const removeFavorite = useRemoveFavorite();
 
   const isFavorited = favorites.some((f) => f.id === food.id);
-
+  const isFavPending = toggleFavorite.isPending || removeFavorite.isPending;
   const currentPrice = Number(food.variants[0]?.discountPrice ?? food.variants[0]?.price ?? 0);
-
-  const handleAddToCart = () => {
-    addToCart.mutate(
-      { foodId: food.id, quantity, unitPrice: currentPrice },
-      {
-        onSuccess: () => toast.success("Added to cart"),
-        onError: (err) => toast.error(handleApiError(err)),
-      },
-    );
-  };
 
   const handleBuyNow = () => {
     addToCart.mutate(
       { foodId: food.id, quantity, unitPrice: currentPrice },
-      {
-        onSuccess: () => router.push("/checkout"),
-        onError: (err) => toast.error(handleApiError(err)),
-      },
+      { onSuccess: () => router.push("/checkout") },
     );
   };
 
-  const handleFavorite = () => {
-    if (isFavorited) {
-      removeFavorite.mutate(food.id, {
-        onError: (err) => toast.error(handleApiError(err)),
-      });
-    } else {
-      toggleFavorite.mutate(food.id, {
-        onError: (err) => toast.error(handleApiError(err)),
-      });
-    }
-  };
-
   const discountPercent = food.variants[0]?.discountPrice
-    ? Math.round(((Number(food.variants[0].price) - Number(food.variants[0].discountPrice)) / Number(food.variants[0].price)) * 100)
+    ? Math.round(
+        ((Number(food.variants[0].price) - Number(food.variants[0].discountPrice)) /
+          Number(food.variants[0].price)) *
+          100,
+      )
     : null;
 
   return (
@@ -98,11 +84,21 @@ export function ProductHero({ food }: { food: Food }) {
         >
           <motion.div variants={imageVariants} className="lg:col-span-6">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[32px] bg-muted shadow-[var(--shadow-card)] border border-border/40">
-              <Image src={food.coverImage} alt={food.name} fill priority unoptimized className="object-cover" />
+              <Image
+                src={food.coverImage}
+                alt={food.name}
+                fill
+                priority
+                unoptimized
+                className="object-cover"
+              />
             </div>
           </motion.div>
 
-          <motion.div variants={contentVariants} className="lg:col-span-6 flex flex-col justify-center">
+          <motion.div
+            variants={contentVariants}
+            className="lg:col-span-6 flex flex-col justify-center"
+          >
             <div className="flex items-center justify-between">
               <span className="inline-flex items-center rounded-full bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success">
                 &middot; In stock
@@ -111,15 +107,17 @@ export function ProductHero({ food }: { food: Food }) {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={handleFavorite}
-                disabled={toggleFavorite.isPending || removeFavorite.isPending}
+                onClick={() => (isFavorited ? removeFavorite : toggleFavorite).mutate(food)}
+                disabled={isFavPending}
                 className="rounded-full border border-border bg-white shadow-sm hover:text-destructive dark:bg-card"
               >
-                <Heart className={`size-4 ${isFavorited ? "fill-destructive text-destructive" : ""}`} />
+                <Heart
+                  className={`size-4 ${isFavorited ? "fill-destructive text-destructive" : ""}`}
+                />
               </Button>
             </div>
 
-            <h1 className="mt-3 font-fraunces text-3xl font-normal tracking-tight text-secondary-foreground sm:text-4xl leading-tight">
+            <h1 className="mt-3 font-heading text-3xl font-normal tracking-tight text-secondary-foreground sm:text-4xl leading-tight">
               {food.name}
             </h1>
 
@@ -135,7 +133,7 @@ export function ProductHero({ food }: { food: Food }) {
               </div>
 
               <span>&middot;</span>
-              <span>#{food.id.slice(0, 8)}</span>
+              <span>{food.servingSize}</span>
 
               <span>&middot;</span>
 
@@ -150,9 +148,9 @@ export function ProductHero({ food }: { food: Food }) {
               </span>
 
               {food.variants[0]?.discountPrice && (
-              <span className="font-sans text-lg text-muted-foreground line-through">
-                ৳{food.variants[0].price}
-              </span>
+                <span className="font-sans text-lg text-muted-foreground line-through">
+                  ৳{food.variants[0].price}
+                </span>
               )}
 
               {discountPercent && (
@@ -225,7 +223,9 @@ export function ProductHero({ food }: { food: Food }) {
               <Button
                 variant="outline"
                 size="xl"
-                onClick={handleAddToCart}
+                onClick={() =>
+                  addToCart.mutate({ foodId: food.id, quantity, unitPrice: currentPrice })
+                }
                 disabled={addToCart.isPending}
                 className="gap-2 rounded-2xl border-primary bg-primary/5 text-primary hover:bg-primary/10"
               >

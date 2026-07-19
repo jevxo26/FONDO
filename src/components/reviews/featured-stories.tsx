@@ -12,7 +12,7 @@ export default function FeaturedStories() {
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-primary font-sans text-xs font-bold uppercase tracking-widest block">Subscribers</span>
-            <h2 className="font-fraunces text-2xl md:text-4xl font-normal text-foreground">Featured Stories</h2>
+            <h2 className="font-heading text-2xl md:text-4xl font-normal text-foreground">Featured Stories</h2>
           </div>
           <div className="flex items-center gap-2">
             <button className="p-2 rounded-full border border-border bg-background hover:bg-muted text-foreground transition-all">
@@ -33,7 +33,7 @@ export default function FeaturedStories() {
               <div className="flex text-primary">
                 {[...Array(5)].map((_, i) => <Star key={i} className="size-4 fill-current" />)}
               </div>
-              <blockquote className="font-fraunces text-lg md:text-xl text-foreground leading-relaxed font-light italic">
+              <blockquote className="font-heading text-lg md:text-xl text-foreground leading-relaxed font-light italic">
                 &ldquo;As a Weight Loss Subscriber, I&apos;ve tried many services, but Food Flow is the first that actually feels like a restaurant experience at home. The meals are incredibly fresh, and the on-time delivery means I never miss a scheduled breakfast or dinner framework.&rdquo;
               </blockquote>
             </div>

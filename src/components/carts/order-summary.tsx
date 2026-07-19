@@ -2,6 +2,7 @@
 
 import { ArrowUpRight, ShieldCheck, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface OrderSummaryProps {
   subtotal: number;
@@ -10,8 +11,8 @@ interface OrderSummaryProps {
 }
 
 export function OrderSummary({ subtotal, savings, deliveryCharges }: OrderSummaryProps) {
-  const deliveryCost = deliveryCharges === "free" ? 0 : deliveryCharges;
-  const totalAmount = subtotal - savings + deliveryCost;
+  const deliveryCost = deliveryCharges === "free" ? 0 : Number(deliveryCharges);
+  const totalAmount = Number(subtotal) - Number(savings) + deliveryCost;
 
   return (
     <div className="rounded-[32px] border border-border/50 bg-white p-6 shadow-[var(--shadow-card)] dark:bg-card flex flex-col gap-6">
@@ -23,17 +24,17 @@ export function OrderSummary({ subtotal, savings, deliveryCharges }: OrderSummar
       <div className="flex flex-col gap-3.5 border-b border-border/40 pb-5 font-sans text-sm">
         <div className="flex justify-between text-muted-foreground">
           <span>Subtotal</span>
-          <span className="font-medium text-secondary-foreground">৳{subtotal}</span>
+          <span className="font-medium text-secondary-foreground">৳{Number(subtotal)}</span>
         </div>
         <div className="flex justify-between text-muted-foreground">
           <span>Delivery charges</span>
           <span className="font-medium text-emerald-600 capitalize">
-            {deliveryCharges === "free" ? "free" : `৳${deliveryCharges}`}
+            {deliveryCharges === "free" ? "free" : `৳${Number(deliveryCharges)}`}
           </span>
         </div>
         <div className="flex justify-between text-muted-foreground">
           <span>Savings</span>
-          <span className="font-medium text-rose-600 font-semibold">-৳{savings}</span>
+          <span className="font-medium text-rose-600 font-semibold">-৳{Number(savings)}</span>
         </div>
       </div>
 
@@ -46,16 +47,18 @@ export function OrderSummary({ subtotal, savings, deliveryCharges }: OrderSummar
       </div>
 
       {/* Primary Conversion Button Action */}
-      <Button
-        variant="accent"
-        size="xl"
-        className="w-full justify-between rounded-full pl-6 pr-3.5"
-      >
-        <span className="font-sans text-sm font-semibold tracking-wide capitalize">checkout</span>
-        <div className="flex size-7 items-center justify-center rounded-full bg-primary text-primary-foreground">
-          <ArrowUpRight className="size-4 stroke-[2.5]" />
-        </div>
-      </Button>
+      <Link href="/checkout">
+        <Button
+          variant="accent"
+          size="xl"
+          className="w-full justify-between rounded-full pl-6 pr-3.5"
+        >
+          <span className="font-sans text-sm font-semibold tracking-wide capitalize">checkout</span>
+          <div className="flex size-7 items-center justify-center rounded-full bg-primary text-primary-foreground">
+            <ArrowUpRight className="size-4 stroke-[2.5]" />
+          </div>
+        </Button>
+      </Link>
 
       {/* Operational Micro-Badges Trust Signals */}
       <div className="flex items-center justify-center gap-5 text-[11px] font-sans text-muted-foreground/80 pt-1 border-t border-border/30">

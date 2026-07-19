@@ -21,7 +21,7 @@ export default function RiderDashboardPage() {
         <StatCard label="Earnings Today" value="৳1,850" variant="default" icon={DollarSign} accent="right" />
       </div>
       <div className="mt-8">
-        <h3 className="font-fraunces text-lg font-semibold text-foreground">Active Deliveries</h3>
+        <h3 className="font-heading text-lg font-semibold text-foreground">Active Deliveries</h3>
         <DashboardActiveDeliveries data={activeDeliveries} />
       </div>
     </div>

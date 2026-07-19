@@ -61,7 +61,7 @@ const ORDER_INCLUDE = {
     },
   },
   payment: true,
-  customer: { select: { id: true, fullName: true, email: true, phone: true } },
+  customer: { select: { id: true, firstName: true, lastName: true, email: true, phone: true } },
   vendor: { select: { id: true, businessName: true, phone: true, email: true } },
 };
 
@@ -536,7 +536,7 @@ export const listAllOrders = catchServiceAsync(
       {
         where,
         orderBy: { placedAt: "desc" },
-        include: { customer: { select: { id: true, fullName: true, phone: true } }, items: { include: { food: true } }, payment: true },
+        include: { customer: { select: { id: true, firstName: true, lastName: true, phone: true } }, items: { include: { food: true } }, payment: true },
       },
       query.page ?? 1,
       query.limit ?? 20,
@@ -551,7 +551,7 @@ export const listVendorOrders = catchServiceAsync(
 
     return paginate(
       prisma.order,
-      { where, orderBy: { placedAt: "desc" }, include: { customer: { select: { id: true, fullName: true } }, items: { include: { food: true } } } },
+      { where, orderBy: { placedAt: "desc" }, include: { customer: { select: { id: true, firstName: true, lastName: true } }, items: { include: { food: true } } } },
       page,
       limit,
     );

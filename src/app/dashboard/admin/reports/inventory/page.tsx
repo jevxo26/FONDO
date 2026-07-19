@@ -32,7 +32,7 @@ export default function ReportsInventoryPage() {
       </div>
       <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <DarkCard icon={<AlertTriangle className="size-10" />} title="Out of Stock" description={`${outOfStock} items need immediate action`} className="flex-1">
-          <div className="font-fraunces text-4xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] text-red-400">{outOfStock}</div>
+          <div className="font-heading text-4xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] text-red-400">{outOfStock}</div>
           <div className="mt-2 text-sm text-white/70">{lowStock} more at low stock levels</div>
         </DarkCard>
         <GlassCard icon={<RefreshCw className="size-5 text-primary" />} title="Low Stock" value={lowStock.toString()} subtitle="Items below minimum threshold" className="flex-1">

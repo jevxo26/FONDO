@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { useFoods } from "./foods-provider";
-import { useFoodCategories } from "@/hooks/useFoodCategories";
+import { useFoodCategories } from "@/hooks/use-food-categories";
 import { useGetFoods } from "@/hooks/use-foods";
 import FoodGrid from "./food-grid";
 import Pagination from "./pagination";
@@ -124,7 +124,7 @@ export default function FoodsWorkspace() {
         {/* Left Side Hierarchy Filter Layout */}
         <div className="lg:col-span-3 space-y-6">
           <div className="bg-white border border-[#16100C]/10 rounded-2xl p-5 shadow-sm space-y-4">
-            <h3 className="font-fraunces text-base font-normal text-[#16100C]">Categories</h3>
+            <h3 className="font-heading text-base font-normal text-[#16100C]">Categories</h3>
             <div className="flex flex-col gap-1">
               <button
                 onClick={() => setActiveCategory("All")}

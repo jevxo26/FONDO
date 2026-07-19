@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Menu, Zap } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function HeroContent() {
   return (
@@ -11,7 +12,7 @@ export function HeroContent() {
         </span>
       </div>
 
-      <h1 className="font-fraunces text-4xl font-normal leading-tight tracking-tight text-secondary-foreground sm:text-5xl lg:text-[64px]">
+      <h1 className="font-heading text-4xl font-normal leading-tight tracking-tight text-secondary-foreground sm:text-5xl lg:text-[64px]">
         Honest food from local gardens.
       </h1>
 
@@ -21,24 +22,30 @@ export function HeroContent() {
       </p>
 
       <div className="flex items-center gap-3 sm:gap-4">
-        <Link
-          href="/foods"
-          className="flex items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 sm:gap-3 sm:px-5 sm:py-4"
+        <Button
+          variant="default"
+          size="xl"
+          className="gap-2 rounded-full h-auto sm:gap-3"
+          nativeButton={false}
+          render={<Link href="/foods" />}
         >
-          <Menu className="size-4 shrink-0 text-white" />
-          <span className="whitespace-nowrap font-sans text-sm font-semibold leading-5 text-white lg:text-base">
+          <Menu className="size-4 shrink-0 text-primary-foreground" />
+          <span className="whitespace-nowrap font-sans text-sm font-semibold leading-5 lg:text-base">
             Order Now
           </span>
-        </Link>
-        <Link
-          href="/foods"
-          className="flex items-center justify-center gap-2 rounded-2xl border border-primary bg-white/4 px-4 py-3 sm:px-5 sm:py-4"
+        </Button>
+        <Button
+          variant="outline"
+          size="xl"
+          className="gap-2 rounded-full h-auto"
+          nativeButton={false}
+          render={<Link href="/foods" />}
         >
-          <span className="whitespace-nowrap font-sans text-sm font-medium leading-5 text-foreground">
+          <span className="whitespace-nowrap font-sans text-sm font-medium leading-5">
             Browse categories
           </span>
-          <ArrowRight className="size-4 shrink-0 text-foreground" />
-        </Link>
+          <ArrowRight className="size-4 shrink-0" />
+        </Button>
       </div>
 
       <div className="flex flex-wrap items-center gap-6">

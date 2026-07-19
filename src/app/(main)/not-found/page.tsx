@@ -18,7 +18,7 @@ export default function OrderNotFound() {
         {/* TOP PANEL: Section Headline + Integrated Input Search Bar Grid */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-12">
           <div>
-            <h1 className="font-fraunces text-4xl font-normal text-secondary-foreground tracking-tight">
+            <h1 className="font-heading text-4xl font-normal text-secondary-foreground tracking-tight">
               Track Your Order
             </h1>
             <p className="font-sans text-xs text-muted-foreground mt-1">
@@ -65,7 +65,7 @@ export default function OrderNotFound() {
 
           {/* Redirect CTA Navigation Action Button */}
           <Link
-            href="/menu"
+            href="/foods"
             className="inline-flex h-11 items-center justify-center rounded-xl bg-primary px-6 font-sans text-xs font-semibold text-card transition-colors hover:bg-[#bfa052] shadow-sm"
           >
             Back to Shopping

@@ -22,7 +22,7 @@ export function InfiniteSlider({
 }: InfiniteSliderProps) {
   return (
     <div
-      className={cn("overflow-hidden", className)}
+      className={cn("overflow-hidden px-4", className)}
       style={
         {
           "--slide-duration": `${speed}s`,

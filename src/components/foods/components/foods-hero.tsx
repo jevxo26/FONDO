@@ -1,5 +1,5 @@
 "use client";
-import { useFoodCategories } from "@/hooks/useFoodCategories";
+import { useFoodCategories } from "@/hooks/use-food-categories";
 import { Search } from "lucide-react";
 import { useFoods } from "./foods-provider";
 
@@ -16,7 +16,7 @@ export default function FoodsHero() {
         <span className="font-sans text-xs font-bold uppercase tracking-widest text-[#CEA359]">
           Culinary Masterpieces
         </span>
-        <h1 className="font-fraunces text-4xl md:text-6xl font-normal text-[#16100C] leading-tight">
+        <h1 className="font-heading text-4xl md:text-6xl font-normal text-[#16100C] leading-tight">
           Explore Our Authentic Menu
         </h1>
         <p className="font-sans text-sm md:text-base text-[#16100C]/70 max-w-xl mx-auto leading-relaxed font-light">

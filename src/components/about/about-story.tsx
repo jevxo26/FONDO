@@ -16,13 +16,13 @@ export default function OurStory() {
           {/* Overlapping Badge */}
           <div className="absolute -bottom-6 -right-4 md:-right-6 size-24 md:size-28 rounded-full bg-[#FCD391] border border-[#CEA359]/30 flex flex-col items-center justify-center shadow-lg text-center p-3">
             <span className="font-sans text-[10px] uppercase tracking-widest text-[#16100C]/60">Since</span>
-            <span className="font-fraunces text-xl font-bold text-[#16100C]">2021</span>
+            <span className="font-heading text-xl font-bold text-[#16100C]">2021</span>
           </div>
         </div>
         {/* Right Text */}
         <div className="lg:col-span-7 space-y-6 lg:pl-8">
           <span className="font-sans text-xs font-bold uppercase tracking-widest text-[#CEA359]">Our Legacy</span>
-          <h2 className="font-fraunces text-3xl md:text-5xl font-normal text-[#16100C]">
+          <h2 className="font-heading text-3xl md:text-5xl font-normal text-[#16100C]">
             The Story Behind Food Flow
           </h2>
           <div className="font-sans text-sm text-[#16100C]/75 space-y-4 leading-relaxed font-light">

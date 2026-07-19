@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { SectionReveal } from "@/components/common/section-reveal";
 import { ArrowRight, Play } from "lucide-react";
 import Image from "next/image";
@@ -19,30 +20,33 @@ export function ServiceBanner() {
           <SectionReveal variant="blurReveal" distance={20}>
             <div className="relative z-10 flex w-full max-w-full flex-col gap-4 p-6 sm:max-w-[730px] sm:gap-6 sm:p-8 lg:p-10">
               <div className="inline-flex w-fit items-center rounded-full border border-primary/40 bg-primary/15 px-3 py-1.5">
-                <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.275px] text-background">
+                <span className="font-sans text-xs font-semibold uppercase tracking-wider text-background">
                   Tonight&apos;s service is open
                 </span>
               </div>
 
-              <h2 className="font-fraunces text-3xl leading-[120%] tracking-[-1.2px] text-background sm:text-4xl md:text-5xl lg:text-[60px]">
+              <h2 className="font-heading text-3xl leading-tight tracking-tight text-background sm:text-4xl md:text-5xl lg:text-[60px]">
                 A heritage feast, delivered in 25 minutes.
               </h2>
 
-              <p className="text-sm leading-[120%] text-background/75 sm:text-base">
+              <p className="text-sm leading-tight text-background/75 sm:text-base">
                 Free delivery over ৳999 across Dhaka. Reserve a table, or let us bring the kitchen
                 to you.
               </p>
 
               <div className="flex items-center gap-3 sm:gap-6">
-                <Link
-                  href="/foods"
-                  className="flex items-center gap-2 rounded-full bg-primary px-4 py-3 transition-shadow duration-300 hover:shadow-[var(--shadow-elevated)] sm:gap-2.5 sm:px-6 sm:py-3.5"
+                <Button
+                  variant="default"
+                  size="xl"
+                  className="gap-2 rounded-full h-auto shadow-[var(--shadow-elevated)]"
+                  nativeButton={false}
+                  render={<Link href="/foods" />}
                 >
-                  <Play className="size-4 shrink-0 fill-primary-foreground text-primary-foreground" />
-                  <span className="whitespace-nowrap font-sans text-sm font-semibold text-primary-foreground">
+                  <Play className="size-4 shrink-0 fill-primary-foreground" />
+                  <span className="whitespace-nowrap font-sans text-sm font-semibold">
                     Order now
                   </span>
-                </Link>
+                </Button>
                 <Link
                   href="/foods"
                   className="flex items-center gap-2 rounded-full border border-background/30 bg-background/10 px-4 py-3 backdrop-blur transition-shadow duration-300 hover:shadow-[var(--shadow-elevated)] sm:px-6 sm:py-3.5"

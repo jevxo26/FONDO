@@ -1,5 +1,19 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+"use client";
+
+import { useEffect } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api-client";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setCartData, clearCartData } from "@/store/slices/cartDataSlice";
+import { incrementCartCount } from "@/store/slices/counterSlice";
+import { toast } from "sonner";
+import { handleApiError } from "@/lib/api-error";
+
+export interface CartItemFood {
+  id: string;
+  name: string;
+  thumbnail: string | null;
+}
 
 export interface CartItemFood {
   id: string;
@@ -26,42 +40,73 @@ export interface Cart {
 }
 
 export function useCart() {
-  return useQuery({
+  const dispatch = useAppDispatch();
+  const reduxCart = useAppSelector((s) => s.cartData.cart);
+
+  const query = useQuery({
     queryKey: ["cart"],
     queryFn: () => api.get<Cart>("/cart"),
+    staleTime: 30_000,
+    gcTime: 60_000,
   });
+
+  useEffect(() => {
+    if (query.data) dispatch(setCartData(query.data));
+  }, [query.data, dispatch]);
+
+  return {
+    ...query,
+    data: reduxCart ?? query.data,
+  };
 }
 
 export function useAddToCart() {
-  const qc = useQueryClient();
+  const dispatch = useAppDispatch();
   return useMutation({
     mutationFn: (data: { foodId: string; quantity: number; unitPrice: number }) =>
       api.post<Cart>("/cart/items", data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["cart"] }),
+    onSuccess: (data, variables) => {
+      dispatch(incrementCartCount(variables.quantity));
+      dispatch(setCartData(data));
+      toast.success("Added to cart");
+    },
+    onError: (error) => toast.error(handleApiError(error)),
   });
 }
 
 export function useRemoveFromCart() {
-  const qc = useQueryClient();
+  const dispatch = useAppDispatch();
   return useMutation({
-    mutationFn: (itemId: string) => api.delete(`/cart/items/${itemId}`),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["cart"] }),
+    mutationFn: (itemId: string) => api.delete<Cart>(`/cart/items/${itemId}`),
+    onSuccess: (data) => {
+      dispatch(setCartData(data));
+      toast.success("Item removed");
+    },
+    onError: (error) => toast.error(handleApiError(error)),
   });
 }
 
 export function useUpdateCartItem() {
-  const qc = useQueryClient();
+  const dispatch = useAppDispatch();
   return useMutation({
     mutationFn: ({ itemId, quantity }: { itemId: string; quantity: number }) =>
-      api.patch(`/cart/items/${itemId}`, { quantity }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["cart"] }),
+      api.patch<Cart>(`/cart/items/${itemId}`, { quantity }),
+    onSuccess: (data) => {
+      dispatch(setCartData(data));
+      toast.success("Quantity updated");
+    },
+    onError: (error) => toast.error(handleApiError(error)),
   });
 }
 
 export function useClearCart() {
-  const qc = useQueryClient();
+  const dispatch = useAppDispatch();
   return useMutation({
     mutationFn: () => api.delete("/cart"),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["cart"] }),
+    onSuccess: () => {
+      dispatch(clearCartData());
+      toast.success("Cart cleared");
+    },
+    onError: (error) => toast.error(handleApiError(error)),
   });
 }

@@ -20,7 +20,7 @@ export function WalletCard({ totalHoldings, pendingRefunds }: WalletCardProps) {
               <p className="mb-1 text-xs font-bold uppercase tracking-widest text-primary">
                 Total Assets
               </p>
-              <h4 className="font-fraunces text-2xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] md:text-4xl">
+              <h4 className="font-heading text-2xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] md:text-4xl">
                 ৳{(totalHoldings + pendingRefunds).toLocaleString()}
               </h4>
             </div>

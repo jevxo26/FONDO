@@ -59,7 +59,7 @@ export function HeroImage({ foods }: HeroImageProps) {
                     unoptimized
                   />
                 </div>
-                <div className="absolute left-3 top-3 flex w-fit items-center gap-2.5 rounded-2xl bg-white p-2.5 shadow-[var(--shadow-badge)] sm:left-4 sm:top-4">
+                <div className="absolute left-3 top-3 flex w-fit items-center gap-2.5 rounded-2xl bg-background p-2.5 shadow-[var(--shadow-badge)] sm:left-4 sm:top-4">
                   <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/20">
                     <Star className="size-4 text-primary" />
                   </div>
@@ -72,7 +72,7 @@ export function HeroImage({ foods }: HeroImageProps) {
                     </span>
                   </div>
                 </div>
-                <div className="absolute bottom-4 right-3 flex w-fit items-center gap-2 rounded-2xl bg-white p-3 shadow-[var(--shadow-elevated)] sm:bottom-8 sm:right-4">
+                <div className="absolute bottom-4 right-3 flex w-fit items-center gap-2 rounded-2xl bg-background p-3 shadow-[var(--shadow-elevated)] sm:bottom-8 sm:right-4">
                   <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/20">
                     <Timer className="size-4 text-primary" />
                   </div>

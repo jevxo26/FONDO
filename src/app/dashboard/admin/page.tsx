@@ -54,7 +54,7 @@ export default function DashboardPage() {
         <div className="flex items-center gap-2 md:gap-4">
           <div className="flex items-center gap-2">
             <div className="size-2 rounded-full bg-primary" />
-            <h1 className="font-fraunces text-xl font-bold leading-tight tracking-tight text-foreground md:text-[32px]">
+            <h1 className="font-heading text-xl font-bold leading-tight tracking-tight text-foreground md:text-[32px]">
               Overview
             </h1>
           </div>

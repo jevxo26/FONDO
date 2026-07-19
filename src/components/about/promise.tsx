@@ -14,7 +14,7 @@ export default function FoodoPromise() {
   return (
     <section className="py-16 bg-[#EBE5DA] text-[#16100C]">
       <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-10">
-        <h2 className="font-fraunces text-2xl md:text-3xl font-normal text-center">The Foodo Promise</h2>
+        <h2 className="font-heading text-2xl md:text-3xl font-normal text-center">The Foodo Promise</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {promises.map((prom, idx) => (
             <div key={idx} className="flex gap-4 items-start">

@@ -64,7 +64,7 @@ export function CustomerCard({ customer }: CustomerCardProps) {
 
   return (
     <Link
-      href={`/dashboard/customers/orders?customer=${encodeURIComponent(customer.fullName)}`}
+      href={`/dashboard/admin/customers/orders?customer=${encodeURIComponent(customer.fullName)}`}
       className={`group relative block overflow-hidden rounded-3xl shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] active:scale-[0.98] ${config.cardBg}`}
     >
       <span className="pointer-events-none absolute -bottom-4 -right-4 select-none text-[120px] font-bold leading-none text-primary/[0.06]">

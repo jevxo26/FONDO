@@ -15,7 +15,7 @@ const ReviewsTab = ({ ratingData }: ratingData) => {
     <div className="flex flex-col gap-8">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center border-b border-border/40 pb-8">
         <div className="md:col-span-3 flex flex-col items-center justify-center text-center border-r border-border/40 py-2">
-          <h2 className="font-fraunces text-5xl font-bold text-secondary-foreground">
+          <h2 className="font-heading text-5xl font-bold text-secondary-foreground">
             {ratingData.averageRating.toFixed(1)}
           </h2>
           <div className="flex items-center gap-0.5 mt-2">

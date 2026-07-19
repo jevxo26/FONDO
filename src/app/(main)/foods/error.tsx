@@ -18,7 +18,7 @@ export default function FoodsError({
   return (
     <div className="min-h-[60vh] bg-background flex items-center justify-center px-4">
       <div className="text-center max-w-md">
-        <h2 className="font-fraunces text-2xl font-semibold text-foreground mb-2">
+        <h2 className="font-heading text-2xl font-semibold text-foreground mb-2">
           Something went wrong
         </h2>
         <p className="font-sans text-sm text-muted-foreground mb-6">

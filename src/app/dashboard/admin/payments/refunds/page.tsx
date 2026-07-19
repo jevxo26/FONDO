@@ -26,7 +26,7 @@ export default function PaymentsRefundsPage() {
       </div>
       <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <DarkCard icon={<Wallet className="size-40" />} title="Total Refund Amount" description={`Across ${total} requests`}>
-          <div className="font-fraunces text-3xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">৳{totalAmount.toLocaleString()}</div>
+          <div className="font-heading text-3xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">৳{totalAmount.toLocaleString()}</div>
           <div className="mt-3 flex items-center gap-2 text-sm text-white/70">
             <div className="h-2 w-full rounded-full bg-white/10">
               <div className="h-2 rounded-full bg-primary" style={{ width: `${(refunds.filter((r) => r.status === "PROCESSED").length / total) * 100}%` }} />

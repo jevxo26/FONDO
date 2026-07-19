@@ -14,8 +14,8 @@ export default function StoryMissionStats() {
           <Utensils className="size-6" />
         </div>
 
-        {/* Section Heading using font-fraunces */}
-        <h2 className="font-fraunces text-3xl md:text-5xl font-normal tracking-tight text-[#FAF5EB]">
+        {/* Section Heading using font-heading */}
+        <h2 className="font-heading text-3xl md:text-5xl font-normal tracking-tight text-[#FAF5EB]">
           Our Mission
         </h2>
 
@@ -29,7 +29,7 @@ export default function StoryMissionStats() {
           
           {/* Stat Item 1 */}
           <div className="px-2 text-center">
-            <span className="font-fraunces text-lg sm:text-xl md:text-2xl font-normal text-[#CEA359] block">
+            <span className="font-heading text-lg sm:text-xl md:text-2xl font-normal text-[#CEA359] block">
               100%
             </span>
             <span className="font-sans text-[10px] sm:text-xs text-[#FAF5EB]/60 uppercase tracking-widest block mt-1">
@@ -39,7 +39,7 @@ export default function StoryMissionStats() {
 
           {/* Stat Item 2 */}
           <div className="px-2 text-center">
-            <span className="font-fraunces text-lg sm:text-xl md:text-2xl font-normal text-[#CEA359] block">
+            <span className="font-heading text-lg sm:text-xl md:text-2xl font-normal text-[#CEA359] block">
               40+
             </span>
             <span className="font-sans text-[10px] sm:text-xs text-[#FAF5EB]/60 uppercase tracking-widest block mt-1">
@@ -49,7 +49,7 @@ export default function StoryMissionStats() {
 
           {/* Stat Item 3 */}
           <div className="px-2 text-center">
-            <span className="font-fraunces text-lg sm:text-xl md:text-2xl font-normal text-[#CEA359] block">
+            <span className="font-heading text-lg sm:text-xl md:text-2xl font-normal text-[#CEA359] block">
               12h
             </span>
             <span className="font-sans text-[10px] sm:text-xs text-[#FAF5EB]/60 uppercase tracking-widest block mt-1">

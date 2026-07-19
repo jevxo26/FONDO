@@ -16,7 +16,7 @@ export function RiderProfileInfo({ rider }: ProfileInfoProps) {
     <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
       <div className="lg:col-span-2 space-y-6">
         <div className="rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-6 shadow-[var(--shadow-card)]">
-          <h3 className="font-fraunces text-lg font-semibold text-foreground">Personal Information</h3>
+          <h3 className="font-heading text-lg font-semibold text-foreground">Personal Information</h3>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex items-center gap-3">
               <User className="size-5 text-muted-foreground" />
@@ -50,7 +50,7 @@ export function RiderProfileInfo({ rider }: ProfileInfoProps) {
         </div>
 
         <div className="rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-6 shadow-[var(--shadow-card)]">
-          <h3 className="font-fraunces text-lg font-semibold text-foreground">Vehicle & Documents</h3>
+          <h3 className="font-heading text-lg font-semibold text-foreground">Vehicle & Documents</h3>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex items-center gap-3">
               <Car className="size-5 text-muted-foreground" />
@@ -80,7 +80,7 @@ export function RiderProfileInfo({ rider }: ProfileInfoProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs uppercase tracking-widest text-muted-foreground">Status</p>
-              <p className={cn("font-fraunces text-xl font-bold", online ? "text-success" : "text-muted-foreground")}>
+              <p className={cn("font-heading text-xl font-bold", online ? "text-success" : "text-muted-foreground")}>
                 {online ? "Online" : "Offline"}
               </p>
             </div>
@@ -100,7 +100,7 @@ export function RiderProfileInfo({ rider }: ProfileInfoProps) {
         </div>
 
         <div className="rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-6 shadow-[var(--shadow-card)]">
-          <h4 className="font-fraunces text-base font-semibold text-foreground">Stats</h4>
+          <h4 className="font-heading text-base font-semibold text-foreground">Stats</h4>
           <div className="mt-4 space-y-3 text-sm">
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Total Deliveries</span>

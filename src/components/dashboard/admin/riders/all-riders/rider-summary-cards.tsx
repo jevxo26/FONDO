@@ -26,7 +26,7 @@ export function RiderSummaryCards() {
           description={`${avgRating} avg rating · ${zoneCount} zones`}
         >
           <div className="mb-6 flex items-baseline gap-2">
-            <h2 className="font-fraunces text-3xl font-bold text-white md:text-5xl">{total}</h2>
+            <h2 className="font-heading text-3xl font-bold text-white md:text-5xl">{total}</h2>
             <span className="text-sm text-white/70">Total Riders</span>
           </div>
           <div className="flex flex-wrap gap-4 border-t border-white/10 pt-4 text-sm">

@@ -35,7 +35,7 @@ export default function VendorsPendingPage() {
           description="1.8 days faster than last quarter"
           className="flex-1"
         >
-          <div className="font-fraunces text-4xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">67%</div>
+          <div className="font-heading text-4xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">67%</div>
           <div className="mt-3 text-sm text-white/70">Approval rate improvement</div>
         </DarkCard>
       </div>

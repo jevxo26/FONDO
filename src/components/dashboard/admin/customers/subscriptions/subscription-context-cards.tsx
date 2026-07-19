@@ -24,7 +24,7 @@ export function SubscriptionContextCards() {
         title="Renewal Rate"
         description="Customers renewing this month"
       >
-        <p className="font-fraunces text-[28px]">78%</p>
+        <p className="font-heading text-[28px]">78%</p>
         <p className="text-sm text-primary">+5% vs last quarter</p>
       </DarkCard>
     </div>

@@ -12,7 +12,7 @@ export default function ContactHero() {
           </span>
 
           {/* Main Serif Headline Statement */}
-          <h1 className="font-fraunces text-4xl sm:text-5xl md:text-6xl font-normal text-foreground tracking-tight leading-[1.08]">
+          <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-normal text-foreground tracking-tight leading-[1.08]">
             We&apos;d love to hear from you.
           </h1>
 

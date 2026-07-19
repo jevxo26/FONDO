@@ -10,7 +10,7 @@ export default function MissionVision() {
           <div className="text-[#CEA359] bg-[#CEA359]/10 size-10 rounded-full flex items-center justify-center">
             <Flag className="size-5" />
           </div>
-          <h3 className="font-fraunces text-xl font-normal text-[#16100C]">Our Mission</h3>
+          <h3 className="font-heading text-xl font-normal text-[#16100C]">Our Mission</h3>
           <p className="font-sans text-xs text-[#16100C]/70 leading-relaxed font-light">
             To make healthy eating accessible, affordable, and delicious for everyone, showing that premium nutrition is never a luxury, but a daily standard.
           </p>
@@ -20,7 +20,7 @@ export default function MissionVision() {
           <div className="text-[#CEA359] bg-[#CEA359]/10 size-10 rounded-full flex items-center justify-center">
             <Eye className="size-5" />
           </div>
-          <h3 className="font-fraunces text-xl font-normal text-[#16100C]">Our Vision</h3>
+          <h3 className="font-heading text-xl font-normal text-[#16100C]">Our Vision</h3>
           <p className="font-sans text-xs text-[#16100C]/70 leading-relaxed font-light">
             To become Bangladesh&apos;s most trusted personalized food subscription platform, nurturing a healthier nation one plate at a time.
           </p>

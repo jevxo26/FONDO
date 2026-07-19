@@ -1,6 +1,7 @@
-import { SectionReveal } from "@/components/common/section-reveal";
-import { CHEF_STORY } from "@/data/homepage";
 import { cn } from "@/lib/utils";
+import { SectionReveal } from "@/components/common/section-reveal";
+import { Badge } from "@/components/ui/badge";
+import { CHEF_STORY } from "@/data/homepage";
 import { Award, BookOpen, Sparkles } from "lucide-react";
 import Image from "next/image";
 
@@ -11,9 +12,9 @@ const iconMap = {
 };
 
 const variantClasses = {
-  dark: "bg-foreground text-white border-foreground",
-  orange: "bg-[#E7963D]/15 text-foreground border-[#E7963D]/40",
-  light: "bg-white text-foreground border-border",
+  dark: "bg-foreground text-background border-foreground",
+  orange: "bg-primary/15 text-foreground border-primary/40",
+  light: "bg-card text-foreground border-border",
 };
 
 export function ChefStory() {
@@ -33,8 +34,8 @@ export function ChefStory() {
                   className="object-cover"
                 />
                 {/* Stats overlay card */}
-                <div className="absolute bottom-6 right-6 flex flex-col rounded-3xl border border-border bg-white p-4 shadow-[var(--shadow-elevated)]">
-                  <span className="font-sans text-[30px] font-bold leading-none tracking-[-0.6px] text-foreground">
+                <div className="absolute bottom-6 right-6 flex flex-col rounded-3xl border border-border bg-card p-4 shadow-[var(--shadow-elevated)]">
+                  <span className="font-sans text-3xl font-bold leading-none tracking-tight text-foreground">
                     {CHEF_STORY.stats.value}
                   </span>
                   <span className="mt-1 text-xs text-foreground/55">{CHEF_STORY.stats.label}</span>
@@ -45,18 +46,18 @@ export function ChefStory() {
             {/* Text */}
             <div className="flex flex-1 flex-col gap-8">
               <div className="flex flex-col gap-3">
-                <span className="text-xs font-semibold uppercase tracking-[2.534px] text-foreground/60">
+                <span className="text-xs font-semibold uppercase tracking-label text-foreground/60">
                   {CHEF_STORY.label}
                 </span>
-                <h2 className="font-fraunces text-3xl leading-tight tracking-[-0.96px] text-foreground sm:text-4xl lg:text-[48px]">
+                <h2 className="font-heading text-3xl leading-tight tracking-heading text-foreground sm:text-4xl lg:text-[48px]">
                   {CHEF_STORY.name}
                 </h2>
                 <p className="text-base leading-relaxed text-foreground/65">{CHEF_STORY.bio}</p>
               </div>
 
               {/* Quote */}
-              <blockquote className="border-l-[3px] border-primary pl-5">
-                <p className="font-fraunces text-[24px] italic leading-snug tracking-[-0.48px] text-foreground">
+              <blockquote className="border-l-2 border-primary pl-5">
+                <p className="font-heading text-2xl italic leading-snug tracking-tight text-foreground">
                   &ldquo;{CHEF_STORY.quote}&rdquo;
                 </p>
               </blockquote>
@@ -65,17 +66,19 @@ export function ChefStory() {
               <div className="flex flex-wrap items-center gap-4">
                 {CHEF_STORY.badges.map((badge) => {
                   const Icon = iconMap[badge.icon as keyof typeof iconMap];
+                  const variantClass = variantClasses[badge.variant];
                   return (
-                    <div
+                    <Badge
                       key={badge.text}
+                      variant="outline"
                       className={cn(
-                        "flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold",
-                        variantClasses[badge.variant],
+                        "h-auto gap-2 rounded-full px-3 py-1.5 text-xs font-semibold",
+                        variantClass,
                       )}
                     >
                       {Icon && <Icon className="size-3" />}
                       {badge.text}
-                    </div>
+                    </Badge>
                   );
                 })}
               </div>

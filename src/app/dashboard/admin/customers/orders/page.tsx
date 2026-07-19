@@ -1,31 +1,71 @@
+"use client";
+
+import { Suspense } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
+import { api } from "@/lib/api-client";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { ContextCards } from "@/components/dashboard/admin/customers/orders/context-cards";
 import { OrdersTableSection } from "@/components/dashboard/admin/customers/orders/orders-table-section";
-
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { Button } from "@/components/ui/button";
-import { orders } from "@/data/orders";
+import { Skeleton } from "@/components/ui/skeleton";
 import { CheckCircle, Clock, Download, Plus, ShoppingBag, Timer, X } from "lucide-react";
 import Link from "next/link";
+import type { CustomerOrder } from "@/data/orders";
 
-export default async function CustomerOrdersPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const { customer } = await searchParams;
-  const customerFilter = typeof customer === "string" ? customer : undefined;
+interface ApiOrder {
+  id: string;
+  orderNumber: string;
+  orderStatus: string;
+  paymentStatus: string;
+  totalAmount: number;
+  placedAt: string;
+  items: unknown[];
+  customer: { id: string; firstName: string; lastName: string; phone: string };
+}
 
-  const filteredOrders = customerFilter
-    ? orders.filter((o) => o.customerName.toLowerCase() === customerFilter.toLowerCase())
-    : orders;
+interface PaginatedOrders {
+  items: ApiOrder[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
 
-  const totalOrders = filteredOrders.length;
-  const pending = filteredOrders.filter((o) => o.orderStatus === "PENDING").length;
-  const inProgress = filteredOrders.filter(
+function adaptOrder(o: ApiOrder): CustomerOrder {
+  return {
+    id: o.id,
+    orderNumber: o.orderNumber,
+    customerId: o.customer.id,
+    customerName: `${o.customer.firstName} ${o.customer.lastName}`.trim(),
+    items: o.items.length,
+    totalAmount: Number(o.totalAmount),
+    orderStatus: o.orderStatus as CustomerOrder["orderStatus"],
+    paymentStatus: o.paymentStatus as CustomerOrder["paymentStatus"],
+    placedAt: o.placedAt ? new Date(o.placedAt).toLocaleDateString() : "",
+  };
+}
+
+function OrdersContent() {
+  const searchParams = useSearchParams();
+  const customerFilter = searchParams.get("customer") ?? undefined;
+
+  const { data } = useQuery({
+    queryKey: ["admin", "orders", "all"],
+    queryFn: () => api.get<PaginatedOrders>("/admin/orders?page=1&limit=100"),
+  });
+
+  const allOrders = (data?.items ?? []).map(adaptOrder);
+  const orders = customerFilter
+    ? allOrders.filter((o) => o.customerName.toLowerCase().includes(customerFilter.toLowerCase()))
+    : allOrders;
+  const total = orders.length;
+  const pending = orders.filter((o) => o.orderStatus === "PENDING").length;
+  const inProgress = orders.filter(
     (o) => o.orderStatus === "PREPARING" || o.orderStatus === "ON_THE_WAY",
   ).length;
-  const completed = filteredOrders.filter((o) => o.orderStatus === "COMPLETED").length;
+  const completed = orders.filter((o) => o.orderStatus === "COMPLETED").length;
 
   return (
     <div>
@@ -48,22 +88,10 @@ export default async function CustomerOrdersPage({
       />
 
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total Orders" value={totalOrders} icon={ShoppingBag} accent="bottom" />
+        <StatCard label="Total Orders" value={total} icon={ShoppingBag} accent="bottom" />
         <StatCard label="Pending" value={pending} variant="warning" icon={Clock} accent="bottom" />
-        <StatCard
-          label="In Progress"
-          value={inProgress}
-          variant="danger"
-          icon={Timer}
-          accent="bottom"
-        />
-        <StatCard
-          label="Completed"
-          value={completed}
-          variant="success"
-          icon={CheckCircle}
-          accent="bottom"
-        />
+        <StatCard label="In Progress" value={inProgress} variant="danger" icon={Timer} accent="bottom" />
+        <StatCard label="Completed" value={completed} variant="success" icon={CheckCircle} accent="bottom" />
       </div>
 
       {customerFilter && (
@@ -81,12 +109,20 @@ export default async function CustomerOrdersPage({
       )}
 
       <div className="mt-8">
-        <OrdersTableSection data={filteredOrders} />
+        <OrdersTableSection data={orders} />
       </div>
 
       <div className="mt-8">
         <ContextCards />
       </div>
     </div>
+  );
+}
+
+export default function CustomerOrdersPage() {
+  return (
+    <Suspense fallback={<div className="space-y-6"><Skeleton className="h-12 w-full" /><Skeleton className="h-64 w-full" /></div>}>
+      <OrdersContent />
+    </Suspense>
   );
 }

@@ -1,14 +1,14 @@
 import { SectionReveal } from "@/components/common/section-reveal";
-import { BlogReviewCard } from "./blog-review-card";
-import { BLOG_POSTS } from "@/data/homepage";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
+import { BLOG_POSTS } from "@/data/homepage";
+import { BlogReviewCard } from "./blog-review-card";
 
 export function BlogReviews() {
   return (
     <section>
       <div className="wrapper">
-        <SectionReveal variant="blurReveal" distance={20}>
-          <h2 className="text-center font-sans text-2xl font-bold leading-[130%] text-foreground sm:text-3xl lg:text-[32px]">
+        <SectionReveal distance={20}>
+          <h2 className="text-center font-sans text-2xl font-bold leading-snug text-foreground sm:text-3xl lg:text-[32px]">
             Our BlogsReview
           </h2>
 

@@ -10,7 +10,7 @@ export default function RiderPerformancePage() {
       <PageHeader title="Performance" description="Your delivery stats and customer ratings." icon={BarChart3} />
       <PerformanceCards perf={myPerformance} />
       <div className="mt-10">
-        <h3 className="font-fraunces text-lg font-semibold text-foreground">Completion Rate</h3>
+        <h3 className="font-heading text-lg font-semibold text-foreground">Completion Rate</h3>
         <p className="text-sm text-muted-foreground">{myPerformance.completionRate}% of deliveries completed successfully</p>
         <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-muted">
           <div
@@ -20,7 +20,7 @@ export default function RiderPerformancePage() {
         </div>
       </div>
       <div className="mt-10">
-        <h3 className="font-fraunces text-lg font-semibold text-foreground">Recent Ratings</h3>
+        <h3 className="font-heading text-lg font-semibold text-foreground">Recent Ratings</h3>
         <RatingTable data={riderRatings} />
       </div>
     </div>

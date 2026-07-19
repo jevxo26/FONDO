@@ -1,10 +1,8 @@
 "use client";
 
-import { ShoppingBag, Plus, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAddToCart } from "@/hooks/use-cart";
-import { toast } from "sonner";
-import { handleApiError } from "@/lib/api-error";
+import { Loader2, Plus, ShoppingBag } from "lucide-react";
 
 interface AddToCartButtonProps {
   foodId: string;
@@ -16,13 +14,8 @@ export default function AddToCartButton({ foodId, price, quantity = 1 }: AddToCa
   const addToCart = useAddToCart();
 
   const handleClick = () => {
-    addToCart.mutate(
-      { foodId, quantity, unitPrice: price },
-      {
-        onSuccess: () => toast.success("Added to cart"),
-        onError: (error) => toast.error(handleApiError(error)),
-      },
-    );
+    if (addToCart.isPending) return;
+    addToCart.mutate({ foodId, quantity, unitPrice: price });
   };
 
   return (

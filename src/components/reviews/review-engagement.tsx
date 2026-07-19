@@ -4,7 +4,7 @@ export default function EngagementBanner() {
   return (
     <section className="bg-primary text-primary-foreground py-16 text-center border-t border-b border-border/10">
       <div className="wrapper max-w-2xl mx-auto space-y-6">
-        <h2 className="font-fraunces text-2xl md:text-4xl font-normal tracking-tight">
+        <h2 className="font-heading text-2xl md:text-4xl font-normal tracking-tight">
           Share Your Food Flow Experience
         </h2>
         <p className="font-sans text-xs sm:text-sm opacity-90 leading-relaxed font-light">

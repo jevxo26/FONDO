@@ -48,7 +48,7 @@ const FoodGrid = ({filteredFoods}: {filteredFoods: Food[]}) => {
                       {/* Content Layer */}
                       <div className="p-4 space-y-3">
                         <div className="flex justify-between items-start gap-2">
-                          <h4 className="font-fraunces text-base font-normal text-[#16100C] leading-tight">
+                          <h4 className="font-heading text-base font-normal text-[#16100C] leading-tight">
                             {food.name}
                           </h4>
                           <div className="flex items-center gap-0.5 shrink-0 text-amber-500 font-bold text-[10px] mt-0.5">
@@ -104,7 +104,7 @@ const FoodGrid = ({filteredFoods}: {filteredFoods: Food[]}) => {
                     <div className="p-4 pt-0 border-t border-[#16100C]/5 mt-2 flex items-center justify-between">
                       <div>
                         <span className="text-[9px] uppercase tracking-widest text-[#16100C]/40 block font-light">Price Target</span>
-                        <span className="font-fraunces text-base font-bold text-[#16100C]">৳{currentVariant.price}</span>
+                        <span className="font-heading text-base font-bold text-[#16100C]">৳{currentVariant.price}</span>
                       </div>
                       <button className="px-4 py-2 bg-[#CEA359] hover:bg-[#b08443] transition-colors font-sans font-bold text-[10px] uppercase tracking-wider text-white rounded-xl shadow-sm">
                         Add to Cell

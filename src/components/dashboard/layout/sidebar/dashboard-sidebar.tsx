@@ -68,7 +68,7 @@ export function DashboardSidebar({
                 <LogoIcon className="size-5 text-white group-data-[collapsible=icon]:size-4" />
               </div>
               <div className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
-                <span className="font-fraunces text-xl font-bold">FONDO</span>
+                <span className="font-heading text-xl font-bold">FONDO</span>
                 <span className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
                   {panelLabel}
                 </span>

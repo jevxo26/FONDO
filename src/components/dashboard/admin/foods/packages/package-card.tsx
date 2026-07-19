@@ -45,7 +45,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
           <div className="absolute bottom-3 left-4 right-4">
             <div className="flex items-center gap-2">
-              <h3 className="font-fraunces text-lg font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
+              <h3 className="font-heading text-lg font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
                 {pkg.name}
               </h3>
             </div>
@@ -70,7 +70,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 Daily Calories
               </p>
-              <p className="mt-0.5 font-fraunces text-lg font-bold text-foreground">
+              <p className="mt-0.5 font-heading text-lg font-bold text-foreground">
                 {pkg.dailyCalories.toLocaleString()}
               </p>
             </div>
@@ -78,14 +78,14 @@ export function PackageCard({ pkg }: PackageCardProps) {
               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 Protein
               </p>
-              <p className="mt-0.5 font-fraunces text-lg font-bold text-foreground">
+              <p className="mt-0.5 font-heading text-lg font-bold text-foreground">
                 {pkg.dailyProtein}g
               </p>
             </div>
           </div>
 
           <div className="mt-4 flex items-baseline gap-1">
-            <span className="font-fraunces text-[28px] font-bold tracking-tight text-foreground">
+            <span className="font-heading text-[28px] font-bold tracking-tight text-foreground">
               ৳{pkg.price.toLocaleString()}
             </span>
             {pkg.discountPrice && (

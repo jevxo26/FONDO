@@ -23,21 +23,21 @@ export default function KitchenQueuePage() {
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
         <div className="rounded-3xl bg-gradient-to-br from-warning/10 via-card to-warning/[0.04] p-5 shadow-[var(--shadow-card)]">
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Queued</p>
-          <p className="mt-1 font-fraunces text-[30px] font-bold text-warning">{queued.length}</p>
+          <p className="mt-1 font-heading text-[30px] font-bold text-warning">{queued.length}</p>
         </div>
         <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-5 shadow-[var(--shadow-card)]">
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">In Prep</p>
-          <p className="mt-1 font-fraunces text-[30px] font-bold text-primary">{preparing.length}</p>
+          <p className="mt-1 font-heading text-[30px] font-bold text-primary">{preparing.length}</p>
         </div>
         <div className="rounded-3xl bg-gradient-to-br from-success/10 via-card to-success/[0.04] p-5 shadow-[var(--shadow-card)]">
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Ready</p>
-          <p className="mt-1 font-fraunces text-[30px] font-bold text-success">{ready.length}</p>
+          <p className="mt-1 font-heading text-[30px] font-bold text-success">{ready.length}</p>
         </div>
       </div>
 
       {preparing.length > 0 && (
         <div className="mt-8">
-          <h2 className="mb-4 font-fraunces text-lg font-bold text-foreground">In Preparation</h2>
+          <h2 className="mb-4 font-heading text-lg font-bold text-foreground">In Preparation</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {preparing.map((order) => {
               const detail = getOrderDetail(order.id);
@@ -94,7 +94,7 @@ export default function KitchenQueuePage() {
 
       {queued.length > 0 && (
         <div className="mt-8">
-          <h2 className="mb-4 font-fraunces text-lg font-bold text-foreground">Queued (Next to Prepare)</h2>
+          <h2 className="mb-4 font-heading text-lg font-bold text-foreground">Queued (Next to Prepare)</h2>
           <div className="space-y-2">
             {queued.slice(0, 5).map((order, i) => (
               <div

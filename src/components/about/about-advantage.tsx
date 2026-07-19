@@ -17,7 +17,7 @@ export default function FoodoAdvantage() {
     <section className="py-20 bg-[#FAF5EB]">
       <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-12">
         <div className="text-center space-y-2">
-          <h2 className="font-fraunces text-3xl md:text-4xl font-normal text-[#16100C]">The Foodo Advantage</h2>
+          <h2 className="font-heading text-3xl md:text-4xl font-normal text-[#16100C]">The Foodo Advantage</h2>
           <div className="w-16 h-0.5 bg-[#CEA359] mx-auto" />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

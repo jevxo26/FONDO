@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { closeMobileMenu } from "@/store/slices/uiSlice";
 import { mainNavLinks, childIcons } from "@/data/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 import { ROLE_DASHBOARD } from "@/data/navigation";
 import { useState } from "react";
 
@@ -178,7 +178,7 @@ export function MobileNav() {
         <div className="border-t border-border p-4 space-y-2">
           <MobileAuthSection closeAndClear={closeAndClear} />
           <Link
-            href="/menu"
+            href="/foods"
             onClick={closeAndClear}
             className="flex w-full items-center justify-center rounded-full bg-foreground py-3 text-sm font-medium text-background transition-colors hover:bg-foreground/90"
           >

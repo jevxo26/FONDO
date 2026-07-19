@@ -13,7 +13,7 @@ interface WalletSectionProps {
 export function WalletSection({ balance, transactions }: WalletSectionProps) {
   return (
     <div>
-      <h3 className="font-fraunces text-lg font-semibold text-foreground">Wallet</h3>
+      <h3 className="font-heading text-lg font-semibold text-foreground">Wallet</h3>
       <div className="mt-4 grid grid-cols-1 gap-5 lg:grid-cols-3">
         <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
           <div className="flex items-center gap-3">
@@ -22,7 +22,7 @@ export function WalletSection({ balance, transactions }: WalletSectionProps) {
             </div>
             <div>
               <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Available Balance</p>
-              <p className="font-fraunces text-3xl font-bold text-foreground">
+              <p className="font-heading text-3xl font-bold text-foreground">
                 ৳{balance.balance.toLocaleString()}
               </p>
             </div>
@@ -35,7 +35,7 @@ export function WalletSection({ balance, transactions }: WalletSectionProps) {
             </div>
             <div>
               <p className="text-[10px] uppercase tracking-widest text-muted-foreground">On Hold</p>
-              <p className="font-fraunces text-3xl font-bold text-foreground">
+              <p className="font-heading text-3xl font-bold text-foreground">
                 ৳{balance.holdBalance.toLocaleString()}
               </p>
             </div>
@@ -50,12 +50,12 @@ export function WalletSection({ balance, transactions }: WalletSectionProps) {
           </div>
           <div>
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Withdraw</p>
-            <p className="font-fraunces text-xl font-bold text-foreground">Transfer to Bank</p>
+            <p className="font-heading text-xl font-bold text-foreground">Transfer to Bank</p>
           </div>
         </div>
       </div>
       <div className="mt-6">
-        <h4 className="font-fraunces text-base font-semibold text-foreground">Transaction History</h4>
+        <h4 className="font-heading text-base font-semibold text-foreground">Transaction History</h4>
         <TransactionTable data={transactions} />
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { ProductHero } from "@/components/foods/single-foods/product-hero";
 import { ProductTabs } from "@/components/foods/single-foods/product-tab";
 import { RelatedFoods } from "@/components/foods/single-foods/related-foods";
-import { getFoodBySlug, getFoods } from "@/services/food.service";
+import { getFoodBySlug, getFoods } from "@/services/foods";
 import { notFound } from "next/navigation";
 
 interface PageProps {

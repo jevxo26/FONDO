@@ -27,7 +27,7 @@ export function RecentActivity() {
       <div className="pointer-events-none absolute -top-8 -right-8 z-0 size-28 rounded-full bg-primary/5 blur-2xl" />
       <div className="pointer-events-none absolute right-3 top-3 z-10 size-[7px] rotate-45 border border-primary/30" />
       <div className="relative z-10 p-6">
-        <h3 className="font-fraunces text-lg font-semibold text-foreground">Recent Activity</h3>
+        <h3 className="font-heading text-lg font-semibold text-foreground">Recent Activity</h3>
         <div className="mt-5 flex flex-col gap-4">
           {activities.map((activity) => {
             const cfg = iconConfig[activity.type] || { bg: 'bg-muted', color: 'text-muted-foreground' };

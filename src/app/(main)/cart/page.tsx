@@ -1,20 +1,73 @@
 "use client";
 
-import Link from "next/link";
 import { CartItemCard } from "@/components/carts/cart-item-card";
 import { OrderSummary } from "@/components/carts/order-summary";
-import { useCart, useRemoveFromCart, useUpdateCartItem, useClearCart } from "@/hooks/use-cart";
+import { Button } from "@/components/ui/button";
+import { useCart, useClearCart, useRemoveFromCart, useUpdateCartItem } from "@/hooks/use-cart";
 import { handleApiError } from "@/lib/api-error";
+import { setCartCount } from "@/store/slices/counterSlice";
+import { useAppDispatch } from "@/store/store";
 import type { CartItem as CartItemType } from "@/types/cart";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function CartPageView() {
   const { data: cart, isLoading, error } = useCart();
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveFromCart();
   const clearCart = useClearCart();
+  const dispatch = useAppDispatch();
 
-  if (isLoading) {
+  const [qtyUpdatingIds, setQtyUpdatingIds] = useState<Set<string>>(new Set());
+  const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (cart?.items) {
+      dispatch(setCartCount(cart.items.reduce((sum, i) => sum + i.quantity, 0)));
+    }
+  }, [cart, dispatch]);
+
+  const handleUpdateQuantity = (id: string, newQty: number) => {
+    if (newQty < 1) {
+      setDeletingIds((prev) => new Set(prev).add(id));
+      removeItem.mutate(id, {
+        onSettled: () =>
+          setDeletingIds((prev) => {
+            const next = new Set(prev);
+            next.delete(id);
+            return next;
+          }),
+      });
+      return;
+    }
+    setQtyUpdatingIds((prev) => new Set(prev).add(id));
+    updateItem.mutate(
+      { itemId: id, quantity: newQty },
+      {
+        onSettled: () =>
+          setQtyUpdatingIds((prev) => {
+            const next = new Set(prev);
+            next.delete(id);
+            return next;
+          }),
+      },
+    );
+  };
+
+  const handleRemoveItem = (id: string) => {
+    setDeletingIds((prev) => new Set(prev).add(id));
+    removeItem.mutate(id, {
+      onSettled: () =>
+        setDeletingIds((prev) => {
+          const next = new Set(prev);
+          next.delete(id);
+          return next;
+        }),
+    });
+  };
+
+  if (isLoading && !cart) {
     return (
       <main className="flex-1 py-12">
         <div className="wrapper flex items-center justify-center min-h-[40vh]">
@@ -31,7 +84,7 @@ export default function CartPageView() {
           <div className="py-16 text-center border border-dashed border-border rounded-[32px] bg-white dark:bg-card">
             <p className="font-sans text-sm text-red-600">{handleApiError(error)}</p>
             <Link
-              href="/menu"
+              href="/foods"
               className="mt-4 inline-flex h-10 items-center rounded-xl bg-primary px-5 font-sans text-xs font-semibold text-primary-foreground"
             >
               Return to Menu
@@ -44,35 +97,41 @@ export default function CartPageView() {
 
   const items: CartItemType[] = (cart?.items ?? []).map((item) => ({
     id: item.id,
-    title: item.food?.name ?? "Item",
-    price: item.unitPrice,
+    title: item.food.name,
+    price: Number(item.unitPrice),
     quantity: item.quantity,
-    thumbnail: item.food?.thumbnail ?? "",
+    thumbnail: item.food.thumbnail ?? "",
     itemsSold: 0,
   }));
 
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
-  const subtotalValue = cart?.subtotal ?? 0;
-  const deliveryCost = cart?.deliveryCharge ?? 0;
-
-  const handleUpdateQuantity = (id: string, newQty: number) => {
-    updateItem.mutate({ itemId: id, quantity: newQty });
-  };
-
-  const handleRemoveItem = (id: string) => {
-    removeItem.mutate(id);
-  };
+  const subtotalValue = Number(cart?.subtotal ?? 0);
+  const deliveryCost = Number(cart?.deliveryCharge ?? 0);
 
   return (
     <main className="flex-1 py-12">
       <div className="wrapper">
-        <div className="mb-8">
-          <h1 className="font-fraunces text-4xl font-normal text-secondary-foreground tracking-tight">
-            Your Cart
-          </h1>
-          <p className="font-sans text-xs text-muted-foreground mt-1">
-            {itemCount} {itemCount === 1 ? "item" : "items"} in your cart
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="font-heading text-4xl font-normal text-secondary-foreground tracking-tight">
+              Your Cart
+            </h1>
+            <p className="font-sans text-xs text-muted-foreground mt-1">
+              {itemCount} {itemCount === 1 ? "item" : "items"} in your cart
+            </p>
+          </div>
+          {items.length > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => clearCart.mutate()}
+              disabled={clearCart.isPending}
+              className="gap-2 rounded-full text-destructive border-destructive/30 hover:bg-destructive/10"
+            >
+              <Trash2 className="size-3.5" />
+              Clear all
+            </Button>
+          )}
         </div>
 
         {items.length > 0 ? (
@@ -84,6 +143,8 @@ export default function CartPageView() {
                   item={item}
                   onUpdateQuantity={handleUpdateQuantity}
                   onRemove={handleRemoveItem}
+                  isQtyUpdating={qtyUpdatingIds.has(item.id)}
+                  isDeleting={deletingIds.has(item.id)}
                 />
               ))}
             </div>
@@ -96,7 +157,7 @@ export default function CartPageView() {
               />
 
               <Link
-                href="/menu"
+                href="/foods"
                 className="mt-4 flex w-full h-11 items-center justify-center rounded-full bg-white border border-border font-sans text-xs font-semibold text-secondary-foreground transition-colors hover:bg-muted"
               >
                 Continue shopping
@@ -107,7 +168,7 @@ export default function CartPageView() {
           <div className="py-16 text-center border border-dashed border-border rounded-[32px] bg-white dark:bg-card">
             <p className="font-sans text-sm text-muted-foreground">Your active cart is empty.</p>
             <Link
-              href="/menu"
+              href="/foods"
               className="mt-4 inline-flex h-10 items-center rounded-xl bg-primary px-5 font-sans text-xs font-semibold text-primary-foreground"
             >
               Return to Menu

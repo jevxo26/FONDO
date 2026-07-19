@@ -15,11 +15,11 @@ export function RelatedFoods({ foods }: RelatedFoodsProps) {
     <section className="py-12 bg-background">
       <div className="wrapper">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="font-fraunces text-2xl font-normal tracking-tight text-secondary-foreground sm:text-3xl">
+          <h2 className="font-heading text-2xl font-normal tracking-tight text-secondary-foreground sm:text-3xl">
             Related Foods
           </h2>
           <Link
-            href="/menu"
+            href="/foods"
             className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-white px-4 py-2 font-sans text-xs font-medium text-foreground transition-all hover:bg-muted dark:bg-card"
           >
             View full menu <ArrowUpRight className="size-3.5" />

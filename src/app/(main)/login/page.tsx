@@ -2,7 +2,7 @@
 
 import { CoreLayoutWrapper } from "@/components/auth/core-layout-wrapper";
 import { LoginForm } from "@/components/auth/login/login-form";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";

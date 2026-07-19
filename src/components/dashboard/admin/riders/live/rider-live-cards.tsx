@@ -57,7 +57,7 @@ export function RiderLiveCards() {
     <div>
       <div className="mb-6 flex items-center gap-3">
         <Wifi className="size-5 text-success" />
-        <h3 className="font-fraunces text-xl font-semibold text-foreground">Live Fleet Tracking</h3>
+        <h3 className="font-heading text-xl font-semibold text-foreground">Live Fleet Tracking</h3>
         <span className="ml-auto rounded-full bg-success/10 px-3 py-0.5 text-[11px] font-bold text-success">
           {riderLiveData.length} Active
         </span>

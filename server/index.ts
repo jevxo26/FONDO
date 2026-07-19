@@ -63,6 +63,34 @@ app
     try {
       await prisma.$connect();
       console.log("Prisma connected to the database successfully!");
+
+      // Seed default payment gateway from env
+      if (env.SSLCOMMERZ_STORE_ID) {
+        const existing = await prisma.paymentGateway.findFirst({
+          where: { storeId: env.SSLCOMMERZ_STORE_ID },
+        });
+        if (existing) {
+          await prisma.paymentGateway.update({
+            where: { id: existing.id },
+            data: {
+              secretKey: env.SSLCOMMERZ_STORE_PASSWD,
+              sandboxMode: !env.SSLCOMMERZ_IS_LIVE,
+              status: "active",
+            },
+          });
+        } else {
+          await prisma.paymentGateway.create({
+            data: {
+              name: "SSLCommerz",
+              storeId: env.SSLCOMMERZ_STORE_ID,
+              secretKey: env.SSLCOMMERZ_STORE_PASSWD,
+              sandboxMode: !env.SSLCOMMERZ_IS_LIVE,
+              status: "active",
+            },
+          });
+        }
+        console.log("Payment gateway seeded successfully!");
+      }
     } catch (err) {
       console.error("Error connecting to the database with Prisma:", err);
       process.exit(1);

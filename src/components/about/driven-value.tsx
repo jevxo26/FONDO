@@ -14,7 +14,7 @@ export default function DrivenByValues() {
   return (
     <section className="py-16 bg-[#FAF5EB]">
       <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-10">
-        <h2 className="font-fraunces text-2xl text-center font-normal text-[#16100C]">Driven By Values</h2>
+        <h2 className="font-heading text-2xl text-center font-normal text-[#16100C]">Driven By Values</h2>
         <div className="flex flex-wrap justify-center gap-8 md:gap-12">
           {values.map((val, idx) => (
             <div key={idx} className="flex flex-col items-center space-y-3">

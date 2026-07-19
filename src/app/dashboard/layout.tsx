@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useRequireAuth, useAuth } from "@/hooks/useAuth";
+import { useRequireAuth, useAuth } from "@/hooks/use-auth";
 import { ROLE_DASHBOARD } from "@/data/navigation";
 import { PageTransition } from "@/components/providers/page-transition";
 

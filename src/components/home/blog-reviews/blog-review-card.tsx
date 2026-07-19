@@ -16,7 +16,7 @@ export function BlogReviewCard({ post, className }: BlogReviewCardProps) {
     <Link href="/blog">
       <div
         className={cn(
-          "group relative aspect-[312/228] w-[80vw] shrink-0 overflow-hidden rounded-4xl border-[3px] border-primary bg-card shadow-[var(--shadow-card)] sm:aspect-auto sm:h-[228px] sm:w-[312px] snap-start",
+          "group relative aspect-[312/228] w-[80vw] shrink-0 overflow-hidden rounded-3xl border-2 border-primary bg-card shadow-[var(--shadow-card)] sm:aspect-auto sm:h-[228px] sm:w-[312px] snap-start",
           className,
         )}
       >

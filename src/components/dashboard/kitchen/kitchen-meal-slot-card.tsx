@@ -33,7 +33,7 @@ export function KitchenMealSlotCard({ slot }: KitchenMealSlotCardProps) {
             <Icon className="size-5" />
           </div>
           <div>
-            <p className="font-fraunces text-lg font-bold text-foreground capitalize">{slot.mealType.toLowerCase()}</p>
+            <p className="font-heading text-lg font-bold text-foreground capitalize">{slot.mealType.toLowerCase()}</p>
             <p className="text-xs text-muted-foreground">{slot.time}</p>
           </div>
         </div>

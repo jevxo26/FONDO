@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CoreLayoutWrapper } from "@/components/auth/core-layout-wrapper";
 import { RegistrationForm } from "@/components/auth/register/registration-form";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function RegisterPage() {
   const router = useRouter();

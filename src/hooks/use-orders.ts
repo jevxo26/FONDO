@@ -47,7 +47,8 @@ export interface OrderPayment {
 
 export interface OrderCustomer {
   id: string;
-  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
 }
@@ -104,21 +105,23 @@ export function useCancelOrder() {
 }
 
 export interface PlaceOrderPayload {
-  addressId?: string;
-  streetAddress?: string;
-  city?: string;
-  zipCode?: string;
-  recipientName?: string;
-  phoneNumber?: string;
-  paymentMethod: string;
-  fulfillment: "delivery" | "pickup";
+  cartId: string;
+  addressId: string;
+  paymentMethodId: string;
   notes?: string;
+}
+
+export interface PlaceOrderResponse {
+  orderId: string;
+  orderNumber: string;
+  totalAmount: number;
 }
 
 export function usePlaceOrder() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: PlaceOrderPayload) => api.post("/cart/checkout/place-order", data),
+    mutationFn: (data: PlaceOrderPayload) =>
+      api.post<PlaceOrderResponse>("/cart/checkout/place-order", data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["cart"] });
       qc.invalidateQueries({ queryKey: ["orders"] });

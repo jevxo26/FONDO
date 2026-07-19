@@ -66,12 +66,6 @@ const addFavorite = catchAsync(async (req: AuthRequest, res: Response) => {
   });
 });
 
-const listFavorites = catchAsync(async (req: AuthRequest, res: Response) => {
-  const items = await FoodService.listFavorites(req.user!.userId);
-
-  sendResponse(res, { statusCode: 200, data: items });
-});
-
 const removeFavorite = catchAsync(async (req: AuthRequest, res: Response) => {
   const foodId = req.params.foodId as string;
   await FoodService.removeFavorite(req.user!.userId, foodId);

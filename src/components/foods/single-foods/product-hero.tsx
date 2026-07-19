@@ -15,7 +15,7 @@ export function ProductHero({ food }: { food: Food }) {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
           {/* Left: Main Showcase Image */}
           <div className="lg:col-span-6">
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[32px] bg-muted shadow-[var(--shadow-card)] border border-border/40">
+            <div className="relative aspect-4/3 w-full overflow-hidden rounded-[32px] bg-muted shadow-[var(--shadow-card)] border border-border/40">
               <Image src={food.coverImage} alt={food.name} fill priority unoptimized className="object-cover" />
             </div>
           </div>
@@ -46,9 +46,8 @@ export function ProductHero({ food }: { food: Food }) {
                   <Star key={i} className="size-3.5 fill-primary text-primary" />
                 ))}
                 <span className="ml-1 font-semibold text-foreground">
-                  {food.isPopular ? "4.9" : "4.7"}
+                <span>{food.rating.averageRating}</span>
                 </span>
-                <span>(892 reviews)</span>
               </div>
 
               <span>&middot;</span>
@@ -74,7 +73,7 @@ export function ProductHero({ food }: { food: Food }) {
               )}
 
               <span className="rounded-md bg-rose-100 px-2 py-0.5 text-xs font-semibold text-rose-600 dark:bg-rose-950/50 dark:text-rose-400">
-                25% discount
+                {food.variants[0]?.discountPrice ? `-${Math.round(((parseFloat(food.variants[0].price) - parseFloat(food.variants[0].discountPrice)) / parseFloat(food.variants[0].price)) * 100)}%` : "No Discount"}
               </span>
             </div>
 
@@ -143,10 +142,6 @@ export function ProductHero({ food }: { food: Food }) {
                   <Plus className="size-3.5" />
                 </Button>
               </div>
-
-              <span className="text-xs text-muted-foreground">
-                (Available)
-              </span>
             </div>
 
             {/* Core Page Primary Action Group */}

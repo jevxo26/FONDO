@@ -1,6 +1,7 @@
 import { Food } from "@/types/food";
 import { Clock, Star, Award, ChevronDown } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 const FoodGrid = ({filteredFoods}: {filteredFoods: Food[]}) => {
@@ -23,7 +24,7 @@ const FoodGrid = ({filteredFoods}: {filteredFoods: Food[]}) => {
                   <div key={food.id} className="bg-white border border-[#16100C]/10 rounded-2xl overflow-hidden shadow-sm hover:border-[#CEA359]/30 flex flex-col justify-between transition-all group">
                     <div>
                       {/* Image Module */}
-                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#16100C]/5">
+                      <div className="relative aspect-4/3 w-full overflow-hidden bg-[#16100C]/5">
                         <Image
                           src={food.thumbnail}
                           alt={food.name}
@@ -49,7 +50,7 @@ const FoodGrid = ({filteredFoods}: {filteredFoods: Food[]}) => {
                       <div className="p-4 space-y-3">
                         <div className="flex justify-between items-start gap-2">
                           <h4 className="font-fraunces text-base font-normal text-[#16100C] leading-tight">
-                            {food.name}
+                            <Link href={`/foods/${food.slug}`}>{food.name}</Link>
                           </h4>
                           <div className="flex items-center gap-0.5 shrink-0 text-amber-500 font-bold text-[10px] mt-0.5">
                             <Star className="size-3 fill-current" /> {food.rating.averageRating}

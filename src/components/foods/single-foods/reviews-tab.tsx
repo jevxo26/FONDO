@@ -1,16 +1,35 @@
-import { mockFoodReviews } from "@/data/review";
+import FoodsLoading from "@/app/(main)/foods/loading";
+import { Button } from "@/components/ui/button";
+import { useFoodReviews } from "@/hooks/use-review";
+import { useAuth } from "@/hooks/useAuth";
 import { FoodRating } from "@/types/food-review";
 import { Star } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 
 interface ratingData {
   ratingData: FoodRating;
+  foodId: string
 }
 
-const ReviewsTab = ({ ratingData }: ratingData) => {
-  const allReviews = mockFoodReviews;
+const ReviewsTab = ({ ratingData, foodId }: ratingData) => {
+  const { data, isLoading } = useFoodReviews(foodId);
+
+  const allReviews = data?.items ?? [];
+  console.log({
+    foodId,
+    data,
+    Error,
+    isLoading,
+  });
   const getPercentage = (count: number) => {
     return (count / ratingData.totalReview) * 100;
   };
+  const { user } = useAuth();
+  const [open, setOpen] = useState(false);
+  if (isLoading) return <FoodsLoading />
+
+
   return (
     <div className="flex flex-col gap-8">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center border-b border-border/40 pb-8">
@@ -18,6 +37,22 @@ const ReviewsTab = ({ ratingData }: ratingData) => {
           <h2 className="font-fraunces text-5xl font-bold text-secondary-foreground">
             {ratingData.averageRating.toFixed(1)}
           </h2>
+          {!user && (
+            <Button>
+              <Link href="/login">
+                Login to Review
+              </Link>
+            </Button>
+          )}
+          {user && (
+            <button
+              onClick={() => setOpen(true)}
+              className="px-5 py-3 rounded-xl bg-[#CEA359] text-white font-semibold"
+            >
+              Write Review
+            </button>
+          )}
+
           <div className="flex items-center gap-0.5 mt-2">
             {Array.from({ length: 5 }).map((_, i) => (
               <Star key={i} className="size-4 fill-[#CEA359] text-[#CEA359]" />
@@ -61,12 +96,12 @@ const ReviewsTab = ({ ratingData }: ratingData) => {
               <div className="flex items-center gap-3">
                 <div className="relative size-10 overflow-hidden rounded-full bg-muted border border-border">
                   <div className="w-full h-full bg-[#16100C] text-white flex items-center justify-center font-sans text-xs font-bold uppercase">
-                    {review.customerName.charAt(0)}
+                    {review.customer.firstName.charAt(0)}
                   </div>
                 </div>
                 <div className="flex flex-col">
                   <span className="font-sans text-sm font-semibold text-secondary-foreground leading-tight">
-                    {review.customerName}
+                    {review.customer.firstName} {review.customer.lastName}
                   </span>
                   <span className="font-sans text-[11px] text-emerald-600 font-medium tracking-wide">
                     Verified Purchase
@@ -87,7 +122,7 @@ const ReviewsTab = ({ ratingData }: ratingData) => {
 
             {/* কমেন্ট বডি টেক্সট */}
             <p className="font-sans text-sm leading-relaxed text-muted-foreground pl-0.5">
-              &quot;{review.review}&quot;
+              &quot;{review?.review}&quot;
             </p>
           </div>
         ))}

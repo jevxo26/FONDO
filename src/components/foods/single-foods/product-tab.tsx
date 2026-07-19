@@ -43,7 +43,7 @@ export function ProductTabs({ food }: { food: Food }) {
             value="reviews"
             className="mt-6 rounded-3xl border border-border/60 bg-white p-6 shadow-[var(--shadow-card)] dark:bg-card"
           >
-            <ReviewsTab ratingData={ratingData} />
+            <ReviewsTab ratingData={ratingData} foodId= {food.id}/>
           </TabsContent>
           <TabsContent
             value="qa"

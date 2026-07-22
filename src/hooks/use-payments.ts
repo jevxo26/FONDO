@@ -2,40 +2,8 @@
 
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api-client";
-
-export interface InitiatePaymentPayload {
-  orderId: string;
-  amount: number;
-  paymentMethodId?: string;
-  currency?: string;
-}
-
-export interface InitiatePaymentResponse {
-  paymentId: string;
-  gatewayUrl: string;
-  transactionId: string;
-}
-
-export interface Payment {
-  id: string;
-  paymentNumber: string;
-  orderId: string;
-  amount: number;
-  currency: string;
-  status: string;
-  transactionId: string | null;
-  paymentDate: string | null;
-  failureReason: string | null;
-  createdAt: string;
-}
-
-export interface PaymentListResponse {
-  items: Payment[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
+import { queryKeys } from "@/lib/query-keys";
+import type { Payment, PaymentListResponse, InitiatePaymentPayload, InitiatePaymentResponse } from "@/types/payment";
 
 export function useInitiatePayment() {
   return useMutation({
@@ -46,7 +14,7 @@ export function useInitiatePayment() {
 
 export function usePayments(page = 1, limit = 20) {
   return useQuery({
-    queryKey: ["payments", page, limit],
+    queryKey: queryKeys.payments.list(page, limit),
     queryFn: () =>
       api.get<PaymentListResponse>(`/payments?page=${page}&limit=${limit}`),
   });
@@ -54,7 +22,7 @@ export function usePayments(page = 1, limit = 20) {
 
 export function usePayment(id: string) {
   return useQuery({
-    queryKey: ["payments", id],
+    queryKey: queryKeys.payments.detail(id),
     queryFn: () => api.get<Payment>(`/payments/${id}`),
     enabled: !!id,
   });

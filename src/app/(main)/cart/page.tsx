@@ -5,28 +5,18 @@ import { OrderSummary } from "@/components/carts/order-summary";
 import { Button } from "@/components/ui/button";
 import { useCart, useClearCart, useRemoveFromCart, useUpdateCartItem } from "@/hooks/use-cart";
 import { handleApiError } from "@/lib/api-error";
-import { setCartCount } from "@/store/slices/counterSlice";
-import { useAppDispatch } from "@/store/store";
-import type { CartItem as CartItemType } from "@/types/cart";
 import { Loader2, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function CartPageView() {
   const { data: cart, isLoading, error } = useCart();
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveFromCart();
   const clearCart = useClearCart();
-  const dispatch = useAppDispatch();
 
   const [qtyUpdatingIds, setQtyUpdatingIds] = useState<Set<string>>(new Set());
   const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    if (cart?.items) {
-      dispatch(setCartCount(cart.items.reduce((sum, i) => sum + i.quantity, 0)));
-    }
-  }, [cart, dispatch]);
 
   const handleUpdateQuantity = (id: string, newQty: number) => {
     if (newQty < 1) {
@@ -95,15 +85,7 @@ export default function CartPageView() {
     );
   }
 
-  const items: CartItemType[] = (cart?.items ?? []).map((item) => ({
-    id: item.id,
-    title: item.food.name,
-    price: Number(item.unitPrice),
-    quantity: item.quantity,
-    thumbnail: item.food.thumbnail ?? "",
-    itemsSold: 0,
-  }));
-
+  const items = cart?.items ?? [];
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
   const subtotalValue = Number(cart?.subtotal ?? 0);
   const deliveryCost = Number(cart?.deliveryCharge ?? 0);

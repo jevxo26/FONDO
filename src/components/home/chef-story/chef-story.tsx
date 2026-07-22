@@ -19,13 +19,13 @@ const variantClasses = {
 
 export function ChefStory() {
   return (
-    <section>
+    <section className="py-12 lg:py-16">
       <div className="wrapper">
         <SectionReveal variant="blurReveal" distance={20}>
           <div className="flex flex-col items-center gap-8 lg:flex-row lg:justify-between lg:gap-16">
             {/* Image */}
             <div className="relative flex-1">
-              <div className="relative aspect-[4/5] w-full max-w-lg overflow-hidden rounded-4xl">
+              <div className="relative aspect-[4/5] w-full max-w-lg overflow-hidden rounded-3xl">
                 <Image
                   src={CHEF_STORY.image}
                   alt={CHEF_STORY.name}

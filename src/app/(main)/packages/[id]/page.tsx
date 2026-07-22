@@ -1,4 +1,4 @@
-import CheckoutSidebar from "@/components/packeges/single-package/chekout-sidebar";
+import CheckoutSidebar from "@/components/packeges/single-package/checkout-sidebar";
 import DeliveryRituals from "@/components/packeges/single-package/delivery-rituals";
 import HelpDeskFaq from "@/components/packeges/single-package/faq";
 import HeroSection from "@/components/packeges/single-package/hero-section";

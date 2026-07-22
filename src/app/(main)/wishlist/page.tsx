@@ -2,19 +2,12 @@
 
 import FoodCard from "@/components/common/cards/food-card/food-card";
 import { useFavorites } from "@/hooks/use-favorites";
-import { setFavoritesCount } from "@/store/slices/counterSlice";
-import { useAppDispatch } from "@/store/store";
 import { Heart, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
 
 export default function WishlistPage() {
   const { data: favorites = [], isLoading } = useFavorites();
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(setFavoritesCount(favorites.length));
-  }, [favorites.length, dispatch]);
 
   return (
     <div className="min-h-screen bg-background py-12">

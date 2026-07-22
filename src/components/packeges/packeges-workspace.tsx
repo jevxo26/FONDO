@@ -1,6 +1,6 @@
 // Location: src/components/packages/packages-workspace.tsx
 import { SlidersHorizontal, ArrowUpDown,} from "lucide-react";
-import { usePackages } from "./packages-provider";
+import { usePackages } from "./packages-context";
 import PackageGrid from "./package-grid";
 
 const CATEGORIES = ["All", "Weight Loss", "Weight Gain", "Regular", "Diabetic", "High Protein"];

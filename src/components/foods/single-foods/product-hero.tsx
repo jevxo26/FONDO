@@ -1,49 +1,18 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import type { Food } from "@/types/food";
 import { useAddToCart } from "@/hooks/use-cart";
 import { useFavorites, useRemoveFavorite, useToggleFavorite } from "@/hooks/use-favorites";
-import { Food } from "@/types/food";
-import { motion } from "framer-motion";
-import {
-  Heart,
-  Loader2,
-  MessageSquare,
-  Minus,
-  Plus,
-  Share2,
-  ShoppingCart,
-  Star,
-} from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { ProductGallery } from "./product-gallery";
+import { ProductInfo } from "./product-info";
+import { ProductActions } from "./product-actions";
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15, delayChildren: 0 },
-  },
-};
-
-const imageVariants = {
-  hidden: { opacity: 0, filter: "blur(8px)", scale: 0.95 },
-  visible: {
-    opacity: 1,
-    filter: "blur(0px)",
-    scale: 1,
-    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
-  },
-};
-
-const contentVariants = {
-  hidden: { opacity: 0, x: 30 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
-  },
+  visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0 } },
 };
 
 export function ProductHero({ food }: { food: Food }) {
@@ -58,6 +27,10 @@ export function ProductHero({ food }: { food: Food }) {
   const isFavPending = toggleFavorite.isPending || removeFavorite.isPending;
   const currentPrice = Number(food.variants[0]?.discountPrice ?? food.variants[0]?.price ?? 0);
 
+  const handleAddToCart = () => {
+    addToCart.mutate({ foodId: food.id, quantity, unitPrice: currentPrice });
+  };
+
   const handleBuyNow = () => {
     addToCart.mutate(
       { foodId: food.id, quantity, unitPrice: currentPrice },
@@ -65,198 +38,25 @@ export function ProductHero({ food }: { food: Food }) {
     );
   };
 
-  const discountPercent = food.variants[0]?.discountPrice
-    ? Math.round(
-        ((Number(food.variants[0].price) - Number(food.variants[0].discountPrice)) /
-          Number(food.variants[0].price)) *
-          100,
-      )
-    : null;
+  const handleToggleFav = () => {
+    (isFavorited ? removeFavorite : toggleFavorite).mutate(food);
+  };
 
   return (
     <section className="py-8 lg:py-12 bg-background">
       <div className="wrapper">
-        <motion.div
-          className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.div variants={imageVariants} className="lg:col-span-6">
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[32px] bg-muted shadow-[var(--shadow-card)] border border-border/40">
-              <Image
-                src={food.coverImage}
-                alt={food.name}
-                fill
-                priority
-                unoptimized
-                className="object-cover"
-              />
-            </div>
-          </motion.div>
-
-          <motion.div
-            variants={contentVariants}
-            className="lg:col-span-6 flex flex-col justify-center"
-          >
-            <div className="flex items-center justify-between">
-              <span className="inline-flex items-center rounded-full bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success">
-                &middot; In stock
-              </span>
-
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => (isFavorited ? removeFavorite : toggleFavorite).mutate(food)}
-                disabled={isFavPending}
-                className="rounded-full border border-border bg-white shadow-sm hover:text-destructive dark:bg-card"
-              >
-                <Heart
-                  className={`size-4 ${isFavorited ? "fill-destructive text-destructive" : ""}`}
-                />
-              </Button>
-            </div>
-
-            <h1 className="mt-3 font-heading text-3xl font-normal tracking-tight text-secondary-foreground sm:text-4xl leading-tight">
-              {food.name}
-            </h1>
-
-            <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-              <div className="flex items-center gap-1">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="size-3.5 fill-primary text-primary" />
-                ))}
-                <span className="ml-1 font-semibold text-foreground">
-                  {food.rating?.averageRating ?? "4.9"}
-                </span>
-                <span>({food.rating?.totalReview ?? 892} reviews)</span>
-              </div>
-
-              <span>&middot;</span>
-              <span>{food.servingSize}</span>
-
-              <span>&middot;</span>
-
-              <Button variant="ghost" size="sm" className="h-auto gap-1 p-0 hover:text-foreground">
-                <Share2 className="size-3.5" /> Share
-              </Button>
-            </div>
-
-            <div className="mt-6 flex items-baseline gap-3">
-              <span className="font-sans text-3xl font-bold text-secondary-foreground">
-                ৳{food.variants[0]?.discountPrice ?? food.variants[0]?.price ?? 0}
-              </span>
-
-              {food.variants[0]?.discountPrice && (
-                <span className="font-sans text-lg text-muted-foreground line-through">
-                  ৳{food.variants[0].price}
-                </span>
-              )}
-
-              {discountPercent && (
-                <span className="rounded-md bg-destructive/10 px-2 py-0.5 text-xs font-semibold text-destructive">
-                  {discountPercent}% off
-                </span>
-              )}
-            </div>
-
-            <p className="mt-1 text-xs text-muted-foreground">Free delivery on orders of ৳2,000+</p>
-
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              {food.shortDescription}
-            </p>
-
-            <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-muted-foreground">Preparation:</span>
-                <p className="font-medium">{food.preparationTime} min</p>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Serving:</span>
-                <p className="font-medium">{food.servingSize}</p>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Calories:</span>
-                <p className="font-medium">{food.calories} kcal</p>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Food Type:</span>
-                <p className="font-medium capitalize">{food.foodType}</p>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Spice Level:</span>
-                <p className="font-medium capitalize">{food.spiceLevel}</p>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Protein:</span>
-                <p className="font-medium">{food.protein}g</p>
-              </div>
-            </div>
-
-            <div className="mt-6 flex items-center gap-4">
-              <span className="font-sans text-sm font-medium text-muted-foreground">Quantity:</span>
-              <div className="flex items-center border border-border bg-white rounded-xl overflow-hidden dark:bg-card">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
-                  className="p-2.5 rounded-none"
-                >
-                  <Minus className="size-3.5" />
-                </Button>
-                <span className="w-10 text-center font-sans text-sm font-semibold text-foreground select-none">
-                  {quantity}
-                </span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setQuantity((prev) => prev + 1)}
-                  className="p-2.5 rounded-none"
-                >
-                  <Plus className="size-3.5" />
-                </Button>
-              </div>
-              <span className="text-xs text-muted-foreground">(Available)</span>
-            </div>
-
-            <div className="mt-8 grid grid-cols-2 gap-4">
-              <Button
-                variant="outline"
-                size="xl"
-                onClick={() =>
-                  addToCart.mutate({ foodId: food.id, quantity, unitPrice: currentPrice })
-                }
-                disabled={addToCart.isPending}
-                className="gap-2 rounded-2xl border-primary bg-primary/5 text-primary hover:bg-primary/10"
-              >
-                {addToCart.isPending ? (
-                  <Loader2 className="size-4 animate-spin" />
-                ) : (
-                  <ShoppingCart className="size-4" />
-                )}
-                {addToCart.isPending ? "Adding..." : "Add to cart"}
-              </Button>
-
-              <Button
-                variant="default"
-                size="xl"
-                onClick={handleBuyNow}
-                disabled={addToCart.isPending}
-                className="rounded-2xl"
-              >
-                Buy Now
-              </Button>
-            </div>
-
-            <Button
-              variant="outline"
-              size="xl"
-              className="mt-4 w-full gap-2 rounded-2xl border-primary/30 bg-primary/20 text-primary-foreground hover:bg-primary/30 dark:text-white"
-            >
-              <MessageSquare className="size-4 text-primary" />
-              Order Directly via WhatsApp
-            </Button>
-          </motion.div>
+        <motion.div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12"
+          variants={containerVariants} initial="hidden" animate="visible">
+          <ProductGallery coverImage={food.coverImage} name={food.name} />
+          <ProductInfo food={food} isFavorited={isFavorited} isFavPending={isFavPending} onToggleFav={handleToggleFav}>
+            <ProductActions
+              quantity={quantity}
+              onQuantityChange={setQuantity}
+              onAddToCart={handleAddToCart}
+              onBuyNow={handleBuyNow}
+              isAddToCartPending={addToCart.isPending}
+            />
+          </ProductInfo>
         </motion.div>
       </div>
     </section>

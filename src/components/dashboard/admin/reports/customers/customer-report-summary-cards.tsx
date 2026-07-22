@@ -1,4 +1,4 @@
-import type { AdminCustomer } from "@/hooks/use-admin-customers";
+import type { AdminCustomer } from "@/types/admin";
 import { DarkCard } from "@/components/dashboard/common/dark-card";
 import { GlassCard } from "@/components/dashboard/common/glass-card";
 import { Users, UserCheck, UserX } from "lucide-react";

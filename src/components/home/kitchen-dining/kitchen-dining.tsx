@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export function KitchenDining() {
   return (
-    <section>
+    <section className="py-12 lg:py-16">
       <div className="wrapper">
         <SectionReveal variant="fadeScale" distance={20}>
           <div className="mx-auto flex max-w-2xl flex-col items-center gap-2">
@@ -13,7 +13,7 @@ export function KitchenDining() {
             <h2 className="text-center font-heading text-3xl leading-tight tracking-heading text-foreground sm:text-4xl lg:text-[48px]">
               Kitchen &amp; dining experience
             </h2>
-            <p className="text-center text-sm text-foreground/60 sm:text-base">
+            <p className="text-center text-sm text-muted-foreground sm:text-base">
               A look at the people, copper pots and quiet rooms behind every plate.
             </p>
           </div>

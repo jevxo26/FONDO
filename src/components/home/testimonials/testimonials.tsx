@@ -1,3 +1,4 @@
+import { SectionHeader } from "@/components/common/section-header";
 import { SectionReveal } from "@/components/common/section-reveal";
 import { TESTIMONIALS } from "@/data/homepage";
 import { TestimonialCard } from "./testimonial-card";
@@ -5,12 +6,13 @@ import { InfiniteSlider } from "@/components/ui/infinite-slider";
 
 export function Testimonials() {
   return (
-    <section>
+    <section className="py-12 lg:py-16">
       <div className="wrapper">
-        <SectionReveal variant="blurReveal" distance={20}>
-          <h2 className="text-center font-sans font-semibold text-3xl text-foreground sm:text-4xl lg:text-[40px]">
-            What Dhaka is saying
-          </h2>
+        <SectionReveal distance={20}>
+          <SectionHeader
+            title="What Dhaka is saying"
+            align="center"
+          />
 
           <InfiniteSlider gap={20} speed={50} className="mt-8">
             {TESTIMONIALS.map((testimonial) => (

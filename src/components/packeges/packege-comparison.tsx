@@ -1,4 +1,4 @@
-import { usePackages } from "./packages-provider";
+import { usePackages } from "./packages-context";
 
 export default function PackagesComparison() {
   const { comparedIds, toggleComparison, processedPackages } = usePackages();

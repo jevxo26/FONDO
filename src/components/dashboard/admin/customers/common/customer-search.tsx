@@ -4,7 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { Search, X, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useAdminCustomers, type AdminCustomer } from "@/hooks/use-admin-customers";
+import { useAdminCustomers } from "@/hooks/use-admin-customers";
+import type { AdminCustomer } from "@/types/admin";
 
 interface CustomerSearchProps {
   onSelect: (customer: AdminCustomer) => void;

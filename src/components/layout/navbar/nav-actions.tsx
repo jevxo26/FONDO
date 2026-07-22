@@ -14,18 +14,23 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toggleMobileMenu } from "@/store/slices/uiSlice";
-import { useAppDispatch, useAppSelector } from "@/store/store";
+import { useAppDispatch } from "@/store/store";
 import { fetchMe } from "@/store/slices/authSlice";
 import { getToken } from "@/lib/token";
 import { useAuth } from "@/hooks/use-auth";
+import { useCart } from "@/hooks/use-cart";
+import { useFavorites } from "@/hooks/use-favorites";
 import { ROLE_DASHBOARD } from "@/data/navigation";
 
 export function NavActions() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { user, isAuthenticated, logout } = useAuth();
-  const cartCount = useAppSelector((s) => s.counter.cartCount);
-  const favoritesCount = useAppSelector((s) => s.counter.favoritesCount);
+  const { data: cart } = useCart();
+  const { data: favorites } = useFavorites();
+
+  const cartCount = cart?.items?.reduce((sum, i) => sum + i.quantity, 0) ?? 0;
+  const favoritesCount = favorites?.length ?? 0;
 
   useEffect(() => {
     const token = getToken();

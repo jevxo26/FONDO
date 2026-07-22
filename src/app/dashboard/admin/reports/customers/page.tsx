@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/common/table";
 import { DataTableColumnHeader } from "@/components/common/table";
 import { StatusDotBadge } from "@/components/dashboard/admin/reports/report-badges";
-import { useAdminCustomers, type AdminCustomer } from "@/hooks/use-admin-customers";
+import { useAdminCustomers } from "@/hooks/use-admin-customers";
+import type { AdminCustomer } from "@/types/admin";
 import type { ColumnDef } from "@tanstack/react-table";
 
 function getSegment(c: AdminCustomer): string {

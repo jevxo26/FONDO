@@ -25,7 +25,7 @@ export function SignatureDish() {
             </div>
 
             <div className="flex flex-1 flex-col gap-6">
-              <span className="text-xs font-medium uppercase tracking-widest text-primary">
+              <span className="text-xs font-semibold uppercase tracking-label text-primary">
                 {SIGNATURE_DISH.label}
               </span>
 

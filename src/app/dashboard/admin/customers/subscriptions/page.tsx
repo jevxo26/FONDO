@@ -12,9 +12,8 @@ import { CustomerSearch } from "@/components/dashboard/admin/customers/common/cu
 import {
   useAdminCustomerSubscriptions,
   useAdminCustomer,
-  type AdminSubscription,
-  type AdminCustomer,
 } from "@/hooks/use-admin-customers";
+import type { AdminSubscription, AdminCustomer } from "@/types/admin";
 
 const subscriptionColumns: ColumnDef<AdminSubscription>[] = [
   {

@@ -6,10 +6,8 @@ import { ArrowLeft, Wallet, TrendingUp, TrendingDown, Clock } from "lucide-react
 import { DataTable } from "@/components/common/table";
 import { DataTableColumnHeader } from "@/components/common/table";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import {
-  useAdminCustomerWallet,
-  type AdminWalletTransaction,
-} from "@/hooks/use-admin-customers";
+import { useAdminCustomerWallet } from "@/hooks/use-admin-customers";
+import type { AdminWalletTransaction } from "@/types/admin";
 import type { ColumnDef } from "@tanstack/react-table";
 
 const typeConfig: Record<string, { dot: string; label: string }> = {

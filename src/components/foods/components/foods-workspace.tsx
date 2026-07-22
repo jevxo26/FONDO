@@ -9,6 +9,7 @@ import Pagination from "./pagination";
 import { Food } from "@/types/food";
 import { FoodCategory } from "@/types/category";
 import Categories from "./categories";
+import { FoodsFilterBar } from "./foods-filter-bar";
 
 const ITEMS_PER_PAGE = 4;
 
@@ -136,28 +137,12 @@ export default function FoodsWorkspace() {
 
         {/* Right Side Foods Display Hub Grid */}
         <div className="lg:col-span-9 space-y-6">
-          {/* Controls Bar */}
-          <div className="flex justify-between items-center bg-white border border-[#16100C]/5 rounded-2xl px-5 py-3 shadow-sm">
-            <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-[#16100C]/50">
-              Showing {filteredFoods.length} culinary items
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] text-[#16100C]/60 font-light">Sort By:</span>
-              <select
-                value={sortBy}
-               onChange={(e) => {
-                setSortBy(e.target.value);
-                setCurrentPage(1);
-              }}
-                className="bg-transparent text-[11px] font-bold uppercase tracking-wider text-[#16100C] border-none focus:outline-none cursor-pointer"
-              >
-                <option value="default">Default Framework</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Top Rated Metrics</option>
-              </select>
-            </div>
-          </div>
+          <FoodsFilterBar
+            totalCount={filteredFoods.length}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+            onPageReset={() => setCurrentPage(1)}
+          />
           {/* Main Dynamic Loop */}
           <FoodGrid filteredFoods={paginatedFoods } />
            <Pagination

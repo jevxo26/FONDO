@@ -12,7 +12,7 @@ import {
   TrustBar,
 } from "@/components/home";
 import { apiFetch } from "@/lib/api";
-import { getFoods } from "@/services/foods";
+import type { Food } from "@/types/food";
 
 interface CategoryItem {
   id: string;
@@ -20,9 +20,16 @@ interface CategoryItem {
   image: string | null;
 }
 
+interface FoodsResponse {
+  items: Food[];
+}
+
 export default async function Home() {
   const [foodsData, catData] = await Promise.all([
-    getFoods(1, 6, "popularity", { revalidate: 300, tags: ["foods"] }),
+    apiFetch<FoodsResponse>("/api/foods?page=1&limit=6&sortBy=popularity", {
+      revalidate: 300,
+      tags: ["foods"],
+    }),
     apiFetch<{ items: CategoryItem[] }>("/api/foods/categories/list", {
       revalidate: 300,
       tags: ["categories"],

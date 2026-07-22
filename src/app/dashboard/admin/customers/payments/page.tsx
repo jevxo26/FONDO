@@ -10,11 +10,8 @@ import { DataTableColumnHeader } from "@/components/common/table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { PaymentStatusBadge } from "@/components/dashboard/admin/customers/payments/payment-status-badge";
 import { CustomerSearch } from "@/components/dashboard/admin/customers/common/customer-search";
-import {
-  useAdminCustomerPayments,
-  type AdminPayment,
-  type AdminCustomer,
-} from "@/hooks/use-admin-customers";
+import { useAdminCustomerPayments } from "@/hooks/use-admin-customers";
+import type { AdminPayment, AdminCustomer } from "@/types/admin";
 
 const paymentColumns: ColumnDef<AdminPayment>[] = [
   {

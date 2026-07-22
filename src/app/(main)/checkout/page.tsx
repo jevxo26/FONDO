@@ -1,6 +1,6 @@
 "use client";
 
-import CheckoutForm from "@/components/chekout/form/checkout-form";
+import CheckoutForm from "@/components/checkout/form/checkout-form";
 
 export default function CheckoutPage() {
   return (

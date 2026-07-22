@@ -9,11 +9,8 @@ import { DataTable } from "@/components/common/table";
 import { DataTableColumnHeader } from "@/components/common/table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { CustomerSearch } from "@/components/dashboard/admin/customers/common/customer-search";
-import {
-  useAdminCustomerWallet,
-  type AdminWalletTransaction,
-  type AdminCustomer,
-} from "@/hooks/use-admin-customers";
+import { useAdminCustomerWallet } from "@/hooks/use-admin-customers";
+import type { AdminWalletTransaction, AdminCustomer } from "@/types/admin";
 
 const typeConfig: Record<string, { dot: string; label: string }> = {
   TOPUP: { dot: "bg-success", label: "Top-up" },

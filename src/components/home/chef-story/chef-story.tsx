@@ -19,7 +19,7 @@ const variantClasses = {
 
 export function ChefStory() {
   return (
-    <section className="py-12 lg:py-16">
+    <section className="py-10 lg:py-16">
       <div className="wrapper">
         <SectionReveal variant="blurReveal" distance={20}>
           <div className="flex flex-col items-center gap-8 lg:flex-row lg:justify-between lg:gap-16">

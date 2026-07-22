@@ -12,7 +12,7 @@ interface BestSellersProps {
 
 export function BestSellers({ foods }: BestSellersProps) {
   return (
-    <section className="py-12 lg:py-16">
+    <section className="py-8 lg:py-12">
       <div className="wrapper">
         <SectionHeader
           title="Best Sellers"

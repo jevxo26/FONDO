@@ -18,12 +18,23 @@ export function TestimonialCard({ testimonial, className }: TestimonialCardProps
   return (
     <div
       className={cn(
-        "flex w-[80vw] shrink-0 flex-col gap-5 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] hover:scale-[1.02] active:scale-[0.98] sm:w-[380px] snap-start",
+        "flex w-[80vw] shrink-0 flex-col gap-5 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] hover:scale-[1.02] active:scale-[0.98] sm:w-[380px] snap-start relative",
         className,
       )}
     >
+      {/* Decorative quote mark */}
+      <svg
+        className="pointer-events-none absolute -top-3 left-4 size-16 text-primary/10"
+        viewBox="0 0 100 100"
+        fill="currentColor"
+        aria-hidden
+      >
+        <path d="M30 50C20 50 10 40 10 30C10 20 20 10 30 10C40 10 50 20 50 30V50C50 70 30 90 10 90L5 80C20 80 30 70 30 50Z" />
+        <path d="M80 50C70 50 60 40 60 30C60 20 70 10 80 10C90 10 100 20 100 30V50C100 70 80 90 60 90L55 80C70 80 80 70 80 50Z" />
+      </svg>
+
       {/* Stars */}
-      <div className="flex gap-1">
+      <div className="relative z-10 flex gap-1">
         {Array.from({ length: 5 }).map((_, i) => (
           <Star
             key={i}
@@ -36,7 +47,7 @@ export function TestimonialCard({ testimonial, className }: TestimonialCardProps
       </div>
 
       {/* Quote */}
-      <p className="flex-1 text-sm leading-relaxed text-foreground">
+      <p className="relative z-10 flex-1 text-sm leading-relaxed text-foreground">
         &ldquo;{testimonial.text}&rdquo;
       </p>
 

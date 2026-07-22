@@ -43,7 +43,7 @@ export default async function Home() {
   }));
 
   return (
-    <main className="flex flex-col gap-12 lg:gap-[5rem] pb-[3rem] lg:pb-[5rem]">
+    <main className="flex flex-col pb-[3rem] lg:pb-[5rem]">
       <Hero foods={foodsData.items} />
       <TrustBar />
       <PopularCategories categories={categories} />

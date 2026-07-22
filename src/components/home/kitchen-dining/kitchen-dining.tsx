@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export function KitchenDining() {
   return (
-    <section className="py-12 lg:py-16">
+    <section className="py-10 lg:py-16">
       <div className="wrapper">
         <SectionReveal variant="fadeScale" distance={20}>
           <div className="mx-auto flex max-w-2xl flex-col items-center gap-2">
@@ -28,6 +28,9 @@ export function KitchenDining() {
                 sizes="(max-width: 768px) 100vw, 292px"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
+              <div className="absolute bottom-3 left-3 rounded-lg bg-background/80 px-3 py-1.5 backdrop-blur-sm">
+                <span className="text-xs font-medium text-foreground">Kitchen brigade</span>
+              </div>
             </div>
 
             {/* Center: Cooking + Dining table (stacked) */}
@@ -40,6 +43,9 @@ export function KitchenDining() {
                   sizes="(max-width: 768px) 100vw, 327px"
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
+                <div className="absolute bottom-3 left-3 rounded-lg bg-background/80 px-3 py-1.5 backdrop-blur-sm">
+                  <span className="text-xs font-medium text-foreground">Cooking</span>
+                </div>
               </div>
               <div className="group relative aspect-[327/220] overflow-hidden rounded-3xl md:h-[220px] md:aspect-auto">
                 <Image
@@ -49,6 +55,9 @@ export function KitchenDining() {
                   sizes="(max-width: 768px) 100vw, 327px"
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
+                <div className="absolute bottom-3 left-3 rounded-lg bg-background/80 px-3 py-1.5 backdrop-blur-sm">
+                  <span className="text-xs font-medium text-foreground">Dining table</span>
+                </div>
               </div>
             </div>
 
@@ -61,6 +70,9 @@ export function KitchenDining() {
                 sizes="(max-width: 768px) 100vw, 327px"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
+              <div className="absolute bottom-3 left-3 rounded-lg bg-background/80 px-3 py-1.5 backdrop-blur-sm">
+                <span className="text-xs font-medium text-foreground">Restaurant interior</span>
+              </div>
             </div>
           </div>
         </SectionReveal>

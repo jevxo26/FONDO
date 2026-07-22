@@ -90,18 +90,22 @@ export const SIGNATURE_DISH = {
     {
       title: "Chef's story",
       text: "Trained in Old Dhaka, refined in Lucknow.",
+      icon: "ChefHat",
     },
     {
       title: "Ingredients",
       text: "Aged basmati · saffron · kewra · ghee.",
+      icon: "Sprout",
     },
     {
       title: "Heritage",
       text: "A 120-year-old Mughlai recipe, preserved.",
+      icon: "ScrollText",
     },
     {
       title: "Pairs with",
       text: "Borhani, salad, and our house firni.",
+      icon: "Wine",
     },
   ],
   primaryButton: { label: "Order signature" },

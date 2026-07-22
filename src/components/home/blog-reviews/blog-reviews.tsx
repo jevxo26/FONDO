@@ -6,7 +6,7 @@ import { InfiniteSlider } from "@/components/ui/infinite-slider";
 
 export function BlogReviews() {
   return (
-    <section className="py-12 lg:py-16">
+    <section className="py-8 lg:py-12">
       <div className="wrapper">
         <SectionReveal distance={20}>
           <SectionHeader

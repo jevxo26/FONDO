@@ -8,7 +8,7 @@ interface PopularCategoriesProps {
 
 export function PopularCategories({ categories }: PopularCategoriesProps) {
   return (
-    <section className="py-12 lg:py-16">
+    <section className="py-10 lg:py-16">
       <div className="wrapper">
         <SectionHeader
           title="Popular Categories"

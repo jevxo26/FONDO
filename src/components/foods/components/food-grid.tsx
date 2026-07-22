@@ -22,11 +22,11 @@ const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
             return (
               <div
                 key={food.id}
-                className="bg-white border border-[#16100C]/10 rounded-2xl overflow-hidden shadow-sm hover:border-[#CEA359]/30 flex flex-col justify-between transition-all group"
+                className="bg-card border-border rounded-2xl overflow-hidden shadow-sm hover:border-primary/30 flex flex-col justify-between transition-all group"
               >
                 <div>
                   {/* Image Module */}
-                  <div className="relative aspect-4/3 w-full overflow-hidden bg-[#16100C]/5">
+                  <div className="relative aspect-4/3 w-full overflow-hidden bg-muted">
                     <Image
                       src={food.thumbnail}
                       alt={food.name}
@@ -43,15 +43,15 @@ const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
                         {lbl.label}
                       </span>
                     ))}
-                    <span className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-lg border border-[#16100C]/15 text-[9px] font-bold text-[#16100C] flex items-center gap-1">
-                      <Clock className="size-2.5 text-[#CEA359]" /> {food.preparationTime} min
+                    <span className="absolute bottom-3 right-3 bg-background/90 backdrop-blur-sm px-2 py-0.5 rounded-lg border border-border/15 text-[9px] font-bold text-foreground flex items-center gap-1">
+                      <Clock className="size-2.5 text-primary" /> {food.preparationTime} min
                     </span>
                   </div>
 
                   {/* Content Layer */}
                   <div className="p-4 space-y-3">
                     <div className="flex justify-between items-start gap-2">
-                      <h4 className="font-heading text-base font-normal text-[#16100C] leading-tight">
+                      <h4 className="font-heading text-base font-normal text-foreground leading-tight">
                         {food.name}
                       </h4>
                       <div className="flex items-center gap-0.5 shrink-0 text-amber-500 font-bold text-[10px] mt-0.5">
@@ -59,35 +59,35 @@ const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
                       </div>
                     </div>
 
-                    <p className="font-sans text-[11px] text-[#16100C]/70 leading-relaxed font-light line-clamp-2">
+                    <p className="font-sans text-[11px] text-muted-foreground leading-relaxed font-light line-clamp-2">
                       {food.shortDescription}
                     </p>
 
                     {/* Nutritional Analytics Matrix */}
-                    <div className="grid grid-cols-4 gap-1.5 text-center bg-[#FAF5EB] p-2 rounded-xl border border-[#16100C]/5">
+                    <div className="grid grid-cols-4 gap-1.5 text-center bg-muted/30 p-2 rounded-xl border border-border/50">
                       <div className="text-[9px]">
-                        <span className="text-[#16100C]/40 block uppercase font-light font-sans">
+                        <span className="text-muted-foreground block uppercase font-light font-sans">
                           Cals
                         </span>
-                        <span className="font-bold font-sans text-[#16100C]">{food.calories}</span>
+                        <span className="font-bold font-sans text-foreground">{food.calories}</span>
                       </div>
                       <div className="text-[9px]">
-                        <span className="text-[#16100C]/40 block uppercase font-light font-sans">
+                        <span className="text-muted-foreground block uppercase font-light font-sans">
                           Prot
                         </span>
-                        <span className="font-bold font-sans text-[#16100C]">{food.protein}g</span>
+                        <span className="font-bold font-sans text-foreground">{food.protein}g</span>
                       </div>
                       <div className="text-[9px]">
-                        <span className="text-[#16100C]/40 block uppercase font-light font-sans">
+                        <span className="text-muted-foreground block uppercase font-light font-sans">
                           Fat
                         </span>
-                        <span className="font-bold font-sans text-[#16100C]">{food.fat}g</span>
+                        <span className="font-bold font-sans text-foreground">{food.fat}g</span>
                       </div>
                       <div className="text-[9px]">
-                        <span className="text-[#16100C]/40 block uppercase font-light font-sans">
+                        <span className="text-muted-foreground block uppercase font-light font-sans">
                           Carb
                         </span>
-                        <span className="font-bold font-sans text-[#16100C]">
+                        <span className="font-bold font-sans text-foreground">
                           {food.carbohydrate}g
                         </span>
                       </div>
@@ -99,7 +99,7 @@ const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
                         <select
                           value={activeVariantId}
                           onChange={(e) => handleVariantChange(food.id, e.target.value)}
-                          className="w-full bg-white border border-[#16100C]/10 rounded-xl px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-[#16100C] appearance-none focus:outline-none"
+                          className="w-full bg-background border-border rounded-xl px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-foreground appearance-none focus:outline-none"
                         >
                           {food.variants.map((v) => (
                             <option key={v.id} value={v.id}>
@@ -107,24 +107,24 @@ const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
                             </option>
                           ))}
                         </select>
-                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none size-3 text-[#16100C]/50 mt-0.5" />
+                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none size-3 text-muted-foreground/60 mt-0.5" />
                       </div>
                     )}
                   </div>
                 </div>
 
                 {/* Order Trigger Layer */}
-                <div className="p-4 pt-0 border-t border-[#16100C]/5 mt-2 flex items-center justify-between">
+                <div className="p-4 pt-0 border-t border-border mt-2 flex items-center justify-between">
                   <div>
-                    <span className="text-[9px] uppercase tracking-widest text-[#16100C]/40 block font-light">
+                    <span className="text-[9px] uppercase tracking-widest text-muted-foreground block font-light">
                       Price Target
                     </span>
-                    <span className="font-heading text-base font-bold text-[#16100C]">
+                    <span className="font-heading text-base font-bold text-foreground">
                       ৳{currentVariant.price}
                     </span>
                   </div>
-                  <button className="px-4 py-2 bg-[#CEA359] hover:bg-[#b08443] transition-colors font-sans font-bold text-[10px] uppercase tracking-wider text-white rounded-xl shadow-sm">
-                    Add to Cell
+                  <button className="px-4 py-2 bg-primary hover:bg-primary/90 transition-colors font-sans font-bold text-[10px] uppercase tracking-wider text-primary-foreground rounded-xl shadow-sm">
+                    Add to Cart
                   </button>
                 </div>
               </div>
@@ -132,9 +132,9 @@ const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
           })}
         </div>
       ) : (
-        <div className="text-center py-20 bg-white rounded-2xl border border-[#16100C]/5 shadow-sm">
-          <Award className="size-8 text-[#CEA359] mx-auto mb-3" />
-          <p className="font-sans text-xs text-[#16100C]/50">
+        <div className="text-center py-20 bg-card rounded-2xl border-border shadow-sm">
+          <Award className="size-8 text-primary mx-auto mb-3" />
+          <p className="font-sans text-xs text-muted-foreground">
             No culinary items match your specified filter matrices.
           </p>
         </div>

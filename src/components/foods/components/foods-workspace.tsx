@@ -113,16 +113,16 @@ export default function FoodsWorkspace() {
 
 
   return (
-    <section className="py-12 bg-[#FAF5EB]">
+    <section className="py-12 bg-muted/30">
       <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Side Hierarchy Filter Layout */}
         <div className="lg:col-span-3 space-y-6">
-          <div className="bg-white border border-[#16100C]/10 rounded-2xl p-5 shadow-sm space-y-4">
-            <h3 className="font-heading text-base font-normal text-[#16100C]">Categories</h3>
+          <div className="bg-card border-border rounded-2xl p-5 shadow-sm space-y-4">
+            <h3 className="font-heading text-base font-normal text-foreground">Categories</h3>
             <div className="flex flex-col gap-1">
               <button
                 onClick={() => setActiveCategory("All")}
-                className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all ${activeCategory === "All" ? "bg-[#CEA359]/10 text-[#CEA359] font-bold" : "text-[#16100C]/70 hover:bg-[#16100C]/5"
+                className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all ${activeCategory === "All" ? "bg-primary/10 text-primary font-bold" : "text-muted-foreground hover:bg-muted"
                   }`}
               >
                 All Menu Categories

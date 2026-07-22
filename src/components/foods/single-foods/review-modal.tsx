@@ -21,47 +21,50 @@ export default function ReviewModal({ open, setOpen, foodId, review }: ReviewMod
 
     const isPending =
         createMutation.isPending || updateMutation.isPending;
-    useEffect(() => {
-        if (open) {
-            setRating(review?.rating ?? 5);
-            setComment(review?.review ?? "");
-        }
-    }, [open, review]);
+useEffect(() => {
+  if (open) {
+    setRating(review?.rating ?? 5);
+    setComment(review?.review ?? "");
+  }
+}, [open, review]);
 
     if (!open) return null;
 
-    const handleSubmit = () => {
-        if (review) {
-            updateMutation.mutate(
-                {
-                    reviewId: review.id,
-                    rating,
-                    review: comment,
-                },
-                {
-                    onSuccess: () => {
-                        setOpen(false);
-                    },
-                }
-            );
+   const handleSubmit = () => {
+  if (review) {
+    updateMutation.mutate(
+      {
+        reviewId: review.id,
+        rating,
+        review: comment,
+      },
+      {
+        onSuccess: () => {
+          setOpen(false);
+          setRating(5);
+          setComment("");
+        },
+      }
+    );
 
-            return;
-        }
-        createMutation.mutate(
-            {
-                foodId,
-                rating,
-                review: comment,
-            },
-            {
-                onSuccess: () => {
-                    setOpen(false);
-                    setRating(5);
-                    setComment("");
-                },
-            }
-        );
-    };
+    return;
+  }
+
+  createMutation.mutate(
+    {
+      foodId,
+      rating,
+      review: comment,
+    },
+    {
+      onSuccess: () => {
+        setOpen(false);
+        setRating(5);
+        setComment("");
+      },
+    }
+  );
+};
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-200">

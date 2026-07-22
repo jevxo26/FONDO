@@ -26,7 +26,10 @@ export interface Address {
 export function useAddresses() {
   return useQuery({
     queryKey: ["addresses"],
-    queryFn: () => api.get<Address[]>("/users/me/addresses"),
+    queryFn: async () => {
+      const res = await api.get<{ items: Address[] }>("/users/me/addresses");
+      return res.items;
+    },
   });
 }
 

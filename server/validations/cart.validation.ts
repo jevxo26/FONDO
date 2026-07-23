@@ -44,7 +44,7 @@ export const selectAddressSchema = yup.object({
 
 export const placeOrderSchema = yup.object({
   cartId: yup.string().required("Cart ID is required"),
-  addressId: yup.string().required("Address ID is required"),
+  addressId: yup.string().optional(),
   paymentMethodId: yup.string().required("Payment method ID is required"),
   notes: yup.string().optional(),
   deliverySchedule: yup.object({

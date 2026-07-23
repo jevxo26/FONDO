@@ -27,7 +27,7 @@ export function ProductInfo({ food, isFavorited, isFavPending, onToggleFav, chil
           &middot; In stock
         </span>
         <Button variant="ghost" size="icon" onClick={onToggleFav} disabled={isFavPending}
-          className="rounded-full border border-border bg-white shadow-sm hover:text-destructive dark:bg-card">
+          className="rounded-full border border-border bg-card shadow-sm hover:text-destructive">
           <Heart className={`size-4 ${isFavorited ? "fill-destructive text-destructive" : ""}`} />
         </Button>
       </div>

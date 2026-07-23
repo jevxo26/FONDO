@@ -1,6 +1,11 @@
 export type FulfillmentType = "delivery" | "pickup";
 export type AddressLabel = "Home" | "Office" | "Other";
 
+export interface DeliverySchedule {
+  deliveryDate: Date;
+  deliverySlot: string;
+}
+
 export interface CheckoutFormData {
   fulfillment: FulfillmentType;
   selectedAddressId?: string;
@@ -16,4 +21,5 @@ export interface CheckoutFormData {
   paymentMethodId: string;
   notes?: string;
   couponCode?: string;
+  deliverySchedule?: DeliverySchedule;
 }

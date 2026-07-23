@@ -18,8 +18,8 @@ export function LoginForm({ onSubmit, loading }: LoginFormProps) {
   return (
     <div className="flex flex-col gap-6 animate-fadeIn w-full max-w-md mx-auto">
       <div>
-        <h1 className="font-serif text-2xl text-[#1B0E08] mb-1">Welcome Back</h1>
-        <p className="text-xs text-[#1B0E08]/50">
+        <h1 className="font-heading text-2xl text-foreground mb-1">Welcome Back</h1>
+        <p className="text-xs text-muted-foreground">
           Please enter your credentials to log into your account.
         </p>
       </div>
@@ -33,7 +33,7 @@ export function LoginForm({ onSubmit, loading }: LoginFormProps) {
           {...register("identity", { required: true })}
         />
         {errors.identity?.message && (
-          <span className="text-[11px] text-red-600 font-sans mt-[-8px] ml-1">
+          <span className="text-[11px] text-destructive font-sans mt-[-8px] ml-1">
             {String(errors.identity.message)}
           </span>
         )}
@@ -48,7 +48,7 @@ export function LoginForm({ onSubmit, loading }: LoginFormProps) {
               <button
                 type="button"
                 onClick={() => setShowPass(!showPass)}
-                className="text-[#1B0E08]/40 hover:text-[#1B0E08] transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 {showPass ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
               </button>
@@ -58,13 +58,13 @@ export function LoginForm({ onSubmit, loading }: LoginFormProps) {
           <div className="text-right mt-1">
             <Link
               href="/forgot-password"
-              className="text-[11px] text-[#9C6B26] font-semibold font-sans hover:underline cursor-pointer"
+              className="text-[11px] text-primary font-semibold font-sans hover:underline cursor-pointer"
             >
               Forgot Password?
             </Link>
           </div>
           {errors.password?.message && (
-            <span className="text-[11px] text-red-600 font-sans mt-[-8px] ml-1">
+            <span className="text-[11px] text-destructive font-sans mt-[-8px] ml-1">
               {String(errors.password.message)}
             </span>
           )}
@@ -73,15 +73,15 @@ export function LoginForm({ onSubmit, loading }: LoginFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full h-11 bg-[#1B0E08] text-white rounded-xl text-xs font-bold mt-2 hover:bg-[#1B0E08]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors tracking-wider shadow-sm flex items-center justify-center gap-2"
+          className="w-full h-11 bg-foreground text-background rounded-xl text-xs font-bold mt-2 hover:bg-foreground/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors tracking-wider shadow-sm flex items-center justify-center gap-2"
         >
           {loading ? <Loader2 className="size-4 animate-spin" /> : null}
           {loading ? "Signing In..." : "Sign In"}
         </button>
 
-        <p className="text-center font-sans text-[11px] text-[#1B0E08]/50 mt-2">
+        <p className="text-center font-sans text-[11px] text-muted-foreground mt-2">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-[#9C6B26] font-bold hover:underline cursor-pointer">
+          <Link href="/register" className="text-primary font-bold hover:underline cursor-pointer">
             Create Account
           </Link>
         </p>

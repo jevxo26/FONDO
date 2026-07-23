@@ -68,26 +68,26 @@ useEffect(() => {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-            <div className="w-full max-w-md rounded-2xl bg-white border border-[#16100C]/10 p-6 shadow-xl space-y-5 relative">
+            <div className="w-full max-w-md rounded-2xl bg-card border border-border/10 p-6 shadow-[var(--shadow-elevated)] space-y-5 relative">
                 <button
                     onClick={() => setOpen(false)}
-                    className="absolute right-4 top-4 p-1 rounded-lg text-[#16100C]/40 hover:bg-[#16100C]/5 transition-colors"
+                    className="absolute right-4 top-4 p-1 rounded-lg text-muted-foreground hover:bg-muted transition-colors"
                 >
                     <X className="size-4" />
                 </button>
 
                 <div>
-                    <h3 className="font-fraunces text-xl font-normal text-[#16100C]">
+                    <h3 className="font-heading text-xl font-normal text-foreground">
                         {review ? "Modify Review" : "Share Your Experience"}
                     </h3>
-                    <p className="font-sans text-[11px] text-[#16100C]/50 mt-1">
+                    <p className="font-sans text-[11px] text-muted-foreground mt-1">
                         Your feedback updates our culinary matrix instantly.
                     </p>
                 </div>
 
                 {/* Interactive Luxury Star Selection */}
                 <div className="space-y-1.5">
-                    <label className="text-[10px] uppercase font-bold tracking-wider text-[#16100C]/60">Select Rating</label>
+                    <label className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">Select Rating</label>
                     <div className="flex gap-2">
                         {[1, 2, 3, 4, 5].map((item) => {
                             const isActive = item <= (hoveredRating ?? rating);
@@ -101,7 +101,7 @@ useEffect(() => {
                                     className="transition-transform active:scale-90"
                                 >
                                     <Star
-                                        className={`size-6 transition-colors ${isActive ? "fill-[#CEA359] text-[#CEA359]" : "text-[#16100C]/15"
+                                        className={`size-6 transition-colors ${isActive ? "fill-primary text-primary" : "text-foreground/15"
                                             }`}
                                     />
                                 </button>
@@ -112,12 +112,12 @@ useEffect(() => {
 
                 {/* Comment Box Input */}
                 <div className="space-y-1.5">
-                    <label className="text-[10px] uppercase font-bold tracking-wider text-[#16100C]/60">Detailed Feedback</label>
+                    <label className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">Detailed Feedback</label>
                     <textarea
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
                         placeholder="Describe the textures, flavors, and presentation..."
-                        className="w-full bg-[#FAF5EB] border border-[#16100C]/10 rounded-xl p-3 text-xs text-[#16100C] placeholder-[#16100C]/30 focus:outline-none focus:border-[#CEA359] transition-all resize-none"
+                        className="w-full bg-background border border-border/10 rounded-xl p-3 text-xs text-foreground placeholder-foreground/30 focus:outline-none focus:border-ring transition-all resize-none"
                         rows={4}
                     />
                 </div>
@@ -126,14 +126,14 @@ useEffect(() => {
                 <div className="flex justify-end gap-3 pt-2">
                     <button
                         onClick={() => setOpen(false)}
-                        className="px-4 py-2 text-xs font-bold font-sans uppercase tracking-wider text-[#16100C]/60 border border-[#16100C]/10 rounded-xl hover:bg-[#16100C]/5 transition-colors"
+                        className="px-4 py-2 text-xs font-bold font-sans uppercase tracking-wider text-muted-foreground border border-border/10 rounded-xl hover:bg-muted transition-colors"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={handleSubmit}
                         disabled={isPending}
-                        className="px-5 py-2 bg-[#CEA359] text-white rounded-xl"
+                        className="px-5 py-2 bg-primary text-primary-foreground rounded-xl"
                     >
                         {isPending
                             ? "Saving..."

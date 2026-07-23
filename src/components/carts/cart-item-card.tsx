@@ -61,7 +61,7 @@ export function CartItemCard({
         </div>
 
         <div className="flex items-center justify-between gap-4 mt-auto">
-          <div className="flex items-center border border-border bg-white rounded-xl overflow-hidden dark:bg-muted/10">
+          <div className="flex items-center border border-border bg-card rounded-xl overflow-hidden">
             <Button
               variant="ghost"
               size="icon-xs"

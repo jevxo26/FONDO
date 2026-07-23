@@ -67,7 +67,7 @@ export function CheckoutSummary({
       {/* Security Micro-Badges */}
       <div className="flex items-center justify-center gap-5 text-[11px] font-sans text-muted-foreground/80 pt-1 border-t border-border/30">
         <div className="flex items-center gap-1">
-          <ShieldCheck className="size-3.5 text-emerald-600" /> 100% Secure
+          <ShieldCheck className="size-3.5 text-success" /> 100% Secure
         </div>
         <div className="flex items-center gap-1">
           <Truck className="size-3.5 text-primary" /> Safe Delivery

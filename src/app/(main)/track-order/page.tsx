@@ -66,7 +66,7 @@ function TrackingContent() {
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+            <div className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
               <h2 className="font-heading text-lg font-normal text-foreground mb-6">Delivery Status</h2>
               <div className="space-y-6">
                 {steps.map((step, i) => (
@@ -87,7 +87,7 @@ function TrackingContent() {
           </div>
 
           <div className="space-y-4">
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+            <div className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
               <h3 className="font-heading text-sm font-semibold text-foreground mb-3">Delivery Details</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex items-center gap-2 text-muted-foreground">
@@ -97,7 +97,7 @@ function TrackingContent() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+            <div className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
               <h3 className="font-heading text-sm font-semibold text-foreground mb-3">Order Summary</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">

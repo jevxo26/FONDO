@@ -30,7 +30,7 @@ export function PersonalInfoForm() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="font-fraunces text-xl font-normal text-foreground">Personal Information</h3>
+        <h3 className="font-heading text-xl font-normal text-foreground">Personal Information</h3>
         <p className="font-sans text-[11px] text-muted-foreground/70 mt-1">
           Manage your name, basic identity details, and active avatar settings.
         </p>
@@ -166,7 +166,7 @@ export function ChangePasswordForm() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="font-fraunces text-xl font-normal text-foreground">Change Password</h3>
+        <h3 className="font-heading text-xl font-normal text-foreground">Change Password</h3>
         <p className="font-sans text-[11px] text-muted-foreground/70 mt-1">
           Update your password regularly to stay secure.
         </p>

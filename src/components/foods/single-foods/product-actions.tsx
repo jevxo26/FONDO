@@ -14,7 +14,7 @@ export function ProductActions({ quantity, onQuantityChange, onAddToCart, onBuyN
     <div className="mt-6 lg:col-span-6">
       <div className="flex items-center gap-4">
         <span className="font-sans text-sm font-medium text-muted-foreground">Quantity:</span>
-        <div className="flex items-center border border-border bg-white rounded-xl overflow-hidden dark:bg-card">
+        <div className="flex items-center border border-border bg-card rounded-xl overflow-hidden">
           <Button variant="ghost" size="icon" onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
             className="p-2.5 rounded-none">
             <Minus className="size-3.5" />
@@ -41,7 +41,7 @@ export function ProductActions({ quantity, onQuantityChange, onAddToCart, onBuyN
       </div>
 
       <Button variant="outline" size="xl"
-        className="mt-4 w-full gap-2 rounded-2xl border-primary/30 bg-primary/20 text-primary-foreground hover:bg-primary/30 dark:text-white">
+        className="mt-4 w-full gap-2 rounded-2xl border-primary/30 bg-primary/20 text-primary-foreground hover:bg-primary/30">
         <MessageSquare className="size-4 text-primary" />
         Order Directly via WhatsApp
       </Button>

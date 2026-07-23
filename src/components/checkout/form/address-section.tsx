@@ -78,7 +78,7 @@ export function AddressSection({
               type="text"
               placeholder="e.g. Dhaka"
               {...register("division", { required: !selectedAddressId })}
-              className={errors.division ? "border-rose-400 focus:ring-rose-400" : ""}
+              className={errors.division ? "border-destructive/50 focus:ring-destructive/50" : ""}
             />
           </FormField>
           <FormField label="District" error={errors.district}>
@@ -86,7 +86,7 @@ export function AddressSection({
               type="text"
               placeholder="e.g. Dhaka"
               {...register("district", { required: !selectedAddressId })}
-              className={errors.district ? "border-rose-400 focus:ring-rose-400" : ""}
+              className={errors.district ? "border-destructive/50 focus:ring-destructive/50" : ""}
             />
           </FormField>
           <FormField label="Area / Thana" error={errors.area}>
@@ -94,7 +94,7 @@ export function AddressSection({
               type="text"
               placeholder="e.g. Gulshan"
               {...register("area", { required: !selectedAddressId })}
-              className={errors.area ? "border-rose-400 focus:ring-rose-400" : ""}
+              className={errors.area ? "border-destructive/50 focus:ring-destructive/50" : ""}
             />
           </FormField>
           <FormField label="Road / Street" error={errors.road}>
@@ -102,7 +102,7 @@ export function AddressSection({
               type="text"
               placeholder="Road number, colony name"
               {...register("road")}
-              className={errors.road ? "border-rose-400 focus:ring-rose-400" : ""}
+              className={errors.road ? "border-destructive/50 focus:ring-destructive/50" : ""}
             />
           </FormField>
           <FormField label="House" error={errors.house}>
@@ -116,7 +116,7 @@ export function AddressSection({
               type="text"
               placeholder="e.g. 1212"
               {...register("postalCode")}
-              className={errors.postalCode ? "border-rose-400 focus:ring-rose-400" : ""}
+              className={errors.postalCode ? "border-destructive/50 focus:ring-destructive/50" : ""}
             />
           </FormField>
         </div>

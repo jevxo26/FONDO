@@ -11,7 +11,7 @@ export default function EngagementBanner() {
           Your feedback helps our culinary artisans keep traditional recipes alive while improving real-world kitchen distribution logistics for our community.
         </p>
         <div className="pt-2">
-          <button className="px-8 py-3.5 bg-background text-foreground font-sans font-bold text-xs rounded-xl shadow-lg hover:opacity-95 transition-all uppercase tracking-widest">
+          <button className="px-8 py-3.5 bg-background text-foreground font-sans font-bold text-xs rounded-xl shadow-[var(--shadow-elevated)] hover:opacity-95 transition-all uppercase tracking-widest">
             Write a Review
           </button>
         </div>

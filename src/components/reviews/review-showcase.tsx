@@ -45,7 +45,7 @@ export default function ReviewsHero() {
               className="w-full h-full object-cover"
             />
             {/* Floating Trust Verification Badge */}
-            <div className="absolute bottom-4 left-4 bg-background/90 backdrop-blur-sm border border-border px-3 py-2 rounded-xl flex items-center gap-3 shadow-md">
+            <div className="absolute bottom-4 left-4 bg-background/90 backdrop-blur-sm border border-border px-3 py-2 rounded-xl flex items-center gap-3 shadow-[var(--shadow-card)]">
               <div className="flex gap-1">
                 <span className="size-2.5 rounded-full bg-primary" />
                 <span className="size-2.5 rounded-full bg-success" />

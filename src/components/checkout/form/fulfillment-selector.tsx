@@ -35,7 +35,7 @@ export function FulfillmentSelector({ value, onChange }: Props) {
               }`}
             >
               <div
-                className={`p-2.5 rounded-xl ${isSelected ? "bg-primary/20" : "bg-white border"}`}
+                className={`p-2.5 rounded-xl ${isSelected ? "bg-primary/20" : "bg-card border"}`}
               >
                 <Icon
                   className={`size-5 ${isSelected ? "text-primary" : "text-muted-foreground"}`}

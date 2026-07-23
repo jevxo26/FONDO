@@ -20,10 +20,10 @@ export function CoreLayoutWrapper({ currentStep, children }: CoreLayoutWrapperPr
           priority
           className="object-cover opacity-55 object-center"
         />
-        <div className="relative z-10 text-white flex flex-col gap-4 max-w-md">
+          <div className="relative z-10 text-background flex flex-col gap-4 max-w-md">
           {isIdentityFlow ? (
             <>
-              <div className="self-start px-3 py-1 bg-primary rounded-full text-[10px] font-sans font-bold uppercase tracking-wider text-white">
+              <div className="self-start px-3 py-1 bg-primary rounded-full text-[10px] font-sans font-bold uppercase tracking-wider text-primary-foreground">
                 JOIN THE FLOW
               </div>
               <h2 className="font-heading text-4xl font-normal leading-tight tracking-tight text-background">
@@ -48,7 +48,7 @@ export function CoreLayoutWrapper({ currentStep, children }: CoreLayoutWrapperPr
       </div>
 
       {/* Right Interactive Form Area */}
-      <div className="p-8 sm:p-14 flex flex-col justify-center bg-white relative">
+      <div className="p-8 sm:p-14 flex flex-col justify-center bg-card relative">
         <div className="max-w-md w-full mx-auto">{children}</div>
       </div>
     </div>

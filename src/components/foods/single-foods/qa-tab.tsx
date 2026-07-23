@@ -18,7 +18,7 @@ const QaTab = () => {
           <Input
             type="text"
             placeholder="Ask about ingredients, portion size, catering..."
-            className="pr-14 bg-white dark:bg-card"
+            className="pr-14 bg-card"
           />
 
           <Button
@@ -58,7 +58,7 @@ const QaTab = () => {
                         Food Flow Kitchen
                       </span>
 
-                      <span className="rounded bg-primary/20 px-2 py-0.5 font-sans text-[10px] font-medium text-primary-foreground dark:text-white border border-primary/30">
+                      <span className="rounded bg-primary/20 px-2 py-0.5 font-sans text-[10px] font-medium text-primary-foreground border border-primary/30">
                         Chef
                       </span>
                     </div>

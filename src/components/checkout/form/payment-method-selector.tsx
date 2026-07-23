@@ -43,7 +43,7 @@ export function PaymentMethodSelector({ value, onChange, methods, isLoading }: P
               className={`relative flex flex-col items-center justify-center p-4 rounded-xl border transition-all text-center min-h-[84px] ${
                 isSelected
                   ? "bg-foreground border-foreground text-background"
-                  : "bg-background border-border text-muted-foreground hover:border-neutral-400"
+                  : "bg-background border-border text-muted-foreground hover:border-foreground/20"
               }`}
             >
               {isSelected && (

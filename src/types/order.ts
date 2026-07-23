@@ -69,11 +69,17 @@ export interface Order {
   customer: OrderCustomer;
 }
 
+export interface DeliverySchedule {
+  deliveryDate: Date;
+  deliverySlot: string;
+}
+
 export interface PlaceOrderPayload {
   cartId: string;
-  addressId: string;
+  addressId?: string;
   paymentMethodId: string;
   notes?: string;
+  deliverySchedule?: DeliverySchedule;
 }
 
 export interface PlaceOrderResponse {

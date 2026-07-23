@@ -15,7 +15,7 @@ export function OrderSummary({ subtotal, savings, deliveryCharges }: OrderSummar
   const totalAmount = Number(subtotal) - Number(savings) + deliveryCost;
 
   return (
-    <div className="rounded-[32px] border border-border/50 bg-white p-6 shadow-[var(--shadow-card)] dark:bg-card flex flex-col gap-6">
+    <div className="rounded-[32px] border border-border/50 bg-card p-6 shadow-[var(--shadow-card)] flex flex-col gap-6">
       <h3 className="font-sans text-base font-semibold text-secondary-foreground tracking-tight">
         Order Summary
       </h3>
@@ -28,13 +28,13 @@ export function OrderSummary({ subtotal, savings, deliveryCharges }: OrderSummar
         </div>
         <div className="flex justify-between text-muted-foreground">
           <span>Delivery charges</span>
-          <span className="font-medium text-emerald-600 capitalize">
+          <span className="font-medium text-success capitalize">
             {deliveryCharges === "free" ? "free" : `৳${Number(deliveryCharges)}`}
           </span>
         </div>
         <div className="flex justify-between text-muted-foreground">
           <span>Savings</span>
-          <span className="font-medium text-rose-600 font-semibold">-৳{Number(savings)}</span>
+          <span className="font-medium text-destructive font-semibold">-৳{Number(savings)}</span>
         </div>
       </div>
 
@@ -63,7 +63,7 @@ export function OrderSummary({ subtotal, savings, deliveryCharges }: OrderSummar
       {/* Operational Micro-Badges Trust Signals */}
       <div className="flex items-center justify-center gap-5 text-[11px] font-sans text-muted-foreground/80 pt-1 border-t border-border/30">
         <div className="flex items-center gap-1">
-          <ShieldCheck className="size-3.5 text-emerald-600" /> Secure
+          <ShieldCheck className="size-3.5 text-success" /> Secure
         </div>
         <div className="flex items-center gap-1">
           <Truck className="size-3.5 text-primary" /> Fast Delivery

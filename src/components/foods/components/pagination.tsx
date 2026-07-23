@@ -35,7 +35,7 @@ export default function Pagination({
             onClick={() => onPageChange(page)}
             className={`h-10 w-10 rounded-xl border ${
               page === currentPage
-                ? "bg-[#CEA359] text-white border-[#CEA359]"
+                ? "bg-primary text-primary-foreground border-primary"
                 : ""
             }`}
           >

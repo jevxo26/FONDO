@@ -25,7 +25,7 @@ export default function FilteredFeed() {
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap uppercase tracking-wider ${
-                  activeTab === tab ? "bg-foreground text-background shadow-md" : "bg-card border border-border text-muted-foreground hover:text-foreground"
+                  activeTab === tab ? "bg-foreground text-background shadow-[var(--shadow-card)]" : "bg-card border border-border text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {tab}

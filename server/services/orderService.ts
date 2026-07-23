@@ -70,10 +70,10 @@ export const createOrderFromCart = catchServiceAsync(
         }>;
       }>;
     },
-    addressId: string,
     paymentMethodId: string,
     customerId: string,
     notes?: string,
+    addressId?: string,
     deliverySchedule?: { deliveryDate: Date; deliverySlot?: string },
   ) => {
     const orderNumber = generateOrderNumber();

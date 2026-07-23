@@ -76,7 +76,7 @@ export default function CartPageView() {
       <main className="flex-1 py-8 lg:py-12">
         <div className="wrapper">
           <div className="py-16 text-center border border-dashed border-border rounded-3xl bg-card">
-            <p className="font-sans text-sm text-red-600">{handleApiError(error)}</p>
+            <p className="font-sans text-sm text-destructive">{handleApiError(error)}</p>
             <Link href="/foods">
               <Button variant="default" className="mt-4 rounded-xl">
                 Return to Menu

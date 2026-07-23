@@ -18,6 +18,8 @@ import { AddressSection } from "./address-section";
 import { ContactInfoSection } from "./contact-info-section";
 import { PaymentMethodSelector } from "./payment-method-selector";
 import { CouponSection } from "./coupon-section";
+import { DeliveryScheduleSelector } from "./delivery-schedule-selector";
+import type { DeliverySchedule } from "@/types/checkout-type";
 
 const LABEL = "Home";
 
@@ -28,6 +30,7 @@ const CheckoutForm = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [couponInput, setCouponInput] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+  const [deliverySchedule, setDeliverySchedule] = useState<DeliverySchedule>();
 
   const placeOrder = usePlaceOrder();
   const initiatePayment = useInitiatePayment();
@@ -111,6 +114,8 @@ const CheckoutForm = () => {
         return;
       }
 
+      let finalAddressId: string | undefined;
+
       if (currentFulfillment === "delivery" && !selectedAddressId) {
         const address = await createAddress.mutateAsync({
           label: LABEL,
@@ -130,9 +135,9 @@ const CheckoutForm = () => {
           return;
         }
 
-        var finalAddressId = address.id;
+        finalAddressId = address.id;
       } else if (currentFulfillment === "delivery" && selectedAddressId) {
-        var finalAddressId = selectedAddressId;
+        finalAddressId = selectedAddressId;
       }
 
       if (!data.paymentMethodId && paymentMethods.length > 0) {
@@ -147,9 +152,10 @@ const CheckoutForm = () => {
 
       const order = await placeOrder.mutateAsync({
         cartId,
-        addressId: finalAddressId!,
+        ...(finalAddressId ? { addressId: finalAddressId } : {}),
         paymentMethodId: data.paymentMethodId,
         notes: data.notes || undefined,
+        ...(deliverySchedule ? { deliverySchedule } : {}),
       });
 
       const codMethod = paymentMethods.find((pm) => pm.code === "cod");
@@ -195,7 +201,14 @@ const CheckoutForm = () => {
           />
         )}
 
-        <ContactInfoSection register={register} errors={errors} />
+        <ContactInfoSection register={register} errors={errors} fulfillment={currentFulfillment} />
+
+        {currentFulfillment === "delivery" && (
+          <DeliveryScheduleSelector
+            value={deliverySchedule}
+            onChange={setDeliverySchedule}
+          />
+        )}
 
         <PaymentMethodSelector
           value={currentPaymentMethodId}

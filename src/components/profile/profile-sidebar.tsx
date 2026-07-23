@@ -42,11 +42,11 @@ export function ProfileSidebar({ activeTab, setActiveTab }: SidebarProps) {
   return (
     <div className="bg-card border border-border rounded-2xl p-5 shadow-sm space-y-6">
       <div className="flex items-center gap-3 pb-4 border-b border-border">
-        <div className="size-12 bg-primary/20 rounded-full flex items-center justify-center font-fraunces text-lg font-bold text-primary">
+        <div className="size-12 bg-primary/20 rounded-full flex items-center justify-center font-heading text-lg font-bold text-primary">
           {initials}
         </div>
         <div>
-          <h4 className="font-fraunces text-sm font-bold text-foreground">
+          <h4 className="font-heading text-sm font-bold text-foreground">
             {user ? `${user.firstName} ${user.lastName}` : "Loading..."}
           </h4>
           <p className="font-sans text-[10px] text-muted-foreground">{user?.email ?? "—"}</p>

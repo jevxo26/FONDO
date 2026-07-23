@@ -1,6 +1,5 @@
 "use client";
-
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 import { User, Lock, MapPin, Bell, ShieldAlert, Laptop, ShoppingBag, CalendarDays, Wallet, Heart } from "lucide-react";
 
 interface SidebarProps {

@@ -1,11 +1,11 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
-import { Review } from "@/types/food-review";
 import { useState } from "react";
-import ReviewModal from "./review-modal";
+import { Review } from "@/types/food-review";
 import ReviewSummary from "./review-summary";
+import ReviewModal from "./review-modal";
+import { Button } from "@/components/ui/button";
 import FoodSingleReview from "./single-review";
+import { useAuth } from "@/hooks/use-auth";
 
 interface ReviewsTabProps {
   allReviews: Review[];
@@ -45,7 +45,17 @@ export default function ReviewsTab({ allReviews, foodId }: ReviewsTabProps) {
         ))}
       </div>
 
-      <ReviewModal open={open} setOpen={setOpen} foodId={foodId} review={selectedReview} />
+      <ReviewModal
+        open={open}
+        setOpen={(value) => {
+          setOpen(value);
+          if (!value) {
+            setSelectedReview(null);
+          }
+        }}
+        foodId={foodId}
+        review={selectedReview}
+      />
     </div>
   );
 }

@@ -1,10 +1,9 @@
 "use client";
-
-import { useAuth } from "@/hooks/useAuth";
 import { useUpdateProfile, useChangePassword } from "@/hooks/use-profile";
 import { User, Edit3 } from "lucide-react";
 import { toast } from "sonner";
 import { handleApiError } from "@/lib/api-error";
+import { useAuth } from "@/hooks/use-auth";
 
 export function PersonalInfoForm() {
   const { user } = useAuth();

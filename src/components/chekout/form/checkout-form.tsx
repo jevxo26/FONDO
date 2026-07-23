@@ -3,7 +3,7 @@
 import { FormField } from "@/components/common/form-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateAddress } from "@/hooks/use-addresses";
+import { useAddresses, useCreateAddress } from "@/hooks/use-addresses";
 import { useCart } from "@/hooks/use-cart";
 import { usePlaceOrder } from "@/hooks/use-orders";
 import { useInitiatePayment } from "@/hooks/use-payments";
@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { CheckoutSummary } from "../checkout-summary-right";
+import { applyCoupon, removeCoupon, selectAddress } from "../../../../server/services/checkoutService";
 
 const CheckoutForm = () => {
   const { data: cart, isLoading: cartLoading } = useCart();

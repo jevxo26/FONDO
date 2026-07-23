@@ -11,21 +11,6 @@ function generateOrderNumber(): string {
   return `FND-${y}${m}${d}-${seq}`;
 }
 
-async function findVendorForFood(foodId: string): Promise<string | null> {
-  const assignment = await prisma.vendorFoodAssignment.findFirst({
-    where: { foodId, status: "active" },
-    orderBy: { priority: "asc" },
-    include: { vendor: { select: { id: true } } },
-  });
-  if (assignment) return assignment.vendor.id;
-
-  const vf = await prisma.vendorFood.findFirst({
-    where: { foodId, status: "active", isPrimary: true },
-    include: { vendor: { select: { id: true } } },
-  });
-  return vf?.vendor.id ?? null;
-}
-
 const ORDER_INCLUDE = {
   items: { include: { food: true } },
   meals: { include: { foods: true } },
@@ -97,11 +82,24 @@ export const createOrderFromCart = catchServiceAsync(
     const mealFoodIds = cart.meals.flatMap((m) => m.foods.map((f) => f.foodId));
     const allFoodIds = [...new Set([...itemFoodIds, ...mealFoodIds])];
 
-    const vendorIds: string[] = [];
-    for (const foodId of allFoodIds) {
-      const vid = await findVendorForFood(foodId);
-      if (vid) vendorIds.push(vid);
-    }
+    const [assignments, vfs] = await Promise.all([
+      prisma.vendorFoodAssignment.findMany({
+        where: { foodId: { in: allFoodIds }, status: "active" },
+        orderBy: { priority: "asc" },
+        distinct: ["foodId"],
+        include: { vendor: { select: { id: true } } },
+      }),
+      prisma.vendorFood.findMany({
+        where: { foodId: { in: allFoodIds }, status: "active", isPrimary: true },
+        include: { vendor: { select: { id: true } } },
+      }),
+    ]);
+
+    const vendorMap = new Map<string, string>();
+    for (const a of assignments) { if (a.vendor) vendorMap.set(a.foodId, a.vendor.id); }
+    for (const vf of vfs) { if (!vendorMap.has(vf.foodId) && vf.vendor) vendorMap.set(vf.foodId, vf.vendor.id); }
+
+    const vendorIds = allFoodIds.map((fid) => vendorMap.get(fid)).filter(Boolean) as string[];
     const primaryVendorId = vendorIds.length > 0
       ? vendorIds.sort((a, b) => vendorIds.filter((v) => v === a).length - vendorIds.filter((v) => v === b).length).pop() ?? null
       : null;
@@ -129,15 +127,15 @@ export const createOrderFromCart = catchServiceAsync(
         },
       });
 
-      for (const item of cart.items) {
-        await tx.orderItem.create({
-          data: {
+      if (cart.items.length > 0) {
+        await tx.orderItem.createMany({
+          data: cart.items.map((item) => ({
             orderId: created.id,
             foodId: item.foodId,
             quantity: item.quantity,
             unitPrice: item.unitPrice,
             totalPrice: item.totalPrice,
-          },
+          })),
         });
       }
 

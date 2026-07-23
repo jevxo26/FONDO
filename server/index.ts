@@ -147,7 +147,7 @@ app
       console.log(`> Ready on http://localhost:${env.PORT}`);
     });
   })
-  .catch((err) => {
+  .catch((err: unknown) => {
     console.error("Error starting server", err);
     process.exit(1);
   });

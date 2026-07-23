@@ -13,35 +13,37 @@ export const listCustomers = catchServiceAsync(async () => {
     },
   });
 
-  const enriched = await Promise.all(
-    users.map(async (user) => {
-      const aggr = await prisma.payment.aggregate({
-        where: { customerId: user.id, status: "COMPLETED" },
-        _sum: { amount: true },
-      });
-      const totalSpent = Number(aggr._sum.amount ?? 0);
+  const userIds = users.map((u) => u.id);
 
-      const lastOrder = await prisma.order.findFirst({
-        where: { customerId: user.id, deletedAt: null },
-        orderBy: { placedAt: "desc" },
-        select: { placedAt: true },
-      });
-
-      return {
-        id: user.id,
-        fullName: `${user.firstName} ${user.lastName}`.trim(),
-        phone: user.phone,
-        email: user.email,
-        status: user.status,
-        totalOrders: user._count?.orders ?? 0,
-        totalSpent,
-        subscriptionCount: user._count?.subscriptions ?? 0,
-        walletBalance: user.wallet ? Number(user.wallet.balance) : 0,
-        lastOrderDate: lastOrder?.placedAt ?? null,
-        joinedAt: user.createdAt,
-      };
+  const [paymentAggrs, lastOrders] = await Promise.all([
+    prisma.payment.groupBy({
+      by: ["customerId"],
+      where: { customerId: { in: userIds }, status: "COMPLETED" },
+      _sum: { amount: true },
     }),
-  );
+    prisma.order.groupBy({
+      by: ["customerId"],
+      where: { customerId: { in: userIds }, deletedAt: null },
+      _max: { placedAt: true },
+    }),
+  ]);
+
+  const spentMap = new Map(paymentAggrs.map((p) => [p.customerId, Number(p._sum.amount ?? 0)]));
+  const lastOrderMap = new Map(lastOrders.map((o) => [o.customerId, o._max.placedAt]));
+
+  const enriched = users.map((user) => ({
+    id: user.id,
+    fullName: `${user.firstName} ${user.lastName}`.trim(),
+    phone: user.phone,
+    email: user.email,
+    status: user.status,
+    totalOrders: user._count?.orders ?? 0,
+    totalSpent: spentMap.get(user.id) ?? 0,
+    subscriptionCount: user._count?.subscriptions ?? 0,
+    walletBalance: user.wallet ? Number(user.wallet.balance) : 0,
+    lastOrderDate: lastOrderMap.get(user.id) ?? null,
+    joinedAt: user.createdAt,
+  }));
 
   return { items: enriched, total: enriched.length, page: 1, limit: enriched.length, totalPages: 1 };
 });

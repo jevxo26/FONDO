@@ -215,6 +215,7 @@ model User {
 
   @@index([role])
   @@index([status])
+  @@index([role, deletedAt])
   @@map("users")
 }
 
@@ -307,7 +308,7 @@ model UserSession {
 
   @@index([userId])
   @@index([accessToken])
-  @@index([refreshToken])
+  @@index([refreshToken, status])
   @@index([status])
   @@map("user_sessions")
 }
@@ -349,6 +350,7 @@ model UserToken {
 
   @@index([userId])
   @@index([type])
+  @@index([token])
   @@map("user_tokens")
 }
 
@@ -1076,6 +1078,7 @@ model Food {
   @@index([status])
   @@index([isFeatured])
   @@index([isPopular])
+  @@index([status, deletedAt, categoryId])
   @@map("foods")
 }
 
@@ -1335,6 +1338,7 @@ model FoodReview {
 
   @@index([foodId])
   @@index([customerId])
+  @@index([foodId, status])
   @@map("food_reviews")
 }
 
@@ -1366,6 +1370,7 @@ model FoodFavorite {
 
   @@index([foodId])
   @@index([userId])
+  @@index([userId, foodId])
   @@map("food_favorites")
 }
 
@@ -2128,6 +2133,7 @@ model CartItem {
 
   @@index([cartId])
   @@index([foodId])
+  @@index([cartId, foodId])
   @@map("cart_items")
 }
 
@@ -2464,6 +2470,7 @@ model Payment {
   @@index([customerId])
   @@index([status])
   @@index([paymentMethodId])
+  @@index([transactionId])
   @@map("payments")
 }
 
@@ -3596,6 +3603,7 @@ model CouponUsage {
   @@index([couponId])
   @@index([customerId])
   @@index([orderId])
+  @@index([couponId, customerId])
   @@map("coupon_usages")
 }
 

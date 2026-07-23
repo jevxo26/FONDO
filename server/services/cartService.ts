@@ -44,21 +44,23 @@ export const initCart = catchServiceAsync(
 
     const existing = await prisma.cart.findUnique({ where: { customerId: userId } });
     if (existing && existing.status === "active") {
-      await prisma.cartItem.deleteMany({ where: { cartId: existing.id } });
-      await prisma.cartMeal.deleteMany({ where: { cartId: existing.id } });
-      await prisma.cart.update({
-        where: { id: existing.id },
-        data: {
-          packageId,
-          customMealPlanId,
-          couponId: null,
-          subtotal: 0,
-          discount: 0,
-          deliveryCharge: 0,
-          vat: 0,
-          totalAmount: 0,
-        },
-      });
+      await Promise.all([
+        prisma.cartItem.deleteMany({ where: { cartId: existing.id } }),
+        prisma.cartMeal.deleteMany({ where: { cartId: existing.id } }),
+        prisma.cart.update({
+          where: { id: existing.id },
+          data: {
+            packageId,
+            customMealPlanId,
+            couponId: null,
+            subtotal: 0,
+            discount: 0,
+            deliveryCharge: 0,
+            vat: 0,
+            totalAmount: 0,
+          },
+        }),
+      ]);
     }
 
     const cart = await prisma.cart.upsert({
@@ -74,14 +76,14 @@ export const initCart = catchServiceAsync(
         include: { packageDay: true },
       });
 
-      for (const pm of packageMeals) {
-        await prisma.cartMeal.create({
-          data: {
+      if (packageMeals.length > 0) {
+        await prisma.cartMeal.createMany({
+          data: packageMeals.map((pm) => ({
             cartId: cart.id,
             dayNumber: pm.packageDay.dayNumber,
             mealType: pm.mealType,
             mealTime: pm.mealTime ?? undefined,
-          },
+          })),
         });
       }
     }
@@ -277,10 +279,13 @@ async function _assertActiveCart(cartId: string) {
 }
 
 async function _recalculateCart(cartId: string) {
-  const items = await prisma.cartItem.findMany({
-    where: { cartId },
-    include: { addons: true },
-  });
+  const [items, cart] = await Promise.all([
+    prisma.cartItem.findMany({
+      where: { cartId },
+      include: { addons: true },
+    }),
+    prisma.cart.findUnique({ where: { id: cartId } }),
+  ]);
 
   const itemsSubtotal = items.reduce((sum, item) => sum + Number(item.totalPrice), 0);
   const addonsTotal = items.reduce(
@@ -288,8 +293,7 @@ async function _recalculateCart(cartId: string) {
     0,
   );
   const subtotal = itemsSubtotal + addonsTotal;
-
-  const cart = await prisma.cart.findUnique({ where: { id: cartId } });
+  const itemCount = items.length;
   let discount = 0;
 
   if (cart?.couponId) {
@@ -308,42 +312,42 @@ async function _recalculateCart(cartId: string) {
   const vat = afterDiscount * (VAT_PERCENT / 100);
   const totalAmount = afterDiscount + deliveryCharge + vat;
 
-  await prisma.cart.update({
-    where: { id: cartId },
-    data: {
-      subtotal,
-      discount,
-      deliveryCharge,
-      vat,
-      totalAmount,
-    },
-  });
-
-  const mealCount = await prisma.cartMeal.count({ where: { cartId } });
-  const itemCount = items.length;
-
-  await prisma.cartSummary.upsert({
-    where: { cartId },
-    create: {
-      cartId,
-      itemCount,
-      mealCount,
-      subtotal,
-      discount,
-      deliveryCharge,
-      vat,
-      grandTotal: totalAmount,
-    },
-    update: {
-      itemCount,
-      mealCount,
-      subtotal,
-      discount,
-      deliveryCharge,
-      vat,
-      grandTotal: totalAmount,
-    },
-  });
+  await Promise.all([
+    prisma.cart.update({
+      where: { id: cartId },
+      data: {
+        subtotal,
+        discount,
+        deliveryCharge,
+        vat,
+        totalAmount,
+      },
+    }),
+    prisma.cartMeal.count({ where: { cartId } }).then((mealCount) =>
+      prisma.cartSummary.upsert({
+        where: { cartId },
+        create: {
+          cartId,
+          itemCount,
+          mealCount,
+          subtotal,
+          discount,
+          deliveryCharge,
+          vat,
+          grandTotal: totalAmount,
+        },
+        update: {
+          itemCount,
+          mealCount,
+          subtotal,
+          discount,
+          deliveryCharge,
+          vat,
+          grandTotal: totalAmount,
+        },
+      }),
+    ),
+  ]);
 }
 
 async function _logHistory(cartId: string, action: string, performedBy: string, remarks?: string) {

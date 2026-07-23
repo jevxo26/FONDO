@@ -33,15 +33,16 @@ export const getSummary = catchServiceAsync(async (cartId: string) => {
     }
   }
 
-    const addresses = await prisma.userAddress.findMany({
+  const [addresses, paymentMethods] = await Promise.all([
+    prisma.userAddress.findMany({
       where: { userId: cart.customerId, deletedAt: null },
       select: { id: true, label: true, area: true, district: true, division: true, road: true, house: true, isDefault: true },
-    });
-
-    const paymentMethods = await prisma.paymentMethod.findMany({
+    }),
+    prisma.paymentMethod.findMany({
       where: { isActive: true },
       select: { id: true, name: true, logo: true, isDefault: true },
-    });
+    }),
+  ]);
 
   return {
     subtotal: Number(cart.subtotal),

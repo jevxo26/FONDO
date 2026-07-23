@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import type { Food } from "@/types/food";
 import { useAddToCart } from "@/hooks/use-cart";
 import { useFavorites, useRemoveFavorite, useToggleFavorite } from "@/hooks/use-favorites";
+import type { Food } from "@/types/food";
+import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { ProductActions } from "./product-actions";
 import { ProductGallery } from "./product-gallery";
 import { ProductInfo } from "./product-info";
-import { ProductActions } from "./product-actions";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -45,10 +45,19 @@ export function ProductHero({ food }: { food: Food }) {
   return (
     <section className="py-8 lg:py-12 bg-background">
       <div className="wrapper">
-        <motion.div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12"
-          variants={containerVariants} initial="hidden" animate="visible">
+        <motion.div
+          className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           <ProductGallery coverImage={food.coverImage} name={food.name} />
-          <ProductInfo food={food} isFavorited={isFavorited} isFavPending={isFavPending} onToggleFav={handleToggleFav}>
+          <ProductInfo
+            food={food}
+            isFavorited={isFavorited}
+            isFavPending={isFavPending}
+            onToggleFav={handleToggleFav}
+          >
             <ProductActions
               quantity={quantity}
               onQuantityChange={setQuantity}

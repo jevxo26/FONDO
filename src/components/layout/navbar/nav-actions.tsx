@@ -65,6 +65,7 @@ export function NavActions() {
       <Link
         href="/wishlist"
         className="relative flex size-9 items-center justify-center rounded-full bg-destructive/20 transition-colors hover:bg-destructive/30"
+        className="relative flex size-9 items-center justify-center rounded-full bg-destructive/20 transition-colors hover:bg-destructive/30"
       >
         <Heart className="size-4 text-foreground" />
         {favoritesCount > 0 && (
@@ -75,6 +76,7 @@ export function NavActions() {
       </Link>
       <Link
         href="/cart"
+        className="relative flex size-9 items-center justify-center rounded-full bg-secondary transition-colors hover:bg-secondary"
         className="relative flex size-9 items-center justify-center rounded-full bg-secondary transition-colors hover:bg-secondary"
       >
         <ShoppingCart className="size-4 text-foreground" />

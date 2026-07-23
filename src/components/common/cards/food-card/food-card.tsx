@@ -54,6 +54,9 @@ export default function FoodCard({ food }: { food: Food }) {
             <span className="font-sans text-xs font-medium">
               {food.servingSize} - ৳{defaultVariant?.price}
             </span>
+            <span className="font-sans text-xs font-medium">
+              {food.servingSize} - ৳{defaultVariant?.price}
+            </span>
             <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-white/20">
               <Link href={`/foods/${food.slug}`}>
                 <ArrowUpRight className="size-5 text-white" />

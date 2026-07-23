@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 export default function CartPageView() {
+  const dispatch = useAppDispatch();
   const { data: cart, isLoading, error } = useCart();
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveFromCart();

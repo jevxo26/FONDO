@@ -1,11 +1,10 @@
 "use client";
 
-import { SectionReveal } from "@/components/common/section-reveal";
 import FoodCard from "@/components/common/cards/food-card/food-card";
+import { SectionReveal } from "@/components/common/section-reveal";
 import { useFavorites } from "@/hooks/use-favorites";
 import { Heart, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useEffect } from "react";
 
 export default function WishlistPage() {
   const { data: favorites = [], isLoading } = useFavorites();
@@ -17,7 +16,9 @@ export default function WishlistPage() {
           <h1 className="font-heading text-4xl font-normal text-secondary-foreground tracking-tight">
             My Wishlist
             {favorites.length > 0 && (
-              <span className="text-lg font-sans text-muted-foreground ml-3">({favorites.length})</span>
+              <span className="text-lg font-sans text-muted-foreground ml-3">
+                ({favorites.length})
+              </span>
             )}
           </h1>
           {!isLoading && (

@@ -101,3 +101,33 @@ export interface VendorStaff {
   createdAt: string;
   updatedAt: string;
 }
+// src/types/vendor.ts (add these types)
+export interface VendorSettlement {
+  id: string;
+  settlementNumber: string;
+  periodStart: string;
+  periodEnd: string;
+  totalOrders: number;
+  grossAmount: number;
+  commissionAmount: number;
+  vatAmount: number;
+  adjustmentAmount: number;
+  netAmount: number;
+  paymentStatus: "PAID" | "PROCESSING" | "PENDING";
+  paymentDate: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface VendorWalletTransaction {
+  id: string;
+  walletId: string;
+  transactionType: "CREDIT" | "DEBIT" | "ADJUSTMENT";
+  amount: number;
+  balanceBefore: number;
+  balanceAfter: number;
+  referenceType: string;
+  referenceId: string;
+  remarks: string;
+  createdAt: string;
+}

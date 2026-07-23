@@ -131,3 +131,44 @@ export interface VendorWalletTransaction {
   remarks: string;
   createdAt: string;
 }
+// src/types/vendor.ts (add these types)
+export interface VendorSettings {
+  id: string;
+  vendorId: string;
+  autoAcceptOrder: boolean;
+  autoAssignRider: boolean;
+  allowCustomMeal: boolean;
+  allowPackage: boolean;
+  notificationEnabled: boolean;
+  smsEnabled: boolean;
+  emailEnabled: boolean;
+  marketingEnabled: boolean;
+  status: "ACTIVE" | "INACTIVE";
+  updatedAt: string;
+}
+
+export interface VendorDocument {
+  id: string;
+  documentType: string;
+  documentNumber: string;
+  fileName: string;
+  fileSize: string;
+  issueDate: string;
+  expiryDate: string;
+  verificationStatus: "VERIFIED" | "PENDING" | "REJECTED";
+  uploadedAt: string;
+}
+
+export interface VendorOperatingHour {
+  day: string;
+  opening: string;
+  closing: string;
+  isClosed: boolean;
+}
+
+export interface VendorHoliday {
+  id: string;
+  name: string;
+  date: string;
+  description: string;
+}

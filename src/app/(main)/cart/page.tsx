@@ -95,14 +95,7 @@ export default function CartPageView() {
     );
   }
 
-  const items: CartItemType[] = (cart?.items ?? []).map((item) => ({
-    id: item.id,
-    title: item.food.name,
-    price: Number(item.unitPrice),
-    quantity: item.quantity,
-    thumbnail: item.food.thumbnail ?? "",
-    itemsSold: 0,
-  }));
+  const items: CartItemType[] = cart?.items ?? [];
 
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
   const subtotalValue = Number(cart?.subtotal ?? 0);

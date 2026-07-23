@@ -19,7 +19,7 @@ export function CheckoutSummary({
   const total = subtotal + deliveryFee - savings;
 
   return (
-    <div className="rounded-[32px] border border-border/50 bg-white p-6 shadow-[var(--shadow-card)] dark:bg-card flex flex-col gap-6">
+    <div className="rounded-[32px] border border-border/50 bg-card p-6 shadow-[var(--shadow-card)] flex flex-col gap-6">
       <h3 className="font-sans text-base font-semibold text-secondary-foreground tracking-tight">
         Order Summary
       </h3>
@@ -38,7 +38,7 @@ export function CheckoutSummary({
         </div>
         <div className="flex justify-between text-muted-foreground">
           <span>Savings</span>
-          <span className="font-medium text-rose-600 font-semibold">-৳{savings}</span>
+          <span className="font-medium text-destructive font-semibold">-৳{savings}</span>
         </div>
       </div>
 

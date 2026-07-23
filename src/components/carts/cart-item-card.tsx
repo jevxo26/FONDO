@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Plus, Minus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CartItem } from "@/types/cart";
+import type { CartItem } from "@/types/cart";
 
 interface CartItemCardProps {
   item: CartItem;
@@ -15,11 +15,11 @@ interface CartItemCardProps {
 
 export function CartItemCard({ item, onUpdateQuantity, onRemove, isQtyUpdating, isDeleting }: CartItemCardProps) {
   return (
-    <div className="group relative flex flex-col sm:flex-row gap-5 rounded-[28px] bg-white p-5 border border-border/40 shadow-[var(--shadow-card)] dark:bg-card transition-all hover:border-border/80">
+    <div className="group relative flex flex-col sm:flex-row gap-5 rounded-[28px] bg-card p-5 border border-border/40 shadow-[var(--shadow-card)] transition-all hover:border-border/80">
       <div className="relative aspect-square w-full sm:w-28 shrink-0 overflow-hidden rounded-2xl bg-muted">
         <Image
-          src={item.thumbnail}
-          alt={item.title}
+          src={item.food.thumbnail ?? "/placeholder.svg"}
+          alt={item.food.name}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-102"
         />
@@ -29,23 +29,14 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove, isQtyUpdating, 
         <div className="flex items-start justify-between gap-4">
           <div>
             <h3 className="font-sans text-base font-semibold tracking-tight text-secondary-foreground">
-              {item.title}
+              {item.food.name}
             </h3>
 
             <div className="mt-1 flex items-baseline gap-2">
               <span className="font-sans text-base font-bold text-secondary-foreground">
-                ৳{Number(item.price)}
+                ৳{Number(item.unitPrice)}
               </span>
-              {item.oldPrice && (
-                <span className="font-sans text-xs text-muted-foreground line-through">
-                  ৳{Number(item.oldPrice)}
-                </span>
-              )}
             </div>
-
-            <p className="mt-1 font-sans text-[11px] text-muted-foreground">
-              {item.itemsSold} sold
-            </p>
           </div>
 
           <Button
@@ -60,7 +51,7 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove, isQtyUpdating, 
         </div>
 
         <div className="flex items-center justify-between gap-4 mt-auto">
-          <div className="flex items-center border border-border bg-white rounded-xl overflow-hidden dark:bg-muted/10">
+          <div className="flex items-center border border-border bg-card rounded-xl overflow-hidden">
             <Button
               variant="ghost"
               size="icon-xs"
@@ -85,7 +76,7 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove, isQtyUpdating, 
           </div>
 
           <span className="font-sans text-base font-bold text-secondary-foreground">
-            ৳{Number(item.price) * item.quantity}
+            ৳{Number(item.unitPrice) * item.quantity}
           </span>
         </div>
       </div>

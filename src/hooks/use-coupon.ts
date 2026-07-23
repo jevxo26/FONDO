@@ -7,7 +7,7 @@ export function useApplyCoupon() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (code: string) =>
-      api.post("/cart/checkout/apply-coupon", { code }),
+      api.post("/cart/checkout/apply-coupon", { couponCode: code }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["cart"] });
     },

@@ -8,30 +8,7 @@ import { setCartData, clearCartData } from "@/store/slices/cartDataSlice";
 import { incrementCartCount } from "@/store/slices/counterSlice";
 import { toast } from "sonner";
 import { handleApiError } from "@/lib/api-error";
-
-export interface CartItemFood {
-  id: string;
-  name: string;
-  thumbnail: string | null;
-}
-
-export interface CartItem {
-  id: string;
-  foodId: string;
-  quantity: number;
-  unitPrice: number;
-  totalPrice: number;
-  food: CartItemFood;
-}
-
-export interface Cart {
-  id: string;
-  items: CartItem[];
-  subtotal: number;
-  deliveryCharge: number;
-  discount: number;
-  totalAmount: number;
-}
+import type { Cart } from "@/types/cart";
 
 export function useCart() {
   const dispatch = useAppDispatch();

@@ -1,5 +1,6 @@
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, Ticket, X } from "lucide-react";
+import { Loader2, Tag, X } from "lucide-react";
 
 interface Props {
   appliedCoupon: string | null;
@@ -11,21 +12,29 @@ interface Props {
   onRemove: () => void;
 }
 
-export function CouponSection({ appliedCoupon, couponInput, savings, isPending, onCouponChange, onApply, onRemove }: Props) {
+export function CouponSection({
+  appliedCoupon,
+  couponInput,
+  savings,
+  isPending,
+  onCouponChange,
+  onApply,
+  onRemove,
+}: Props) {
   return (
-    <div className="bg-white rounded-[24px] border border-border/40 p-6 shadow-sm flex flex-col gap-4">
-      <h2 className="font-sans text-base font-semibold text-foreground">Coupon Code</h2>
+    <div className="bg-card rounded-2xl border border-border/40 p-6 shadow-sm">
+      <h2 className="font-sans text-base font-semibold text-foreground mb-4">Coupon Code</h2>
+
       {appliedCoupon ? (
-        <div className="flex items-center justify-between p-3 rounded-xl bg-primary/5 border border-primary/20">
+        <div className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-xl px-4 py-3">
           <div className="flex items-center gap-2">
-            <Ticket className="size-4 text-primary" />
-            <span className="font-sans text-sm font-semibold text-foreground">{appliedCoupon}</span>
-            {savings > 0 && <span className="text-xs text-success font-medium">-৳{savings}</span>}
+            <Tag className="size-4 text-primary" />
+            <span className="font-sans text-sm font-semibold text-primary">{appliedCoupon}</span>
+            {savings > 0 && <span className="text-xs text-muted-foreground">(-৳{savings})</span>}
           </div>
           <button
             type="button"
             onClick={onRemove}
-            disabled={isPending}
             className="p-1 hover:bg-destructive/10 rounded-lg transition-colors"
           >
             <X className="size-4 text-destructive" />
@@ -40,15 +49,16 @@ export function CouponSection({ appliedCoupon, couponInput, savings, isPending, 
             onChange={(e) => onCouponChange(e.target.value)}
             className="flex-1"
           />
-          <button
+          <Button
             type="button"
+            variant="accent"
+            size="sm"
             onClick={onApply}
             disabled={isPending || !couponInput.trim()}
-            className="px-5 py-2 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-1.5"
+            className="shrink-0"
           >
-            {isPending ? <Loader2 className="size-3.5 animate-spin" /> : <Ticket className="size-3.5" />}
-            Apply
-          </button>
+            {isPending ? <Loader2 className="size-4 animate-spin" /> : "Apply"}
+          </Button>
         </div>
       )}
     </div>

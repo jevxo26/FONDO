@@ -2,7 +2,6 @@ export interface FoodResponse {
   items: Food[];
   meta: PaginationMeta;
   totalPages: number;
-
 }
 
 export interface PaginationMeta {
@@ -16,27 +15,31 @@ export interface Food {
   id: string;
   name: string;
   slug: string;
-  shortDescription: string;
-  thumbnail: string;
-  coverImage: string;
+  foodCode?: string;
+  shortDescription?: string;
+  description?: string;
+  thumbnail?: string;
+  coverImage?: string;
 
-  foodType: "VEG" | "NON_VEG";
+  foodType: "VEG" | "NON_VEG" | "VEGAN" | "SEAFOOD";
   spiceLevel: "MILD" | "MEDIUM" | "HOT";
 
-  preparationTime: number;
+  preparationTime?: number;
 
-  calories: number;
-  protein: number;
-  fat: number;
-  carbohydrate: number;
+  calories?: number;
+  protein?: number;
+  fat?: number;
+  carbohydrate?: number;
 
-  servingSize: string;
+  servingSize?: string;
 
+  status?: string;
   isFeatured: boolean;
   isPopular: boolean;
   isRecommended: boolean;
 
   category: Category;
+  subCategory?: { id: string; name: string; slug: string };
 
   variants: Variant[];
 
@@ -82,20 +85,37 @@ export interface FoodLabel {
 }
 
 export interface FoodTag {
+  id?: string;
   name: string;
+  slug?: string;
 }
 
 export interface Diet {
   dietType: string;
 }
 
+export interface AddonItem {
+  id: string;
+  name: string;
+  price: number;
+  image?: string;
+  status?: string;
+}
+
 export interface Addon {
   id: string;
   name: string;
-  price: string;
+  isRequired?: boolean;
+  maxSelection?: number;
+  status?: string;
+  items: AddonItem[];
 }
 
 export interface Discount {
-  type: string;
-  value: number;
+  id: string;
+  discountType: "PERCENTAGE" | "FIXED";
+  discountValue: number;
+  startDate?: string;
+  endDate?: string;
+  status?: string;
 }

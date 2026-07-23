@@ -1,11 +1,10 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api-client";
-import { toast } from "sonner";
 import { handleApiError } from "@/lib/api-error";
-import { queryKeys } from "@/lib/query-keys";
 import type { Cart } from "@/types/cart";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export function useCart() {
   return useQuery({

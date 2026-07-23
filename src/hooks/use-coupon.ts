@@ -1,13 +1,13 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api-client";
 import { queryKeys } from "@/lib/query-keys";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useApplyCoupon() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (code: string) => api.post("/cart/checkout/apply-coupon", { code }),
+    mutationFn: (code: string) => api.post("/cart/checkout/apply-coupon", { couponCode: code }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.cart.all });
     },

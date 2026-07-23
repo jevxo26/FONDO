@@ -2,13 +2,13 @@
 
 import { CartItemCard } from "@/components/carts/cart-item-card";
 import { OrderSummary } from "@/components/carts/order-summary";
+import { SectionReveal } from "@/components/common/section-reveal";
 import { Button } from "@/components/ui/button";
 import { useCart, useClearCart, useRemoveFromCart, useUpdateCartItem } from "@/hooks/use-cart";
 import { handleApiError } from "@/lib/api-error";
 import { Loader2, ShoppingCart, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { SectionReveal } from "@/components/common/section-reveal";
 
 export default function CartPageView() {
   const { data: cart, isLoading, error } = useCart();
@@ -75,7 +75,9 @@ export default function CartPageView() {
           <div className="py-16 text-center border border-dashed border-border rounded-3xl bg-card">
             <p className="font-sans text-sm text-red-600">{handleApiError(error)}</p>
             <Link href="/foods">
-              <Button variant="default" className="mt-4 rounded-xl">Return to Menu</Button>
+              <Button variant="default" className="mt-4 rounded-xl">
+                Return to Menu
+              </Button>
             </Link>
           </div>
         </div>
@@ -83,7 +85,8 @@ export default function CartPageView() {
     );
   }
 
-  const items = cart?.items ?? [];
+  const items: CartItemType[] = cart?.items ?? [];
+
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
   const subtotalValue = Number(cart?.subtotal ?? 0);
   const deliveryCost = Number(cart?.deliveryCharge ?? 0);
@@ -137,7 +140,9 @@ export default function CartPageView() {
               />
 
               <Link href="/foods">
-                <Button variant="outline" className="mt-4 w-full h-11 rounded-full">Continue shopping</Button>
+                <Button variant="outline" className="mt-4 w-full h-11 rounded-full">
+                  Continue shopping
+                </Button>
               </Link>
             </div>
           </div>
@@ -146,7 +151,9 @@ export default function CartPageView() {
             <ShoppingCart className="size-8 mx-auto mb-3 text-muted-foreground" />
             <p className="font-sans text-sm text-muted-foreground">Your active cart is empty.</p>
             <Link href="/foods">
-              <Button variant="default" className="mt-4 rounded-xl">Return to Menu</Button>
+              <Button variant="default" className="mt-4 rounded-xl">
+                Return to Menu
+              </Button>
             </Link>
           </div>
         )}

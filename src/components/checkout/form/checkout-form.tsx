@@ -4,13 +4,14 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useAddresses, useCreateAddress, useSelectAddress } from "@/hooks/use-addresses";
-import { useApplyCoupon, useRemoveCoupon } from "@/hooks/use-coupon";
+import { useAddresses, useCreateAddress } from "@/hooks/use-addresses";
+import { useApplyCoupon, useRemoveCoupon, useSelectAddress } from "@/hooks/use-coupon";
 import { useCart } from "@/hooks/use-cart";
+import { usePaymentMethods } from "@/hooks/use-payment-methods";
 import { usePlaceOrder } from "@/hooks/use-orders";
 import { useInitiatePayment } from "@/hooks/use-payments";
 import { handleApiError } from "@/lib/api-error";
-import type { CheckoutFormData, PaymentMethodType } from "@/types/checkout-type";
+import type { CheckoutFormData } from "@/types/checkout-type";
 import { CheckoutSummary } from "../checkout-summary-right";
 import { FulfillmentSelector } from "./fulfillment-selector";
 import { AddressSection } from "./address-section";
@@ -18,9 +19,12 @@ import { ContactInfoSection } from "./contact-info-section";
 import { PaymentMethodSelector } from "./payment-method-selector";
 import { CouponSection } from "./coupon-section";
 
+const LABEL = "Home";
+
 const CheckoutForm = () => {
   const { data: cart } = useCart();
   const { data: addresses = [] } = useAddresses();
+  const { data: paymentMethods = [], isLoading: pmLoading } = usePaymentMethods();
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [couponInput, setCouponInput] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
@@ -42,18 +46,22 @@ const CheckoutForm = () => {
   } = useForm<CheckoutFormData>({
     defaultValues: {
       fulfillment: "delivery",
-      paymentMethod: "online",
-      streetAddress: "",
-      city: "",
-      zipCode: "",
-      recipientName: "",
-      phoneNumber: "",
-      orderNotes: "",
+      receiverName: "",
+      receiverPhone: "",
+      division: "",
+      district: "",
+      area: "",
+      road: "",
+      house: "",
+      apartment: "",
+      postalCode: "",
+      paymentMethodId: "",
+      notes: "",
     },
   });
 
   const currentFulfillment = watch("fulfillment");
-  const currentPaymentMethod = watch("paymentMethod");
+  const currentPaymentMethodId = watch("paymentMethodId");
 
   const handleAddressSelect = async (addressId: string) => {
     setSelectedAddressId(addressId);
@@ -96,30 +104,48 @@ const CheckoutForm = () => {
         return;
       }
 
-      const address = await createAddress.mutateAsync({
-        label: "Delivery",
-        receiverName: data.recipientName,
-        receiverPhone: data.phoneNumber,
-        division: data.city || "Dhaka",
-        district: data.city || "Dhaka",
-        area: data.city || "Dhaka",
-        road: data.streetAddress,
-        postalCode: data.zipCode,
-      });
+      if (!selectedAddressId) {
+        const address = await createAddress.mutateAsync({
+          label: LABEL,
+          receiverName: data.receiverName,
+          receiverPhone: data.receiverPhone,
+          division: data.division,
+          district: data.district,
+          area: data.area,
+          road: data.road,
+          house: data.house || undefined,
+          apartment: data.apartment || undefined,
+          postalCode: data.postalCode || undefined,
+        });
 
-      if (!address?.id) {
-        toast.error("Failed to save address. Please try again.");
-        return;
+        if (!address?.id) {
+          toast.error("Failed to save address. Please try again.");
+          return;
+        }
+
+        var finalAddressId = address.id;
+      } else {
+        var finalAddressId = selectedAddressId;
+      }
+
+      if (!data.paymentMethodId) {
+        const defaultPm = paymentMethods.find((pm) => pm.isDefault);
+        if (!defaultPm) {
+          toast.error("Please select a payment method");
+          return;
+        }
+        data.paymentMethodId = defaultPm.id;
       }
 
       const order = await placeOrder.mutateAsync({
         cartId,
-        addressId: address.id,
-        paymentMethodId: data.paymentMethod,
-        notes: data.orderNotes,
+        addressId: finalAddressId,
+        paymentMethodId: data.paymentMethodId,
+        notes: data.notes || undefined,
       });
 
-      if (data.paymentMethod === "cod") {
+      const codMethod = paymentMethods.find((pm) => pm.code === "cod");
+      if (codMethod && data.paymentMethodId === codMethod.id) {
         toast.success("Order placed successfully!");
         router.push("/orders");
         return;
@@ -128,7 +154,7 @@ const CheckoutForm = () => {
       const payment = await initiatePayment.mutateAsync({
         orderId: order.orderId,
         amount: order.totalAmount,
-        paymentMethodId: data.paymentMethod,
+        paymentMethodId: data.paymentMethodId,
       });
       window.location.href = payment.gatewayUrl;
     } catch (error) {
@@ -139,7 +165,10 @@ const CheckoutForm = () => {
   const savings = cart?.discount ?? 0;
 
   return (
-    <form onSubmit={handleSubmit(onSubmitForm)} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <form
+      onSubmit={handleSubmit(onSubmitForm)}
+      className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+    >
       <div className="lg:col-span-8 flex flex-col gap-6">
         <FulfillmentSelector
           value={currentFulfillment}
@@ -154,14 +183,17 @@ const CheckoutForm = () => {
             register={register}
             errors={errors}
             showNewAddress={!selectedAddressId}
+            fulfillment={currentFulfillment}
           />
         )}
 
         <ContactInfoSection register={register} errors={errors} />
 
         <PaymentMethodSelector
-          value={currentPaymentMethod}
-          onChange={(val) => setValue("paymentMethod", val as PaymentMethodType)}
+          value={currentPaymentMethodId}
+          onChange={(val) => setValue("paymentMethodId", val)}
+          methods={paymentMethods}
+          isLoading={pmLoading}
         />
 
         <CouponSection
@@ -180,7 +212,9 @@ const CheckoutForm = () => {
           subtotal={cart?.subtotal ?? 0}
           deliveryFee={currentFulfillment === "delivery" ? (cart?.deliveryCharge ?? 60) : 0}
           savings={cart?.discount ?? 0}
-          isSubmitting={placeOrder.isPending || initiatePayment.isPending || createAddress.isPending}
+          isSubmitting={
+            placeOrder.isPending || initiatePayment.isPending || createAddress.isPending
+          }
         />
       </div>
     </form>

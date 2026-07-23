@@ -213,6 +213,8 @@ model User {
   activityLogs       ActivityLog[]
   referral           Referral?
 
+  @@index([role])
+  @@index([status])
   @@map("users")
 }
 
@@ -261,6 +263,7 @@ model UserAddress {
 
   user User @relation(fields: [userId], references: [id])
 
+  @@index([userId])
   @@map("user_addresses")
 }
 
@@ -282,6 +285,7 @@ model UserDevice {
 
   user User @relation(fields: [userId], references: [id])
 
+  @@index([userId])
   @@map("user_devices")
 }
 
@@ -301,6 +305,10 @@ model UserSession {
 
   user User @relation(fields: [userId], references: [id])
 
+  @@index([userId])
+  @@index([accessToken])
+  @@index([refreshToken])
+  @@index([status])
   @@map("user_sessions")
 }
 
@@ -320,6 +328,10 @@ model UserOTP {
 
   user User? @relation(fields: [userId], references: [id])
 
+  @@index([userId])
+  @@index([phone])
+  @@index([otp])
+  @@index([status])
   @@map("user_otps")
 }
 
@@ -335,6 +347,8 @@ model UserToken {
 
   user User @relation(fields: [userId], references: [id])
 
+  @@index([userId])
+  @@index([type])
   @@map("user_tokens")
 }
 
@@ -355,6 +369,7 @@ model UserLoginHistory {
 
   user User @relation(fields: [userId], references: [id])
 
+  @@index([userId])
   @@map("user_login_histories")
 }
 
@@ -521,6 +536,9 @@ model Vendor {
   orders              Order[]
   platformRevenues    PlatformRevenue[]
 
+  @@index([status])
+  @@index([verificationStatus])
+  @@index([isActive])
   @@map("vendors")
 }
 
@@ -787,6 +805,8 @@ model VendorSettlement {
   items        VendorSettlementItem[]
   transactions VendorSettlementTransaction[]
 
+  @@index([vendorId])
+  @@index([paymentStatus])
   @@map("vendor_settlements")
 }
 
@@ -802,6 +822,7 @@ model VendorSettlementItem {
 
   settlement VendorSettlement @relation(fields: [settlementId], references: [id])
 
+  @@index([settlementId])
   @@map("vendor_settlement_items")
 }
 
@@ -850,6 +871,7 @@ model VendorWalletTransaction {
 
   wallet VendorWallet @relation(fields: [walletId], references: [id])
 
+  @@index([walletId])
   @@map("vendor_wallet_transactions")
 }
 
@@ -969,6 +991,7 @@ model Category {
   subCategories SubCategory[]
   foods         Food[]
 
+  @@index([status])
   @@map("categories")
 }
 
@@ -989,6 +1012,8 @@ model SubCategory {
   category Category @relation(fields: [categoryId], references: [id])
   foods    Food[]
 
+  @@index([categoryId])
+  @@index([status])
   @@map("sub_categories")
 }
 
@@ -1046,6 +1071,11 @@ model Food {
   cartMealFoods CartMealFood[]
   orderItems   OrderItem[]
 
+  @@index([categoryId])
+  @@index([subCategoryId])
+  @@index([status])
+  @@index([isFeatured])
+  @@index([isPopular])
   @@map("foods")
 }
 
@@ -1077,6 +1107,8 @@ model FoodVariant {
 
   food Food @relation(fields: [foodId], references: [id])
 
+  @@index([foodId])
+  @@index([status])
   @@map("food_variants")
 }
 
@@ -1093,6 +1125,8 @@ model FoodAddon {
   food  Food          @relation(fields: [foodId], references: [id])
   items FoodAddonItem[]
 
+  @@index([foodId])
+  @@index([status])
   @@map("food_addons")
 }
 
@@ -1108,6 +1142,8 @@ model FoodAddonItem {
 
   addon FoodAddon @relation(fields: [addonId], references: [id])
 
+  @@index([addonId])
+  @@index([status])
   @@map("food_addon_items")
 }
 
@@ -1123,6 +1159,7 @@ model FoodIngredient {
 
   food Food @relation(fields: [foodId], references: [id])
 
+  @@index([foodId])
   @@map("food_ingredients")
 }
 
@@ -1156,6 +1193,7 @@ model FoodAllergen {
 
   food Food @relation(fields: [foodId], references: [id])
 
+  @@index([foodId])
   @@map("food_allergens")
 }
 
@@ -1201,6 +1239,8 @@ model FoodSchedule {
 
   food Food @relation(fields: [foodId], references: [id])
 
+  @@index([foodId])
+  @@index([mealType])
   @@map("food_schedules")
 }
 
@@ -1218,6 +1258,7 @@ model FoodPrice {
 
   food Food @relation(fields: [foodId], references: [id])
 
+  @@index([foodId])
   @@map("food_prices")
 }
 
@@ -1234,6 +1275,8 @@ model FoodDiscount {
 
   food Food @relation(fields: [foodId], references: [id])
 
+  @@index([foodId])
+  @@index([status])
   @@map("food_discounts")
 }
 
@@ -1258,6 +1301,8 @@ model FoodTagMapping {
   food Food    @relation(fields: [foodId], references: [id])
   tag  FoodTag @relation(fields: [tagId], references: [id])
 
+  @@index([foodId])
+  @@index([tagId])
   @@map("food_tag_mappings")
 }
 
@@ -1288,6 +1333,8 @@ model FoodReview {
   food   Food  @relation(fields: [foodId], references: [id])
   customer User @relation(fields: [customerId], references: [id])
 
+  @@index([foodId])
+  @@index([customerId])
   @@map("food_reviews")
 }
 
@@ -1317,6 +1364,8 @@ model FoodFavorite {
   user User @relation(fields: [userId], references: [id])
   food Food @relation(fields: [foodId], references: [id])
 
+  @@index([foodId])
+  @@index([userId])
   @@map("food_favorites")
 }
 
@@ -1397,6 +1446,9 @@ model VendorFood {
   inventories       VendorFoodInventory[]
   performance       VendorFoodPerformance?
 
+  @@index([vendorId])
+  @@index([foodId])
+  @@index([status])
   @@map("vendor_foods")
 }
 
@@ -1587,6 +1639,9 @@ model VendorFoodAssignment {
   food   Food   @relation(fields: [foodId], references: [id])
   vendor Vendor @relation(fields: [vendorId], references: [id])
 
+  @@index([vendorId])
+  @@index([foodId])
+  @@index([status])
   @@map("vendor_food_assignments")
 }
 
@@ -1691,6 +1746,7 @@ model Package {
   availability PackageAvailability?
   customMealPlans CustomMealPlan[]
 
+  @@index([status])
   @@map("packages")
 }
 
@@ -2049,6 +2105,8 @@ model Cart {
   summary  CartSummary?
   histories CartHistory[]
 
+  @@index([customerId, status])
+  @@index([status])
   @@map("carts")
 }
 
@@ -2068,6 +2126,8 @@ model CartItem {
   food    Food        @relation(fields: [foodId], references: [id])
   addons  CartAddon[]
 
+  @@index([cartId])
+  @@index([foodId])
   @@map("cart_items")
 }
 
@@ -2081,6 +2141,7 @@ model CartAddon {
 
   cartItem CartItem @relation(fields: [cartItemId], references: [id])
 
+  @@index([cartItemId])
   @@map("cart_addons")
 }
 
@@ -2096,6 +2157,7 @@ model CartMeal {
   cart  Cart           @relation(fields: [cartId], references: [id])
   foods CartMealFood[]
 
+  @@index([cartId])
   @@map("cart_meals")
 }
 
@@ -2111,6 +2173,8 @@ model CartMealFood {
   cartMeal CartMeal @relation(fields: [cartMealId], references: [id])
   food     Food     @relation(fields: [foodId], references: [id])
 
+  @@index([cartMealId])
+  @@index([foodId])
   @@map("cart_meal_foods")
 }
 
@@ -2189,6 +2253,13 @@ model Order {
   subscriptions    Subscription[]
   platformRevenues PlatformRevenue[]
 
+  @@index([customerId])
+  @@index([vendorId])
+  @@index([orderStatus])
+  @@index([paymentStatus])
+  @@index([deliveryStatus])
+  @@index([placedAt])
+  @@index([deletedAt])
   @@map("orders")
 }
 
@@ -2208,6 +2279,8 @@ model OrderItem {
   order Order @relation(fields: [orderId], references: [id])
   food  Food  @relation(fields: [foodId], references: [id])
 
+  @@index([orderId])
+  @@index([foodId])
   @@map("order_items")
 }
 
@@ -2225,6 +2298,7 @@ model OrderMeal {
   order Order          @relation(fields: [orderId], references: [id])
   foods OrderMealFood[]
 
+  @@index([orderId])
   @@map("order_meals")
 }
 
@@ -2240,6 +2314,8 @@ model OrderMealFood {
 
   orderMeal OrderMeal @relation(fields: [orderMealId], references: [id])
 
+  @@index([orderMealId])
+  @@index([foodId])
   @@map("order_meal_foods")
 }
 
@@ -2255,6 +2331,7 @@ model OrderSchedule {
 
   order Order @relation(fields: [orderId], references: [id])
 
+  @@index([orderId])
   @@map("order_schedules")
 }
 
@@ -2269,6 +2346,7 @@ model OrderStatusHistory {
 
   order Order @relation(fields: [orderId], references: [id])
 
+  @@index([orderId])
   @@map("order_status_histories")
 }
 
@@ -2282,6 +2360,7 @@ model OrderTimeline {
 
   order Order @relation(fields: [orderId], references: [id])
 
+  @@index([orderId])
   @@map("order_timelines")
 }
 
@@ -2332,6 +2411,8 @@ model OrderRefund {
 
   order Order @relation(fields: [orderId], references: [id])
 
+  @@index([orderId])
+  @@index([paymentId])
   @@map("order_refunds")
 }
 
@@ -2380,7 +2461,30 @@ model Payment {
   invoice       PaymentInvoice?
   histories     PaymentHistory[]
 
+  @@index([customerId])
+  @@index([status])
+  @@index([paymentMethodId])
   @@map("payments")
+}
+
+model PaymentGateway {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  name        String
+  merchantId  String?
+  storeId     String?
+  apiKey      String?
+  secretKey   String?
+  sandboxMode Boolean  @default(true)
+  callbackUrl String?
+  refundUrl   String?
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([code])
+  @@index([status])
+  @@map("payment_gateways")
 }
 
 model PaymentMethod {
@@ -2396,23 +2500,6 @@ model PaymentMethod {
   updatedAt DateTime @updatedAt
 
   @@map("payment_methods")
-}
-
-model PaymentGateway {
-  id          String   @id @default(uuid())
-  name        String
-  merchantId  String?
-  storeId     String?
-  apiKey      String?
-  secretKey   String?
-  sandboxMode Boolean  @default(true)
-  callbackUrl String?
-  refundUrl   String?
-  status      String   @default("active")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("payment_gateways")
 }
 
 model PaymentTransaction {
@@ -2433,6 +2520,7 @@ model PaymentTransaction {
 
   payment Payment @relation(fields: [paymentId], references: [id])
 
+  @@index([paymentId])
   @@map("payment_transactions")
 }
 
@@ -2461,6 +2549,7 @@ model PaymentAttempt {
 
   payment Payment @relation(fields: [paymentId], references: [id])
 
+  @@index([paymentId])
   @@map("payment_attempts")
 }
 
@@ -2480,6 +2569,7 @@ model PaymentRefund {
 
   payment Payment @relation(fields: [paymentId], references: [id])
 
+  @@index([paymentId])
   @@map("payment_refunds")
 }
 
@@ -2564,6 +2654,8 @@ model CustomerWalletTransaction {
 
   wallet CustomerWallet @relation(fields: [walletId], references: [id])
 
+  @@index([walletId])
+  @@index([transactionType])
   @@map("customer_wallet_transactions")
 }
 
@@ -2660,6 +2752,9 @@ model Rider {
   deliveries   Delivery[]
   trackingSessions TrackingSession[]
 
+  @@index([vendorId])
+  @@index([status])
+  @@index([isOnline])
   @@map("riders")
 }
 
@@ -2842,6 +2937,7 @@ model RiderWalletTransaction {
 
   wallet RiderWallet @relation(fields: [walletId], references: [id])
 
+  @@index([walletId])
   @@map("rider_wallet_transactions")
 }
 
@@ -2886,6 +2982,9 @@ model Delivery {
   attempts       DeliveryAttempt[]
   trackingSessions TrackingSession[]
 
+  @@index([riderId])
+  @@index([vendorId])
+  @@index([deliveryStatus])
   @@map("deliveries")
 }
 
@@ -3248,6 +3347,8 @@ model SupportTicket {
   category SupportCategory? @relation(fields: [categoryId], references: [id])
   replies  SupportReply[]
 
+  @@index([customerId])
+  @@index([status])
   @@map("support_tickets")
 }
 
@@ -3295,6 +3396,8 @@ model Notification {
 
   user User @relation(fields: [userId], references: [id])
 
+  @@index([userId])
+  @@index([isRead])
   @@map("notifications")
 }
 
@@ -3316,6 +3419,7 @@ model Banner {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
+  @@index([status])
   @@map("banners")
 }
 
@@ -3349,6 +3453,8 @@ model Blog {
 
   category BlogCategory? @relation(fields: [categoryId], references: [id])
 
+  @@index([status])
+  @@index([categoryId])
   @@map("blogs")
 }
 
@@ -3415,6 +3521,8 @@ model ActivityLog {
 
   user User? @relation(fields: [userId], references: [id])
 
+  @@index([userId])
+  @@index([action])
   @@map("activity_logs")
 }
 
@@ -3443,6 +3551,8 @@ model Subscription {
   customer User    @relation(fields: [customerId], references: [id])
   order    Order?  @relation(fields: [orderId], references: [id])
 
+  @@index([customerId])
+  @@index([status])
   @@map("subscriptions")
 }
 
@@ -3469,6 +3579,7 @@ model Coupon {
 
   usages CouponUsage[]
 
+  @@index([status])
   @@map("coupons")
 }
 
@@ -3482,6 +3593,9 @@ model CouponUsage {
 
   coupon Coupon @relation(fields: [couponId], references: [id])
 
+  @@index([couponId])
+  @@index([customerId])
+  @@index([orderId])
   @@map("coupon_usages")
 }
 

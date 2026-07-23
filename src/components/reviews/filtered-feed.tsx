@@ -14,7 +14,7 @@ export default function FilteredFeed() {
   ];
 
   return (
-    <section className="py-[var(--space-section)] bg-background border-t border-border/20">
+    <section className="py-[var(--space-section)] bg-background border-t border-border/20 animate-fadeIn">
       <div className="wrapper space-y-8">
         
         {/* Search and Navigation Pill Filter Header */}
@@ -66,7 +66,7 @@ export default function FilteredFeed() {
                 </p>
               </div>
               <div className="pt-3 border-t border-border/40 flex justify-between items-center text-[10px] text-muted-foreground">
-                <span className="text-emerald-700 font-bold uppercase tracking-wider bg-emerald-50 px-2 py-0.5 rounded">Verified Plan</span>
+                <span className="text-success font-bold uppercase tracking-wider bg-success/10 px-2 py-0.5 rounded">Verified Plan</span>
                 <button className="flex items-center gap-1 hover:text-foreground transition-colors">
                   <ThumbsUp className="size-3" /> Helpful (2)
                 </button>

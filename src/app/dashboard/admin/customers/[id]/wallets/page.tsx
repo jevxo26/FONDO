@@ -78,10 +78,10 @@ const walletTxnColumns: ColumnDef<AdminWalletTransaction>[] = [
 
 export default function CustomerWalletPage() {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = useAdminCustomerWallet(id, { page: 1, limit: 50 });
+  const { data, isLoading } = useAdminCustomerWallet(id);
 
   const wallet = data?.wallet;
-  const transactions = data?.transactions?.items ?? [];
+  const transactions = data?.transactions ?? [];
 
   return (
     <div>

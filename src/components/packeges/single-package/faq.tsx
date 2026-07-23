@@ -8,20 +8,20 @@ export default function HelpDeskFaq() {
   ];
 
   return (
-    <section className="bg-white border border-[#d7c3b2]/20 rounded-[2rem] p-6 lg:p-8 shadow-sm space-y-6">
+    <section className="bg-card border border-border/20 rounded-3xl p-6 lg:p-8 shadow-sm space-y-6">
       <div>
-        <h2 className="font-serif text-xl text-[#1e1b17]">Heritage Help Desk</h2>
-        <p className="text-[11px] text-[#524437]/70">Common operational guidelines mapped out for easy access</p>
+        <h2 className="font-heading text-xl text-foreground">Heritage Help Desk</h2>
+        <p className="text-[11px] text-muted-foreground/70">Common operational guidelines mapped out for easy access</p>
       </div>
 
       <div className="space-y-2">
         {faqs.map((faq, idx) => (
-          <details key={idx} className="group border border-[#d7c3b2]/20 rounded-xl [&_summary::-webkit-details-marker]:hidden bg-transparent open:bg-[#fff8f3]/30 transition-all">
-            <summary className="flex items-center justify-between p-4 cursor-pointer outline-none select-none text-xs font-bold text-[#1e1b17]">
+          <details key={idx} className="group border border-border/20 rounded-xl [&_summary::-webkit-details-marker]:hidden bg-transparent open:bg-background/30 transition-all">
+            <summary className="flex items-center justify-between p-4 cursor-pointer outline-none select-none text-xs font-bold text-foreground">
               <span>{faq.q}</span>
-              <span className="text-lg font-light text-[#524437] transition-transform duration-200 group-open:rotate-45">+</span>
+              <span className="text-lg font-light text-muted-foreground transition-transform duration-200 group-open:rotate-45">+</span>
             </summary>
-            <div className="px-4 pb-4 text-xs text-[#524437] leading-relaxed border-t border-[#d7c3b2]/10 pt-2 animate-in fade-in duration-200">
+            <div className="px-4 pb-4 text-xs text-muted-foreground leading-relaxed border-t border-border/10 pt-2 animate-in fade-in duration-200">
               {faq.a}
             </div>
           </details>

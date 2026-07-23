@@ -1,4 +1,5 @@
 import cookieParser from "cookie-parser";
+import compression from "compression";
 import cors from "cors";
 import express, { Request, Response } from "express";
 import helmet from "helmet";
@@ -58,6 +59,7 @@ app
     // Body parsing
     server.use(express.json());
     server.use(cookieParser());
+    server.use(compression());
 
     // Database
     try {
@@ -66,13 +68,14 @@ app
 
       // Seed default payment gateway from env
       if (env.SSLCOMMERZ_STORE_ID) {
-        const existing = await prisma.paymentGateway.findFirst({
-          where: { storeId: env.SSLCOMMERZ_STORE_ID },
+        const existing = await prisma.paymentGateway.findUnique({
+          where: { code: "sslcommerz" },
         });
         if (existing) {
           await prisma.paymentGateway.update({
             where: { id: existing.id },
             data: {
+              storeId: env.SSLCOMMERZ_STORE_ID,
               secretKey: env.SSLCOMMERZ_STORE_PASSWD,
               sandboxMode: !env.SSLCOMMERZ_IS_LIVE,
               status: "active",
@@ -81,6 +84,7 @@ app
         } else {
           await prisma.paymentGateway.create({
             data: {
+              code: "sslcommerz",
               name: "SSLCommerz",
               storeId: env.SSLCOMMERZ_STORE_ID,
               secretKey: env.SSLCOMMERZ_STORE_PASSWD,
@@ -89,7 +93,6 @@ app
             },
           });
         }
-        console.log("Payment gateway seeded successfully!");
       }
     } catch (err) {
       console.error("Error connecting to the database with Prisma:", err);

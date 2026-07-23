@@ -23,12 +23,17 @@ export function CustomerSearch({
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { data } = useAdminCustomers({
-    search: query || undefined,
-    limit: 10,
-  });
+  const { data } = useAdminCustomers();
 
-  const results = data?.items ?? [];
+  const allCustomers = data ?? [];
+  const results = query
+    ? allCustomers.filter(
+        (c) =>
+          c.fullName.toLowerCase().includes(query.toLowerCase()) ||
+          c.email.toLowerCase().includes(query.toLowerCase()) ||
+          c.phone.includes(query),
+      )
+    : [];
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {

@@ -5,7 +5,7 @@ import { Star, ChevronLeft, ChevronRight, Play } from "lucide-react";
 
 export default function FeaturedStories() {
   return (
-    <section className="py-[var(--space-section)] bg-muted/30 border-t border-b border-border/40">
+    <section className="py-[var(--space-section)] bg-muted/30 border-t border-b border-border/40 animate-fadeIn">
       <div className="wrapper space-y-8">
         
         {/* Header Row with Navigation Controls */}
@@ -56,7 +56,7 @@ export default function FeaturedStories() {
             ].map((video, idx) => (
               <div key={idx} className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-border group shadow-[var(--shadow-card)] bg-card">
                 <img src={video.img} alt={video.label} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-[#16100C]/40 flex items-center justify-center">
+                <div className="absolute inset-0 bg-foreground/40 flex items-center justify-center">
                   <button className="size-12 rounded-full bg-background/90 text-foreground flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-all pl-0.5">
                     <Play className="size-5 fill-current text-foreground" />
                   </button>

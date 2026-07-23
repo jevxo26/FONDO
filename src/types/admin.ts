@@ -99,15 +99,7 @@ export interface AdminPayment {
   order?: { orderNumber: string };
 }
 
-export interface PaginatedResult<T> {
-  items: T[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
 export interface WalletResponse {
   wallet: AdminWallet | null;
-  transactions: PaginatedResult<AdminWalletTransaction>;
+  transactions: AdminWalletTransaction[];
 }

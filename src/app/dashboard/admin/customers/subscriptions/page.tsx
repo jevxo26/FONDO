@@ -73,10 +73,9 @@ export default function SubscriptionsPage() {
   const { data: customerDetail } = useAdminCustomer(selectedCustomer?.id ?? "");
   const { data, isLoading } = useAdminCustomerSubscriptions(
     selectedCustomer?.id ?? "",
-    { page: 1, limit: 50 },
   );
 
-  const subscriptions = data?.items ?? [];
+  const subscriptions = data ?? [];
   const total = subscriptions.length;
   const active = subscriptions.filter((s) => s.status === "ACTIVE").length;
   const paused = subscriptions.filter((s) => s.status === "PAUSED").length;

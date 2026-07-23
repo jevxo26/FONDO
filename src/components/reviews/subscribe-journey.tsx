@@ -9,7 +9,7 @@ export default function SubscriberJourney() {
   ];
 
   return (
-    <section className="py-[var(--space-section)] bg-muted/20 border-t border-b border-border/20">
+    <section className="py-[var(--space-section)] bg-muted/20 border-t border-b border-border/20 animate-fadeIn">
       <div className="wrapper space-y-10">
         <div className="text-center">
           <h2 className="font-heading text-xl md:text-3xl font-normal text-foreground">The Typical Subscriber Journey</h2>
@@ -17,7 +17,7 @@ export default function SubscriberJourney() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((step, idx) => (
             <div key={idx} className="text-center space-y-3 relative">
-              <div className="size-10 bg-foreground text-background font-serif text-sm flex items-center justify-center rounded-full mx-auto shadow-md">
+              <div className="size-10 bg-foreground text-background font-heading text-sm flex items-center justify-center rounded-full mx-auto shadow-md">
                 {step.num}
               </div>
               <h4 className="font-heading text-sm font-medium text-foreground">{step.title}</h4>

@@ -92,9 +92,9 @@ const segmentFilter = {
 };
 
 export default function ReportsCustomersPage() {
-  const { data, isLoading } = useAdminCustomers({ limit: 100 });
+  const { data, isLoading } = useAdminCustomers();
 
-  const customers = data?.items ?? [];
+  const customers = data ?? [];
 
   return (
     <div>

@@ -56,9 +56,9 @@ const subscriptionColumns: ColumnDef<AdminSubscription>[] = [
 
 export default function CustomerSubscriptionsPage() {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = useAdminCustomerSubscriptions(id, { page: 1, limit: 50 });
+  const { data, isLoading } = useAdminCustomerSubscriptions(id);
 
-  const subscriptions = data?.items ?? [];
+  const subscriptions = data ?? [];
   const total = subscriptions.length;
   const active = subscriptions.filter((s) => s.status === "ACTIVE").length;
   const paused = subscriptions.filter((s) => s.status === "PAUSED").length;

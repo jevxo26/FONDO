@@ -5,13 +5,8 @@ import { sendResponse } from "../utils/sendResponse";
 import * as couponService from "../services/couponService";
 
 export const CouponController = {
-  list: catchAsync(async (req: AuthRequest, res: Response) => {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
-    const search = req.query.search as string | undefined;
-    const status = req.query.status as string | undefined;
-    const discountType = req.query.discountType as string | undefined;
-    const result = await couponService.listCoupons({ page, limit, search, status, discountType });
+  list: catchAsync(async (_req: AuthRequest, res: Response) => {
+    const result = await couponService.listCoupons();
     sendResponse(res, { statusCode: 200, data: result });
   }),
 

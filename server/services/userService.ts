@@ -12,6 +12,19 @@ const getAllUsers = catchServiceAsync(async () => {
 });
 
 const createUser = catchServiceAsync(async (data: Prisma.UserCreateInput) => {
+  const { email, phone } = data;
+  const existingUser = await prisma.user.findFirst({
+    where: {
+      OR: [{ email: email as string }, { phone: phone as string }].filter((c) => Object.values(c)[0]),
+    },
+  });
+  if (existingUser) {
+    throw new AppError(
+      400,
+      existingUser.email === email ? "Email is already registered" : "Phone number is already registered",
+    );
+  }
+
   if (data.password) {
     data.password = await encryptPassword(data.password);
   }

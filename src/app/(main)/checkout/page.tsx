@@ -1,13 +1,16 @@
 "use client";
 
 import CheckoutForm from "@/components/checkout/form/checkout-form";
+import { SectionReveal } from "@/components/common/section-reveal";
 
 export default function CheckoutPage() {
   return (
-    <div className="min-h-screen bg-[#FDFBF7] py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="font-heading text-3xl font-bold text-[#16100C] mb-8">Checkout</h1>
-        <CheckoutForm />
+    <div className="min-h-screen bg-background py-8 lg:py-12">
+      <div className="wrapper">
+        <h1 className="font-heading text-3xl font-normal text-foreground mb-8">Checkout</h1>
+        <SectionReveal>
+          <CheckoutForm />
+        </SectionReveal>
       </div>
     </div>
   );

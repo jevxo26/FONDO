@@ -25,14 +25,6 @@ interface ApiOrder {
   customer: { id: string; firstName: string; lastName: string; phone: string };
 }
 
-interface PaginatedOrders {
-  items: ApiOrder[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
 function adaptOrder(o: ApiOrder): CustomerOrder {
   return {
     id: o.id,
@@ -53,10 +45,10 @@ function OrdersContent() {
 
   const { data } = useQuery({
     queryKey: ["admin", "orders", "all"],
-    queryFn: () => api.get<PaginatedOrders>("/admin/orders?page=1&limit=100"),
+    queryFn: () => api.get<ApiOrder[]>("/admin/orders"),
   });
 
-  const allOrders = (data?.items ?? []).map(adaptOrder);
+  const allOrders = (data ?? []).map(adaptOrder);
   const orders = customerFilter
     ? allOrders.filter((o) => o.customerName.toLowerCase().includes(customerFilter.toLowerCase()))
     : allOrders;

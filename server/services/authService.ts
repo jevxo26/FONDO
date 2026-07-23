@@ -1,4 +1,3 @@
-import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import type { Prisma } from "@prisma/client";
 import AppError from "../utils/AppError";
@@ -7,8 +6,9 @@ import { catchServiceAsync } from "../utils/catchServiceAsync";
 import { createRefreshToken, createToken } from "../utils/jwtService";
 import { sendUserDataAsResponse } from "../utils/responseStyle";
 import prisma from "../lib/prisma";
+import { trackFailedLogin } from "./authOtpService";
 
-const loginUser = catchServiceAsync(
+export const loginUser = catchServiceAsync(
   async (identifier: string, password: string) => {
     const isEmail = identifier.includes("@");
     const user = await prisma.user.findFirst({
@@ -61,7 +61,7 @@ const loginUser = catchServiceAsync(
   },
 );
 
-const registerUser = catchServiceAsync(
+export const registerUser = catchServiceAsync(
   async (data: {
     firstName: string;
     lastName: string;
@@ -108,85 +108,7 @@ const registerUser = catchServiceAsync(
   },
 );
 
-const sendOtp = catchServiceAsync(
-  async (payload: { phone?: string; email?: string; purpose: string }) => {
-    const user = await prisma.user.findFirst({
-      where: {
-        OR: [
-          ...(payload.phone ? [{ phone: payload.phone }] : []),
-          ...(payload.email ? [{ email: payload.email }] : []),
-        ],
-      },
-    });
-
-    const otpCode = crypto.randomInt(100000, 999999).toString();
-
-    await prisma.userOTP.create({
-      data: {
-        userId: user?.id,
-        phone: payload.phone,
-        email: payload.email,
-        otp: otpCode,
-        purpose: payload.purpose,
-        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-        status: "active",
-      },
-    });
-
-    return { otp: otpCode, message: "OTP sent successfully" };
-  },
-);
-
-const verifyOtp = catchServiceAsync(
-  async (payload: { phone?: string; email?: string; otp: string; purpose: string }) => {
-    const otpRecord = await prisma.userOTP.findFirst({
-      where: {
-        ...(payload.phone ? { phone: payload.phone } : {}),
-        ...(payload.email ? { email: payload.email } : {}),
-        otp: payload.otp,
-        purpose: payload.purpose,
-        status: "active",
-        expiresAt: { gte: new Date() },
-      },
-      orderBy: { createdAt: "desc" },
-    });
-
-    if (!otpRecord) {
-      throw new AppError(400, "Invalid or expired OTP");
-    }
-
-    if (otpRecord.attemptCount >= 5) {
-      throw new AppError(400, "OTP attempt limit exceeded");
-    }
-
-    await prisma.userOTP.update({
-      where: { id: otpRecord.id },
-      data: {
-        verifiedAt: new Date(),
-        status: "verified",
-      },
-    });
-
-    if (otpRecord.userId) {
-      if (payload.purpose === "PHONE_VERIFY" && payload.phone) {
-        await prisma.user.update({
-          where: { id: otpRecord.userId },
-          data: { isPhoneVerified: true },
-        });
-      }
-      if (payload.purpose === "EMAIL_VERIFY" && payload.email) {
-        await prisma.user.update({
-          where: { id: otpRecord.userId },
-          data: { isEmailVerified: true },
-        });
-      }
-    }
-
-    return { message: "OTP verified successfully" };
-  },
-);
-
-const refreshToken = catchServiceAsync(async (token: string) => {
+export const refreshToken = catchServiceAsync(async (token: string) => {
   const decoded = jwt.verify(
     token,
     (process.env.JWT_REFRESH_SECRET as string) || "refresh_secret",
@@ -222,7 +144,7 @@ const refreshToken = catchServiceAsync(async (token: string) => {
   return { token: newAccessToken };
 });
 
-const logoutUser = catchServiceAsync(async (refreshToken: string) => {
+export const logoutUser = catchServiceAsync(async (refreshToken: string) => {
   if (!refreshToken) {
     throw new AppError(400, "Refresh token is required");
   }
@@ -246,7 +168,7 @@ const logoutUser = catchServiceAsync(async (refreshToken: string) => {
   return { message: "Logged out successfully" };
 });
 
-const getMe = catchServiceAsync(async (userId: string) => {
+export const getMe = catchServiceAsync(async (userId: string) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
@@ -266,140 +188,3 @@ const getMe = catchServiceAsync(async (userId: string) => {
 
   return user;
 });
-
-const forgotPassword = catchServiceAsync(async (email: string) => {
-  const user = await prisma.user.findUnique({ where: { email } });
-
-  if (!user) {
-    return { message: "If the email exists, a reset link has been sent" };
-  }
-
-  const resetToken = crypto.randomBytes(32).toString("hex");
-
-  await prisma.userToken.create({
-    data: {
-      userId: user.id,
-      token: crypto.createHash("sha256").update(resetToken).digest("hex"),
-      type: "RESET_PASSWORD",
-      expiresAt: new Date(Date.now() + 60 * 60 * 1000),
-    },
-  });
-
-  return { resetToken, expiresIn: 3600 };
-});
-
-const resetPassword = catchServiceAsync(
-  async (token: string, newPassword: string) => {
-    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
-
-    const userToken = await prisma.userToken.findFirst({
-      where: {
-        token: hashedToken,
-        type: "RESET_PASSWORD",
-        revokedAt: null,
-        expiresAt: { gte: new Date() },
-      },
-    });
-
-    if (!userToken) {
-      throw new AppError(400, "Invalid or expired reset token");
-    }
-
-    const hashedPassword = await encryptPassword(newPassword);
-
-    await prisma.$transaction([
-      prisma.user.update({
-        where: { id: userToken.userId },
-        data: { password: hashedPassword },
-      }),
-      prisma.userToken.update({
-        where: { id: userToken.id },
-        data: { revokedAt: new Date() },
-      }),
-      prisma.userSession.updateMany({
-        where: { userId: userToken.userId, status: "active" },
-        data: { status: "expired", logoutAt: new Date() },
-      }),
-    ]);
-
-    return { message: "Password reset successful" };
-  },
-);
-
-const changePassword = catchServiceAsync(
-  async (userId: string, currentPassword: string, newPassword: string) => {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-
-    if (!user || !user.password) {
-      throw new AppError(400, "Invalid request");
-    }
-
-    const isMatch = await isPasswordValid(currentPassword, user.password);
-    if (!isMatch) {
-      throw new AppError(400, "Current password is incorrect");
-    }
-
-    const hashedPassword = await encryptPassword(newPassword);
-
-    await prisma.$transaction([
-      prisma.user.update({
-        where: { id: userId },
-        data: { password: hashedPassword },
-      }),
-      prisma.userSecurity.update({
-        where: { userId },
-        data: { passwordChangedAt: new Date() },
-      }),
-      prisma.userSession.updateMany({
-        where: { userId, status: "active" },
-        data: { status: "expired", logoutAt: new Date() },
-      }),
-    ]);
-
-    return { message: "Password changed successfully" };
-  },
-);
-
-async function trackFailedLogin(userId: string) {
-  const security = await prisma.userSecurity.findUnique({
-    where: { userId },
-  });
-
-  const failedCount = (security?.failedLoginCount || 0) + 1;
-
-  await prisma.userSecurity.upsert({
-    where: { userId },
-    update: {
-      failedLoginCount: failedCount,
-      lastFailedLoginAt: new Date(),
-      accountLocked: failedCount >= 5,
-      accountLockedUntil: failedCount >= 5
-        ? new Date(Date.now() + 30 * 60 * 1000)
-        : undefined,
-    },
-    create: {
-      userId,
-      failedLoginCount: failedCount,
-      lastFailedLoginAt: new Date(),
-      accountLocked: failedCount >= 5,
-      accountLockedUntil: failedCount >= 5
-        ? new Date(Date.now() + 30 * 60 * 1000)
-        : undefined,
-    },
-  });
-}
-
-export const AuthService = {
-  loginUser,
-  registerUser,
-  sendOtp,
-  verifyOtp,
-  refreshToken,
-  logoutUser,
-  getMe,
-  forgotPassword,
-  resetPassword,
-  changePassword,
-};

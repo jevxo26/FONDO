@@ -2,13 +2,14 @@ import { Request, Response } from "express";
 import { AuthRequest } from "../types/auth.types";
 import { catchAsync } from "../utils/catchAsync";
 import { sendResponse } from "../utils/sendResponse";
-import { AuthService } from "../services/authService";
+import * as authService from "../services/authService";
+import * as authOtpService from "../services/authOtpService";
 
 const login = catchAsync(async (req: Request, res: Response) => {
   const { email, phone, password } = req.body;
   const identifier = email || phone;
 
-  const result = await AuthService.loginUser(identifier, password);
+  const result = await authService.loginUser(identifier, password);
 
   res.cookie("refreshToken", result.refreshToken, {
     httpOnly: true,
@@ -28,7 +29,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
 });
 
 const register = catchAsync(async (req: Request, res: Response) => {
-  const user = await AuthService.registerUser(req.body);
+  const user = await authService.registerUser(req.body);
 
   sendResponse(res, {
     statusCode: 201,
@@ -38,7 +39,7 @@ const register = catchAsync(async (req: Request, res: Response) => {
 });
 
 const sendOtp = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.sendOtp(req.body);
+  const result = await authOtpService.sendOtp(req.body);
 
   sendResponse(res, {
     statusCode: 200,
@@ -48,7 +49,7 @@ const sendOtp = catchAsync(async (req: Request, res: Response) => {
 });
 
 const verifyOtp = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.verifyOtp(req.body);
+  const result = await authOtpService.verifyOtp(req.body);
 
   sendResponse(res, {
     statusCode: 200,
@@ -64,7 +65,7 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
     return;
   }
 
-  const result = await AuthService.refreshToken(token);
+  const result = await authService.refreshToken(token);
 
   sendResponse(res, {
     statusCode: 200,
@@ -76,7 +77,7 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 const logout = catchAsync(async (req: Request, res: Response) => {
   const refreshToken = req.cookies?.refreshToken;
 
-  const result = await AuthService.logoutUser(refreshToken);
+  const result = await authService.logoutUser(refreshToken);
 
   res.clearCookie("refreshToken");
 
@@ -87,7 +88,7 @@ const logout = catchAsync(async (req: Request, res: Response) => {
 });
 
 const me = catchAsync(async (req: AuthRequest, res: Response) => {
-  const user = await AuthService.getMe(req.user!.userId);
+  const user = await authService.getMe(req.user!.userId);
 
   sendResponse(res, {
     statusCode: 200,
@@ -98,7 +99,7 @@ const me = catchAsync(async (req: AuthRequest, res: Response) => {
 
 const forgotPassword = catchAsync(async (req: Request, res: Response) => {
   const { email } = req.body;
-  const result = await AuthService.forgotPassword(email);
+  const result = await authOtpService.forgotPassword(email);
 
   sendResponse(res, {
     statusCode: 200,
@@ -109,7 +110,7 @@ const forgotPassword = catchAsync(async (req: Request, res: Response) => {
 
 const resetPassword = catchAsync(async (req: Request, res: Response) => {
   const { token, password } = req.body;
-  const result = await AuthService.resetPassword(token, password);
+  const result = await authOtpService.resetPassword(token, password);
 
   sendResponse(res, {
     statusCode: 200,
@@ -119,7 +120,7 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
 
 const changePassword = catchAsync(async (req: AuthRequest, res: Response) => {
   const { currentPassword, newPassword } = req.body;
-  const result = await AuthService.changePassword(
+  const result = await authOtpService.changePassword(
     req.user!.userId,
     currentPassword,
     newPassword,

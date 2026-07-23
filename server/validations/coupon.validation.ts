@@ -28,11 +28,3 @@ export const updateCouponSchema = yup.object({
   endDate: yup.string().optional().nullable(),
   status: yup.string().oneOf(["active", "inactive", "expired"]).optional(),
 });
-
-export const listCouponsSchema = yup.object({
-  page: yup.number().positive().optional(),
-  limit: yup.number().positive().optional(),
-  search: yup.string().optional(),
-  status: yup.string().oneOf(["active", "inactive", "expired"]).optional(),
-  discountType: yup.string().oneOf(["PERCENTAGE", "FIXED"]).optional(),
-});

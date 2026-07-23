@@ -1,7 +1,6 @@
 import prisma from "../lib/prisma";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
-import { paginate } from "../utils/pagination";
 import * as sslcommerz from "./sslcommerz";
 
 async function getOrCreateWallet(customerId: string) {
@@ -19,19 +18,13 @@ export const getWallet = catchServiceAsync(async (customerId: string) => {
   return getOrCreateWallet(customerId);
 });
 
-export const listTransactions = catchServiceAsync(async (customerId: string, page = 1, limit = 20, type?: string) => {
+export const listTransactions = catchServiceAsync(async (customerId: string) => {
   const wallet = await getOrCreateWallet(customerId);
-  const where: Record<string, unknown> = { walletId: wallet.id };
-  if (type) where.transactionType = type.toUpperCase();
-
-  return paginate(prisma.customerWalletTransaction, { where, orderBy: { createdAt: "desc" } }, page, limit);
+  return prisma.customerWalletTransaction.findMany({ where: { walletId: wallet.id }, orderBy: { createdAt: "desc" } });
 });
 
 export const topupWallet = catchServiceAsync(async (customerId: string, data: { amount: number; paymentMethodId?: string }) => {
   const wallet = await getOrCreateWallet(customerId);
-
-  const gateway = await prisma.paymentGateway.findFirst({ where: { status: "active" }, orderBy: { createdAt: "asc" } });
-  if (!gateway) throw new AppError(503, "No active payment gateway");
 
   const customer = await prisma.user.findUnique({ where: { id: customerId } });
   if (!customer) throw new AppError(404, "Customer not found");
@@ -42,6 +35,8 @@ export const topupWallet = catchServiceAsync(async (customerId: string, data: { 
     data: { walletId: wallet.id, amount: data.amount, status: "pending" },
   });
 
+  const gateway = await prisma.paymentGateway.findFirst({ where: { status: "active" }, orderBy: { createdAt: "asc" } });
+  if (!gateway) throw new AppError(503, "No active payment gateway");
   const result = await sslcommerz.initPayment(
     { storeId: gateway.storeId!, secretKey: gateway.secretKey!, sandboxMode: gateway.sandboxMode },
     {
@@ -75,8 +70,8 @@ export const topupSuccess = catchServiceAsync(async (query: Record<string, strin
   if (topup.status === "completed") return { success: true };
 
   if (val_id) {
-    const gateway = await prisma.paymentGateway.findFirst({ where: { status: "active" } });
-    if (gateway?.storeId && gateway?.secretKey) {
+    const gateway = await prisma.paymentGateway.findFirst({ where: { status: "active" }, orderBy: { createdAt: "asc" } });
+    if (gateway && gateway.storeId && gateway.secretKey) {
       const validation = await sslcommerz.validatePayment(
         { storeId: gateway.storeId, secretKey: gateway.secretKey, sandboxMode: gateway.sandboxMode },
         val_id,

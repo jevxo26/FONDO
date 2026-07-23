@@ -69,14 +69,6 @@ export interface Order {
   customer: OrderCustomer;
 }
 
-export interface OrderListResponse {
-  items: Order[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
 export interface PlaceOrderPayload {
   cartId: string;
   addressId: string;

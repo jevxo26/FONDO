@@ -49,7 +49,7 @@ function formatDate(date: string | null) {
 export default function CustomerDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { data: customer, isLoading } = useAdminCustomer(id);
-  const { data: recentOrders } = useAdminCustomerOrders(id, { page: 1, limit: 5 });
+  const { data: recentOrders } = useAdminCustomerOrders(id);
 
   if (isLoading) {
     return (
@@ -180,7 +180,7 @@ export default function CustomerDetailPage() {
                 </Link>
               </div>
               <div className="mt-6 space-y-3">
-                {recentOrders?.items.map((order) => (
+                {recentOrders?.map((order) => (
                   <div
                     key={order.id}
                     className="flex items-center justify-between rounded-xl bg-muted/50 px-4 py-3 transition-colors hover:bg-muted"
@@ -197,7 +197,7 @@ export default function CustomerDetailPage() {
                     </div>
                   </div>
                 ))}
-                {(!recentOrders?.items || recentOrders.items.length === 0) && (
+                {(!recentOrders || recentOrders.length === 0) && (
                   <p className="py-8 text-center text-sm text-muted-foreground">No orders yet.</p>
                 )}
               </div>

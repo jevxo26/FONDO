@@ -12,9 +12,9 @@ import { useMemo } from "react";
 
 export default function CustomerOrdersPage() {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = useAdminCustomerOrders(id, { page: 1, limit: 50 });
+  const { data, isLoading } = useAdminCustomerOrders(id);
 
-  const orders = data?.items ?? [];
+  const orders = data ?? [];
 
   const total = orders.length;
   const pending = orders.filter((o) => o.orderStatus === "PENDING").length;

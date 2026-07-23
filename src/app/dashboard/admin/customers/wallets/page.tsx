@@ -79,11 +79,10 @@ export default function WalletsPage() {
 
   const { data, isLoading } = useAdminCustomerWallet(
     selectedCustomer?.id ?? "",
-    { page: 1, limit: 50 },
   );
 
   const wallet = data?.wallet;
-  const transactions = data?.transactions?.items ?? [];
+  const transactions = data?.transactions ?? [];
 
   return (
     <div>

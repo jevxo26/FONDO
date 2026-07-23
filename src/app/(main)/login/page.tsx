@@ -57,7 +57,7 @@ export default function LoginPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F5EFE6] flex items-center justify-center py-10 px-4">
+    <div className="min-h-screen bg-background flex items-center justify-center py-10 px-4">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onLoginSubmit)} className="w-full max-w-6xl">
           <CoreLayoutWrapper currentStep={3}>
@@ -66,8 +66,8 @@ export default function LoginPage() {
         </form>
       </FormProvider>
 
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-2 bg-black/80 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl">
-        <span className="text-xs text-gray-400 flex items-center mr-1 whitespace-nowrap">
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-2 bg-foreground/80 backdrop-blur-sm rounded-lg px-4 py-3 shadow-xl">
+        <span className="text-xs text-muted-foreground flex items-center mr-1 whitespace-nowrap">
           Quick Login:
         </span>
         {devUsers.map((u) => (
@@ -76,7 +76,7 @@ export default function LoginPage() {
             type="button"
             disabled={loading}
             onClick={() => quickLogin(u.email, "password123")}
-            className="px-3 py-1.5 rounded text-xs font-medium text-white transition-colors bg-gray-700 hover:bg-gray-600 disabled:opacity-50"
+            className="px-3 py-1.5 rounded text-xs font-medium text-foreground transition-colors bg-card hover:bg-muted disabled:opacity-50"
           >
             {u.label}
           </button>

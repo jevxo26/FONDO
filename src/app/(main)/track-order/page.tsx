@@ -15,9 +15,9 @@ function TrackingContent() {
 
   if (!orderId) {
     return (
-      <div className="min-h-screen bg-background py-10">
+      <div className="min-h-screen bg-background py-8 lg:py-12">
         <div className="wrapper max-w-6xl text-center py-20">
-          <h1 className="font-sans text-2xl font-bold text-foreground mb-2">Track Your Order</h1>
+          <h1 className="font-heading text-2xl font-normal text-foreground mb-2">Track Your Order</h1>
           <p className="font-sans text-sm text-muted-foreground mb-6">
             Enter your order ID to track your delivery.
           </p>
@@ -29,7 +29,7 @@ function TrackingContent() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background py-10 flex items-center justify-center">
+      <div className="min-h-screen bg-background py-8 lg:py-12 flex items-center justify-center">
         <Loader2 className="size-8 animate-spin text-primary" />
       </div>
     );
@@ -37,9 +37,9 @@ function TrackingContent() {
 
   if (error || !order) {
     return (
-      <div className="min-h-screen bg-background py-10">
+      <div className="min-h-screen bg-background py-8 lg:py-12">
         <div className="wrapper max-w-6xl text-center py-20">
-          <h1 className="font-sans text-2xl font-bold text-foreground mb-2">Order Not Found</h1>
+          <h1 className="font-heading text-2xl font-normal text-foreground mb-2">Order Not Found</h1>
           <p className="font-sans text-sm text-muted-foreground mb-6">
             {handleApiError(error)}
           </p>
@@ -57,17 +57,17 @@ function TrackingContent() {
   ];
 
   return (
-    <div className="min-h-screen bg-background py-10">
+    <div className="min-h-screen bg-background py-8 lg:py-12">
       <div className="wrapper max-w-6xl">
         <div className="mb-8">
-          <h1 className="font-sans text-2xl font-bold text-foreground">Track Your Order</h1>
+          <h1 className="font-heading text-2xl font-normal text-foreground">Track Your Order</h1>
           <p className="font-sans text-sm text-muted-foreground">Order #{order.id}</p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <h2 className="font-sans text-lg font-semibold text-foreground mb-6">Delivery Status</h2>
+              <h2 className="font-heading text-lg font-normal text-foreground mb-6">Delivery Status</h2>
               <div className="space-y-6">
                 {steps.map((step, i) => (
                   <div key={step.label} className="flex items-start gap-4">
@@ -88,7 +88,7 @@ function TrackingContent() {
 
           <div className="space-y-4">
             <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <h3 className="font-sans text-sm font-semibold text-foreground mb-3">Delivery Details</h3>
+              <h3 className="font-heading text-sm font-semibold text-foreground mb-3">Delivery Details</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Phone className="size-4" />
@@ -98,7 +98,7 @@ function TrackingContent() {
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <h3 className="font-sans text-sm font-semibold text-foreground mb-3">Order Summary</h3>
+              <h3 className="font-heading text-sm font-semibold text-foreground mb-3">Order Summary</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Items</span>
@@ -124,7 +124,7 @@ function TrackingContent() {
 export default function TrackingPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-background py-10 flex items-center justify-center">
+      <div className="min-h-screen bg-background py-8 lg:py-12 flex items-center justify-center">
         <Loader2 className="size-8 animate-spin text-primary" />
       </div>
     }>

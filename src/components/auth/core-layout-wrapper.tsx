@@ -10,9 +10,9 @@ export function CoreLayoutWrapper({ currentStep, children }: CoreLayoutWrapperPr
   const isIdentityFlow = currentStep <= 2;
 
   return (
-    <div className="w-full max-w-6xl bg-[#FDFBF7] rounded-[32px] overflow-hidden border border-[#E6DFD5] shadow-[0_8px_30px_rgb(0,0,0,0.02)] grid grid-cols-1 lg:grid-cols-2 min-h-[780px]">
+    <div className="w-full max-w-6xl bg-background rounded-3xl overflow-hidden border border-border shadow-[var(--shadow-card)] grid grid-cols-1 lg:grid-cols-2 min-h-[780px]">
       {/* Left Media Branding Panel */}
-      <div className="relative hidden lg:flex flex-col justify-end p-12 bg-[#0F0A06]">
+      <div className="relative hidden lg:flex flex-col justify-end p-12 bg-foreground">
         <Image
           src={isIdentityFlow ? "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" : "https://plus.unsplash.com/premium_photo-1675252369719-dd52bc69c3df?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}
           alt="Food Flow Heritage Scene"
@@ -26,22 +26,22 @@ export function CoreLayoutWrapper({ currentStep, children }: CoreLayoutWrapperPr
               <div className="self-start px-3 py-1 bg-primary rounded-full text-[10px] font-sans font-bold uppercase tracking-wider text-white">
                 JOIN THE FLOW
               </div>
-              <h2 className="font-serif text-4xl font-normal leading-tight tracking-tight text-[#FDFBF7]">
+              <h2 className="font-heading text-4xl font-normal leading-tight tracking-tight text-background">
                 A heritage of flavor awaits your presence.
               </h2>
-              <p className="font-sans text-xs text-[#E6DFD5]/80 leading-relaxed">
+              <p className="font-sans text-xs text-background/80 leading-relaxed">
                 Create an account to unlock exclusive chef&apos;s specials, track your orders in real-time, and join our culinary community.
               </p>
             </>
           ) : (
             <>
-              <h2 className="font-serif text-5xl font-normal leading-none tracking-tight text-[#E8A34A]">
+              <h2 className="font-heading text-5xl font-normal leading-none tracking-tight text-primary">
                 Food Flow
               </h2>
-              <p className="font-sans text-base text-[#FDFBF7]/90 font-light leading-relaxed">
+              <p className="font-sans text-base text-background/90 font-light leading-relaxed">
                 The final touch to your artisanal journey.
               </p>
-              <div className="w-16 h-[1px] bg-[#FDFBF7]/30 mt-2" />
+              <div className="w-16 h-[1px] bg-background/30 mt-2" />
             </>
           )}
         </div>

@@ -68,10 +68,9 @@ export default function PaymentsPage() {
 
   const { data, isLoading } = useAdminCustomerPayments(
     selectedCustomer?.id ?? "",
-    { page: 1, limit: 50 },
   );
 
-  const payments = data?.items ?? [];
+  const payments = data ?? [];
   const total = payments.length;
   const completed = payments.filter((p) => p.status === "COMPLETED").length;
   const failed = payments.filter((p) => p.status === "FAILED").length;

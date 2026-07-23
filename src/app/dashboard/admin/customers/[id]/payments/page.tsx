@@ -67,9 +67,9 @@ const paymentColumns: ColumnDef<AdminPayment>[] = [
 
 export default function CustomerPaymentsPage() {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = useAdminCustomerPayments(id, { page: 1, limit: 50 });
+  const { data, isLoading } = useAdminCustomerPayments(id);
 
-  const payments = data?.items ?? [];
+  const payments = data ?? [];
   const total = payments.length;
   const completed = payments.filter((p) => p.status === "COMPLETED").length;
   const failed = payments.filter((p) => p.status === "FAILED").length;

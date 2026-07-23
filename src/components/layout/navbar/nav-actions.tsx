@@ -1,26 +1,35 @@
 "use client";
 
-import { useEffect } from "react";
-import { Heart, Menu, ShoppingCart, Truck, ChevronDown, LogOut, LayoutDashboard, User } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { toggleMobileMenu } from "@/store/slices/uiSlice";
-import { useAppDispatch } from "@/store/store";
-import { fetchMe } from "@/store/slices/authSlice";
-import { getToken } from "@/lib/token";
+import { ROLE_DASHBOARD } from "@/data/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { useCart } from "@/hooks/use-cart";
 import { useFavorites } from "@/hooks/use-favorites";
-import { ROLE_DASHBOARD } from "@/data/navigation";
+import { getToken } from "@/lib/token";
+import { fetchMe } from "@/store/slices/authSlice";
+import { toggleMobileMenu } from "@/store/slices/uiSlice";
+import { useAppDispatch } from "@/store/store";
+import {
+  ChevronDown,
+  Heart,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  ShoppingCart,
+  Truck,
+  User,
+} from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 export function NavActions() {
   const dispatch = useAppDispatch();
@@ -105,7 +114,7 @@ export function NavActions() {
                 Dashboard
               </DropdownMenuItem>
             )}
-            <DropdownMenuItem onClick={() => router.push("/customer/profile")}>
+            <DropdownMenuItem onClick={() => router.push("/profile")}>
               <User className="size-4" />
               Profile
             </DropdownMenuItem>

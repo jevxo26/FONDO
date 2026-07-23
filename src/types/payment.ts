@@ -23,11 +23,3 @@ export interface Payment {
   failureReason: string | null;
   createdAt: string;
 }
-
-export interface PaymentListResponse {
-  items: Payment[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}

@@ -1,14 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Loader2, XCircle } from "lucide-react";
+import { ArrowLeft, Loader2, Package, XCircle } from "lucide-react";
 import { useOrders, useCancelOrder } from "@/hooks/use-orders";
 import { handleApiError } from "@/lib/api-error";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { SectionReveal } from "@/components/common/section-reveal";
 
 export default function OrdersPage() {
-  const { data, isLoading, error } = useOrders(1, 20);
+  const { data, isLoading, error } = useOrders();
   const cancelOrder = useCancelOrder();
 
   const handleCancel = (orderId: string) => {
@@ -20,7 +21,7 @@ export default function OrdersPage() {
 
   if (isLoading) {
     return (
-      <main className="flex-1 py-12">
+      <main className="flex-1 py-8 lg:py-12">
         <div className="wrapper flex items-center justify-center min-h-[40vh]">
           <Loader2 className="size-6 animate-spin text-muted-foreground" />
         </div>
@@ -30,12 +31,12 @@ export default function OrdersPage() {
 
   if (error) {
     return (
-      <main className="flex-1 py-12">
+      <main className="flex-1 py-8 lg:py-12">
         <div className="wrapper">
-          <div className="py-16 text-center border border-dashed border-border rounded-[32px] bg-white dark:bg-card">
+          <div className="py-16 text-center border border-dashed border-border rounded-3xl bg-card">
             <p className="font-sans text-sm text-destructive">{handleApiError(error)}</p>
-            <Link href="/menu" className="mt-4 inline-flex h-10 items-center rounded-xl bg-primary px-5 font-sans text-xs font-semibold text-primary-foreground">
-              Return to Menu
+            <Link href="/menu">
+              <Button variant="default" className="mt-4 rounded-xl">Return to Menu</Button>
             </Link>
           </div>
         </div>
@@ -43,32 +44,33 @@ export default function OrdersPage() {
     );
   }
 
-  const orders = data?.items ?? [];
+  const orders = data ?? [];
 
   return (
-    <main className="flex-1 py-12">
+    <main className="flex-1 py-8 lg:py-12">
       <div className="wrapper">
         <div className="mb-8">
           <Link href="/profile" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground mb-4">
             <ArrowLeft className="size-3.5" /> Back to Profile
           </Link>
-          <h1 className="font-fraunces text-4xl font-normal text-secondary-foreground tracking-tight">My Orders</h1>
-          <p className="font-sans text-xs text-muted-foreground mt-1">{data?.total ?? 0} total orders</p>
+          <h1 className="font-heading text-4xl font-normal text-secondary-foreground tracking-tight">My Orders</h1>
+          <p className="font-sans text-xs text-muted-foreground mt-1">{orders.length} total orders</p>
         </div>
 
         {orders.length === 0 ? (
-          <div className="py-16 text-center border border-dashed border-border rounded-[32px] bg-white dark:bg-card">
+          <div className="py-16 text-center border border-dashed border-border rounded-3xl bg-card">
+            <Package className="size-8 mx-auto mb-3 text-muted-foreground" />
             <p className="font-sans text-sm text-muted-foreground">No orders yet.</p>
-            <Link href="/menu" className="mt-4 inline-flex h-10 items-center rounded-xl bg-primary px-5 font-sans text-xs font-semibold text-primary-foreground">
-              Browse Menu
+            <Link href="/menu">
+              <Button variant="default" className="mt-4 rounded-xl">Browse Menu</Button>
             </Link>
           </div>
         ) : (
-          <div className="flex flex-col gap-4">
+          <SectionReveal className="flex flex-col gap-4" stagger>
             {orders.map((order) => (
               <div
                 key={order.id}
-                className="rounded-[28px] bg-white border border-border/40 p-5 shadow-[var(--shadow-card)] dark:bg-card"
+                className="rounded-3xl bg-card border border-border/40 p-6 shadow-[var(--shadow-card)]"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -95,11 +97,8 @@ export default function OrdersPage() {
                   <div className="text-right">
                     <span className="font-sans text-xl font-bold text-secondary-foreground">৳{order.totalAmount}</span>
                     <div className="mt-2 flex gap-2 justify-end">
-                      <Link
-                        href={`/track-order?orderId=${order.id}`}
-                        className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 border border-border rounded-lg text-foreground hover:bg-muted transition-colors"
-                      >
-                        Track
+                      <Link href={`/track-order?orderId=${order.id}`}>
+                        <Button variant="outline" size="sm" className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5">Track</Button>
                       </Link>
                       {["PENDING", "CONFIRMED"].includes(order.orderStatus) && (
                         <button
@@ -130,7 +129,7 @@ export default function OrdersPage() {
                 )}
               </div>
             ))}
-          </div>
+          </SectionReveal>
         )}
       </div>
     </main>

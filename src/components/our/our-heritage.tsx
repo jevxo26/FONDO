@@ -1,11 +1,10 @@
 // Location: src/components/our/our-heritage.tsx
-"use client";
 
 import React from "react";
 
 export default function OurHeritage() {
   return (
-    <section className="py-[var(--space-section)] bg-background text-foreground border-b border-border/10">
+    <section className="py-[var(--space-section)] bg-background text-foreground border-b border-border/10 animate-fadeIn">
       <div className="wrapper grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
         
         {/* Left Column: Story narrative & context (6 of 12 grid columns on desktop) */}

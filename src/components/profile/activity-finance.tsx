@@ -5,13 +5,13 @@ import { useAuth } from "@/hooks/use-auth";
 import Link from "next/link";
 
 export function OrderHistory() {
-  const { data: ordersRes, isLoading } = useOrders(1, 10);
+  const { data: ordersRes, isLoading } = useOrders();
 
   if (isLoading) {
     return <p className="text-xs text-muted-foreground">Loading orders...</p>;
   }
 
-  const orders = ordersRes?.items ?? [];
+  const orders = ordersRes ?? [];
 
   return (
     <div className="space-y-6">
@@ -43,9 +43,9 @@ export function OrderHistory() {
           ))}
         </div>
       )}
-      {ordersRes && ordersRes.totalPages > 1 && (
+      {ordersRes && ordersRes.length > 10 && (
         <p className="text-[10px] text-muted-foreground text-center">
-          Page {ordersRes.page} of {ordersRes.totalPages}
+          Showing recent {ordersRes.length} orders
         </p>
       )}
     </div>

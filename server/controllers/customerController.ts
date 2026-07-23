@@ -5,12 +5,8 @@ import { sendResponse } from "../utils/sendResponse";
 import * as customerService from "../services/customerService";
 
 export const CustomerController = {
-  list: catchAsync(async (req: AuthRequest, res: Response) => {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
-    const search = req.query.search as string | undefined;
-    const status = req.query.status as string | undefined;
-    const result = await customerService.listCustomers({ page, limit, search, status });
+  list: catchAsync(async (_req: AuthRequest, res: Response) => {
+    const result = await customerService.listCustomers();
     sendResponse(res, { statusCode: 200, data: result });
   }),
 
@@ -22,34 +18,25 @@ export const CustomerController = {
 
   listOrders: catchAsync(async (req: AuthRequest, res: Response) => {
     const customerId = req.params.id as string;
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
-    const status = req.query.status as string | undefined;
-    const result = await customerService.listCustomerOrders(customerId, page, limit, status);
+    const result = await customerService.listCustomerOrders(customerId);
     sendResponse(res, { statusCode: 200, data: result });
   }),
 
   listSubscriptions: catchAsync(async (req: AuthRequest, res: Response) => {
     const customerId = req.params.id as string;
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
-    const result = await customerService.listCustomerSubscriptions(customerId, page, limit);
+    const result = await customerService.listCustomerSubscriptions(customerId);
     sendResponse(res, { statusCode: 200, data: result });
   }),
 
   getWallet: catchAsync(async (req: AuthRequest, res: Response) => {
     const customerId = req.params.id as string;
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
-    const result = await customerService.getCustomerWallet(customerId, page, limit);
+    const result = await customerService.getCustomerWallet(customerId);
     sendResponse(res, { statusCode: 200, data: result });
   }),
 
   listPayments: catchAsync(async (req: AuthRequest, res: Response) => {
     const customerId = req.params.id as string;
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
-    const result = await customerService.listCustomerPayments(customerId, page, limit);
+    const result = await customerService.listCustomerPayments(customerId);
     sendResponse(res, { statusCode: 200, data: result });
   }),
 };

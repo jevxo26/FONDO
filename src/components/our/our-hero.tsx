@@ -1,8 +1,6 @@
-"use client";
-
 export default function StoryHero() {
   return (
-    <section className="relative min-h-[600px] lg:min-h-[85vh] flex items-center justify-center overflow-hidden bg-foreground">
+    <section className="relative min-h-[600px] lg:min-h-[85vh] flex items-center justify-center overflow-hidden bg-foreground animate-fadeIn">
       
       {/* 1. Background Image using a high-quality free Unsplash URL */}
       <div 
@@ -15,7 +13,7 @@ export default function StoryHero() {
       />
       
       {/* 2. Dark Overlay using primary-foreground hex equivalent (#1B0E08) for deep visual contrast */}
-      <div className="absolute inset-0 bg-[#1B0E08]/75 backdrop-blur-[1px]" />
+      <div className="absolute inset-0 bg-primary-foreground/75 backdrop-blur-[1px]" />
 
       {/* 3. Main Content Container using your custom global .wrapper utility */}
       <div className="wrapper relative z-10 flex flex-col items-center justify-center text-center space-y-6 pt-24 pb-20">

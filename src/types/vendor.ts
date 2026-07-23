@@ -81,3 +81,23 @@ export interface VendorKitchen {
   createdAt: string;
   updatedAt: string;
 }
+
+// src/types/vendor.ts (add these types)
+export interface VendorStaff {
+  id: string;
+  userId: string;
+  fullName: string;
+  phone: string;
+  email: string;
+  designation: string;
+  branch: string;
+  branchId: string;
+  joiningDate: string;
+  salary: number;
+  status: "ACTIVE" | "INACTIVE" | "ON_LEAVE";
+  shift: string;
+  roles: string[];
+  avatar: string;
+  createdAt: string;
+  updatedAt: string;
+}

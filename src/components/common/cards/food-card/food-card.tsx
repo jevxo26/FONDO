@@ -52,10 +52,7 @@ export default function FoodCard({ food }: { food: Food }) {
               <ShoppingBag className="size-4 text-foreground" />
             </div>{" "}
             <span className="font-sans text-xs font-medium">
-              {food.servingSize} - ৳{defaultVariant?.price}
-            </span>
-            <span className="font-sans text-xs font-medium">
-              {food.servingSize} - ৳{defaultVariant?.price}
+              {food.servingSize ?? ""} - ৳{defaultVariant?.price}
             </span>
             <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-white/20">
               <Link href={`/foods/${food.slug}`}>
@@ -83,12 +80,12 @@ export default function FoodCard({ food }: { food: Food }) {
           </div>
           <div className="flex items-center gap-1">
             <Clock className="size-3.5" />
-            <span>{food.preparationTime} min</span>
+            <span>{food.preparationTime ?? 0} min</span>
           </div>
         </div>
 
         <p className="mt-3 font-sans text-sm leading-relaxed text-muted-foreground line-clamp-2 flex-1">
-          {food.shortDescription}
+          {food.shortDescription ?? ""}
         </p>
         <AddToCartButton
           foodId={food.id}

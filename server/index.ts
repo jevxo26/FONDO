@@ -94,6 +94,19 @@ app
           });
         }
       }
+      // Seed default payment methods
+      const existingMethods = await prisma.paymentMethod.count();
+      if (existingMethods === 0) {
+        await prisma.paymentMethod.createMany({
+          data: [
+            { code: "bkash", name: "bKash", isDefault: false },
+            { code: "nagad", name: "Nagad", isDefault: false },
+            { code: "cod", name: "Cash on Delivery", isDefault: true },
+            { code: "card", name: "Credit/Debit Card", isDefault: false },
+            { code: "rocket", name: "Rocket", isDefault: false },
+          ],
+        });
+      }
     } catch (err) {
       console.error("Error connecting to the database with Prisma:", err);
       process.exit(1);

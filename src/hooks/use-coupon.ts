@@ -14,6 +14,17 @@ export function useApplyCoupon() {
   });
 }
 
+export function useSelectAddress() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (addressId: string) =>
+      api.post("/cart/checkout/select-address", { addressId }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.cart.all });
+    },
+  });
+}
+
 export function useRemoveCoupon() {
   const qc = useQueryClient();
   return useMutation({

@@ -5,10 +5,12 @@ import { OrderSummary } from "@/components/carts/order-summary";
 import { SectionReveal } from "@/components/common/section-reveal";
 import { Button } from "@/components/ui/button";
 import { useCart, useClearCart, useRemoveFromCart, useUpdateCartItem } from "@/hooks/use-cart";
+import { useAppDispatch } from "@/store/store";
 import { handleApiError } from "@/lib/api-error";
 import { Loader2, ShoppingCart, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import type { CartItem as CartItemType } from "@/types/cart";
 
 export default function CartPageView() {
   const dispatch = useAppDispatch();

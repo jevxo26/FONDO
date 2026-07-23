@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -63,6 +63,13 @@ const CheckoutForm = () => {
   const currentFulfillment = watch("fulfillment");
   const currentPaymentMethodId = watch("paymentMethodId");
 
+  useEffect(() => {
+    if (paymentMethods.length > 0 && !currentPaymentMethodId) {
+      const defaultPm = paymentMethods.find((pm) => pm.isDefault) ?? paymentMethods[0];
+      setValue("paymentMethodId", defaultPm.id);
+    }
+  }, [paymentMethods, currentPaymentMethodId, setValue]);
+
   const handleAddressSelect = async (addressId: string) => {
     setSelectedAddressId(addressId);
     try {
@@ -104,7 +111,7 @@ const CheckoutForm = () => {
         return;
       }
 
-      if (!selectedAddressId) {
+      if (currentFulfillment === "delivery" && !selectedAddressId) {
         const address = await createAddress.mutateAsync({
           label: LABEL,
           receiverName: data.receiverName,
@@ -124,22 +131,23 @@ const CheckoutForm = () => {
         }
 
         var finalAddressId = address.id;
-      } else {
+      } else if (currentFulfillment === "delivery" && selectedAddressId) {
         var finalAddressId = selectedAddressId;
       }
 
-      if (!data.paymentMethodId) {
-        const defaultPm = paymentMethods.find((pm) => pm.isDefault);
-        if (!defaultPm) {
-          toast.error("Please select a payment method");
-          return;
-        }
+      if (!data.paymentMethodId && paymentMethods.length > 0) {
+        const defaultPm = paymentMethods.find((pm) => pm.isDefault) ?? paymentMethods[0];
         data.paymentMethodId = defaultPm.id;
+      }
+
+      if (!data.paymentMethodId) {
+        toast.error("Please select a payment method");
+        return;
       }
 
       const order = await placeOrder.mutateAsync({
         cartId,
-        addressId: finalAddressId,
+        addressId: finalAddressId!,
         paymentMethodId: data.paymentMethodId,
         notes: data.notes || undefined,
       });

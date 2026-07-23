@@ -45,7 +45,7 @@ export function ProductInfo({ food, isFavorited, isFavPending, onToggleFav, chil
           <span>({food.rating?.totalReview ?? 892} reviews)</span>
         </div>
         <span>&middot;</span>
-        <span>{food.servingSize}</span>
+        <span>{food.servingSize ?? ""}</span>
         <span>&middot;</span>
         <Button variant="ghost" size="sm" className="h-auto gap-1 p-0 hover:text-foreground">
           <Share2 className="size-3.5" /> Share
@@ -67,15 +67,15 @@ export function ProductInfo({ food, isFavorited, isFavPending, onToggleFav, chil
       </div>
 
       <p className="mt-1 text-xs text-muted-foreground">Free delivery on orders of ৳2,000+</p>
-      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{food.shortDescription}</p>
+      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{food.shortDescription ?? ""}</p>
 
       <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
-        <div><span className="text-muted-foreground">Preparation:</span><p className="font-medium">{food.preparationTime} min</p></div>
-        <div><span className="text-muted-foreground">Serving:</span><p className="font-medium">{food.servingSize}</p></div>
-        <div><span className="text-muted-foreground">Calories:</span><p className="font-medium">{food.calories} kcal</p></div>
+        <div><span className="text-muted-foreground">Preparation:</span><p className="font-medium">{food.preparationTime ?? 0} min</p></div>
+        <div><span className="text-muted-foreground">Serving:</span><p className="font-medium">{food.servingSize ?? ""}</p></div>
+        <div><span className="text-muted-foreground">Calories:</span><p className="font-medium">{food.calories ?? 0} kcal</p></div>
         <div><span className="text-muted-foreground">Food Type:</span><p className="font-medium capitalize">{food.foodType}</p></div>
         <div><span className="text-muted-foreground">Spice Level:</span><p className="font-medium capitalize">{food.spiceLevel}</p></div>
-        <div><span className="text-muted-foreground">Protein:</span><p className="font-medium">{food.protein}g</p></div>
+        <div><span className="text-muted-foreground">Protein:</span><p className="font-medium">{food.protein ?? 0}g</p></div>
       </div>
       {children}
     </motion.div>

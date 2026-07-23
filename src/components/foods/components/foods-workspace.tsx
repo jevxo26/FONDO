@@ -42,7 +42,7 @@ export default function FoodsWorkspace() {
       result = result.filter((food) => {
         return (
           food.name.toLowerCase().includes(keyword) ||
-          food.shortDescription.toLowerCase().includes(keyword)
+          (food.shortDescription ?? "").toLowerCase().includes(keyword)
         );
       });
     }
@@ -61,7 +61,7 @@ export default function FoodsWorkspace() {
       result = result.filter((food) => {
         return (
           food.name.toLowerCase().includes(keyword) ||
-          food.shortDescription.toLowerCase().includes(keyword)
+          (food.shortDescription ?? "").toLowerCase().includes(keyword)
         );
       });
     }

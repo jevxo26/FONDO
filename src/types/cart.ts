@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-=======
 export interface CartItemFood {
   id: string;
   name: string;
@@ -15,15 +13,10 @@ export interface CartAddon {
   price: number;
 }
 
->>>>>>> Stashed changes
 export interface CartItem {
   id: string;
   foodId: string;
   quantity: number;
-<<<<<<< Updated upstream
-  thumbnail: string;
-  itemsSold: number;
-=======
   unitPrice: number;
   totalPrice: number;
   food: CartItemFood;
@@ -69,5 +62,4 @@ export interface Cart {
   totalAmount: number;
   status?: string;
   mealCount?: number;
->>>>>>> Stashed changes
 }

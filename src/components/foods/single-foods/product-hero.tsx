@@ -51,7 +51,7 @@ export function ProductHero({ food }: { food: Food }) {
           initial="hidden"
           animate="visible"
         >
-          <ProductGallery coverImage={food.coverImage} name={food.name} />
+          <ProductGallery coverImage={food.coverImage ?? ""} name={food.name} />
           <ProductInfo
             food={food}
             isFavorited={isFavorited}

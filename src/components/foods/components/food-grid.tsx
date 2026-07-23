@@ -22,17 +22,17 @@ const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
             return (
               <div
                 key={food.id}
-                className="bg-card border-border rounded-2xl overflow-hidden shadow-sm hover:border-primary/30 flex flex-col justify-between transition-all group"
+                className="bg-card border-border rounded-2xl overflow-hidden shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elevated)] hover:scale-[1.01] flex flex-col justify-between transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-primary/30 group"
               >
                 <div>
                   {/* Image Module */}
                   <div className="relative aspect-4/3 w-full overflow-hidden bg-muted">
                     <Image
-                      src={food.thumbnail}
+                      src={food.thumbnail ?? "/placeholder.svg"}
                       alt={food.name}
                       width={200}
                       height={200}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-105"
                     />
                     {food.labels.map((lbl) => (
                       <span
@@ -60,7 +60,7 @@ const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
                     </div>
 
                     <p className="font-sans text-[11px] text-muted-foreground leading-relaxed font-light line-clamp-2">
-                      {food.shortDescription}
+                      {food.shortDescription ?? ""}
                     </p>
 
                     {/* Nutritional Analytics Matrix */}

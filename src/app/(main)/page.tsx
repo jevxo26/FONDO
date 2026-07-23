@@ -24,6 +24,8 @@ interface FoodsResponse {
   items: Food[];
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const [foodsData, catData] = await Promise.all([
     apiFetch<FoodsResponse>("/api/foods?page=1&limit=6&sortBy=popularity", {

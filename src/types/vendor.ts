@@ -210,3 +210,18 @@ export interface VendorBankAccount {
   createdAt: string;
   updatedAt: string;
 }
+// src/types/vendor.ts (add these types)
+export interface VendorServiceArea {
+  id: string;
+  vendorId: string;
+  division: string;
+  district: string;
+  upazila: string;
+  area: string;
+  deliveryCharge: number;
+  minimumOrderAmount: number;
+  estimatedDeliveryTime: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}

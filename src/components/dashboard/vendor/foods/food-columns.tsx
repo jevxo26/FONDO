@@ -5,6 +5,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { type VendorFood } from "@/types/vendor";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DataTableColumnHeader } from "@/components/common/table/data-table-column-header";
 
 const getStockBadge = (status: VendorFood["stockStatus"]) => {
   const variants = {
@@ -47,7 +48,9 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "name",
-    header: "Food Item",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Food Item" />
+    ),
     cell: ({ row }) => {
       const food = row.original;
       return (
@@ -68,7 +71,9 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "category",
-    header: "Category",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Category" />
+    ),
     cell: ({ row }) => (
       <div className="flex flex-col gap-0.5">
         <span className="text-sm">{row.getValue("category")}</span>
@@ -78,7 +83,9 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "kitchen",
-    header: "Kitchen / Branch",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Kitchen / Branch" />
+    ),
     cell: ({ row }) => (
       <div className="flex flex-col gap-0.5">
         <span className="text-sm">{row.getValue("kitchen")}</span>
@@ -88,7 +95,9 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "price",
-    header: "Price",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Price" />
+    ),
     cell: ({ row }) => {
       const price = row.getValue("price") as number;
       return (
@@ -105,7 +114,9 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "stock",
-    header: "Stock",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Stock" />
+    ),
     cell: ({ row }) => {
       const stock = row.getValue("stock") as number;
       const { minStock, maxStock } = row.original;
@@ -134,7 +145,9 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "stockStatus",
-    header: "Status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Stock Status" />
+    ),
     cell: ({ row }) => {
       const status = row.getValue("stockStatus") as VendorFood["stockStatus"];
       const badge = getStockBadge(status);
@@ -147,7 +160,9 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "status",
-    header: "Active",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Active" />
+    ),
     cell: ({ row }) => {
       const status = row.getValue("status") as VendorFood["status"];
       const badge = getStatusBadge(status);
@@ -160,7 +175,9 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "totalOrders",
-    header: "Orders",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Orders" />
+    ),
     cell: ({ row }) => (
       <div className="text-center">
         <span className="font-medium text-sm">{row.getValue("totalOrders")}</span>
@@ -169,7 +186,9 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "rating",
-    header: "Rating",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Rating" />
+    ),
     cell: ({ row }) => {
       const rating = row.getValue("rating") as number;
       return (

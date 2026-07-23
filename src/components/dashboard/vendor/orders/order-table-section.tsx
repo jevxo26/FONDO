@@ -67,7 +67,6 @@ export function VendorOrderTableSection() {
         icon: <RefreshCw className="h-4 w-4" />,
         variant: "default" as const,
         onClick: (order: VendorOrder) => {
-          // This would open a status update dropdown/modal
           console.log("Update status", order);
         },
       },
@@ -111,8 +110,8 @@ export function VendorOrderTableSection() {
   );
 
   const initialSort: InitialSort = {
-    id: "orderNumber", // Changed from "createdAt" to "orderNumber"
-    desc: false,
+    id: "createdAt",
+    desc: true, // Show newest first
   };
 
   return (

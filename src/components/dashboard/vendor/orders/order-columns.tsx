@@ -4,6 +4,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { type VendorOrder } from "@/types/vendor";
 import { getOrderStatusBadge } from "@/data/vendor-orders";
 import { format } from "date-fns";
+import { DataTableColumnHeader } from "@/components/common/table/data-table-column-header";
 
 export const orderColumns: ColumnDef<VendorOrder>[] = [
   {
@@ -29,7 +30,9 @@ export const orderColumns: ColumnDef<VendorOrder>[] = [
   },
   {
     accessorKey: "orderNumber",
-    header: "Order #",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Order #" />
+    ),
     cell: ({ row }) => {
       const order = row.original;
       return (
@@ -44,7 +47,9 @@ export const orderColumns: ColumnDef<VendorOrder>[] = [
   },
   {
     accessorKey: "customerName",
-    header: "Customer",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Customer" />
+    ),
     cell: ({ row }) => {
       const order = row.original;
       return (
@@ -57,7 +62,9 @@ export const orderColumns: ColumnDef<VendorOrder>[] = [
   },
   {
     accessorKey: "items",
-    header: "Items",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Items" />
+    ),
     cell: ({ row }) => {
       const order = row.original;
       return (
@@ -72,7 +79,9 @@ export const orderColumns: ColumnDef<VendorOrder>[] = [
   },
   {
     accessorKey: "totalAmount",
-    header: "Total",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Total" />
+    ),
     cell: ({ row }) => {
       const amount = row.getValue("totalAmount") as number;
       return (
@@ -84,7 +93,9 @@ export const orderColumns: ColumnDef<VendorOrder>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
     cell: ({ row }) => {
       const status = row.getValue("status") as VendorOrder["status"];
       const badge = getOrderStatusBadge(status);
@@ -97,7 +108,9 @@ export const orderColumns: ColumnDef<VendorOrder>[] = [
   },
   {
     accessorKey: "paymentStatus",
-    header: "Payment",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Payment" />
+    ),
     cell: ({ row }) => {
       const status = row.getValue("paymentStatus") as VendorOrder["paymentStatus"];
       const variants: Record<string, { label: string; className: string }> = {
@@ -115,7 +128,9 @@ export const orderColumns: ColumnDef<VendorOrder>[] = [
   },
   {
     accessorKey: "deliveryDate",
-    header: "Delivery",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Delivery" />
+    ),
     cell: ({ row }) => {
       const order = row.original;
       return (
@@ -123,6 +138,20 @@ export const orderColumns: ColumnDef<VendorOrder>[] = [
           <span className="text-sm">{format(new Date(order.deliveryDate), "MMM d")}</span>
           <span className="text-xs text-muted-foreground">{order.deliverySlot}</span>
         </div>
+      );
+    },
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Created" />
+    ),
+    cell: ({ row }) => {
+      const order = row.original;
+      return (
+        <span className="text-sm">
+          {format(new Date(order.createdAt), "MMM d, h:mm a")}
+        </span>
       );
     },
   },

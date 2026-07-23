@@ -172,3 +172,27 @@ export interface VendorHoliday {
   date: string;
   description: string;
 }
+
+// src/types/vendor.ts (add these types)
+export interface VendorBranch {
+  id: string;
+  vendorId: string;
+  branchName: string;
+  branchCode: string;
+  phone: string;
+  email: string;
+  country: string;
+  division: string;
+  district: string;
+  upazila: string;
+  area: string;
+  road: string;
+  house: string;
+  postalCode: string;
+  latitude: string;
+  longitude: string;
+  isMainBranch: boolean;
+  status: "ACTIVE" | "INACTIVE";
+  createdAt: string;
+  updatedAt: string;
+}

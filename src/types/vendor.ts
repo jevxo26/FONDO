@@ -39,3 +39,27 @@ export interface RowAction<TData> {
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
   onClick: (data: TData) => void;
 }
+
+// src/types/vendor.ts (add these types)
+export interface VendorOrderItem {
+  name: string;
+  quantity: number;
+  price: number;
+}
+
+export interface VendorOrder {
+  id: string;
+  orderNumber: string;
+  customerName: string;
+  customerPhone: string;
+  items: VendorOrderItem[];
+  totalItems: number;
+  totalAmount: number;
+  status: "PENDING" | "CONFIRMED" | "PREPARING" | "READY_FOR_PICKUP" | "PICKED_UP" | "ON_THE_WAY" | "DELIVERED" | "COMPLETED" | "CANCELLED";
+  paymentStatus: "PAID" | "PENDING" | "REFUNDED";
+  deliveryAddress: string;
+  deliveryDate: string;
+  deliverySlot: string;
+  createdAt: string;
+  updatedAt: string;
+}

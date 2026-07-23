@@ -28,7 +28,7 @@ export const serviceAreaColumns: ColumnDef<VendorServiceArea>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "location",
+    accessorKey: "area", // Added for sorting/filtering
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Location" />
     ),
@@ -48,6 +48,26 @@ export const serviceAreaColumns: ColumnDef<VendorServiceArea>[] = [
           </span>
         </div>
       );
+    },
+  },
+  {
+    accessorKey: "division", // Added for filtering
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Division" />
+    ),
+    cell: ({ row }) => {
+      const area = row.original;
+      return <span className="text-sm">{area.division}</span>;
+    },
+  },
+  {
+    accessorKey: "district", // Added for filtering
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="District" />
+    ),
+    cell: ({ row }) => {
+      const area = row.original;
+      return <span className="text-sm">{area.district}</span>;
     },
   },
   {
@@ -72,9 +92,7 @@ export const serviceAreaColumns: ColumnDef<VendorServiceArea>[] = [
     ),
     cell: ({ row }) => {
       const amount = row.getValue("minimumOrderAmount") as number;
-      return (
-        <span className="text-sm">৳{amount}</span>
-      );
+      return <span className="text-sm">৳{amount}</span>;
     },
   },
   {

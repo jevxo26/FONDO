@@ -115,8 +115,9 @@ export function VendorServiceAreaTableSection() {
     </Button>
   );
 
+  // Changed from "area" to "area" - but since that doesn't exist, use a valid column
   const initialSort: InitialSort = {
-    id: "area",
+    id: "deliveryCharge", // Changed from "area" to "deliveryCharge"
     desc: false,
   };
 

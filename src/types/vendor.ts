@@ -195,4 +195,18 @@ export interface VendorBranch {
   status: "ACTIVE" | "INACTIVE";
   createdAt: string;
   updatedAt: string;
+}// src/types/vendor.ts (add these types)
+export interface VendorBankAccount {
+  id: string;
+  vendorId: string;
+  bankName: string;
+  branchName: string;
+  accountName: string;
+  accountNumber: string;
+  routingNumber: string;
+  accountType: "CURRENT" | "SAVINGS" | "MOBILE_BANKING";
+  isPrimary: boolean;
+  status: "ACTIVE" | "INACTIVE";
+  createdAt: string;
+  updatedAt: string;
 }

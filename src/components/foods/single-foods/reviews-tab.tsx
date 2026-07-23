@@ -45,7 +45,17 @@ export default function ReviewsTab({ allReviews, foodId }: ReviewsTabProps) {
         ))}
       </div>
 
-      <ReviewModal open={open} setOpen={setOpen} foodId={foodId} review={selectedReview} />
+      <ReviewModal
+        open={open}
+        setOpen={(value) => {
+          setOpen(value);
+          if (!value) {
+            setSelectedReview(null);
+          }
+        }}
+        foodId={foodId}
+        review={selectedReview}
+      />
     </div>
   );
 }

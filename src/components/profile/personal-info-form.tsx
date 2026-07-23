@@ -1,10 +1,10 @@
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
-import { useUpdateProfile, useChangePassword } from "@/hooks/use-profile";
-import { User, Edit3 } from "lucide-react";
-import { toast } from "sonner";
+import { useChangePassword, useUpdateProfile } from "@/hooks/use-profile";
 import { handleApiError } from "@/lib/api-error";
+import { Edit3, User } from "lucide-react";
+import { toast } from "sonner";
 
 export function PersonalInfoForm() {
   const { user } = useAuth();
@@ -31,7 +31,9 @@ export function PersonalInfoForm() {
     <div className="space-y-6">
       <div>
         <h3 className="font-fraunces text-xl font-normal text-foreground">Personal Information</h3>
-        <p className="font-sans text-[11px] text-muted-foreground/70 mt-1">Manage your name, basic identity details, and active avatar settings.</p>
+        <p className="font-sans text-[11px] text-muted-foreground/70 mt-1">
+          Manage your name, basic identity details, and active avatar settings.
+        </p>
       </div>
       <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center pb-6 border-b border-border">
         <div className="size-20 bg-muted rounded-full relative overflow-hidden group border border-border flex items-center justify-center text-muted-foreground">
@@ -41,38 +43,87 @@ export function PersonalInfoForm() {
           </div>
         </div>
         <div>
-          <button type="button" disabled className="px-3 py-1.5 border border-border text-[11px] font-bold rounded-xl text-muted-foreground cursor-not-allowed">Upload New Image</button>
-          <p className="text-[10px] text-muted-foreground/50 mt-1.5">JPG, PNG strictly allowed up to 2MB.</p>
+          <button
+            type="button"
+            disabled
+            className="px-3 py-1.5 border border-border text-[11px] font-bold rounded-xl text-muted-foreground cursor-not-allowed"
+          >
+            Upload New Image
+          </button>
+          <p className="text-[10px] text-muted-foreground/50 mt-1.5">
+            JPG, PNG strictly allowed up to 2MB.
+          </p>
         </div>
       </div>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">First Name</label>
-          <input type="text" name="firstName" defaultValue={user?.firstName ?? ""} className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground" />
+          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">
+            First Name
+          </label>
+          <input
+            type="text"
+            name="firstName"
+            defaultValue={user?.firstName ?? ""}
+            className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground"
+          />
         </div>
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">Last Name</label>
-          <input type="text" name="lastName" defaultValue={user?.lastName ?? ""} className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground" />
+          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">
+            Last Name
+          </label>
+          <input
+            type="text"
+            name="lastName"
+            defaultValue={user?.lastName ?? ""}
+            className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground"
+          />
         </div>
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">Email Address</label>
-          <input type="email" defaultValue={user?.email ?? ""} disabled className="w-full bg-muted/50 border border-border rounded-xl px-3 py-2 text-xs text-muted-foreground cursor-not-allowed" />
+          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">
+            Email Address
+          </label>
+          <input
+            type="email"
+            defaultValue={user?.email ?? ""}
+            disabled
+            className="w-full bg-muted/50 border border-border rounded-xl px-3 py-2 text-xs text-muted-foreground cursor-not-allowed"
+          />
         </div>
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">Phone Number</label>
-          <input type="text" name="phone" defaultValue={user?.phone ?? ""} className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground" />
+          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">
+            Phone Number
+          </label>
+          <input
+            type="text"
+            name="phone"
+            defaultValue={user?.phone ?? ""}
+            className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground"
+          />
         </div>
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">Gender</label>
-          <select name="gender" defaultValue={user?.gender ?? "Male"} className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground">
+          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">
+            Gender
+          </label>
+          <select
+            name="gender"
+            defaultValue={user?.gender ?? "Male"}
+            className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground"
+          >
             <option value="Male">Male</option>
             <option value="Female">Female</option>
             <option value="Other">Other</option>
           </select>
         </div>
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">Date of Birth</label>
-          <input type="date" name="dateOfBirth" defaultValue={user?.dateOfBirth ?? ""} className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground" />
+          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">
+            Date of Birth
+          </label>
+          <input
+            type="date"
+            name="dateOfBirth"
+            defaultValue={user?.dateOfBirth ?? ""}
+            className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground"
+          />
         </div>
         <div className="md:col-span-2 pt-2">
           <button
@@ -116,20 +167,46 @@ export function ChangePasswordForm() {
     <div className="space-y-6">
       <div>
         <h3 className="font-fraunces text-xl font-normal text-foreground">Change Password</h3>
-        <p className="font-sans text-[11px] text-muted-foreground/70 mt-1">Update your password regularly to stay secure.</p>
+        <p className="font-sans text-[11px] text-muted-foreground/70 mt-1">
+          Update your password regularly to stay secure.
+        </p>
       </div>
       <form onSubmit={handleSubmit} className="max-w-md space-y-4">
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">Current Password</label>
-          <input type="password" name="currentPassword" required placeholder="••••••••" className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground" />
+          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">
+            Current Password
+          </label>
+          <input
+            type="password"
+            name="currentPassword"
+            required
+            placeholder="••••••••"
+            className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground"
+          />
         </div>
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">New Password</label>
-          <input type="password" name="newPassword" required placeholder="••••••••" className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground" />
+          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">
+            New Password
+          </label>
+          <input
+            type="password"
+            name="newPassword"
+            required
+            placeholder="••••••••"
+            className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground"
+          />
         </div>
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">Confirm New Password</label>
-          <input type="password" name="confirmPassword" required placeholder="••••••••" className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground" />
+          <label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground/70">
+            Confirm New Password
+          </label>
+          <input
+            type="password"
+            name="confirmPassword"
+            required
+            placeholder="••••••••"
+            className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ring text-foreground"
+          />
         </div>
         <button
           type="submit"

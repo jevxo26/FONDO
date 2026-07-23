@@ -1,7 +1,18 @@
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
-import { User, Lock, MapPin, Bell, ShieldAlert, Laptop, ShoppingBag, CalendarDays, Wallet, Heart } from "lucide-react";
+import {
+  User,
+  Lock,
+  MapPin,
+  Bell,
+  ShieldAlert,
+  Laptop,
+  ShoppingBag,
+  CalendarDays,
+  Wallet,
+  Heart,
+} from "lucide-react";
 
 interface SidebarProps {
   activeTab: string;
@@ -43,13 +54,17 @@ export function ProfileSidebar({ activeTab, setActiveTab }: SidebarProps) {
       </div>
 
       <div className="flex flex-col gap-1">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/50 px-3 mb-2 block">Core Profile</span>
-        {coreTabs.map(tab => (
+        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/50 px-3 mb-2 block">
+          Core Profile
+        </span>
+        {coreTabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all text-left ${
-              activeTab === tab.id ? "bg-primary/10 text-primary font-bold" : "text-muted-foreground hover:bg-muted"
+              activeTab === tab.id
+                ? "bg-primary/10 text-primary font-bold"
+                : "text-muted-foreground hover:bg-muted"
             }`}
           >
             <tab.icon className="size-3.5" />
@@ -57,13 +72,17 @@ export function ProfileSidebar({ activeTab, setActiveTab }: SidebarProps) {
           </button>
         ))}
 
-        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/50 px-3 mt-4 mb-2 block">Activity & Finances</span>
-        {activityTabs.map(tab => (
+        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/50 px-3 mt-4 mb-2 block">
+          Activity & Finances
+        </span>
+        {activityTabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all text-left ${
-              activeTab === tab.id ? "bg-primary/10 text-primary font-bold" : "text-muted-foreground hover:bg-muted"
+              activeTab === tab.id
+                ? "bg-primary/10 text-primary font-bold"
+                : "text-muted-foreground hover:bg-muted"
             }`}
           >
             <tab.icon className="size-3.5" />

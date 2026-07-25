@@ -48,7 +48,7 @@ export const placeOrderSchema = yup.object({
   paymentMethodId: yup.string().required("Payment method ID is required"),
   notes: yup.string().optional(),
   deliverySchedule: yup.object({
-    deliveryDate: yup.date().required("Delivery date is required"),
+    deliveryDate: yup.date().optional(),
     deliverySlot: yup.string().optional(),
   }).optional(),
 });

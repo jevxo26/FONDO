@@ -21,14 +21,21 @@ const cartInclude = {
 } as const;
 
 export const getActiveCart = catchServiceAsync(async (userId: string) => {
-  let cart = await prisma.cart.findUnique({
+  let cart = await prisma.cart.findFirst({
     where: { customerId: userId },
+    orderBy: { createdAt: "desc" },
     include: cartInclude,
   });
 
-  if (!cart || cart.status === "converted") {
+  if (!cart) {
     cart = await prisma.cart.create({
       data: { customerId: userId, status: "active" },
+      include: cartInclude,
+    });
+  } else if (cart.status !== "active") {
+    cart = await prisma.cart.update({
+      where: { id: cart.id },
+      data: { status: "active", subtotal: 0, discount: 0, deliveryCharge: 0, vat: 0, totalAmount: 0, packageId: null, customMealPlanId: null, couponId: null },
       include: cartInclude,
     });
   }
@@ -42,8 +49,8 @@ export const initCart = catchServiceAsync(
       throw new AppError(400, "Either packageId or customMealPlanId is required");
     }
 
-    const existing = await prisma.cart.findUnique({ where: { customerId: userId } });
-    if (existing && existing.status === "active") {
+    const existing = await prisma.cart.findFirst({ where: { customerId: userId, status: "active" } });
+    if (existing) {
       await Promise.all([
         prisma.cartItem.deleteMany({ where: { cartId: existing.id } }),
         prisma.cartMeal.deleteMany({ where: { cartId: existing.id } }),
@@ -63,12 +70,19 @@ export const initCart = catchServiceAsync(
       ]);
     }
 
-    const cart = await prisma.cart.upsert({
-      where: { customerId: userId },
-      create: { customerId: userId, packageId, customMealPlanId, status: "active" },
-      update: { packageId, customMealPlanId, couponId: null, status: "active" },
-      include: cartInclude,
-    });
+    let cart: Awaited<ReturnType<typeof prisma.cart.findFirst<{ include: typeof cartInclude }>>>;
+    if (existing) {
+      cart = await prisma.cart.update({
+        where: { id: existing.id },
+        data: { packageId, customMealPlanId, couponId: null, status: "active" },
+        include: cartInclude,
+      });
+    } else {
+      cart = await prisma.cart.create({
+        data: { customerId: userId, packageId, customMealPlanId, status: "active" },
+        include: cartInclude,
+      });
+    }
 
     if (packageId) {
       const packageMeals = await prisma.packageMeal.findMany({

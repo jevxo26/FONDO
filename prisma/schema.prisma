@@ -199,7 +199,7 @@ model User {
   userRoles          UserRole[]
   favorites          FoodFavorite[]
   foodReviews        FoodReview[]
-  cart               Cart?
+  carts              Cart[]
   orders             Order[]
   payments           Payment[]
   wallet             CustomerWallet?
@@ -2090,7 +2090,7 @@ model DietaryRestriction {
 
 model Cart {
   id              String   @id @default(uuid())
-  customerId      String   @unique
+  customerId      String
   packageId       String?
   customMealPlanId String?
   couponId        String?

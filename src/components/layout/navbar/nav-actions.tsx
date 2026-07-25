@@ -34,7 +34,7 @@ import { toast } from "sonner";
 export function NavActions() {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, loading, logout } = useAuth();
   const { data: cart } = useCart();
   const { data: favorites } = useFavorites();
 
@@ -43,10 +43,10 @@ export function NavActions() {
 
   useEffect(() => {
     const token = getToken();
-    if (token && !isAuthenticated) {
+    if (token && !isAuthenticated && !loading) {
       dispatch(fetchMe());
     }
-  }, [dispatch, isAuthenticated]);
+  }, [dispatch, isAuthenticated, loading]);
 
   const handleLogout = async () => {
     try {

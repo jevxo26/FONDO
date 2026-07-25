@@ -150,12 +150,14 @@ const CheckoutForm = () => {
         return;
       }
 
+      const hasSchedule = deliverySchedule?.deliveryDate && deliverySchedule?.deliverySlot;
+
       const order = await placeOrder.mutateAsync({
         cartId,
         ...(finalAddressId ? { addressId: finalAddressId } : {}),
         paymentMethodId: data.paymentMethodId,
         notes: data.notes || undefined,
-        ...(deliverySchedule ? { deliverySchedule } : {}),
+        ...(hasSchedule ? { deliverySchedule } : {}),
       });
 
       const codMethod = paymentMethods.find((pm) => pm.code === "cod");

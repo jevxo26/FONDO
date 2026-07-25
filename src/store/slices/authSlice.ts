@@ -126,6 +126,8 @@ const authSlice = createSlice({
       })
       .addCase(fetchMe.rejected, (state) => {
         state.loading = false;
+        state.accessToken = null;
+        clearToken();
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;

@@ -11,6 +11,7 @@ import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import vendorRoutes from "./routes/vendorRoutes";
 import foodRoutes from "./routes/foodRoutes";
+import packageRoutes from "./routes/package.routes";
 import adminFoodRoutes from "./routes/adminFoodRoutes";
 import cartRoutes from "./routes/cartRoutes";
 import orderRoutes from "./routes/orderRoutes";
@@ -106,6 +107,7 @@ app
     server.use("/api/vendor", vendorRoutes);
     server.use("/api/auth", authRoutes);
     server.use("/api/foods", foodRoutes);
+    server.use("/api/package", packageRoutes);
     server.use("/api/admin", adminFoodRoutes);
     server.use("/api/cart", cartRoutes);
     server.use("/api/admin/customers", customerRoutes);

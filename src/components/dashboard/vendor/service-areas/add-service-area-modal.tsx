@@ -110,7 +110,7 @@ export function AddServiceAreaModal({ open, onOpenChange }: AddServiceAreaModalP
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Upazila / Thana</Label>
+              <Label>Upazila/Thana</Label>
               <Input
                 placeholder="e.g., Gulshan"
                 value={formData.upazila}
@@ -147,7 +147,7 @@ export function AddServiceAreaModal({ open, onOpenChange }: AddServiceAreaModalP
               />
             </div>
             <div className="space-y-2">
-              <Label>Est. Delivery (minutes)</Label>
+              <Label>Est.. Delivery (minutes)</Label>
               <Input
                 type="number"
                 placeholder="e.g., 25"

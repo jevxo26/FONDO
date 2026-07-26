@@ -1719,9 +1719,9 @@ model Package {
   packageCode    String   @unique
   name           String
   slug           String   @unique
-  description    String?
-  thumbnail      String?
-  coverImage     String?
+  description    String
+  thumbnail      String
+  coverImage     String
   packageType    String
   durationDays   Int
   totalMeals     Int
@@ -1998,17 +1998,21 @@ model PackageAvailability {
 }
 
 model CustomMealPlan {
-  id          String   @id @default(uuid())
-  customerId  String
-  packageId   String?
-  name        String
-  totalDays   Int
-  status      String   @default("active")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                    String   @id @default(uuid())
+  customerId            String
+  packageId             String?
+  acceptedByVendorId    String? 
+  name                  String
+  totalDays             Int
+  totalPrice            Decimal  @default(0) @db.Decimal(10, 2)
+  vendorApprovalStatus  String   @default("pending") // pending, accepted, rejected
+  paymentStatus         String   @default("pending") // pending, paid
+  status                String   @default("active")  // active, completed, cancelled
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 
-  customer User                    @relation(fields: [customerId], references: [id])
-  package  Package?                @relation(fields: [packageId], references: [id])
+  customer User         @relation(fields: [customerId], references: [id])
+  package  Package?     @relation(fields: [packageId], references: [id])
   days     CustomMealDay[]
 
   @@map("custom_meal_plans")

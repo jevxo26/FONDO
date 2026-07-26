@@ -1,60 +1,40 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/api-client";
-import { queryKeys } from "@/lib/query-keys";
-import type {
-  AdminCustomer,
-  AdminCustomerDetail,
-  AdminCustomerOrder,
-  AdminSubscription,
-  AdminPayment,
-  WalletResponse,
-} from "@/types/admin";
+import {
+  useGetAdminCustomersQuery,
+  useGetAdminCustomerQuery,
+  useGetAdminCustomerOrdersQuery,
+  useGetAdminCustomerSubscriptionsQuery,
+  useGetAdminCustomerWalletQuery,
+  useGetAdminCustomerPaymentsQuery,
+} from "@/store/api/slices/admin-customers-api";
 
 export function useAdminCustomers() {
-  return useQuery({
-    queryKey: queryKeys.admin.customers.all,
-    queryFn: () => api.get<AdminCustomer[]>(`/admin/customers`),
-  });
+  const { data, isLoading, error } = useGetAdminCustomersQuery(undefined);
+  return { data, isLoading, error };
 }
 
 export function useAdminCustomer(id: string) {
-  return useQuery({
-    queryKey: queryKeys.admin.customers.detail(id),
-    queryFn: () => api.get<AdminCustomerDetail>(`/admin/customers/${id}`),
-    enabled: !!id,
-  });
+  const { data, isLoading, error } = useGetAdminCustomerQuery(id, { skip: !id });
+  return { data, isLoading, error };
 }
 
 export function useAdminCustomerOrders(customerId: string) {
-  return useQuery({
-    queryKey: queryKeys.admin.customers.orders(customerId),
-    queryFn: () => api.get<AdminCustomerOrder[]>(`/admin/customers/${customerId}/orders`),
-    enabled: !!customerId,
-  });
+  const { data, isLoading, error } = useGetAdminCustomerOrdersQuery(customerId, { skip: !customerId });
+  return { data, isLoading, error };
 }
 
 export function useAdminCustomerSubscriptions(customerId: string) {
-  return useQuery({
-    queryKey: queryKeys.admin.customers.subscriptions(customerId),
-    queryFn: () => api.get<AdminSubscription[]>(`/admin/customers/${customerId}/subscriptions`),
-    enabled: !!customerId,
-  });
+  const { data, isLoading, error } = useGetAdminCustomerSubscriptionsQuery(customerId, { skip: !customerId });
+  return { data, isLoading, error };
 }
 
 export function useAdminCustomerWallet(customerId: string) {
-  return useQuery({
-    queryKey: queryKeys.admin.customers.wallet(customerId),
-    queryFn: () => api.get<WalletResponse>(`/admin/customers/${customerId}/wallet`),
-    enabled: !!customerId,
-  });
+  const { data, isLoading, error } = useGetAdminCustomerWalletQuery(customerId, { skip: !customerId });
+  return { data, isLoading, error };
 }
 
 export function useAdminCustomerPayments(customerId: string) {
-  return useQuery({
-    queryKey: queryKeys.admin.customers.payments(customerId),
-    queryFn: () => api.get<AdminPayment[]>(`/admin/customers/${customerId}/payments`),
-    enabled: !!customerId,
-  });
+  const { data, isLoading, error } = useGetAdminCustomerPaymentsQuery(customerId, { skip: !customerId });
+  return { data, isLoading, error };
 }

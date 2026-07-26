@@ -2,50 +2,60 @@
 
 import { useCallback, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/store/store";
-import { loginUser, registerUser, fetchMe, logoutUser } from "@/store/slices/authSlice";
+import { useAppSelector } from "@/store/store";
+import { useLoginMutation, useRegisterMutation, useFetchMeQuery, useLogoutMutation } from "@/store/api/slices/auth-api";
 import { getToken } from "@/lib/token";
 import type { RegisterInput } from "@/lib/validations/auth";
 
 export function useAuth() {
-  const dispatch = useAppDispatch();
-  const { user, isAuthenticated, loading, error } = useAppSelector((s) => s.auth);
+  const { user, isAuthenticated } = useAppSelector((s) => s.auth);
+  const [loginMutation, { isLoading: loginLoading }] = useLoginMutation();
+  const [registerMutation, { isLoading: registerLoading }] = useRegisterMutation();
+  const [logoutMutation, { isLoading: logoutLoading }] = useLogoutMutation();
+
+  useFetchMeQuery(undefined, { skip: !getToken() || isAuthenticated });
 
   const login = useCallback(
     (identity: string, password: string) =>
-      dispatch(loginUser({ identity, password })).unwrap(),
-    [dispatch],
+      loginMutation({ identity, password }).unwrap(),
+    [loginMutation],
   );
 
   const register = useCallback(
     (data: Omit<RegisterInput, "confirmPassword">) =>
-      dispatch(registerUser(data)).unwrap(),
-    [dispatch],
+      registerMutation(data).unwrap(),
+    [registerMutation],
   );
 
-  const logout = useCallback(() => dispatch(logoutUser()).unwrap(), [dispatch]);
+  const logout = useCallback(() => logoutMutation().unwrap(), [logoutMutation]);
 
-  return { user, isAuthenticated, loading, error, login, register, logout };
+  return {
+    user,
+    isAuthenticated,
+    loading: loginLoading || registerLoading || logoutLoading,
+    login,
+    register,
+    logout,
+  };
 }
 
 export function useRequireAuth(redirectTo = "/login") {
   const router = useRouter();
   const pathname = usePathname();
-  const dispatch = useAppDispatch();
-  const { isAuthenticated, loading } = useAppSelector((s) => s.auth);
+  const { isAuthenticated } = useAppSelector((s) => s.auth);
+  const hasToken = !!getToken();
+
+  const { isLoading } = useFetchMeQuery(undefined, {
+    skip: !hasToken,
+  });
+
+  const loading = hasToken && !isAuthenticated && isLoading;
 
   useEffect(() => {
-    const token = getToken();
-    if (token && !isAuthenticated && !loading) {
-      dispatch(fetchMe());
-    }
-  }, [dispatch, isAuthenticated, loading]);
-
-  useEffect(() => {
-    if (!loading && !isAuthenticated && !getToken()) {
+    if (!loading && !isAuthenticated && !hasToken) {
       router.push(`${redirectTo}?redirect=${encodeURIComponent(pathname)}`);
     }
-  }, [loading, isAuthenticated, router, redirectTo, pathname]);
+  }, [loading, isAuthenticated, hasToken, router, redirectTo, pathname]);
 
   return { isAuthenticated, loading };
 }

@@ -1,67 +1,35 @@
 "use client";
 
-import { api } from "@/lib/api-client";
-import { handleApiError } from "@/lib/api-error";
-import { queryKeys } from "@/lib/query-keys";
-import type { Cart } from "@/types/cart";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import {
+  useGetCartQuery,
+  useAddToCartMutation,
+  useRemoveFromCartMutation,
+  useUpdateCartItemMutation,
+  useClearCartMutation,
+} from "@/store/api/slices/cart-api";
+import { createMutationWrapper } from "@/store/api/mutation-wrapper";
 
 export function useCart() {
-  return useQuery({
-    queryKey: queryKeys.cart.all,
-    queryFn: () => api.get<Cart>("/cart"),
-    staleTime: 30_000,
-    gcTime: 60_000,
-  });
+  const { data, isLoading, error } = useGetCartQuery(undefined);
+  return { data, isLoading, error };
 }
 
 export function useAddToCart() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (data: { foodId: string; quantity: number; unitPrice: number }) =>
-      api.post<Cart>("/cart/items", data),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.cart.all });
-      toast.success("Added to cart");
-    },
-    onError: (error) => toast.error(handleApiError(error)),
-  });
+  const [trigger, { isLoading }] = useAddToCartMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 
 export function useRemoveFromCart() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (itemId: string) => api.delete<Cart>(`/cart/items/${itemId}`),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.cart.all });
-      toast.success("Item removed");
-    },
-    onError: (error) => toast.error(handleApiError(error)),
-  });
+  const [trigger, { isLoading }] = useRemoveFromCartMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 
 export function useUpdateCartItem() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: ({ itemId, quantity }: { itemId: string; quantity: number }) =>
-      api.patch<Cart>(`/cart/items/${itemId}`, { quantity }),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.cart.all });
-      toast.success("Quantity updated");
-    },
-    onError: (error) => toast.error(handleApiError(error)),
-  });
+  const [trigger, { isLoading }] = useUpdateCartItemMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 
 export function useClearCart() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: () => api.delete("/cart"),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.cart.all });
-      toast.success("Cart cleared");
-    },
-    onError: (error) => toast.error(handleApiError(error)),
-  });
+  const [trigger, { isLoading }] = useClearCartMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }

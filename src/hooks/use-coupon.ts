@@ -1,36 +1,20 @@
 "use client";
 
-import { api } from "@/lib/api-client";
-import { queryKeys } from "@/lib/query-keys";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useApplyCouponMutation, useRemoveCouponMutation } from "@/store/api/slices/coupon-api";
+import { useSelectAddressMutation } from "@/store/api/slices/addresses-api";
+import { createMutationWrapper } from "@/store/api/mutation-wrapper";
 
 export function useApplyCoupon() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (code: string) => api.post("/cart/checkout/apply-coupon", { couponCode: code }),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.cart.all });
-    },
-  });
+  const [trigger, { isLoading }] = useApplyCouponMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 
 export function useSelectAddress() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (addressId: string) =>
-      api.post("/cart/checkout/select-address", { addressId }),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.cart.all });
-    },
-  });
+  const [trigger, { isLoading }] = useSelectAddressMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 
 export function useRemoveCoupon() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: () => api.delete("/cart/checkout/remove-coupon"),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.cart.all });
-    },
-  });
+  const [trigger, { isLoading }] = useRemoveCouponMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }

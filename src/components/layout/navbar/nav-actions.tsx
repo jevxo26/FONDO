@@ -12,8 +12,6 @@ import { ROLE_DASHBOARD } from "@/data/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { useCart } from "@/hooks/use-cart";
 import { useFavorites } from "@/hooks/use-favorites";
-import { getToken } from "@/lib/token";
-import { fetchMe } from "@/store/slices/authSlice";
 import { toggleMobileMenu } from "@/store/slices/uiSlice";
 import { useAppDispatch } from "@/store/store";
 import {
@@ -28,7 +26,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { toast } from "sonner";
 
 export function NavActions() {
@@ -40,13 +37,6 @@ export function NavActions() {
 
   const cartCount = cart?.items?.reduce((sum, i) => sum + i.quantity, 0) ?? 0;
   const favoritesCount = favorites?.length ?? 0;
-
-  useEffect(() => {
-    const token = getToken();
-    if (token && !isAuthenticated && !loading) {
-      dispatch(fetchMe());
-    }
-  }, [dispatch, isAuthenticated, loading]);
 
   const handleLogout = async () => {
     try {

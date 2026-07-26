@@ -1659,9 +1659,9 @@ model Package {
   packageCode    String   @unique
   name           String
   slug           String   @unique
-  description    String?
-  thumbnail      String?
-  coverImage     String?
+  description    String
+  thumbnail      String
+  coverImage     String
   packageType    String
   durationDays   Int
   totalMeals     Int

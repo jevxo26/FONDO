@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// ১. সকল প্যাকেজ লিস্ট (ফিল্টারিংসহ)
+// Package list with filtering.
 const getAllPackages = async (query: any) => {
   const { categoryId, packageType, search } = query;
   return await prisma.package.findMany({
@@ -21,7 +21,7 @@ const getAllPackages = async (query: any) => {
   });
 };
 
-// ২. নির্দিষ্ট প্যাকেজ ডিটেইলস (সব সম্পর্কসহ)
+// Package details with all related information.
 const getPackageById = async (id: string) => {
   return await prisma.package.findUnique({
     where: { id },
@@ -49,18 +49,15 @@ const getPackageById = async (id: string) => {
   });
 };
 
-// ৩. নতুন প্যাকেজ তৈরি (ভেন্ডরের জন্য)
 const createVendorPackage = async (vendorId: string, data: any) => {
-  // ডেটার ভেতরে প্রয়োজনীয় ফিল্ড ম্যাপ করে প্যাকেজ তৈরি করা হচ্ছে
   return await prisma.package.create({
     data: {
       ...data,
-      // আপনার স্কিমা অনুযায়ী যদি ভেন্ডর আইডি প্যাকেজে রাখতে হয় তবে এখানে যুক্ত করতে পারেন
+      // If your schema stores the vendor ID in the package, include it here.
     },
   });
 };
 
-// ৪. ইউজার কর্তৃক কাস্টম মিল প্ল্যান রিকোয়েস্ট তৈরি (পেন্ডিং স্ট্যাটাসসহ)
 const createCustomMealRequest = async (customerId: string, data: any) => {
   const { packageId, name, totalDays, totalPrice, days } = data;
 
@@ -98,7 +95,6 @@ const createCustomMealRequest = async (customerId: string, data: any) => {
   });
 };
 
-// ৫. ভেন্ডরের জন্য পেন্ডিং কাস্টম রিকোয়েস্টগুলো দেখানো (স্ট্যাটাস ও কাস্টমার ডিটেইলসহ)
 const getPendingCustomRequests = async () => {
   return await prisma.customMealPlan.findMany({
     where: {
@@ -113,9 +109,8 @@ const getPendingCustomRequests = async () => {
   });
 };
 
-// ৬. ভেন্ডর কর্তৃক কাস্টম রিকোয়েস্ট এক্সেপ্ট/অ্যাপ্রুভ করা এবং ইউজারের কাছে নোটিফিকেশন পাঠানো
 const vendorAcceptCustomRequest = async (planId: string, vendorId: string) => {
-  const plan = await prisma.customMealPlan.findUnique({ 
+  const plan = await prisma.customMealPlan.findUnique({
     where: { id: planId },
     include: { customer: true }
   });
@@ -123,7 +118,6 @@ const vendorAcceptCustomRequest = async (planId: string, vendorId: string) => {
   if (!plan) throw new Error('Custom meal plan not found');
   if (plan.acceptedByVendorId) throw new Error('This request has already been accepted by another vendor');
 
-  // কাস্টম প্ল্যান স্ট্যাটাস আপডেট করা
   const updatedPlan = await prisma.customMealPlan.update({
     where: { id: planId },
     data: {
@@ -132,20 +126,20 @@ const vendorAcceptCustomRequest = async (planId: string, vendorId: string) => {
     },
   });
 
-  // ইউজারের কাছে নোটিফিকেশন পাঠানো
+  // TO REVIEW
   await prisma.notification.create({
     data: {
       userId: plan.customerId,
       title: 'Custom Meal Plan Approved!',
       message: `Your custom meal plan "${plan.name}" has been approved by the vendor. You can proceed to payment.`,
-      type: 'ORDER', 
+      type: 'ORDER',
     },
   });
 
   return updatedPlan;
 };
 
-// ৭. ভেন্ডর অ্যাক্সেপ্ট করার পর ইউজারের পেমেন্ট ও অর্ডার কনফার্মেশন
+// Order confirm after confirm
 const confirmCustomOrderPayment = async (planId: string) => {
   const plan = await prisma.customMealPlan.findUnique({ where: { id: planId } });
 
@@ -161,6 +155,19 @@ const confirmCustomOrderPayment = async (planId: string) => {
   });
 };
 
+// admin or vendor
+const createPackageCategory = async (data: any) => {
+  return await prisma.packageCategory.create({
+    data,
+  });
+};
+
+const getAllCategories = async () => {
+  return await prisma.packageCategory.findMany({
+    where: { status: 'active' },
+  });
+};
+
 export const PackageService = {
   getAllPackages,
   getPackageById,
@@ -169,4 +176,6 @@ export const PackageService = {
   getPendingCustomRequests,
   vendorAcceptCustomRequest,
   confirmCustomOrderPayment,
+  createPackageCategory,
+  getAllCategories
 };

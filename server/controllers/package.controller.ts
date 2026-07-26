@@ -21,7 +21,7 @@ const getPackageDetails = async (req: Request, res: Response): Promise<Response>
   }
 };
 
-// ভেন্ডর কর্তৃক নতুন প্যাকেজ তৈরি
+// New package created by vendor
 const createPackage = async (req: any, res: Response): Promise<Response> => {
   try {
     const vendorId = req.user.id;
@@ -32,7 +32,7 @@ const createPackage = async (req: any, res: Response): Promise<Response> => {
   }
 };
 
-// ইউজার কর্তৃক কাস্টম মিল প্ল্যান রিকোয়েস্ট তৈরি (পেন্ডিং স্ট্যাটাসসহ)
+// Custom package create by user
 const createCustomRequest = async (req: any, res: Response): Promise<Response> => {
   try {
     const customerId = req.user.id;
@@ -43,7 +43,7 @@ const createCustomRequest = async (req: any, res: Response): Promise<Response> =
   }
 };
 
-// ভেন্ডরের জন্য পেন্ডিং কাস্টম রিকোয়েস্টগুলো দেখানো (স্ট্যাটাসসহ)
+// get package for vendor with status
 const getVendorOpenRequests = async (req: Request, res: Response): Promise<Response> => {
   try {
     const requests = await PackageService.getPendingCustomRequests();
@@ -53,7 +53,7 @@ const getVendorOpenRequests = async (req: Request, res: Response): Promise<Respo
   }
 };
 
-// ভেন্ডর কর্তৃক কাস্টম রিকোয়েস্ট অ্যাপ্রুভ (অ্যাপ্রুভ করার পর ইউজারে নোটিফিকেশন পাঠানো)
+// Vendor approved the custom request (send a notification to the user after approval)
 const acceptCustomRequest = async (req: any, res: Response): Promise<Response> => {
   try {
     const vendorId = req.user.id;
@@ -75,6 +75,24 @@ const payForCustomOrder = async (req: Request, res: Response): Promise<Response>
   }
 };
 
+const createCategory = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const result = await PackageService.createPackageCategory(req.body);
+    return res.status(201).json({ success: true, message: 'Package category created successfully', data: result });
+  } catch (error: any) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getCategories = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const result = await PackageService.getAllCategories();
+    return res.status(200).json({ success: true, data: result });
+  } catch (error: any) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 export const PackageController = {
   getPackages,
   getPackageDetails,
@@ -83,4 +101,6 @@ export const PackageController = {
   getVendorOpenRequests,
   acceptCustomRequest,
   payForCustomOrder,
+  createCategory,
+  getCategories
 };

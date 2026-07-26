@@ -1,6 +1,6 @@
 // Location: src/components/packages/packages-hero.tsx
 import { Search } from "lucide-react";
-import { usePackages } from "./packages-provider";
+import { usePackages } from "./packages-context";
 
 export default function PackagesHero() {
   const { searchQuery, setSearchQuery } = usePackages();

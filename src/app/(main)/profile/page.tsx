@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { OrderHistory, WalletBalance } from "@/components/profile/activity-finance";
-import { AddressManager, DeviceRegistry, LoginHistoryTable } from "@/components/profile/adress-manager";
+import { AddressManager } from "@/components/profile/address-manager";
+import { LoginHistoryTable } from "@/components/profile/login-history-table";
+import { DeviceRegistry } from "@/components/profile/device-registry";
 import { ChangePasswordForm, PersonalInfoForm } from "@/components/profile/personal-info-form";
 import { ProfileSidebar } from "@/components/profile/profile-sidebar";
 import FavoritesList from "@/components/profile/favorites-list";

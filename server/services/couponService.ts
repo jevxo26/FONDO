@@ -2,35 +2,10 @@ import type { DiscountType } from "@prisma/client";
 import prisma from "../lib/prisma";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
-import { paginate } from "../utils/pagination";
 
-export const listCoupons = catchServiceAsync(
-  async ({
-    page = 1,
-    limit = 20,
-    search,
-    status,
-    discountType,
-  }: {
-    page?: number;
-    limit?: number;
-    search?: string;
-    status?: string;
-    discountType?: string;
-  }) => {
-    const where: Record<string, unknown> = {};
-    if (search) {
-      where.OR = [
-        { couponCode: { contains: search, mode: "insensitive" } },
-        { title: { contains: search, mode: "insensitive" } },
-      ];
-    }
-    if (status) where.status = status;
-    if (discountType) where.discountType = discountType;
-
-    return paginate(prisma.coupon, { where, orderBy: { createdAt: "desc" } }, page, limit);
-  },
-);
+export const listCoupons = catchServiceAsync(async () => {
+  return prisma.coupon.findMany({ where: {}, orderBy: { createdAt: "desc" } });
+});
 
 export const getCouponById = catchServiceAsync(async (id: string) => {
   const coupon = await prisma.coupon.findUnique({ where: { id } });

@@ -1,7 +1,8 @@
 import { ProductHero } from "@/components/foods/single-foods/product-hero";
 import { ProductTabs } from "@/components/foods/single-foods/product-tab";
 import { RelatedFoods } from "@/components/foods/single-foods/related-foods";
-import { getFoodBySlug, getFoods } from "@/services/foods";
+import { apiFetch } from "@/lib/api";
+import type { Food } from "@/types/food";
 import { notFound } from "next/navigation";
 
 interface PageProps {
@@ -14,8 +15,8 @@ export default async function FoodDetails({ params }: PageProps) {
   const { slug } = await params;
 
   try {
-    const food = await getFoodBySlug(slug);
-    const related = await getFoods(1, 5, "popularity");
+    const food = await apiFetch<Food>(`/api/foods/slug/${slug}`);
+    const related = await apiFetch<{ items: Food[] }>("/api/foods?page=1&limit=5&sortBy=popularity");
 
     const relatedFoods = related.items
       .filter((f) => f.slug !== slug)

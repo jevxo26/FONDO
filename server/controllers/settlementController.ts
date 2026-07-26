@@ -13,17 +13,13 @@ export const SettlementController = {
 
   listVendorWalletTransactions: catchAsync(async (req: AuthRequest, res: Response) => {
     const vendorId = req.params.vendorId as string;
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
-    const result = await settlementService.listVendorWalletTransactions(vendorId, page, limit);
+    const result = await settlementService.listVendorWalletTransactions(vendorId);
     sendResponse(res, { statusCode: 200, data: result });
   }),
 
   listVendorSettlements: catchAsync(async (req: AuthRequest, res: Response) => {
     const vendorId = req.params.vendorId as string;
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
-    const result = await settlementService.listVendorSettlements(vendorId, page, limit);
+    const result = await settlementService.listVendorSettlements(vendorId);
     sendResponse(res, { statusCode: 200, data: result });
   }),
 

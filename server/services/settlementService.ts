@@ -1,7 +1,6 @@
 import prisma from "../lib/prisma";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
-import { paginate } from "../utils/pagination";
 
 export const getVendorWallet = catchServiceAsync(async (vendorId: string) => {
   let wallet = await prisma.vendorWallet.findUnique({ where: { vendorId } });
@@ -13,15 +12,15 @@ export const getVendorWallet = catchServiceAsync(async (vendorId: string) => {
   return wallet;
 });
 
-export const listVendorWalletTransactions = catchServiceAsync(async (vendorId: string, page = 1, limit = 20) => {
+export const listVendorWalletTransactions = catchServiceAsync(async (vendorId: string) => {
   const wallet = await prisma.vendorWallet.findUnique({ where: { vendorId } });
   if (!wallet) throw new AppError(404, "Vendor wallet not found");
 
-  return paginate(prisma.vendorWalletTransaction, { where: { walletId: wallet.id }, orderBy: { createdAt: "desc" } }, page, limit);
+  return prisma.vendorWalletTransaction.findMany({ where: { walletId: wallet.id }, orderBy: { createdAt: "desc" } });
 });
 
-export const listVendorSettlements = catchServiceAsync(async (vendorId: string, page = 1, limit = 20) => {
-  return paginate(prisma.vendorSettlement, { where: { vendorId }, orderBy: { createdAt: "desc" } }, page, limit);
+export const listVendorSettlements = catchServiceAsync(async (vendorId: string) => {
+  return prisma.vendorSettlement.findMany({ where: { vendorId }, orderBy: { createdAt: "desc" } });
 });
 
 export const getSettlementDetail = catchServiceAsync(async (settlementId: string) => {

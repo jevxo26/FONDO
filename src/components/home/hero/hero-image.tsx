@@ -51,7 +51,7 @@ export function HeroImage({ foods }: HeroImageProps) {
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/20 to-primary/5" />
                 <div className="absolute inset-0 overflow-hidden rounded-3xl">
                   <Image
-                    src={food.thumbnail}
+                    src={food.thumbnail!}
                     alt={food.name}
                     fill
                     sizes="(max-width: 1024px) 100vw, 681px"
@@ -77,7 +77,7 @@ export function HeroImage({ foods }: HeroImageProps) {
                     <Timer className="size-4 text-primary" />
                   </div>
                   <span className="inline-flex items-center gap-1 font-sans text-xs font-semibold leading-snug text-foreground">
-                    {food.preparationTime} min &middot; {food.rating.averageRating}
+                    {food.preparationTime ?? 0} min &middot; {food.rating.averageRating}
                     <Star className="size-3 fill-foreground flex items-center" />
                   </span>
                 </div>

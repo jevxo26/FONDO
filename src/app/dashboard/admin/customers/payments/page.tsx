@@ -10,11 +10,8 @@ import { DataTableColumnHeader } from "@/components/common/table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { PaymentStatusBadge } from "@/components/dashboard/admin/customers/payments/payment-status-badge";
 import { CustomerSearch } from "@/components/dashboard/admin/customers/common/customer-search";
-import {
-  useAdminCustomerPayments,
-  type AdminPayment,
-  type AdminCustomer,
-} from "@/hooks/use-admin-customers";
+import { useAdminCustomerPayments } from "@/hooks/use-admin-customers";
+import type { AdminPayment, AdminCustomer } from "@/types/admin";
 
 const paymentColumns: ColumnDef<AdminPayment>[] = [
   {
@@ -71,10 +68,9 @@ export default function PaymentsPage() {
 
   const { data, isLoading } = useAdminCustomerPayments(
     selectedCustomer?.id ?? "",
-    { page: 1, limit: 50 },
   );
 
-  const payments = data?.items ?? [];
+  const payments = data ?? [];
   const total = payments.length;
   const completed = payments.filter((p) => p.status === "COMPLETED").length;
   const failed = payments.filter((p) => p.status === "FAILED").length;

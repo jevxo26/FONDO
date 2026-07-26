@@ -1,11 +1,12 @@
-export const catchServiceAsync = <T extends (...args: any[]) => Promise<any>>(fn: T): T => {
-  return (async (...args: Parameters<T>) => {
+export const catchServiceAsync = <TArgs extends unknown[], TReturn>(
+  fn: (...args: TArgs) => Promise<TReturn>,
+): ((...args: TArgs) => Promise<TReturn>) => {
+  return async (...args: TArgs) => {
     try {
       return await fn(...args);
     } catch (error) {
-      // এখানে আপনি চাইলে সার্ভিসের এররগুলো লগ করে রাখতে পারেন বা কাস্টমাইজ করতে পারেন
       console.error("Service Layer Error:", error);
-      throw error; // Controller-এর catchAsync যেন এটাকে ধরতে পারে তাই থ্রো করা হলো
+      throw error;
     }
-  }) as T;
+  };
 };

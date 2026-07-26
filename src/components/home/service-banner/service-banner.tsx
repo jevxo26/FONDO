@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
 import { SectionReveal } from "@/components/common/section-reveal";
+import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export function ServiceBanner() {
   return (
-    <section>
+    <section className="py-6 lg:py-10">
       <div className="wrapper">
         <div className="relative flex min-h-[250px] overflow-hidden rounded-3xl md:min-h-[383px]">
           <Image

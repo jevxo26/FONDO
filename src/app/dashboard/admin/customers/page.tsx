@@ -35,9 +35,9 @@ export default function CustomersPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
 
-  const { data } = useAdminCustomers({ limit: 100 });
+  const { data } = useAdminCustomers();
 
-  const allCustomers = data?.items ?? [];
+  const allCustomers = data ?? [];
 
   const filtered = useMemo(() => {
     let list = allCustomers;

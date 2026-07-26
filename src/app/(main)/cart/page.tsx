@@ -2,31 +2,25 @@
 
 import { CartItemCard } from "@/components/carts/cart-item-card";
 import { OrderSummary } from "@/components/carts/order-summary";
+import { SectionReveal } from "@/components/common/section-reveal";
 import { Button } from "@/components/ui/button";
 import { useCart, useClearCart, useRemoveFromCart, useUpdateCartItem } from "@/hooks/use-cart";
-import { handleApiError } from "@/lib/api-error";
-import { setCartCount } from "@/store/slices/counterSlice";
 import { useAppDispatch } from "@/store/store";
-import type { CartItem as CartItemType } from "@/types/cart";
-import { Loader2, Trash2 } from "lucide-react";
+import { handleApiError } from "@/lib/api-error";
+import { Loader2, ShoppingCart, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import type { CartItem as CartItemType } from "@/types/cart";
 
 export default function CartPageView() {
+  const dispatch = useAppDispatch();
   const { data: cart, isLoading, error } = useCart();
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveFromCart();
   const clearCart = useClearCart();
-  const dispatch = useAppDispatch();
 
   const [qtyUpdatingIds, setQtyUpdatingIds] = useState<Set<string>>(new Set());
   const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    if (cart?.items) {
-      dispatch(setCartCount(cart.items.reduce((sum, i) => sum + i.quantity, 0)));
-    }
-  }, [cart, dispatch]);
 
   const handleUpdateQuantity = (id: string, newQty: number) => {
     if (newQty < 1) {
@@ -69,7 +63,7 @@ export default function CartPageView() {
 
   if (isLoading && !cart) {
     return (
-      <main className="flex-1 py-12">
+      <main className="flex-1 py-8 lg:py-12">
         <div className="wrapper flex items-center justify-center min-h-[40vh]">
           <Loader2 className="size-6 animate-spin text-muted-foreground" />
         </div>
@@ -79,15 +73,14 @@ export default function CartPageView() {
 
   if (error) {
     return (
-      <main className="flex-1 py-12">
+      <main className="flex-1 py-8 lg:py-12">
         <div className="wrapper">
-          <div className="py-16 text-center border border-dashed border-border rounded-[32px] bg-white dark:bg-card">
-            <p className="font-sans text-sm text-red-600">{handleApiError(error)}</p>
-            <Link
-              href="/foods"
-              className="mt-4 inline-flex h-10 items-center rounded-xl bg-primary px-5 font-sans text-xs font-semibold text-primary-foreground"
-            >
-              Return to Menu
+          <div className="py-16 text-center border border-dashed border-border rounded-3xl bg-card">
+            <p className="font-sans text-sm text-destructive">{handleApiError(error)}</p>
+            <Link href="/foods">
+              <Button variant="default" className="mt-4 rounded-xl">
+                Return to Menu
+              </Button>
             </Link>
           </div>
         </div>
@@ -95,21 +88,14 @@ export default function CartPageView() {
     );
   }
 
-  const items: CartItemType[] = (cart?.items ?? []).map((item) => ({
-    id: item.id,
-    title: item.food.name,
-    price: Number(item.unitPrice),
-    quantity: item.quantity,
-    thumbnail: item.food.thumbnail ?? "",
-    itemsSold: 0,
-  }));
+  const items: CartItemType[] = cart?.items ?? [];
 
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
   const subtotalValue = Number(cart?.subtotal ?? 0);
   const deliveryCost = Number(cart?.deliveryCharge ?? 0);
 
   return (
-    <main className="flex-1 py-12">
+    <main className="flex-1 py-8 lg:py-12">
       <div className="wrapper">
         <div className="mb-8 flex items-center justify-between">
           <div>
@@ -136,7 +122,7 @@ export default function CartPageView() {
 
         {items.length > 0 ? (
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-start">
-            <div className="flex flex-col gap-4 lg:col-span-8">
+            <SectionReveal className="flex flex-col gap-4 lg:col-span-8">
               {items.map((item) => (
                 <CartItemCard
                   key={item.id}
@@ -147,7 +133,7 @@ export default function CartPageView() {
                   isDeleting={deletingIds.has(item.id)}
                 />
               ))}
-            </div>
+            </SectionReveal>
 
             <div className="lg:col-span-4 lg:sticky lg:top-24">
               <OrderSummary
@@ -156,22 +142,21 @@ export default function CartPageView() {
                 deliveryCharges={deliveryCost || "free"}
               />
 
-              <Link
-                href="/foods"
-                className="mt-4 flex w-full h-11 items-center justify-center rounded-full bg-white border border-border font-sans text-xs font-semibold text-secondary-foreground transition-colors hover:bg-muted"
-              >
-                Continue shopping
+              <Link href="/foods">
+                <Button variant="outline" className="mt-4 w-full h-11 rounded-full">
+                  Continue shopping
+                </Button>
               </Link>
             </div>
           </div>
         ) : (
-          <div className="py-16 text-center border border-dashed border-border rounded-[32px] bg-white dark:bg-card">
+          <div className="py-16 text-center border border-dashed border-border rounded-3xl bg-card">
+            <ShoppingCart className="size-8 mx-auto mb-3 text-muted-foreground" />
             <p className="font-sans text-sm text-muted-foreground">Your active cart is empty.</p>
-            <Link
-              href="/foods"
-              className="mt-4 inline-flex h-10 items-center rounded-xl bg-primary px-5 font-sans text-xs font-semibold text-primary-foreground"
-            >
-              Return to Menu
+            <Link href="/foods">
+              <Button variant="default" className="mt-4 rounded-xl">
+                Return to Menu
+              </Button>
             </Link>
           </div>
         )}

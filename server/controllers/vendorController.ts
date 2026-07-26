@@ -3,18 +3,9 @@ import { catchAsync } from "../utils/catchAsync";
 import { sendResponse } from "../utils/sendResponse";
 import { VendorService } from "../services/vendorService";
 import { VendorStatus, VerificationStatus } from "@prisma/client";
-import prisma from "../lib/prisma";
 
 // Core System Controls
 const createVendor = catchAsync(async (req: Request, res: Response) => {
-  const { phone, email, tradeLicenseNumber, tinNumber, binNumber } = req.body;
-  const targetChecks = [phone && { phone }, email && { email }, tradeLicenseNumber && { tradeLicenseNumber }, tinNumber && { tinNumber }, binNumber && { binNumber }].filter(Boolean) as any[];
-
-  if (targetChecks.length > 0) {
-    const duplicate = await prisma.vendor.findFirst({ where: { OR: targetChecks } });
-    if (duplicate) return sendResponse(res, { statusCode: 400, message: "Some data is already in use" });
-  }
-
   const result = await VendorService.createVendor(req.body);
   sendResponse(res, { statusCode: 201, message: "Vendor created", data: result });
 });

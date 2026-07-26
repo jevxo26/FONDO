@@ -33,15 +33,16 @@ export const getSummary = catchServiceAsync(async (cartId: string) => {
     }
   }
 
-    const addresses = await prisma.userAddress.findMany({
+  const [addresses, paymentMethods] = await Promise.all([
+    prisma.userAddress.findMany({
       where: { userId: cart.customerId, deletedAt: null },
       select: { id: true, label: true, area: true, district: true, division: true, road: true, house: true, isDefault: true },
-    });
-
-    const paymentMethods = await prisma.paymentMethod.findMany({
+    }),
+    prisma.paymentMethod.findMany({
       where: { isActive: true },
       select: { id: true, name: true, logo: true, isDefault: true },
-    });
+    }),
+  ]);
 
   return {
     subtotal: Number(cart.subtotal),
@@ -123,10 +124,10 @@ export const selectAddress = catchServiceAsync(async (cartId: string, addressId:
 export const placeOrder = catchServiceAsync(
   async (
     cartId: string,
-    addressId: string,
     paymentMethodId: string,
     customerId: string,
     notes?: string,
+    addressId?: string,
     deliverySchedule?: { deliveryDate: Date; deliverySlot?: string },
   ) => {
     const cart = await prisma.cart.findUnique({
@@ -139,11 +140,13 @@ export const placeOrder = catchServiceAsync(
       throw new AppError(400, "Cart is empty");
     }
 
-    const address = await prisma.userAddress.findFirst({
-      where: { id: addressId, userId: customerId, deletedAt: null },
-    });
-    if (!address) throw new AppError(404, "Address not found");
+    if (addressId) {
+      const address = await prisma.userAddress.findFirst({
+        where: { id: addressId, userId: customerId, deletedAt: null },
+      });
+      if (!address) throw new AppError(404, "Address not found");
+    }
 
-    return createOrderFromCart(cart, addressId, paymentMethodId, customerId, notes, deliverySchedule);
+    return createOrderFromCart(cart, paymentMethodId, customerId, notes, addressId, deliverySchedule);
   },
 );

@@ -30,7 +30,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5EFE6] flex items-center justify-center py-10 px-4">
+    <div className="min-h-screen bg-background flex items-center justify-center py-10 px-4">
       <CoreLayoutWrapper currentStep={1}>
         <RegistrationForm onSubmit={onRegisterSubmit} loading={loading} />
       </CoreLayoutWrapper>

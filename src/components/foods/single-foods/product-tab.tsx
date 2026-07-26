@@ -14,7 +14,7 @@ export function ProductTabs({ food }: { food: Food }) {
   const allReviews = data?.items ?? [];
 
   const tabTriggerClass =
-    "rounded-xl bg-white border border-border text-muted-foreground " +
+    "rounded-xl bg-card border border-border text-muted-foreground " +
     "data-active:bg-primary data-active:text-primary-foreground data-active:border-primary data-active:shadow-sm " +
     "h-auto py-2.5 px-2 sm:py-3 sm:px-4 text-xs sm:text-sm font-medium whitespace-nowrap";
 
@@ -38,21 +38,21 @@ export function ProductTabs({ food }: { food: Food }) {
 
           <TabsContent
             value="details"
-            className="mt-4 sm:mt-6 rounded-2xl sm:rounded-3xl border border-border/60 bg-white p-4 sm:p-6 shadow-[var(--shadow-card)] dark:bg-card"
+            className="mt-4 sm:mt-6 rounded-2xl sm:rounded-3xl border border-border/60 bg-card p-4 sm:p-6 shadow-[var(--shadow-card)]"
           >
             <DescriptionTab food={food} />
           </TabsContent>
 
           <TabsContent
             value="reviews"
-            className="mt-4 sm:mt-6 rounded-2xl sm:rounded-3xl border border-border/60 bg-white p-4 sm:p-6 shadow-[var(--shadow-card)] dark:bg-card"
+            className="mt-4 sm:mt-6 rounded-2xl sm:rounded-3xl border border-border/60 bg-card p-4 sm:p-6 shadow-[var(--shadow-card)]"
           >
             <ReviewsTab foodId={food.id} allReviews={allReviews} />
           </TabsContent>
 
           <TabsContent
             value="qa"
-            className="mt-4 sm:mt-6 rounded-2xl sm:rounded-3xl border border-border/60 bg-white p-4 sm:p-6 shadow-[var(--shadow-card)] dark:bg-card"
+            className="mt-4 sm:mt-6 rounded-2xl sm:rounded-3xl border border-border/60 bg-card p-4 sm:p-6 shadow-[var(--shadow-card)]"
           >
             <QaTab />
           </TabsContent>

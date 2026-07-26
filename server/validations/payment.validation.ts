@@ -3,7 +3,7 @@ import * as yup from "yup";
 export const initiatePaymentSchema = yup.object({
   orderId: yup.string().uuid().required(),
   paymentMethodId: yup.string().uuid().optional(),
-  gatewayId: yup.string().uuid().optional(),
+  gatewayCode: yup.string().optional().default("sslcommerz"),
   amount: yup.number().positive().required(),
   currency: yup.string().optional().default("BDT"),
 });
@@ -17,7 +17,6 @@ export const confirmPaymentSchema = yup.object({
 
 export const retryPaymentSchema = yup.object({
   paymentMethodId: yup.string().uuid().optional(),
-  gatewayId: yup.string().uuid().optional(),
 });
 
 export const refundPaymentSchema = yup.object({

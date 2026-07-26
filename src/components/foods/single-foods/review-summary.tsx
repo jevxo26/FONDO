@@ -47,10 +47,10 @@ export default function ReviewSummary({ foodId, reviews }: ReviewSummaryProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center border-b border-[#16100C]/10 pb-8 bg-[#FAF5EB]/30 p-6 rounded-2xl">
+    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center border-b border-border/10 pb-8 bg-background/30 p-6 rounded-2xl">
       {/* Left Column: Average Matrix */}
-      <div className="md:col-span-4 flex flex-col items-center justify-center text-center md:border-r border-[#16100C]/10 py-4">
-        <h2 className="font-fraunces text-6xl font-normal text-[#16100C]">
+      <div className="md:col-span-4 flex flex-col items-center justify-center text-center md:border-r border-border/10 py-4">
+        <h2 className="font-heading text-6xl font-normal text-foreground">
           {ratingData.averageRating.toFixed(1)}
         </h2>
         <div className="flex items-center gap-0.5 mt-3">
@@ -59,12 +59,12 @@ export default function ReviewSummary({ foodId, reviews }: ReviewSummaryProps) {
             return (
               <Star
                 key={index}
-                className={`size-4 ${isFilled ? "fill-[#CEA359] text-[#CEA359]" : "text-[#16100C]/15"}`}
+                className={`size-4 ${isFilled ? "fill-primary text-primary" : "text-foreground/15"}`}
               />
             );
           })}
         </div>
-        <span className="text-[11px] font-sans tracking-wider uppercase font-medium text-[#16100C]/50 mt-3">
+        <span className="text-[11px] font-sans tracking-wider uppercase font-medium text-muted-foreground mt-3">
           {ratingData.totalReview.toLocaleString()} Verified Reviews
         </span>
       </div>
@@ -72,16 +72,16 @@ export default function ReviewSummary({ foodId, reviews }: ReviewSummaryProps) {
       {/* Right Column: Progress Bars */}
       <div className="md:col-span-8 flex flex-col gap-2.5">
         {ratingRows.map((row) => (
-          <div key={row.star} className="flex items-center gap-4 text-xs font-sans text-[#16100C]/70">
+          <div key={row.star} className="flex items-center gap-4 text-xs font-sans text-muted-foreground">
             <span className="w-3 font-bold">{row.star}</span>
-            <Star className="size-3.5 fill-[#CEA359] text-[#CEA359] shrink-0" />
-            <div className="flex-1 h-1.5 bg-[#16100C]/5 rounded-full overflow-hidden">
+            <Star className="size-3.5 fill-primary text-primary shrink-0" />
+            <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
               <div
-                className="h-full bg-[#CEA359] rounded-full transition-all duration-500"
+                className="h-full bg-primary rounded-full transition-all duration-500"
                 style={{ width: `${getPercentage(row.count)}%` }}
               />
             </div>
-            <span className="w-8 text-right text-[11px] font-medium text-[#16100C]/40">
+            <span className="w-8 text-right text-[11px] font-medium text-muted-foreground">
               {row.count}
             </span>
           </div>

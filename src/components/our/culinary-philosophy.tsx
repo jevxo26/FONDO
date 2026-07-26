@@ -1,5 +1,4 @@
 // Location: src/components/our/story-philosophy.tsx
-"use client";
 
 import React from "react";
 import { Flame, Compass, Sprout, Sparkles } from "lucide-react";
@@ -7,7 +6,7 @@ import Image from "next/image";
 
 export default function CulinaryPhilosophy() {
   return (
-    <section className="py-[var(--space-section)] bg-background text-foreground border-b border-border/10">
+    <section className="py-[var(--space-section)] bg-background text-foreground border-b border-border/10 animate-fadeIn">
       <div className="wrapper space-y-12">
         
         {/* Centered Section Header */}

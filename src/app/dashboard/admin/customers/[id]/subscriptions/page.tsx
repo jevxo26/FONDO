@@ -5,10 +5,8 @@ import Link from "next/link";
 import { ArrowLeft, CreditCard, CheckCircle, PauseCircle, XCircle } from "lucide-react";
 import { DataTable } from "@/components/common/table";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import {
-  useAdminCustomerSubscriptions,
-  type AdminSubscription,
-} from "@/hooks/use-admin-customers";
+import { useAdminCustomerSubscriptions } from "@/hooks/use-admin-customers";
+import type { AdminSubscription } from "@/types/admin";
 import { DataTableColumnHeader } from "@/components/common/table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { SubscriptionStatusBadge } from "@/components/dashboard/admin/customers/subscriptions/subscription-status-badge";
@@ -58,9 +56,9 @@ const subscriptionColumns: ColumnDef<AdminSubscription>[] = [
 
 export default function CustomerSubscriptionsPage() {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = useAdminCustomerSubscriptions(id, { page: 1, limit: 50 });
+  const { data, isLoading } = useAdminCustomerSubscriptions(id);
 
-  const subscriptions = data?.items ?? [];
+  const subscriptions = data ?? [];
   const total = subscriptions.length;
   const active = subscriptions.filter((s) => s.status === "ACTIVE").length;
   const paused = subscriptions.filter((s) => s.status === "PAUSED").length;

@@ -36,10 +36,10 @@ export function useRequireAuth(redirectTo = "/login") {
 
   useEffect(() => {
     const token = getToken();
-    if (token && !isAuthenticated) {
+    if (token && !isAuthenticated && !loading) {
       dispatch(fetchMe());
     }
-  }, [dispatch, isAuthenticated]);
+  }, [dispatch, isAuthenticated, loading]);
 
   useEffect(() => {
     if (!loading && !isAuthenticated && !getToken()) {

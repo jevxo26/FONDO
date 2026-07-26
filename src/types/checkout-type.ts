@@ -1,15 +1,25 @@
 export type FulfillmentType = "delivery" | "pickup";
-export type PaymentMethodType = "online" | "bkash" | "nagad" | "cod";
+export type AddressLabel = "Home" | "Office" | "Other";
+
+export interface DeliverySchedule {
+  deliveryDate: Date;
+  deliverySlot: string;
+}
 
 export interface CheckoutFormData {
   fulfillment: FulfillmentType;
-  addressId?: string;
-  streetAddress: string;
-  city: string;
-  zipCode: string;
-  recipientName: string;
-  phoneNumber: string;
-  paymentMethod: PaymentMethodType;
-  orderNotes: string;
+  selectedAddressId?: string;
+  receiverName: string;
+  receiverPhone: string;
+  division: string;
+  district: string;
+  area: string;
+  road: string;
+  house?: string;
+  apartment?: string;
+  postalCode?: string;
+  paymentMethodId: string;
+  notes?: string;
   couponCode?: string;
+  deliverySchedule?: DeliverySchedule;
 }

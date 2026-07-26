@@ -6,10 +6,8 @@ import { ArrowLeft, CreditCard, CheckCircle, XCircle, Ban } from "lucide-react";
 import { DataTable } from "@/components/common/table";
 import { DataTableColumnHeader } from "@/components/common/table";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import {
-  useAdminCustomerPayments,
-  type AdminPayment,
-} from "@/hooks/use-admin-customers";
+import { useAdminCustomerPayments } from "@/hooks/use-admin-customers";
+import type { AdminPayment } from "@/types/admin";
 import type { ColumnDef } from "@tanstack/react-table";
 import { PaymentStatusBadge } from "@/components/dashboard/admin/customers/payments/payment-status-badge";
 
@@ -69,9 +67,9 @@ const paymentColumns: ColumnDef<AdminPayment>[] = [
 
 export default function CustomerPaymentsPage() {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = useAdminCustomerPayments(id, { page: 1, limit: 50 });
+  const { data, isLoading } = useAdminCustomerPayments(id);
 
-  const payments = data?.items ?? [];
+  const payments = data ?? [];
   const total = payments.length;
   const completed = payments.filter((p) => p.status === "COMPLETED").length;
   const failed = payments.filter((p) => p.status === "FAILED").length;

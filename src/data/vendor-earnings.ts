@@ -1,0 +1,192 @@
+// src/data/vendor-earnings.ts
+import type { VendorSettlement, VendorWalletTransaction } from "@/types/vendor";
+
+export const vendorSettlements: VendorSettlement[] = [
+  {
+    id: "stl-001",
+    settlementNumber: "STL-2024-001",
+    periodStart: "2024-01-01",
+    periodEnd: "2024-01-07",
+    totalOrders: 45,
+    grossAmount: 125000,
+    commissionAmount: 18750,
+    vatAmount: 2500,
+    adjustmentAmount: 0,
+    netAmount: 103750,
+    paymentStatus: "PAID",
+    paymentDate: "2024-01-10",
+    createdAt: "2024-01-08T00:00:00Z",
+    updatedAt: "2024-01-10T00:00:00Z",
+  },
+  {
+    id: "stl-002",
+    settlementNumber: "STL-2024-002",
+    periodStart: "2024-01-08",
+    periodEnd: "2024-01-14",
+    totalOrders: 52,
+    grossAmount: 148000,
+    commissionAmount: 22200,
+    vatAmount: 2960,
+    adjustmentAmount: -1000,
+    netAmount: 121840,
+    paymentStatus: "PAID",
+    paymentDate: "2024-01-17",
+    createdAt: "2024-01-15T00:00:00Z",
+    updatedAt: "2024-01-17T00:00:00Z",
+  },
+  {
+    id: "stl-003",
+    settlementNumber: "STL-2024-003",
+    periodStart: "2024-01-15",
+    periodEnd: "2024-01-21",
+    totalOrders: 38,
+    grossAmount: 98000,
+    commissionAmount: 14700,
+    vatAmount: 1960,
+    adjustmentAmount: 500,
+    netAmount: 81840,
+    paymentStatus: "PENDING",
+    paymentDate: null,
+    createdAt: "2024-01-22T00:00:00Z",
+    updatedAt: "2024-01-22T00:00:00Z",
+  },
+  {
+    id: "stl-004",
+    settlementNumber: "STL-2024-004",
+    periodStart: "2024-01-22",
+    periodEnd: "2024-01-28",
+    totalOrders: 41,
+    grossAmount: 112000,
+    commissionAmount: 16800,
+    vatAmount: 2240,
+    adjustmentAmount: 0,
+    netAmount: 92960,
+    paymentStatus: "PROCESSING",
+    paymentDate: null,
+    createdAt: "2024-01-29T00:00:00Z",
+    updatedAt: "2024-01-29T00:00:00Z",
+  },
+  {
+    id: "stl-005",
+    settlementNumber: "STL-2024-005",
+    periodStart: "2024-01-29",
+    periodEnd: "2024-02-04",
+    totalOrders: 55,
+    grossAmount: 165000,
+    commissionAmount: 24750,
+    vatAmount: 3300,
+    adjustmentAmount: -500,
+    netAmount: 136450,
+    paymentStatus: "PENDING",
+    paymentDate: null,
+    createdAt: "2024-02-05T00:00:00Z",
+    updatedAt: "2024-02-05T00:00:00Z",
+  },
+];
+
+export const vendorWalletTransactions: VendorWalletTransaction[] = [
+  {
+    id: "wtx-001",
+    walletId: "wal-001",
+    transactionType: "CREDIT",
+    amount: 103750,
+    balanceBefore: 0,
+    balanceAfter: 103750,
+    referenceType: "SETTLEMENT",
+    referenceId: "stl-001",
+    remarks: "Settlement STL-2024-001",
+    createdAt: "2024-01-10T00:00:00Z",
+  },
+  {
+    id: "wtx-002",
+    walletId: "wal-001",
+    transactionType: "DEBIT",
+    amount: 25000,
+    balanceBefore: 103750,
+    balanceAfter: 78750,
+    referenceType: "WITHDRAWAL",
+    referenceId: "wd-001",
+    remarks: "Withdrawal to bank account",
+    createdAt: "2024-01-12T00:00:00Z",
+  },
+  {
+    id: "wtx-003",
+    walletId: "wal-001",
+    transactionType: "CREDIT",
+    amount: 121840,
+    balanceBefore: 78750,
+    balanceAfter: 200590,
+    referenceType: "SETTLEMENT",
+    referenceId: "stl-002",
+    remarks: "Settlement STL-2024-002",
+    createdAt: "2024-01-17T00:00:00Z",
+  },
+  {
+    id: "wtx-004",
+    walletId: "wal-001",
+    transactionType: "DEBIT",
+    amount: 50000,
+    balanceBefore: 200590,
+    balanceAfter: 150590,
+    referenceType: "WITHDRAWAL",
+    referenceId: "wd-002",
+    remarks: "Withdrawal to bKash",
+    createdAt: "2024-01-20T00:00:00Z",
+  },
+  {
+    id: "wtx-005",
+    walletId: "wal-001",
+    transactionType: "CREDIT",
+    amount: 81840,
+    balanceBefore: 150590,
+    balanceAfter: 232430,
+    referenceType: "SETTLEMENT",
+    referenceId: "stl-003",
+    remarks: "Settlement STL-2024-003",
+    createdAt: "2024-01-22T00:00:00Z",
+  },
+  {
+    id: "wtx-006",
+    walletId: "wal-001",
+    transactionType: "ADJUSTMENT",
+    amount: 500,
+    balanceBefore: 232430,
+    balanceAfter: 232930,
+    referenceType: "ADJUSTMENT",
+    referenceId: "adj-001",
+    remarks: "Adjustment for late delivery compensation",
+    createdAt: "2024-01-25T00:00:00Z",
+  },
+];
+
+export const settlementStatuses = [
+  { value: "ALL", label: "All Status" },
+  { value: "PAID", label: "Paid" },
+  { value: "PROCESSING", label: "Processing" },
+  { value: "PENDING", label: "Pending" },
+];
+
+export const transactionTypes = [
+  { value: "ALL", label: "All Types" },
+  { value: "CREDIT", label: "Credit" },
+  { value: "DEBIT", label: "Debit" },
+  { value: "ADJUSTMENT", label: "Adjustment" },
+];
+
+export const getSettlementStatusBadge = (status: string) => {
+  const variants: Record<string, { label: string; className: string }> = {
+    PAID: { label: "Paid", className: "bg-success/10 text-success ring-success/20" },
+    PROCESSING: { label: "Processing", className: "bg-primary/10 text-primary ring-primary/20" },
+    PENDING: { label: "Pending", className: "bg-warning/10 text-warning ring-warning/20" },
+  };
+  return variants[status] || variants.PENDING;
+};
+
+export const getTransactionTypeBadge = (type: string) => {
+  const variants: Record<string, { label: string; className: string }> = {
+    CREDIT: { label: "Credit", className: "bg-success/10 text-success ring-success/20" },
+    DEBIT: { label: "Debit", className: "bg-destructive/10 text-destructive ring-destructive/20" },
+    ADJUSTMENT: { label: "Adjustment", className: "bg-primary/10 text-primary ring-primary/20" },
+  };
+  return variants[type] || variants.ADJUSTMENT;
+};

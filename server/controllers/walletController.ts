@@ -13,10 +13,7 @@ export const WalletController = {
 
   transactions: catchAsync(async (req: AuthRequest, res: Response) => {
     const customerId = req.user!.userId;
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
-    const type = req.query.type as string | undefined;
-    const result = await walletService.listTransactions(customerId, page, limit, type);
+    const result = await walletService.listTransactions(customerId);
     sendResponse(res, { statusCode: 200, data: result });
   }),
 

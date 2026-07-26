@@ -5,18 +5,16 @@ import Link from "next/link";
 import { ArrowLeft, ShoppingBag, CheckCircle, Clock, Timer, XCircle } from "lucide-react";
 import { DataTable } from "@/components/common/table";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import {
-  useAdminCustomerOrders,
-  type AdminCustomerOrder,
-} from "@/hooks/use-admin-customers";
+import { useAdminCustomerOrders } from "@/hooks/use-admin-customers";
+import type { AdminCustomerOrder } from "@/types/admin";
 import { orderColumns } from "@/components/dashboard/admin/customers/orders/order-columns";
 import { useMemo } from "react";
 
 export default function CustomerOrdersPage() {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = useAdminCustomerOrders(id, { page: 1, limit: 50 });
+  const { data, isLoading } = useAdminCustomerOrders(id);
 
-  const orders = data?.items ?? [];
+  const orders = data ?? [];
 
   const total = orders.length;
   const pending = orders.filter((o) => o.orderStatus === "PENDING").length;

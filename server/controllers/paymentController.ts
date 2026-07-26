@@ -66,13 +66,8 @@ export const PaymentController = {
   }),
 
   list: catchAsync(async (req: AuthRequest, res: Response) => {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
-    const status = req.query.status as string | undefined;
-    const customerId = req.user!.role === "CUSTOMER" ? req.user!.userId : (req.query.customerId as string | undefined);
-    const from = req.query.from as string | undefined;
-    const to = req.query.to as string | undefined;
-    const result = await paymentService.listPayments({ page, limit, status, customerId, from, to });
+    const customerId = req.user!.role === "CUSTOMER" ? req.user!.userId : undefined;
+    const result = await paymentService.listPayments(customerId);
     sendResponse(res, { statusCode: 200, data: result });
   }),
 

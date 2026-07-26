@@ -23,7 +23,7 @@ function PaymentSuccessContent() {
   return (
     <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
       <div className="w-full max-w-[540px] flex flex-col gap-6">
-        <div className="bg-card rounded-[32px] border border-border/40 p-8 text-center shadow-[var(--shadow-card)]">
+        <div className="bg-card rounded-3xl border border-border/40 p-8 text-center shadow-[var(--shadow-card)]">
           <div className="mx-auto size-16 bg-primary/10 rounded-full flex items-center justify-center mb-5">
             <Check className="size-8 text-primary stroke-[2.5]" />
           </div>
@@ -62,14 +62,14 @@ function PaymentSuccessContent() {
           <div className="flex flex-col gap-3 mb-6">
             <Link
               href="/track-order"
-              className="flex items-center justify-center gap-2 w-full h-12 rounded-full bg-[#16100C] text-white font-sans text-sm font-semibold transition-colors hover:bg-[#2C241E]"
+              className="flex items-center justify-center gap-2 w-full h-12 rounded-full bg-foreground text-background font-sans text-sm font-semibold transition-colors hover:bg-foreground/90"
             >
               <Package className="size-4 stroke-[2]" />
               Track Your Order
             </Link>
             <Link
               href="/foods"
-              className="flex items-center justify-center gap-2 w-full h-12 rounded-full bg-white border border-border text-foreground font-sans text-sm font-semibold transition-colors hover:bg-muted"
+              className="flex items-center justify-center gap-2 w-full h-12 rounded-full bg-background border border-border text-foreground font-sans text-sm font-semibold transition-colors hover:bg-muted"
             >
               <Home className="size-4 stroke-[2]" />
               Continue Shopping
@@ -96,15 +96,15 @@ function PaymentSuccessContent() {
             <p className="font-sans text-[11px] text-muted-foreground">Payment confirmed</p>
           </div>
           <div className="bg-card border border-border/40 rounded-2xl p-4 text-center shadow-[var(--shadow-card)]">
-            <div className="size-8 mx-auto flex items-center justify-center bg-amber-50 rounded-lg mb-1.5">
-              <Clock className="size-5 text-amber-500 stroke-[2]" />
+            <div className="size-8 mx-auto flex items-center justify-center bg-warning/10 rounded-lg mb-1.5">
+              <Clock className="size-5 text-warning stroke-[2]" />
             </div>
             <h4 className="font-sans text-sm font-bold text-foreground mb-0.5">Processing</h4>
             <p className="font-sans text-[11px] text-muted-foreground">Preparing your order</p>
           </div>
           <div className="bg-card border border-border/40 rounded-2xl p-4 text-center shadow-[var(--shadow-card)]">
-            <div className="size-8 mx-auto flex items-center justify-center bg-emerald-50 rounded-lg mb-1.5">
-              <Package className="size-5 text-emerald-500 stroke-[2]" />
+            <div className="size-8 mx-auto flex items-center justify-center bg-success/10 rounded-lg mb-1.5">
+              <Package className="size-5 text-success stroke-[2]" />
             </div>
             <h4 className="font-sans text-sm font-bold text-foreground mb-0.5">Delivered</h4>
             <p className="font-sans text-[11px] text-muted-foreground">Enjoy your food!</p>

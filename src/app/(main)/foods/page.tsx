@@ -11,7 +11,7 @@ export default function AllFoodsPage() {
   if(isLoading) return <FoodsLoading></FoodsLoading>
   return (
     <FoodsProvider>
-      <main className="min-h-screen bg-foreground text-black">
+      <main className="min-h-screen bg-background text-foreground">
         {/* Section 1: Advanced Search Top Panel View */}
         <FoodsHero />
         {/* Section 2: Core Matrix Database Feed Hub */}

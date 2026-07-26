@@ -113,10 +113,10 @@ export const CartController = {
     const { cartId, addressId, paymentMethodId, notes, deliverySchedule } = req.body;
     const result = await checkoutService.placeOrder(
       cartId,
-      addressId,
       paymentMethodId,
       req.user!.userId,
       notes,
+      addressId,
       deliverySchedule,
     );
     sendResponse(res, { statusCode: 201, data: result });

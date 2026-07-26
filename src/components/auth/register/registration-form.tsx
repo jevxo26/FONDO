@@ -37,8 +37,8 @@ export function RegistrationForm({ onSubmit, loading }: RegistrationFormProps) {
   return (
     <div className="flex flex-col gap-6 animate-fadeIn w-full max-w-md mx-auto">
       <div>
-        <h1 className="font-serif text-2xl text-[#1B0E08] mb-1">Create Account</h1>
-        <p className="text-xs text-[#1B0E08]/50">
+        <h1 className="font-heading text-2xl text-foreground mb-1">Create Account</h1>
+        <p className="text-xs text-muted-foreground">
           Please fill in your credentials to register into our community platform.
         </p>
       </div>
@@ -52,7 +52,7 @@ export function RegistrationForm({ onSubmit, loading }: RegistrationFormProps) {
               {...register("firstName")}
             />
             {errors.firstName?.message && (
-              <span className="text-[11px] text-red-600 font-sans mt-1 ml-1">
+              <span className="text-[11px] text-destructive font-sans mt-1 ml-1">
                 {String(errors.firstName.message)}
               </span>
             )}
@@ -64,7 +64,7 @@ export function RegistrationForm({ onSubmit, loading }: RegistrationFormProps) {
               {...register("lastName")}
             />
             {errors.lastName?.message && (
-              <span className="text-[11px] text-red-600 font-sans mt-1 ml-1">
+              <span className="text-[11px] text-destructive font-sans mt-1 ml-1">
                 {String(errors.lastName.message)}
               </span>
             )}
@@ -80,7 +80,7 @@ export function RegistrationForm({ onSubmit, loading }: RegistrationFormProps) {
             {...register("email")}
           />
           {errors.email?.message && (
-            <span className="text-[11px] text-red-600 font-sans mt-1 ml-1">
+            <span className="text-[11px] text-destructive font-sans mt-1 ml-1">
               {String(errors.email.message)}
             </span>
           )}
@@ -95,7 +95,7 @@ export function RegistrationForm({ onSubmit, loading }: RegistrationFormProps) {
             {...register("phone")}
           />
           {errors.phone?.message && (
-            <span className="text-[11px] text-red-600 font-sans mt-1 ml-1">
+            <span className="text-[11px] text-destructive font-sans mt-1 ml-1">
               {String(errors.phone.message)}
             </span>
           )}
@@ -111,7 +111,7 @@ export function RegistrationForm({ onSubmit, loading }: RegistrationFormProps) {
               <button
                 type="button"
                 onClick={() => setShowPass(!showPass)}
-                className="text-[#1B0E08]/40 hover:text-[#1B0E08] transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 {showPass ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
               </button>
@@ -119,7 +119,7 @@ export function RegistrationForm({ onSubmit, loading }: RegistrationFormProps) {
             {...register("password")}
           />
           {errors.password && (
-            <span className="text-[11px] text-red-600 font-sans mt-1 ml-1">
+            <span className="text-[11px] text-destructive font-sans mt-1 ml-1">
               {errors.password.message}
             </span>
           )}
@@ -135,7 +135,7 @@ export function RegistrationForm({ onSubmit, loading }: RegistrationFormProps) {
               <button
                 type="button"
                 onClick={() => setShowConfirmPass(!showConfirmPass)}
-                className="text-[#1B0E08]/40 hover:text-[#1B0E08] transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 {showConfirmPass ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
               </button>
@@ -143,7 +143,7 @@ export function RegistrationForm({ onSubmit, loading }: RegistrationFormProps) {
             {...register("confirmPassword")}
           />
           {errors.confirmPassword && (
-            <span className="text-[11px] text-red-600 font-sans mt-1 ml-1">
+            <span className="text-[11px] text-destructive font-sans mt-1 ml-1">
               {errors.confirmPassword.message}
             </span>
           )}
@@ -152,15 +152,15 @@ export function RegistrationForm({ onSubmit, loading }: RegistrationFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full h-11 bg-[#9C6B26] text-white rounded-xl text-xs font-bold mt-2 hover:bg-[#855B20] disabled:opacity-50 disabled:cursor-not-allowed transition-colors tracking-wider shadow-sm flex items-center justify-center gap-2"
+          className="w-full h-11 bg-primary text-primary-foreground rounded-xl text-xs font-bold mt-2 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors tracking-wider shadow-sm flex items-center justify-center gap-2"
         >
           {loading ? <Loader2 className="size-4 animate-spin" /> : null}
           {loading ? "Creating Account..." : "Register Account"}
         </button>
 
-        <p className="text-center font-sans text-[11px] text-[#1B0E08]/50 mt-2">
+        <p className="text-center font-sans text-[11px] text-muted-foreground mt-2">
           Already have an account?{" "}
-          <Link href="/login" className="text-[#9C6B26] font-bold hover:underline cursor-pointer">
+          <Link href="/login" className="text-primary font-bold hover:underline cursor-pointer">
             Sign In
           </Link>
         </p>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePackages } from './packages-provider';
+import { usePackages } from './packages-context';
 import PackageCard from './packages-card';
 
 const PackageGrid = () => {

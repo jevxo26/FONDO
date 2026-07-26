@@ -1,5 +1,6 @@
 import React from 'react';
-import { MealPackage, usePackages } from "./packages-provider";
+import { usePackages } from "./packages-context";
+import type { MealPackage } from "./packages-context";
 import { Check, Clock, Flame, Star, Utensils } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';

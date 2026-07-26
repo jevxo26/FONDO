@@ -4,7 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { Search, X, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useAdminCustomers, type AdminCustomer } from "@/hooks/use-admin-customers";
+import { useAdminCustomers } from "@/hooks/use-admin-customers";
+import type { AdminCustomer } from "@/types/admin";
 
 interface CustomerSearchProps {
   onSelect: (customer: AdminCustomer) => void;
@@ -22,12 +23,17 @@ export function CustomerSearch({
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { data } = useAdminCustomers({
-    search: query || undefined,
-    limit: 10,
-  });
+  const { data } = useAdminCustomers();
 
-  const results = data?.items ?? [];
+  const allCustomers = data ?? [];
+  const results = query
+    ? allCustomers.filter(
+        (c) =>
+          c.fullName.toLowerCase().includes(query.toLowerCase()) ||
+          c.email.toLowerCase().includes(query.toLowerCase()) ||
+          c.phone.includes(query),
+      )
+    : [];
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {

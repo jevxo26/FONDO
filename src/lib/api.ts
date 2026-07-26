@@ -1,5 +1,5 @@
+import { cookies } from "next/headers";
 import { ApiError } from "./api-error";
-import { getToken } from "./token";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
@@ -15,18 +15,25 @@ export interface ServerFetchOptions extends RequestInit {
 }
 
 export async function apiFetch<T>(endpoint: string, options?: ServerFetchOptions): Promise<T> {
-  const token = getToken();
+  const { revalidate = 60, tags, headers: optionHeaders, ...fetchOptions } = options ?? {};
 
-  const { revalidate = 60, tags, ...fetchOptions } = options ?? {};
+  let authHeader: Record<string, string> = {};
+  try {
+    const cookieStore = await cookies();
+    const refreshToken = cookieStore.get("refreshToken");
+    if (refreshToken?.value) {
+      authHeader = { Authorization: `Bearer ${refreshToken.value}` };
+    }
+  } catch {
+    // called from client — no cookies() available
+  }
 
   const res = await fetch(`${BASE_URL}${endpoint}`, {
     ...fetchOptions,
     headers: {
       "Content-Type": "application/json",
-      ...(token && {
-        Authorization: `Bearer ${token}`,
-      }),
-      ...(options?.headers || {}),
+      ...authHeader,
+      ...(optionHeaders as Record<string, string> | undefined),
     },
     next: {
       revalidate,

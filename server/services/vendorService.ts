@@ -2,6 +2,7 @@ import { Prisma, Role, VerificationStatus } from "@prisma/client";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import prisma from "../lib/prisma";
 import { encryptPassword } from "../utils/bcryptService";
+import AppError from "../utils/AppError";
 
 // Helper method to resolve internal structural ID via public vendor code safely
 const getInternalIdByCode = async (vendorCode: string): Promise<string> => {
@@ -13,8 +14,15 @@ const getInternalIdByCode = async (vendorCode: string): Promise<string> => {
   return record.id;
 };
 
-const createVendor = catchServiceAsync(async (payload: any) => {
+const createVendor = catchServiceAsync(async (payload: { firstName: string; lastName: string; password: string; email: string; phone: string; businessName: string; ownerName?: string; tradeLicenseNumber?: string; tinNumber?: string; binNumber?: string }) => {
   const { firstName, lastName, password, email, phone, businessName, ownerName, tradeLicenseNumber, tinNumber, binNumber } = payload;
+
+  const checks: Prisma.VendorWhereInput[] = [{ phone }, { email }, { tradeLicenseNumber }, { tinNumber }, { binNumber }].filter((c) => Object.values(c)[0]);
+  if (checks.length > 0) {
+    const duplicate = await prisma.vendor.findFirst({ where: { OR: checks } });
+    if (duplicate) throw new AppError(400, "Some data is already in use");
+  }
+
   const hashedPassword = await encryptPassword(password);
   const uniqueVendorCode = `VEND-${String(Date.now()).slice(-7)}`;
 
@@ -23,9 +31,13 @@ const createVendor = catchServiceAsync(async (payload: any) => {
       data: { firstName, lastName, email, phone, password: hashedPassword, role: Role.VENDOR },
     });
 
-    const newVendor = await tx.vendor.create({
-      data: { businessName, ownerName, email, phone, tradeLicenseNumber, tinNumber, binNumber, vendorCode: uniqueVendorCode, settings: { create: {} }, wallet: { create: {} } },
-    });
+    const vendorData: Record<string, unknown> = { businessName, email, phone, vendorCode: uniqueVendorCode, settings: { create: {} }, wallet: { create: {} } };
+    if (ownerName) vendorData.ownerName = ownerName;
+    if (tradeLicenseNumber) vendorData.tradeLicenseNumber = tradeLicenseNumber;
+    if (tinNumber) vendorData.tinNumber = tinNumber;
+    if (binNumber) vendorData.binNumber = binNumber;
+
+    const newVendor = await tx.vendor.create({ data: vendorData as Prisma.VendorCreateInput });
 
     await tx.vendorStaff.create({
       data: { vendorId: newVendor.id, userId: newUser.id, fullName: `${firstName} ${lastName}`, phone, email, designation: "Owner / Administrator" },
@@ -68,7 +80,7 @@ const upsertProfile = catchServiceAsync(async (vendorCode: string, profileData: 
   const vendorId = await getInternalIdByCode(vendorCode);
   return prisma.vendorProfile.upsert({
     where: { vendorId },
-    create: { ...profileData, vendorId } as any,
+    create: { ...profileData, vendorId } as Prisma.VendorProfileCreateInput,
     update: profileData,
   });
 });
@@ -78,7 +90,7 @@ const createBranch = catchServiceAsync(async (vendorCode: string, data: Prisma.V
   const vendorId = await getInternalIdByCode(vendorCode);
   const trackingCode = `BR-${String(Date.now()).slice(-6)}`;
   return prisma.vendorBranch.create({
-    data: { ...data, branchCode: trackingCode, vendor: { connect: { id: vendorId } } } as any,
+    data: { ...data, branchCode: trackingCode, vendor: { connect: { id: vendorId } } } as Prisma.VendorBranchCreateInput,
   });
 });
 
@@ -103,7 +115,7 @@ const createKitchen = catchServiceAsync(async (branchId: string, data: Prisma.Ve
       kitchenCode: kCode,
       vendor: { connect: { id: targetBranch.vendorId } },
       branch: { connect: { id: branchId } },
-    } as any,
+    } as Prisma.VendorKitchenCreateInput,
   });
 });
 
@@ -111,7 +123,7 @@ const createKitchen = catchServiceAsync(async (branchId: string, data: Prisma.Ve
 const addDocument = catchServiceAsync(async (vendorCode: string, data: Prisma.VendorDocumentCreateInput) => {
   const vendorId = await getInternalIdByCode(vendorCode);
   return prisma.vendorDocument.create({
-    data: { ...data, vendor: { connect: { id: vendorId } } } as any,
+    data: { ...data, vendor: { connect: { id: vendorId } } } as Prisma.VendorDocumentCreateInput,
   });
 });
 
@@ -143,7 +155,7 @@ const createSettlementInvoice = catchServiceAsync(async (vendorCode: string, dat
       totalCommission: data.totalCommission,
       totalPayable: data.totalPayable,
       vendor: { connect: { id: vendorId } },
-    } as any,
+    } as Prisma.VendorSettlementCreateInput,
   });
 });
 

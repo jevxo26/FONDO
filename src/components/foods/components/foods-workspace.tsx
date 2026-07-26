@@ -9,6 +9,7 @@ import Pagination from "./pagination";
 import { Food } from "@/types/food";
 import { FoodCategory } from "@/types/category";
 import Categories from "./categories";
+import { FoodsFilterBar } from "./foods-filter-bar";
 
 const ITEMS_PER_PAGE = 4;
 
@@ -41,7 +42,7 @@ export default function FoodsWorkspace() {
       result = result.filter((food) => {
         return (
           food.name.toLowerCase().includes(keyword) ||
-          food.shortDescription.toLowerCase().includes(keyword)
+          (food.shortDescription ?? "").toLowerCase().includes(keyword)
         );
       });
     }
@@ -60,7 +61,7 @@ export default function FoodsWorkspace() {
       result = result.filter((food) => {
         return (
           food.name.toLowerCase().includes(keyword) ||
-          food.shortDescription.toLowerCase().includes(keyword)
+          (food.shortDescription ?? "").toLowerCase().includes(keyword)
         );
       });
     }
@@ -112,16 +113,16 @@ export default function FoodsWorkspace() {
 
 
   return (
-    <section className="py-12 bg-[#FAF5EB]">
+    <section className="py-12 bg-muted/30">
       <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Side Hierarchy Filter Layout */}
         <div className="lg:col-span-3 space-y-6">
-          <div className="bg-white border border-[#16100C]/10 rounded-2xl p-5 shadow-sm space-y-4">
-            <h3 className="font-heading text-base font-normal text-[#16100C]">Categories</h3>
+          <div className="bg-card border-border rounded-2xl p-5 shadow-sm space-y-4">
+            <h3 className="font-heading text-base font-normal text-foreground">Categories</h3>
             <div className="flex flex-col gap-1">
               <button
                 onClick={() => setActiveCategory("All")}
-                className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all ${activeCategory === "All" ? "bg-[#CEA359]/10 text-[#CEA359] font-bold" : "text-[#16100C]/70 hover:bg-[#16100C]/5"
+                className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all ${activeCategory === "All" ? "bg-primary/10 text-primary font-bold" : "text-muted-foreground hover:bg-muted"
                   }`}
               >
                 All Menu Categories
@@ -136,28 +137,12 @@ export default function FoodsWorkspace() {
 
         {/* Right Side Foods Display Hub Grid */}
         <div className="lg:col-span-9 space-y-6">
-          {/* Controls Bar */}
-          <div className="flex justify-between items-center bg-white border border-[#16100C]/5 rounded-2xl px-5 py-3 shadow-sm">
-            <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-[#16100C]/50">
-              Showing {filteredFoods.length} culinary items
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] text-[#16100C]/60 font-light">Sort By:</span>
-              <select
-                value={sortBy}
-               onChange={(e) => {
-                setSortBy(e.target.value);
-                setCurrentPage(1);
-              }}
-                className="bg-transparent text-[11px] font-bold uppercase tracking-wider text-[#16100C] border-none focus:outline-none cursor-pointer"
-              >
-                <option value="default">Default Framework</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Top Rated Metrics</option>
-              </select>
-            </div>
-          </div>
+          <FoodsFilterBar
+            totalCount={filteredFoods.length}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+            onPageReset={() => setCurrentPage(1)}
+          />
           {/* Main Dynamic Loop */}
           <FoodGrid filteredFoods={paginatedFoods } />
            <Pagination

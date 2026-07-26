@@ -16,7 +16,7 @@ export default function ReviewFaq() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {faqs.map((faq, idx) => (
-            <div key={idx} className="bg-card border border-border/40 rounded-xl p-5 space-y-2 shadow-sm">
+            <div key={idx} className="bg-card border border-border/40 rounded-xl p-5 space-y-2 shadow-[var(--shadow-card)]">
               <h4 className="font-heading text-sm font-medium text-foreground">{faq.q}</h4>
               <p className="font-sans text-xs text-muted-foreground leading-relaxed">{faq.a}</p>
             </div>

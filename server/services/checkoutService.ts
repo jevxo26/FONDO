@@ -1,7 +1,7 @@
 import prisma from "../lib/prisma";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
-import { createOrderFromCart } from "./orderService";
+import { createOrderFromCart, createOrderFromItems } from "./orderService";
 
 export const getSummary = catchServiceAsync(async (cartId: string) => {
   const cart = await prisma.cart.findUnique({
@@ -123,13 +123,26 @@ export const selectAddress = catchServiceAsync(async (cartId: string, addressId:
 
 export const placeOrder = catchServiceAsync(
   async (
-    cartId: string,
+    cartId: string | undefined,
     paymentMethodId: string,
     customerId: string,
+    items?: Array<{ foodId: string; name: string; quantity: number; unitPrice: number; totalPrice: number }>,
     notes?: string,
     addressId?: string,
-    deliverySchedule?: { deliveryDate: Date; deliverySlot?: string },
   ) => {
+    if (addressId) {
+      const address = await prisma.userAddress.findFirst({
+        where: { id: addressId, userId: customerId, deletedAt: null },
+      });
+      if (!address) throw new AppError(404, "Address not found");
+    }
+
+    if (items && items.length > 0) {
+      return createOrderFromItems(customerId, items, paymentMethodId, addressId, notes);
+    }
+
+    if (!cartId) throw new AppError(400, "Cart ID or items required");
+
     const cart = await prisma.cart.findUnique({
       where: { id: cartId },
       include: { items: { include: { addons: true } }, meals: { include: { foods: true } } },
@@ -140,13 +153,6 @@ export const placeOrder = catchServiceAsync(
       throw new AppError(400, "Cart is empty");
     }
 
-    if (addressId) {
-      const address = await prisma.userAddress.findFirst({
-        where: { id: addressId, userId: customerId, deletedAt: null },
-      });
-      if (!address) throw new AppError(404, "Address not found");
-    }
-
-    return createOrderFromCart(cart, paymentMethodId, customerId, notes, addressId, deliverySchedule);
+    return createOrderFromCart(cart, paymentMethodId, customerId, notes, addressId);
   },
 );

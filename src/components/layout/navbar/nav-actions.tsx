@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,8 +13,6 @@ import { ROLE_DASHBOARD } from "@/data/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { useCart } from "@/hooks/use-cart";
 import { useFavorites } from "@/hooks/use-favorites";
-import { getToken } from "@/lib/token";
-import { fetchMe } from "@/store/slices/authSlice";
 import { toggleMobileMenu } from "@/store/slices/uiSlice";
 import { useAppDispatch } from "@/store/store";
 import {
@@ -28,25 +27,20 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { toast } from "sonner";
 
 export function NavActions() {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   const { user, isAuthenticated, loading, logout } = useAuth();
   const { data: cart } = useCart();
   const { data: favorites } = useFavorites();
 
   const cartCount = cart?.items?.reduce((sum, i) => sum + i.quantity, 0) ?? 0;
   const favoritesCount = favorites?.length ?? 0;
-
-  useEffect(() => {
-    const token = getToken();
-    if (token && !isAuthenticated && !loading) {
-      dispatch(fetchMe());
-    }
-  }, [dispatch, isAuthenticated, loading]);
 
   const handleLogout = async () => {
     try {
@@ -67,7 +61,7 @@ export function NavActions() {
         className="relative flex size-9 items-center justify-center rounded-full bg-destructive/20 transition-colors hover:bg-destructive/30"
       >
         <Heart className="size-4 text-foreground" />
-        {favoritesCount > 0 && (
+        {mounted && favoritesCount > 0 && (
           <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground leading-none">
             {favoritesCount > 9 ? "9+" : favoritesCount}
           </span>
@@ -78,7 +72,7 @@ export function NavActions() {
         className="relative flex size-9 items-center justify-center rounded-full bg-secondary transition-colors hover:bg-secondary"
       >
         <ShoppingCart className="size-4 text-foreground" />
-        {cartCount > 0 && (
+        {mounted && cartCount > 0 && (
           <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground leading-none">
             {cartCount > 9 ? "9+" : cartCount}
           </span>

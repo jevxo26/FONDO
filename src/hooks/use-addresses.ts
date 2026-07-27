@@ -1,59 +1,41 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/api-client";
-import { queryKeys } from "@/lib/query-keys";
-import type { Address } from "@/types/address";
+import {
+  useGetAddressesQuery,
+  useCreateAddressMutation,
+  useUpdateAddressMutation,
+  useDeleteAddressMutation,
+  useSetDefaultAddressMutation,
+  useSelectAddressMutation,
+} from "@/store/api/slices/addresses-api";
+import { createMutationWrapper } from "@/store/api/mutation-wrapper";
 
 export function useAddresses() {
-  return useQuery({
-    queryKey: queryKeys.addresses.all,
-    queryFn: async () => {
-      const res = await api.get<{ items: Address[] }>("/users/me/addresses");
-      return res.items;
-    },
-  });
+  const { data, isLoading, error } = useGetAddressesQuery(undefined);
+  return { data, isLoading, error };
 }
 
 export function useCreateAddress() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (data: Record<string, unknown>) => api.post<Address>("/users/me/addresses", data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addresses.all }),
-  });
+  const [trigger, { isLoading }] = useCreateAddressMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 
 export function useUpdateAddress() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<Address> }) =>
-      api.patch<Address>(`/users/me/addresses/${id}`, data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addresses.all }),
-  });
+  const [trigger, { isLoading }] = useUpdateAddressMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 
 export function useDeleteAddress() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => api.delete(`/users/me/addresses/${id}`),
-    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addresses.all }),
-  });
+  const [trigger, { isLoading }] = useDeleteAddressMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 
 export function useSetDefaultAddress() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => api.patch(`/users/me/addresses/${id}/default`),
-    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addresses.all }),
-  });
+  const [trigger, { isLoading }] = useSetDefaultAddressMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 
 export function useSelectAddress() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (addressId: string) => api.post("/cart/checkout/select-address", { addressId }),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.cart.all });
-    },
-  });
+  const [trigger, { isLoading }] = useSelectAddressMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }

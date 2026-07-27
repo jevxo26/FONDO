@@ -1,9 +1,22 @@
-import { ArrowLeft, Building, CheckCircle, Clock, MapPin, Phone, User } from "lucide-react";
+"use client";
+
+import { toast } from "sonner";
+import { ArrowLeft, Building, CheckCircle, Clock, Loader2, Phone, User } from "lucide-react";
 import Link from "next/link";
-import { orders } from "@/data/orders";
-import { getOrderDetail } from "@/data/order-detail";
+import { useGetOrderQuery, useUpdateOrderStatusMutation } from "@/store/api/slices/orders-api";
+import { useGetAllAdminOrdersQuery } from "@/store/api/slices/admin-customers-api";
 import { OrderStatusBadge } from "@/components/dashboard/admin/customers/orders/order-status-badge";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import type { Order, OrderItem, OrderTimeline } from "@/types/order";
+import type { OrderStatus } from "@/data/orders";
+
+interface ApiVendorType {
+  id: string;
+  businessName: string;
+  phone: string;
+  email: string;
+}
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -28,12 +41,41 @@ function OrderNotFound() {
   );
 }
 
-export default async function OrderDetailPage({ params }: PageProps) {
-  const { id } = await params;
-  const order = orders.find((o) => o.id === id);
-  if (!order) return <OrderNotFound />;
+function OrderDetailContent({ orderId }: { orderId: string }) {
+  const { data: order, isLoading, error } = useGetOrderQuery(orderId);
+  useGetAllAdminOrdersQuery();
 
-  const detail = getOrderDetail(order.id);
+  const [confirmOrder, { isLoading: isConfirming }] = useUpdateOrderStatusMutation();
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[400px] items-center justify-center">
+        <Loader2 className="size-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error || !order) return <OrderNotFound />;
+
+  const isPending = order.orderStatus === "PENDING";
+  const orderStatus = order.orderStatus as OrderStatus;
+
+  const timelineItems = (order.timeline as OrderTimeline[]).map((t) => ({
+    label: t.title,
+    time: t.createdAt ? new Date(t.createdAt).toLocaleString() : null,
+    done: true,
+  }));
+
+  const itemRows = (order.items as OrderItem[]).map((item) => ({
+    name: item.food?.name ?? "Unknown item",
+    quantity: item.quantity,
+    price: Number(item.totalPrice),
+  }));
+
+  const subtotal = Number(order.subtotal);
+  const deliveryFee = Number(order.deliveryCharge);
+  const discount = Number(order.discount);
+  const total = Number(order.totalAmount);
 
   return (
     <div>
@@ -53,67 +95,90 @@ export default async function OrderDetailPage({ params }: PageProps) {
             <h1 className="font-heading text-3xl font-bold text-foreground md:text-4xl">
               {order.orderNumber}
             </h1>
-            <OrderStatusBadge status={order.orderStatus} />
+            <OrderStatusBadge status={orderStatus} />
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
-            Placed on {order.placedAt}
+            Placed on {order.placedAt ? new Date(order.placedAt).toLocaleDateString() : ""}
           </p>
         </div>
+        {isPending && (
+          <Button
+            onClick={async () => {
+              try {
+                await confirmOrder({ orderId, status: "CONFIRMED" }).unwrap();
+                toast.success("Order confirmed");
+              } catch {
+                toast.error("Failed to confirm order");
+              }
+            }}
+            disabled={isConfirming}
+            className="rounded-full"
+          >
+            {isConfirming ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <CheckCircle className="size-4" />
+            )}
+            Confirm Order
+          </Button>
+        )}
       </div>
 
       <div className="mb-8 grid gap-5 lg:grid-cols-3">
-        <div className="lg:col-span-2 space-y-5">
-          <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
-            <h2 className="mb-4 font-heading text-lg font-bold text-foreground">
-              Timeline
-            </h2>
-            <div className="space-y-0">
-              {detail.timeline.map((step, i) => (
-                <div key={i} className="relative flex gap-4 pb-4 last:pb-0">
-                  <div className="flex flex-col items-center">
-                    <div
-                      className={cn(
-                        "flex size-7 shrink-0 items-center justify-center rounded-full border-2 text-xs font-bold",
-                        step.done
-                          ? "border-success bg-success/10 text-success"
-                          : "border-muted-foreground/30 text-muted-foreground/50",
-                      )}
-                    >
-                      {step.done ? <CheckCircle className="size-4" /> : i + 1}
-                    </div>
-                    {i < detail.timeline.length - 1 && (
+        <div className="space-y-5 lg:col-span-2">
+          {timelineItems.length > 0 && (
+            <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
+              <h2 className="mb-4 font-heading text-lg font-bold text-foreground">
+                Timeline
+              </h2>
+              <div className="space-y-0">
+                {timelineItems.map((step, i) => (
+                  <div key={i} className="relative flex gap-4 pb-4 last:pb-0">
+                    <div className="flex flex-col items-center">
                       <div
                         className={cn(
-                          "mt-0.5 w-0.5 grow",
-                          step.done ? "bg-success/40" : "bg-border",
+                          "flex size-7 shrink-0 items-center justify-center rounded-full border-2 text-xs font-bold",
+                          step.done
+                            ? "border-success bg-success/10 text-success"
+                            : "border-muted-foreground/30 text-muted-foreground/50",
                         )}
-                      />
-                    )}
-                  </div>
-                  <div className="min-w-0 pb-2">
-                    <p
-                      className={cn(
-                        "text-sm font-medium",
-                        step.done ? "text-foreground" : "text-muted-foreground",
+                      >
+                        {step.done ? <CheckCircle className="size-4" /> : i + 1}
+                      </div>
+                      {i < timelineItems.length - 1 && (
+                        <div
+                          className={cn(
+                            "mt-0.5 w-0.5 grow",
+                            step.done ? "bg-success/40" : "bg-border",
+                          )}
+                        />
                       )}
-                    >
-                      {step.label}
-                    </p>
-                    {step.time && (
-                      <p className="text-xs text-muted-foreground">{step.time}</p>
-                    )}
+                    </div>
+                    <div className="min-w-0 pb-2">
+                      <p
+                        className={cn(
+                          "text-sm font-medium",
+                          step.done ? "text-foreground" : "text-muted-foreground",
+                        )}
+                      >
+                        {step.label}
+                      </p>
+                      {step.time && (
+                        <p className="text-xs text-muted-foreground">{step.time}</p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
             <h2 className="mb-4 font-heading text-lg font-bold text-foreground">
-              Items ({detail.items.length})
+              Items ({itemRows.length})
             </h2>
             <div className="divide-y divide-border/40">
-              {detail.items.map((item, i) => (
+              {itemRows.map((item, i) => (
                 <div key={i} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
                   <div className="flex items-center gap-3">
                     <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-xs font-bold text-primary">
@@ -131,25 +196,23 @@ export default async function OrderDetailPage({ params }: PageProps) {
             <div className="mt-4 space-y-2 border-t border-border/40 pt-4">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span className="font-mono text-foreground">৳{detail.subtotal.toLocaleString()}</span>
+                <span className="font-mono text-foreground">৳{subtotal.toLocaleString()}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Delivery Fee</span>
                 <span className="font-mono text-foreground">
-                  {detail.deliveryFee === 0 ? "Free" : `৳${detail.deliveryFee}`}
+                  {deliveryFee === 0 ? "Free" : `৳${deliveryFee}`}
                 </span>
               </div>
-              {detail.discount > 0 && (
+              {discount > 0 && (
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Discount</span>
-                  <span className="font-mono text-success">-৳{detail.discount}</span>
+                  <span className="font-mono text-success">-৳{discount}</span>
                 </div>
               )}
               <div className="flex items-center justify-between border-t border-border/40 pt-2 text-base font-bold">
                 <span className="text-foreground">Total</span>
-                <span className="font-mono text-foreground">
-                  ৳{(detail.subtotal + detail.deliveryFee - detail.discount).toLocaleString()}
-                </span>
+                <span className="font-mono text-foreground">৳{total.toLocaleString()}</span>
               </div>
             </div>
           </div>
@@ -157,69 +220,45 @@ export default async function OrderDetailPage({ params }: PageProps) {
 
         <div className="space-y-5">
           <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
-            <h2 className="mb-4 font-heading text-lg font-bold text-foreground">
-              Customer
-            </h2>
+            <h2 className="mb-4 font-heading text-lg font-bold text-foreground">Customer</h2>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <User className="size-4 shrink-0 text-primary" />
-                <span className="text-sm text-foreground">{order.customerName}</span>
+                <span className="text-sm text-foreground">
+                  {order.customer.firstName} {order.customer.lastName}
+                </span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="size-4 shrink-0 text-primary" />
-                <span className="text-sm text-foreground">{detail.customerPhone}</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <MapPin className="size-4 shrink-0 text-primary mt-0.5" />
-                <div>
-                  <p className="text-sm text-foreground">{detail.customerAddress}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Deliver to: {detail.deliveryAddress}
-                  </p>
-                </div>
+                <span className="text-sm text-foreground">{order.customer.phone}</span>
               </div>
             </div>
           </div>
 
           <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
-            <h2 className="mb-4 font-heading text-lg font-bold text-foreground">
-              Vendor & Rider
-            </h2>
+            <h2 className="mb-4 font-heading text-lg font-bold text-foreground">Vendor & Rider</h2>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <Building className="size-4 shrink-0 text-primary" />
-                <span className="text-sm text-foreground">{detail.vendor}</span>
+                <span className="text-sm text-foreground">
+                  {(order as Order & { vendor?: ApiVendorType }).vendor?.businessName ?? "Not assigned yet"}
+                </span>
               </div>
               <div className="flex items-center gap-3">
                 <User className="size-4 shrink-0 text-primary" />
                 <span className="text-sm text-foreground">
-                  {detail.rider ?? "Not assigned yet"}
+                  {order.delivery?.rider?.fullName ?? "Not assigned yet"}
                 </span>
               </div>
-            </div>
-          </div>
-
-          <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
-            <h2 className="mb-4 font-heading text-lg font-bold text-foreground">
-              Actions
-            </h2>
-            <div className="space-y-2">
-              <button className="w-full rounded-xl bg-primary/10 px-4 py-2.5 text-sm font-medium text-primary ring-1 ring-primary/20 transition-all duration-300 hover:bg-primary/20 active:scale-[0.98]">
-                Assign Rider
-              </button>
-              <button className="w-full rounded-xl bg-destructive/10 px-4 py-2.5 text-sm font-medium text-destructive ring-1 ring-destructive/20 transition-all duration-300 hover:bg-destructive/20 active:scale-[0.98]">
-                Cancel Order
-              </button>
-              <button className="w-full rounded-xl bg-primary/10 px-4 py-2.5 text-sm font-medium text-primary ring-1 ring-primary/20 transition-all duration-300 hover:bg-primary/20 active:scale-[0.98]">
-                Send Notification
-              </button>
-              <button className="w-full rounded-xl bg-primary/10 px-4 py-2.5 text-sm font-medium text-primary ring-1 ring-primary/20 transition-all duration-300 hover:bg-primary/20 active:scale-[0.98]">
-                View Chat
-              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
   );
+}
+
+export default async function OrderDetailPage({ params }: PageProps) {
+  const { id } = await params;
+  return <OrderDetailContent orderId={id} />;
 }

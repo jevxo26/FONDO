@@ -9,7 +9,7 @@ const list = catchAsync(async (req: AuthRequest, res: Response) => {
 
   sendResponse(res, {
     statusCode: 200,
-    data: { items: addresses },
+    data: addresses,
   });
 });
 

@@ -11,6 +11,30 @@ function generateOrderNumber(): string {
   return `FND-${y}${m}${d}-${seq}`;
 }
 
+async function resolvePrimaryVendor(foodIds: string[]): Promise<string | null> {
+  const [assignments, vfs] = await Promise.all([
+    prisma.vendorFoodAssignment.findMany({
+      where: { foodId: { in: foodIds }, status: "active" },
+      orderBy: { priority: "asc" },
+      distinct: ["foodId"],
+      include: { vendor: { select: { id: true } } },
+    }),
+    prisma.vendorFood.findMany({
+      where: { foodId: { in: foodIds }, status: "active", isPrimary: true },
+      include: { vendor: { select: { id: true } } },
+    }),
+  ]);
+
+  const vendorMap = new Map<string, string>();
+  for (const a of assignments) { if (a.vendor) vendorMap.set(a.foodId, a.vendor.id); }
+  for (const vf of vfs) { if (!vendorMap.has(vf.foodId) && vf.vendor) vendorMap.set(vf.foodId, vf.vendor.id); }
+
+  const vendorIds = foodIds.map((fid) => vendorMap.get(fid)).filter(Boolean) as string[];
+  return vendorIds.length > 0
+    ? vendorIds.sort((a, b) => vendorIds.filter((v) => v === a).length - vendorIds.filter((v) => v === b).length).pop() ?? null
+    : null;
+}
+
 const ORDER_INCLUDE = {
   items: { include: { food: true } },
   meals: { include: { foods: true } },
@@ -81,28 +105,7 @@ export const createOrderFromCart = catchServiceAsync(
     const itemFoodIds = cart.items.map((i) => i.foodId);
     const mealFoodIds = cart.meals.flatMap((m) => m.foods.map((f) => f.foodId));
     const allFoodIds = [...new Set([...itemFoodIds, ...mealFoodIds])];
-
-    const [assignments, vfs] = await Promise.all([
-      prisma.vendorFoodAssignment.findMany({
-        where: { foodId: { in: allFoodIds }, status: "active" },
-        orderBy: { priority: "asc" },
-        distinct: ["foodId"],
-        include: { vendor: { select: { id: true } } },
-      }),
-      prisma.vendorFood.findMany({
-        where: { foodId: { in: allFoodIds }, status: "active", isPrimary: true },
-        include: { vendor: { select: { id: true } } },
-      }),
-    ]);
-
-    const vendorMap = new Map<string, string>();
-    for (const a of assignments) { if (a.vendor) vendorMap.set(a.foodId, a.vendor.id); }
-    for (const vf of vfs) { if (!vendorMap.has(vf.foodId) && vf.vendor) vendorMap.set(vf.foodId, vf.vendor.id); }
-
-    const vendorIds = allFoodIds.map((fid) => vendorMap.get(fid)).filter(Boolean) as string[];
-    const primaryVendorId = vendorIds.length > 0
-      ? vendorIds.sort((a, b) => vendorIds.filter((v) => v === a).length - vendorIds.filter((v) => v === b).length).pop() ?? null
-      : null;
+    const primaryVendorId = await resolvePrimaryVendor(allFoodIds);
 
     const order = await prisma.$transaction(async (tx) => {
       const created = await tx.order.create({
@@ -233,11 +236,101 @@ export const createOrderFromCart = catchServiceAsync(
   },
 );
 
+export const createOrderFromItems = catchServiceAsync(
+  async (
+    customerId: string,
+    items: Array<{ foodId: string; name: string; quantity: number; unitPrice: number; totalPrice: number }>,
+    paymentMethodId: string,
+    addressId?: string,
+    notes?: string,
+  ) => {
+    const orderNumber = generateOrderNumber();
+    const subtotal = items.reduce((s, i) => s + i.totalPrice, 0);
+    const deliveryCharge = subtotal > 0 ? 50 : 0;
+    const discount = 0;
+    const vat = subtotal * 0.05;
+    const totalAmount = subtotal - discount + deliveryCharge + vat;
+
+    const foodIds = [...new Set(items.map((i) => i.foodId))];
+    const primaryVendorId = await resolvePrimaryVendor(foodIds);
+
+    const order = await prisma.$transaction(async (tx) => {
+      const created = await tx.order.create({
+        data: {
+          orderNumber,
+          customerId,
+          vendorId: primaryVendorId,
+          addressId,
+          subtotal,
+          discount,
+          deliveryCharge,
+          vat,
+          totalAmount,
+          paymentStatus: "PENDING",
+          orderStatus: "PENDING",
+          deliveryStatus: "PENDING",
+          notes,
+          placedAt: new Date(),
+        },
+      });
+
+      await tx.orderItem.createMany({
+        data: items.map((item) => ({
+          orderId: created.id,
+          foodId: item.foodId,
+          quantity: item.quantity,
+          unitPrice: item.unitPrice,
+          totalPrice: item.totalPrice,
+        })),
+      });
+
+      await tx.orderStatusHistory.create({
+        data: {
+          orderId: created.id,
+          previousStatus: null,
+          currentStatus: "PENDING",
+          changedBy: "system",
+          remarks: "Order placed",
+        },
+      });
+
+      await tx.orderTimeline.create({
+        data: {
+          orderId: created.id,
+          title: "Order Placed",
+          description: "Your order has been placed successfully.",
+          status: "completed",
+        },
+      });
+
+      await tx.payment.create({
+        data: {
+          paymentNumber: `PAY-${orderNumber}`,
+          orderId: created.id,
+          customerId,
+          paymentMethodId,
+          amount: totalAmount,
+          status: "PENDING",
+        },
+      });
+
+      return created;
+    });
+
+    return {
+      orderId: order.id,
+      orderNumber: order.orderNumber,
+      totalAmount: Number(order.totalAmount),
+      paymentUrl: `/api/payments/${order.id}/process`,
+    };
+  },
+);
+
 export const listMyOrders = catchServiceAsync(async (userId: string) => {
   return prisma.order.findMany({
     where: { customerId: userId, deletedAt: null },
     orderBy: { placedAt: "desc" },
-    include: { items: true, payment: true },
+    include: { items: { include: { food: true } }, payment: true },
   });
 });
 

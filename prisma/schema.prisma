@@ -2001,7 +2001,7 @@ model PackageAvailability {
 
 model CustomMealPlan {
   id                    String   @id @default(uuid())
-  customerId            String
+  customerId      String   @unique
   packageId             String?
   acceptedByVendorId    String? 
   name                  String
@@ -2096,7 +2096,7 @@ model DietaryRestriction {
 
 model Cart {
   id              String   @id @default(uuid())
-  customerId      String
+  customerId      String   @unique
   packageId       String?
   customMealPlanId String?
   couponId        String?
@@ -2482,7 +2482,7 @@ model Payment {
 
 model PaymentGateway {
   id          String   @id @default(uuid())
-  code        String   @unique
+  code        String   @unique @default("sslcommerz")
   name        String
   merchantId  String?
   storeId     String?

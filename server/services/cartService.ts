@@ -20,6 +20,32 @@ const cartInclude = {
   summary: true,
 } as const;
 
+function calcTotals(items: { totalPrice: unknown; addons: { price: unknown; quantity: number }[] }[]) {
+  const itemsSubtotal = items.reduce((sum, item) => sum + Number(item.totalPrice), 0);
+  const addonsTotal = items.reduce(
+    (sum, item) => sum + item.addons.reduce((as, a) => as + Number(a.price) * a.quantity, 0),
+    0,
+  );
+  return itemsSubtotal + addonsTotal;
+}
+
+function applyDiscount(subtotal: number, discountValue: unknown, discountType: string | undefined | null) {
+  if (!discountValue || !discountType) return 0;
+  const dv = Number(discountValue);
+  const discount =
+    discountType === "PERCENTAGE"
+      ? subtotal * (dv / 100)
+      : dv;
+  return Math.min(discount, subtotal);
+}
+
+function buildTotals(subtotal: number, discount: number) {
+  const afterDiscount = subtotal - discount;
+  const deliveryCharge = afterDiscount > 0 ? DEFAULT_DELIVERY_CHARGE : 0;
+  const vat = afterDiscount * (VAT_PERCENT / 100);
+  return { discount, deliveryCharge, vat, totalAmount: afterDiscount + deliveryCharge + vat };
+}
+
 export const getActiveCart = catchServiceAsync(async (userId: string) => {
   let cart = await prisma.cart.findFirst({
     where: { customerId: userId },
@@ -102,30 +128,20 @@ export const initCart = catchServiceAsync(
       }
     }
 
-    await _recalculateCart(cart.id);
-    await _logHistory(
-      cart.id,
-      "INIT",
-      userId,
-      `Cart initialized with ${packageId ? "package" : "custom plan"}`,
-    );
-
-    return prisma.cart.findUnique({ where: { id: cart.id }, include: cartInclude });
+    return _recalculateAndReturn(cart.id, userId);
   },
 );
 
 export const addItem = catchServiceAsync(
   async (
-    cartId: string,
+    cart: { id: string },
     foodId: string,
     quantity: number,
     unitPrice: number,
     packageMealId?: string,
   ) => {
-    const cart = await _assertActiveCart(cartId);
-
     const existing = await prisma.cartItem.findFirst({
-      where: { cartId, foodId, packageMealId: packageMealId ?? null },
+      where: { cartId: cart.id, foodId, packageMealId: packageMealId ?? null },
     });
 
     if (existing) {
@@ -139,7 +155,7 @@ export const addItem = catchServiceAsync(
     } else {
       await prisma.cartItem.create({
         data: {
-          cartId,
+          cartId: cart.id,
           foodId,
           quantity,
           unitPrice,
@@ -149,8 +165,7 @@ export const addItem = catchServiceAsync(
       });
     }
 
-    await _recalculateCart(cartId);
-    return prisma.cart.findUnique({ where: { id: cartId }, include: cartInclude });
+    return _recalculateAndReturn(cart.id);
   },
 );
 
@@ -163,8 +178,7 @@ export const updateItemQuantity = catchServiceAsync(async (itemId: string, quant
     data: { quantity, totalPrice: quantity * Number(item.unitPrice) },
   });
 
-  await _recalculateCart(item.cartId);
-  return prisma.cart.findUnique({ where: { id: item.cartId }, include: cartInclude });
+  return _recalculateAndReturn(item.cartId);
 });
 
 export const removeItem = catchServiceAsync(async (itemId: string) => {
@@ -177,8 +191,7 @@ export const removeItem = catchServiceAsync(async (itemId: string) => {
   await prisma.cartAddon.deleteMany({ where: { cartItemId: itemId } });
   await prisma.cartItem.delete({ where: { id: itemId } });
 
-  await _recalculateCart(item.cartId);
-  return prisma.cart.findUnique({ where: { id: item.cartId }, include: cartInclude });
+  return _recalculateAndReturn(item.cartId);
 });
 
 export const addAddon = catchServiceAsync(
@@ -190,8 +203,7 @@ export const addAddon = catchServiceAsync(
       data: { cartItemId: itemId, addonItemId, quantity, price },
     });
 
-    await _recalculateCart(item.cartId);
-    return prisma.cart.findUnique({ where: { id: item.cartId }, include: cartInclude });
+    return _recalculateAndReturn(item.cartId);
   },
 );
 
@@ -203,21 +215,17 @@ export const removeAddon = catchServiceAsync(async (addonId: string) => {
   await prisma.cartAddon.delete({ where: { id: addonId } });
 
   if (item) {
-    await _recalculateCart(item.cartId);
-    return prisma.cart.findUnique({ where: { id: item.cartId }, include: cartInclude });
+    return _recalculateAndReturn(item.cartId);
   }
 });
 
 export const addMeal = catchServiceAsync(
-  async (cartId: string, dayNumber: number, mealType: string, mealTime?: string) => {
-    await _assertActiveCart(cartId);
-
+  async (cart: { id: string }, dayNumber: number, mealType: string, mealTime?: string) => {
     await prisma.cartMeal.create({
-      data: { cartId, dayNumber, mealType, mealTime },
+      data: { cartId: cart.id, dayNumber, mealType, mealTime },
     });
 
-    await _recalculateCart(cartId);
-    return prisma.cart.findUnique({ where: { id: cartId }, include: cartInclude });
+    return _recalculateAndReturn(cart.id);
   },
 );
 
@@ -228,8 +236,7 @@ export const removeMeal = catchServiceAsync(async (mealId: string) => {
   await prisma.cartMealFood.deleteMany({ where: { cartMealId: mealId } });
   await prisma.cartMeal.delete({ where: { id: mealId } });
 
-  await _recalculateCart(meal.cartId);
-  return prisma.cart.findUnique({ where: { id: meal.cartId }, include: cartInclude });
+  return _recalculateAndReturn(meal.cartId);
 });
 
 export const addFoodToMeal = catchServiceAsync(
@@ -241,8 +248,7 @@ export const addFoodToMeal = catchServiceAsync(
       data: { cartMealId: mealId, foodId, quantity, isReplacement },
     });
 
-    await _recalculateCart(meal.cartId);
-    return prisma.cart.findUnique({ where: { id: meal.cartId }, include: cartInclude });
+    return _recalculateAndReturn(meal.cartId);
   },
 );
 
@@ -254,19 +260,16 @@ export const removeFoodFromMeal = catchServiceAsync(async (mealId: string, foodI
     where: { cartMealId: mealId, foodId },
   });
 
-  await _recalculateCart(meal.cartId);
-  return prisma.cart.findUnique({ where: { id: meal.cartId }, include: cartInclude });
+  return _recalculateAndReturn(meal.cartId);
 });
 
-export const clearCart = catchServiceAsync(async (cartId: string) => {
-  const cart = await _assertActiveCart(cartId);
-
-  await prisma.cartAddon.deleteMany({ where: { cartItem: { cartId } } });
-  await prisma.cartItem.deleteMany({ where: { cartId } });
-  await prisma.cartMealFood.deleteMany({ where: { cartMeal: { cartId } } });
-  await prisma.cartMeal.deleteMany({ where: { cartId } });
+export const clearCart = catchServiceAsync(async (cart: { id: string; customerId: string }) => {
+  await prisma.cartAddon.deleteMany({ where: { cartItem: { cartId: cart.id } } });
+  await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
+  await prisma.cartMealFood.deleteMany({ where: { cartMeal: { cartId: cart.id } } });
+  await prisma.cartMeal.deleteMany({ where: { cartId: cart.id } });
   await prisma.cart.update({
-    where: { id: cartId },
+    where: { id: cart.id },
     data: {
       packageId: null,
       customMealPlanId: null,
@@ -279,89 +282,56 @@ export const clearCart = catchServiceAsync(async (cartId: string) => {
     },
   });
 
-  await _recalculateCart(cartId);
-  await _logHistory(cartId, "CLEAR", cart.customerId, "Cart cleared");
-
-  return prisma.cart.findUnique({ where: { id: cartId }, include: cartInclude });
+  await _logHistory(cart.id, "CLEAR", cart.customerId, "Cart cleared");
+  return prisma.cart.findUnique({ where: { id: cart.id }, include: cartInclude });
 });
 
-async function _assertActiveCart(cartId: string) {
-  const cart = await prisma.cart.findUnique({ where: { id: cartId } });
-  if (!cart) throw new AppError(404, "Cart not found");
-  if (cart.status !== "active") throw new AppError(400, "Cart is not active");
-  return cart;
-}
-
-async function _recalculateCart(cartId: string) {
-  const [items, cart] = await Promise.all([
-    prisma.cartItem.findMany({
+async function _recalculateAndReturn(cartId: string, userId?: string) {
+  return prisma.$transaction(async (tx) => {
+    const items = await tx.cartItem.findMany({
       where: { cartId },
       include: { addons: true },
-    }),
-    prisma.cart.findUnique({ where: { id: cartId } }),
-  ]);
+    });
 
-  const itemsSubtotal = items.reduce((sum, item) => sum + Number(item.totalPrice), 0);
-  const addonsTotal = items.reduce(
-    (sum, item) => sum + item.addons.reduce((as, a) => as + Number(a.price) * a.quantity, 0),
-    0,
-  );
-  const subtotal = itemsSubtotal + addonsTotal;
-  const itemCount = items.length;
-  let discount = 0;
+    const subtotal = calcTotals(items);
+    const itemCount = items.length;
+    let discount = 0;
 
-  if (cart?.couponId) {
-    const coupon = await prisma.coupon.findUnique({ where: { id: cart.couponId } });
-    if (coupon && coupon.status === "active" && new Date() <= coupon.endDate!) {
-      discount =
-        coupon.discountType === "PERCENTAGE"
-          ? subtotal * (Number(coupon.discountValue) / 100)
-          : Number(coupon.discountValue);
-      if (discount > subtotal) discount = subtotal;
+    const cart = await tx.cart.findUnique({ where: { id: cartId } });
+    if (cart?.couponId) {
+      const coupon = await tx.coupon.findUnique({ where: { id: cart.couponId } });
+      if (coupon && coupon.status === "active" && new Date() <= coupon.endDate!) {
+        discount = applyDiscount(subtotal, coupon.discountValue, coupon.discountType);
+      }
     }
-  }
 
-  const afterDiscount = subtotal - discount;
-  const deliveryCharge = afterDiscount > 0 ? DEFAULT_DELIVERY_CHARGE : 0;
-  const vat = afterDiscount * (VAT_PERCENT / 100);
-  const totalAmount = afterDiscount + deliveryCharge + vat;
+    const totals = buildTotals(subtotal, discount);
 
-  await Promise.all([
-    prisma.cart.update({
-      where: { id: cartId },
-      data: {
-        subtotal,
-        discount,
-        deliveryCharge,
-        vat,
-        totalAmount,
-      },
-    }),
-    prisma.cartMeal.count({ where: { cartId } }).then((mealCount) =>
-      prisma.cartSummary.upsert({
-        where: { cartId },
-        create: {
-          cartId,
-          itemCount,
-          mealCount,
-          subtotal,
-          discount,
-          deliveryCharge,
-          vat,
-          grandTotal: totalAmount,
-        },
-        update: {
-          itemCount,
-          mealCount,
-          subtotal,
-          discount,
-          deliveryCharge,
-          vat,
-          grandTotal: totalAmount,
-        },
+    const mealCount = await tx.cartMeal.count({ where: { cartId } });
+
+    await Promise.all([
+      tx.cart.update({
+        where: { id: cartId },
+        data: { subtotal, ...totals },
       }),
-    ),
-  ]);
+      tx.cartSummary.upsert({
+        where: { cartId },
+        create: { cartId, itemCount, mealCount, subtotal, ...totals, grandTotal: totals.totalAmount },
+        update: { itemCount, mealCount, subtotal, ...totals, grandTotal: totals.totalAmount },
+      }),
+    ]);
+
+    if (userId) {
+      await tx.cartHistory.create({
+        data: { cartId, action: "INIT", performedBy: userId, remarks: "Cart initialized" },
+      });
+    }
+
+    return tx.cart.findUnique({
+      where: { id: cartId },
+      include: cartInclude,
+    });
+  });
 }
 
 async function _logHistory(cartId: string, action: string, performedBy: string, remarks?: string) {

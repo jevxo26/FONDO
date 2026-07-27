@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, Loader2, Package, XCircle } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { ArrowLeft, Loader2, Package, XCircle, Star, Receipt } from "lucide-react";
 import { useOrders, useCancelOrder } from "@/hooks/use-orders";
 import { handleApiError } from "@/lib/api-error";
 import { toast } from "sonner";
@@ -10,6 +12,14 @@ import { SectionReveal } from "@/components/common/section-reveal";
 
 export default function OrdersPage() {
   const { data, isLoading, error } = useOrders();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const payment = searchParams.get("payment");
+    if (payment === "success") toast.success("Payment successful! Your order is confirmed.");
+    else if (payment === "failed") toast.error("Payment failed. Please try again.");
+    else if (payment === "cancelled") toast.info("Payment cancelled.");
+  }, [searchParams]);
   const cancelOrder = useCancelOrder();
 
   const handleCancel = (orderId: string) => {
@@ -109,6 +119,18 @@ export default function OrdersPage() {
                           <XCircle className="size-3" /> Cancel
                         </button>
                       )}
+                      {["DELIVERED", "COMPLETED"].includes(order.orderStatus) && (
+                        <Link href={`/track-order?orderId=${order.id}`}>
+                          <Button variant="outline" size="sm" className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5">
+                            <Star className="size-3 mr-1" /> Review
+                          </Button>
+                        </Link>
+                      )}
+                      <Link href={`/track-order?orderId=${order.id}&showInvoice=true`}>
+                        <Button variant="outline" size="sm" className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5">
+                          <Receipt className="size-3 mr-1" /> Invoice
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </div>

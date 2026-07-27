@@ -19,14 +19,14 @@ export const CartController = {
 
   clearCart: catchAsync(async (req: AuthRequest, res: Response) => {
     const userCart = await cartService.getActiveCart(req.user!.userId);
-    const cart = await cartService.clearCart(userCart.id);
+    const cart = await cartService.clearCart(userCart);
     sendResponse(res, { statusCode: 200, data: cart });
   }),
 
   addItem: catchAsync(async (req: AuthRequest, res: Response) => {
     const { foodId, packageMealId, quantity, unitPrice } = req.body;
     const userCart = await cartService.getActiveCart(req.user!.userId);
-    const cart = await cartService.addItem(userCart.id, foodId, quantity, unitPrice, packageMealId);
+    const cart = await cartService.addItem(userCart, foodId, quantity, unitPrice, packageMealId);
     sendResponse(res, { statusCode: 201, data: cart });
   }),
 
@@ -59,7 +59,7 @@ export const CartController = {
   addMeal: catchAsync(async (req: AuthRequest, res: Response) => {
     const { dayNumber, mealType, mealTime } = req.body;
     const userCart = await cartService.getActiveCart(req.user!.userId);
-    const cart = await cartService.addMeal(userCart.id, dayNumber, mealType, mealTime);
+    const cart = await cartService.addMeal(userCart, dayNumber, mealType, mealTime);
     sendResponse(res, { statusCode: 201, data: cart });
   }),
 
@@ -110,14 +110,14 @@ export const CartController = {
   }),
 
   placeOrder: catchAsync(async (req: AuthRequest, res: Response) => {
-    const { cartId, addressId, paymentMethodId, notes, deliverySchedule } = req.body;
+    const { cartId, addressId, paymentMethodId, notes, items } = req.body;
     const result = await checkoutService.placeOrder(
       cartId,
       paymentMethodId,
       req.user!.userId,
+      items,
       notes,
       addressId,
-      deliverySchedule,
     );
     sendResponse(res, { statusCode: 201, data: result });
   }),

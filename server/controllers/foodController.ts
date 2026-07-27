@@ -39,7 +39,7 @@ const getById = catchAsync(async (req: Request, res: Response) => {
 const listCategories = catchAsync(async (_req: Request, res: Response) => {
   const categories = await FoodService.listCategories();
 
-  sendResponse(res, { statusCode: 200, data: { items: categories } });
+  sendResponse(res, { statusCode: 200, data: categories });
 });
 
 const getCategory = catchAsync(async (req: Request, res: Response) => {
@@ -52,7 +52,7 @@ const getCategory = catchAsync(async (req: Request, res: Response) => {
 const listTags = catchAsync(async (_req: Request, res: Response) => {
   const tags = await FoodService.listTags();
 
-  sendResponse(res, { statusCode: 200, data: { items: tags } });
+  sendResponse(res, { statusCode: 200, data: tags });
 });
 
 const addFavorite = catchAsync(async (req: AuthRequest, res: Response) => {

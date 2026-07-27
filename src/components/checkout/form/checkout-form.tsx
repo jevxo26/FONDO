@@ -11,11 +11,11 @@ import { usePaymentMethods } from "@/hooks/use-payment-methods";
 import { usePlaceOrder } from "@/hooks/use-orders";
 import { useInitiatePayment } from "@/hooks/use-payments";
 import { handleApiError } from "@/lib/api-error";
+import { getCart, clearCart } from "@/lib/cart-storage";
 import type { CheckoutFormData } from "@/types/checkout-type";
 import { CheckoutSummary } from "../checkout-summary-right";
 import { FulfillmentSelector } from "./fulfillment-selector";
 import { AddressSection } from "./address-section";
-import { ContactInfoSection } from "./contact-info-section";
 import { PaymentMethodSelector } from "./payment-method-selector";
 import { CouponSection } from "./coupon-section";
 import { DeliveryScheduleSelector } from "./delivery-schedule-selector";
@@ -56,10 +56,8 @@ const CheckoutForm = () => {
       area: "",
       road: "",
       house: "",
-      apartment: "",
       postalCode: "",
       paymentMethodId: "",
-      notes: "",
     },
   });
 
@@ -108,9 +106,9 @@ const CheckoutForm = () => {
 
   const onSubmitForm = async (data: CheckoutFormData) => {
     try {
-      const cartId = cart?.id;
-      if (!cartId) {
-        toast.error("Cart not found. Please try again.");
+      const localCart = getCart();
+      if (!localCart || localCart.items.length === 0) {
+        toast.error("Cart is empty. Please add items first.");
         return;
       }
 
@@ -153,12 +151,19 @@ const CheckoutForm = () => {
       const hasSchedule = deliverySchedule?.deliveryDate && deliverySchedule?.deliverySlot;
 
       const order = await placeOrder.mutateAsync({
-        cartId,
+        items: localCart.items.map((i) => ({
+          foodId: i.foodId,
+          name: i.name,
+          quantity: i.quantity,
+          unitPrice: i.unitPrice,
+          totalPrice: i.totalPrice,
+        })),
         ...(finalAddressId ? { addressId: finalAddressId } : {}),
         paymentMethodId: data.paymentMethodId,
-        notes: data.notes || undefined,
         ...(hasSchedule ? { deliverySchedule } : {}),
       });
+
+      clearCart();
 
       const codMethod = paymentMethods.find((pm) => pm.code === "cod");
       if (codMethod && data.paymentMethodId === codMethod.id) {
@@ -183,33 +188,31 @@ const CheckoutForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmitForm)}
-      className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+      className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"
     >
-      <div className="lg:col-span-8 flex flex-col gap-6">
+      <div className="lg:col-span-8 flex flex-col gap-4">
         <FulfillmentSelector
           value={currentFulfillment}
           onChange={(val) => setValue("fulfillment", val)}
         />
 
         {currentFulfillment === "delivery" && (
-          <AddressSection
-            addresses={addresses}
-            selectedAddressId={selectedAddressId}
-            onSelect={handleAddressSelect}
-            register={register}
-            errors={errors}
-            showNewAddress={!selectedAddressId}
-            fulfillment={currentFulfillment}
-          />
-        )}
+          <>
+            <AddressSection
+              addresses={addresses}
+              selectedAddressId={selectedAddressId}
+              onSelect={handleAddressSelect}
+              register={register}
+              errors={errors}
+              showNewAddress={!selectedAddressId}
+              fulfillment={currentFulfillment}
+            />
 
-        <ContactInfoSection register={register} errors={errors} fulfillment={currentFulfillment} />
-
-        {currentFulfillment === "delivery" && (
-          <DeliveryScheduleSelector
-            value={deliverySchedule}
-            onChange={setDeliverySchedule}
-          />
+            <DeliveryScheduleSelector
+              value={deliverySchedule}
+              onChange={setDeliverySchedule}
+            />
+          </>
         )}
 
         <PaymentMethodSelector

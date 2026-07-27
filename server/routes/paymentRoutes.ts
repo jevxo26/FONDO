@@ -24,7 +24,7 @@ router.get("/payments/cancel", PaymentController.cancel);
 router.post("/payments/ipn", PaymentController.ipn);
 
 // Customer
-router.post("/payments/initiate", verifyToken, authorize("CUSTOMER"), validate(initiatePaymentSchema), PaymentController.initiate);
+router.post("/payments/initiate", verifyToken, validate(initiatePaymentSchema), PaymentController.initiate);
 router.post("/payments/:id/retry", verifyToken, authorize("CUSTOMER"), validate(retryPaymentSchema), PaymentController.retry);
 
 // Admin

@@ -5,6 +5,8 @@ import {
   useGetOrderQuery,
   useCancelOrderMutation,
   usePlaceOrderMutation,
+  useSubmitFeedbackMutation,
+  useGetInvoiceQuery,
 } from "@/store/api/slices/orders-api";
 import { createMutationWrapper } from "@/store/api/mutation-wrapper";
 
@@ -26,4 +28,14 @@ export function useCancelOrder() {
 export function usePlaceOrder() {
   const [trigger, { isLoading }] = usePlaceOrderMutation();
   return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useSubmitFeedback() {
+  const [trigger, { isLoading }] = useSubmitFeedbackMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useInvoice(orderId: string) {
+  const { data, isLoading, error } = useGetInvoiceQuery(orderId, { skip: !orderId });
+  return { data, isLoading, error };
 }

@@ -1,15 +1,15 @@
-import { FormField } from "@/components/common/form-field";
 import { Input } from "@/components/ui/input";
 import type { Address } from "@/types/address";
-import type { FulfillmentType } from "@/types/checkout-type";
+import type { FulfillmentType, CheckoutFormData } from "@/types/checkout-type";
 import { Check, MapPin } from "lucide-react";
+import type { UseFormRegister } from "react-hook-form";
 
 interface Props {
   addresses: Address[];
   selectedAddressId: string | null;
   onSelect: (id: string) => void;
-  register: any;
-  errors: any;
+  register: UseFormRegister<CheckoutFormData>;
+  errors: Record<string, { message?: string } | undefined>;
   showNewAddress: boolean;
   fulfillment: FulfillmentType;
 }
@@ -25,17 +25,16 @@ export function AddressSection({
 }: Props) {
   return (
     <div className="bg-card rounded-2xl border border-border/40 p-6 shadow-sm flex flex-col gap-4">
-      <h2 className="font-sans text-base font-semibold text-foreground">Delivery Address</h2>
+      <h2 className="font-sans text-base font-semibold text-foreground">Delivery Details</h2>
 
       {fulfillment === "delivery" && addresses.length > 0 && (
-        <div className="flex flex-col gap-3">
-          <p className="text-xs text-muted-foreground font-medium">Saved addresses</p>
+        <div className="flex flex-col gap-2">
           {addresses.map((addr) => (
             <button
               key={addr.id}
               type="button"
               onClick={() => onSelect(addr.id)}
-              className={`flex items-center gap-3 p-4 rounded-xl border text-left transition-all ${
+              className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${
                 selectedAddressId === addr.id
                   ? "border-primary bg-primary/5"
                   : "border-border bg-background hover:border-border/80"
@@ -54,71 +53,87 @@ export function AddressSection({
                   )}
                 </p>
                 <p className="font-sans text-[11px] text-muted-foreground mt-0.5 truncate">
-                  {addr.road || addr.house
-                    ? `${addr.house ? addr.house + ", " : ""}${addr.road ? addr.road + ", " : ""}`
-                    : ""}
-                  {addr.area}
-                  {addr.district ? `, ${addr.district}` : ""}
-                  {addr.postalCode ? ` - ${addr.postalCode}` : ""}
+                  {addr.area}{addr.district ? `, ${addr.district}` : ""}
                 </p>
               </div>
               {selectedAddressId === addr.id && <Check className="size-4 text-primary shrink-0" />}
             </button>
           ))}
-          <div className="border-t border-border/40 pt-3 mt-1">
-            <p className="text-[10px] text-muted-foreground mb-2">Or enter a new address:</p>
-          </div>
         </div>
       )}
 
       {showNewAddress && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <FormField label="Division" error={errors.division}>
-            <Input
-              type="text"
-              placeholder="e.g. Dhaka"
-              {...register("division", { required: !selectedAddressId })}
-              className={errors.division ? "border-destructive/50 focus:ring-destructive/50" : ""}
-            />
-          </FormField>
-          <FormField label="District" error={errors.district}>
-            <Input
-              type="text"
-              placeholder="e.g. Dhaka"
-              {...register("district", { required: !selectedAddressId })}
-              className={errors.district ? "border-destructive/50 focus:ring-destructive/50" : ""}
-            />
-          </FormField>
-          <FormField label="Area / Thana" error={errors.area}>
-            <Input
-              type="text"
-              placeholder="e.g. Gulshan"
-              {...register("area", { required: !selectedAddressId })}
-              className={errors.area ? "border-destructive/50 focus:ring-destructive/50" : ""}
-            />
-          </FormField>
-          <FormField label="Road / Street" error={errors.road}>
-            <Input
-              type="text"
-              placeholder="Road number, colony name"
-              {...register("road")}
-              className={errors.road ? "border-destructive/50 focus:ring-destructive/50" : ""}
-            />
-          </FormField>
-          <FormField label="House" error={errors.house}>
-            <Input type="text" placeholder="House / building number" {...register("house")} />
-          </FormField>
-          <FormField label="Apartment" error={errors.apartment}>
-            <Input type="text" placeholder="Flat / suite number" {...register("apartment")} />
-          </FormField>
-          <FormField label="Postal Code" error={errors.postalCode}>
-            <Input
-              type="text"
-              placeholder="e.g. 1212"
-              {...register("postalCode")}
-              className={errors.postalCode ? "border-destructive/50 focus:ring-destructive/50" : ""}
-            />
-          </FormField>
+        <div className="flex flex-col gap-3">
+          {fulfillment === "delivery" && addresses.length > 0 && (
+            <p className="text-[10px] text-muted-foreground">Or enter a new address:</p>
+          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="font-sans text-xs font-medium text-foreground mb-1 block">Receiver Name</label>
+              <Input
+                type="text"
+                placeholder="Full name"
+                {...register("receiverName", { required: fulfillment === "delivery" })}
+                className={errors.receiverName ? "border-destructive/50 h-8 text-xs" : "h-8 text-xs"}
+              />
+              {errors.receiverName && <p className="text-[10px] text-destructive mt-0.5">{errors.receiverName.message}</p>}
+            </div>
+            <div>
+              <label className="font-sans text-xs font-medium text-foreground mb-1 block">Phone</label>
+              <Input
+                type="tel"
+                placeholder="+880 1XXX XXXXXX"
+                {...register("receiverPhone", { required: fulfillment === "delivery" })}
+                className={errors.receiverPhone ? "border-destructive/50 h-8 text-xs" : "h-8 text-xs"}
+              />
+              {errors.receiverPhone && <p className="text-[10px] text-destructive mt-0.5">{errors.receiverPhone.message}</p>}
+            </div>
+            <div>
+              <label className="font-sans text-xs font-medium text-foreground mb-1 block">Division</label>
+              <Input
+                type="text"
+                placeholder="e.g. Dhaka"
+                {...register("division", { required: !selectedAddressId })}
+                className={errors.division ? "border-destructive/50 h-8 text-xs" : "h-8 text-xs"}
+              />
+            </div>
+            <div>
+              <label className="font-sans text-xs font-medium text-foreground mb-1 block">District</label>
+              <Input
+                type="text"
+                placeholder="e.g. Dhaka"
+                {...register("district", { required: !selectedAddressId })}
+                className={errors.district ? "border-destructive/50 h-8 text-xs" : "h-8 text-xs"}
+              />
+            </div>
+            <div>
+              <label className="font-sans text-xs font-medium text-foreground mb-1 block">Area / Thana</label>
+              <Input
+                type="text"
+                placeholder="e.g. Gulshan"
+                {...register("area", { required: !selectedAddressId })}
+                className={errors.area ? "border-destructive/50 h-8 text-xs" : "h-8 text-xs"}
+              />
+            </div>
+            <div>
+              <label className="font-sans text-xs font-medium text-foreground mb-1 block">Road / Street</label>
+              <Input
+                type="text"
+                placeholder="Road / colony name"
+                {...register("road")}
+                className="h-8 text-xs"
+              />
+            </div>
+            <div>
+              <label className="font-sans text-xs font-medium text-foreground mb-1 block">House</label>
+              <Input
+                type="text"
+                placeholder="House / building"
+                {...register("house")}
+                className="h-8 text-xs"
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>

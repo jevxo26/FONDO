@@ -45,7 +45,7 @@ export const listCustomers = catchServiceAsync(async () => {
     joinedAt: user.createdAt,
   }));
 
-  return { items: enriched, total: enriched.length, page: 1, limit: enriched.length, totalPages: 1 };
+  return enriched;
 });
 
 export const getCustomerDetail = catchServiceAsync(async (customerId: string) => {
@@ -103,7 +103,7 @@ export const listCustomerOrders = catchServiceAsync(async (customerId: string) =
     orderBy: { placedAt: "desc" },
     include: { items: { include: { food: { select: { id: true, name: true, images: true } } } }, payment: { select: { status: true, amount: true } } },
   });
-  return { items, total: items.length, page: 1, limit: items.length, totalPages: 1 };
+  return items;
 });
 
 export const listCustomerSubscriptions = catchServiceAsync(async (customerId: string) => {
@@ -111,7 +111,7 @@ export const listCustomerSubscriptions = catchServiceAsync(async (customerId: st
     where: { customerId },
     orderBy: { createdAt: "desc" },
   });
-  return { items, total: items.length, page: 1, limit: items.length, totalPages: 1 };
+  return items;
 });
 
 export const getCustomerWallet = catchServiceAsync(async (customerId: string) => {
@@ -137,5 +137,5 @@ export const listCustomerPayments = catchServiceAsync(async (customerId: string)
     orderBy: { createdAt: "desc" },
     include: { order: { select: { orderNumber: true } } },
   });
-  return { items, total: items.length, page: 1, limit: items.length, totalPages: 1 };
+  return items;
 });

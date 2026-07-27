@@ -28,12 +28,24 @@ export function ProductHero({ food }: { food: Food }) {
   const currentPrice = Number(food.variants[0]?.discountPrice ?? food.variants[0]?.price ?? 0);
 
   const handleAddToCart = () => {
-    addToCart.mutate({ foodId: food.id, quantity, unitPrice: currentPrice });
+    addToCart.mutate({
+      foodId: food.id,
+      name: food.name,
+      thumbnail: food.thumbnail,
+      quantity,
+      unitPrice: currentPrice,
+    });
   };
 
   const handleBuyNow = () => {
     addToCart.mutate(
-      { foodId: food.id, quantity, unitPrice: currentPrice },
+      {
+        foodId: food.id,
+        name: food.name,
+        thumbnail: food.thumbnail,
+        quantity,
+        unitPrice: currentPrice,
+      },
       { onSuccess: () => router.push("/checkout") },
     );
   };

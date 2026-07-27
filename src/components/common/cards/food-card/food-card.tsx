@@ -2,13 +2,24 @@
 
 import { Button } from "@/components/ui/button";
 import { useFavorites, useRemoveFavorite, useToggleFavorite } from "@/hooks/use-favorites";
-import { Food } from "@/types/food";
 import { ArrowUpRight, Clock, Heart, ShoppingBag, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import AddToCartButton from "./add-to-cart-button";
 
-export default function FoodCard({ food }: { food: Food }) {
+interface FoodCardFood {
+  id: string;
+  name: string;
+  thumbnail?: string;
+  slug: string;
+  servingSize?: string;
+  shortDescription?: string;
+  preparationTime?: number;
+  variants: Array<{ price: string | number; discountPrice?: string | number | null }>;
+  rating?: { averageRating: number };
+}
+
+export default function FoodCard({ food }: { food: FoodCardFood }) {
   const defaultVariant = food.variants?.[0];
   const { data: favorites = [] } = useFavorites();
   const toggleFavorite = useToggleFavorite();
@@ -89,6 +100,8 @@ export default function FoodCard({ food }: { food: Food }) {
         </p>
         <AddToCartButton
           foodId={food.id}
+          name={food.name}
+          thumbnail={food.thumbnail}
           price={Number(defaultVariant?.discountPrice ?? defaultVariant?.price ?? 0)}
         />
       </div>

@@ -9,7 +9,7 @@ export default function ReviewFaq() {
   ];
 
   return (
-    <section className="py-[var(--space-section)] bg-background border-t border-border/20">
+    <section className="py-(--space-section) bg-background border-t border-border/20">
       <div className="wrapper max-w-4xl mx-auto space-y-8">
         <div className="text-center">
           <h2 className="font-heading text-xl md:text-3xl font-normal text-foreground">Common Questions About Reviews</h2>

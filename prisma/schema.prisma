@@ -1071,6 +1071,7 @@ model Food {
   vendorFoods  VendorFood[]
   cartItems    CartItem[]
   cartMealFoods CartMealFood[]
+  packageMealFoods PackageMealFood[]
   orderItems   OrderItem[]
 
   @@index([categoryId])
@@ -1813,6 +1814,7 @@ model PackageMealFood {
   updatedAt     DateTime @updatedAt
 
   packageMeal PackageMeal @relation(fields: [packageMealId], references: [id])
+  food        Food        @relation(fields: [foodId], references: [id])
 
   @@map("package_meal_foods")
 }

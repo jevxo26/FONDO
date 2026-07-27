@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Package list with filtering.
 const getAllPackages = async (query: any) => {
   const { categoryId, packageType, search } = query;
   return await prisma.package.findMany({
@@ -17,6 +16,19 @@ const getAllPackages = async (query: any) => {
       prices: true,
       rating: true,
       images: true,
+      days: {
+        include: {
+          meals: {
+            include: {
+              foods: {
+                include: {
+                  food: true, 
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 };

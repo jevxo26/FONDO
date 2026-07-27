@@ -13,7 +13,7 @@ router.get('/', PackageController.getPackages);
 router.get('/:id', PackageController.getPackageDetails);
 
 // --- Vendor Management Routes ---
-router.post('/vendor/create', PackageController.createPackage); // verifyVendor 
+router.post('/vendor/create', PackageController.createPackage); // verifyVendor (Use hardcod vendor now)
 router.get('/vendor/open-requests', PackageController.getVendorOpenRequests); // verifyVendor 
 router.patch('/vendor/accept-request/:id', PackageController.acceptCustomRequest); // verifyVendor 
 

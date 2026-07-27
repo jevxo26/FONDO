@@ -1,8 +1,10 @@
+// src/app/dashboard/admin/foods/packages/page.tsx
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { PackageCard } from "@/components/dashboard/admin/foods/packages/package-card";
 import { Button } from "@/components/ui/button";
 import { foodPackages } from "@/data/packages";
 import { Package, Plus, Download } from "lucide-react";
+import Link from "next/link";
 
 export default function FoodPackagesPage() {
   return (
@@ -17,10 +19,12 @@ export default function FoodPackagesPage() {
               <Download className="size-[18px]" />
               Export
             </Button>
-            <Button className="rounded-full">
-              <Plus className="size-[18px]" />
-              Add Package
-            </Button>
+            <Link href="/dashboard/admin/foods/packages/add">
+              <Button className="rounded-full">
+                <Plus className="size-[18px]" />
+                Add Package
+              </Button>
+            </Link>
           </div>
         }
       />

@@ -1,10 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import type { FacetedFilter, RowAction } from "@/components/common/table";
+import type { FacetedFilter } from "@/components/common/table";
 import { DataTable } from "@/components/common/table";
 import type { CustomerOrder } from "@/data/orders";
-import { CreditCard, Eye, ListChecks, Truck, XCircle } from "lucide-react";
+import { CreditCard, ListChecks } from "lucide-react";
 import { orderColumns } from "./order-columns";
 
 const orderStatusFilter: FacetedFilter = {
@@ -42,32 +41,10 @@ interface OrdersTableSectionProps {
 }
 
 export function OrdersTableSection({ data }: OrdersTableSectionProps) {
-  const router = useRouter();
-
-  const rowActions: RowAction<CustomerOrder>[] = [
-    {
-      label: "View Details",
-      icon: <Eye className="size-4" />,
-      onClick: (row) => router.push(`/dashboard/admin/orders/${row.id}`),
-    },
-    {
-      label: "Assign Rider",
-      icon: <Truck className="size-4" />,
-      onClick: (row) => console.log("Assign Rider", row.id),
-    },
-    {
-      label: "Cancel Order",
-      icon: <XCircle className="size-4" />,
-      variant: "destructive",
-      onClick: (row) => console.log("Cancel Order", row.id),
-    },
-  ];
-
   return (
     <DataTable
       columns={orderColumns}
       data={data}
-      rowActions={rowActions}
       filters={[orderStatusFilter, paymentStatusFilter]}
     />
   );

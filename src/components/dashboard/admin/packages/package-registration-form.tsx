@@ -1,347 +1,284 @@
-// src/components/dashboard/admin/packages/package-registration-form.tsx
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight, Save, X } from "lucide-react";
-import { toast } from "sonner";
+import React, { type ReactNode } from "react";
+import { useForm, useFieldArray, type FieldError as FieldErrorType } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Plus, Trash2, Package, Utensils, DollarSign, CheckCircle2, RotateCcw } from "lucide-react";
+import { packageSchema } from "@/lib/schema/package-schema";
+import { FormField } from "@/components/common/form-field";
 
-// ✅ Import from package-registration folder (newly created)
-import { BasicInfoStep } from "./package-registration/basic-info-step";
-import { PricingStep } from "./package-registration/pricing-step";
-import { ConfigurationStep } from "./package-registration/configuration-step";
-import { RulesStep } from "./package-registration/rules-step";
-import { NutritionStep } from "./package-registration/nutrition-step";
-import { BenefitsStep } from "./package-registration/benefits-step";
-import { MediaStep } from "./package-registration/media-step";
 
-// ReviewStep - inline component
-const ReviewStep = ({ data }: { data: any }) => {
-  return (
-    <div className="space-y-6">
-      <h3 className="font-fraunces text-lg font-semibold">Review Package</h3>
-      <p className="text-sm text-muted-foreground">Review all the package details before submitting</p>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-1">
-          <p className="text-xs text-muted-foreground">Name</p>
-          <p className="font-medium">{data.name || "Not set"}</p>
-        </div>
-        <div className="space-y-1">
-          <p className="text-xs text-muted-foreground">Category</p>
-          <p className="font-medium">{data.category || "Not set"}</p>
-        </div>
-        <div className="space-y-1">
-          <p className="text-xs text-muted-foreground">Package Type</p>
-          <p className="font-medium">{data.packageType || "Not set"}</p>
-        </div>
-        <div className="space-y-1">
-          <p className="text-xs text-muted-foreground">Price</p>
-          <p className="font-fraunces text-xl font-bold text-primary">৳{data.price || 0}</p>
-        </div>
-        <div className="space-y-1">
-          <p className="text-xs text-muted-foreground">Duration</p>
-          <p className="font-medium">{data.durationDays || 0} Days</p>
-        </div>
-        <div className="space-y-1">
-          <p className="text-xs text-muted-foreground">Total Meals</p>
-          <p className="font-medium">{data.totalMeals || 0}</p>
-        </div>
-        <div className="col-span-2 space-y-1">
-          <p className="text-xs text-muted-foreground">Description</p>
-          <p className="text-sm">{data.description || "No description"}</p>
-        </div>
-        <div className="col-span-2 space-y-1">
-          <p className="text-xs text-muted-foreground">Tags</p>
-          <div className="flex flex-wrap gap-1">
-            {(data.tags || []).map((tag: string) => (
-              <span key={tag} className="px-2 py-0.5 bg-muted rounded-full text-xs">
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+
+// ==========================================
+// Initial Form Dummy Data
+// ==========================================
+
+const dummyData = {
+  name: "7-Day Premium Weight Gain & Muscle Plan",
+  code: "PKG-WG-PRO",
+  category: "Weight Gain & Muscle Building",
+  durationDays: 7,
+  totalMeals: 14,
+  price: 4200,
+  discountedPrice: 3900,
+  isCustomizable: true,
+  status: "Active",
+  meals: [
+    {
+      day: "Day 1",
+      mealType: "Breakfast",
+      time: "08:00 AM",
+      foodItem: "Rosogolla (2 pcs) & Chicken Biryani",
+      calories: 870,
+      protein: 32,
+      fat: 27,
+      carbs: 117,
+    },
+    {
+      day: "Day 1",
+      mealType: "Lunch",
+      time: "01:30 PM",
+      foodItem: "Fish Curry (Rui/Katol)",
+      calories: 380,
+      protein: 28,
+      fat: 18,
+      carbs: 12,
+    },
+  ],
 };
 
-interface PackageRegistrationFormProps {
-  initialData?: any;
-  isEdit?: boolean;
-}
+// Common Input Tailwind Classes following Global Design System
+const inputStyles =
+  "w-full px-3.5 py-2 text-sm bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground placeholder:text-muted-foreground shadow-sm";
 
-const STEPS = [
-  { id: 1, label: "Basic Info" },
-  { id: 2, label: "Pricing" },
-  { id: 3, label: "Configuration" },
-  { id: 4, label: "Rules" },
-  { id: 5, label: "Nutrition" },
-  { id: 6, label: "Benefits" },
-  { id: 7, label: "Media" },
-  { id: 8, label: "Review" },
-];
-
-export function PackageRegistrationForm({ initialData, isEdit = false }: PackageRegistrationFormProps) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<any>({
-    name: "",
-    slug: "",
-    packageCode: "",
-    description: "",
-    category: "",
-    tags: [],
-    status: "DRAFT",
-    price: 0,
-    discountPrice: "",
-    currency: "BDT",
-    vat: 0,
-    deliveryCharge: 0,
-    packageType: "",
-    durationDays: "",
-    totalMeals: "",
-    isCustomizable: true,
-    thumbnail: "",
-    coverImage: "",
-    gallery: [],
-    benefits: [],
-    nutrition: {
-      dailyCalories: "",
-      dailyProtein: "",
-      dailyCarbohydrate: "",
-      dailyFat: "",
-      dailyFiber: "",
-      dailySugar: "",
-      dailySodium: "",
-    },
-    rules: {
-      minimumOrderDays: "",
-      maximumOrderDays: "",
-      minimumMealsPerDay: "",
-      maximumMealsPerDay: "",
-      advancePaymentRequired: false,
-      allowPause: false,
-      allowResume: false,
-      allowSkipMeal: false,
-      allowCancellation: false,
-      deliveryDays: [],
-      deliveryTimeStart: "",
-      deliveryTimeEnd: "",
-      mealCutoffTime: "",
-    },
-    ...initialData,
+export default function AddPackageForm() {
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: yupResolver(packageSchema),
+    defaultValues: dummyData,
   });
 
-  const updateField = (field: string, value: any) => {
-    setFormData((prev: any) => ({ ...prev, [field]: value }));
-  };
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "meals",
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      if (!formData.name || !formData.price || !formData.packageType || !formData.durationDays || !formData.totalMeals) {
-        toast.error("Please fill in all required fields");
-        setIsLoading(false);
-        return;
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      console.log("Package data:", formData);
-      toast.success(isEdit ? "Package updated successfully!" : "Package created successfully!");
-      router.push("/dashboard/admin/packages");
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const nextStep = () => {
-    if (currentStep < STEPS.length) {
-      if (currentStep === 1 && (!formData.name || !formData.category)) {
-        toast.error("Please fill in all required fields in Basic Info");
-        return;
-      }
-      if (currentStep === 2 && (!formData.price || !formData.currency)) {
-        toast.error("Please fill in all required fields in Pricing");
-        return;
-      }
-      if (currentStep === 3 && (!formData.packageType || !formData.durationDays || !formData.totalMeals)) {
-        toast.error("Please fill in all required fields in Configuration");
-        return;
-      }
-      setCurrentStep((prev) => prev + 1);
-    }
-  };
-
-  const prevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep((prev) => prev - 1);
-    }
-  };
-
-  const goToStep = (step: number) => {
-    setCurrentStep(step);
-  };
-
-  const renderStep = () => {
-    switch (currentStep) {
-      case 1:
-        return (
-          <Card className="p-6">
-            <BasicInfoStep data={formData} onChange={updateField} />
-          </Card>
-        );
-      case 2:
-        return (
-          <Card className="p-6">
-            <PricingStep data={formData} onChange={updateField} />
-          </Card>
-        );
-      case 3:
-        return (
-          <Card className="p-6">
-            <ConfigurationStep data={formData} onChange={updateField} />
-          </Card>
-        );
-      case 4:
-        return (
-          <Card className="p-6">
-            <RulesStep data={formData} onChange={updateField} />
-          </Card>
-        );
-      case 5:
-        return (
-          <Card className="p-6">
-            <NutritionStep data={formData} onChange={updateField} />
-          </Card>
-        );
-      case 6:
-        return (
-          <Card className="p-6">
-            <BenefitsStep data={formData} onChange={updateField} />
-          </Card>
-        );
-      case 7:
-        return (
-          <Card className="p-6">
-            <MediaStep data={formData} onChange={updateField} />
-          </Card>
-        );
-      case 8:
-        return (
-          <Card className="p-6">
-            <ReviewStep data={formData} />
-          </Card>
-        );
-      default:
-        return null;
-    }
-  };
-
-  const renderStepIndicator = () => {
-    return (
-      <div className="flex items-center gap-1 mb-8 overflow-x-auto pb-2">
-        {STEPS.map((step, index) => (
-          <div key={step.id} className="flex items-center shrink-0">
-            <button
-              type="button"
-              onClick={() => goToStep(step.id)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
-                currentStep === step.id
-                  ? "bg-primary text-primary-foreground shadow-[0_0_20px_rgba(206,163,89,0.3)]"
-                  : currentStep > step.id
-                  ? "bg-success/10 text-success"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-              }`}
-            >
-              <span
-                className={`flex size-5 items-center justify-center rounded-full text-[10px] font-bold ${
-                  currentStep === step.id
-                    ? "bg-white/20 text-primary-foreground"
-                    : currentStep > step.id
-                    ? "bg-success/20 text-success"
-                    : "bg-background text-muted-foreground"
-                }`}
-              >
-                {currentStep > step.id ? "✓" : step.id}
-              </span>
-              {step.label}
-            </button>
-            {index < STEPS.length - 1 && (
-              <div className={`w-8 h-px mx-1 ${currentStep > step.id ? "bg-success" : "bg-muted"}`} />
-            )}
-          </div>
-        ))}
-      </div>
-    );
+  const onSubmit = (data: any) => {
+    console.log("Submitted Package Data:", data);
+    alert("Package saved successfully!");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h2 className="font-fraunces text-2xl font-bold">
-          {isEdit ? "Edit Package" : "Register New Package"}
-        </h2>
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => router.push("/dashboard/admin/packages")}
-            size="sm"
-          >
-            <X className="h-4 w-4 mr-1" />
-            Cancel
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              const draftData = { ...formData, status: "DRAFT" };
-              console.log("Saved as draft:", draftData);
-              toast.success("Package saved as draft");
-            }}
-            size="sm"
-          >
-            Save Draft
-          </Button>
+    <section className="py-6 lg:py-8">
+      <div className="wrapper max-w-5xl mx-auto space-y-8">
+        {/* Header Action Bar */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card p-6 rounded-2xl border border-border shadow-sm">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2.5">
+              <Package className="w-6 h-6 text-primary" />
+              Create New Diet Package
+            </h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Configure package pricing, rules, and daily nutritional schedules.
+            </p>
+          </div>
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={() => reset(dummyData)}
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-muted-foreground bg-muted hover:bg-muted/80 rounded-lg transition"
+            >
+              <RotateCcw className="w-4 h-4" />
+              Reset
+            </button>
+            <button
+              type="submit"
+              form="package-form"
+              disabled={isSubmitting}
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2 text-sm font-semibold text-primary-foreground bg-primary hover:bg-primary/90 rounded-lg transition shadow-sm disabled:opacity-50"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              {isSubmitting ? "Saving..." : "Save Package"}
+            </button>
+          </div>
         </div>
+
+        {/* Main Form */}
+        <form id="package-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* Section 1: Basic Information */}
+          <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-6">
+            <div className="border-b border-border pb-3">
+              <h2 className="text-base font-bold text-foreground">Basic Information</h2>
+              <p className="text-xs text-muted-foreground">General details and accessibility settings.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <FormField label="Package Name" htmlFor="name" error={errors.name} required className="md:col-span-2">
+                <input id="name" {...register("name")} placeholder="e.g. 7-Day Muscle Building Plan" className={inputStyles} />
+              </FormField>
+
+              <FormField label="Package Code" htmlFor="code" error={errors.code} required>
+                <input id="code" {...register("code")} placeholder="PKG-WG-PRO" className={inputStyles} />
+              </FormField>
+
+              <FormField label="Category" htmlFor="category" error={errors.category} required>
+                <input id="category" {...register("category")} placeholder="Weight Gain" className={inputStyles} />
+              </FormField>
+
+              <FormField label="Status" htmlFor="status" error={errors.status} required>
+                <select id="status" {...register("status")} className={inputStyles}>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </FormField>
+
+              <div className="flex items-center gap-3 pt-6">
+                <input
+                  type="checkbox"
+                  id="isCustomizable"
+                  {...register("isCustomizable")}
+                  className="w-4 h-4 rounded border-input text-primary focus:ring-primary/20 accent-primary"
+                />
+                <label htmlFor="isCustomizable" className="text-sm font-medium text-foreground cursor-pointer select-none">
+                  Allow User Customization
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: Pricing & Duration */}
+          <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-6">
+            <div className="border-b border-border pb-3 flex items-center gap-2">
+              <DollarSign className="w-5 h-5 text-primary" />
+              <div>
+                <h2 className="text-base font-bold text-foreground">Pricing & Duration</h2>
+                <p className="text-xs text-muted-foreground">Set subscription duration and standard pricing details.</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+              <FormField label="Duration (Days)" htmlFor="durationDays" error={errors.durationDays} required>
+                <input id="durationDays" type="number" {...register("durationDays")} className={inputStyles} />
+              </FormField>
+
+              <FormField label="Total Meals" htmlFor="totalMeals" error={errors.totalMeals} required>
+                <input id="totalMeals" type="number" {...register("totalMeals")} className={inputStyles} />
+              </FormField>
+
+              <FormField label="Standard Price (BDT)" htmlFor="price" error={errors.price} required>
+                <input id="price" type="number" {...register("price")} className={inputStyles} />
+              </FormField>
+
+              <FormField label="Discounted Price (BDT)" htmlFor="discountedPrice" error={errors.discountedPrice} required>
+                <input id="discountedPrice" type="number" {...register("discountedPrice")} className={inputStyles} />
+              </FormField>
+            </div>
+          </div>
+
+          {/* Section 3: Dynamic Meal Items */}
+          <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-6">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <div className="flex items-center gap-2">
+                <Utensils className="w-5 h-5 text-primary" />
+                <div>
+                  <h2 className="text-base font-bold text-foreground">Meal Schedule ({fields.length})</h2>
+                  <p className="text-xs text-muted-foreground">Define daily nutritional meals included in this plan.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() =>
+                  append({
+                    day: "Day 1",
+                    mealType: "Lunch",
+                    time: "01:00 PM",
+                    foodItem: "",
+                    calories: 0,
+                    protein: 0,
+                    fat: 0,
+                    carbs: 0,
+                  })
+                }
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition"
+              >
+                <Plus className="w-4 h-4" /> Add Meal Item
+              </button>
+            </div>
+
+            {errors.meals && typeof errors.meals.message === "string" && (
+              <p className="text-xs font-medium text-red-500">{errors.meals.message}</p>
+            )}
+
+            <div className="space-y-4">
+              {fields.map((field, index) => (
+                <div
+                  key={field.id}
+                  className="p-5 border border-border rounded-xl bg-muted/30 space-y-4 relative group"
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-bold text-primary uppercase tracking-wider">
+                      Meal #{index + 1}
+                    </span>
+                    {fields.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => remove(index)}
+                        className="text-muted-foreground hover:text-red-500 transition p-1"
+                        title="Remove Meal"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Meal Header Fields */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <FormField label="Day" error={errors.meals?.[index]?.day} required>
+                      <input {...register(`meals.${index}.day` as const)} placeholder="Day 1" className={inputStyles} />
+                    </FormField>
+
+                    <FormField label="Type" error={errors.meals?.[index]?.mealType} required>
+                      <input {...register(`meals.${index}.mealType` as const)} placeholder="Breakfast" className={inputStyles} />
+                    </FormField>
+
+                    <FormField label="Time" error={errors.meals?.[index]?.time} required>
+                      <input {...register(`meals.${index}.time` as const)} placeholder="08:00 AM" className={inputStyles} />
+                    </FormField>
+
+                    <FormField label="Food Description" error={errors.meals?.[index]?.foodItem} required>
+                      <input {...register(`meals.${index}.foodItem` as const)} placeholder="Rice & Chicken" className={inputStyles} />
+                    </FormField>
+                  </div>
+
+                  {/* Meal Macros Row */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2 border-t border-border/50">
+                    <FormField label="Calories (kcal)" error={errors.meals?.[index]?.calories} required>
+                      <input type="number" {...register(`meals.${index}.calories` as const)} className={inputStyles} />
+                    </FormField>
+
+                    <FormField label="Protein (g)" error={errors.meals?.[index]?.protein} required>
+                      <input type="number" {...register(`meals.${index}.protein` as const)} className={inputStyles} />
+                    </FormField>
+
+                    <FormField label="Fat (g)" error={errors.meals?.[index]?.fat} required>
+                      <input type="number" {...register(`meals.${index}.fat` as const)} className={inputStyles} />
+                    </FormField>
+
+                    <FormField label="Carbs (g)" error={errors.meals?.[index]?.carbs} required>
+                      <input type="number" {...register(`meals.${index}.carbs` as const)} className={inputStyles} />
+                    </FormField>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </form>
       </div>
-
-      {renderStepIndicator()}
-      {renderStep()}
-
-      <div className="flex items-center justify-between pt-4 border-t">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={prevStep}
-          disabled={currentStep === 1}
-          className="gap-2"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          Previous
-        </Button>
-
-        <div className="flex items-center gap-3">
-          {currentStep < STEPS.length ? (
-            <Button type="button" onClick={nextStep} className="gap-2">
-              Next
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          ) : (
-            <Button type="submit" disabled={isLoading} className="gap-2">
-              <Save className="h-4 w-4" />
-              {isLoading ? "Saving..." : isEdit ? "Update Package" : "Create Package"}
-            </Button>
-          )}
-        </div>
-      </div>
-    </form>
+    </section>
   );
 }

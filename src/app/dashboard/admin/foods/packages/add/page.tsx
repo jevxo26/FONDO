@@ -1,6 +1,6 @@
 // src/app/dashboard/admin/packages/add/page.tsx
+import AddPackageForm from "@/components/dashboard/admin/packages/package-registration-form";
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { PackageRegistrationForm } from "@/components/dashboard/admin/packages/package-registration-form";
 import { Package } from "lucide-react";
 
 export default function AddPackagePage() {
@@ -11,7 +11,7 @@ export default function AddPackagePage() {
         description="Create a new meal package for subscription plans."
         icon={Package}
       />
-      <PackageRegistrationForm />
+      <AddPackageForm/>
     </div>
   );
 }

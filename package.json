@@ -9,7 +9,10 @@
     "start": "NODE_ENV=production node dist/server/index.js",
     "lint": "eslint",
     "format": "prettier --write \"{src,server}/**/*.{ts,tsx,js,jsx,json}\"",
-    "type-check": "tsc --noEmit && tsc --noEmit --project tsconfig.server.json"
+    "type-check": "tsc --noEmit && tsc --noEmit --project tsconfig.server.json",
+    "prisma:generate": "npx prisma generate",
+    "prisma:push": "npx prisma db push --skip-generate",
+    "prisma:migrate": "npx prisma migrate dev"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

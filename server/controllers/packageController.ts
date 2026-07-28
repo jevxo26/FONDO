@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { PackageService } from '../services/package.service';
+import { PackageService } from '../services/packageService';
 
 const getPackages = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -23,6 +23,7 @@ const getPackageDetails = async (req: Request, res: Response): Promise<Response>
 
 // New package created by vendor
 const createPackage = async (req: any, res: Response): Promise<Response> => {
+  console.log(req.body)
   try {
     // const vendorId = req.user.id;
     const vendorId = "81e8d8c3-5d23-474b-8763-098ab6a45652";

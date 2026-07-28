@@ -64,8 +64,48 @@ const getPackageById = async (id: string) => {
 const createVendorPackage = async (vendorId: string, data: any) => {
   return await prisma.package.create({
     data: {
-      ...data,
-      // If your schema stores the vendor ID in the package, include it here.
+      packageCode: data.packageCode,
+      name: data.name,
+      slug: data.slug,
+      description: data.description,
+      thumbnail: data.thumbnail,
+      coverImage: data.coverImage,
+      packageType: data.packageType,
+      durationDays: data.durationDays,
+      totalMeals: data.totalMeals,
+      price: data.price,
+      discountPrice: data.discountPrice,
+      currency: data.currency,
+      isCustomizable: data.isCustomizable,
+      status: data.status,
+
+      packageCategory: {
+        connect: {
+          id: data.packageCategoryId,
+        },
+      },
+
+      days: {
+        create: data.days.map((day: any) => ({
+          dayNumber: day.dayNumber,
+          title: day.title,
+          description: day.description,
+
+          meals: {
+            create: day.meals.map((meal: any) => ({
+              mealType: meal.mealType,
+              mealTime: meal.mealTime,
+
+              foods: {
+                create: meal.foods.map((food: any) => ({
+                  foodId: food.foodId,
+                  quantity: food.quantity,
+                })),
+              },
+            })),
+          },
+        })),
+      },
     },
   });
 };

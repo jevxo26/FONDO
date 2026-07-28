@@ -1,625 +1,111 @@
-[
-    {
-      "id": "105a3836-b72c-4383-82c2-3e15f6403a60",
-      "packageCode": "PKG-WG-PRO",
-      "name": "7-Day Premium Weight Gain & Muscle Plan",
-      "slug": "7-day-premium-weight-gain-muscle-plan",
-      "description": "A fully structured 7-day high-calorie and high-protein meal package for healthy weight gain.",
-      "thumbnail": "https://example.com/thumb.jpg",
-      "coverImage": "https://example.com/cover.jpg",
-      "packageType": "WEEKLY",
-      "durationDays": 7,
-      "totalMeals": 14,
-      "price": "4200",
-      "discountPrice": "3900",
-      "currency": "BDT",
-      "isCustomizable": true,
-      "status": "active",
-      "createdAt": "2026-07-27T10:15:33.206Z",
-      "updatedAt": "2026-07-27T10:15:33.206Z",
-      "deletedAt": null,
-      "packageCategoryId": "7a7bcb9c-4933-4e6d-b1ab-795d1c9bc85b",
-      "packageCategory": {
-        "id": "7a7bcb9c-4933-4e6d-b1ab-795d1c9bc85b",
-        "name": "Weight Gain & Muscle Building",
-        "slug": "weight-gain-muscle-building",
-        "description": "High-calorie and high-protein nutrient-dense meal plans for healthy weight gain.",
-        "icon": "https://example.com/icons/weight-gain.png",
-        "status": "active",
-        "createdAt": "2026-07-26T05:46:29.130Z",
-        "updatedAt": "2026-07-26T05:46:29.130Z"
+export const  packageData =[
+  {
+    "id": "105a3836-b72c-4383-82c2-3e15f6403a60",
+    "packageCode": "PKG-WG-PRO",
+    "name": "7-Day Premium Weight Gain & Muscle Plan",
+    "slug": "7-day-premium-weight-gain-muscle-plan",
+    "description": "A fully structured 7-day high-calorie and high-protein meal package for healthy weight gain.",
+    "thumbnail": "https://example.com/thumb.jpg",
+    "coverImage": "https://example.com/cover.jpg",
+    "packageType": "WEEKLY",
+    "durationDays": 3,
+    "totalMeals": 4,
+    "price": "4200",
+    "discountPrice": "3900",
+    "currency": "BDT",
+    "isCustomizable": true,
+    "status": "active",
+    "packageCategoryId": "7a7bcb9c-4933-4e6d-b1ab-795d1c9bc85b",
+    "packageCategory": {
+      "id": "7a7bcb9c-4933-4e6d-b1ab-795d1c9bc85b",
+      "name": "Weight Gain & Muscle Building",
+      "slug": "weight-gain-muscle-building",
+      "description": "High-calorie and high-protein nutrient-dense meal plans for healthy weight gain.",
+      "icon": "https://example.com/icons/weight-gain.png",
+      "status": "active"
+    },
+    "prices": [],
+    "rating": null,
+    "images": [],
+    "days": [
+      {
+        "dayNumber": 1,
+        "title": "Day 1 Schedule",
+        "meals": [
+          {
+            "mealType": "BREAKFAST",
+            "mealTime": "08:00 AM",
+            "foods": [
+              {
+                "name": "Rosogolla (2 pcs)",
+                "quantity": 1,
+                "calories": 220,
+                "protein": 4
+              },
+              {
+                "name": "Chicken Biryani",
+                "quantity": 1,
+                "calories": 650,
+                "protein": 28
+              }
+            ]
+          },
+          {
+            "mealType": "LUNCH",
+            "mealTime": "01:30 PM",
+            "foods": [
+              {
+                "name": "Fish Curry (Rui/Katol)",
+                "quantity": 1,
+                "calories": 380,
+                "protein": 28
+              }
+            ]
+          }
+        ]
       },
-      "prices": [],
-      "rating": null,
-      "images": [],
-      "days": [
-        {
-          "id": "6b4bd466-3e70-4263-a29a-bc04cc15a051",
-          "packageId": "105a3836-b72c-4383-82c2-3e15f6403a60",
-          "dayNumber": 1,
-          "title": "Day 1 Schedule",
-          "description": null,
-          "status": "active",
-          "createdAt": "2026-07-27T10:15:33.206Z",
-          "updatedAt": "2026-07-27T10:15:33.206Z",
-          "meals": [
-            {
-              "id": "5a76dd61-575e-49e0-a7e8-e49c3283712e",
-              "packageDayId": "6b4bd466-3e70-4263-a29a-bc04cc15a051",
-              "mealType": "BREAKFAST",
-              "mealTime": "08:00 AM",
-              "calories": null,
-              "status": "active",
-              "createdAt": "2026-07-27T10:15:33.206Z",
-              "updatedAt": "2026-07-27T10:15:33.206Z",
-              "foods": [
-                {
-                  "id": "e1ee629b-5d55-4463-97f3-cdaf53713e48",
-                  "packageMealId": "5a76dd61-575e-49e0-a7e8-e49c3283712e",
-                  "foodId": "07f5887f-9403-4030-9cbd-a128812ab131",
-                  "quantity": 1,
-                  "isOptional": false,
-                  "sortOrder": 0,
-                  "createdAt": "2026-07-27T10:15:33.206Z",
-                  "updatedAt": "2026-07-27T10:15:33.206Z",
-                  "food": {
-                    "id": "07f5887f-9403-4030-9cbd-a128812ab131",
-                    "categoryId": "359023e6-b4f9-4848-b334-3ab7201086b8",
-                    "subCategoryId": "901b3e23-4495-4768-805b-4d92bd6017d9",
-                    "foodCode": "FD-1784030270759-5HLM",
-                    "name": "Rosogolla (2 pcs)",
-                    "slug": "rosogolla-2pcs",
-                    "shortDescription": "Soft, spongy cottage cheese dumplings soaked in light sugar syrup. Bengal's most beloved sweet.",
-                    "description": "Soft, spongy cottage cheese dumplings soaked in light sugar syrup. Bengal's most beloved sweet.",
-                    "thumbnail": "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "coverImage": "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "preparationTime": 2,
-                    "calories": 220,
-                    "protein": 4,
-                    "fat": 5,
-                    "carbohydrate": 42,
-                    "servingSize": "2 pieces (100g)",
-                    "foodType": "VEG",
-                    "spiceLevel": "MILD",
-                    "isFeatured": false,
-                    "isPopular": true,
-                    "isRecommended": false,
-                    "status": "active",
-                    "createdAt": "2026-07-14T11:57:50.761Z",
-                    "updatedAt": "2026-07-17T13:53:56.203Z",
-                    "deletedAt": null
-                  }
-                },
-                {
-                  "id": "5cc863c4-0af5-4040-8e9c-c86e7117f403",
-                  "packageMealId": "5a76dd61-575e-49e0-a7e8-e49c3283712e",
-                  "foodId": "1403bda3-8c32-4e29-8ff1-eeb1dea16f67",
-                  "quantity": 1,
-                  "isOptional": false,
-                  "sortOrder": 0,
-                  "createdAt": "2026-07-27T10:15:33.206Z",
-                  "updatedAt": "2026-07-27T10:15:33.206Z",
-                  "food": {
-                    "id": "1403bda3-8c32-4e29-8ff1-eeb1dea16f67",
-                    "categoryId": "cd885af0-72a5-44f2-adb9-a9017c3cf36e",
-                    "subCategoryId": "ebd22780-d067-4104-903a-618e2ddee048",
-                    "foodCode": "FD-1784030220936-FBOK",
-                    "name": "Chicken Biryani",
-                    "slug": "chicken-biryani",
-                    "shortDescription": "Fragrant basmati rice layered with marinated chicken, caramelized onions, and aromatic spices. Cooked in the traditional",
-                    "description": "Fragrant basmati rice layered with marinated chicken, caramelized onions, and aromatic spices. Cooked in the traditional dum style.",
-                    "thumbnail": "https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Zm9vZHxlbnwwfHwwfHx8MA%3D%3D",
-                    "coverImage": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "preparationTime": 30,
-                    "calories": 650,
-                    "protein": 28,
-                    "fat": 22,
-                    "carbohydrate": 75,
-                    "servingSize": "1 plate (400g)",
-                    "foodType": "NON_VEG",
-                    "spiceLevel": "MEDIUM",
-                    "isFeatured": true,
-                    "isPopular": true,
-                    "isRecommended": true,
-                    "status": "active",
-                    "createdAt": "2026-07-14T11:57:00.938Z",
-                    "updatedAt": "2026-07-17T13:53:56.203Z",
-                    "deletedAt": null
-                  }
-                }
-              ]
-            },
-            {
-              "id": "e77e7d7c-e04a-4edc-9ff9-c65b22bc809f",
-              "packageDayId": "6b4bd466-3e70-4263-a29a-bc04cc15a051",
-              "mealType": "LUNCH",
-              "mealTime": "01:30 PM",
-              "calories": null,
-              "status": "active",
-              "createdAt": "2026-07-27T10:15:33.206Z",
-              "updatedAt": "2026-07-27T10:15:33.206Z",
-              "foods": [
-                {
-                  "id": "0c6e0d79-76a5-4d7d-b866-7eaf266238b6",
-                  "packageMealId": "e77e7d7c-e04a-4edc-9ff9-c65b22bc809f",
-                  "foodId": "27faf81e-626c-473a-9076-02ada8dbe241",
-                  "quantity": 1,
-                  "isOptional": false,
-                  "sortOrder": 0,
-                  "createdAt": "2026-07-27T10:15:33.206Z",
-                  "updatedAt": "2026-07-27T10:15:33.206Z",
-                  "food": {
-                    "id": "27faf81e-626c-473a-9076-02ada8dbe241",
-                    "categoryId": "10c3b344-4f07-4dfd-b580-e4dd2ef4fbbb",
-                    "subCategoryId": "677b853d-68db-4c20-a8fe-4d02940ff7c9",
-                    "foodCode": "FD-1784030275332-IIAZ",
-                    "name": "Fish Curry (Rui/Katol)",
-                    "slug": "fish-curry-rui-katol",
-                    "shortDescription": "Traditional Bengali fish curry made with freshwater Rui/Katol in a turmeric and mustard gravy. Authentic and soulful.",
-                    "description": "Traditional Bengali fish curry made with freshwater Rui/Katol in a turmeric and mustard gravy. Authentic and soulful.",
-                    "thumbnail": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "coverImage": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "preparationTime": 35,
-                    "calories": 380,
-                    "protein": 28,
-                    "fat": 18,
-                    "carbohydrate": 12,
-                    "servingSize": "1 bowl (350g)",
-                    "foodType": "SEAFOOD",
-                    "spiceLevel": "MEDIUM",
-                    "isFeatured": true,
-                    "isPopular": true,
-                    "isRecommended": true,
-                    "status": "active",
-                    "createdAt": "2026-07-14T11:57:55.334Z",
-                    "updatedAt": "2026-07-17T13:53:56.203Z",
-                    "deletedAt": null
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "aeba4668-fb67-46ff-8584-094afaace9d5",
-          "packageId": "105a3836-b72c-4383-82c2-3e15f6403a60",
-          "dayNumber": 2,
-          "title": "Day 2 Schedule",
-          "description": null,
-          "status": "active",
-          "createdAt": "2026-07-27T10:15:33.206Z",
-          "updatedAt": "2026-07-27T10:15:33.206Z",
-          "meals": [
-            {
-              "id": "4489c019-62b8-4751-8527-43e1193c702b",
-              "packageDayId": "aeba4668-fb67-46ff-8584-094afaace9d5",
-              "mealType": "BREAKFAST",
-              "mealTime": "08:00 AM",
-              "calories": null,
-              "status": "active",
-              "createdAt": "2026-07-27T10:15:33.206Z",
-              "updatedAt": "2026-07-27T10:15:33.206Z",
-              "foods": [
-                {
-                  "id": "b232a52e-2247-4d4e-adb2-19a6285bbb27",
-                  "packageMealId": "4489c019-62b8-4751-8527-43e1193c702b",
-                  "foodId": "2a7f2597-bfcd-440a-8c37-75a95b58b6fa",
-                  "quantity": 1,
-                  "isOptional": false,
-                  "sortOrder": 0,
-                  "createdAt": "2026-07-27T10:15:33.206Z",
-                  "updatedAt": "2026-07-27T10:15:33.206Z",
-                  "food": {
-                    "id": "2a7f2597-bfcd-440a-8c37-75a95b58b6fa",
-                    "categoryId": "a1df0b73-f600-4b2a-a4d0-c38a3ea6bb64",
-                    "subCategoryId": "8a9716ee-10a8-4f10-85c2-9920b7a8903e",
-                    "foodCode": "FD-1784030243565-GJZ4",
-                    "name": "Grilled Chicken Salad",
-                    "slug": "grilled-chicken-salad",
-                    "shortDescription": "Fresh mixed greens topped with herb-marinated grilled chicken breast, cherry tomatoes, cucumber, and house dressing.",
-                    "description": "Fresh mixed greens topped with herb-marinated grilled chicken breast, cherry tomatoes, cucumber, and house dressing.",
-                    "thumbnail": "https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "coverImage": "https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "preparationTime": 15,
-                    "calories": 280,
-                    "protein": 35,
-                    "fat": 12,
-                    "carbohydrate": 10,
-                    "servingSize": "1 bowl (300g)",
-                    "foodType": "NON_VEG",
-                    "spiceLevel": "MILD",
-                    "isFeatured": true,
-                    "isPopular": false,
-                    "isRecommended": true,
-                    "status": "active",
-                    "createdAt": "2026-07-14T11:57:23.566Z",
-                    "updatedAt": "2026-07-17T13:53:56.203Z",
-                    "deletedAt": null
-                  }
-                },
-                {
-                  "id": "b497c3c5-3235-4b5a-8c22-245edba9de28",
-                  "packageMealId": "4489c019-62b8-4751-8527-43e1193c702b",
-                  "foodId": "3e30228a-b943-433c-9356-a4a8e09300ea",
-                  "quantity": 1,
-                  "isOptional": false,
-                  "sortOrder": 0,
-                  "createdAt": "2026-07-27T10:15:33.206Z",
-                  "updatedAt": "2026-07-27T10:15:33.206Z",
-                  "food": {
-                    "id": "3e30228a-b943-433c-9356-a4a8e09300ea",
-                    "categoryId": "10c3b344-4f07-4dfd-b580-e4dd2ef4fbbb",
-                    "subCategoryId": "0455377e-f1fc-46cd-95b8-906241d4d1cb",
-                    "foodCode": "FD-1784030250286-LD0H",
-                    "name": "Daal (Lentil Soup)",
-                    "slug": "daal-lentil-soup",
-                    "shortDescription": "Traditional Bengali lentil soup tempered with garlic, cumin, and mustard seeds. A comforting staple.",
-                    "description": "Traditional Bengali lentil soup tempered with garlic, cumin, and mustard seeds. A comforting staple.",
-                    "thumbnail": "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "coverImage": "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "preparationTime": 20,
-                    "calories": 180,
-                    "protein": 14,
-                    "fat": 5,
-                    "carbohydrate": 28,
-                    "servingSize": "1 bowl (250ml)",
-                    "foodType": "VEG",
-                    "spiceLevel": "MILD",
-                    "isFeatured": false,
-                    "isPopular": true,
-                    "isRecommended": false,
-                    "status": "active",
-                    "createdAt": "2026-07-14T11:57:30.287Z",
-                    "updatedAt": "2026-07-17T13:53:56.203Z",
-                    "deletedAt": null
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "13533892-89f0-47a3-b7fe-e6e82b69bd11",
-          "packageId": "105a3836-b72c-4383-82c2-3e15f6403a60",
-          "dayNumber": 3,
-          "title": "Day 3 Schedule",
-          "description": null,
-          "status": "active",
-          "createdAt": "2026-07-27T10:15:33.206Z",
-          "updatedAt": "2026-07-27T10:15:33.206Z",
-          "meals": [
-            {
-              "id": "908d97d6-93c3-4d9c-a73b-c473c6e7172d",
-              "packageDayId": "13533892-89f0-47a3-b7fe-e6e82b69bd11",
-              "mealType": "BREAKFAST",
-              "mealTime": "08:00 AM",
-              "calories": null,
-              "status": "active",
-              "createdAt": "2026-07-27T10:15:33.206Z",
-              "updatedAt": "2026-07-27T10:15:33.206Z",
-              "foods": [
-                {
-                  "id": "e6c79ebd-10a2-4bd2-9bf2-778bb677197b",
-                  "packageMealId": "908d97d6-93c3-4d9c-a73b-c473c6e7172d",
-                  "foodId": "6f78e9c4-aa55-481b-b7dd-e325e3c196f3",
-                  "quantity": 1,
-                  "isOptional": false,
-                  "sortOrder": 0,
-                  "createdAt": "2026-07-27T10:15:33.206Z",
-                  "updatedAt": "2026-07-27T10:15:33.206Z",
-                  "food": {
-                    "id": "6f78e9c4-aa55-481b-b7dd-e325e3c196f3",
-                    "categoryId": "a406a43d-932a-46d5-9a03-e43c380c0282",
-                    "subCategoryId": "af71c2e9-ed26-4466-820d-212f0fae5727",
-                    "foodCode": "FD-1784030266127-L8X3",
-                    "name": "Mango Lassi",
-                    "slug": "mango-lassi",
-                    "shortDescription": "Creamy yogurt-based drink blended with ripe Alphonso mangoes and a hint of cardamom. Refreshingly delicious.",
-                    "description": "Creamy yogurt-based drink blended with ripe Alphonso mangoes and a hint of cardamom. Refreshingly delicious.",
-                    "thumbnail": "https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjJ8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "coverImage": "https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjJ8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "preparationTime": 5,
-                    "calories": 180,
-                    "protein": 6,
-                    "fat": 8,
-                    "carbohydrate": 24,
-                    "servingSize": "1 glass (300ml)",
-                    "foodType": "VEG",
-                    "spiceLevel": "MILD",
-                    "isFeatured": true,
-                    "isPopular": true,
-                    "isRecommended": false,
-                    "status": "active",
-                    "createdAt": "2026-07-14T11:57:46.129Z",
-                    "updatedAt": "2026-07-17T13:53:56.203Z",
-                    "deletedAt": null
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "4fede8c9-65b6-4d94-8c66-831f594084ab",
-          "packageId": "105a3836-b72c-4383-82c2-3e15f6403a60",
-          "dayNumber": 4,
-          "title": "Day 4 Schedule",
-          "description": null,
-          "status": "active",
-          "createdAt": "2026-07-27T10:15:33.206Z",
-          "updatedAt": "2026-07-27T10:15:33.206Z",
-          "meals": [
-            {
-              "id": "9f86ced3-ae9f-4a6b-9236-ce3e79176cb0",
-              "packageDayId": "4fede8c9-65b6-4d94-8c66-831f594084ab",
-              "mealType": "BREAKFAST",
-              "mealTime": "08:00 AM",
-              "calories": null,
-              "status": "active",
-              "createdAt": "2026-07-27T10:15:33.206Z",
-              "updatedAt": "2026-07-27T10:15:33.206Z",
-              "foods": [
-                {
-                  "id": "5b1fee6e-aa23-42ee-a355-252e7d27c509",
-                  "packageMealId": "9f86ced3-ae9f-4a6b-9236-ce3e79176cb0",
-                  "foodId": "76cf1dff-ce07-4516-8b12-a2ac6e8b0ccc",
-                  "quantity": 1,
-                  "isOptional": false,
-                  "sortOrder": 0,
-                  "createdAt": "2026-07-27T10:15:33.206Z",
-                  "updatedAt": "2026-07-27T10:15:33.206Z",
-                  "food": {
-                    "id": "76cf1dff-ce07-4516-8b12-a2ac6e8b0ccc",
-                    "categoryId": "10c3b344-4f07-4dfd-b580-e4dd2ef4fbbb",
-                    "subCategoryId": "e79e9631-ad3f-4cf3-93bc-756ba492b9d5",
-                    "foodCode": "FD-1784030231716-UKS6",
-                    "name": "Beef Curry",
-                    "slug": "beef-curry",
-                    "shortDescription": "Tender beef slow-cooked in rich aromatic gravy with traditional Bengali spices. Perfect with rice or bread.",
-                    "description": "Tender beef slow-cooked in rich aromatic gravy with traditional Bengali spices. Perfect with rice or bread.",
-                    "thumbnail": "https://images.unsplash.com/photo-1574484284002-952d92456975?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjR8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "coverImage": "https://images.unsplash.com/photo-1574484284002-952d92456975?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjR8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "preparationTime": 45,
-                    "calories": 450,
-                    "protein": 32,
-                    "fat": 25,
-                    "carbohydrate": 15,
-                    "servingSize": "1 bowl (300g)",
-                    "foodType": "NON_VEG",
-                    "spiceLevel": "HOT",
-                    "isFeatured": true,
-                    "isPopular": true,
-                    "isRecommended": false,
-                    "status": "active",
-                    "createdAt": "2026-07-14T11:57:11.718Z",
-                    "updatedAt": "2026-07-17T13:53:56.203Z",
-                    "deletedAt": null
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "2aea3f69-b63b-4e38-b95f-ed6241416873",
-          "packageId": "105a3836-b72c-4383-82c2-3e15f6403a60",
-          "dayNumber": 5,
-          "title": "Day 5 Schedule",
-          "description": null,
-          "status": "active",
-          "createdAt": "2026-07-27T10:15:33.206Z",
-          "updatedAt": "2026-07-27T10:15:33.206Z",
-          "meals": [
-            {
-              "id": "a6430690-c359-4ac5-b89b-5f9371afd1ac",
-              "packageDayId": "2aea3f69-b63b-4e38-b95f-ed6241416873",
-              "mealType": "BREAKFAST",
-              "mealTime": "08:00 AM",
-              "calories": null,
-              "status": "active",
-              "createdAt": "2026-07-27T10:15:33.206Z",
-              "updatedAt": "2026-07-27T10:15:33.206Z",
-              "foods": [
-                {
-                  "id": "e73dad65-ed36-4737-9aae-101fda12ca7f",
-                  "packageMealId": "a6430690-c359-4ac5-b89b-5f9371afd1ac",
-                  "foodId": "a40ac14c-555b-438d-83d8-72d7cd934186",
-                  "quantity": 1,
-                  "isOptional": false,
-                  "sortOrder": 0,
-                  "createdAt": "2026-07-27T10:15:33.206Z",
-                  "updatedAt": "2026-07-27T10:15:33.206Z",
-                  "food": {
-                    "id": "a40ac14c-555b-438d-83d8-72d7cd934186",
-                    "categoryId": "ecdc4620-4d06-4028-93e2-f776ce020732",
-                    "subCategoryId": "d6f0814c-3d10-428e-98f4-a0992dffd307",
-                    "foodCode": "FD-1784030261562-5R0E",
-                    "name": "Plain Paratha",
-                    "slug": "plain-paratha",
-                    "shortDescription": "Flaky, golden-brown layered flatbread made with whole wheat flour and ghee. Perfect with any curry.",
-                    "description": "Flaky, golden-brown layered flatbread made with whole wheat flour and ghee. Perfect with any curry.",
-                    "thumbnail": "https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "coverImage": "https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "preparationTime": 10,
-                    "calories": 200,
-                    "protein": 5,
-                    "fat": 12,
-                    "carbohydrate": 22,
-                    "servingSize": "1 piece (80g)",
-                    "foodType": "VEG",
-                    "spiceLevel": "MILD",
-                    "isFeatured": false,
-                    "isPopular": true,
-                    "isRecommended": false,
-                    "status": "active",
-                    "createdAt": "2026-07-14T11:57:41.563Z",
-                    "updatedAt": "2026-07-17T13:53:56.203Z",
-                    "deletedAt": null
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "87c2c8bf-6866-40cf-a99e-9c94917bf79c",
-          "packageId": "105a3836-b72c-4383-82c2-3e15f6403a60",
-          "dayNumber": 6,
-          "title": "Day 6 Schedule",
-          "description": null,
-          "status": "active",
-          "createdAt": "2026-07-27T10:15:33.206Z",
-          "updatedAt": "2026-07-27T10:15:33.206Z",
-          "meals": [
-            {
-              "id": "724b076f-0614-4c8d-8dbf-2a14c2459124",
-              "packageDayId": "87c2c8bf-6866-40cf-a99e-9c94917bf79c",
-              "mealType": "BREAKFAST",
-              "mealTime": "08:00 AM",
-              "calories": null,
-              "status": "active",
-              "createdAt": "2026-07-27T10:15:33.206Z",
-              "updatedAt": "2026-07-27T10:15:33.206Z",
-              "foods": [
-                {
-                  "id": "91c7c310-203c-4f09-af1e-7f804294a2b7",
-                  "packageMealId": "724b076f-0614-4c8d-8dbf-2a14c2459124",
-                  "foodId": "bf5a4347-1197-42fb-9545-cbf315228afc",
-                  "quantity": 1,
-                  "isOptional": false,
-                  "sortOrder": 0,
-                  "createdAt": "2026-07-27T10:15:33.206Z",
-                  "updatedAt": "2026-07-27T10:15:33.206Z",
-                  "food": {
-                    "id": "bf5a4347-1197-42fb-9545-cbf315228afc",
-                    "categoryId": "cd885af0-72a5-44f2-adb9-a9017c3cf36e",
-                    "subCategoryId": "a7d3f396-1ddd-453e-9089-b0cd53fac359",
-                    "foodCode": "FD-1784030237918-E08G",
-                    "name": "Vegetable Khichuri",
-                    "slug": "vegetable-khichuri",
-                    "shortDescription": "Comforting one-pot dish of rice and lentils with mixed vegetables. Light, healthy, and easy to digest.",
-                    "description": "Comforting one-pot dish of rice and lentils with mixed vegetables. Light, healthy, and easy to digest.",
-                    "thumbnail": "https://images.unsplash.com/photo-1493770348161-369560ae357d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzV8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "coverImage": "https://images.unsplash.com/photo-1493770348161-369560ae357d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzV8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "preparationTime": 25,
-                    "calories": 350,
-                    "protein": 12,
-                    "fat": 8,
-                    "carbohydrate": 60,
-                    "servingSize": "1 plate (350g)",
-                    "foodType": "VEG",
-                    "spiceLevel": "MILD",
-                    "isFeatured": false,
-                    "isPopular": true,
-                    "isRecommended": true,
-                    "status": "active",
-                    "createdAt": "2026-07-14T11:57:17.920Z",
-                    "updatedAt": "2026-07-17T13:53:56.203Z",
-                    "deletedAt": null
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "61eb60f4-ee29-40da-9eb6-6d270cee8d9c",
-          "packageId": "105a3836-b72c-4383-82c2-3e15f6403a60",
-          "dayNumber": 7,
-          "title": "Day 7 Schedule",
-          "description": null,
-          "status": "active",
-          "createdAt": "2026-07-27T10:15:33.206Z",
-          "updatedAt": "2026-07-27T10:15:33.206Z",
-          "meals": [
-            {
-              "id": "b5410171-32fc-42bb-afad-3452541f0a15",
-              "packageDayId": "61eb60f4-ee29-40da-9eb6-6d270cee8d9c",
-              "mealType": "BREAKFAST",
-              "mealTime": "08:00 AM",
-              "calories": null,
-              "status": "active",
-              "createdAt": "2026-07-27T10:15:33.206Z",
-              "updatedAt": "2026-07-27T10:15:33.206Z",
-              "foods": [
-                {
-                  "id": "fda9ea80-0f78-422d-a247-e3d97f6957c1",
-                  "packageMealId": "b5410171-32fc-42bb-afad-3452541f0a15",
-                  "foodId": "c30bf0e7-9f89-40f2-bb66-2719378e648f",
-                  "quantity": 1,
-                  "isOptional": false,
-                  "sortOrder": 0,
-                  "createdAt": "2026-07-27T10:15:33.206Z",
-                  "updatedAt": "2026-07-27T10:15:33.206Z",
-                  "food": {
-                    "id": "c30bf0e7-9f89-40f2-bb66-2719378e648f",
-                    "categoryId": "10c3b344-4f07-4dfd-b580-e4dd2ef4fbbb",
-                    "subCategoryId": "677b853d-68db-4c20-a8fe-4d02940ff7c9",
-                    "foodCode": "FD-1784030255389-HHZI",
-                    "name": "Mutton Rezala",
-                    "slug": "mutton-rezala",
-                    "shortDescription": "Royal Mughlai dish featuring tender mutton in a creamy white gravy flavored with rose water, kewra, and saffron.",
-                    "description": "Royal Mughlai dish featuring tender mutton in a creamy white gravy flavored with rose water, kewra, and saffron.",
-                    "thumbnail": "https://images.unsplash.com/photo-1484980972926-edee96e0960d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzR8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "coverImage": "https://images.unsplash.com/photo-1484980972926-edee96e0960d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzR8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "preparationTime": 50,
-                    "calories": 520,
-                    "protein": 30,
-                    "fat": 28,
-                    "carbohydrate": 18,
-                    "servingSize": "1 bowl (300g)",
-                    "foodType": "NON_VEG",
-                    "spiceLevel": "MILD",
-                    "isFeatured": true,
-                    "isPopular": false,
-                    "isRecommended": true,
-                    "status": "active",
-                    "createdAt": "2026-07-14T11:57:35.390Z",
-                    "updatedAt": "2026-07-17T13:53:56.203Z",
-                    "deletedAt": null
-                  }
-                },
-                {
-                  "id": "8f9d0d40-3213-431c-be78-a26d92df53a8",
-                  "packageMealId": "b5410171-32fc-42bb-afad-3452541f0a15",
-                  "foodId": "07f5887f-9403-4030-9cbd-a128812ab131",
-                  "quantity": 1,
-                  "isOptional": false,
-                  "sortOrder": 0,
-                  "createdAt": "2026-07-27T10:15:33.206Z",
-                  "updatedAt": "2026-07-27T10:15:33.206Z",
-                  "food": {
-                    "id": "07f5887f-9403-4030-9cbd-a128812ab131",
-                    "categoryId": "359023e6-b4f9-4848-b334-3ab7201086b8",
-                    "subCategoryId": "901b3e23-4495-4768-805b-4d92bd6017d9",
-                    "foodCode": "FD-1784030270759-5HLM",
-                    "name": "Rosogolla (2 pcs)",
-                    "slug": "rosogolla-2pcs",
-                    "shortDescription": "Soft, spongy cottage cheese dumplings soaked in light sugar syrup. Bengal's most beloved sweet.",
-                    "description": "Soft, spongy cottage cheese dumplings soaked in light sugar syrup. Bengal's most beloved sweet.",
-                    "thumbnail": "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "coverImage": "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGZvb2R8ZW58MHx8MHx8fDA%3D",
-                    "preparationTime": 2,
-                    "calories": 220,
-                    "protein": 4,
-                    "fat": 5,
-                    "carbohydrate": 42,
-                    "servingSize": "2 pieces (100g)",
-                    "foodType": "VEG",
-                    "spiceLevel": "MILD",
-                    "isFeatured": false,
-                    "isPopular": true,
-                    "isRecommended": false,
-                    "status": "active",
-                    "createdAt": "2026-07-14T11:57:50.761Z",
-                    "updatedAt": "2026-07-17T13:53:56.203Z",
-                    "deletedAt": null
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+      {
+        "dayNumber": 2,
+        "title": "Day 2 Schedule",
+        "meals": [
+          {
+            "mealType": "BREAKFAST",
+            "mealTime": "08:00 AM",
+            "foods": [
+              {
+                "name": "Grilled Chicken Salad",
+                "quantity": 1,
+                "calories": 280,
+                "protein": 35
+              },
+              {
+                "name": "Daal (Lentil Soup)",
+                "quantity": 1,
+                "calories": 180,
+                "protein": 14
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "dayNumber": 3,
+        "title": "Day 3 Schedule",
+        "meals": [
+          {
+            "mealType": "BREAKFAST",
+            "mealTime": "08:00 AM",
+            "foods": [
+              {
+                "name": "Mango Lassi",
+                "quantity": 1,
+                "calories": 180,
+                "protein": 6
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

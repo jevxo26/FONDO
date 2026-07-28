@@ -1,69 +1,9 @@
-const STORAGE_KEY = "fondo_cart";
-const VAT_PERCENT = 5;
-const DELIVERY_CHARGE = 50;
+import type { StoredCartItem, CartTotals, StoredAddon } from "./types";
+import { readCart, writeCart } from "./io";
+import { computeTotals, VAT_PERCENT, DELIVERY_CHARGE } from "./totals";
 
-export interface StoredCartItem {
-  id: string;
-  foodId: string;
-  name: string;
-  thumbnail?: string;
-  quantity: number;
-  unitPrice: number;
-  totalPrice: number;
-  addons: StoredAddon[];
-  packageMealId?: string;
-}
-
-interface StoredAddon {
-  addonItemId: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-export interface CartTotals {
-  items: StoredCartItem[];
-  itemCount: number;
-  subtotal: number;
-  discount: number;
-  deliveryCharge: number;
-  vat: number;
-  totalAmount: number;
-  couponCode?: string;
-}
-
-function readCart(): StoredCartItem[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeCart(items: StoredCartItem[]) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  window.dispatchEvent(new CustomEvent("fondo-cart-changed"));
-}
-
-function computeTotals(items: StoredCartItem[], discount = 0, couponCode?: string): CartTotals {
-  const subtotal = items.reduce((sum, i) => sum + i.totalPrice, 0);
-  const deliveryCharge = subtotal > 0 ? DELIVERY_CHARGE : 0;
-  const vat = subtotal * (VAT_PERCENT / 100);
-  const totalAmount = subtotal - discount + deliveryCharge + vat;
-  return {
-    items,
-    itemCount: items.reduce((sum, i) => sum + i.quantity, 0),
-    subtotal,
-    discount,
-    deliveryCharge,
-    vat,
-    totalAmount,
-    couponCode,
-  };
-}
+export type { StoredCartItem, CartTotals, StoredAddon };
+export { VAT_PERCENT, DELIVERY_CHARGE };
 
 export function getCart(): CartTotals {
   return computeTotals(readCart());
@@ -121,7 +61,22 @@ export function clearCart(): CartTotals {
   return computeTotals([]);
 }
 
-export function saveCart(apiCart: { items: Array<{ id: string; foodId: string; quantity: number; unitPrice: number; totalPrice: number; food: { id: string; name: string; thumbnail?: string | null }; addons?: Array<{ id: string; addonItemId: string; name: string; quantity: number; price: number }>; packageMealId?: string }>; subtotal: number; discount: number; deliveryCharge: number; vat: number }): CartTotals {
+export function saveCart(apiCart: {
+  items: Array<{
+    id: string;
+    foodId: string;
+    quantity: number;
+    unitPrice: number;
+    totalPrice: number;
+    food: { id: string; name: string; thumbnail?: string | null };
+    addons?: Array<{ id: string; addonItemId: string; name: string; quantity: number; price: number }>;
+    packageMealId?: string;
+  }>;
+  subtotal: number;
+  discount: number;
+  deliveryCharge: number;
+  vat: number;
+}): CartTotals {
   const items: StoredCartItem[] = apiCart.items.map((i) => ({
     id: i.id,
     foodId: i.foodId,

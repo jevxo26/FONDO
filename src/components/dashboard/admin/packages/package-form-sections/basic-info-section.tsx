@@ -13,9 +13,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { packageCategories, packageTags } from "@/data/admin-packages";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 interface BasicInfoSectionProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
   onChange: (field: string, value: any) => void;
 }
@@ -30,11 +31,11 @@ export function BasicInfoSection({ data, onChange }: BasicInfoSectionProps) {
       .replace(/^-|-$/g, "");
   };
 
-  const generateCode = () => {
+  const defaultCode = useMemo(() => {
     const prefix = "PKG";
     const timestamp = Date.now().toString().slice(-6);
     return `${prefix}-${timestamp}`;
-  };
+  }, []);
 
   const handleAddTag = (value: string | null) => {
     if (value) {
@@ -83,7 +84,7 @@ export function BasicInfoSection({ data, onChange }: BasicInfoSectionProps) {
         <div className="space-y-2">
           <Label>Package Code</Label>
           <Input
-            value={data.packageCode || generateCode()}
+            value={data.packageCode || defaultCode}
             onChange={(e) => onChange("packageCode", e.target.value)}
             placeholder="Auto-generated"
           />

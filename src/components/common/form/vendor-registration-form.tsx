@@ -39,7 +39,7 @@ export function VendorRegistrationForm() {
           <div className="text-center space-y-2">
             <span className="text-xs font-bold uppercase tracking-wider text-primary">Partner Onboarding</span>
             <h2 className="font-heading text-3xl sm:text-5xl tracking-tight text-foreground">Vendor Registration Form</h2>
-            <p className="text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto">Fill out required details to join Fondo's food delivery ecosystem.</p>
+            <p className="text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto">Fill out required details to join Fondo&apos;s food delivery ecosystem.</p>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="bg-card border border-border rounded-4xl p-6 sm:p-10 shadow-[var(--shadow-elevated)] space-y-12">
             <BusinessOwnerInfo register={register} errors={errors} />

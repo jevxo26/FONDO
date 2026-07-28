@@ -31,23 +31,25 @@ This version has breaking changes — APIs, conventions, and file structure may 
 ```
 src/                  # Next.js 16 App Router (frontend only)
   app/                # Route groups: (main)/ = customer-facing, dashboard/ = admin
-  components/{feature}/{name}/   # Feature-based, <100 lines per file
+  components/{feature}/{name}/   # Feature-based, max 150 lines per file
   components/ui/      # shadcn components
   components/common/  # Shared: cards, table/, section-header
   data/{domain}.ts    # Static data, constants
-  store/              # Redux Toolkit (store.ts, slices/)
-  lib/                # Utilities: api-client, token, utils
+  store/              # Redux Toolkit (store.ts, api/, slices/)
+  lib/{domain}/       # Domain libs as dirs (cart-storage/, validations/)
   hooks/              # Custom React hooks
+  hooks/forms/        # Form-specific logic hooks (useCheckout, useReviewForm)
   types/              # Shared TypeScript types (one file per domain)
 
 server/               # Express 5 custom server (NOT in src/)
   index.ts            # Entrypoint: Express + Next.js hybrid, Prisma connect
-  controllers/        # Route handlers
-  services/           # Business logic (Prisma queries)
+  controllers/        # Thin route handlers (<20 lines each)
+  services/           # Business logic, max 300 lines per file
   middlewares/        # verifyToken, authorize, validate
   routes/             # /api/* route definitions
   validations/        # Yup/express-validator schemas (one per domain)
   utils/              # catchAsync, sendResponse, AppError, pagination
+  config/             # env, upload config
 
 prisma/
   schema.prisma       # PostgreSQL schema (30+ models)
@@ -59,21 +61,39 @@ prisma/
 ## Conventions
 
 ### Components
-- **<100 lines** per file — split if bigger
-- **UI only** — no data fetching or business logic
+- **<150 lines** per file — split by section if exceeded
+- **UI only** — no data fetching, no business logic, no react-hook-form, no RTK Query hooks
 - **Server-first** — `"use client"` only for hooks, event handlers, browser APIs
+- **Modal forms** split into field-group components (e.g., `branch-basic-fields.tsx`, `branch-address-fields.tsx`) — parent keeps Dialog wrapper + state + handleSubmit only
+- **Page files** (<150 lines) — orchestrate data fetching + compose subcomponents; never inline large JSX sections
 
 ### State
 - **Redux Toolkit** for global state (auth, UI) — slices in `store/slices/`
 - **RTK Query** for all API calls (single paradigm with Redux) — api slices in `store/api/slices/`
 - Typed hooks: `useAppDispatch`, `useAppSelector` from `@/store/store`
+- Components never call RTK Query hooks directly — always wrap in `src/hooks/`
+
+### Business Logic
+- **Components never contain business logic** — extract into hooks in `src/hooks/` or `src/hooks/forms/`
+- Form logic: extract into `src/hooks/forms/use-{domain}-form.ts` — returns `{ mutate, isPending, formState, handlers }`
+- Checkout-level orchestration: extract into `src/hooks/use-{domain}.ts` (e.g., `useCheckout` returns all state + handlers)
+- Hooks expose `{ mutate, mutateAsync, isPending }` with optional `onSuccess`/`onError`/`onSettled` callbacks
 
 ### CSS
 - Tailwind CSS v4 with CSS variables in `globals.css`
 - `cn()` from `@/lib/utils` for conditional classes
-- Container: `<div className="wrapper">` — max-width 1440px, responsive padding
+- Container: `<div className="wrapper">` — max-width 1440px, responsive `padding-inline: var(--space-container)`
 - Use `@utility` for reusable classes; never hardcode hex values
-- Full design system reference: `DESIGN.md` (tokens, shadows, radius, dark mode, component palette)
+- Animation: `animate-fadeIn` utility available for fade + translateY entrance
+- Fluid spacing: `var(--space-section)` for section gaps, `var(--space-container)` for container padding
+- Font size tokens: `text-display`, `text-h1`, `text-h2`, `text-card-title`, `text-body`, `text-small`, `text-price`, `text-label`, `text-badge`
+- Radius tokens: `rounded-sm`/`md`/`lg`/`xl`/`2xl`/`3xl`/`4xl`/`full`
+- Full design system reference: `docs/DESIGN.md` (tokens, shadows, radius, dark mode, component palette)
+
+### Server Services
+- **Max 300 lines** per file — split by domain concern
+- Convention: `server/services/{domain}{SubDomain}Service.ts` (e.g., `orderCreationService.ts`, `orderCrudService.ts`)
+- Controllers stay <20 lines — thin wrappers that call service, catch error, send response
 
 ### Icons
 - **Lucide icons** — import from `lucide-react`

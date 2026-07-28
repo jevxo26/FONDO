@@ -23,7 +23,7 @@ const columns: ColumnDef<DeliveryRating>[] = [
   {
     accessorKey: "review",
     header: "Review",
-    cell: ({ row }) => <span className="text-muted-foreground italic">"{row.original.review}"</span>,
+    cell: ({ row }) => <span className="text-muted-foreground italic">&quot;{row.original.review}&quot;</span>,
   },
   {
     accessorKey: "date",

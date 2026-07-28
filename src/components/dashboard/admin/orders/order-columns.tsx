@@ -6,7 +6,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { CustomerOrder } from "@/data/orders";
 import { DataTableColumnHeader } from "@/components/common/table";
 import { OrderStatusBadge } from "@/components/dashboard/admin/customers/orders/order-status-badge";
-import { useUpdateOrderStatusMutation } from "@/store/api/slices/orders-api";
+import { useUpdateOrderStatus } from "@/hooks/use-orders";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,21 +17,21 @@ import {
 import { CheckCircle, Eye, Loader2, MoreHorizontal, Truck, XCircle } from "lucide-react";
 
 function ConfirmButton({ orderId, status }: { orderId: string; status: string }) {
-  const [confirmOrder, { isLoading }] = useUpdateOrderStatusMutation();
+  const { mutate, isPending } = useUpdateOrderStatus();
 
   return (
     <button
       onClick={(e) => {
         e.stopPropagation();
-        confirmOrder({ orderId, status })
-          .unwrap()
-          .then(() => toast.success("Order confirmed"))
-          .catch(() => toast.error("Failed to confirm order"));
+        mutate({ orderId, status }, {
+          onSuccess: () => toast.success("Order confirmed"),
+          onError: () => toast.error("Failed to confirm order"),
+        });
       }}
-      disabled={isLoading}
+      disabled={isPending}
       className="inline-flex items-center gap-1.5 rounded-lg bg-success/10 px-3 py-1.5 text-[13px] font-semibold text-success transition-all duration-200 hover:bg-success/20 active:scale-[0.97] disabled:opacity-50"
     >
-      {isLoading ? <Loader2 className="size-3.5 animate-spin" /> : <CheckCircle className="size-3.5" />}
+      {isPending ? <Loader2 className="size-3.5 animate-spin" /> : <CheckCircle className="size-3.5" />}
       Accept
     </button>
   );

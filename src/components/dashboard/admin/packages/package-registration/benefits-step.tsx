@@ -111,7 +111,7 @@ export function BenefitsStep({ data, onChange }: BenefitsStepProps) {
 
       {benefits.length === 0 && (
         <p className="text-sm text-muted-foreground text-center py-8">
-          No benefits added. Click "Add Benefit" to start.
+          No benefits added. Click &quot;Add Benefit&quot; to start.
         </p>
       )}
     </div>

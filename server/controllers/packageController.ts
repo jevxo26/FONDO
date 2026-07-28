@@ -65,13 +65,11 @@ const acceptCustomRequest = async (req: any, res: Response): Promise<Response> =
     const vendorId = req.user.id;
     const planId = req.params.id as string;
     const result = await PackageService.vendorAcceptCustomRequest(planId, vendorId);
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Request approved and notification sent to user successfully",
-        data: result,
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Request approved and notification sent to user successfully",
+      data: result,
+    });
   } catch (error: any) {
     return res.status(400).json({ success: false, message: error.message });
   }

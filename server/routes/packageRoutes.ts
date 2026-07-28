@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { PackageController } from "../controllers/package.controller";
+import { PackageController } from "../controllers/packageController";
 // import { verifyAuth, verifyVendor } from "../middlewares/auth.middleware";
 
 const router = Router();

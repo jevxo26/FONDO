@@ -1,35 +1,29 @@
 "use client";
 
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { api } from "@/lib/api-client";
-import { queryKeys } from "@/lib/query-keys";
-import type { Payment, InitiatePaymentPayload, InitiatePaymentResponse } from "@/types/payment";
+import {
+  useInitiatePaymentMutation,
+  useGetPaymentsQuery,
+  useGetPaymentQuery,
+  useRetryPaymentMutation,
+} from "@/store/api/slices/payments-api";
+import { createMutationWrapper } from "@/store/api/mutation-wrapper";
 
 export function useInitiatePayment() {
-  return useMutation({
-    mutationFn: (data: InitiatePaymentPayload) =>
-      api.post<InitiatePaymentResponse>("/payments/initiate", data),
-  });
+  const [trigger, { isLoading }] = useInitiatePaymentMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 
 export function usePayments() {
-  return useQuery({
-    queryKey: queryKeys.payments.all,
-    queryFn: () => api.get<Payment[]>(`/payments`),
-  });
+  const { data, isLoading, error } = useGetPaymentsQuery(undefined);
+  return { data, isLoading, error };
 }
 
 export function usePayment(id: string) {
-  return useQuery({
-    queryKey: queryKeys.payments.detail(id),
-    queryFn: () => api.get<Payment>(`/payments/${id}`),
-    enabled: !!id,
-  });
+  const { data, isLoading, error } = useGetPaymentQuery(id, { skip: !id });
+  return { data, isLoading, error };
 }
 
 export function useRetryPayment() {
-  return useMutation({
-    mutationFn: (paymentId: string) =>
-      api.post<InitiatePaymentResponse>(`/payments/${paymentId}/retry`),
-  });
+  const [trigger, { isLoading }] = useRetryPaymentMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }

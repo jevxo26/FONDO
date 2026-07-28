@@ -69,9 +69,9 @@ export const initiatePayment = catchServiceAsync(
         customerPhone: customer.phone,
         customerEmail: customer.email || `${customer.phone}@fondo.bd`,
         customerAddress: "",
-        successUrl: `${process.env.BASE_URL || "http://localhost:3000"}/api/payments/success`,
-        failUrl: `${process.env.BASE_URL || "http://localhost:3000"}/api/payments/fail`,
-        cancelUrl: `${process.env.BASE_URL || "http://localhost:3000"}/api/payments/cancel`,
+        successUrl: `${process.env.BASE_URL || "http://localhost:3000"}/orders?payment=success`,
+        failUrl: `${process.env.BASE_URL || "http://localhost:3000"}/orders?payment=failed`,
+        cancelUrl: `${process.env.BASE_URL || "http://localhost:3000"}/orders?payment=cancelled`,
       },
     );
 

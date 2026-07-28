@@ -1,22 +1,14 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
-import { api } from "@/lib/api-client";
-import { useAppDispatch } from "@/store/store";
-import { fetchMe } from "@/store/slices/authSlice";
-import type { UpdateProfilePayload, ChangePasswordPayload } from "@/types/user";
+import { useUpdateProfileMutation, useChangePasswordMutation } from "@/store/api/slices/profile-api";
+import { createMutationWrapper } from "@/store/api/mutation-wrapper";
 
 export function useUpdateProfile() {
-  const dispatch = useAppDispatch();
-
-  return useMutation({
-    mutationFn: (data: UpdateProfilePayload) => api.patch("/users/me", data),
-    onSuccess: () => dispatch(fetchMe()),
-  });
+  const [trigger, { isLoading }] = useUpdateProfileMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 
 export function useChangePassword() {
-  return useMutation({
-    mutationFn: (data: ChangePasswordPayload) => api.post("/auth/change-password", data),
-  });
+  const [trigger, { isLoading }] = useChangePasswordMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }

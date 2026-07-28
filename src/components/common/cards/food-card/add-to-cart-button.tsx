@@ -6,16 +6,24 @@ import { Loader2, Plus, ShoppingBag } from "lucide-react";
 
 interface AddToCartButtonProps {
   foodId: string;
+  name: string;
+  thumbnail?: string;
   price: number;
   quantity?: number;
 }
 
-export default function AddToCartButton({ foodId, price, quantity = 1 }: AddToCartButtonProps) {
+export default function AddToCartButton({
+  foodId,
+  name,
+  thumbnail,
+  price,
+  quantity = 1,
+}: AddToCartButtonProps) {
   const addToCart = useAddToCart();
 
   const handleClick = () => {
     if (addToCart.isPending) return;
-    addToCart.mutate({ foodId, quantity, unitPrice: price });
+    addToCart.mutate({ foodId, name, thumbnail, quantity, unitPrice: price });
   };
 
   return (

@@ -42,13 +42,22 @@ export const selectAddressSchema = yup.object({
   addressId: yup.string().required("Address ID is required"),
 });
 
+const orderItemSchema = yup.object({
+  foodId: yup.string().required(),
+  name: yup.string().required(),
+  quantity: yup.number().integer().min(1).required(),
+  unitPrice: yup.number().positive().required(),
+  totalPrice: yup.number().positive().required(),
+});
+
 export const placeOrderSchema = yup.object({
-  cartId: yup.string().required("Cart ID is required"),
+  cartId: yup.string().optional(),
   addressId: yup.string().optional(),
   paymentMethodId: yup.string().required("Payment method ID is required"),
+  items: yup.array().of(orderItemSchema).optional(),
   notes: yup.string().optional(),
   deliverySchedule: yup.object({
-    deliveryDate: yup.date().required("Delivery date is required"),
+    deliveryDate: yup.date().optional(),
     deliverySlot: yup.string().optional(),
   }).optional(),
 });

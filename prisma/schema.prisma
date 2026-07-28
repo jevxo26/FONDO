@@ -199,7 +199,7 @@ model User {
   userRoles          UserRole[]
   favorites          FoodFavorite[]
   foodReviews        FoodReview[]
-  cart               Cart?
+  carts              Cart[]
   orders             Order[]
   payments           Payment[]
   wallet             CustomerWallet?
@@ -1071,6 +1071,7 @@ model Food {
   vendorFoods  VendorFood[]
   cartItems    CartItem[]
   cartMealFoods CartMealFood[]
+  packageMealFoods PackageMealFood[]
   orderItems   OrderItem[]
 
   @@index([categoryId])
@@ -1719,9 +1720,9 @@ model Package {
   packageCode    String   @unique
   name           String
   slug           String   @unique
-  description    String?
-  thumbnail      String?
-  coverImage     String?
+  description    String
+  thumbnail      String
+  coverImage     String
   packageType    String
   durationDays   Int
   totalMeals     Int
@@ -1813,6 +1814,7 @@ model PackageMealFood {
   updatedAt     DateTime @updatedAt
 
   packageMeal PackageMeal @relation(fields: [packageMealId], references: [id])
+  food        Food        @relation(fields: [foodId], references: [id])
 
   @@map("package_meal_foods")
 }
@@ -1998,17 +2000,21 @@ model PackageAvailability {
 }
 
 model CustomMealPlan {
-  id          String   @id @default(uuid())
-  customerId  String
-  packageId   String?
-  name        String
-  totalDays   Int
-  status      String   @default("active")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                    String   @id @default(uuid())
+  customerId      String   @unique
+  packageId             String?
+  acceptedByVendorId    String? 
+  name                  String
+  totalDays             Int
+  totalPrice            Decimal  @default(0) @db.Decimal(10, 2)
+  vendorApprovalStatus  String   @default("pending") // pending, accepted, rejected
+  paymentStatus         String   @default("pending") // pending, paid
+  status                String   @default("active")  // active, completed, cancelled
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 
-  customer User                    @relation(fields: [customerId], references: [id])
-  package  Package?                @relation(fields: [packageId], references: [id])
+  customer User         @relation(fields: [customerId], references: [id])
+  package  Package?     @relation(fields: [packageId], references: [id])
   days     CustomMealDay[]
 
   @@map("custom_meal_plans")
@@ -2476,7 +2482,7 @@ model Payment {
 
 model PaymentGateway {
   id          String   @id @default(uuid())
-  code        String   @unique
+  code        String   @unique @default("sslcommerz")
   name        String
   merchantId  String?
   storeId     String?

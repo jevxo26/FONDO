@@ -32,13 +32,13 @@ export default async function Home() {
       revalidate: 300,
       tags: ["foods"],
     }),
-    apiFetch<{ items: CategoryItem[] }>("/api/foods/categories/list", {
+    apiFetch<CategoryItem[]>("/api/foods/categories/list", {
       revalidate: 300,
       tags: ["categories"],
     }),
   ]);
 
-  const categories = catData.items.map((c) => ({
+  const categories = catData.map((c) => ({
     id: c.id,
     label: c.name,
     image: c.image ?? "/images/home/card_1.png",

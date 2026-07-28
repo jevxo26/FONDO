@@ -3,7 +3,7 @@ import * as yup from "yup";
 export const updateOrderSchema = yup.object({
   notes: yup.string().optional(),
   deliverySchedule: yup.object({
-    deliveryDate: yup.date().required("Delivery date is required"),
+    deliveryDate: yup.date().optional(),
     deliverySlot: yup.string().optional(),
   }).optional(),
 });

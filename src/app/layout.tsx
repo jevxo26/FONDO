@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Bai_Jamjuree, Inter } from "next/font/google";
 import "./globals.css";
 import { ReduxProvider } from "@/components/ReduxProvider";
-import { QueryProvider } from "@/components/providers/query-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -31,9 +30,7 @@ export default function RootLayout({
     <html lang="en" className={`${baiJamjuree.variable} ${inter.variable} h-full antialiased`} >
       <body className="min-h-full flex flex-col">
         <TooltipProvider delay={0}>
-          <ReduxProvider>
-            <QueryProvider>{children}</QueryProvider>
-          </ReduxProvider>
+          <ReduxProvider>{children}</ReduxProvider>
           <Toaster />
         </TooltipProvider>
       </body>

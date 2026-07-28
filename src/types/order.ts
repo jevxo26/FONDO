@@ -50,6 +50,28 @@ export interface OrderCustomer {
   phone: string;
 }
 
+export interface OrderFeedback {
+  id: string;
+  orderId: string;
+  rating: number;
+  review: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OrderInvoice {
+  id: string;
+  orderId: string;
+  invoiceNumber: string;
+  invoiceDate: string;
+  subtotal: number | null;
+  discount: number | null;
+  vat: number | null;
+  deliveryCharge: number | null;
+  grandTotal: number;
+  pdfUrl: string | null;
+}
+
 export interface Order {
   id: string;
   orderNumber: string;
@@ -67,6 +89,8 @@ export interface Order {
   delivery: OrderDelivery | null;
   payment: OrderPayment | null;
   customer: OrderCustomer;
+  feedback: OrderFeedback | null;
+  invoice: OrderInvoice | null;
 }
 
 export interface DeliverySchedule {
@@ -74,8 +98,17 @@ export interface DeliverySchedule {
   deliverySlot: string;
 }
 
+export interface OrderItemPayload {
+  foodId: string;
+  name: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+}
+
 export interface PlaceOrderPayload {
-  cartId: string;
+  cartId?: string;
+  items?: OrderItemPayload[];
   addressId?: string;
   paymentMethodId: string;
   notes?: string;

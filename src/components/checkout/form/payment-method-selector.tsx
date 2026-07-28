@@ -1,5 +1,5 @@
 import { Check, CreditCard, Loader2 } from "lucide-react";
-import type { PaymentMethod } from "@/hooks/use-payment-methods";
+import type { PaymentMethod } from "@/store/api/slices/payments-api";
 
 interface Props {
   value: string;

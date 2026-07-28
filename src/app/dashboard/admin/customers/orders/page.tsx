@@ -1,9 +1,8 @@
 "use client";
 
 import { Suspense } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import { api } from "@/lib/api-client";
+import { useGetAllAdminOrdersQuery } from "@/store/api/slices/admin-customers-api";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { ContextCards } from "@/components/dashboard/admin/customers/orders/context-cards";
 import { OrdersTableSection } from "@/components/dashboard/admin/customers/orders/orders-table-section";
@@ -43,12 +42,9 @@ function OrdersContent() {
   const searchParams = useSearchParams();
   const customerFilter = searchParams.get("customer") ?? undefined;
 
-  const { data } = useQuery({
-    queryKey: ["admin", "orders", "all"],
-    queryFn: () => api.get<ApiOrder[]>("/admin/orders"),
-  });
+  const { data } = useGetAllAdminOrdersQuery(undefined);
 
-  const allOrders = (data ?? []).map(adaptOrder);
+  const allOrders = ((data ?? []) as ApiOrder[]).map(adaptOrder);
   const orders = customerFilter
     ? allOrders.filter((o) => o.customerName.toLowerCase().includes(customerFilter.toLowerCase()))
     : allOrders;

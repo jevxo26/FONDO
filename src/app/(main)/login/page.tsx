@@ -14,7 +14,7 @@ import { ROLE_DASHBOARD } from "@/data/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, user, isAuthenticated, loading, error } = useAuth();
+  const { login, user, isAuthenticated, loading } = useAuth();
 
   const methods = useForm<LoginInput>({
     resolver: yupResolver(loginSchema),

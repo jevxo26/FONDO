@@ -1,49 +1,29 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/api-client";
-import { queryKeys } from "@/lib/query-keys";
-import type { ReviewListResponse } from "@/types/food-review";
+import {
+  useGetFoodReviewsQuery,
+  useCreateReviewMutation,
+  useUpdateReviewMutation,
+  useDeleteReviewMutation,
+} from "@/store/api/slices/reviews-api";
+import { createMutationWrapper } from "@/store/api/mutation-wrapper";
 
 export function useFoodReviews(foodId: string) {
-  return useQuery({
-    queryKey: queryKeys.reviews.byFood(foodId),
-    queryFn: () => api.get<ReviewListResponse>(`/foods/${foodId}/reviews`),
-    enabled: !!foodId,
-  });
+  const { data, isLoading, error } = useGetFoodReviewsQuery(foodId, { skip: !foodId });
+  return { data, isLoading, error };
 }
 
-export function useCreateReview(foodId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (data: { foodId: string; rating: number; review: string }) =>
-      api.post(`/foods/${data.foodId}/reviews`, { rating: data.rating, review: data.review }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.reviews.byFood(foodId) });
-    },
-  });
+export function useCreateReview(_foodId: string) {
+  const [trigger, { isLoading }] = useCreateReviewMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 
-export function useUpdateReview(foodId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ reviewId, rating, review }: { reviewId: string; rating: number; review: string }) =>
-      api.patch(`/reviews/${reviewId}`, { rating, review }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.reviews.byFood(foodId) });
-    },
-  });
+export function useUpdateReview(_foodId: string) {
+  const [trigger, { isLoading }] = useUpdateReviewMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 
-export function useDeleteReview(foodId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (reviewId: string) => api.delete(`/reviews/${reviewId}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.reviews.byFood(foodId) });
-    },
-  });
+export function useDeleteReview(_foodId: string) {
+  const [trigger, { isLoading }] = useDeleteReviewMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
 }

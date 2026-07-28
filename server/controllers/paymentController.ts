@@ -7,7 +7,7 @@ import * as paymentService from "../services/paymentService";
 export const PaymentController = {
   listMethods: catchAsync(async (_req: AuthRequest, res: Response) => {
     const methods = await paymentService.listPaymentMethods();
-    sendResponse(res, { statusCode: 200, data: { items: methods } });
+    sendResponse(res, { statusCode: 200, data: methods });
   }),
 
   initiate: catchAsync(async (req: AuthRequest, res: Response) => {

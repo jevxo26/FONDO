@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { orders, type OrderStatus } from "@/data/orders";
+import { useMemo, useState } from "react";
+import { useGetAllAdminOrdersQuery } from "@/store/api/slices/admin-customers-api";
 import { OrdersTableSection } from "@/components/dashboard/admin/orders/orders-table-section";
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
@@ -10,6 +10,40 @@ import {
   Ban, Check, CheckCircle, Clock, CookingPot, LayoutList,
   Package, Receipt, Truck, XCircle,
 } from "lucide-react";
+import type { CustomerOrder, OrderStatus } from "@/data/orders";
+
+interface ApiOrderItem {
+  id: string;
+  foodId: string;
+  quantity: number;
+  totalPrice: number;
+  food: { id: string; name: string; thumbnail: string | null };
+}
+
+interface ApiOrder {
+  id: string;
+  orderNumber: string;
+  orderStatus: string;
+  paymentStatus: string;
+  totalAmount: number;
+  placedAt: string;
+  customer: { id: string; firstName: string; lastName: string; phone: string };
+  items: ApiOrderItem[];
+}
+
+function adaptOrder(o: ApiOrder): CustomerOrder {
+  return {
+    id: o.id,
+    orderNumber: o.orderNumber,
+    customerId: o.customer.id,
+    customerName: `${o.customer.firstName} ${o.customer.lastName}`.trim(),
+    items: o.items.length,
+    totalAmount: Number(o.totalAmount),
+    orderStatus: o.orderStatus as OrderStatus,
+    paymentStatus: o.paymentStatus as CustomerOrder["paymentStatus"],
+    placedAt: o.placedAt ? new Date(o.placedAt).toLocaleDateString() : "",
+  };
+}
 
 const statusFilters: { label: string; value: OrderStatus | null; icon: typeof Clock }[] = [
   { label: "All", value: null, icon: LayoutList },
@@ -25,18 +59,23 @@ const statusFilters: { label: string; value: OrderStatus | null; icon: typeof Cl
 export default function AllOrdersPage() {
   const [activeFilter, setActiveFilter] = useState<OrderStatus | null>(null);
 
-  const filtered = activeFilter
-    ? orders.filter((o) => o.orderStatus === activeFilter)
-    : orders;
+  const { data } = useGetAllAdminOrdersQuery();
 
-  const total = orders.length;
-  const activeOrders = orders.filter(
+  const allOrders = useMemo(() => ((data ?? []) as ApiOrder[]).map(adaptOrder), [data]);
+
+  const filtered = useMemo(() => {
+    if (!activeFilter) return allOrders;
+    return allOrders.filter((o) => o.orderStatus === activeFilter);
+  }, [allOrders, activeFilter]);
+
+  const total = allOrders.length;
+  const activeOrders = allOrders.filter(
     (o) => !["CANCELLED", "REFUNDED", "COMPLETED", "DELIVERED"].includes(o.orderStatus),
   ).length;
-  const completed = orders.filter(
+  const completed = allOrders.filter(
     (o) => o.orderStatus === "COMPLETED" || o.orderStatus === "DELIVERED",
   ).length;
-  const cancelled = orders.filter(
+  const cancelled = allOrders.filter(
     (o) => o.orderStatus === "CANCELLED" || o.orderStatus === "REFUNDED",
   ).length;
 
@@ -68,8 +107,8 @@ export default function AllOrdersPage() {
           {statusFilters.map((f) => {
             const Icon = f.icon;
             const count = f.value
-              ? orders.filter((o) => o.orderStatus === f.value).length
-              : orders.length;
+              ? allOrders.filter((o) => o.orderStatus === f.value).length
+              : allOrders.length;
             const isActive = activeFilter === f.value;
             return (
               <button

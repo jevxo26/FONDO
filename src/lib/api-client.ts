@@ -40,6 +40,7 @@ apiClient.interceptors.response.use(
 
     if (
       error.response?.status === 401 &&
+      getToken() &&
       !originalRequest._retry &&
       !originalRequest.url?.includes("/auth/refresh")
     ) {
@@ -114,5 +115,8 @@ export const api = {
   },
   delete<T>(url: string): Promise<T> {
     return request<T>("DELETE", url);
+  },
+  request<T>(method: string, url: string, data?: unknown): Promise<T> {
+    return request<T>(method, url, data);
   },
 };

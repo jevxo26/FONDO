@@ -49,7 +49,7 @@ export const getSummary = catchServiceAsync(async (cartId: string) => {
     discount: Number(cart.discount),
     deliveryCharge: Number(cart.deliveryCharge),
     vat: Number(cart.vat),
-    grandTotal: Number(cart.totalAmount),
+    grandTotal: Number(cart.subtotal) - Number(cart.discount) + Number(cart.deliveryCharge) + Number(cart.vat),
     itemCount: cart.items.length,
     mealCount: cart.meals.length,
     appliedCoupon: couponData,

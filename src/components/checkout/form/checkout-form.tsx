@@ -11,7 +11,7 @@ import { usePaymentMethods } from "@/hooks/use-payment-methods";
 import { usePlaceOrder } from "@/hooks/use-orders";
 import { useInitiatePayment } from "@/hooks/use-payments";
 import { handleApiError } from "@/lib/api-error";
-import { getCart, clearCart } from "@/lib/cart-storage";
+import { clearCart } from "@/lib/cart-storage";
 import type { CheckoutFormData } from "@/types/checkout-type";
 import { CheckoutSummary } from "../checkout-summary-right";
 import { FulfillmentSelector } from "./fulfillment-selector";
@@ -106,9 +106,9 @@ const CheckoutForm = () => {
 
   const onSubmitForm = async (data: CheckoutFormData) => {
     try {
-      const localCart = getCart();
-      if (!localCart || localCart.items.length === 0) {
-        toast.error("Cart is empty. Please add items first.");
+      const cartId = cart?.id;
+      if (!cartId) {
+        toast.error("Cart not found. Please try again.");
         return;
       }
 
@@ -151,15 +151,10 @@ const CheckoutForm = () => {
       const hasSchedule = deliverySchedule?.deliveryDate && deliverySchedule?.deliverySlot;
 
       const order = await placeOrder.mutateAsync({
-        items: localCart.items.map((i) => ({
-          foodId: i.foodId,
-          name: i.name,
-          quantity: i.quantity,
-          unitPrice: i.unitPrice,
-          totalPrice: i.totalPrice,
-        })),
+        cartId,
         ...(finalAddressId ? { addressId: finalAddressId } : {}),
         paymentMethodId: data.paymentMethodId,
+        notes: data.notes || undefined,
         ...(hasSchedule ? { deliverySchedule } : {}),
       });
 

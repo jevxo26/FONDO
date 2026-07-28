@@ -10,7 +10,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 **8 roles:** Super Admin, Admin, Vendor, Vendor Staff, Kitchen Staff, Rider, Customer, Support Agent
 
-**Stack:** Next.js 16 (App Router), React 19, TypeScript 5, Express 5 (custom server), Prisma (PostgreSQL via Neon), Redux Toolkit, TanStack Query, Tailwind CSS v4, shadcn/ui (style: `base-nova`)
+**Stack:** Next.js 16 (App Router), React 19, TypeScript 5, Express 5 (custom server), Prisma (PostgreSQL via Neon), Redux Toolkit (RTK Query), Tailwind CSS v4, shadcn/ui (style: `base-nova`)
 
 ## Commands
 
@@ -36,7 +36,7 @@ src/                  # Next.js 16 App Router (frontend only)
   components/common/  # Shared: cards, table/, section-header
   data/{domain}.ts    # Static data, constants
   store/              # Redux Toolkit (store.ts, slices/)
-  lib/                # Utilities: api-client, query-client, token, utils
+  lib/                # Utilities: api-client, token, utils
   hooks/              # Custom React hooks
   types/              # Shared TypeScript types (one file per domain)
 
@@ -64,8 +64,8 @@ prisma/
 - **Server-first** — `"use client"` only for hooks, event handlers, browser APIs
 
 ### State
-- **Redux Toolkit** for global state (auth, cart/UI/mutations) — slices in `store/slices/`
-- **TanStack Query** for server state (Provider in `components/providers/query-provider.tsx`)
+- **Redux Toolkit** for global state (auth, UI) — slices in `store/slices/`
+- **RTK Query** for all API calls (single paradigm with Redux) — api slices in `store/api/slices/`
 - Typed hooks: `useAppDispatch`, `useAppSelector` from `@/store/store`
 
 ### CSS
@@ -86,12 +86,11 @@ prisma/
 - Errors throw `ApiError(statusCode, message)` — use `handleApiError(error)` for user messages
 - 401 auto-triggers `/auth/refresh`, queues concurrent failed requests
 
-### Data Fetching (TanStack Query)
-- Query keys are plain strings per domain (`["cart"]`, `["favorites"]`, `["foods"]`, `["orders"]`)
-- Use `staleTime` on infrequent-data queries to avoid connection pool exhaustion
-- Mutation hooks own `onSuccess`/`onError` — toast + Redux dispatch inside hook
-- Components only call `mutate(data)` and read `isPending` for loading
-- Do NOT pass inline `onSuccess`/`onError` to `mutate()` in components (exception: redirect)
+### Data Fetching (RTK Query)
+- Each domain gets one file in `src/store/api/slices/{domain}-api.ts`
+- Tag constants declared in `src/store/api/tags.ts` (shared across domains, cross-invalidation via shared tag strings)
+- Mutation hooks (`src/hooks/`) wrap RTK Query triggers — expose `{ mutate, mutateAsync, isPending }` shape with `onSuccess`/`onError`
+- Components call `mutate(data)` and read `isPending` — do NOT pass inline callbacks to `mutate()` (exception: redirect)
 
 ### Loading States
 - Buttons: `disabled={isPending}`, icon swaps to `<Loader2 className="animate-spin" />`
@@ -138,4 +137,4 @@ prisma/
 
 - **No test framework** — no jest/vitest in `package.json`, no test files exist. Tests are not yet set up.
 - **Prisma needs schema sync** — `npx prisma generate` after any schema change, `npx prisma migrate dev` after model additions.
-- **Neon connection pool limit** — Free tier ~9 connections. Keep concurrent API calls low. Use `staleTime` on queries. Guard mutations with `if (isPending) return`.
+- **Neon connection pool limit** — Free tier ~9 connections. Keep concurrent API calls low. Guard mutations with `if (isPending) return`.

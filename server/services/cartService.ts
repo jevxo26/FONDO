@@ -43,7 +43,11 @@ function buildTotals(subtotal: number, discount: number) {
   const afterDiscount = subtotal - discount;
   const deliveryCharge = afterDiscount > 0 ? DEFAULT_DELIVERY_CHARGE : 0;
   const vat = afterDiscount * (VAT_PERCENT / 100);
-  return { discount, deliveryCharge, vat, totalAmount: afterDiscount + deliveryCharge + vat };
+  return { discount, deliveryCharge, vat };
+}
+
+function computeTotalAmount(subtotal: number, discount: number, deliveryCharge: number, vat: number) {
+  return subtotal - discount + deliveryCharge + vat;
 }
 
 export const getActiveCart = catchServiceAsync(async (userId: string) => {
@@ -61,12 +65,12 @@ export const getActiveCart = catchServiceAsync(async (userId: string) => {
   } else if (cart.status !== "active") {
     cart = await prisma.cart.update({
       where: { id: cart.id },
-      data: { status: "active", subtotal: 0, discount: 0, deliveryCharge: 0, vat: 0, totalAmount: 0, packageId: null, customMealPlanId: null, couponId: null },
+      data: { status: "active", subtotal: 0, discount: 0, deliveryCharge: 0, vat: 0, packageId: null, customMealPlanId: null, couponId: null },
       include: cartInclude,
     });
   }
 
-  return cart;
+  return { ...cart, totalAmount: computeTotalAmount(Number(cart.subtotal), Number(cart.discount), Number(cart.deliveryCharge), Number(cart.vat)) };
 });
 
 export const initCart = catchServiceAsync(
@@ -90,7 +94,6 @@ export const initCart = catchServiceAsync(
             discount: 0,
             deliveryCharge: 0,
             vat: 0,
-            totalAmount: 0,
           },
         }),
       ]);
@@ -278,12 +281,12 @@ export const clearCart = catchServiceAsync(async (cart: { id: string; customerId
       discount: 0,
       deliveryCharge: 0,
       vat: 0,
-      totalAmount: 0,
     },
   });
 
   await _logHistory(cart.id, "CLEAR", cart.customerId, "Cart cleared");
-  return prisma.cart.findUnique({ where: { id: cart.id }, include: cartInclude });
+  const updated = await prisma.cart.findUnique({ where: { id: cart.id }, include: cartInclude });
+  return { ...updated!, totalAmount: 0 };
 });
 
 async function _recalculateAndReturn(cartId: string, userId?: string) {
@@ -306,6 +309,7 @@ async function _recalculateAndReturn(cartId: string, userId?: string) {
     }
 
     const totals = buildTotals(subtotal, discount);
+    const totalAmount = computeTotalAmount(subtotal, discount, totals.deliveryCharge, totals.vat);
 
     const mealCount = await tx.cartMeal.count({ where: { cartId } });
 
@@ -316,8 +320,8 @@ async function _recalculateAndReturn(cartId: string, userId?: string) {
       }),
       tx.cartSummary.upsert({
         where: { cartId },
-        create: { cartId, itemCount, mealCount, subtotal, ...totals, grandTotal: totals.totalAmount },
-        update: { itemCount, mealCount, subtotal, ...totals, grandTotal: totals.totalAmount },
+        create: { cartId, itemCount, mealCount, subtotal, ...totals, grandTotal: totalAmount },
+        update: { itemCount, mealCount, subtotal, ...totals, grandTotal: totalAmount },
       }),
     ]);
 
@@ -327,10 +331,12 @@ async function _recalculateAndReturn(cartId: string, userId?: string) {
       });
     }
 
-    return tx.cart.findUnique({
+    const result = await tx.cart.findUnique({
       where: { id: cartId },
       include: cartInclude,
     });
+
+    return { ...result!, totalAmount };
   });
 }
 

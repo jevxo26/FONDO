@@ -121,6 +121,27 @@ export function clearCart(): CartTotals {
   return computeTotals([]);
 }
 
+export function saveCart(apiCart: { items: Array<{ id: string; foodId: string; quantity: number; unitPrice: number; totalPrice: number; food: { id: string; name: string; thumbnail?: string | null }; addons?: Array<{ id: string; addonItemId: string; name: string; quantity: number; price: number }>; packageMealId?: string }>; subtotal: number; discount: number; deliveryCharge: number; vat: number }): CartTotals {
+  const items: StoredCartItem[] = apiCart.items.map((i) => ({
+    id: i.id,
+    foodId: i.foodId,
+    name: i.food.name,
+    thumbnail: i.food.thumbnail ?? undefined,
+    quantity: i.quantity,
+    unitPrice: i.unitPrice,
+    totalPrice: i.totalPrice,
+    addons: (i.addons || []).map((a) => ({
+      addonItemId: a.addonItemId,
+      name: a.name,
+      price: a.price,
+      quantity: a.quantity,
+    })),
+    packageMealId: i.packageMealId,
+  }));
+  writeCart(items);
+  return computeTotals(items, Number(apiCart.discount));
+}
+
 export function setCouponCode(code?: string): CartTotals {
   const items = readCart();
   if (typeof window !== "undefined") {

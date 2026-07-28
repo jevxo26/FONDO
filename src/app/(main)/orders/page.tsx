@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowLeft, Loader2, Package, XCircle, Star, Receipt } from "lucide-react";
@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { SectionReveal } from "@/components/common/section-reveal";
 
-export default function OrdersPage() {
+function OrdersContent() {
   const { data, isLoading, error } = useOrders();
   const searchParams = useSearchParams();
 
@@ -155,5 +155,19 @@ export default function OrdersPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function OrdersPage() {
+  return (
+    <Suspense fallback={
+      <main className="flex-1 py-8 lg:py-12">
+        <div className="wrapper flex items-center justify-center min-h-[40vh]">
+          <Loader2 className="size-6 animate-spin text-muted-foreground" />
+        </div>
+      </main>
+    }>
+      <OrdersContent />
+    </Suspense>
   );
 }

@@ -45,7 +45,11 @@ export function useFavorites() {
   const [local, setLocal] = useState<wishlistStorage.WishlistItem[]>(() =>
     wishlistStorage.getWishlist(),
   );
-  const { data: apiFavorites, isLoading, error } = useGetFavoritesQuery(undefined, {
+  const {
+    data: apiFavorites,
+    isLoading,
+    error,
+  } = useGetFavoritesQuery(undefined, {
     skip: !isAuthenticated,
   });
   const prevApi = useRef(apiFavorites);

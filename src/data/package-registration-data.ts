@@ -91,9 +91,24 @@ export const mockPackages: PackageRegistration[] = [
     coverImage: "/images/package-diabetic-cover.jpg",
     gallery: [],
     benefits: [
-      { id: "b1", title: "Blood Sugar Control", description: "Specially designed meals for diabetes management", icon: "🩸" },
-      { id: "b2", title: "Nutritionist Approved", description: "Approved by certified nutritionists", icon: "👨‍⚕️" },
-      { id: "b3", title: "Free Delivery", description: "Free delivery for all diabetic packages", icon: "🚚" },
+      {
+        id: "b1",
+        title: "Blood Sugar Control",
+        description: "Specially designed meals for diabetes management",
+        icon: "🩸",
+      },
+      {
+        id: "b2",
+        title: "Nutritionist Approved",
+        description: "Approved by certified nutritionists",
+        icon: "👨‍⚕️",
+      },
+      {
+        id: "b3",
+        title: "Free Delivery",
+        description: "Free delivery for all diabetic packages",
+        icon: "🚚",
+      },
     ],
     nutrition: {
       dailyCalories: 1800,
@@ -129,7 +144,8 @@ export const mockPackages: PackageRegistration[] = [
     packageCode: "PKG-002",
     name: "High Protein",
     slug: "high-protein",
-    description: "40g+ protein per meal for muscle recovery and growth. Ideal for fitness enthusiasts.",
+    description:
+      "40g+ protein per meal for muscle recovery and growth. Ideal for fitness enthusiasts.",
     category: "HIGH_PROTEIN",
     tags: ["HIGH_PROTEIN", "FITNESS", "POPULAR"],
     status: "ACTIVE",
@@ -146,9 +162,24 @@ export const mockPackages: PackageRegistration[] = [
     coverImage: "/images/package-protein-cover.jpg",
     gallery: [],
     benefits: [
-      { id: "b1", title: "High Protein", description: "40g+ protein per meal for muscle recovery", icon: "💪" },
-      { id: "b2", title: "Fitness Focused", description: "Meals designed for fitness enthusiasts", icon: "🏋️" },
-      { id: "b3", title: "Muscle Recovery", description: "Optimized for post-workout recovery", icon: "🔄" },
+      {
+        id: "b1",
+        title: "High Protein",
+        description: "40g+ protein per meal for muscle recovery",
+        icon: "💪",
+      },
+      {
+        id: "b2",
+        title: "Fitness Focused",
+        description: "Meals designed for fitness enthusiasts",
+        icon: "🏋️",
+      },
+      {
+        id: "b3",
+        title: "Muscle Recovery",
+        description: "Optimized for post-workout recovery",
+        icon: "🔄",
+      },
     ],
     nutrition: {
       dailyCalories: 2400,
@@ -201,8 +232,18 @@ export const mockPackages: PackageRegistration[] = [
     coverImage: "/images/package-office-cover.jpg",
     gallery: [],
     benefits: [
-      { id: "b1", title: "Office Friendly", description: "Quick and easy meals for office workers", icon: "🏢" },
-      { id: "b2", title: "Best Seller", description: "Most popular package among office workers", icon: "⭐" },
+      {
+        id: "b1",
+        title: "Office Friendly",
+        description: "Quick and easy meals for office workers",
+        icon: "🏢",
+      },
+      {
+        id: "b2",
+        title: "Best Seller",
+        description: "Most popular package among office workers",
+        icon: "⭐",
+      },
       { id: "b3", title: "Fast Delivery", description: "Delivered right to your desk", icon: "🚀" },
     ],
     nutrition: {

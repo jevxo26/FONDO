@@ -10,9 +10,15 @@ export function ReportSummaryCards() {
   const totalProfit = salesEntries.reduce((s, e) => s + e.profit, 0);
   const totalOrders = salesEntries.reduce((s, e) => s + e.orders, 0);
   const avgProfitMargin = totalRevenue > 0 ? Math.round((totalProfit / totalRevenue) * 100) : 0;
-  const onlineRev = salesEntries.filter((e) => e.channel === "ONLINE").reduce((s, e) => s + e.revenue, 0);
-  const dineRev = salesEntries.filter((e) => e.channel === "DINE_IN").reduce((s, e) => s + e.revenue, 0);
-  const cateringRev = salesEntries.filter((e) => e.channel === "CATERING").reduce((s, e) => s + e.revenue, 0);
+  const onlineRev = salesEntries
+    .filter((e) => e.channel === "ONLINE")
+    .reduce((s, e) => s + e.revenue, 0);
+  const dineRev = salesEntries
+    .filter((e) => e.channel === "DINE_IN")
+    .reduce((s, e) => s + e.revenue, 0);
+  const cateringRev = salesEntries
+    .filter((e) => e.channel === "CATERING")
+    .reduce((s, e) => s + e.revenue, 0);
   const bestDay = [...salesEntries].sort((a, b) => b.revenue - a.revenue)[0];
 
   return (

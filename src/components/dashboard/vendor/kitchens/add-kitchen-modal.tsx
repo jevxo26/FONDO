@@ -1,25 +1,25 @@
-"use client"
+"use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
-import { KitchenBasicFields } from "./kitchen-basic-fields"
-import { KitchenConfigFields } from "./kitchen-config-fields"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { KitchenBasicFields } from "./kitchen-basic-fields";
+import { KitchenConfigFields } from "./kitchen-config-fields";
 
 interface AddKitchenModalProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 interface FormData {
-  name: string
-  code: string
-  branch: string
-  capacity: string
-  preparationTime: string
-  headChef: string
-  status: string
-  description: string
+  name: string;
+  code: string;
+  branch: string;
+  capacity: string;
+  preparationTime: string;
+  headChef: string;
+  status: string;
+  description: string;
 }
 
 export function AddKitchenModal({ open, onOpenChange }: AddKitchenModalProps) {
@@ -32,17 +32,17 @@ export function AddKitchenModal({ open, onOpenChange }: AddKitchenModalProps) {
     headChef: "",
     status: "ACTIVE",
     description: "",
-  })
+  });
 
   const handleFieldChange = (field: string, val: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: val }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: val }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Form data:", formData)
-    onOpenChange(false)
-  }
+    e.preventDefault();
+    console.log("Form data:", formData);
+    onOpenChange(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -64,5 +64,5 @@ export function AddKitchenModal({ open, onOpenChange }: AddKitchenModalProps) {
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

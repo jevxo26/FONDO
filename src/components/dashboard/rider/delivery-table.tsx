@@ -15,22 +15,48 @@ interface DeliveryTableProps {
   onCancel?: (delivery: RiderDelivery) => void;
 }
 
-export function DeliveryTable({ data, isLoading, onAccept, onPickup, onDeliver, onCancel }: DeliveryTableProps) {
+export function DeliveryTable({
+  data,
+  isLoading,
+  onAccept,
+  onPickup,
+  onDeliver,
+  onCancel,
+}: DeliveryTableProps) {
   const statusFilters: FacetedFilter[] = [
-    { columnId: "status", title: "Status", options: [
-      { label: "Assigned", value: "ASSIGNED" },
-      { label: "Accepted", value: "ACCEPTED" },
-      { label: "Picked Up", value: "PICKED_UP" },
-      { label: "On the Way", value: "ON_THE_WAY" },
-      { label: "Delivered", value: "DELIVERED" },
-    ]},
+    {
+      columnId: "status",
+      title: "Status",
+      options: [
+        { label: "Assigned", value: "ASSIGNED" },
+        { label: "Accepted", value: "ACCEPTED" },
+        { label: "Picked Up", value: "PICKED_UP" },
+        { label: "On the Way", value: "ON_THE_WAY" },
+        { label: "Delivered", value: "DELIVERED" },
+      ],
+    },
   ];
 
   const rowActions: RowAction<RiderDelivery>[] = [
-    ...(onAccept ? [{ label: "Accept", icon: <Check className="size-3.5" />, onClick: onAccept }] : []),
-    ...(onPickup ? [{ label: "Mark Picked Up", icon: <Bike className="size-3.5" />, onClick: onPickup }] : []),
-    ...(onDeliver ? [{ label: "Mark Delivered", icon: <MapPin className="size-3.5" />, onClick: onDeliver }] : []),
-    ...(onCancel ? [{ label: "Cancel", icon: <X className="size-3.5" />, onClick: onCancel, variant: "destructive" as const }] : []),
+    ...(onAccept
+      ? [{ label: "Accept", icon: <Check className="size-3.5" />, onClick: onAccept }]
+      : []),
+    ...(onPickup
+      ? [{ label: "Mark Picked Up", icon: <Bike className="size-3.5" />, onClick: onPickup }]
+      : []),
+    ...(onDeliver
+      ? [{ label: "Mark Delivered", icon: <MapPin className="size-3.5" />, onClick: onDeliver }]
+      : []),
+    ...(onCancel
+      ? [
+          {
+            label: "Cancel",
+            icon: <X className="size-3.5" />,
+            onClick: onCancel,
+            variant: "destructive" as const,
+          },
+        ]
+      : []),
   ];
 
   return (

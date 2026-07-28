@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/components/dashboard/admin/packages/package-form-sections/rules-section.tsx
 "use client";
 

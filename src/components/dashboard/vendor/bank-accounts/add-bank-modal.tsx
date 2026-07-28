@@ -1,25 +1,25 @@
-"use client"
+"use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
-import { BankAccountFields } from "./bank-account-fields"
-import { BankSettingsFields } from "./bank-settings-fields"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { BankAccountFields } from "./bank-account-fields";
+import { BankSettingsFields } from "./bank-settings-fields";
 
 interface AddBankModalProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 interface FormData {
-  bankName: string
-  branchName: string
-  accountName: string
-  accountNumber: string
-  routingNumber: string
-  accountType: string
-  isPrimary: boolean
-  status: string
+  bankName: string;
+  branchName: string;
+  accountName: string;
+  accountNumber: string;
+  routingNumber: string;
+  accountType: string;
+  isPrimary: boolean;
+  status: string;
 }
 
 export function AddBankModal({ open, onOpenChange }: AddBankModalProps) {
@@ -32,17 +32,17 @@ export function AddBankModal({ open, onOpenChange }: AddBankModalProps) {
     accountType: "",
     isPrimary: false,
     status: "ACTIVE",
-  })
+  });
 
   const handleFieldChange = (field: string, val: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: val }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: val }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Form data:", formData)
-    onOpenChange(false)
-  }
+    e.preventDefault();
+    console.log("Form data:", formData);
+    onOpenChange(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -64,5 +64,5 @@ export function AddBankModal({ open, onOpenChange }: AddBankModalProps) {
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

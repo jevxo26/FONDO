@@ -12,6 +12,4 @@ export const sidebarItems: SidebarItem[] = [
   { label: "Meals", href: "/meals", icon: UtensilsCrossed },
 ];
 
-export const sectionConfig = [
-  { label: "Kitchen", items: ["Orders", "Meals"] },
-] as const;
+export const sectionConfig = [{ label: "Kitchen", items: ["Orders", "Meals"] }] as const;

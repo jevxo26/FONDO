@@ -3,7 +3,12 @@ import Image from "next/image";
 
 const imageVariants = {
   hidden: { opacity: 0, filter: "blur(8px)", scale: 0.95 },
-  visible: { opacity: 1, filter: "blur(0px)", scale: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const } },
+  visible: {
+    opacity: 1,
+    filter: "blur(0px)",
+    scale: 1,
+    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
+  },
 };
 
 export function ProductGallery({ coverImage, name }: { coverImage: string; name: string }) {

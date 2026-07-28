@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface FoodPricingFieldsProps {
   formData: {
-    price: string
-    costPrice: string
-    stock: string
-  }
-  onFieldChange: (field: string, val: string | boolean) => void
+    price: string;
+    costPrice: string;
+    stock: string;
+  };
+  onFieldChange: (field: string, val: string | boolean) => void;
 }
 
 export function FoodPricingFields({ formData, onFieldChange }: FoodPricingFieldsProps) {
@@ -43,5 +43,5 @@ export function FoodPricingFields({ formData, onFieldChange }: FoodPricingFields
         />
       </div>
     </div>
-  )
+  );
 }

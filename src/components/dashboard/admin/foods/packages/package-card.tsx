@@ -54,7 +54,12 @@ export function PackageCard({ pkg }: PackageCardProps) {
 
         <div className="p-5">
           <div className="flex items-center justify-between gap-2">
-            <span className={cn("inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ring-1", typeColors[pkg.packageType])}>
+            <span
+              className={cn(
+                "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ring-1",
+                typeColors[pkg.packageType],
+              )}
+            >
               <TypeIcon className="size-3" />
               {pkg.packageType}
             </span>
@@ -116,18 +121,34 @@ export function PackageCard({ pkg }: PackageCardProps) {
             ))}
           </div>
 
-          <div className={cn("mt-5 h-px w-full bg-gradient-to-r from-primary/40 via-primary/30 to-transparent")} />
+          <div
+            className={cn(
+              "mt-5 h-px w-full bg-gradient-to-r from-primary/40 via-primary/30 to-transparent",
+            )}
+          />
 
           <div className="mt-4 flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8"
+            >
               <Eye className="mr-1.5 size-[15px]" />
               View
             </Button>
-            <Button variant="ghost" size="sm" className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8"
+            >
               <Edit className="mr-1.5 size-[15px]" />
               Edit
             </Button>
-            <Button variant="ghost" size="sm" className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8"
+            >
               <BarChart3 className="mr-1.5 size-[15px]" />
               Analytics
             </Button>

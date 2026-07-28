@@ -26,7 +26,13 @@ function formatDate(date: string | null) {
   });
 }
 
-export default function CustomerAccountInfo({ id, dateOfBirth, isEmailVerified, isPhoneVerified, lastOrder }: CustomerAccountInfoProps) {
+export default function CustomerAccountInfo({
+  id,
+  dateOfBirth,
+  isEmailVerified,
+  isPhoneVerified,
+  lastOrder,
+}: CustomerAccountInfoProps) {
   return (
     <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-6 shadow-[var(--shadow-card)]">
       <div className="relative z-10">
@@ -59,10 +65,14 @@ export default function CustomerAccountInfo({ id, dateOfBirth, isEmailVerified, 
           {lastOrder && (
             <>
               <div className="my-2 border-t border-primary/10" />
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Last Order</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                Last Order
+              </p>
               <div className="flex items-center justify-between rounded-lg bg-muted/50 px-4 py-3">
                 <div>
-                  <p className="text-sm font-bold text-foreground">৳{lastOrder.totalAmount.toLocaleString()}</p>
+                  <p className="text-sm font-bold text-foreground">
+                    ৳{lastOrder.totalAmount.toLocaleString()}
+                  </p>
                   <p className="text-xs text-muted-foreground">{formatDate(lastOrder.placedAt)}</p>
                 </div>
                 <OrderStatusBadge status={lastOrder.orderStatus as never} />

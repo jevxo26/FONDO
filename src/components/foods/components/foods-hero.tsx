@@ -1,5 +1,4 @@
 "use client";
-import { useFoodCategories } from "@/hooks/use-food-categories";
 import { Search } from "lucide-react";
 import { useFoods } from "./foods-provider";
 

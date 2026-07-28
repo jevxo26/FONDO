@@ -1,4 +1,4 @@
-const SSLCommerzPayment = require("sslcommerz-lts");
+import SSLCommerzPayment from "sslcommerz-lts";
 
 interface SslcInitRequest {
   totalAmount: number;
@@ -57,7 +57,10 @@ export async function initPayment(
   });
 
   return {
-    status: response.status === "SUCCESS" ? "success" : (response.status as string)?.toLowerCase() || "fail",
+    status:
+      response.status === "SUCCESS"
+        ? "success"
+        : (response.status as string)?.toLowerCase() || "fail",
     GatewayPageURL: response.GatewayPageURL,
     failedreason: response.failedreason,
     tran_id: response.tran_id,

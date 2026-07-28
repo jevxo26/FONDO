@@ -20,7 +20,9 @@ const statusStyles: Record<OrderStatus, string> = {
 
 export function OrderStatusBadge({ status }: OrderStatusBadgeProps) {
   return (
-    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider ring-1 ${statusStyles[status]}`}>
+    <span
+      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider ring-1 ${statusStyles[status]}`}
+    >
       {status.replace(/_/g, " ")}
     </span>
   );

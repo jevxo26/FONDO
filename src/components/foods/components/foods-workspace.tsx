@@ -30,7 +30,7 @@ export default function FoodsWorkspace() {
   const { data } = useGetFoods();
 
   const categories: FoodCategory[] = categoriesData?.items ?? [];
-  const foods: Food[] = data?.items ?? [];
+  const foods: Food[] = useMemo(() => data?.items ?? [], [data]);
 
   const filteredFoods = useMemo(() => {
     let result = [...foods];
@@ -49,9 +49,7 @@ export default function FoodsWorkspace() {
 
     // Category
     if (activeCategory !== "All") {
-      result = result.filter(
-        (food) => food.category.name === activeCategory
-      );
+      result = result.filter((food) => food.category.name === activeCategory);
     }
 
     // SubCategory
@@ -84,13 +82,7 @@ export default function FoodsWorkspace() {
     });
 
     return result;
-  }, [
-    foods,
-    activeCategory,
-    activeSubCategory,
-    searchQuery,
-    sortBy,
-  ]);
+  }, [foods, activeCategory, activeSubCategory, searchQuery, sortBy]);
 
   // Reset to page 1 when filters change
   const filterKey = `${activeCategory}-${activeSubCategory}-${searchQuery}-${sortBy}`;
@@ -108,9 +100,8 @@ export default function FoodsWorkspace() {
 
   const paginatedFoods = filteredFoods.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
+    currentPage * ITEMS_PER_PAGE,
   );
-
 
   return (
     <section className="py-12 bg-muted/30">
@@ -122,14 +113,25 @@ export default function FoodsWorkspace() {
             <div className="flex flex-col gap-1">
               <button
                 onClick={() => setActiveCategory("All")}
-                className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all ${activeCategory === "All" ? "bg-primary/10 text-primary font-bold" : "text-muted-foreground hover:bg-muted"
-                  }`}
+                className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+                  activeCategory === "All"
+                    ? "bg-primary/10 text-primary font-bold"
+                    : "text-muted-foreground hover:bg-muted"
+                }`}
               >
                 All Menu Categories
               </button>
 
               {categories.map((cat) => (
-               <Categories key={cat.id} cat={cat} activeCategory={activeCategory} setActiveCategory={setActiveCategory} setActiveSubCategory={setActiveSubCategory} setCurrentPage={setCurrentPage} activeSubCategory={activeSubCategory} />
+                <Categories
+                  key={cat.id}
+                  cat={cat}
+                  activeCategory={activeCategory}
+                  setActiveCategory={setActiveCategory}
+                  setActiveSubCategory={setActiveSubCategory}
+                  setCurrentPage={setCurrentPage}
+                  activeSubCategory={activeSubCategory}
+                />
               ))}
             </div>
           </div>
@@ -144,14 +146,14 @@ export default function FoodsWorkspace() {
             onPageReset={() => setCurrentPage(1)}
           />
           {/* Main Dynamic Loop */}
-          <FoodGrid filteredFoods={paginatedFoods } />
-           <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
+          <FoodGrid filteredFoods={paginatedFoods} />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
-        </div>
+      </div>
     </section>
   );
 }

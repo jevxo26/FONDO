@@ -13,11 +13,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { packageCategories, packageTags } from "@/data/admin-packages";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 
 interface BasicInfoSectionProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: (field: string, value: any) => void;
 }
 
@@ -31,11 +32,11 @@ export function BasicInfoSection({ data, onChange }: BasicInfoSectionProps) {
       .replace(/^-|-$/g, "");
   };
 
-  const defaultCode = useMemo(() => {
+  const [defaultCode] = useState(() => {
     const prefix = "PKG";
     const timestamp = Date.now().toString().slice(-6);
     return `${prefix}-${timestamp}`;
-  }, []);
+  });
 
   const handleAddTag = (value: string | null) => {
     if (value) {
@@ -48,7 +49,10 @@ export function BasicInfoSection({ data, onChange }: BasicInfoSectionProps) {
   };
 
   const handleRemoveTag = (tag: string) => {
-    onChange("tags", (data.tags || []).filter((t: string) => t !== tag));
+    onChange(
+      "tags",
+      (data.tags || []).filter((t: string) => t !== tag),
+    );
   };
 
   return (
@@ -123,10 +127,7 @@ export function BasicInfoSection({ data, onChange }: BasicInfoSectionProps) {
 
       <div className="space-y-2">
         <Label>Tags</Label>
-        <Select
-          value={selectedTag}
-          onValueChange={handleAddTag}
-        >
+        <Select value={selectedTag} onValueChange={handleAddTag}>
           <SelectTrigger>
             <SelectValue placeholder="Select tags" />
           </SelectTrigger>

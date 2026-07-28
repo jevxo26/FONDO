@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useOrder } from "@/hooks/use-orders";
 import Link from "next/link";
-import { Check, Package, Home, Clock, CreditCard } from "lucide-react";
+import { Check, Package, Home, Clock } from "lucide-react";
 import { Suspense } from "react";
 
 function PaymentSuccessContent() {

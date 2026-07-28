@@ -19,7 +19,4 @@ export const couponApi = api.injectEndpoints({
   overrideExisting: false,
 });
 
-export const {
-  useApplyCouponMutation,
-  useRemoveCouponMutation,
-} = couponApi;
+export const { useApplyCouponMutation, useRemoveCouponMutation } = couponApi;

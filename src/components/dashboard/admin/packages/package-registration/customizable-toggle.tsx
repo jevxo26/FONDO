@@ -15,10 +15,7 @@ export function CustomizableToggle({ checked, onChange }: CustomizableToggleProp
         <Label className="text-base">Customizable</Label>
         <p className="text-sm text-muted-foreground">Allow customers to customize meals</p>
       </div>
-      <Switch
-        checked={checked}
-        onCheckedChange={onChange}
-      />
+      <Switch checked={checked} onCheckedChange={onChange} />
     </div>
   );
 }

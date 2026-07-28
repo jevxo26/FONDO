@@ -15,7 +15,6 @@ import DeliveryDetailsCard from "@/components/track-order/delivery-details-card"
 function TrackingContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId") ?? "";
-  const showInvoice = searchParams.get("showInvoice") === "true";
 
   const { data: order, isLoading, error } = useOrder(orderId);
 
@@ -23,11 +22,15 @@ function TrackingContent() {
     return (
       <div className="min-h-screen bg-background py-8 lg:py-12">
         <div className="wrapper max-w-6xl text-center py-20">
-          <h1 className="font-heading text-2xl font-normal text-foreground mb-2">Track Your Order</h1>
+          <h1 className="font-heading text-2xl font-normal text-foreground mb-2">
+            Track Your Order
+          </h1>
           <p className="font-sans text-sm text-muted-foreground mb-6">
             Enter your order ID to track your delivery.
           </p>
-          <Link href="/" className="text-primary underline text-sm">Go back home</Link>
+          <Link href="/" className="text-primary underline text-sm">
+            Go back home
+          </Link>
         </div>
       </div>
     );
@@ -45,11 +48,13 @@ function TrackingContent() {
     return (
       <div className="min-h-screen bg-background py-8 lg:py-12">
         <div className="wrapper max-w-6xl text-center py-20">
-          <h1 className="font-heading text-2xl font-normal text-foreground mb-2">Order Not Found</h1>
-          <p className="font-sans text-sm text-muted-foreground mb-6">
-            {handleApiError(error)}
-          </p>
-          <Link href="/" className="text-primary underline text-sm">Go back home</Link>
+          <h1 className="font-heading text-2xl font-normal text-foreground mb-2">
+            Order Not Found
+          </h1>
+          <p className="font-sans text-sm text-muted-foreground mb-6">{handleApiError(error)}</p>
+          <Link href="/" className="text-primary underline text-sm">
+            Go back home
+          </Link>
         </div>
       </div>
     );
@@ -60,7 +65,11 @@ function TrackingContent() {
   const steps = [
     { label: "Order Confirmed", completed: true, icon: CreditCard },
     { label: "Preparing", completed: true, icon: Smartphone },
-    { label: "Out for Delivery", completed: order.deliveryStatus === "ON_THE_WAY" || order.deliveryStatus === "DELIVERED", icon: Truck },
+    {
+      label: "Out for Delivery",
+      completed: order.deliveryStatus === "ON_THE_WAY" || order.deliveryStatus === "DELIVERED",
+      icon: Truck,
+    },
     { label: "Delivered", completed: delivered, icon: Check },
   ];
 
@@ -79,7 +88,11 @@ function TrackingContent() {
             {delivered && (
               <FeedbackSection
                 orderId={orderId}
-                existing={order.feedback ? { rating: order.feedback.rating, review: order.feedback.review } : null}
+                existing={
+                  order.feedback
+                    ? { rating: order.feedback.rating, review: order.feedback.review }
+                    : null
+                }
               />
             )}
           </div>
@@ -103,11 +116,13 @@ function TrackingContent() {
 
 export default function TrackingPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-background py-8 lg:py-12 flex items-center justify-center">
-        <Loader2 className="size-8 animate-spin text-primary" />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-background py-8 lg:py-12 flex items-center justify-center">
+          <Loader2 className="size-8 animate-spin text-primary" />
+        </div>
+      }
+    >
       <TrackingContent />
     </Suspense>
   );

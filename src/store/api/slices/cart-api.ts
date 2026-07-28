@@ -3,8 +3,15 @@ import { getErrorMessage } from "../utils";
 import type { Cart, CartItem } from "@/types/cart";
 import { toast } from "sonner";
 
-interface AddToCartPayload { foodId: string; quantity: number; unitPrice: number }
-interface UpdateCartItemPayload { itemId: string; quantity: number }
+interface AddToCartPayload {
+  foodId: string;
+  quantity: number;
+  unitPrice: number;
+}
+interface UpdateCartItemPayload {
+  itemId: string;
+  quantity: number;
+}
 
 function createTempItem(payload: AddToCartPayload): CartItem {
   return {
@@ -42,8 +49,13 @@ export const cartApi = api.injectEndpoints({
             }
           }),
         );
-        try { await queryFulfilled; toast.success("Added to cart") }
-        catch (err) { patch.undo(); toast.error(getErrorMessage(err)) }
+        try {
+          await queryFulfilled;
+          toast.success("Added to cart");
+        } catch (err) {
+          patch.undo();
+          toast.error(getErrorMessage(err));
+        }
       },
     }),
 
@@ -57,8 +69,13 @@ export const cartApi = api.injectEndpoints({
             if (idx !== -1) draft.items.splice(idx, 1);
           }),
         );
-        try { await queryFulfilled; toast.success("Item removed") }
-        catch (err) { patch.undo(); toast.error(getErrorMessage(err)) }
+        try {
+          await queryFulfilled;
+          toast.success("Item removed");
+        } catch (err) {
+          patch.undo();
+          toast.error(getErrorMessage(err));
+        }
       },
     }),
 
@@ -69,7 +86,7 @@ export const cartApi = api.injectEndpoints({
         body: { quantity },
       }),
       invalidatesTags: ["Cart"],
-      async onQueryStarted({ itemId, quantity }, { dispatch, queryFulfilled, getState }) {
+      async onQueryStarted({ itemId, quantity }, { dispatch, queryFulfilled }) {
         const patch = dispatch(
           cartApi.util.updateQueryData("getCart", undefined, (draft) => {
             const item = draft.items.find((i) => i.id === itemId);
@@ -79,8 +96,13 @@ export const cartApi = api.injectEndpoints({
             }
           }),
         );
-        try { await queryFulfilled; toast.success("Quantity updated") }
-        catch (err) { patch.undo(); toast.error(getErrorMessage(err)) }
+        try {
+          await queryFulfilled;
+          toast.success("Quantity updated");
+        } catch (err) {
+          patch.undo();
+          toast.error(getErrorMessage(err));
+        }
       },
     }),
 
@@ -96,8 +118,13 @@ export const cartApi = api.injectEndpoints({
             }
           }),
         );
-        try { await queryFulfilled; toast.success("Cart cleared") }
-        catch (err) { patch.undo(); toast.error(getErrorMessage(err)) }
+        try {
+          await queryFulfilled;
+          toast.success("Cart cleared");
+        } catch (err) {
+          patch.undo();
+          toast.error(getErrorMessage(err));
+        }
       },
     }),
   }),

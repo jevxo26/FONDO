@@ -4,7 +4,11 @@ interface OrderSummaryCardProps {
   paymentStatus: string;
 }
 
-export default function OrderSummaryCard({ itemsCount, totalAmount, paymentStatus }: OrderSummaryCardProps) {
+export default function OrderSummaryCard({
+  itemsCount,
+  totalAmount,
+  paymentStatus,
+}: OrderSummaryCardProps) {
   return (
     <div className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
       <h3 className="font-heading text-sm font-semibold text-foreground mb-3">Order Summary</h3>

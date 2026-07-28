@@ -9,10 +9,7 @@ import { DataTableColumnHeader } from "@/components/common/table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { SubscriptionStatusBadge } from "@/components/dashboard/admin/customers/subscriptions/subscription-status-badge";
 import { CustomerSearch } from "@/components/dashboard/admin/customers/common/customer-search";
-import {
-  useAdminCustomerSubscriptions,
-  useAdminCustomer,
-} from "@/hooks/use-admin-customers";
+import { useAdminCustomerSubscriptions } from "@/hooks/use-admin-customers";
 import type { AdminSubscription, AdminCustomer } from "@/types/admin";
 
 const subscriptionColumns: ColumnDef<AdminSubscription>[] = [
@@ -28,9 +25,13 @@ const subscriptionColumns: ColumnDef<AdminSubscription>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
     cell: ({ row }) => (
       <div>
-        <p className="text-sm font-bold text-foreground">৳{row.original.totalAmount.toLocaleString()}</p>
+        <p className="text-sm font-bold text-foreground">
+          ৳{row.original.totalAmount.toLocaleString()}
+        </p>
         {row.original.remainingAmount > 0 && (
-          <p className="text-[11px] text-destructive">৳{row.original.remainingAmount.toLocaleString()} due</p>
+          <p className="text-[11px] text-destructive">
+            ৳{row.original.remainingAmount.toLocaleString()} due
+          </p>
         )}
       </div>
     ),
@@ -44,13 +45,17 @@ const subscriptionColumns: ColumnDef<AdminSubscription>[] = [
   {
     accessorKey: "duration",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Duration" />,
-    cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.duration} days</span>,
+    cell: ({ row }) => (
+      <span className="text-sm text-muted-foreground">{row.original.duration} days</span>
+    ),
   },
   {
     accessorKey: "autoRenew",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Auto Renew" />,
     cell: ({ row }) => (
-      <span className={`text-sm font-bold ${row.original.autoRenew ? "text-success" : "text-muted-foreground"}`}>
+      <span
+        className={`text-sm font-bold ${row.original.autoRenew ? "text-success" : "text-muted-foreground"}`}
+      >
         {row.original.autoRenew ? "Yes" : "No"}
       </span>
     ),
@@ -70,10 +75,7 @@ const subscriptionColumns: ColumnDef<AdminSubscription>[] = [
 export default function SubscriptionsPage() {
   const [selectedCustomer, setSelectedCustomer] = useState<AdminCustomer | null>(null);
 
-  const { data: customerDetail } = useAdminCustomer(selectedCustomer?.id ?? "");
-  const { data, isLoading } = useAdminCustomerSubscriptions(
-    selectedCustomer?.id ?? "",
-  );
+  const { data, isLoading } = useAdminCustomerSubscriptions(selectedCustomer?.id ?? "");
 
   const subscriptions = data ?? [];
   const total = subscriptions.length;
@@ -102,18 +104,39 @@ export default function SubscriptionsPage() {
           <div className="flex size-16 items-center justify-center rounded-full bg-muted">
             <Search className="size-6 text-muted-foreground" />
           </div>
-          <h3 className="mt-4 font-fraunces text-lg font-bold text-foreground">Select a Customer</h3>
+          <h3 className="mt-4 font-fraunces text-lg font-bold text-foreground">
+            Select a Customer
+          </h3>
           <p className="mt-1 max-w-md text-sm text-muted-foreground">
-            Search for a customer above to view their subscription plans, status, and payment history.
+            Search for a customer above to view their subscription plans, status, and payment
+            history.
           </p>
         </div>
       ) : (
         <>
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard label="Total Subscriptions" value={total} icon={CreditCard} accent="top" />
-            <StatCard label="Active" value={active} variant="success" icon={CheckCircle} accent="top" />
-            <StatCard label="Paused" value={paused} variant="warning" icon={PauseCircle} accent="top" />
-            <StatCard label="Expired / Cancelled" value={expired} variant="danger" icon={XCircle} accent="top" />
+            <StatCard
+              label="Active"
+              value={active}
+              variant="success"
+              icon={CheckCircle}
+              accent="top"
+            />
+            <StatCard
+              label="Paused"
+              value={paused}
+              variant="warning"
+              icon={PauseCircle}
+              accent="top"
+            />
+            <StatCard
+              label="Expired / Cancelled"
+              value={expired}
+              variant="danger"
+              icon={XCircle}
+              accent="top"
+            />
           </div>
           <div className="mt-6">
             <DataTable

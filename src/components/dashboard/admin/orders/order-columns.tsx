@@ -23,15 +23,22 @@ function ConfirmButton({ orderId, status }: { orderId: string; status: string })
     <button
       onClick={(e) => {
         e.stopPropagation();
-        mutate({ orderId, status }, {
-          onSuccess: () => toast.success("Order confirmed"),
-          onError: () => toast.error("Failed to confirm order"),
-        });
+        mutate(
+          { orderId, status },
+          {
+            onSuccess: () => toast.success("Order confirmed"),
+            onError: () => toast.error("Failed to confirm order"),
+          },
+        );
       }}
       disabled={isPending}
       className="inline-flex items-center gap-1.5 rounded-lg bg-success/10 px-3 py-1.5 text-[13px] font-semibold text-success transition-all duration-200 hover:bg-success/20 active:scale-[0.97] disabled:opacity-50"
     >
-      {isPending ? <Loader2 className="size-3.5 animate-spin" /> : <CheckCircle className="size-3.5" />}
+      {isPending ? (
+        <Loader2 className="size-3.5 animate-spin" />
+      ) : (
+        <CheckCircle className="size-3.5" />
+      )}
       Accept
     </button>
   );

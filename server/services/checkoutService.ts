@@ -36,7 +36,16 @@ export const getSummary = catchServiceAsync(async (cartId: string) => {
   const [addresses, paymentMethods] = await Promise.all([
     prisma.userAddress.findMany({
       where: { userId: cart.customerId, deletedAt: null },
-      select: { id: true, label: true, area: true, district: true, division: true, road: true, house: true, isDefault: true },
+      select: {
+        id: true,
+        label: true,
+        area: true,
+        district: true,
+        division: true,
+        road: true,
+        house: true,
+        isDefault: true,
+      },
     }),
     prisma.paymentMethod.findMany({
       where: { isActive: true },
@@ -49,7 +58,11 @@ export const getSummary = catchServiceAsync(async (cartId: string) => {
     discount: Number(cart.discount),
     deliveryCharge: Number(cart.deliveryCharge),
     vat: Number(cart.vat),
-    grandTotal: Number(cart.subtotal) - Number(cart.discount) + Number(cart.deliveryCharge) + Number(cart.vat),
+    grandTotal:
+      Number(cart.subtotal) -
+      Number(cart.discount) +
+      Number(cart.deliveryCharge) +
+      Number(cart.vat),
     itemCount: cart.items.length,
     mealCount: cart.meals.length,
     appliedCoupon: couponData,
@@ -85,9 +98,10 @@ export const applyCoupon = catchServiceAsync(async (cartId: string, couponCode: 
     }
   }
 
-  const discountAmount = coupon.discountType === "PERCENTAGE"
-    ? Number(cart.subtotal) * (Number(coupon.discountValue) / 100)
-    : Number(coupon.discountValue);
+  const discountAmount =
+    coupon.discountType === "PERCENTAGE"
+      ? Number(cart.subtotal) * (Number(coupon.discountValue) / 100)
+      : Number(coupon.discountValue);
 
   await prisma.cart.update({
     where: { id: cartId },
@@ -126,7 +140,13 @@ export const placeOrder = catchServiceAsync(
     cartId: string | undefined,
     paymentMethodId: string,
     customerId: string,
-    items?: Array<{ foodId: string; name: string; quantity: number; unitPrice: number; totalPrice: number }>,
+    items?: Array<{
+      foodId: string;
+      name: string;
+      quantity: number;
+      unitPrice: number;
+      totalPrice: number;
+    }>,
     notes?: string,
     addressId?: string,
   ) => {

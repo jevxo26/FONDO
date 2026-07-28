@@ -14,26 +14,46 @@ interface KitchenOrderTableProps {
   onMarkPacked?: (order: KitchenOrder) => void;
 }
 
-export function KitchenOrderTable({ data, isLoading, onStartPrep, onMarkReady, onMarkPacked }: KitchenOrderTableProps) {
+export function KitchenOrderTable({
+  data,
+  isLoading,
+  onStartPrep,
+  onMarkReady,
+  onMarkPacked,
+}: KitchenOrderTableProps) {
   const filters: FacetedFilter[] = [
-    { columnId: "status", title: "Status", options: [
-      { label: "Queued", value: "QUEUED" },
-      { label: "Preparing", value: "PREPARING" },
-      { label: "Ready", value: "READY" },
-      { label: "Packed", value: "PACKED" },
-    ]},
-    { columnId: "mealType", title: "Meal", options: [
-      { label: "Breakfast", value: "BREAKFAST" },
-      { label: "Lunch", value: "LUNCH" },
-      { label: "Dinner", value: "DINNER" },
-      { label: "Snacks", value: "SNACKS" },
-    ]},
+    {
+      columnId: "status",
+      title: "Status",
+      options: [
+        { label: "Queued", value: "QUEUED" },
+        { label: "Preparing", value: "PREPARING" },
+        { label: "Ready", value: "READY" },
+        { label: "Packed", value: "PACKED" },
+      ],
+    },
+    {
+      columnId: "mealType",
+      title: "Meal",
+      options: [
+        { label: "Breakfast", value: "BREAKFAST" },
+        { label: "Lunch", value: "LUNCH" },
+        { label: "Dinner", value: "DINNER" },
+        { label: "Snacks", value: "SNACKS" },
+      ],
+    },
   ];
 
   const rowActions: RowAction<KitchenOrder>[] = [
-    ...(onStartPrep ? [{ label: "Start Prep", icon: <ChefHat className="size-3.5" />, onClick: onStartPrep }] : []),
-    ...(onMarkReady ? [{ label: "Mark Ready", icon: <CheckCircle className="size-3.5" />, onClick: onMarkReady }] : []),
-    ...(onMarkPacked ? [{ label: "Mark Packed", icon: <Package className="size-3.5" />, onClick: onMarkPacked }] : []),
+    ...(onStartPrep
+      ? [{ label: "Start Prep", icon: <ChefHat className="size-3.5" />, onClick: onStartPrep }]
+      : []),
+    ...(onMarkReady
+      ? [{ label: "Mark Ready", icon: <CheckCircle className="size-3.5" />, onClick: onMarkReady }]
+      : []),
+    ...(onMarkPacked
+      ? [{ label: "Mark Packed", icon: <Package className="size-3.5" />, onClick: onMarkPacked }]
+      : []),
   ];
 
   return (

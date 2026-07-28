@@ -33,9 +33,12 @@ export function NavActions() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
-  const { user, isAuthenticated, loading, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const { data: cart } = useCart();
   const { data: favorites } = useFavorites();
 
@@ -92,6 +95,7 @@ export function NavActions() {
             <span className="hidden cursor-pointer items-center gap-2 rounded-[8px] bg-foreground px-3 py-2 text-[14px] font-medium text-secondary transition-colors hover:bg-foreground/90 lg:flex">
               <span className="flex size-6 items-center justify-center rounded-full bg-secondary/30 text-xs font-bold text-secondary">
                 {user.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img src={user.avatar} alt="" className="size-6 rounded-full object-cover" />
                 ) : (
                   user.firstName[0]?.toUpperCase()

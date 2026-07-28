@@ -26,7 +26,7 @@ const INITIAL_FILTERS: Filters = {
 export function VendorBankTableSection() {
   const [accounts, setAccounts] = useState<VendorBankAccount[]>(vendorBankAccounts);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS);
+  const [filters] = useState<Filters>(INITIAL_FILTERS);
 
   const filteredData = useMemo(() => {
     return accounts.filter((item) => {
@@ -37,16 +37,12 @@ export function VendorBankTableSection() {
     });
   }, [accounts, filters]);
 
-  const handleFilterChange = useCallback((key: keyof Filters) => (value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  }, []);
-
   const handleSetPrimary = useCallback((account: VendorBankAccount) => {
     setAccounts((prev) =>
       prev.map((item) => ({
         ...item,
         isPrimary: item.id === account.id,
-      }))
+      })),
     );
   }, []);
 
@@ -54,13 +50,13 @@ export function VendorBankTableSection() {
     setAccounts((prev) =>
       prev.map((item) =>
         item.id === account.id
-          ? { 
-              ...item, 
+          ? {
+              ...item,
               status: item.status === "ACTIVE" ? "INACTIVE" : "ACTIVE",
-              updatedAt: new Date().toISOString()
+              updatedAt: new Date().toISOString(),
             }
-          : item
-      )
+          : item,
+      ),
     );
   }, []);
 
@@ -94,7 +90,9 @@ export function VendorBankTableSection() {
         variant: "destructive" as const,
         onClick: (account: VendorBankAccount) => {
           if (account.isPrimary) {
-            alert("Cannot delete the primary account. Please set another account as primary first.");
+            alert(
+              "Cannot delete the primary account. Please set another account as primary first.",
+            );
             return;
           }
           if (confirm(`Are you sure you want to delete ${account.bankName} account?`)) {
@@ -103,7 +101,7 @@ export function VendorBankTableSection() {
         },
       },
     ],
-    [handleSetPrimary, handleToggleStatus]
+    [handleSetPrimary, handleToggleStatus],
   );
 
   const facetedFilters: FacetedFilter[] = useMemo(
@@ -124,7 +122,7 @@ export function VendorBankTableSection() {
         options: bankAccountTypes.map((s) => ({ label: s.label, value: s.value })),
       },
     ],
-    []
+    [],
   );
 
   const toolbarActions = (
@@ -153,10 +151,7 @@ export function VendorBankTableSection() {
         enableColumnToggle
         initialSort={initialSort}
       />
-      <AddBankModal
-        open={isAddModalOpen}
-        onOpenChange={setIsAddModalOpen}
-      />
+      <AddBankModal open={isAddModalOpen} onOpenChange={setIsAddModalOpen} />
     </>
   );
 }

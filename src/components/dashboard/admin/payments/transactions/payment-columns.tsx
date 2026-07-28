@@ -11,7 +11,9 @@ export const paymentColumns: ColumnDef<PaymentTransaction>[] = [
     accessorKey: "transactionId",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Transaction ID" />,
     cell: ({ row }) => (
-      <span className="font-mono text-sm font-bold text-foreground">{row.original.transactionId}</span>
+      <span className="font-mono text-sm font-bold text-foreground">
+        {row.original.transactionId}
+      </span>
     ),
   },
   {

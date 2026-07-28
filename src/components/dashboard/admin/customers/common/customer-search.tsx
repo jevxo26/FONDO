@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Search, X, ChevronDown } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAdminCustomers } from "@/hooks/use-admin-customers";
@@ -56,12 +56,19 @@ export function CustomerSearch({
         <div className="flex items-center gap-3 rounded-2xl border border-primary/20 bg-primary/5 px-4 py-2.5">
           <Avatar>
             <AvatarFallback className="bg-primary/20 text-xs font-bold text-primary">
-              {selectedCustomer.fullName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)}
+              {selectedCustomer.fullName
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .toUpperCase()
+                .slice(0, 2)}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-bold text-foreground">{selectedCustomer.fullName}</p>
-            <p className="text-xs text-muted-foreground">{selectedCustomer.email} · {selectedCustomer.phone}</p>
+            <p className="text-xs text-muted-foreground">
+              {selectedCustomer.email} · {selectedCustomer.phone}
+            </p>
           </div>
           <button
             onClick={() => {
@@ -101,7 +108,9 @@ export function CustomerSearch({
       {isOpen && !selectedCustomer && query && (
         <div className="absolute z-50 mt-2 max-h-72 w-full overflow-auto rounded-2xl border border-primary/10 bg-card p-2 shadow-[var(--shadow-elevated)]">
           {results.length === 0 ? (
-            <p className="px-3 py-6 text-center text-sm text-muted-foreground">No customers found</p>
+            <p className="px-3 py-6 text-center text-sm text-muted-foreground">
+              No customers found
+            </p>
           ) : (
             results.map((customer) => (
               <button
@@ -115,20 +124,27 @@ export function CustomerSearch({
               >
                 <Avatar>
                   <AvatarFallback className="bg-muted text-xs font-bold text-muted-foreground">
-                    {customer.fullName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)}
+                    {customer.fullName
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .toUpperCase()
+                      .slice(0, 2)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-bold text-foreground">{customer.fullName}</p>
                   <p className="text-xs text-muted-foreground">{customer.email}</p>
                 </div>
-                <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                  customer.status === "ACTIVE"
-                    ? "bg-success/10 text-success"
-                    : customer.status === "SUSPENDED"
-                      ? "bg-destructive/10 text-destructive"
-                      : "bg-muted text-muted-foreground"
-                }`}>
+                <span
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
+                    customer.status === "ACTIVE"
+                      ? "bg-success/10 text-success"
+                      : customer.status === "SUSPENDED"
+                        ? "bg-destructive/10 text-destructive"
+                        : "bg-muted text-muted-foreground"
+                  }`}
+                >
                   {customer.status}
                 </span>
               </button>

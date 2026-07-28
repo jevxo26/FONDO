@@ -38,7 +38,11 @@ export function CouponSection({
           </span>
           {savings > 0 && <span className="text-xs text-primary">-৳{savings}</span>}
         </div>
-        {open ? <ChevronUp className="size-4 text-muted-foreground" /> : <ChevronDown className="size-4 text-muted-foreground" />}
+        {open ? (
+          <ChevronUp className="size-4 text-muted-foreground" />
+        ) : (
+          <ChevronDown className="size-4 text-muted-foreground" />
+        )}
       </button>
 
       {open && (
@@ -47,7 +51,9 @@ export function CouponSection({
             <div className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-xl px-4 py-3">
               <div className="flex items-center gap-2">
                 <Tag className="size-4 text-primary" />
-                <span className="font-sans text-sm font-semibold text-primary">{appliedCoupon}</span>
+                <span className="font-sans text-sm font-semibold text-primary">
+                  {appliedCoupon}
+                </span>
               </div>
               <button
                 type="button"

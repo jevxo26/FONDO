@@ -12,7 +12,7 @@ export default function RegisterPage() {
 
   const onRegisterSubmit = async (data: Record<string, unknown>) => {
     try {
-      const { confirmPassword: _, ...payload } = data as {
+      const { confirmPassword: _unused, ...payload } = data as {
         firstName: string;
         lastName: string;
         email: string;

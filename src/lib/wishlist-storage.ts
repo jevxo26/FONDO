@@ -63,7 +63,19 @@ export function toggleWishlist(item: WishlistItem): WishlistItem[] {
   return items;
 }
 
-export function saveWishlist(apiItems: Array<{ id: string; name: string; thumbnail?: string; slug: string; servingSize?: string; shortDescription?: string; preparationTime?: number; variants: Array<{ price: string | number; discountPrice?: string | number | null }>; rating?: { averageRating: number } }>) {
+export function saveWishlist(
+  apiItems: Array<{
+    id: string;
+    name: string;
+    thumbnail?: string;
+    slug: string;
+    servingSize?: string;
+    shortDescription?: string;
+    preparationTime?: number;
+    variants: Array<{ price: string | number; discountPrice?: string | number | null }>;
+    rating?: { averageRating: number };
+  }>,
+) {
   const items: WishlistItem[] = apiItems.map((f) => ({
     id: f.id,
     name: f.name,

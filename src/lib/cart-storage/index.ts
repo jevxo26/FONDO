@@ -69,7 +69,13 @@ export function saveCart(apiCart: {
     unitPrice: number;
     totalPrice: number;
     food: { id: string; name: string; thumbnail?: string | null };
-    addons?: Array<{ id: string; addonItemId: string; name: string; quantity: number; price: number }>;
+    addons?: Array<{
+      id: string;
+      addonItemId: string;
+      name: string;
+      quantity: number;
+      price: number;
+    }>;
     packageMealId?: string;
   }>;
   subtotal: number;

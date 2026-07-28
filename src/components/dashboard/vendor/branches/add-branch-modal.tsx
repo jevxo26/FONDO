@@ -1,34 +1,34 @@
-"use client"
+"use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
-import { BranchBasicFields } from "./branch-basic-fields"
-import { BranchAddressFields } from "./branch-address-fields"
-import { BranchSettingsFields } from "./branch-settings-fields"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { BranchBasicFields } from "./branch-basic-fields";
+import { BranchAddressFields } from "./branch-address-fields";
+import { BranchSettingsFields } from "./branch-settings-fields";
 
 interface AddBranchModalProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 interface FormData {
-  branchName: string
-  branchCode: string
-  phone: string
-  email: string
-  country: string
-  division: string
-  district: string
-  upazila: string
-  area: string
-  road: string
-  house: string
-  postalCode: string
-  latitude: string
-  longitude: string
-  isMainBranch: boolean
-  status: string
+  branchName: string;
+  branchCode: string;
+  phone: string;
+  email: string;
+  country: string;
+  division: string;
+  district: string;
+  upazila: string;
+  area: string;
+  road: string;
+  house: string;
+  postalCode: string;
+  latitude: string;
+  longitude: string;
+  isMainBranch: boolean;
+  status: string;
 }
 
 export function AddBranchModal({ open, onOpenChange }: AddBranchModalProps) {
@@ -49,17 +49,17 @@ export function AddBranchModal({ open, onOpenChange }: AddBranchModalProps) {
     longitude: "",
     isMainBranch: false,
     status: "ACTIVE",
-  })
+  });
 
   const handleFieldChange = (field: string, val: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: val }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: val }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Form data:", formData)
-    onOpenChange(false)
-  }
+    e.preventDefault();
+    console.log("Form data:", formData);
+    onOpenChange(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -82,5 +82,5 @@ export function AddBranchModal({ open, onOpenChange }: AddBranchModalProps) {
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -56,8 +56,14 @@ const listFoods = catchServiceAsync(
         orderBy: Object.keys(orderBy).length > 0 ? orderBy : { createdAt: "desc" },
         include: {
           category: { select: { id: true, name: true, slug: true } },
-          variants: { where: { status: "active" }, select: { id: true, name: true, price: true, discountPrice: true, servingSize: true } },
-          addons: { where: { status: "active" }, include: { items: { where: { status: "active" } } } },
+          variants: {
+            where: { status: "active" },
+            select: { id: true, name: true, price: true, discountPrice: true, servingSize: true },
+          },
+          addons: {
+            where: { status: "active" },
+            include: { items: { where: { status: "active" } } },
+          },
           rating: { select: { averageRating: true, totalReview: true } },
           labels: true,
           tagMappings: { include: { tag: { select: { name: true } } } },
@@ -156,7 +162,10 @@ const listCategories = catchServiceAsync(async () => {
     where: { status: "active", deletedAt: null },
     orderBy: { sortOrder: "asc" },
     include: {
-      subCategories: { where: { status: "active", deletedAt: null }, orderBy: { sortOrder: "asc" } },
+      subCategories: {
+        where: { status: "active", deletedAt: null },
+        orderBy: { sortOrder: "asc" },
+      },
       _count: { select: { foods: { where: { status: "active", deletedAt: null } } } },
     },
   });
@@ -166,7 +175,10 @@ const getCategoryById = catchServiceAsync(async (id: string) => {
   const category = await prisma.category.findUnique({
     where: { id, status: "active", deletedAt: null },
     include: {
-      subCategories: { where: { status: "active", deletedAt: null }, orderBy: { sortOrder: "asc" } },
+      subCategories: {
+        where: { status: "active", deletedAt: null },
+        orderBy: { sortOrder: "asc" },
+      },
       _count: { select: { foods: { where: { status: "active", deletedAt: null } } } },
     },
   });
@@ -219,8 +231,14 @@ const listFavorites = catchServiceAsync(async (userId: string) => {
       food: {
         include: {
           category: { select: { id: true, name: true, slug: true } },
-          variants: { where: { status: "active" }, select: { id: true, name: true, price: true, discountPrice: true, servingSize: true } },
-          addons: { where: { status: "active" }, include: { items: { where: { status: "active" } } } },
+          variants: {
+            where: { status: "active" },
+            select: { id: true, name: true, price: true, discountPrice: true, servingSize: true },
+          },
+          addons: {
+            where: { status: "active" },
+            include: { items: { where: { status: "active" } } },
+          },
           rating: { select: { averageRating: true, totalReview: true } },
           labels: true,
           tagMappings: { include: { tag: { select: { name: true } } } },

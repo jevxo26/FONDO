@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/components/dashboard/admin/packages/package-form.tsx
 "use client";
 
@@ -34,6 +35,7 @@ export function PackageForm({ initialData, isEdit = false }: PackageFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+
   const [formData, setFormData] = useState<any>({
     name: "",
     slug: "",
@@ -92,7 +94,13 @@ export function PackageForm({ initialData, isEdit = false }: PackageFormProps) {
 
     try {
       // Validate required fields
-      if (!formData.name || !formData.price || !formData.packageType || !formData.durationDays || !formData.totalMeals) {
+      if (
+        !formData.name ||
+        !formData.price ||
+        !formData.packageType ||
+        !formData.durationDays ||
+        !formData.totalMeals
+      ) {
         toast.error("Please fill in all required fields");
         setIsLoading(false);
         return;
@@ -103,7 +111,7 @@ export function PackageForm({ initialData, isEdit = false }: PackageFormProps) {
       console.log("Package data:", formData);
       toast.success(isEdit ? "Package updated successfully!" : "Package created successfully!");
       router.push("/dashboard/admin/packages");
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
@@ -188,8 +196,8 @@ export function PackageForm({ initialData, isEdit = false }: PackageFormProps) {
                 currentStep === step.id
                   ? "bg-primary text-primary-foreground shadow-[0_0_20px_rgba(206,163,89,0.3)]"
                   : currentStep > step.id
-                  ? "bg-success/10 text-success"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    ? "bg-success/10 text-success"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80"
               }`}
             >
               <span
@@ -197,8 +205,8 @@ export function PackageForm({ initialData, isEdit = false }: PackageFormProps) {
                   currentStep === step.id
                     ? "bg-white/20 text-primary-foreground"
                     : currentStep > step.id
-                    ? "bg-success/20 text-success"
-                    : "bg-background text-muted-foreground"
+                      ? "bg-success/20 text-success"
+                      : "bg-background text-muted-foreground"
                 }`}
               >
                 {currentStep > step.id ? "✓" : step.id}
@@ -207,9 +215,7 @@ export function PackageForm({ initialData, isEdit = false }: PackageFormProps) {
             </button>
             {index < STEPS.length - 1 && (
               <div
-                className={`w-12 h-px mx-2 ${
-                  currentStep > step.id ? "bg-success" : "bg-muted"
-                }`}
+                className={`w-12 h-px mx-2 ${currentStep > step.id ? "bg-success" : "bg-muted"}`}
               />
             )}
           </div>

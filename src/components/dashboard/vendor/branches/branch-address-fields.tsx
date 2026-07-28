@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface BranchAddressFieldsProps {
   formData: {
-    division: string
-    district: string
-    upazila: string
-    area: string
-    road: string
-    house: string
-    postalCode: string
-    country: string
-    latitude: string
-    longitude: string
-  }
-  onFieldChange: (field: string, val: string | boolean) => void
+    division: string;
+    district: string;
+    upazila: string;
+    area: string;
+    road: string;
+    house: string;
+    postalCode: string;
+    country: string;
+    latitude: string;
+    longitude: string;
+  };
+  onFieldChange: (field: string, val: string | boolean) => void;
 }
 
 export function BranchAddressFields({ formData, onFieldChange }: BranchAddressFieldsProps) {
@@ -113,5 +113,5 @@ export function BranchAddressFields({ formData, onFieldChange }: BranchAddressFi
         </div>
       </div>
     </>
-  )
+  );
 }

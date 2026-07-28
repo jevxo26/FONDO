@@ -18,18 +18,24 @@ export function PaymentSummaryCards() {
           </div>
           <div className="flex flex-wrap gap-6 pt-6 border-t border-white/10">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Growth</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Growth
+              </p>
               <p className="flex items-center font-bold text-success">
                 <TrendingUp className="mr-1 size-4" />
                 +12.4%
               </p>
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Successful</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Successful
+              </p>
               <p className="font-bold text-white">2,143 Tx</p>
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Avg. Order</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Avg. Order
+              </p>
               <p className="font-bold text-white">৳1,250</p>
             </div>
           </div>

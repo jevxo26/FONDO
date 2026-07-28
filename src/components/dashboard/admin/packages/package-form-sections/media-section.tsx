@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/components/dashboard/admin/packages/package-form-sections/media-section.tsx
 "use client";
 
@@ -20,7 +21,10 @@ export function MediaSection({ data, onChange }: MediaSectionProps) {
   };
 
   const removeGalleryImage = (index: number) => {
-    onChange("gallery", gallery.filter((_: any, i: number) => i !== index));
+    onChange(
+      "gallery",
+      gallery.filter((_: any, i: number) => i !== index),
+    );
   };
 
   const updateGalleryImage = (index: number, value: string) => {
@@ -41,6 +45,7 @@ export function MediaSection({ data, onChange }: MediaSectionProps) {
           />
           {data.thumbnail && (
             <div className="mt-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={data.thumbnail}
                 alt="Thumbnail"
@@ -58,6 +63,7 @@ export function MediaSection({ data, onChange }: MediaSectionProps) {
           />
           {data.coverImage && (
             <div className="mt-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={data.coverImage}
                 alt="Cover"
@@ -96,6 +102,7 @@ export function MediaSection({ data, onChange }: MediaSectionProps) {
                 className="text-xs"
               />
               {url && (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={url}
                   alt={`Gallery ${index + 1}`}
@@ -107,9 +114,7 @@ export function MediaSection({ data, onChange }: MediaSectionProps) {
         </div>
 
         {gallery.length === 0 && (
-          <p className="text-sm text-muted-foreground text-center py-4">
-            No gallery images added.
-          </p>
+          <p className="text-sm text-muted-foreground text-center py-4">No gallery images added.</p>
         )}
       </div>
     </div>

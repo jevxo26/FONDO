@@ -16,10 +16,17 @@ interface PackageBasicFieldsProps {
   slug: string;
   packageCode: string;
   category: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onFieldChange: (field: string, value: any) => void;
 }
 
-export function PackageBasicFields({ name, slug, packageCode, category, onFieldChange }: PackageBasicFieldsProps) {
+export function PackageBasicFields({
+  name,
+  slug,
+  packageCode,
+  category,
+  onFieldChange,
+}: PackageBasicFieldsProps) {
   return (
     <>
       <div className="grid grid-cols-2 gap-4">

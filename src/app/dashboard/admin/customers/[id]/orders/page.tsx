@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ShoppingBag, CheckCircle, Clock, Timer, XCircle } from "lucide-react";
+import { ArrowLeft, ShoppingBag, CheckCircle, Clock, Timer } from "lucide-react";
 import { DataTable } from "@/components/common/table";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { useAdminCustomerOrders } from "@/hooks/use-admin-customers";
@@ -14,7 +14,7 @@ export default function CustomerOrdersPage() {
   const { id } = useParams<{ id: string }>();
   const { data, isLoading } = useAdminCustomerOrders(id);
 
-  const orders = data ?? [];
+  const orders = useMemo(() => data ?? [], [data]);
 
   const total = orders.length;
   const pending = orders.filter((o) => o.orderStatus === "PENDING").length;
@@ -83,8 +83,20 @@ export default function CustomerOrdersPage() {
       <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Total Orders" value={total} icon={ShoppingBag} accent="bottom" />
         <StatCard label="Pending" value={pending} variant="warning" icon={Clock} accent="bottom" />
-        <StatCard label="In Progress" value={inProgress} variant="danger" icon={Timer} accent="bottom" />
-        <StatCard label="Completed" value={completed} variant="success" icon={CheckCircle} accent="bottom" />
+        <StatCard
+          label="In Progress"
+          value={inProgress}
+          variant="danger"
+          icon={Timer}
+          accent="bottom"
+        />
+        <StatCard
+          label="Completed"
+          value={completed}
+          variant="success"
+          icon={CheckCircle}
+          accent="bottom"
+        />
       </div>
 
       <div className="mt-8">

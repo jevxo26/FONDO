@@ -2,7 +2,6 @@ import prisma from "../lib/prisma";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 
-
 export const listCustomers = catchServiceAsync(async () => {
   const users = await prisma.user.findMany({
     where: { role: "CUSTOMER", deletedAt: null },
@@ -101,7 +100,10 @@ export const listCustomerOrders = catchServiceAsync(async (customerId: string) =
   const items = await prisma.order.findMany({
     where: { customerId, deletedAt: null },
     orderBy: { placedAt: "desc" },
-    include: { items: { include: { food: { select: { id: true, name: true, images: true } } } }, payment: { select: { status: true, amount: true } } },
+    include: {
+      items: { include: { food: { select: { id: true, name: true, images: true } } } },
+      payment: { select: { status: true, amount: true } },
+    },
   });
   return items;
 });

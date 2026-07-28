@@ -28,7 +28,11 @@ export default function DashboardLayout({
       <SidebarInset
         suppressHydrationWarning
         className="relative self-start max-h-svh overflow-y-auto"
-        style={{ backgroundImage: 'radial-gradient(circle, rgba(206,163,89,0.35) 1.5px, transparent 1.5px)', backgroundSize: '20px 20px' }}
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, rgba(206,163,89,0.35) 1.5px, transparent 1.5px)",
+          backgroundSize: "20px 20px",
+        }}
       >
         <DashboardHeader />
         <div className="relative z-10 grid w-full grid-cols-1 xl:grid-cols-[minmax(0,1fr)_minmax(0,1600px)_minmax(0,1fr)] xl:grid-rows-1">

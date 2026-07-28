@@ -83,7 +83,10 @@ export function useAddToCart() {
   const [trigger, { isLoading }] = useAddToCartMutation();
 
   const mutate = useCallback(
-    (args: AddToCartArgs, options?: { onSuccess?: () => void; onError?: (e: unknown) => void; onSettled?: () => void }) => {
+    (
+      args: AddToCartArgs,
+      options?: { onSuccess?: () => void; onError?: (e: unknown) => void; onSettled?: () => void },
+    ) => {
       if (isLoading) return;
       cartStorage.addItem(args.foodId, args.name, args.unitPrice, args.quantity, args.thumbnail);
       trigger({ foodId: args.foodId, quantity: args.quantity, unitPrice: args.unitPrice })
@@ -104,7 +107,11 @@ export function useAddToCart() {
   const mutateAsync = useCallback(
     async (args: AddToCartArgs) => {
       cartStorage.addItem(args.foodId, args.name, args.unitPrice, args.quantity, args.thumbnail);
-      return trigger({ foodId: args.foodId, quantity: args.quantity, unitPrice: args.unitPrice }).unwrap();
+      return trigger({
+        foodId: args.foodId,
+        quantity: args.quantity,
+        unitPrice: args.unitPrice,
+      }).unwrap();
     },
     [trigger],
   );

@@ -1,18 +1,24 @@
-"use client"
+"use client";
 
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { foodCategories } from "@/data/vendor-foods"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { foodCategories } from "@/data/vendor-foods";
 
 interface FoodBasicFieldsProps {
   formData: {
-    name: string
-    sku: string
-    category: string
-    subCategory: string
-  }
-  onFieldChange: (field: string, val: string | boolean) => void
+    name: string;
+    sku: string;
+    category: string;
+    subCategory: string;
+  };
+  onFieldChange: (field: string, val: string | boolean) => void;
 }
 
 export function FoodBasicFields({ formData, onFieldChange }: FoodBasicFieldsProps) {
@@ -43,7 +49,7 @@ export function FoodBasicFields({ formData, onFieldChange }: FoodBasicFieldsProp
             value={formData.category}
             onValueChange={(value) => {
               if (value) {
-                onFieldChange("category", value)
+                onFieldChange("category", value);
               }
             }}
           >
@@ -71,5 +77,5 @@ export function FoodBasicFields({ formData, onFieldChange }: FoodBasicFieldsProp
         </div>
       </div>
     </>
-  )
+  );
 }

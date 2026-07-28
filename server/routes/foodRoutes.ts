@@ -21,6 +21,11 @@ router.get("/:id", FoodController.getById);
 router.post("/:foodId/favorite", verifyToken, FoodController.addFavorite);
 router.delete("/:foodId/favorite", verifyToken, FoodController.removeFavorite);
 router.get("/:foodId/reviews", FoodController.listReviews);
-router.post("/:foodId/reviews", verifyToken, validate(createReviewSchema), FoodController.createReview);
+router.post(
+  "/:foodId/reviews",
+  verifyToken,
+  validate(createReviewSchema),
+  FoodController.createReview,
+);
 
 export default router;

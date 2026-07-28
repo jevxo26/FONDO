@@ -1,21 +1,30 @@
-"use client"
+"use client";
 
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { divisions, districts } from "@/data/vendor-service-areas"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { divisions, districts } from "@/data/vendor-service-areas";
 
 interface ServiceAreaLocationFieldsProps {
   formData: {
-    division: string
-    district: string
-    upazila: string
-    area: string
-  }
-  onFieldChange: (field: string, val: string | boolean) => void
+    division: string;
+    district: string;
+    upazila: string;
+    area: string;
+  };
+  onFieldChange: (field: string, val: string | boolean) => void;
 }
 
-export function ServiceAreaLocationFields({ formData, onFieldChange }: ServiceAreaLocationFieldsProps) {
+export function ServiceAreaLocationFields({
+  formData,
+  onFieldChange,
+}: ServiceAreaLocationFieldsProps) {
   return (
     <>
       <div className="grid grid-cols-2 gap-4">
@@ -25,7 +34,7 @@ export function ServiceAreaLocationFields({ formData, onFieldChange }: ServiceAr
             value={formData.division}
             onValueChange={(value) => {
               if (value) {
-                onFieldChange("division", value)
+                onFieldChange("division", value);
               }
             }}
           >
@@ -49,7 +58,7 @@ export function ServiceAreaLocationFields({ formData, onFieldChange }: ServiceAr
             value={formData.district}
             onValueChange={(value) => {
               if (value) {
-                onFieldChange("district", value)
+                onFieldChange("district", value);
               }
             }}
           >
@@ -87,5 +96,5 @@ export function ServiceAreaLocationFields({ formData, onFieldChange }: ServiceAr
         </div>
       </div>
     </>
-  )
+  );
 }

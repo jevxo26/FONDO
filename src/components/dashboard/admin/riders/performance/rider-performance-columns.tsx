@@ -24,7 +24,9 @@ export const riderPerformanceColumns: ColumnDef<RiderPerformanceData>[] = [
     accessorKey: "onTimeRate",
     header: ({ column }) => <DataTableColumnHeader column={column} title="On-Time" />,
     cell: ({ row }) => (
-      <span className={`font-bold ${row.original.onTimeRate > 90 ? "text-success" : row.original.onTimeRate > 80 ? "text-warning" : "text-destructive"}`}>
+      <span
+        className={`font-bold ${row.original.onTimeRate > 90 ? "text-success" : row.original.onTimeRate > 80 ? "text-warning" : "text-destructive"}`}
+      >
         {row.original.onTimeRate}%
       </span>
     ),
@@ -32,15 +34,19 @@ export const riderPerformanceColumns: ColumnDef<RiderPerformanceData>[] = [
   {
     accessorKey: "avgRating",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Rating" />,
-    cell: ({ row }) => (
-      <span className="font-bold text-foreground">{row.original.avgRating}</span>
-    ),
+    cell: ({ row }) => <span className="font-bold text-foreground">{row.original.avgRating}</span>,
   },
   {
     accessorKey: "lateDeliveries",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Late" />,
     cell: ({ row }) => (
-      <span className={row.original.lateDeliveries > 3 ? "font-bold text-destructive" : "text-sm text-muted-foreground"}>
+      <span
+        className={
+          row.original.lateDeliveries > 3
+            ? "font-bold text-destructive"
+            : "text-sm text-muted-foreground"
+        }
+      >
         {row.original.lateDeliveries}
       </span>
     ),
@@ -49,7 +55,13 @@ export const riderPerformanceColumns: ColumnDef<RiderPerformanceData>[] = [
     accessorKey: "complaints",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Complaints" />,
     cell: ({ row }) => (
-      <span className={row.original.complaints > 0 ? "font-bold text-destructive" : "text-sm text-muted-foreground"}>
+      <span
+        className={
+          row.original.complaints > 0
+            ? "font-bold text-destructive"
+            : "text-sm text-muted-foreground"
+        }
+      >
         {row.original.complaints}
       </span>
     ),

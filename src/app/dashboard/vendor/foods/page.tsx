@@ -2,7 +2,7 @@
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 
-import { Utensils, PlusCircle, AlertCircle, TrendingUp, Package } from "lucide-react";
+import { Utensils, PlusCircle, AlertCircle, Package } from "lucide-react";
 import { vendorFoods } from "@/data/vendor-foods";
 import { VendorFoodTableSection } from "@/components/dashboard/vendor/foods/food-table";
 
@@ -11,11 +11,6 @@ export default function VendorFoodsPage() {
   const activeItems = vendorFoods.filter((f) => f.status === "ACTIVE").length;
   const outOfStock = vendorFoods.filter((f) => f.stockStatus === "OUT_OF_STOCK").length;
   const lowStock = vendorFoods.filter((f) => f.stockStatus === "LOW_STOCK").length;
-  
-  // Find top seller (most orders)
-  const topSeller = vendorFoods.reduce((max, food) => 
-    food.totalOrders > max.totalOrders ? food : max
-  );
 
   return (
     <div className="space-y-8">
@@ -57,9 +52,7 @@ export default function VendorFoodsPage() {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-fraunces text-xl font-semibold tracking-tight">
-            Food Items List
-          </h3>
+          <h3 className="font-fraunces text-xl font-semibold tracking-tight">Food Items List</h3>
           <p className="text-xs uppercase tracking-widest text-muted-foreground">
             {vendorFoods.filter((f) => f.status === "ACTIVE").length} Active
           </p>

@@ -1,16 +1,22 @@
-"use client"
+"use client";
 
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { branchStatuses } from "@/data/vendor-branches"
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { branchStatuses } from "@/data/vendor-branches";
 
 interface BranchSettingsFieldsProps {
   formData: {
-    status: string
-    isMainBranch: boolean
-  }
-  onFieldChange: (field: string, val: string | boolean) => void
+    status: string;
+    isMainBranch: boolean;
+  };
+  onFieldChange: (field: string, val: string | boolean) => void;
 }
 
 export function BranchSettingsFields({ formData, onFieldChange }: BranchSettingsFieldsProps) {
@@ -22,7 +28,7 @@ export function BranchSettingsFields({ formData, onFieldChange }: BranchSettings
           value={formData.status}
           onValueChange={(value) => {
             if (value) {
-              onFieldChange("status", value)
+              onFieldChange("status", value);
             }
           }}
         >
@@ -48,5 +54,5 @@ export function BranchSettingsFields({ formData, onFieldChange }: BranchSettings
         />
       </div>
     </div>
-  )
+  );
 }

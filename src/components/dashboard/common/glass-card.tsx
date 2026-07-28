@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 interface GlassCardProps {
   icon: React.ReactNode;
@@ -12,7 +12,7 @@ interface GlassCardProps {
 
 export function GlassCard({
   icon,
-  iconBg = 'bg-primary/10',
+  iconBg = "bg-primary/10",
   title,
   value,
   subtitle,
@@ -22,7 +22,7 @@ export function GlassCard({
   return (
     <div
       className={cn(
-        'group relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/20 via-card to-primary/[0.08] shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]',
+        "group relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/20 via-card to-primary/[0.08] shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]",
         className,
       )}
     >
@@ -34,7 +34,12 @@ export function GlassCard({
       <div className="relative z-10 p-5 md:p-6">
         <div className="flex items-start justify-between gap-4">
           <h3 className="font-heading text-lg leading-tight text-foreground md:text-xl">{title}</h3>
-          <div className={cn('mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)]', iconBg)}>
+          <div
+            className={cn(
+              "mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)]",
+              iconBg,
+            )}
+          >
             {icon}
           </div>
         </div>
@@ -42,7 +47,9 @@ export function GlassCard({
         <div className="mt-5 h-px w-full bg-gradient-to-r from-primary/40 via-primary/30 to-transparent" />
 
         <div className="mt-5">
-          <p className="font-heading text-[30px] tracking-tight text-foreground drop-shadow-[0_1px_1px_rgba(0,0,0,0.03)]">{value}</p>
+          <p className="font-heading text-[30px] tracking-tight text-foreground drop-shadow-[0_1px_1px_rgba(0,0,0,0.03)]">
+            {value}
+          </p>
           <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
         </div>
 

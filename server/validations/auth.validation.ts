@@ -12,10 +12,7 @@ export const registerSchema = yup.object({
     .string()
     .min(6, "Password must be at least 6 characters")
     .required("Password is required"),
-  gender: yup
-    .string()
-    .oneOf(["MALE", "FEMALE", "OTHER"], "Invalid gender")
-    .optional(),
+  gender: yup.string().oneOf(["MALE", "FEMALE", "OTHER"], "Invalid gender").optional(),
   avatar: yup.string().url("Invalid URL format").optional(),
   dateOfBirth: yup.date().optional(),
 });

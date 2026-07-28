@@ -13,7 +13,11 @@ export function DangerZone() {
   };
 
   const handleDelete = () => {
-    if (confirm("Are you sure you want to permanently delete your account? This action cannot be undone.")) {
+    if (
+      confirm(
+        "Are you sure you want to permanently delete your account? This action cannot be undone.",
+      )
+    ) {
       console.log("Delete account");
     }
   };
@@ -30,7 +34,12 @@ export function DangerZone() {
             </p>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" size="sm" className="border-destructive/30 text-destructive hover:bg-destructive/10" onClick={handleDeactivate}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-destructive/30 text-destructive hover:bg-destructive/10"
+              onClick={handleDeactivate}
+            >
               Deactivate Account
             </Button>
             <Button variant="destructive" size="sm" onClick={handleDelete}>

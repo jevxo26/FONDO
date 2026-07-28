@@ -1,28 +1,28 @@
-"use client"
+"use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
-import { FoodBasicFields } from "./food-basic-fields"
-import { FoodPricingFields } from "./food-pricing-fields"
-import { FoodMetaFields } from "./food-meta-fields"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { FoodBasicFields } from "./food-basic-fields";
+import { FoodPricingFields } from "./food-pricing-fields";
+import { FoodMetaFields } from "./food-meta-fields";
 
 interface AddFoodModalProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 interface FormData {
-  name: string
-  category: string
-  subCategory: string
-  price: string
-  costPrice: string
-  stock: string
-  kitchen: string
-  branch: string
-  sku: string
-  description: string
+  name: string;
+  category: string;
+  subCategory: string;
+  price: string;
+  costPrice: string;
+  stock: string;
+  kitchen: string;
+  branch: string;
+  sku: string;
+  description: string;
 }
 
 export function AddFoodModal({ open, onOpenChange }: AddFoodModalProps) {
@@ -37,17 +37,17 @@ export function AddFoodModal({ open, onOpenChange }: AddFoodModalProps) {
     branch: "",
     sku: "",
     description: "",
-  })
+  });
 
   const handleFieldChange = (field: string, val: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: val }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: val }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Form data:", formData)
-    onOpenChange(false)
-  }
+    e.preventDefault();
+    console.log("Form data:", formData);
+    onOpenChange(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -70,5 +70,5 @@ export function AddFoodModal({ open, onOpenChange }: AddFoodModalProps) {
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -70,44 +70,40 @@ const updateAddress = catchServiceAsync(
   },
 );
 
-const deleteAddress = catchServiceAsync(
-  async (userId: string, addressId: string) => {
-    const address = await prisma.userAddress.findFirst({
-      where: { id: addressId, userId, deletedAt: null },
-    });
+const deleteAddress = catchServiceAsync(async (userId: string, addressId: string) => {
+  const address = await prisma.userAddress.findFirst({
+    where: { id: addressId, userId, deletedAt: null },
+  });
 
-    if (!address) {
-      throw new AppError(404, "Address not found");
-    }
+  if (!address) {
+    throw new AppError(404, "Address not found");
+  }
 
-    return prisma.userAddress.update({
-      where: { id: addressId },
-      data: { deletedAt: new Date() },
-    });
-  },
-);
+  return prisma.userAddress.update({
+    where: { id: addressId },
+    data: { deletedAt: new Date() },
+  });
+});
 
-const setDefaultAddress = catchServiceAsync(
-  async (userId: string, addressId: string) => {
-    const address = await prisma.userAddress.findFirst({
-      where: { id: addressId, userId, deletedAt: null },
-    });
+const setDefaultAddress = catchServiceAsync(async (userId: string, addressId: string) => {
+  const address = await prisma.userAddress.findFirst({
+    where: { id: addressId, userId, deletedAt: null },
+  });
 
-    if (!address) {
-      throw new AppError(404, "Address not found");
-    }
+  if (!address) {
+    throw new AppError(404, "Address not found");
+  }
 
-    await prisma.userAddress.updateMany({
-      where: { userId, isDefault: true, id: { not: addressId } },
-      data: { isDefault: false },
-    });
+  await prisma.userAddress.updateMany({
+    where: { userId, isDefault: true, id: { not: addressId } },
+    data: { isDefault: false },
+  });
 
-    return prisma.userAddress.update({
-      where: { id: addressId },
-      data: { isDefault: true },
-    });
-  },
-);
+  return prisma.userAddress.update({
+    where: { id: addressId },
+    data: { isDefault: true },
+  });
+});
 
 export const AddressService = {
   listAddresses,

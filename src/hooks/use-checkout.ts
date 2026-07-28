@@ -93,6 +93,7 @@ export default function useCheckout(): UseCheckoutReturn {
     },
   });
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const currentFulfillment = watch("fulfillment");
   const currentPaymentMethodId = watch("paymentMethodId");
 

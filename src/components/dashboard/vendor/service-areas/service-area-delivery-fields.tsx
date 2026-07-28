@@ -1,20 +1,23 @@
-"use client"
+"use client";
 
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 
 interface ServiceAreaDeliveryFieldsProps {
   formData: {
-    deliveryCharge: string
-    minimumOrderAmount: string
-    estimatedDeliveryTime: string
-    isActive: boolean
-  }
-  onFieldChange: (field: string, val: string | boolean) => void
+    deliveryCharge: string;
+    minimumOrderAmount: string;
+    estimatedDeliveryTime: string;
+    isActive: boolean;
+  };
+  onFieldChange: (field: string, val: string | boolean) => void;
 }
 
-export function ServiceAreaDeliveryFields({ formData, onFieldChange }: ServiceAreaDeliveryFieldsProps) {
+export function ServiceAreaDeliveryFields({
+  formData,
+  onFieldChange,
+}: ServiceAreaDeliveryFieldsProps) {
   return (
     <>
       <div className="grid grid-cols-3 gap-4">
@@ -54,5 +57,5 @@ export function ServiceAreaDeliveryFields({ formData, onFieldChange }: ServiceAr
         />
       </div>
     </>
-  )
+  );
 }

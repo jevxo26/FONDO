@@ -8,7 +8,9 @@ export const deliveryColumns: ColumnDef<RiderDelivery>[] = [
   {
     accessorKey: "deliveryCode",
     header: "Delivery Code",
-    cell: ({ row }) => <span className="font-medium text-foreground">{row.original.deliveryCode}</span>,
+    cell: ({ row }) => (
+      <span className="font-medium text-foreground">{row.original.deliveryCode}</span>
+    ),
   },
   {
     accessorKey: "customerName",
@@ -28,7 +30,9 @@ export const deliveryColumns: ColumnDef<RiderDelivery>[] = [
   {
     accessorKey: "items",
     header: "Items",
-    cell: ({ row }) => <span className="text-muted-foreground">{row.original.items.join(", ")}</span>,
+    cell: ({ row }) => (
+      <span className="text-muted-foreground">{row.original.items.join(", ")}</span>
+    ),
   },
   {
     accessorKey: "status",
@@ -38,6 +42,8 @@ export const deliveryColumns: ColumnDef<RiderDelivery>[] = [
   {
     accessorKey: "estimatedDeliveryTime",
     header: "Est. Time",
-    cell: ({ row }) => <span className="text-muted-foreground">{row.original.estimatedDeliveryTime}</span>,
+    cell: ({ row }) => (
+      <span className="text-muted-foreground">{row.original.estimatedDeliveryTime}</span>
+    ),
   },
 ];

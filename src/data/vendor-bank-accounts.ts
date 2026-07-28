@@ -82,7 +82,10 @@ export const getAccountTypeBadge = (type: string) => {
   const variants: Record<string, { label: string; className: string }> = {
     CURRENT: { label: "Current", className: "bg-blue-500/10 text-blue-500 ring-blue-500/20" },
     SAVINGS: { label: "Savings", className: "bg-green-500/10 text-green-500 ring-green-500/20" },
-    MOBILE_BANKING: { label: "Mobile Banking", className: "bg-purple-500/10 text-purple-500 ring-purple-500/20" },
+    MOBILE_BANKING: {
+      label: "Mobile Banking",
+      className: "bg-purple-500/10 text-purple-500 ring-purple-500/20",
+    },
   };
   return variants[type] || variants.CURRENT;
 };
@@ -90,7 +93,10 @@ export const getAccountTypeBadge = (type: string) => {
 export const getBankAccountStatusBadge = (status: string) => {
   const variants: Record<string, { label: string; className: string }> = {
     ACTIVE: { label: "Active", className: "bg-success/10 text-success ring-success/20" },
-    INACTIVE: { label: "Inactive", className: "bg-muted text-muted-foreground ring-muted-foreground/20" },
+    INACTIVE: {
+      label: "Inactive",
+      className: "bg-muted text-muted-foreground ring-muted-foreground/20",
+    },
   };
   return variants[status] || variants.INACTIVE;
 };

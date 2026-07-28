@@ -15,7 +15,4 @@ export const profileApi = api.injectEndpoints({
   overrideExisting: false,
 });
 
-export const {
-  useUpdateProfileMutation,
-  useChangePasswordMutation,
-} = profileApi;
+export const { useUpdateProfileMutation, useChangePasswordMutation } = profileApi;

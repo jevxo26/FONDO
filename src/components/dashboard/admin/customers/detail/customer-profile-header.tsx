@@ -47,7 +47,12 @@ export default function CustomerProfileHeader({
           <div className="flex items-center gap-5">
             <Avatar className="size-16 md:size-20">
               <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-xl font-bold text-primary shadow-[0_2px_8px_rgba(0,0,0,0.04)] ring-1 ring-primary/10">
-                {fullName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)}
+                {fullName
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .toUpperCase()
+                  .slice(0, 2)}
               </AvatarFallback>
             </Avatar>
             <div>
@@ -55,7 +60,10 @@ export default function CustomerProfileHeader({
                 <h1 className="font-fraunces text-2xl font-bold text-foreground md:text-3xl">
                   {fullName}
                 </h1>
-                <Badge variant="outline" className={`rounded-full px-3 py-0.5 text-[11px] font-bold uppercase ${statusStyle}`}>
+                <Badge
+                  variant="outline"
+                  className={`rounded-full px-3 py-0.5 text-[11px] font-bold uppercase ${statusStyle}`}
+                >
                   {statusLabel}
                 </Badge>
               </div>

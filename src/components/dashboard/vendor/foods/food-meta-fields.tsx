@@ -1,18 +1,24 @@
-"use client"
+"use client";
 
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { kitchens } from "@/data/vendor-foods"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { kitchens } from "@/data/vendor-foods";
 
 interface FoodMetaFieldsProps {
   formData: {
-    kitchen: string
-    branch: string
-    description: string
-  }
-  onFieldChange: (field: string, val: string | boolean) => void
+    kitchen: string;
+    branch: string;
+    description: string;
+  };
+  onFieldChange: (field: string, val: string | boolean) => void;
 }
 
 export function FoodMetaFields({ formData, onFieldChange }: FoodMetaFieldsProps) {
@@ -25,7 +31,7 @@ export function FoodMetaFields({ formData, onFieldChange }: FoodMetaFieldsProps)
             value={formData.kitchen}
             onValueChange={(value) => {
               if (value) {
-                onFieldChange("kitchen", value)
+                onFieldChange("kitchen", value);
               }
             }}
           >
@@ -62,5 +68,5 @@ export function FoodMetaFields({ formData, onFieldChange }: FoodMetaFieldsProps)
         />
       </div>
     </>
-  )
+  );
 }

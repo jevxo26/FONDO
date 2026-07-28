@@ -14,13 +14,17 @@ export function CoreLayoutWrapper({ currentStep, children }: CoreLayoutWrapperPr
       {/* Left Media Branding Panel */}
       <div className="relative hidden lg:flex flex-col justify-end p-12 bg-foreground">
         <Image
-          src={isIdentityFlow ? "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" : "https://plus.unsplash.com/premium_photo-1675252369719-dd52bc69c3df?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}
+          src={
+            isIdentityFlow
+              ? "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              : "https://plus.unsplash.com/premium_photo-1675252369719-dd52bc69c3df?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          }
           alt="Food Flow Heritage Scene"
           fill
           priority
           className="object-cover opacity-55 object-center"
         />
-          <div className="relative z-10 text-background flex flex-col gap-4 max-w-md">
+        <div className="relative z-10 text-background flex flex-col gap-4 max-w-md">
           {isIdentityFlow ? (
             <>
               <div className="self-start px-3 py-1 bg-primary rounded-full text-[10px] font-sans font-bold uppercase tracking-wider text-primary-foreground">
@@ -30,7 +34,8 @@ export function CoreLayoutWrapper({ currentStep, children }: CoreLayoutWrapperPr
                 A heritage of flavor awaits your presence.
               </h2>
               <p className="font-sans text-xs text-background/80 leading-relaxed">
-                Create an account to unlock exclusive chef&apos;s specials, track your orders in real-time, and join our culinary community.
+                Create an account to unlock exclusive chef&apos;s specials, track your orders in
+                real-time, and join our culinary community.
               </p>
             </>
           ) : (

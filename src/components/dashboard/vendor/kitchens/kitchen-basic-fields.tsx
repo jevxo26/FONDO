@@ -1,18 +1,24 @@
-"use client"
+"use client";
 
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { branches } from "@/data/vendor-kitchens"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { branches } from "@/data/vendor-kitchens";
 
 interface KitchenBasicFieldsProps {
   formData: {
-    name: string
-    code: string
-    branch: string
-    headChef: string
-  }
-  onFieldChange: (field: string, val: string | boolean) => void
+    name: string;
+    code: string;
+    branch: string;
+    headChef: string;
+  };
+  onFieldChange: (field: string, val: string | boolean) => void;
 }
 
 export function KitchenBasicFields({ formData, onFieldChange }: KitchenBasicFieldsProps) {
@@ -43,7 +49,7 @@ export function KitchenBasicFields({ formData, onFieldChange }: KitchenBasicFiel
             value={formData.branch}
             onValueChange={(value) => {
               if (value) {
-                onFieldChange("branch", value)
+                onFieldChange("branch", value);
               }
             }}
           >
@@ -71,5 +77,5 @@ export function KitchenBasicFields({ formData, onFieldChange }: KitchenBasicFiel
         </div>
       </div>
     </>
-  )
+  );
 }

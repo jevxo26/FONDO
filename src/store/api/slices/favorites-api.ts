@@ -17,10 +17,15 @@ export const favoritesApi = api.injectEndpoints({
         const patchResult = dispatch(
           favoritesApi.util.updateQueryData("getFavorites", undefined, (draft) => {
             if (!draft.some((f) => f.id === food.id)) draft.unshift(food);
-          })
+          }),
         );
-        try { await queryFulfilled; toast.success("Added to favorites") }
-        catch (err) { patchResult.undo(); toast.error(getErrorMessage(err)) }
+        try {
+          await queryFulfilled;
+          toast.success("Added to favorites");
+        } catch (err) {
+          patchResult.undo();
+          toast.error(getErrorMessage(err));
+        }
       },
     }),
 
@@ -32,18 +37,20 @@ export const favoritesApi = api.injectEndpoints({
           favoritesApi.util.updateQueryData("getFavorites", undefined, (draft) => {
             const idx = draft.findIndex((f) => f.id === food.id);
             if (idx !== -1) draft.splice(idx, 1);
-          })
+          }),
         );
-        try { await queryFulfilled; toast.success("Removed from favorites") }
-        catch (err) { patchResult.undo(); toast.error(getErrorMessage(err)) }
+        try {
+          await queryFulfilled;
+          toast.success("Removed from favorites");
+        } catch (err) {
+          patchResult.undo();
+          toast.error(getErrorMessage(err));
+        }
       },
     }),
   }),
   overrideExisting: false,
 });
 
-export const {
-  useGetFavoritesQuery,
-  useToggleFavoriteMutation,
-  useRemoveFavoriteMutation,
-} = favoritesApi;
+export const { useGetFavoritesQuery, useToggleFavoriteMutation, useRemoveFavoriteMutation } =
+  favoritesApi;

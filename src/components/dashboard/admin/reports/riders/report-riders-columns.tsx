@@ -9,7 +9,9 @@ export const riderReportColumns: ColumnDef<RiderReportEntry>[] = [
   {
     accessorKey: "riderName",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Rider" />,
-    cell: ({ row }) => <span className="text-sm font-bold text-foreground">{row.original.riderName}</span>,
+    cell: ({ row }) => (
+      <span className="text-sm font-bold text-foreground">{row.original.riderName}</span>
+    ),
   },
   {
     accessorKey: "deliveries",
@@ -25,7 +27,11 @@ export const riderReportColumns: ColumnDef<RiderReportEntry>[] = [
     accessorKey: "late",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Late" />,
     cell: ({ row }) => (
-      <span className={row.original.late > 0 ? "font-bold text-destructive" : "text-sm text-muted-foreground"}>
+      <span
+        className={
+          row.original.late > 0 ? "font-bold text-destructive" : "text-sm text-muted-foreground"
+        }
+      >
         {row.original.late}
       </span>
     ),
@@ -34,7 +40,9 @@ export const riderReportColumns: ColumnDef<RiderReportEntry>[] = [
     accessorKey: "rating",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Rating" />,
     cell: ({ row }) => (
-      <span className={`font-bold ${row.original.rating >= 4 ? "text-success" : row.original.rating >= 3 ? "text-warning" : "text-destructive"}`}>
+      <span
+        className={`font-bold ${row.original.rating >= 4 ? "text-success" : row.original.rating >= 3 ? "text-warning" : "text-destructive"}`}
+      >
         {row.original.rating}
       </span>
     ),
@@ -42,7 +50,9 @@ export const riderReportColumns: ColumnDef<RiderReportEntry>[] = [
   {
     accessorKey: "earnings",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Earnings" />,
-    cell: ({ row }) => <span className="font-bold text-foreground">৳{row.original.earnings.toLocaleString()}</span>,
+    cell: ({ row }) => (
+      <span className="font-bold text-foreground">৳{row.original.earnings.toLocaleString()}</span>
+    ),
   },
   {
     accessorKey: "status",

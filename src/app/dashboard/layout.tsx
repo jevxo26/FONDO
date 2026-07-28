@@ -31,7 +31,5 @@ export default function DashboardLayout({
     }
   }, [isAuthenticated, user, pathname, router]);
 
-  return (
-    <PageTransition>{children}</PageTransition>
-  );
+  return <PageTransition>{children}</PageTransition>;
 }

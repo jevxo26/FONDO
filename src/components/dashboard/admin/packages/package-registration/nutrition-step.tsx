@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/components/dashboard/admin/packages/package-registration/nutrition-step.tsx
 "use client";
 
@@ -29,7 +30,9 @@ export function NutritionStep({ data, onChange }: NutritionStepProps) {
   return (
     <div className="space-y-6">
       <h3 className="font-fraunces text-lg font-semibold">Daily Nutrition</h3>
-      <p className="text-sm text-muted-foreground">Set the daily nutritional values for your package</p>
+      <p className="text-sm text-muted-foreground">
+        Set the daily nutritional values for your package
+      </p>
 
       <div className="grid grid-cols-2 gap-4">
         {nutritionFields.map((field) => (

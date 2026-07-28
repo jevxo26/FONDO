@@ -30,9 +30,7 @@ export const settlementColumns: ColumnDef<VendorSettlement>[] = [
   },
   {
     accessorKey: "settlementNumber",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Settlement #" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Settlement #" />,
     cell: ({ row }) => {
       const settlement = row.original;
       return (
@@ -47,16 +45,12 @@ export const settlementColumns: ColumnDef<VendorSettlement>[] = [
   },
   {
     accessorKey: "period",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Period" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Period" />,
     cell: ({ row }) => {
       const settlement = row.original;
       return (
         <div className="flex flex-col gap-0.5">
-          <span className="text-sm">
-            {format(new Date(settlement.periodStart), "MMM d")}
-          </span>
+          <span className="text-sm">{format(new Date(settlement.periodStart), "MMM d")}</span>
           <span className="text-xs text-muted-foreground">
             to {format(new Date(settlement.periodEnd), "MMM d, yyyy")}
           </span>
@@ -66,18 +60,12 @@ export const settlementColumns: ColumnDef<VendorSettlement>[] = [
   },
   {
     accessorKey: "totalOrders",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Orders" />
-    ),
-    cell: ({ row }) => (
-      <span className="font-medium text-sm">{row.getValue("totalOrders")}</span>
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Orders" />,
+    cell: ({ row }) => <span className="font-medium text-sm">{row.getValue("totalOrders")}</span>,
   },
   {
     accessorKey: "grossAmount",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Gross" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Gross" />,
     cell: ({ row }) => {
       const amount = row.getValue("grossAmount") as number;
       return (
@@ -89,23 +77,15 @@ export const settlementColumns: ColumnDef<VendorSettlement>[] = [
   },
   {
     accessorKey: "commissionAmount",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Commission" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Commission" />,
     cell: ({ row }) => {
       const amount = row.getValue("commissionAmount") as number;
-      return (
-        <span className="text-sm text-destructive">
-          -৳{amount.toLocaleString()}
-        </span>
-      );
+      return <span className="text-sm text-destructive">-৳{amount.toLocaleString()}</span>;
     },
   },
   {
     accessorKey: "netAmount",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Net Amount" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Net Amount" />,
     cell: ({ row }) => {
       const amount = row.getValue("netAmount") as number;
       return (
@@ -117,9 +97,7 @@ export const settlementColumns: ColumnDef<VendorSettlement>[] = [
   },
   {
     accessorKey: "paymentStatus",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({ row }) => {
       const status = row.getValue("paymentStatus") as VendorSettlement["paymentStatus"];
       const badge = getSettlementStatusBadge(status);
@@ -132,16 +110,10 @@ export const settlementColumns: ColumnDef<VendorSettlement>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Created" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
     cell: ({ row }) => {
       const date = row.getValue("createdAt") as string;
-      return (
-        <span className="text-sm">
-          {format(new Date(date), "MMM d, yyyy")}
-        </span>
-      );
+      return <span className="text-sm">{format(new Date(date), "MMM d, yyyy")}</span>;
     },
   },
 ];

@@ -1,5 +1,4 @@
 import prisma from "../lib/prisma";
-import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import { generateOrderNumber, resolvePrimaryVendor } from "./orderUtils";
 
@@ -14,7 +13,7 @@ export const createOrderFromCart = catchServiceAsync(
       discount: import("@prisma/client/runtime/library").Decimal;
       deliveryCharge: import("@prisma/client/runtime/library").Decimal;
       vat: import("@prisma/client/runtime/library").Decimal;
-      totalAmount: import("@prisma/client/runtime/library").Decimal;
+      totalAmount?: import("@prisma/client/runtime/library").Decimal | null;
       couponId?: string | null;
       items: Array<{
         id: string;
@@ -48,6 +47,13 @@ export const createOrderFromCart = catchServiceAsync(
   ) => {
     const orderNumber = generateOrderNumber();
 
+    const totalAmount =
+      cart.totalAmount ??
+      Number(cart.subtotal) -
+        Number(cart.discount) +
+        Number(cart.deliveryCharge) +
+        Number(cart.vat);
+
     const itemFoodIds = cart.items.map((i) => i.foodId);
     const mealFoodIds = cart.meals.flatMap((m) => m.foods.map((f) => f.foodId));
     const allFoodIds = [...new Set([...itemFoodIds, ...mealFoodIds])];
@@ -67,7 +73,7 @@ export const createOrderFromCart = catchServiceAsync(
           discount: cart.discount,
           deliveryCharge: cart.deliveryCharge,
           vat: cart.vat,
-          totalAmount: cart.totalAmount,
+          totalAmount,
           paymentStatus: "PENDING",
           orderStatus: "PENDING",
           deliveryStatus: "PENDING",
@@ -145,7 +151,7 @@ export const createOrderFromCart = catchServiceAsync(
           orderId: created.id,
           customerId,
           paymentMethodId,
-          amount: cart.totalAmount,
+          amount: totalAmount,
           status: "PENDING",
         },
       });
@@ -167,7 +173,7 @@ export const createOrderFromCart = catchServiceAsync(
 
       await tx.cartSummary.update({
         where: { cartId: cart.id },
-        data: { grandTotal: cart.totalAmount },
+        data: { grandTotal: totalAmount },
       });
 
       return created;
@@ -185,7 +191,13 @@ export const createOrderFromCart = catchServiceAsync(
 export const createOrderFromItems = catchServiceAsync(
   async (
     customerId: string,
-    items: Array<{ foodId: string; name: string; quantity: number; unitPrice: number; totalPrice: number }>,
+    items: Array<{
+      foodId: string;
+      name: string;
+      quantity: number;
+      unitPrice: number;
+      totalPrice: number;
+    }>,
     paymentMethodId: string,
     addressId?: string,
     notes?: string,

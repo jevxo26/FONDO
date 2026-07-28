@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/components/dashboard/admin/packages/package-form-sections/benefits-section.tsx
 "use client";
 
@@ -17,7 +18,6 @@ import { Plus, Trash2 } from "lucide-react";
 import { benefitIcons } from "@/data/admin-packages";
 
 interface BenefitsSectionProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
   onChange: (field: string, value: any) => void;
 }
@@ -33,8 +33,10 @@ export function BenefitsSection({ data, onChange }: BenefitsSectionProps) {
   };
 
   const removeBenefit = (index: number) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onChange("benefits", benefits.filter((_: any, i: number) => i !== index));
+    onChange(
+      "benefits",
+      benefits.filter((_: any, i: number) => i !== index),
+    );
   };
 
   const updateBenefit = (index: number, field: string, value: string) => {
@@ -108,4 +110,9 @@ export function BenefitsSection({ data, onChange }: BenefitsSectionProps) {
 
       {benefits.length === 0 && (
         <p className="text-sm text-muted-foreground text-center py-8">
-          No benefits added. Click &quot;Add 
+          No benefits added. Click &quot;Add Benefit&quot; to start.
+        </p>
+      )}
+    </div>
+  );
+}

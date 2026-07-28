@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Input } from "@/components/ui/input";
@@ -16,6 +17,7 @@ import { Plus, Search } from "lucide-react";
 interface MealSearchPanelProps {
   searchQuery: string;
   onSearchChange: (q: string) => void;
+
   filteredFoods: any[];
   onSelectFood: (food: any) => void;
   selectedMealType: string;
@@ -35,7 +37,9 @@ export function MealSearchPanel({
       <div className="flex items-center justify-between">
         <div>
           <Label>Package Meals</Label>
-          <p className="text-xs text-muted-foreground">Add meals that will be included in this package</p>
+          <p className="text-xs text-muted-foreground">
+            Add meals that will be included in this package
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Select

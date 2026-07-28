@@ -1,16 +1,22 @@
-"use client"
+"use client";
 
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { bankAccountTypes } from "@/data/vendor-bank-accounts"
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { bankAccountTypes } from "@/data/vendor-bank-accounts";
 
 interface BankSettingsFieldsProps {
   formData: {
-    status: string
-    isPrimary: boolean
-  }
-  onFieldChange: (field: string, val: string | boolean) => void
+    status: string;
+    isPrimary: boolean;
+  };
+  onFieldChange: (field: string, val: string | boolean) => void;
 }
 
 export function BankSettingsFields({ formData, onFieldChange }: BankSettingsFieldsProps) {
@@ -22,7 +28,7 @@ export function BankSettingsFields({ formData, onFieldChange }: BankSettingsFiel
           value={formData.status}
           onValueChange={(value) => {
             if (value) {
-              onFieldChange("status", value)
+              onFieldChange("status", value);
             }
           }}
         >
@@ -48,5 +54,5 @@ export function BankSettingsFields({ formData, onFieldChange }: BankSettingsFiel
         />
       </div>
     </div>
-  )
+  );
 }

@@ -31,7 +31,7 @@ export function AssignRoleModal({ open, onOpenChange, staff, onAssign }: AssignR
 
   const handleToggleRole = (role: string) => {
     setSelectedRoles((prev) =>
-      prev.includes(role) ? prev.filter((r) => r !== role) : [...prev, role]
+      prev.includes(role) ? prev.filter((r) => r !== role) : [...prev, role],
     );
   };
 
@@ -50,9 +50,7 @@ export function AssignRoleModal({ open, onOpenChange, staff, onAssign }: AssignR
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="font-fraunces text-2xl">Assign Roles</DialogTitle>
-          <p className="text-sm text-muted-foreground">
-            Assign roles to {staff.fullName}
-          </p>
+          <p className="text-sm text-muted-foreground">Assign roles to {staff.fullName}</p>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-3">

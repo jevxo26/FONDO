@@ -25,7 +25,7 @@ const INITIAL_FILTERS: Filters = {
 export function VendorKitchenTableSection() {
   const [kitchens, setKitchens] = useState<VendorKitchen[]>(vendorKitchens);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS);
+  const [filters] = useState<Filters>(INITIAL_FILTERS);
 
   const filteredData = useMemo(() => {
     return kitchens.filter((item) => {
@@ -35,21 +35,17 @@ export function VendorKitchenTableSection() {
     });
   }, [kitchens, filters]);
 
-  const handleFilterChange = useCallback((key: keyof Filters) => (value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  }, []);
-
   const handleToggleStatus = useCallback((kitchen: VendorKitchen) => {
     setKitchens((prev) =>
       prev.map((item) =>
         item.id === kitchen.id
-          ? { 
-              ...item, 
+          ? {
+              ...item,
               status: item.status === "ACTIVE" ? "INACTIVE" : "ACTIVE",
-              updatedAt: new Date().toISOString()
+              updatedAt: new Date().toISOString(),
             }
-          : item
-      )
+          : item,
+      ),
     );
   }, []);
 
@@ -78,7 +74,7 @@ export function VendorKitchenTableSection() {
         },
       },
     ],
-    [handleToggleStatus]
+    [handleToggleStatus],
   );
 
   const facetedFilters: FacetedFilter[] = useMemo(
@@ -94,7 +90,7 @@ export function VendorKitchenTableSection() {
         options: branches.map((b) => ({ label: b.label, value: b.value })),
       },
     ],
-    []
+    [],
   );
 
   const toolbarActions = (
@@ -123,10 +119,7 @@ export function VendorKitchenTableSection() {
         enableColumnToggle
         initialSort={initialSort}
       />
-      <AddKitchenModal
-        open={isAddModalOpen}
-        onOpenChange={setIsAddModalOpen}
-      />
+      <AddKitchenModal open={isAddModalOpen} onOpenChange={setIsAddModalOpen} />
     </>
   );
 }

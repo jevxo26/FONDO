@@ -12,7 +12,7 @@ import React from "react";
 export default function BecomeVendorPage() {
   return (
     <main className="bg-background text-foreground font-sans min-h-screen relative overflow-x-hidden pb-16 lg:pb-0">
-      <VendorHeroSection/>
+      <VendorHeroSection />
       <VendorMarqueeSection />
       <WhySellSection />
       <HowItWorksSection />
@@ -20,8 +20,8 @@ export default function BecomeVendorPage() {
       <VendorRegistrationForm />
       <DashboardPreviewSection />
       <BenefitsTestimonialsSection />
-      <VendorFaqSection/>
-      <VendorCtaSection/>
+      <VendorFaqSection />
+      <VendorCtaSection />
     </main>
   );
 }

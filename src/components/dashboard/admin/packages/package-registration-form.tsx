@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/components/dashboard/admin/packages/package-registration-form.tsx
 "use client";
 
@@ -18,11 +19,14 @@ import { BenefitsStep } from "./package-registration/benefits-step";
 import { MediaStep } from "./package-registration/media-step";
 
 // ReviewStep - inline component
+
 const ReviewStep = ({ data }: { data: any }) => {
   return (
     <div className="space-y-6">
       <h3 className="font-fraunces text-lg font-semibold">Review Package</h3>
-      <p className="text-sm text-muted-foreground">Review all the package details before submitting</p>
+      <p className="text-sm text-muted-foreground">
+        Review all the package details before submitting
+      </p>
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1">
           <p className="text-xs text-muted-foreground">Name</p>
@@ -83,10 +87,14 @@ const STEPS = [
   { id: 8, label: "Review" },
 ];
 
-export function PackageRegistrationForm({ initialData, isEdit = false }: PackageRegistrationFormProps) {
+export function PackageRegistrationForm({
+  initialData,
+  isEdit = false,
+}: PackageRegistrationFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+
   const [formData, setFormData] = useState<any>({
     name: "",
     slug: "",
@@ -144,7 +152,13 @@ export function PackageRegistrationForm({ initialData, isEdit = false }: Package
     setIsLoading(true);
 
     try {
-      if (!formData.name || !formData.price || !formData.packageType || !formData.durationDays || !formData.totalMeals) {
+      if (
+        !formData.name ||
+        !formData.price ||
+        !formData.packageType ||
+        !formData.durationDays ||
+        !formData.totalMeals
+      ) {
         toast.error("Please fill in all required fields");
         setIsLoading(false);
         return;
@@ -154,7 +168,7 @@ export function PackageRegistrationForm({ initialData, isEdit = false }: Package
       console.log("Package data:", formData);
       toast.success(isEdit ? "Package updated successfully!" : "Package created successfully!");
       router.push("/dashboard/admin/packages");
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
@@ -171,7 +185,10 @@ export function PackageRegistrationForm({ initialData, isEdit = false }: Package
         toast.error("Please fill in all required fields in Pricing");
         return;
       }
-      if (currentStep === 3 && (!formData.packageType || !formData.durationDays || !formData.totalMeals)) {
+      if (
+        currentStep === 3 &&
+        (!formData.packageType || !formData.durationDays || !formData.totalMeals)
+      ) {
         toast.error("Please fill in all required fields in Configuration");
         return;
       }
@@ -256,8 +273,8 @@ export function PackageRegistrationForm({ initialData, isEdit = false }: Package
                 currentStep === step.id
                   ? "bg-primary text-primary-foreground shadow-[0_0_20px_rgba(206,163,89,0.3)]"
                   : currentStep > step.id
-                  ? "bg-success/10 text-success"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    ? "bg-success/10 text-success"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80"
               }`}
             >
               <span
@@ -265,8 +282,8 @@ export function PackageRegistrationForm({ initialData, isEdit = false }: Package
                   currentStep === step.id
                     ? "bg-white/20 text-primary-foreground"
                     : currentStep > step.id
-                    ? "bg-success/20 text-success"
-                    : "bg-background text-muted-foreground"
+                      ? "bg-success/20 text-success"
+                      : "bg-background text-muted-foreground"
                 }`}
               >
                 {currentStep > step.id ? "✓" : step.id}
@@ -274,7 +291,9 @@ export function PackageRegistrationForm({ initialData, isEdit = false }: Package
               {step.label}
             </button>
             {index < STEPS.length - 1 && (
-              <div className={`w-8 h-px mx-1 ${currentStep > step.id ? "bg-success" : "bg-muted"}`} />
+              <div
+                className={`w-8 h-px mx-1 ${currentStep > step.id ? "bg-success" : "bg-muted"}`}
+              />
             )}
           </div>
         ))}

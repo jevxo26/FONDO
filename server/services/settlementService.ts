@@ -16,7 +16,10 @@ export const listVendorWalletTransactions = catchServiceAsync(async (vendorId: s
   const wallet = await prisma.vendorWallet.findUnique({ where: { vendorId } });
   if (!wallet) throw new AppError(404, "Vendor wallet not found");
 
-  return prisma.vendorWalletTransaction.findMany({ where: { walletId: wallet.id }, orderBy: { createdAt: "desc" } });
+  return prisma.vendorWalletTransaction.findMany({
+    where: { walletId: wallet.id },
+    orderBy: { createdAt: "desc" },
+  });
 });
 
 export const listVendorSettlements = catchServiceAsync(async (vendorId: string) => {
@@ -37,7 +40,11 @@ export const getSettlementDetail = catchServiceAsync(async (settlementId: string
 });
 
 export const createSettlementBatch = catchServiceAsync(
-  async (data: { vendorId: string; settlementPeriodStart: string; settlementPeriodEnd: string }) => {
+  async (data: {
+    vendorId: string;
+    settlementPeriodStart: string;
+    settlementPeriodEnd: string;
+  }) => {
     const vendor = await prisma.vendor.findUnique({ where: { id: data.vendorId } });
     if (!vendor) throw new AppError(404, "Vendor not found");
 
@@ -45,7 +52,11 @@ export const createSettlementBatch = catchServiceAsync(
     const endDate = new Date(data.settlementPeriodEnd);
 
     const orders = await prisma.order.findMany({
-      where: { vendorId: data.vendorId, placedAt: { gte: startDate, lte: endDate }, paymentStatus: "COMPLETED" },
+      where: {
+        vendorId: data.vendorId,
+        placedAt: { gte: startDate, lte: endDate },
+        paymentStatus: "COMPLETED",
+      },
       include: { platformRevenues: true },
     });
 
@@ -80,7 +91,8 @@ export const createSettlementBatch = catchServiceAsync(
             orderId: o.id,
             orderAmount: o.totalAmount,
             commission: o.platformRevenues?.[0]?.commissionAmount || 0,
-            payableAmount: Number(o.totalAmount) - (Number(o.platformRevenues?.[0]?.commissionAmount) || 0),
+            payableAmount:
+              Number(o.totalAmount) - (Number(o.platformRevenues?.[0]?.commissionAmount) || 0),
           })),
         },
       },
@@ -92,18 +104,28 @@ export const createSettlementBatch = catchServiceAsync(
 );
 
 export const processSettlement = catchServiceAsync(
-  async (settlementId: string, data: { transactionId?: string; paymentMethod?: string; processedAt?: string }) => {
+  async (
+    settlementId: string,
+    data: { transactionId?: string; paymentMethod?: string; processedAt?: string },
+  ) => {
     const settlement = await prisma.vendorSettlement.findUnique({ where: { id: settlementId } });
     if (!settlement) throw new AppError(404, "Settlement not found");
-    if (settlement.paymentStatus !== "pending") throw new AppError(400, "Settlement already processed");
+    if (settlement.paymentStatus !== "pending")
+      throw new AppError(400, "Settlement already processed");
 
-    const wallet = await prisma.vendorWallet.findUnique({ where: { vendorId: settlement.vendorId } });
+    const wallet = await prisma.vendorWallet.findUnique({
+      where: { vendorId: settlement.vendorId },
+    });
     if (!wallet) throw new AppError(404, "Vendor wallet not found");
 
     await prisma.$transaction([
       prisma.vendorSettlement.update({
         where: { id: settlementId },
-        data: { paymentStatus: "paid", paymentDate: data.processedAt ? new Date(data.processedAt) : new Date(), transactionId: data.transactionId },
+        data: {
+          paymentStatus: "paid",
+          paymentDate: data.processedAt ? new Date(data.processedAt) : new Date(),
+          transactionId: data.transactionId,
+        },
       }),
       prisma.vendorSettlementTransaction.create({
         data: {
@@ -115,7 +137,10 @@ export const processSettlement = catchServiceAsync(
           processedAt: new Date(),
         },
       }),
-      prisma.vendorWallet.update({ where: { id: wallet.id }, data: { balance: { increment: Number(settlement.netAmount!) } } }),
+      prisma.vendorWallet.update({
+        where: { id: wallet.id },
+        data: { balance: { increment: Number(settlement.netAmount!) } },
+      }),
       prisma.vendorWalletTransaction.create({
         data: {
           walletId: wallet.id,

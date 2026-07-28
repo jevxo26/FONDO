@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface StaffBasicFieldsProps {
   formData: {
-    fullName: string
-    phone: string
-    email: string
-  }
-  onFieldChange: (field: string, val: string | boolean) => void
+    fullName: string;
+    phone: string;
+    email: string;
+  };
+  onFieldChange: (field: string, val: string | boolean) => void;
 }
 
 export function StaffBasicFields({ formData, onFieldChange }: StaffBasicFieldsProps) {
@@ -43,5 +43,5 @@ export function StaffBasicFields({ formData, onFieldChange }: StaffBasicFieldsPr
         />
       </div>
     </>
-  )
+  );
 }

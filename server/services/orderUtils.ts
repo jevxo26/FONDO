@@ -24,12 +24,21 @@ export async function resolvePrimaryVendor(foodIds: string[]): Promise<string | 
   ]);
 
   const vendorMap = new Map<string, string>();
-  for (const a of assignments) { if (a.vendor) vendorMap.set(a.foodId, a.vendor.id); }
-  for (const vf of vfs) { if (!vendorMap.has(vf.foodId) && vf.vendor) vendorMap.set(vf.foodId, vf.vendor.id); }
+  for (const a of assignments) {
+    if (a.vendor) vendorMap.set(a.foodId, a.vendor.id);
+  }
+  for (const vf of vfs) {
+    if (!vendorMap.has(vf.foodId) && vf.vendor) vendorMap.set(vf.foodId, vf.vendor.id);
+  }
 
   const vendorIds = foodIds.map((fid) => vendorMap.get(fid)).filter(Boolean) as string[];
   return vendorIds.length > 0
-    ? vendorIds.sort((a, b) => vendorIds.filter((v) => v === a).length - vendorIds.filter((v) => v === b).length).pop() ?? null
+    ? (vendorIds
+        .sort(
+          (a, b) =>
+            vendorIds.filter((v) => v === a).length - vendorIds.filter((v) => v === b).length,
+        )
+        .pop() ?? null)
     : null;
 }
 

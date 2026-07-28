@@ -20,7 +20,9 @@ const cartInclude = {
   summary: true,
 } as const;
 
-function calcTotals(items: { totalPrice: unknown; addons: { price: unknown; quantity: number }[] }[]) {
+function calcTotals(
+  items: { totalPrice: unknown; addons: { price: unknown; quantity: number }[] }[],
+) {
   const itemsSubtotal = items.reduce((sum, item) => sum + Number(item.totalPrice), 0);
   const addonsTotal = items.reduce(
     (sum, item) => sum + item.addons.reduce((as, a) => as + Number(a.price) * a.quantity, 0),
@@ -29,13 +31,14 @@ function calcTotals(items: { totalPrice: unknown; addons: { price: unknown; quan
   return itemsSubtotal + addonsTotal;
 }
 
-function applyDiscount(subtotal: number, discountValue: unknown, discountType: string | undefined | null) {
+function applyDiscount(
+  subtotal: number,
+  discountValue: unknown,
+  discountType: string | undefined | null,
+) {
   if (!discountValue || !discountType) return 0;
   const dv = Number(discountValue);
-  const discount =
-    discountType === "PERCENTAGE"
-      ? subtotal * (dv / 100)
-      : dv;
+  const discount = discountType === "PERCENTAGE" ? subtotal * (dv / 100) : dv;
   return Math.min(discount, subtotal);
 }
 
@@ -46,7 +49,12 @@ function buildTotals(subtotal: number, discount: number) {
   return { discount, deliveryCharge, vat };
 }
 
-function computeTotalAmount(subtotal: number, discount: number, deliveryCharge: number, vat: number) {
+function computeTotalAmount(
+  subtotal: number,
+  discount: number,
+  deliveryCharge: number,
+  vat: number,
+) {
   return subtotal - discount + deliveryCharge + vat;
 }
 
@@ -65,12 +73,29 @@ export const getActiveCart = catchServiceAsync(async (userId: string) => {
   } else if (cart.status !== "active") {
     cart = await prisma.cart.update({
       where: { id: cart.id },
-      data: { status: "active", subtotal: 0, discount: 0, deliveryCharge: 0, vat: 0, packageId: null, customMealPlanId: null, couponId: null },
+      data: {
+        status: "active",
+        subtotal: 0,
+        discount: 0,
+        deliveryCharge: 0,
+        vat: 0,
+        packageId: null,
+        customMealPlanId: null,
+        couponId: null,
+      },
       include: cartInclude,
     });
   }
 
-  return { ...cart, totalAmount: computeTotalAmount(Number(cart.subtotal), Number(cart.discount), Number(cart.deliveryCharge), Number(cart.vat)) };
+  return {
+    ...cart,
+    totalAmount: computeTotalAmount(
+      Number(cart.subtotal),
+      Number(cart.discount),
+      Number(cart.deliveryCharge),
+      Number(cart.vat),
+    ),
+  };
 });
 
 export const initCart = catchServiceAsync(
@@ -79,7 +104,9 @@ export const initCart = catchServiceAsync(
       throw new AppError(400, "Either packageId or customMealPlanId is required");
     }
 
-    const existing = await prisma.cart.findFirst({ where: { customerId: userId, status: "active" } });
+    const existing = await prisma.cart.findFirst({
+      where: { customerId: userId, status: "active" },
+    });
     if (existing) {
       await Promise.all([
         prisma.cartItem.deleteMany({ where: { cartId: existing.id } }),

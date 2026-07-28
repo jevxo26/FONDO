@@ -22,7 +22,11 @@ export function RegistrationForm({ onSubmit, loading }: RegistrationFormProps) {
   const [showPass, setShowPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<RegisterInput>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterInput>({
     resolver: yupResolver(registerSchema),
     defaultValues: {
       firstName: "",
@@ -46,11 +50,7 @@ export function RegistrationForm({ onSubmit, loading }: RegistrationFormProps) {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <FormInput
-              label="First Name"
-              placeholder="First"
-              {...register("firstName")}
-            />
+            <FormInput label="First Name" placeholder="First" {...register("firstName")} />
             {errors.firstName?.message && (
               <span className="text-[11px] text-destructive font-sans mt-1 ml-1">
                 {String(errors.firstName.message)}
@@ -58,11 +58,7 @@ export function RegistrationForm({ onSubmit, loading }: RegistrationFormProps) {
             )}
           </div>
           <div>
-            <FormInput
-              label="Last Name"
-              placeholder="Last"
-              {...register("lastName")}
-            />
+            <FormInput label="Last Name" placeholder="Last" {...register("lastName")} />
             {errors.lastName?.message && (
               <span className="text-[11px] text-destructive font-sans mt-1 ml-1">
                 {String(errors.lastName.message)}

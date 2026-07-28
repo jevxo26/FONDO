@@ -46,7 +46,9 @@ function OrdersContent() {
           <div className="py-16 text-center border border-dashed border-border rounded-3xl bg-card">
             <p className="font-sans text-sm text-destructive">{handleApiError(error)}</p>
             <Link href="/menu">
-              <Button variant="default" className="mt-4 rounded-xl">Return to Menu</Button>
+              <Button variant="default" className="mt-4 rounded-xl">
+                Return to Menu
+              </Button>
             </Link>
           </div>
         </div>
@@ -60,11 +62,18 @@ function OrdersContent() {
     <main className="flex-1 py-8 lg:py-12">
       <div className="wrapper">
         <div className="mb-8">
-          <Link href="/profile" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground mb-4">
+          <Link
+            href="/profile"
+            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground mb-4"
+          >
             <ArrowLeft className="size-3.5" /> Back to Profile
           </Link>
-          <h1 className="font-heading text-4xl font-normal text-secondary-foreground tracking-tight">My Orders</h1>
-          <p className="font-sans text-xs text-muted-foreground mt-1">{orders.length} total orders</p>
+          <h1 className="font-heading text-4xl font-normal text-secondary-foreground tracking-tight">
+            My Orders
+          </h1>
+          <p className="font-sans text-xs text-muted-foreground mt-1">
+            {orders.length} total orders
+          </p>
         </div>
 
         {orders.length === 0 ? (
@@ -72,7 +81,9 @@ function OrdersContent() {
             <Package className="size-8 mx-auto mb-3 text-muted-foreground" />
             <p className="font-sans text-sm text-muted-foreground">No orders yet.</p>
             <Link href="/menu">
-              <Button variant="default" className="mt-4 rounded-xl">Browse Menu</Button>
+              <Button variant="default" className="mt-4 rounded-xl">
+                Browse Menu
+              </Button>
             </Link>
           </div>
         ) : (
@@ -101,14 +112,24 @@ function OrdersContent() {
                       <span className="px-2 py-0.5 rounded-md font-semibold bg-primary/10 text-primary uppercase tracking-wider text-[10px]">
                         {order.orderStatus}
                       </span>
-                      <span>{order.items.length} {order.items.length === 1 ? "item" : "items"}</span>
+                      <span>
+                        {order.items.length} {order.items.length === 1 ? "item" : "items"}
+                      </span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="font-sans text-xl font-bold text-secondary-foreground">৳{order.totalAmount}</span>
+                    <span className="font-sans text-xl font-bold text-secondary-foreground">
+                      ৳{order.totalAmount}
+                    </span>
                     <div className="mt-2 flex gap-2 justify-end">
                       <Link href={`/track-order?orderId=${order.id}`}>
-                        <Button variant="outline" size="sm" className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5">Track</Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5"
+                        >
+                          Track
+                        </Button>
                       </Link>
                       {["PENDING", "CONFIRMED"].includes(order.orderStatus) && (
                         <button
@@ -121,13 +142,21 @@ function OrdersContent() {
                       )}
                       {["DELIVERED", "COMPLETED"].includes(order.orderStatus) && (
                         <Link href={`/track-order?orderId=${order.id}`}>
-                          <Button variant="outline" size="sm" className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5"
+                          >
                             <Star className="size-3 mr-1" /> Review
                           </Button>
                         </Link>
                       )}
                       <Link href={`/track-order?orderId=${order.id}&showInvoice=true`}>
-                        <Button variant="outline" size="sm" className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5"
+                        >
                           <Receipt className="size-3 mr-1" /> Invoice
                         </Button>
                       </Link>
@@ -139,12 +168,17 @@ function OrdersContent() {
                   <div className="mt-4 pt-4 border-t border-border/40">
                     <div className="flex flex-wrap gap-2">
                       {order.items.slice(0, 4).map((item) => (
-                        <span key={item.id} className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-md">
+                        <span
+                          key={item.id}
+                          className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-md"
+                        >
                           {item.food.name} x{item.quantity}
                         </span>
                       ))}
                       {order.items.length > 4 && (
-                        <span className="text-xs text-muted-foreground">+{order.items.length - 4} more</span>
+                        <span className="text-xs text-muted-foreground">
+                          +{order.items.length - 4} more
+                        </span>
                       )}
                     </div>
                   </div>
@@ -160,13 +194,15 @@ function OrdersContent() {
 
 export default function OrdersPage() {
   return (
-    <Suspense fallback={
-      <main className="flex-1 py-8 lg:py-12">
-        <div className="wrapper flex items-center justify-center min-h-[40vh]">
-          <Loader2 className="size-6 animate-spin text-muted-foreground" />
-        </div>
-      </main>
-    }>
+    <Suspense
+      fallback={
+        <main className="flex-1 py-8 lg:py-12">
+          <div className="wrapper flex items-center justify-center min-h-[40vh]">
+            <Loader2 className="size-6 animate-spin text-muted-foreground" />
+          </div>
+        </main>
+      }
+    >
       <OrdersContent />
     </Suspense>
   );

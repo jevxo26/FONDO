@@ -53,7 +53,9 @@ export default function CustomerRecentOrders({ orders, customerId }: CustomerRec
                 </p>
               </div>
               <div className="flex items-center gap-4">
-                <span className="font-bold text-foreground">৳{order.totalAmount.toLocaleString()}</span>
+                <span className="font-bold text-foreground">
+                  ৳{order.totalAmount.toLocaleString()}
+                </span>
                 <OrderStatusBadge status={order.orderStatus as never} />
               </div>
             </div>

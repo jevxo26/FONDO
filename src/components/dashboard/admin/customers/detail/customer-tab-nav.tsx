@@ -20,7 +20,9 @@ export default function CustomerTabNav({ customerId, currentTab = "" }: Customer
     <div className="mt-6">
       <nav className="flex gap-1">
         {tabs.map((tab) => {
-          const href = tab.href ? `/dashboard/admin/customers/${customerId}${tab.href}` : `/dashboard/admin/customers/${customerId}`;
+          const href = tab.href
+            ? `/dashboard/admin/customers/${customerId}${tab.href}`
+            : `/dashboard/admin/customers/${customerId}`;
           const isActive = tab.href === currentTab;
           return (
             <Link

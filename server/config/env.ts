@@ -2,10 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const requiredVars = [
-  "DATABASE_URL",
-  "JWT_SECRET",
-] as const;
+const requiredVars = ["DATABASE_URL", "JWT_SECRET"] as const;
 
 for (const varName of requiredVars) {
   if (!process.env[varName]) {

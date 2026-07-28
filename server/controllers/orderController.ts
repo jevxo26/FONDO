@@ -33,7 +33,12 @@ export const OrderController = {
   cancel: catchAsync(async (req: AuthRequest, res: Response) => {
     const id = req.params.id as string;
     const { reason, cancelledBy } = req.body;
-    const result = await orderFulfillmentService.cancelOrder(id, reason, cancelledBy, req.user!.userId);
+    const result = await orderFulfillmentService.cancelOrder(
+      id,
+      reason,
+      cancelledBy,
+      req.user!.userId,
+    );
     sendResponse(res, { statusCode: 200, data: result });
   }),
 
@@ -72,7 +77,13 @@ export const OrderController = {
   processRefund: catchAsync(async (req: AuthRequest, res: Response) => {
     const orderId = req.params.orderId as string;
     const { amount, refundMethod, reason } = req.body;
-    const refund = await orderFulfillmentService.processRefund(orderId, amount, refundMethod, reason, req.user!.userId);
+    const refund = await orderFulfillmentService.processRefund(
+      orderId,
+      amount,
+      refundMethod,
+      reason,
+      req.user!.userId,
+    );
     sendResponse(res, { statusCode: 201, data: refund });
   }),
 

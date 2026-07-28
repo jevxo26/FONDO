@@ -43,9 +43,7 @@ export function SelectedMealsList({
       <p className="text-xs text-muted-foreground">Selected Meals ({meals.length})</p>
       {meals.map((meal: MealItem) => (
         <Card key={meal.id} className="p-3 flex items-center gap-3">
-          <Badge className="w-24 justify-center">
-            {meal.mealType}
-          </Badge>
+          <Badge className="w-24 justify-center">{meal.mealType}</Badge>
           <div className="flex-1">
             <p className="text-sm font-medium">{meal.name}</p>
           </div>

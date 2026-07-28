@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { PackageBasicFields } from "./package-basic-fields";
 import { PackageDescriptionTags } from "./package-description-tags";
 import {
@@ -13,7 +13,9 @@ import {
 import { Label } from "@/components/ui/label";
 
 interface BasicInfoStepProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: (field: string, value: any) => void;
 }
 
@@ -27,11 +29,11 @@ export function BasicInfoStep({ data, onChange }: BasicInfoStepProps) {
       .replace(/^-|-$/g, "");
   };
 
-  const defaultCode = useMemo(() => {
+  const [defaultCode] = useState(() => {
     const prefix = "PKG";
     const timestamp = Date.now().toString().slice(-6);
     return `${prefix}-${timestamp}`;
-  }, []);
+  });
 
   const handleAddTag = (value: string | null) => {
     if (value) {
@@ -44,7 +46,10 @@ export function BasicInfoStep({ data, onChange }: BasicInfoStepProps) {
   };
 
   const handleRemoveTag = (tag: string) => {
-    onChange("tags", (data.tags || []).filter((t: string) => t !== tag));
+    onChange(
+      "tags",
+      (data.tags || []).filter((t: string) => t !== tag),
+    );
   };
 
   const handleNameChange = (value: string) => {
@@ -75,7 +80,6 @@ export function BasicInfoStep({ data, onChange }: BasicInfoStepProps) {
         tags={data.tags || []}
         selectedTag={selectedTag}
         onFieldChange={onChange}
-        onSelectedTagChange={setSelectedTag}
         onAddTag={handleAddTag}
         onRemoveTag={handleRemoveTag}
       />

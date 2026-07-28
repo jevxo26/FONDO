@@ -1,19 +1,25 @@
-"use client"
+"use client";
 
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { kitchenStatuses } from "@/data/vendor-kitchens"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { kitchenStatuses } from "@/data/vendor-kitchens";
 
 interface KitchenConfigFieldsProps {
   formData: {
-    capacity: string
-    preparationTime: string
-    status: string
-    description: string
-  }
-  onFieldChange: (field: string, val: string | boolean) => void
+    capacity: string;
+    preparationTime: string;
+    status: string;
+    description: string;
+  };
+  onFieldChange: (field: string, val: string | boolean) => void;
 }
 
 export function KitchenConfigFields({ formData, onFieldChange }: KitchenConfigFieldsProps) {
@@ -45,7 +51,7 @@ export function KitchenConfigFields({ formData, onFieldChange }: KitchenConfigFi
           value={formData.status}
           onValueChange={(value) => {
             if (value) {
-              onFieldChange("status", value)
+              onFieldChange("status", value);
             }
           }}
         >
@@ -73,5 +79,5 @@ export function KitchenConfigFields({ formData, onFieldChange }: KitchenConfigFi
         />
       </div>
     </>
-  )
+  );
 }

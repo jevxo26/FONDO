@@ -1,20 +1,26 @@
-"use client"
+"use client";
 
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { staffDesignations, staffShifts, staffBranches, staffStatuses } from "@/data/vendor-staff"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { staffDesignations, staffShifts, staffBranches, staffStatuses } from "@/data/vendor-staff";
 
 interface StaffRoleFieldsProps {
   formData: {
-    designation: string
-    branch: string
-    shift: string
-    salary: string
-    joiningDate: string
-    status: string
-  }
-  onFieldChange: (field: string, val: string | boolean) => void
+    designation: string;
+    branch: string;
+    shift: string;
+    salary: string;
+    joiningDate: string;
+    status: string;
+  };
+  onFieldChange: (field: string, val: string | boolean) => void;
 }
 
 export function StaffRoleFields({ formData, onFieldChange }: StaffRoleFieldsProps) {
@@ -27,7 +33,7 @@ export function StaffRoleFields({ formData, onFieldChange }: StaffRoleFieldsProp
             value={formData.designation}
             onValueChange={(value) => {
               if (value) {
-                onFieldChange("designation", value)
+                onFieldChange("designation", value);
               }
             }}
           >
@@ -51,7 +57,7 @@ export function StaffRoleFields({ formData, onFieldChange }: StaffRoleFieldsProp
             value={formData.branch}
             onValueChange={(value) => {
               if (value) {
-                onFieldChange("branch", value)
+                onFieldChange("branch", value);
               }
             }}
           >
@@ -77,7 +83,7 @@ export function StaffRoleFields({ formData, onFieldChange }: StaffRoleFieldsProp
             value={formData.shift}
             onValueChange={(value) => {
               if (value) {
-                onFieldChange("shift", value)
+                onFieldChange("shift", value);
               }
             }}
           >
@@ -119,7 +125,7 @@ export function StaffRoleFields({ formData, onFieldChange }: StaffRoleFieldsProp
           value={formData.status}
           onValueChange={(value) => {
             if (value) {
-              onFieldChange("status", value)
+              onFieldChange("status", value);
             }
           }}
         >
@@ -138,5 +144,5 @@ export function StaffRoleFields({ formData, onFieldChange }: StaffRoleFieldsProp
         </Select>
       </div>
     </>
-  )
+  );
 }

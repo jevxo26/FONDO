@@ -20,7 +20,9 @@ export const pendingColumns: ColumnDef<PendingVendor>[] = [
   {
     accessorKey: "location",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Location" />,
-    cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.location}</span>,
+    cell: ({ row }) => (
+      <span className="text-sm text-muted-foreground">{row.original.location}</span>
+    ),
   },
   {
     accessorKey: "status",
@@ -33,6 +35,8 @@ export const pendingColumns: ColumnDef<PendingVendor>[] = [
   {
     accessorKey: "applied",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Applied" />,
-    cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.applied}</span>,
+    cell: ({ row }) => (
+      <span className="text-sm text-muted-foreground">{row.original.applied}</span>
+    ),
   },
 ];

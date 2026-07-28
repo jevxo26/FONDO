@@ -53,7 +53,8 @@ export function AddressSection({
                   )}
                 </p>
                 <p className="font-sans text-[11px] text-muted-foreground mt-0.5 truncate">
-                  {addr.area}{addr.district ? `, ${addr.district}` : ""}
+                  {addr.area}
+                  {addr.district ? `, ${addr.district}` : ""}
                 </p>
               </div>
               {selectedAddressId === addr.id && <Check className="size-4 text-primary shrink-0" />}
@@ -69,27 +70,43 @@ export function AddressSection({
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="font-sans text-xs font-medium text-foreground mb-1 block">Receiver Name</label>
+              <label className="font-sans text-xs font-medium text-foreground mb-1 block">
+                Receiver Name
+              </label>
               <Input
                 type="text"
                 placeholder="Full name"
                 {...register("receiverName", { required: fulfillment === "delivery" })}
-                className={errors.receiverName ? "border-destructive/50 h-8 text-xs" : "h-8 text-xs"}
+                className={
+                  errors.receiverName ? "border-destructive/50 h-8 text-xs" : "h-8 text-xs"
+                }
               />
-              {errors.receiverName && <p className="text-[10px] text-destructive mt-0.5">{errors.receiverName.message}</p>}
+              {errors.receiverName && (
+                <p className="text-[10px] text-destructive mt-0.5">{errors.receiverName.message}</p>
+              )}
             </div>
             <div>
-              <label className="font-sans text-xs font-medium text-foreground mb-1 block">Phone</label>
+              <label className="font-sans text-xs font-medium text-foreground mb-1 block">
+                Phone
+              </label>
               <Input
                 type="tel"
                 placeholder="+880 1XXX XXXXXX"
                 {...register("receiverPhone", { required: fulfillment === "delivery" })}
-                className={errors.receiverPhone ? "border-destructive/50 h-8 text-xs" : "h-8 text-xs"}
+                className={
+                  errors.receiverPhone ? "border-destructive/50 h-8 text-xs" : "h-8 text-xs"
+                }
               />
-              {errors.receiverPhone && <p className="text-[10px] text-destructive mt-0.5">{errors.receiverPhone.message}</p>}
+              {errors.receiverPhone && (
+                <p className="text-[10px] text-destructive mt-0.5">
+                  {errors.receiverPhone.message}
+                </p>
+              )}
             </div>
             <div>
-              <label className="font-sans text-xs font-medium text-foreground mb-1 block">Division</label>
+              <label className="font-sans text-xs font-medium text-foreground mb-1 block">
+                Division
+              </label>
               <Input
                 type="text"
                 placeholder="e.g. Dhaka"
@@ -98,7 +115,9 @@ export function AddressSection({
               />
             </div>
             <div>
-              <label className="font-sans text-xs font-medium text-foreground mb-1 block">District</label>
+              <label className="font-sans text-xs font-medium text-foreground mb-1 block">
+                District
+              </label>
               <Input
                 type="text"
                 placeholder="e.g. Dhaka"
@@ -107,7 +126,9 @@ export function AddressSection({
               />
             </div>
             <div>
-              <label className="font-sans text-xs font-medium text-foreground mb-1 block">Area / Thana</label>
+              <label className="font-sans text-xs font-medium text-foreground mb-1 block">
+                Area / Thana
+              </label>
               <Input
                 type="text"
                 placeholder="e.g. Gulshan"
@@ -116,7 +137,9 @@ export function AddressSection({
               />
             </div>
             <div>
-              <label className="font-sans text-xs font-medium text-foreground mb-1 block">Road / Street</label>
+              <label className="font-sans text-xs font-medium text-foreground mb-1 block">
+                Road / Street
+              </label>
               <Input
                 type="text"
                 placeholder="Road / colony name"
@@ -125,7 +148,9 @@ export function AddressSection({
               />
             </div>
             <div>
-              <label className="font-sans text-xs font-medium text-foreground mb-1 block">House</label>
+              <label className="font-sans text-xs font-medium text-foreground mb-1 block">
+                House
+              </label>
               <Input
                 type="text"
                 placeholder="House / building"

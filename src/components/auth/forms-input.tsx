@@ -1,9 +1,12 @@
 import React from "react";
 
-
 export const FormInput = React.forwardRef<
   HTMLInputElement,
-  { label: string; icon?: React.ReactNode; rightAction?: React.ReactNode } & React.InputHTMLAttributes<HTMLInputElement>
+  {
+    label: string;
+    icon?: React.ReactNode;
+    rightAction?: React.ReactNode;
+  } & React.InputHTMLAttributes<HTMLInputElement>
 >(({ label, icon, rightAction, ...props }, ref) => (
   <div className="flex flex-col gap-1.5 w-full font-sans text-xs">
     <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/70">
@@ -23,9 +26,7 @@ export const FormInput = React.forwardRef<
         } ${rightAction ? "pr-10" : ""}`}
       />
       {rightAction && (
-        <div className="absolute right-3.5 top-1/2 -translate-y-1/2">
-          {rightAction}
-        </div>
+        <div className="absolute right-3.5 top-1/2 -translate-y-1/2">{rightAction}</div>
       )}
     </div>
   </div>

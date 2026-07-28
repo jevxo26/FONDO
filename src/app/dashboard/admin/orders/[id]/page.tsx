@@ -56,7 +56,9 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
 
   const customerName = `${order.customer.firstName} ${order.customer.lastName}`;
   const customerPhone = order.customer.phone;
-  const vendorName = (order as Order & { vendor?: { businessName: string } }).vendor?.businessName ?? "Not assigned yet";
+  const vendorName =
+    (order as Order & { vendor?: { businessName: string } }).vendor?.businessName ??
+    "Not assigned yet";
   const riderName = order.delivery?.rider?.fullName ?? "Not assigned yet";
 
   return (
@@ -108,6 +110,7 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
   );
 }
 
+// eslint-disable-next-line @next/next/no-async-client-component
 export default async function OrderDetailPage({ params }: PageProps) {
   const { id } = await params;
   return <OrderDetailContent orderId={id} />;

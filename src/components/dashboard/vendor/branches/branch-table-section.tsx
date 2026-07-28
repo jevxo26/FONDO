@@ -22,7 +22,7 @@ const INITIAL_FILTERS: Filters = {
 export function VendorBranchTableSection() {
   const [branches, setBranches] = useState<VendorBranch[]>(vendorBranches);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS);
+  const [filters] = useState<Filters>(INITIAL_FILTERS);
 
   const filteredData = useMemo(() => {
     return branches.filter((item) => {
@@ -31,16 +31,12 @@ export function VendorBranchTableSection() {
     });
   }, [branches, filters]);
 
-  const handleFilterChange = useCallback((key: keyof Filters) => (value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  }, []);
-
   const handleSetMainBranch = useCallback((branch: VendorBranch) => {
     setBranches((prev) =>
       prev.map((item) => ({
         ...item,
         isMainBranch: item.id === branch.id,
-      }))
+      })),
     );
   }, []);
 
@@ -48,13 +44,13 @@ export function VendorBranchTableSection() {
     setBranches((prev) =>
       prev.map((item) =>
         item.id === branch.id
-          ? { 
-              ...item, 
+          ? {
+              ...item,
               status: item.status === "ACTIVE" ? "INACTIVE" : "ACTIVE",
-              updatedAt: new Date().toISOString()
+              updatedAt: new Date().toISOString(),
             }
-          : item
-      )
+          : item,
+      ),
     );
   }, []);
 
@@ -97,7 +93,7 @@ export function VendorBranchTableSection() {
         },
       },
     ],
-    [handleSetMainBranch, handleToggleStatus]
+    [handleSetMainBranch, handleToggleStatus],
   );
 
   const facetedFilters: FacetedFilter[] = useMemo(
@@ -108,7 +104,7 @@ export function VendorBranchTableSection() {
         options: branchStatuses.map((s) => ({ label: s.label, value: s.value })),
       },
     ],
-    []
+    [],
   );
 
   const toolbarActions = (
@@ -137,10 +133,7 @@ export function VendorBranchTableSection() {
         enableColumnToggle
         initialSort={initialSort}
       />
-      <AddBranchModal
-        open={isAddModalOpen}
-        onOpenChange={setIsAddModalOpen}
-      />
+      <AddBranchModal open={isAddModalOpen} onOpenChange={setIsAddModalOpen} />
     </>
   );
 }

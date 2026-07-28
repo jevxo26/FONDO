@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface BranchBasicFieldsProps {
   formData: {
-    branchName: string
-    branchCode: string
-    phone: string
-    email: string
-  }
-  onFieldChange: (field: string, val: string | boolean) => void
+    branchName: string;
+    branchCode: string;
+    phone: string;
+    email: string;
+  };
+  onFieldChange: (field: string, val: string | boolean) => void;
 }
 
 export function BranchBasicFields({ formData, onFieldChange }: BranchBasicFieldsProps) {
@@ -54,5 +54,5 @@ export function BranchBasicFields({ formData, onFieldChange }: BranchBasicFields
         </div>
       </div>
     </>
-  )
+  );
 }

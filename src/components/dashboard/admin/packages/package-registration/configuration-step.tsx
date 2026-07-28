@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -32,6 +33,7 @@ export function ConfigurationStep({ data, onChange }: ConfigurationStepProps) {
       id: `meal-${Date.now()}`,
       name: foodItem.name,
       foodId: foodItem.id,
+
       mealType: selectedMealType as any,
       quantity: 1,
       price: foodItem.price || foodItem.basePrice || 0,
@@ -41,31 +43,31 @@ export function ConfigurationStep({ data, onChange }: ConfigurationStepProps) {
   };
 
   const removeMeal = (mealId: string) => {
-    onChange("meals", meals.filter((m: MealItem) => m.id !== mealId));
+    onChange(
+      "meals",
+      meals.filter((m: MealItem) => m.id !== mealId),
+    );
   };
 
   const updateMealQuantity = (mealId: string, quantity: number) => {
     onChange(
       "meals",
-      meals.map((m: MealItem) =>
-        m.id === mealId ? { ...m, quantity: Math.max(1, quantity) } : m
-      )
+      meals.map((m: MealItem) => (m.id === mealId ? { ...m, quantity: Math.max(1, quantity) } : m)),
     );
   };
 
   const updateMealType = (mealId: string, mealType: string) => {
     onChange(
       "meals",
-      meals.map((m: MealItem) =>
-        m.id === mealId ? { ...m, mealType: mealType as any } : m
-      )
+      meals.map((m: MealItem) => (m.id === mealId ? { ...m, mealType: mealType as any } : m)),
     );
   };
 
-  const filteredFoods = vendorFoods.filter((food) =>
-    food.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    food.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    food.kitchen.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredFoods = vendorFoods.filter(
+    (food) =>
+      food.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      food.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      food.kitchen.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (

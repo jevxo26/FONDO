@@ -221,12 +221,21 @@ export const getOrderStatusBadge = (status: string) => {
     PENDING: { label: "Pending", className: "bg-warning/10 text-warning ring-warning/20" },
     CONFIRMED: { label: "Confirmed", className: "bg-primary/10 text-primary ring-primary/20" },
     PREPARING: { label: "Preparing", className: "bg-blue-500/10 text-blue-500 ring-blue-500/20" },
-    READY_FOR_PICKUP: { label: "Ready", className: "bg-indigo-500/10 text-indigo-500 ring-indigo-500/20" },
-    PICKED_UP: { label: "Picked Up", className: "bg-purple-500/10 text-purple-500 ring-purple-500/20" },
+    READY_FOR_PICKUP: {
+      label: "Ready",
+      className: "bg-indigo-500/10 text-indigo-500 ring-indigo-500/20",
+    },
+    PICKED_UP: {
+      label: "Picked Up",
+      className: "bg-purple-500/10 text-purple-500 ring-purple-500/20",
+    },
     ON_THE_WAY: { label: "On The Way", className: "bg-cyan-500/10 text-cyan-500 ring-cyan-500/20" },
     DELIVERED: { label: "Delivered", className: "bg-success/10 text-success ring-success/20" },
     COMPLETED: { label: "Completed", className: "bg-success/10 text-success ring-success/20" },
-    CANCELLED: { label: "Cancelled", className: "bg-destructive/10 text-destructive ring-destructive/20" },
+    CANCELLED: {
+      label: "Cancelled",
+      className: "bg-destructive/10 text-destructive ring-destructive/20",
+    },
   };
   return variants[status] || variants.PENDING;
 };

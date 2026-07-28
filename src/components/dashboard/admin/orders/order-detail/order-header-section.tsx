@@ -36,11 +36,7 @@ export default function OrderHeaderSection({
         </p>
       </div>
       {isPending && (
-        <Button
-          onClick={onConfirm}
-          disabled={isConfirming}
-          className="rounded-full"
-        >
+        <Button onClick={onConfirm} disabled={isConfirming} className="rounded-full">
           {isConfirming ? (
             <Loader2 className="size-4 animate-spin" />
           ) : (

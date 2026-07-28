@@ -29,7 +29,16 @@ export default function CustomerProfileWorkspace() {
           {activeTab === "wallet" && <WalletBalance />}
           {activeTab === "favorites" && <FavoritesList />}
 
-          {!["personal-info", "change-password", "addresses", "login-history", "devices", "order-history", "wallet", "favorites"].includes(activeTab) && (
+          {![
+            "personal-info",
+            "change-password",
+            "addresses",
+            "login-history",
+            "devices",
+            "order-history",
+            "wallet",
+            "favorites",
+          ].includes(activeTab) && (
             <div className="text-center py-10 text-xs text-muted-foreground/50 font-sans">
               Section coming soon.
             </div>

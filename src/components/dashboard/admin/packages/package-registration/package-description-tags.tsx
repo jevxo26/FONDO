@@ -17,8 +17,8 @@ interface PackageDescriptionTagsProps {
   description: string;
   tags: string[];
   selectedTag: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onFieldChange: (field: string, value: any) => void;
-  onSelectedTagChange: (value: string) => void;
   onAddTag: (value: string | null) => void;
   onRemoveTag: (tag: string) => void;
 }
@@ -28,7 +28,6 @@ export function PackageDescriptionTags({
   tags,
   selectedTag,
   onFieldChange,
-  onSelectedTagChange,
   onAddTag,
   onRemoveTag,
 }: PackageDescriptionTagsProps) {

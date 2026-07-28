@@ -1,24 +1,30 @@
-"use client"
+"use client";
 
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { bankNames, bankAccountTypes } from "@/data/vendor-bank-accounts"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { bankNames, bankAccountTypes } from "@/data/vendor-bank-accounts";
 
 interface BankAccountFieldsProps {
   formData: {
-    bankName: string
-    accountType: string
-    branchName: string
-    accountName: string
-    accountNumber: string
-    routingNumber: string
-  }
-  onFieldChange: (field: string, val: string | boolean) => void
+    bankName: string;
+    accountType: string;
+    branchName: string;
+    accountName: string;
+    accountNumber: string;
+    routingNumber: string;
+  };
+  onFieldChange: (field: string, val: string | boolean) => void;
 }
 
 export function BankAccountFields({ formData, onFieldChange }: BankAccountFieldsProps) {
-  const isMobileBanking = formData.accountType === "MOBILE_BANKING"
+  const isMobileBanking = formData.accountType === "MOBILE_BANKING";
 
   return (
     <>
@@ -29,7 +35,7 @@ export function BankAccountFields({ formData, onFieldChange }: BankAccountFields
             value={formData.bankName}
             onValueChange={(value) => {
               if (value) {
-                onFieldChange("bankName", value)
+                onFieldChange("bankName", value);
               }
             }}
           >
@@ -53,10 +59,10 @@ export function BankAccountFields({ formData, onFieldChange }: BankAccountFields
             value={formData.accountType}
             onValueChange={(value) => {
               if (value) {
-                onFieldChange("accountType", value)
+                onFieldChange("accountType", value);
                 if (value === "MOBILE_BANKING") {
-                  onFieldChange("branchName", "")
-                  onFieldChange("routingNumber", "")
+                  onFieldChange("branchName", "");
+                  onFieldChange("routingNumber", "");
                 }
               }
             }}
@@ -115,5 +121,5 @@ export function BankAccountFields({ formData, onFieldChange }: BankAccountFields
         )}
       </div>
     </>
-  )
+  );
 }

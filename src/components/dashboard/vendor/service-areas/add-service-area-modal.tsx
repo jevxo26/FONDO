@@ -1,25 +1,25 @@
-"use client"
+"use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
-import { ServiceAreaLocationFields } from "./service-area-location-fields"
-import { ServiceAreaDeliveryFields } from "./service-area-delivery-fields"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { ServiceAreaLocationFields } from "./service-area-location-fields";
+import { ServiceAreaDeliveryFields } from "./service-area-delivery-fields";
 
 interface AddServiceAreaModalProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 interface FormData {
-  division: string
-  district: string
-  upazila: string
-  area: string
-  deliveryCharge: string
-  minimumOrderAmount: string
-  estimatedDeliveryTime: string
-  isActive: boolean
+  division: string;
+  district: string;
+  upazila: string;
+  area: string;
+  deliveryCharge: string;
+  minimumOrderAmount: string;
+  estimatedDeliveryTime: string;
+  isActive: boolean;
 }
 
 export function AddServiceAreaModal({ open, onOpenChange }: AddServiceAreaModalProps) {
@@ -32,17 +32,17 @@ export function AddServiceAreaModal({ open, onOpenChange }: AddServiceAreaModalP
     minimumOrderAmount: "",
     estimatedDeliveryTime: "",
     isActive: true,
-  })
+  });
 
   const handleFieldChange = (field: string, val: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: val }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: val }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Form data:", formData)
-    onOpenChange(false)
-  }
+    e.preventDefault();
+    console.log("Form data:", formData);
+    onOpenChange(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -64,5 +64,5 @@ export function AddServiceAreaModal({ open, onOpenChange }: AddServiceAreaModalP
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -4,8 +4,21 @@ import { getFoodDetail } from "@/data/food-detail";
 import { RatingStars } from "@/components/common/rating-stars";
 import { PriceTag } from "@/components/common/price-tag";
 import {
-  ArrowLeft, Utensils, Flame, Star, Scale, Building, Clock, Edit,
-  TrendingUp, MessageSquare, CheckCircle, XCircle, ThumbsUp, FileEdit, Eye,
+  ArrowLeft,
+  Utensils,
+  Flame,
+  Star,
+  Scale,
+  Building,
+  Clock,
+  Edit,
+  TrendingUp,
+  MessageSquare,
+  CheckCircle,
+  XCircle,
+  ThumbsUp,
+  FileEdit,
+  Eye,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -22,7 +35,9 @@ function FoodNotFound() {
         <Eye className="size-6 text-destructive" />
       </div>
       <h2 className="font-heading text-xl font-bold text-foreground">Food Not Found</h2>
-      <p className="text-sm text-muted-foreground">The food item you&apos;re looking for doesn&apos;t exist.</p>
+      <p className="text-sm text-muted-foreground">
+        The food item you&apos;re looking for doesn&apos;t exist.
+      </p>
       <Link
         href="/dashboard/admin/foods"
         className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
@@ -34,7 +49,15 @@ function FoodNotFound() {
   );
 }
 
-function InfoBadge({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+function InfoBadge({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
   return (
     <div className="flex items-center gap-3 rounded-2xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-4 shadow-[var(--shadow-card)]">
       <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
@@ -52,12 +75,19 @@ function NutritionRow({ label, value, unit }: { label: string; value: number; un
   return (
     <div className="flex items-center justify-between border-b border-border/40 pb-2 last:border-0 last:pb-0">
       <span className="text-sm text-muted-foreground">{label}</span>
-      <span className="font-mono text-sm font-medium text-foreground">{value}{unit}</span>
+      <span className="font-mono text-sm font-medium text-foreground">
+        {value}
+        {unit}
+      </span>
     </div>
   );
 }
 
-function ReviewCard({ review }: { review: { author: string; rating: number; comment: string; date: string } }) {
+function ReviewCard({
+  review,
+}: {
+  review: { author: string; rating: number; comment: string; date: string };
+}) {
   return (
     <div className="rounded-2xl border border-border/40 bg-card p-4 shadow-sm">
       <div className="flex items-center justify-between">
@@ -122,21 +152,17 @@ export default async function FoodDetailPage({ params }: PageProps) {
 
       <div className="relative mb-8 overflow-hidden rounded-3xl bg-muted shadow-[var(--shadow-card)]">
         <div className="aspect-[21/9] w-full md:aspect-[3/1]">
-          <Image
-            src={food.thumbnail}
-            alt={food.name}
-            fill
-            className="object-cover"
-            priority
-          />
+          <Image src={food.thumbnail} alt={food.name} fill className="object-cover" priority />
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
           <div className="flex items-center gap-3">
-            <span className={cn(
-              "inline-block rounded-full px-3 py-1 text-xs font-medium",
-              statusStyles[food.status],
-            )}>
+            <span
+              className={cn(
+                "inline-block rounded-full px-3 py-1 text-xs font-medium",
+                statusStyles[food.status],
+              )}
+            >
               {food.status}
             </span>
             {food.isFeatured && (
@@ -169,12 +195,32 @@ export default async function FoodDetailPage({ params }: PageProps) {
       </div>
 
       <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-        <InfoBadge icon={<Utensils className="size-4" />} label="Category" value={food.categoryName} />
+        <InfoBadge
+          icon={<Utensils className="size-4" />}
+          label="Category"
+          value={food.categoryName}
+        />
         <InfoBadge icon={<Building className="size-4" />} label="Vendor" value={food.vendor} />
-        <InfoBadge icon={<Scale className="size-4" />} label="Type" value={food.foodType.replace("_", " ")} />
-        <InfoBadge icon={<Clock className="size-4" />} label="Cook Time" value={`${food.preparationTime} min`} />
-        <InfoBadge icon={<TrendingUp className="size-4" />} label="Times Ordered" value={food.timesOrdered.toLocaleString()} />
-        <InfoBadge icon={<MessageSquare className="size-4" />} label="Rating" value={`${detail.avgRating} (${detail.totalReviews})`} />
+        <InfoBadge
+          icon={<Scale className="size-4" />}
+          label="Type"
+          value={food.foodType.replace("_", " ")}
+        />
+        <InfoBadge
+          icon={<Clock className="size-4" />}
+          label="Cook Time"
+          value={`${food.preparationTime} min`}
+        />
+        <InfoBadge
+          icon={<TrendingUp className="size-4" />}
+          label="Times Ordered"
+          value={food.timesOrdered.toLocaleString()}
+        />
+        <InfoBadge
+          icon={<MessageSquare className="size-4" />}
+          label="Rating"
+          value={`${detail.avgRating} (${detail.totalReviews})`}
+        />
       </div>
 
       <div className="mb-8">
@@ -214,10 +260,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
             <span className="text-xs text-muted-foreground">Base price before discounts</span>
           </div>
           <div className="mt-4">
-            <PriceTag
-              price={food.basePrice}
-              size="lg"
-            />
+            <PriceTag price={food.basePrice} size="lg" />
             <p className="mt-1 text-xs text-muted-foreground">
               Sale prices applied at checkout based on active vendor contract
             </p>

@@ -16,9 +16,7 @@ export default function OrderTimeline({ timelineItems }: OrderTimelineProps) {
 
   return (
     <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
-      <h2 className="mb-4 font-heading text-lg font-bold text-foreground">
-        Timeline
-      </h2>
+      <h2 className="mb-4 font-heading text-lg font-bold text-foreground">Timeline</h2>
       <div className="space-y-0">
         {timelineItems.map((step, i) => (
           <div key={i} className="relative flex gap-4 pb-4 last:pb-0">
@@ -35,10 +33,7 @@ export default function OrderTimeline({ timelineItems }: OrderTimelineProps) {
               </div>
               {i < timelineItems.length - 1 && (
                 <div
-                  className={cn(
-                    "mt-0.5 w-0.5 grow",
-                    step.done ? "bg-success/40" : "bg-border",
-                  )}
+                  className={cn("mt-0.5 w-0.5 grow", step.done ? "bg-success/40" : "bg-border")}
                 />
               )}
             </div>
@@ -51,9 +46,7 @@ export default function OrderTimeline({ timelineItems }: OrderTimelineProps) {
               >
                 {step.label}
               </p>
-              {step.time && (
-                <p className="text-xs text-muted-foreground">{step.time}</p>
-              )}
+              {step.time && <p className="text-xs text-muted-foreground">{step.time}</p>}
             </div>
           </div>
         ))}

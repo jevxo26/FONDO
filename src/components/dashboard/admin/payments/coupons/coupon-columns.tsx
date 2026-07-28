@@ -10,7 +10,9 @@ export const couponColumns: ColumnDef<Coupon>[] = [
     accessorKey: "code",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Code" />,
     cell: ({ row }) => (
-      <span className="font-mono text-sm font-bold uppercase text-foreground">{row.original.code}</span>
+      <span className="font-mono text-sm font-bold uppercase text-foreground">
+        {row.original.code}
+      </span>
     ),
   },
   {
@@ -18,7 +20,9 @@ export const couponColumns: ColumnDef<Coupon>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Discount" />,
     cell: ({ row }) => (
       <span className="font-bold text-foreground">
-        {row.original.discountType === "PERCENTAGE" ? `${row.original.discount}%` : `৳${row.original.discount}`}
+        {row.original.discountType === "PERCENTAGE"
+          ? `${row.original.discount}%`
+          : `৳${row.original.discount}`}
       </span>
     ),
   },
@@ -45,7 +49,9 @@ export const couponColumns: ColumnDef<Coupon>[] = [
     cell: ({ row }) => {
       const s = row.original.status;
       const v: Record<string, "default" | "secondary" | "destructive"> = {
-        ACTIVE: "default", EXPIRED: "secondary", DISABLED: "destructive",
+        ACTIVE: "default",
+        EXPIRED: "secondary",
+        DISABLED: "destructive",
       };
       return <Badge variant={v[s]}>{s}</Badge>;
     },

@@ -103,43 +103,41 @@ export const forgotPassword = catchServiceAsync(async (email: string) => {
   return { resetToken, expiresIn: 3600 };
 });
 
-export const resetPassword = catchServiceAsync(
-  async (token: string, newPassword: string) => {
-    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+export const resetPassword = catchServiceAsync(async (token: string, newPassword: string) => {
+  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
-    const userToken = await prisma.userToken.findFirst({
-      where: {
-        token: hashedToken,
-        type: "RESET_PASSWORD",
-        revokedAt: null,
-        expiresAt: { gte: new Date() },
-      },
-    });
+  const userToken = await prisma.userToken.findFirst({
+    where: {
+      token: hashedToken,
+      type: "RESET_PASSWORD",
+      revokedAt: null,
+      expiresAt: { gte: new Date() },
+    },
+  });
 
-    if (!userToken) {
-      throw new AppError(400, "Invalid or expired reset token");
-    }
+  if (!userToken) {
+    throw new AppError(400, "Invalid or expired reset token");
+  }
 
-    const hashedPassword = await encryptPassword(newPassword);
+  const hashedPassword = await encryptPassword(newPassword);
 
-    await prisma.$transaction([
-      prisma.user.update({
-        where: { id: userToken.userId },
-        data: { password: hashedPassword },
-      }),
-      prisma.userToken.update({
-        where: { id: userToken.id },
-        data: { revokedAt: new Date() },
-      }),
-      prisma.userSession.updateMany({
-        where: { userId: userToken.userId, status: "active" },
-        data: { status: "expired", logoutAt: new Date() },
-      }),
-    ]);
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: userToken.userId },
+      data: { password: hashedPassword },
+    }),
+    prisma.userToken.update({
+      where: { id: userToken.id },
+      data: { revokedAt: new Date() },
+    }),
+    prisma.userSession.updateMany({
+      where: { userId: userToken.userId, status: "active" },
+      data: { status: "expired", logoutAt: new Date() },
+    }),
+  ]);
 
-    return { message: "Password reset successful" };
-  },
-);
+  return { message: "Password reset successful" };
+});
 
 export const changePassword = catchServiceAsync(
   async (userId: string, currentPassword: string, newPassword: string) => {
@@ -190,18 +188,14 @@ export async function trackFailedLogin(userId: string) {
       failedLoginCount: failedCount,
       lastFailedLoginAt: new Date(),
       accountLocked: failedCount >= 5,
-      accountLockedUntil: failedCount >= 5
-        ? new Date(Date.now() + 30 * 60 * 1000)
-        : undefined,
+      accountLockedUntil: failedCount >= 5 ? new Date(Date.now() + 30 * 60 * 1000) : undefined,
     },
     create: {
       userId,
       failedLoginCount: failedCount,
       lastFailedLoginAt: new Date(),
       accountLocked: failedCount >= 5,
-      accountLockedUntil: failedCount >= 5
-        ? new Date(Date.now() + 30 * 60 * 1000)
-        : undefined,
+      accountLockedUntil: failedCount >= 5 ? new Date(Date.now() + 30 * 60 * 1000) : undefined,
     },
   });
 }

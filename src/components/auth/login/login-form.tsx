@@ -11,9 +11,12 @@ interface LoginFormProps {
   loading?: boolean;
 }
 
-export function LoginForm({ onSubmit, loading }: LoginFormProps) {
+export function LoginForm({ onSubmit: _onSubmit, loading }: LoginFormProps) {
   const [showPass, setShowPass] = useState(false);
-  const { register, handleSubmit, formState: { errors } } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <div className="flex flex-col gap-6 animate-fadeIn w-full max-w-md mx-auto">

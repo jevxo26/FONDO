@@ -20,11 +20,7 @@ export default function EditPackagePage({ params }: EditPackagePageProps) {
 
   return (
     <div className="space-y-8">
-      <PageHeader
-        title="Edit Package"
-        description={`Editing "${pkg.name}"`}
-        icon={Package}
-      />
+      <PageHeader title="Edit Package" description={`Editing "${pkg.name}"`} icon={Package} />
       <PackageRegistrationForm initialData={pkg} isEdit />
     </div>
   );

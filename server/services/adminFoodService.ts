@@ -47,19 +47,21 @@ export const createFood = catchServiceAsync(async (data: InferType<typeof create
   });
 });
 
-export const updateFood = catchServiceAsync(async (id: string, data: InferType<typeof updateFoodSchema>) => {
-  const food = await prisma.food.findFirst({ where: { id, deletedAt: null } });
-  if (!food) throw new AppError(404, "Food not found");
+export const updateFood = catchServiceAsync(
+  async (id: string, data: InferType<typeof updateFoodSchema>) => {
+    const food = await prisma.food.findFirst({ where: { id, deletedAt: null } });
+    if (!food) throw new AppError(404, "Food not found");
 
-  if (data.slug) {
-    const slugExists = await prisma.food.findFirst({
-      where: { slug: data.slug, id: { not: id } },
-    });
-    if (slugExists) throw new AppError(400, "Another food already uses this slug");
-  }
+    if (data.slug) {
+      const slugExists = await prisma.food.findFirst({
+        where: { slug: data.slug, id: { not: id } },
+      });
+      if (slugExists) throw new AppError(400, "Another food already uses this slug");
+    }
 
-  return prisma.food.update({ where: { id }, data: data as unknown as Prisma.FoodUpdateInput });
-});
+    return prisma.food.update({ where: { id }, data: data as unknown as Prisma.FoodUpdateInput });
+  },
+);
 
 export const deleteFood = catchServiceAsync(async (id: string) => {
   const food = await prisma.food.findFirst({ where: { id, deletedAt: null } });
@@ -70,5 +72,3 @@ export const deleteFood = catchServiceAsync(async (id: string) => {
     data: { deletedAt: new Date(), status: "archived" } as unknown as Prisma.FoodUpdateInput,
   });
 });
-
-

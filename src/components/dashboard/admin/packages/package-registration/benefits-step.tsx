@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/components/dashboard/admin/packages/package-registration/benefits-step.tsx
 "use client";
 
@@ -32,7 +33,10 @@ export function BenefitsStep({ data, onChange }: BenefitsStepProps) {
   };
 
   const removeBenefit = (index: number) => {
-    onChange("benefits", benefits.filter((_: any, i: number) => i !== index));
+    onChange(
+      "benefits",
+      benefits.filter((_: any, i: number) => i !== index),
+    );
   };
 
   const updateBenefit = (index: number, field: string, value: string) => {

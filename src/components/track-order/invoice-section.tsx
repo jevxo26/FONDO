@@ -14,15 +14,16 @@ export default function InvoiceSection({ orderId }: InvoiceSectionProps) {
 
   return (
     <div className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between"
-      >
+      <button onClick={() => setOpen(!open)} className="flex w-full items-center justify-between">
         <div className="flex items-center gap-2">
           <Receipt className="size-4 text-muted-foreground" />
           <h3 className="font-heading text-sm font-semibold text-foreground">Invoice</h3>
         </div>
-        {open ? <ChevronUp className="size-4 text-muted-foreground" /> : <ChevronDown className="size-4 text-muted-foreground" />}
+        {open ? (
+          <ChevronUp className="size-4 text-muted-foreground" />
+        ) : (
+          <ChevronDown className="size-4 text-muted-foreground" />
+        )}
       </button>
 
       {open && (
@@ -39,7 +40,9 @@ export default function InvoiceSection({ orderId }: InvoiceSectionProps) {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Date</span>
-                <span className="font-medium">{new Date(invoice.invoiceDate).toLocaleDateString("en-BD")}</span>
+                <span className="font-medium">
+                  {new Date(invoice.invoiceDate).toLocaleDateString("en-BD")}
+                </span>
               </div>
               <div className="border-t border-border my-2" />
               <div className="flex justify-between">
@@ -49,7 +52,9 @@ export default function InvoiceSection({ orderId }: InvoiceSectionProps) {
               {Number(invoice.discount) > 0 && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Discount</span>
-                  <span className="text-green-600">-৳{Number(invoice.discount).toLocaleString()}</span>
+                  <span className="text-green-600">
+                    -৳{Number(invoice.discount).toLocaleString()}
+                  </span>
                 </div>
               )}
               <div className="flex justify-between">

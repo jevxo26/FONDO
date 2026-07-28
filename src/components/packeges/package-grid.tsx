@@ -1,14 +1,16 @@
-import React from 'react';
-import { usePackages } from './packages-context';
-import PackageCard from './packages-card';
+import React from "react";
+import { usePackages } from "./packages-context";
+import PackageCard from "./packages-card";
 
 const PackageGrid = () => {
-        const {processedPackages } = usePackages();
-    return (
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-            {processedPackages.map((pkg) =><PackageCard key={pkg.id} pkg= {pkg} />)}
-          </div>
-    );
+  const { processedPackages } = usePackages();
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+      {processedPackages.map((pkg) => (
+        <PackageCard key={pkg.id} pkg={pkg} />
+      ))}
+    </div>
+  );
 };
 
 export default PackageGrid;

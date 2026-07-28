@@ -14,7 +14,10 @@ import CustomerAccountInfo from "@/components/dashboard/admin/customers/detail/c
 const statusConfig: Record<string, { label: string; style: string }> = {
   ACTIVE: { label: "Active", style: "bg-success/10 text-success border-success/20" },
   INACTIVE: { label: "Inactive", style: "bg-muted text-muted-foreground border-border" },
-  SUSPENDED: { label: "Suspended", style: "bg-destructive/10 text-destructive border-destructive/20" },
+  SUSPENDED: {
+    label: "Suspended",
+    style: "bg-destructive/10 text-destructive border-destructive/20",
+  },
 };
 
 export default function CustomerDetailPage() {
@@ -36,14 +39,20 @@ export default function CustomerDetailPage() {
       <div className="flex flex-col items-center justify-center py-20">
         <XCircle className="size-12 text-destructive" />
         <h2 className="mt-4 font-fraunces text-xl font-bold">Customer not found</h2>
-        <Link href="/dashboard/admin/customers" className="mt-2 text-sm text-primary hover:underline">
+        <Link
+          href="/dashboard/admin/customers"
+          className="mt-2 text-sm text-primary hover:underline"
+        >
           Back to customers
         </Link>
       </div>
     );
   }
 
-  const status = statusConfig[customer.status] ?? { label: customer.status, style: "bg-muted text-muted-foreground" };
+  const status = statusConfig[customer.status] ?? {
+    label: customer.status,
+    style: "bg-muted text-muted-foreground",
+  };
 
   return (
     <div>

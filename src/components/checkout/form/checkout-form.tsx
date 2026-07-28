@@ -60,10 +60,7 @@ const CheckoutForm = () => {
               fulfillment={currentFulfillment}
             />
 
-            <DeliveryScheduleSelector
-              value={deliverySchedule}
-              onChange={setDeliverySchedule}
-            />
+            <DeliveryScheduleSelector value={deliverySchedule} onChange={setDeliverySchedule} />
           </>
         )}
 

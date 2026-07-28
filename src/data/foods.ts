@@ -20,8 +20,14 @@ const spiceLevels = ["MILD", "MEDIUM", "HOT", "EXTRA_HOT"] as const;
 const statuses = ["ACTIVE", "ACTIVE", "ACTIVE", "ACTIVE", "DRAFT", "ARCHIVED"] as const;
 
 const vendors = [
-  "Fresh Meals", "Spice House", "Bistro Dhaka", "Golden Wok",
-  "Pizza Nova", "Curry Leaf", "Sweet Tooth", "The Kebab House",
+  "Fresh Meals",
+  "Spice House",
+  "Bistro Dhaka",
+  "Golden Wok",
+  "Pizza Nova",
+  "Curry Leaf",
+  "Sweet Tooth",
+  "The Kebab House",
 ];
 
 const foodNames = [

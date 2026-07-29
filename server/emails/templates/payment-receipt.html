@@ -1,0 +1,33 @@
+<h2 style="margin: 0 0 4px; font-size: 22px;">Payment Received &#x2705;</h2>
+<p style="color: #52525b; margin: 0 0 20px;">
+  Hi <strong>{{firstName}}</strong>, your payment of <strong>{{amount}}</strong> was successful.
+</p>
+
+<table role="presentation" style="background: #fafafa; border-radius: 12px; padding: 16px 20px; width: 100%; margin-bottom: 20px;">
+  <tr>
+    <td style="font-size: 13px; color: #71717a; padding: 4px 0;">Transaction ID</td>
+    <td style="text-align: right; font-weight: 600; padding: 4px 0; font-family: monospace;">{{transactionId}}</td>
+  </tr>
+  <tr>
+    <td style="font-size: 13px; color: #71717a; padding: 4px 0;">Amount</td>
+    <td style="text-align: right; font-weight: 700; font-size: 18px; padding: 4px 0;">{{amount}}</td>
+  </tr>
+  <tr>
+    <td style="font-size: 13px; color: #71717a; padding: 4px 0;">Payment Method</td>
+    <td style="text-align: right; padding: 4px 0;">{{method}}</td>
+  </tr>
+  <tr>
+    <td style="font-size: 13px; color: #71717a; padding: 4px 0;">Date</td>
+    <td style="text-align: right; padding: 4px 0;">{{date}}</td>
+  </tr>
+  {{#if orderNumber}}
+  <tr>
+    <td style="font-size: 13px; color: #71717a; padding: 4px 0;">Order</td>
+    <td style="text-align: right; padding: 4px 0;">{{orderNumber}}</td>
+  </tr>
+  {{/if}}
+</table>
+
+<p style="text-align: center; margin-top: 24px;">
+  <a href="{{orderUrl}}" class="btn btn-primary">View Receipt</a>
+</p>

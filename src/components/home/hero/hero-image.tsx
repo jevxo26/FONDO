@@ -45,45 +45,47 @@ export function HeroImage({ foods }: HeroImageProps) {
     <div className="flex w-full flex-col items-center gap-4 lg:max-w-[500px] xl:max-w-[681px]">
       <Carousel setApi={setApi} className="w-full" opts={{ loop: true }}>
         <CarouselContent>
-          {foods.filter((f) => f.thumbnail).map((food) => (
-            <CarouselItem key={food.id}>
-              <div className="relative aspect-square w-full lg:aspect-auto lg:h-[490px]">
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/20 to-primary/5" />
-                <div className="absolute inset-0 overflow-hidden rounded-3xl">
-                  <Image
-                    src={food.thumbnail!}
-                    alt={food.name}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 681px"
-                    className="object-cover"
-                    unoptimized
-                  />
-                </div>
-                <div className="absolute left-3 top-3 flex w-fit items-center gap-2.5 rounded-2xl bg-background p-2.5 shadow-[var(--shadow-badge)] sm:left-4 sm:top-4">
-                  <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/20">
-                    <Star className="size-4 text-primary" />
+          {foods
+            .filter((f) => f.thumbnail)
+            .map((food) => (
+              <CarouselItem key={food.id}>
+                <div className="relative aspect-square w-full lg:aspect-auto lg:h-[490px]">
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/20 to-primary/5" />
+                  <div className="absolute inset-0 overflow-hidden rounded-3xl">
+                    <Image
+                      src={food.thumbnail!}
+                      alt={food.name}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 681px"
+                      className="object-cover"
+                      unoptimized
+                    />
                   </div>
-                  <div className="flex flex-col">
-                    <span className="font-sans text-[11px] font-normal uppercase leading-4 tracking-wider text-muted-foreground">
-                      Best Seller
+                  <div className="absolute left-3 top-3 flex w-fit items-center gap-2.5 rounded-2xl bg-background p-2.5 shadow-[var(--shadow-badge)] sm:left-4 sm:top-4">
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/20">
+                      <Star className="size-4 text-primary" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-sans text-[11px] font-normal uppercase leading-4 tracking-wider text-muted-foreground">
+                        Best Seller
+                      </span>
+                      <span className="font-sans text-sm font-normal leading-tight text-secondary-foreground">
+                        {food.name}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="absolute bottom-4 right-3 flex w-fit items-center gap-2 rounded-2xl bg-background p-3 shadow-[var(--shadow-elevated)] sm:bottom-8 sm:right-4">
+                    <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/20">
+                      <Timer className="size-4 text-primary" />
+                    </div>
+                    <span className="inline-flex items-center gap-1 font-sans text-xs font-semibold leading-snug text-foreground">
+                      {food.preparationTime ?? 0} min &middot; {food.averageRating}
+                      <Star className="size-3 fill-foreground flex items-center" />
                     </span>
-                    <span className="font-sans text-sm font-normal leading-tight text-secondary-foreground">
-                      {food.name}
-                    </span>
                   </div>
                 </div>
-                <div className="absolute bottom-4 right-3 flex w-fit items-center gap-2 rounded-2xl bg-background p-3 shadow-[var(--shadow-elevated)] sm:bottom-8 sm:right-4">
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/20">
-                    <Timer className="size-4 text-primary" />
-                  </div>
-                  <span className="inline-flex items-center gap-1 font-sans text-xs font-semibold leading-snug text-foreground">
-                    {food.preparationTime ?? 0} min &middot; {food.rating.averageRating}
-                    <Star className="size-3 fill-foreground flex items-center" />
-                  </span>
-                </div>
-              </div>
-            </CarouselItem>
-          ))}
+              </CarouselItem>
+            ))}
         </CarouselContent>
       </Carousel>
 

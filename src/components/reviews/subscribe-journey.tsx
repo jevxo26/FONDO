@@ -2,17 +2,35 @@ import React from "react";
 
 export default function SubscriberJourney() {
   const steps = [
-    { num: "1", title: "Discovery", desc: "Select and authenticate your target heritage dietary layout." },
-    { num: "2", title: "Menu Tailoring", desc: "Isolate micro-exclusions and macro weights inside the console." },
-    { num: "3", title: "Daily Production", desc: "Artisans slow-simmer your allocated dishes across 12 hours." },
-    { num: "4", title: "Pleasure", desc: "Receive automated sterile cell drops fresh at your doorstep." },
+    {
+      num: "1",
+      title: "Discovery",
+      desc: "Select and authenticate your target heritage dietary layout.",
+    },
+    {
+      num: "2",
+      title: "Menu Tailoring",
+      desc: "Isolate micro-exclusions and macro weights inside the console.",
+    },
+    {
+      num: "3",
+      title: "Daily Production",
+      desc: "Artisans slow-simmer your allocated dishes across 12 hours.",
+    },
+    {
+      num: "4",
+      title: "Pleasure",
+      desc: "Receive automated sterile cell drops fresh at your doorstep.",
+    },
   ];
 
   return (
     <section className="py-[var(--space-section)] bg-muted/20 border-t border-b border-border/20 animate-fadeIn">
       <div className="wrapper space-y-10">
         <div className="text-center">
-          <h2 className="font-heading text-xl md:text-3xl font-normal text-foreground">The Typical Subscriber Journey</h2>
+          <h2 className="font-heading text-xl md:text-3xl font-normal text-foreground">
+            The Typical Subscriber Journey
+          </h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((step, idx) => (

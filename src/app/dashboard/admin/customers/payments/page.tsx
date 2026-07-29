@@ -18,21 +18,27 @@ const paymentColumns: ColumnDef<AdminPayment>[] = [
     accessorKey: "paymentNumber",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Payment #" />,
     cell: ({ row }) => (
-      <span className="font-mono text-sm font-bold text-foreground">{row.original.paymentNumber}</span>
+      <span className="font-mono text-sm font-bold text-foreground">
+        {row.original.paymentNumber}
+      </span>
     ),
   },
   {
     accessorKey: "transactionId",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Transaction ID" />,
     cell: ({ row }) => (
-      <span className="font-mono text-sm text-muted-foreground">{row.original.transactionId ?? "—"}</span>
+      <span className="font-mono text-sm text-muted-foreground">
+        {row.original.transactionId ?? "—"}
+      </span>
     ),
   },
   {
     accessorKey: "amount",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
     cell: ({ row }) => (
-      <span className="font-bold text-foreground">৳{Number(row.original.amount).toLocaleString()}</span>
+      <span className="font-bold text-foreground">
+        ৳{Number(row.original.amount).toLocaleString()}
+      </span>
     ),
   },
   {
@@ -46,9 +52,7 @@ const paymentColumns: ColumnDef<AdminPayment>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Date" />,
     cell: ({ row }) => (
       <span className="text-sm text-muted-foreground">
-        {row.original.paymentDate
-          ? new Date(row.original.paymentDate).toLocaleDateString()
-          : "—"}
+        {row.original.paymentDate ? new Date(row.original.paymentDate).toLocaleDateString() : "—"}
       </span>
     ),
   },
@@ -66,15 +70,14 @@ const paymentColumns: ColumnDef<AdminPayment>[] = [
 export default function PaymentsPage() {
   const [selectedCustomer, setSelectedCustomer] = useState<AdminCustomer | null>(null);
 
-  const { data, isLoading } = useAdminCustomerPayments(
-    selectedCustomer?.id ?? "",
-  );
+  const { data, isLoading } = useAdminCustomerPayments(selectedCustomer?.id ?? "");
 
   const payments = data ?? [];
   const total = payments.length;
-  const completed = payments.filter((p) => p.status === "COMPLETED").length;
   const failed = payments.filter((p) => p.status === "FAILED").length;
-  const refunded = payments.filter((p) => p.status === "REFUNDED" || p.status === "PARTIALLY_REFUNDED").length;
+  const refunded = payments.filter(
+    (p) => p.status === "REFUNDED" || p.status === "PARTIALLY_REFUNDED",
+  ).length;
   const totalRevenue = payments
     .filter((p) => p.status === "COMPLETED")
     .reduce((s, p) => s + Number(p.amount), 0);
@@ -110,16 +113,25 @@ export default function PaymentsPage() {
           <div className="flex size-16 items-center justify-center rounded-full bg-muted">
             <Search className="size-6 text-muted-foreground" />
           </div>
-          <h3 className="mt-4 font-fraunces text-lg font-bold text-foreground">Select a Customer</h3>
+          <h3 className="mt-4 font-fraunces text-lg font-bold text-foreground">
+            Select a Customer
+          </h3>
           <p className="mt-1 max-w-md text-sm text-muted-foreground">
-            Search for a customer above to view their payment history, transaction records, and refund status.
+            Search for a customer above to view their payment history, transaction records, and
+            refund status.
           </p>
         </div>
       ) : (
         <>
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard label="Total Payments" value={total} icon={CreditCard} accent="top" />
-            <StatCard label="Revenue Collected" value={`৳${totalRevenue.toLocaleString()}`} variant="success" icon={CheckCircle} accent="top" />
+            <StatCard
+              label="Revenue Collected"
+              value={`৳${totalRevenue.toLocaleString()}`}
+              variant="success"
+              icon={CheckCircle}
+              accent="top"
+            />
             <StatCard label="Failed" value={failed} variant="danger" icon={XCircle} accent="top" />
             <StatCard label="Refunded" value={refunded} variant="warning" icon={Ban} accent="top" />
           </div>

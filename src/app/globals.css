@@ -47,6 +47,17 @@
   --font-sans: var(--font-sans);
   --font-heading: var(--font-heading);
 
+  /* Font sizes */
+  --font-size-display: 40px;
+  --font-size-h1: 32px;
+  --font-size-h2: 24px;
+  --font-size-card-title: 18px;
+  --font-size-body: 15px;
+  --font-size-small: 12px;
+  --font-size-price: 19px;
+  --font-size-label: 14px;
+  --font-size-badge: 11px;
+
   /* Radius */
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -55,6 +66,7 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-full: 9999px;
 }
 
 :root {
@@ -165,6 +177,15 @@
   letter-spacing: -0.96px;
 }
 
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@utility animate-fadeIn {
+  animation: fadeIn 0.6s ease-out;
+}
+
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
@@ -176,26 +197,10 @@
     animation-direction: var(--slide-direction, normal);
   }
 
-  .font-heading {
-    font-family: var(--font-heading);
-  }
-
   .wrapper {
     margin-inline: auto;
     width: 100%;
     max-width: 1440px;
-    padding-inline: 1rem;
-  }
-
-  @media (width >= 40rem) {
-    .wrapper {
-      padding-inline: 1.5rem;
-    }
-  }
-
-  @media (width >= 64rem) {
-    .wrapper {
-      padding-inline: 60px;
-    }
+    padding-inline: var(--space-container);
   }
 }

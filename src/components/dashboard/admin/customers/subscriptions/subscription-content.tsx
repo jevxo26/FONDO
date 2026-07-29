@@ -7,7 +7,16 @@ import { SubscriptionContextCards } from "@/components/dashboard/admin/customers
 import type { Subscription } from "@/data/subscriptions";
 import { subscriptions } from "@/data/subscriptions";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { CalendarCheck, CheckCircle, CreditCard, Eye, Package, Pause, PauseCircle, XCircle } from "lucide-react";
+import {
+  CalendarCheck,
+  CheckCircle,
+  CreditCard,
+  Eye,
+  Package,
+  Pause,
+  PauseCircle,
+  XCircle,
+} from "lucide-react";
 
 const statusFilter: FacetedFilter = {
   columnId: "status",
@@ -70,7 +79,13 @@ export function SubscriptionContent() {
         <StatCard label="Total Subscriptions" value={total} icon={CreditCard} accent="top" />
         <StatCard label="Active" value={active} variant="success" icon={CheckCircle} accent="top" />
         <StatCard label="Paused" value={paused} variant="warning" icon={PauseCircle} accent="top" />
-        <StatCard label="Expired / Cancelled" value={expired} variant="danger" icon={XCircle} accent="top" />
+        <StatCard
+          label="Expired / Cancelled"
+          value={expired}
+          variant="danger"
+          icon={XCircle}
+          accent="top"
+        />
       </div>
 
       <div className="mt-6">

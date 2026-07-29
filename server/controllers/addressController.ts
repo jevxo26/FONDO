@@ -25,11 +25,7 @@ const create = catchAsync(async (req: AuthRequest, res: Response) => {
 
 const update = catchAsync(async (req: AuthRequest, res: Response) => {
   const id = req.params.id as string;
-  const address = await AddressService.updateAddress(
-    req.user!.userId,
-    id,
-    req.body,
-  );
+  const address = await AddressService.updateAddress(req.user!.userId, id, req.body);
 
   sendResponse(res, {
     statusCode: 200,
@@ -50,10 +46,7 @@ const remove = catchAsync(async (req: AuthRequest, res: Response) => {
 
 const setDefault = catchAsync(async (req: AuthRequest, res: Response) => {
   const id = req.params.id as string;
-  const address = await AddressService.setDefaultAddress(
-    req.user!.userId,
-    id,
-  );
+  const address = await AddressService.setDefaultAddress(req.user!.userId, id);
 
   sendResponse(res, {
     statusCode: 200,

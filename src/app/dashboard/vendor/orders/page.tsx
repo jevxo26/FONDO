@@ -2,17 +2,17 @@
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { VendorOrderTableSection } from "@/components/dashboard/vendor/orders/order-table-section";
-import { ClipboardList, Clock, CheckCircle2, XCircle, Package } from "lucide-react";
+import { ClipboardList, Clock, CheckCircle2, Package } from "lucide-react";
 import { vendorOrders } from "@/data/vendor-orders";
 
 export default function VendorOrdersPage() {
   const totalOrders = vendorOrders.length;
   const pendingOrders = vendorOrders.filter((o) => o.status === "PENDING").length;
-  const inProgress = vendorOrders.filter((o) => 
-    ["CONFIRMED", "PREPARING", "READY_FOR_PICKUP", "PICKED_UP", "ON_THE_WAY"].includes(o.status)
+  const inProgress = vendorOrders.filter((o) =>
+    ["CONFIRMED", "PREPARING", "READY_FOR_PICKUP", "PICKED_UP", "ON_THE_WAY"].includes(o.status),
   ).length;
-  const completedToday = vendorOrders.filter((o) => 
-    o.status === "COMPLETED" || o.status === "DELIVERED"
+  const completedToday = vendorOrders.filter(
+    (o) => o.status === "COMPLETED" || o.status === "DELIVERED",
   ).length;
   const cancelledOrders = vendorOrders.filter((o) => o.status === "CANCELLED").length;
 
@@ -55,9 +55,7 @@ export default function VendorOrdersPage() {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-fraunces text-xl font-semibold tracking-tight">
-            Order List
-          </h3>
+          <h3 className="font-fraunces text-xl font-semibold tracking-tight">Order List</h3>
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
             {completedToday} Completed · {cancelledOrders} Cancelled
           </p>

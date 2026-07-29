@@ -71,8 +71,8 @@ export function Navbar() {
                       <NavigationMenuLink
                         href={link.href!}
                         className={cn(
-                            navigationMenuTriggerStyle(),
-                            "text-[16px] font-semibold text-foreground/75",
+                          navigationMenuTriggerStyle(),
+                          "text-[16px] font-semibold text-foreground/75",
                         )}
                       >
                         {link.label}

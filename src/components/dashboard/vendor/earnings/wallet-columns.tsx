@@ -30,26 +30,20 @@ export const walletColumns: ColumnDef<VendorWalletTransaction>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Date" />,
     cell: ({ row }) => {
       const date = row.getValue("createdAt") as string;
       return (
         <div className="flex flex-col gap-0.5">
           <span className="text-sm">{format(new Date(date), "MMM d, yyyy")}</span>
-          <span className="text-xs text-muted-foreground">
-            {format(new Date(date), "h:mm a")}
-          </span>
+          <span className="text-xs text-muted-foreground">{format(new Date(date), "h:mm a")}</span>
         </div>
       );
     },
   },
   {
     accessorKey: "transactionType",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Type" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
     cell: ({ row }) => {
       const type = row.getValue("transactionType") as VendorWalletTransaction["transactionType"];
       const badge = getTransactionTypeBadge(type);
@@ -62,15 +56,15 @@ export const walletColumns: ColumnDef<VendorWalletTransaction>[] = [
   },
   {
     accessorKey: "amount",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Amount" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
     cell: ({ row }) => {
       const transaction = row.original;
       const amount = transaction.amount;
       const isCredit = transaction.transactionType === "CREDIT";
       return (
-        <span className={`font-fraunces font-semibold text-sm ${isCredit ? "text-success" : "text-destructive"}`}>
+        <span
+          className={`font-fraunces font-semibold text-sm ${isCredit ? "text-success" : "text-destructive"}`}
+        >
           {isCredit ? "+" : "-"}৳{amount.toLocaleString()}
         </span>
       );
@@ -78,21 +72,15 @@ export const walletColumns: ColumnDef<VendorWalletTransaction>[] = [
   },
   {
     accessorKey: "balanceAfter",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Balance" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Balance" />,
     cell: ({ row }) => {
       const balance = row.getValue("balanceAfter") as number;
-      return (
-        <span className="font-medium text-sm">৳{balance.toLocaleString()}</span>
-      );
+      return <span className="font-medium text-sm">৳{balance.toLocaleString()}</span>;
     },
   },
   {
     accessorKey: "remarks",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Remarks" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Remarks" />,
     cell: ({ row }) => (
       <span className="text-sm text-muted-foreground">{row.getValue("remarks")}</span>
     ),

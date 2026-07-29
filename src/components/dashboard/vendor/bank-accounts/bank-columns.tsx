@@ -30,9 +30,7 @@ export const bankColumns: ColumnDef<VendorBankAccount>[] = [
   },
   {
     accessorKey: "bankName",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Bank / Provider" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Bank / Provider" />,
     cell: ({ row }) => {
       const account = row.original;
       const isMobile = account.accountType === "MOBILE_BANKING";
@@ -46,7 +44,10 @@ export const bankColumns: ColumnDef<VendorBankAccount>[] = [
             )}
             <span className="font-medium text-sm">{account.bankName}</span>
             {account.isPrimary && (
-              <Badge variant="outline" className="bg-primary/10 text-primary ring-primary/20 text-[10px]">
+              <Badge
+                variant="outline"
+                className="bg-primary/10 text-primary ring-primary/20 text-[10px]"
+              >
                 <Star className="h-3 w-3 mr-1 fill-primary" />
                 Primary
               </Badge>
@@ -61,18 +62,12 @@ export const bankColumns: ColumnDef<VendorBankAccount>[] = [
   },
   {
     accessorKey: "accountName",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Account Name" />
-    ),
-    cell: ({ row }) => (
-      <span className="text-sm">{row.getValue("accountName")}</span>
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Account Name" />,
+    cell: ({ row }) => <span className="text-sm">{row.getValue("accountName")}</span>,
   },
   {
     accessorKey: "accountNumber",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Account Number" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Account Number" />,
     cell: ({ row }) => {
       const account = row.original;
       const isMobile = account.accountType === "MOBILE_BANKING";
@@ -81,7 +76,10 @@ export const bankColumns: ColumnDef<VendorBankAccount>[] = [
           <CreditCard className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="font-mono text-sm">{account.accountNumber}</span>
           {isMobile && (
-            <Badge variant="outline" className="text-[10px] bg-purple-500/10 text-purple-500 ring-purple-500/20">
+            <Badge
+              variant="outline"
+              className="text-[10px] bg-purple-500/10 text-purple-500 ring-purple-500/20"
+            >
               Mobile
             </Badge>
           )}
@@ -91,9 +89,7 @@ export const bankColumns: ColumnDef<VendorBankAccount>[] = [
   },
   {
     accessorKey: "accountType",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Type" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
     cell: ({ row }) => {
       const type = row.getValue("accountType") as VendorBankAccount["accountType"];
       const badge = getAccountTypeBadge(type);
@@ -106,23 +102,15 @@ export const bankColumns: ColumnDef<VendorBankAccount>[] = [
   },
   {
     accessorKey: "routingNumber",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Routing #" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Routing #" />,
     cell: ({ row }) => {
       const routing = row.getValue("routingNumber") as string;
-      return (
-        <span className="text-sm font-mono">
-          {routing || "-"}
-        </span>
-      );
+      return <span className="text-sm font-mono">{routing || "-"}</span>;
     },
   },
   {
     accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({ row }) => {
       const status = row.getValue("status") as VendorBankAccount["status"];
       const badge = getBankAccountStatusBadge(status);

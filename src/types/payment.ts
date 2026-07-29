@@ -1,3 +1,11 @@
+export interface PaymentMethod {
+  id: string;
+  name: string;
+  code: string;
+  logo?: string;
+  isDefault: boolean;
+}
+
 export interface InitiatePaymentPayload {
   orderId: string;
   amount: number;

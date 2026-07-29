@@ -11,7 +11,9 @@ export const refundColumns: ColumnDef<RefundRequest>[] = [
     accessorKey: "transactionId",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Transaction" />,
     cell: ({ row }) => (
-      <span className="font-mono text-sm font-bold text-foreground">{row.original.transactionId}</span>
+      <span className="font-mono text-sm font-bold text-foreground">
+        {row.original.transactionId}
+      </span>
     ),
   },
   {
@@ -38,9 +40,7 @@ export const refundColumns: ColumnDef<RefundRequest>[] = [
   {
     accessorKey: "reason",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Reason" />,
-    cell: ({ row }) => (
-      <span className="text-sm text-muted-foreground">{row.original.reason}</span>
-    ),
+    cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.reason}</span>,
   },
   {
     accessorKey: "status",

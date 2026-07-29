@@ -55,7 +55,16 @@ export interface VendorOrder {
   items: VendorOrderItem[];
   totalItems: number;
   totalAmount: number;
-  status: "PENDING" | "CONFIRMED" | "PREPARING" | "READY_FOR_PICKUP" | "PICKED_UP" | "ON_THE_WAY" | "DELIVERED" | "COMPLETED" | "CANCELLED";
+  status:
+    | "PENDING"
+    | "CONFIRMED"
+    | "PREPARING"
+    | "READY_FOR_PICKUP"
+    | "PICKED_UP"
+    | "ON_THE_WAY"
+    | "DELIVERED"
+    | "COMPLETED"
+    | "CANCELLED";
   paymentStatus: "PAID" | "PENDING" | "REFUNDED";
   deliveryAddress: string;
   deliveryDate: string;
@@ -195,7 +204,7 @@ export interface VendorBranch {
   status: "ACTIVE" | "INACTIVE";
   createdAt: string;
   updatedAt: string;
-}// src/types/vendor.ts (add these types)
+} // src/types/vendor.ts (add these types)
 export interface VendorBankAccount {
   id: string;
   vendorId: string;

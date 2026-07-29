@@ -2,7 +2,6 @@ import prisma from "../lib/prisma";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 
-
 export const listCustomers = catchServiceAsync(async () => {
   const users = await prisma.user.findMany({
     where: { role: "CUSTOMER", deletedAt: null },
@@ -52,7 +51,6 @@ export const getCustomerDetail = catchServiceAsync(async (customerId: string) =>
   const user = await prisma.user.findFirst({
     where: { id: customerId, role: "CUSTOMER", deletedAt: null },
     include: {
-      profile: true,
       addresses: true,
       wallet: { include: { transactions: { orderBy: { createdAt: "desc" }, take: 10 } } },
       _count: { select: { orders: true, subscriptions: true, payments: true } },
@@ -86,7 +84,6 @@ export const getCustomerDetail = catchServiceAsync(async (customerId: string) =>
     isEmailVerified: user.isEmailVerified,
     lastLoginAt: user.lastLoginAt,
     joinedAt: user.createdAt,
-    profile: user.profile,
     addresses: user.addresses,
     wallet: user.wallet,
     totalOrders: user._count?.orders ?? 0,
@@ -101,7 +98,10 @@ export const listCustomerOrders = catchServiceAsync(async (customerId: string) =
   const items = await prisma.order.findMany({
     where: { customerId, deletedAt: null },
     orderBy: { placedAt: "desc" },
-    include: { items: { include: { food: { select: { id: true, name: true, images: true } } } }, payment: { select: { status: true, amount: true } } },
+    include: {
+      items: { include: { food: { select: { id: true, name: true, images: true } } } },
+      payment: { select: { status: true, amount: true } },
+    },
   });
   return items;
 });

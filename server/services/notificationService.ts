@@ -4,24 +4,37 @@ import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import prisma from "../lib/prisma";
 
+const notificationSelect = {
+  pushNotification: true,
+  emailNotification: true,
+  smsNotification: true,
+  orderNotification: true,
+  paymentNotification: true,
+  promotionNotification: true,
+  chatNotification: true,
+  marketingNotification: true,
+  systemNotification: true,
+} as const;
+
 const getSettings = catchServiceAsync(async (userId: string) => {
-  const settings = await prisma.userNotificationSetting.findUnique({
-    where: { userId },
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: notificationSelect,
   });
 
-  if (!settings) {
-    throw new AppError(404, "Notification settings not found");
+  if (!user) {
+    throw new AppError(404, "User not found");
   }
 
-  return settings;
+  return user;
 });
 
 const updateSettings = catchServiceAsync(
   async (userId: string, data: InferType<typeof updateNotificationSchema>) => {
-    return prisma.userNotificationSetting.upsert({
-      where: { userId },
-      update: data,
-      create: { userId, ...data },
+    return prisma.user.update({
+      where: { id: userId },
+      select: notificationSelect,
+      data,
     });
   },
 );

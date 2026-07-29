@@ -3,8 +3,15 @@ import { getErrorMessage } from "../utils";
 import type { Cart, CartItem } from "@/types/cart";
 import { toast } from "sonner";
 
-interface AddToCartPayload { foodId: string; quantity: number; unitPrice: number }
-interface UpdateCartItemPayload { itemId: string; quantity: number }
+interface AddToCartPayload {
+  foodId: string;
+  quantity: number;
+  unitPrice: number;
+}
+interface UpdateCartItemPayload {
+  itemId: string;
+  quantity: number;
+}
 
 function createTempItem(payload: AddToCartPayload): CartItem {
   return {
@@ -28,22 +35,29 @@ export const cartApi = api.injectEndpoints({
       query: (body) => ({ url: "/cart/items", method: "POST", body }),
       invalidatesTags: ["Cart"],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        const patch = dispatch(
-          cartApi.util.updateQueryData("getCart", undefined, (draft) => {
-            const existing = draft.items.find((i) => i.foodId === arg.foodId);
-            if (existing) {
-              existing.quantity += arg.quantity;
-              existing.totalPrice = existing.quantity * existing.unitPrice;
-            } else {
-              draft.items.unshift(createTempItem(arg));
-            }
-            if (draft.summary) {
-              draft.summary.subtotal = draft.items.reduce((s, i) => s + i.totalPrice, 0);
-            }
-          }),
-        );
-        try { await queryFulfilled; toast.success("Added to cart") }
-        catch (err) { patch.undo(); toast.error(getErrorMessage(err)) }
+        let patch: { undo: () => void } | undefined;
+        try {
+          patch = dispatch(
+            cartApi.util.updateQueryData("getCart", undefined, (draft) => {
+              const existing = draft.items.find((i) => i.foodId === arg.foodId);
+              if (existing) {
+                existing.quantity += arg.quantity;
+                existing.totalPrice = existing.quantity * existing.unitPrice;
+              } else {
+                draft.items.unshift(createTempItem(arg));
+              }
+              draft.subtotal = draft.items.reduce((s, i) => s + i.totalPrice, 0);
+              draft.grandTotal = draft.subtotal - draft.discount + draft.deliveryCharge + draft.vat;
+            }),
+          );
+        } catch { /* no cache entry yet — skip optimistic update */ }
+        toast.success("Added to cart");
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          patch?.undo();
+          toast.error(getErrorMessage(err));
+        }
       },
     }),
 
@@ -51,14 +65,23 @@ export const cartApi = api.injectEndpoints({
       query: (id) => ({ url: `/cart/items/${id}`, method: "DELETE" }),
       invalidatesTags: ["Cart"],
       async onQueryStarted(id, { dispatch, queryFulfilled }) {
-        const patch = dispatch(
-          cartApi.util.updateQueryData("getCart", undefined, (draft) => {
-            const idx = draft.items.findIndex((i) => i.id === id);
-            if (idx !== -1) draft.items.splice(idx, 1);
-          }),
-        );
-        try { await queryFulfilled; toast.success("Item removed") }
-        catch (err) { patch.undo(); toast.error(getErrorMessage(err)) }
+        let patch: { undo: () => void } | undefined;
+        try {
+          patch = dispatch(
+            cartApi.util.updateQueryData("getCart", undefined, (draft) => {
+              draft.items = draft.items.filter((i) => i.id !== id);
+              draft.subtotal = draft.items.reduce((s, i) => s + i.totalPrice, 0);
+              draft.grandTotal = draft.subtotal - draft.discount + draft.deliveryCharge + draft.vat;
+            }),
+          );
+        } catch { /* skip */ }
+        toast.success("Item removed");
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          patch?.undo();
+          toast.error(getErrorMessage(err));
+        }
       },
     }),
 
@@ -69,18 +92,28 @@ export const cartApi = api.injectEndpoints({
         body: { quantity },
       }),
       invalidatesTags: ["Cart"],
-      async onQueryStarted({ itemId, quantity }, { dispatch, queryFulfilled, getState }) {
-        const patch = dispatch(
-          cartApi.util.updateQueryData("getCart", undefined, (draft) => {
-            const item = draft.items.find((i) => i.id === itemId);
-            if (item) {
-              item.quantity = quantity;
-              item.totalPrice = quantity * item.unitPrice;
-            }
-          }),
-        );
-        try { await queryFulfilled; toast.success("Quantity updated") }
-        catch (err) { patch.undo(); toast.error(getErrorMessage(err)) }
+      async onQueryStarted({ itemId, quantity }, { dispatch, queryFulfilled }) {
+        let patch: { undo: () => void } | undefined;
+        try {
+          patch = dispatch(
+            cartApi.util.updateQueryData("getCart", undefined, (draft) => {
+              const item = draft.items.find((i) => i.id === itemId);
+              if (item) {
+                item.quantity = quantity;
+                item.totalPrice = quantity * item.unitPrice;
+              }
+              draft.subtotal = draft.items.reduce((s, i) => s + i.totalPrice, 0);
+              draft.grandTotal = draft.subtotal - draft.discount + draft.deliveryCharge + draft.vat;
+            }),
+          );
+        } catch { /* skip */ }
+        toast.success("Quantity updated");
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          patch?.undo();
+          toast.error(getErrorMessage(err));
+        }
       },
     }),
 
@@ -88,20 +121,27 @@ export const cartApi = api.injectEndpoints({
       query: () => ({ url: "/cart", method: "DELETE" }),
       invalidatesTags: ["Cart"],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        const patch = dispatch(
-          cartApi.util.updateQueryData("getCart", undefined, (draft) => {
-            draft.items = [];
-            if (draft.summary) {
-              draft.summary.subtotal = 0;
-            }
-          }),
-        );
-        try { await queryFulfilled; toast.success("Cart cleared") }
-        catch (err) { patch.undo(); toast.error(getErrorMessage(err)) }
+        let patch: { undo: () => void } | undefined;
+        try {
+          patch = dispatch(
+            cartApi.util.updateQueryData("getCart", undefined, (draft) => {
+              draft.items = [];
+              draft.subtotal = 0;
+              draft.grandTotal = -draft.discount + draft.deliveryCharge + draft.vat;
+            }),
+          );
+        } catch { /* skip */ }
+        toast.success("Cart cleared");
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          patch?.undo();
+          toast.error(getErrorMessage(err));
+        }
       },
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

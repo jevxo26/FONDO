@@ -1,20 +1,31 @@
 import { revenueEntries } from "@/data/reports";
 import { DarkCard } from "@/components/dashboard/common/dark-card";
 import { GlassCard } from "@/components/dashboard/common/glass-card";
-import { DollarSign, Landmark, AlertTriangle, TrendingUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { DollarSign, Landmark, AlertTriangle } from "lucide-react";
 
 export function RevenueSummaryCards() {
   const totalAmount = revenueEntries.reduce((s, e) => s + e.amount, 0);
-  const settled = revenueEntries.filter((e) => e.status === "SETTLED").reduce((s, e) => s + e.amount, 0);
-  const disputed = revenueEntries.filter((e) => e.status === "DISPUTED").reduce((s, e) => s + e.amount, 0);
+  const settled = revenueEntries
+    .filter((e) => e.status === "SETTLED")
+    .reduce((s, e) => s + e.amount, 0);
+  const disputed = revenueEntries
+    .filter((e) => e.status === "DISPUTED")
+    .reduce((s, e) => s + e.amount, 0);
   const pending = totalAmount - settled - disputed;
   const settledRate = totalAmount > 0 ? Math.round((settled / totalAmount) * 100) : 0;
-  const sources = ["PLATFORM_FEE", "DELIVERY_FEE", "COMMISSION", "SUBSCRIPTION", "ADVERTISING"] as const;
-  const topSource = sources.map((src) => ({
-    name: src.replace(/_/g, " "),
-    amount: revenueEntries.filter((e) => e.source === src).reduce((s, e) => s + e.amount, 0),
-  })).sort((a, b) => b.amount - a.amount)[0];
+  const sources = [
+    "PLATFORM_FEE",
+    "DELIVERY_FEE",
+    "COMMISSION",
+    "SUBSCRIPTION",
+    "ADVERTISING",
+  ] as const;
+  const topSource = sources
+    .map((src) => ({
+      name: src.replace(/_/g, " "),
+      amount: revenueEntries.filter((e) => e.source === src).reduce((s, e) => s + e.amount, 0),
+    }))
+    .sort((a, b) => b.amount - a.amount)[0];
 
   return (
     <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
@@ -32,19 +43,27 @@ export function RevenueSummaryCards() {
         </div>
         <div className="flex flex-wrap gap-6 border-t border-white/10 pt-6">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Settled</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Settled
+            </p>
             <p className="font-bold text-success">৳{settled.toLocaleString()}</p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Pending</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Pending
+            </p>
             <p className="font-bold text-warning">৳{pending.toLocaleString()}</p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Disputed</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Disputed
+            </p>
             <p className="font-bold text-destructive">৳{disputed.toLocaleString()}</p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Top Source</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Top Source
+            </p>
             <p className="font-bold text-white">{topSource.name}</p>
           </div>
         </div>

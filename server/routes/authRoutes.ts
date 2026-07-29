@@ -23,6 +23,11 @@ router.post("/logout", AuthController.logout);
 router.get("/me", verifyToken, AuthController.me);
 router.post("/forgot-password", validate(forgotPasswordSchema), AuthController.forgotPassword);
 router.post("/reset-password", validate(resetPasswordSchema), AuthController.resetPassword);
-router.patch("/change-password", verifyToken, validate(changePasswordSchema), AuthController.changePassword);
+router.patch(
+  "/change-password",
+  verifyToken,
+  validate(changePasswordSchema),
+  AuthController.changePassword,
+);
 
 export default router;

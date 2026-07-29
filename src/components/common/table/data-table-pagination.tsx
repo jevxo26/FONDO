@@ -76,7 +76,11 @@ export function DataTablePagination({
                 <PaginationLink
                   isActive={p === currentPage}
                   onClick={() => onPageChange(p)}
-                  className={p === currentPage ? "bg-primary text-primary-foreground border-0 shadow-[0_2px_8px_rgba(206,163,89,0.25)]" : ""}
+                  className={
+                    p === currentPage
+                      ? "bg-primary text-primary-foreground border-0 shadow-[0_2px_8px_rgba(206,163,89,0.25)]"
+                      : ""
+                  }
                 >
                   {p + 1}
                 </PaginationLink>

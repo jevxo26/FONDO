@@ -1,7 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CreditCard, Download, Search, UserPlus, UserCheck, UserX, Users, Wallet, X } from "lucide-react";
+import {
+  CreditCard,
+  Download,
+  Search,
+  UserPlus,
+  UserCheck,
+  UserX,
+  Users,
+  Wallet,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/dashboard/common/page-header";
@@ -37,7 +46,7 @@ export default function CustomersPage() {
 
   const { data } = useAdminCustomers();
 
-  const allCustomers = data ?? [];
+  const allCustomers = useMemo(() => data ?? [], [data]);
 
   const filtered = useMemo(() => {
     let list = allCustomers;
@@ -95,10 +104,33 @@ export default function CustomersPage() {
         }
       />
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total Customers" value={allCustomers.length} icon={Users} accent="bottom" />
-        <StatCard label="Active" value={allCustomers.filter((c) => c.status === "ACTIVE").length} variant="success" icon={UserCheck} accent="bottom" />
-        <StatCard label="Suspended" value={allCustomers.filter((c) => c.status === "SUSPENDED").length} variant="warning" icon={UserX} accent="bottom" />
-        <StatCard label="Wallet Holdings" value={`৳${allCustomers.reduce((s, c) => s + c.walletBalance, 0).toLocaleString()}`} variant="default" icon={Wallet} accent="bottom" />
+        <StatCard
+          label="Total Customers"
+          value={allCustomers.length}
+          icon={Users}
+          accent="bottom"
+        />
+        <StatCard
+          label="Active"
+          value={allCustomers.filter((c) => c.status === "ACTIVE").length}
+          variant="success"
+          icon={UserCheck}
+          accent="bottom"
+        />
+        <StatCard
+          label="Suspended"
+          value={allCustomers.filter((c) => c.status === "SUSPENDED").length}
+          variant="warning"
+          icon={UserX}
+          accent="bottom"
+        />
+        <StatCard
+          label="Wallet Holdings"
+          value={`৳${allCustomers.reduce((s, c) => s + c.walletBalance, 0).toLocaleString()}`}
+          variant="default"
+          icon={Wallet}
+          accent="bottom"
+        />
       </div>
       <div className="mt-8 grid grid-cols-12 gap-8">
         <div className="col-span-12 lg:col-span-8">
@@ -108,7 +140,9 @@ export default function CustomersPage() {
             <div className="pointer-events-none absolute right-3 top-3 z-10 size-[7px] rotate-45 border border-primary/30" />
             <div className="relative z-10">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <h3 className="font-fraunces text-xl font-semibold text-foreground">Active Profiles</h3>
+                <h3 className="font-fraunces text-xl font-semibold text-foreground">
+                  Active Profiles
+                </h3>
                 <div className="flex items-center gap-2">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -142,7 +176,9 @@ export default function CustomersPage() {
                 ))}
               </div>
               {adapted.length === 0 && (
-                <p className="py-12 text-center text-sm text-muted-foreground">No customers match your search.</p>
+                <p className="py-12 text-center text-sm text-muted-foreground">
+                  No customers match your search.
+                </p>
               )}
             </div>
           </div>
@@ -151,17 +187,23 @@ export default function CustomersPage() {
           <DarkCard icon={<Wallet className="size-40" />}>
             <div className="mb-6 flex items-start justify-between">
               <div>
-                <p className="mb-1 text-xs font-bold uppercase tracking-widest text-primary">Total Assets</p>
+                <p className="mb-1 text-xs font-bold uppercase tracking-widest text-primary">
+                  Total Assets
+                </p>
                 <h4 className="font-fraunces text-2xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] md:text-4xl">
-                  ৳{(totalHoldings).toLocaleString()}
+                  ৳{totalHoldings.toLocaleString()}
                 </h4>
               </div>
               <Wallet className="size-8 text-primary drop-shadow-[0_2px_3px_rgba(0,0,0,0.3)]" />
             </div>
             <div className="mb-6 space-y-3">
               <div className="rounded-lg bg-black/20 p-3">
-                <p className="text-[10px] uppercase tracking-widest text-zinc-500">Cust. Wallet Holdings</p>
-                <p className="mt-1 text-base font-bold text-white">৳{totalHoldings.toLocaleString()}</p>
+                <p className="text-[10px] uppercase tracking-widest text-zinc-500">
+                  Cust. Wallet Holdings
+                </p>
+                <p className="mt-1 text-base font-bold text-white">
+                  ৳{totalHoldings.toLocaleString()}
+                </p>
               </div>
             </div>
             <Button className="w-full rounded-xl shadow-lg shadow-black/10">
@@ -169,7 +211,13 @@ export default function CustomersPage() {
               Manage Settlement
             </Button>
           </DarkCard>
-          <GlassCard icon={<Users className="size-5 text-primary" />} iconBg="bg-primary/10" title="Recent Activity" value={filtered.length.toString()} subtitle="active profiles">
+          <GlassCard
+            icon={<Users className="size-5 text-primary" />}
+            iconBg="bg-primary/10"
+            title="Recent Activity"
+            value={filtered.length.toString()}
+            subtitle="active profiles"
+          >
             <div className="mt-4 space-y-2">
               {adapted.slice(0, 5).map((c) => (
                 <a
@@ -182,18 +230,37 @@ export default function CustomersPage() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-bold text-foreground truncate">{c.fullName}</p>
-                    <p className="text-[10px] text-muted-foreground">{c.totalOrders} orders · ৳{c.totalOrders > 0 ? Math.round(allCustomers.find((x) => x.id === c.id)?.totalSpent ?? 0 / c.totalOrders) : 0} avg</p>
+                    <p className="text-[10px] text-muted-foreground">
+                      {c.totalOrders} orders · ৳
+                      {c.totalOrders > 0
+                        ? Math.round(
+                            allCustomers.find((x) => x.id === c.id)?.totalSpent ??
+                              0 / c.totalOrders,
+                          )
+                        : 0}{" "}
+                      avg
+                    </p>
                   </div>
-                  <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                    c.status === "ACTIVE" ? "bg-success/10 text-success" : c.status === "SUSPENDED" ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground"
-                  }`}>
+                  <span
+                    className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
+                      c.status === "ACTIVE"
+                        ? "bg-success/10 text-success"
+                        : c.status === "SUSPENDED"
+                          ? "bg-destructive/10 text-destructive"
+                          : "bg-muted text-muted-foreground"
+                    }`}
+                  >
                     {c.status}
                   </span>
                 </a>
               ))}
             </div>
           </GlassCard>
-          <StatusMetrics activeCount={activeCount} suspendedCount={suspendedCount} totalCustomers={allCustomers.length} />
+          <StatusMetrics
+            activeCount={activeCount}
+            suspendedCount={suspendedCount}
+            totalCustomers={allCustomers.length}
+          />
         </div>
       </div>
     </div>

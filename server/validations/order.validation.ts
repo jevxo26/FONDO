@@ -2,10 +2,12 @@ import * as yup from "yup";
 
 export const updateOrderSchema = yup.object({
   notes: yup.string().optional(),
-  deliverySchedule: yup.object({
-    deliveryDate: yup.date().optional(),
-    deliverySlot: yup.string().optional(),
-  }).optional(),
+  deliverySchedule: yup
+    .object({
+      deliveryDate: yup.date().optional(),
+      deliverySlot: yup.string().optional(),
+    })
+    .optional(),
 });
 
 export const cancelOrderSchema = yup.object({
@@ -14,9 +16,18 @@ export const cancelOrderSchema = yup.object({
 });
 
 export const updateStatusSchema = yup.object({
-  status: yup.string()
+  status: yup
+    .string()
     .oneOf(
-      ["CONFIRMED", "PREPARING", "READY_FOR_PICKUP", "PICKED_UP", "ON_THE_WAY", "DELIVERED", "CANCELLED"],
+      [
+        "CONFIRMED",
+        "PREPARING",
+        "READY_FOR_PICKUP",
+        "PICKED_UP",
+        "ON_THE_WAY",
+        "DELIVERED",
+        "CANCELLED",
+      ],
       "Invalid status transition",
     )
     .required("Status is required"),

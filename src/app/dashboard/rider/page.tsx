@@ -1,12 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
-import { Bike, DollarSign, MapPin, Package, Loader2 } from "lucide-react";
-import { riderDeliveries as fallbackRiderDeliveries } from "@/data/riders";
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { DashboardActiveDeliveries } from "@/components/dashboard/rider/dashboard-active-deliveries";
+import { riderDeliveries as fallbackRiderDeliveries, type DeliveryStatus, type RiderZone } from "@/data/riders";
 import { useGetOrdersQuery } from "@/store/api/slices/orders-api";
+import { Bike, DollarSign, Loader2, MapPin, Package } from "lucide-react";
+import { useMemo } from "react";
 
 export default function RiderDashboardPage() {
   const { data: apiOrders, isLoading } = useGetOrdersQuery();
@@ -15,16 +15,30 @@ export default function RiderDashboardPage() {
     if (apiOrders && apiOrders.length > 0) {
       return apiOrders.map((o) => ({
         id: o.id,
+        deliveryCode: o.orderNumber,
         orderId: o.id,
         orderNumber: o.orderNumber,
-        customerName: o.deliveryAddress?.receiverName || "Customer",
-        customerPhone: o.deliveryAddress?.receiverPhone || "",
+        customerName: `${o.customer.firstName} ${o.customer.lastName}`,
+        customerPhone: o.customer.phone,
         pickupAddress: "FONDO Central Kitchen",
-        deliveryAddress: `${o.deliveryAddress?.house ? o.deliveryAddress.house + ", " : ""}${o.deliveryAddress?.road ? o.deliveryAddress.road + ", " : ""}${o.deliveryAddress?.area || ""}, ${o.deliveryAddress?.district || ""}`,
-        status: o.status === "DELIVERED" ? "DELIVERED" : o.status === "ON_THE_WAY" ? "ON_THE_WAY" : o.status === "PICKED_UP" ? "PICKED_UP" : "ASSIGNED",
+        deliveryAddress: `${o.customer.firstName} ${o.customer.lastName}`,
+        zone: "Gulshan" as RiderZone,
+        items: o.items.map((i) => i.food.name),
+        status: (
+          o.orderStatus === "DELIVERED"
+            ? "DELIVERED"
+            : o.orderStatus === "ON_THE_WAY"
+              ? "ON_THE_WAY"
+              : o.orderStatus === "PICKED_UP"
+                ? "PICKED_UP"
+                : "ASSIGNED"
+        ) as DeliveryStatus,
         deliveryFee: 60,
-        estimatedTime: "25 min",
-        createdAt: o.createdAt,
+        estimatedDeliveryTime: "25 min",
+        actualPickupTime: null,
+        actualDeliveryTime: null,
+        priority: 0,
+        createdAt: o.placedAt,
       }));
     }
     return fallbackRiderDeliveries;
@@ -39,7 +53,33 @@ export default function RiderDashboardPage() {
 
   return (
     <div>
-      <PageHeader title="Rider Dashboard" description="Your live delivery overview and active routes." icon={Bike} />
+      <PageHeader title="Dashboard" description="Your delivery overview." icon={Bike} />
+      <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <StatCard label="Active Deliveries" value={activeCount} icon={MapPin} accent="right" />
+        <StatCard
+          label="Completed Today"
+          value={completedCount}
+          variant="success"
+          icon={Package}
+          accent="right"
+        />
+        <StatCard
+          label="Earnings Today"
+          value="৳1,850"
+          variant="default"
+          icon={DollarSign}
+          accent="right"
+        />
+      </div>
+      <div className="mt-8">
+        <h3 className="font-heading text-lg font-semibold text-foreground">Active Deliveries</h3>
+        <DashboardActiveDeliveries data={activeDeliveries} />
+      </div>
+      <PageHeader
+        title="Rider Dashboard"
+        description="Your live delivery overview and active routes."
+        icon={Bike}
+      />
 
       {isLoading ? (
         <div className="mt-12 flex justify-center">
@@ -49,11 +89,25 @@ export default function RiderDashboardPage() {
         <>
           <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
             <StatCard label="Active Deliveries" value={activeCount} icon={MapPin} accent="right" />
-            <StatCard label="Completed Today" value={completedCount} variant="success" icon={Package} accent="right" />
-            <StatCard label="Earnings Today" value={`৳${completedCount * 60 + 500}`} variant="default" icon={DollarSign} accent="right" />
+            <StatCard
+              label="Completed Today"
+              value={completedCount}
+              variant="success"
+              icon={Package}
+              accent="right"
+            />
+            <StatCard
+              label="Earnings Today"
+              value={`৳${completedCount * 60 + 500}`}
+              variant="default"
+              icon={DollarSign}
+              accent="right"
+            />
           </div>
           <div className="mt-8">
-            <h3 className="font-heading text-lg font-semibold text-foreground">Active Deliveries</h3>
+            <h3 className="font-heading text-lg font-semibold text-foreground">
+              Active Deliveries
+            </h3>
             <DashboardActiveDeliveries data={activeDeliveries} />
           </div>
         </>
@@ -61,4 +115,3 @@ export default function RiderDashboardPage() {
     </div>
   );
 }
-

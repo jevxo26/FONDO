@@ -41,7 +41,7 @@ const listFoods = catchServiceAsync(
       orderBy.variants = { _count: "asc" };
       orderBy.prices = { _count: "asc" };
     } else if (params.sortBy === "rating") {
-      orderBy.rating = { averageRating: params.sortOrder || "desc" };
+      orderBy.averageRating = params.sortOrder || "desc";
     } else if (params.sortBy === "popularity") {
       orderBy.isPopular = "desc";
     } else {
@@ -56,9 +56,14 @@ const listFoods = catchServiceAsync(
         orderBy: Object.keys(orderBy).length > 0 ? orderBy : { createdAt: "desc" },
         include: {
           category: { select: { id: true, name: true, slug: true } },
-          variants: { where: { status: "active" }, select: { id: true, name: true, price: true, discountPrice: true, servingSize: true } },
-          addons: { where: { status: "active" }, include: { items: { where: { status: "active" } } } },
-          rating: { select: { averageRating: true, totalReview: true } },
+          variants: {
+            where: { status: "active" },
+            select: { id: true, name: true, price: true, discountPrice: true, servingSize: true },
+          },
+          addons: {
+            where: { status: "active" },
+            include: { items: { where: { status: "active" } } },
+          },
           labels: true,
           tagMappings: { include: { tag: { select: { name: true } } } },
           diets: { select: { dietType: true } },
@@ -89,7 +94,13 @@ const listFoods = catchServiceAsync(
       category: f.category,
       variants: f.variants,
       addons: f.addons,
-      rating: f.rating,
+      averageRating: f.averageRating,
+      totalReview: f.totalReview,
+      fiveStar: f.fiveStar,
+      fourStar: f.fourStar,
+      threeStar: f.threeStar,
+      twoStar: f.twoStar,
+      oneStar: f.oneStar,
       labels: f.labels,
       tags: f.tagMappings.map((tm) => tm.tag),
       diets: f.diets,
@@ -110,7 +121,6 @@ const getFoodBySlug = catchServiceAsync(async (slug: string) => {
       variants: { where: { status: "active" } },
       addons: { where: { status: "active" }, include: { items: { where: { status: "active" } } } },
       ingredients: true,
-      nutrition: true,
       allergens: true,
       preparation: true,
       availability: true,
@@ -118,7 +128,6 @@ const getFoodBySlug = catchServiceAsync(async (slug: string) => {
       prices: { where: { status: "active" }, orderBy: { effectiveFrom: "desc" }, take: 1 },
       discounts: { where: { status: "active" }, orderBy: { startDate: "desc" }, take: 1 },
       labels: true,
-      rating: true,
       tagMappings: { include: { tag: { select: { id: true, name: true, slug: true } } } },
       diets: { select: { dietType: true } },
       images: { orderBy: { sortOrder: "asc" } },
@@ -140,7 +149,6 @@ const getFoodById = catchServiceAsync(async (id: string) => {
       category: { select: { id: true, name: true, slug: true } },
       variants: { where: { status: "active" } },
       addons: { where: { status: "active" }, include: { items: { where: { status: "active" } } } },
-      rating: { select: { averageRating: true, totalReview: true } },
       labels: true,
       diets: { select: { dietType: true } },
     },
@@ -156,7 +164,10 @@ const listCategories = catchServiceAsync(async () => {
     where: { status: "active", deletedAt: null },
     orderBy: { sortOrder: "asc" },
     include: {
-      subCategories: { where: { status: "active", deletedAt: null }, orderBy: { sortOrder: "asc" } },
+      subCategories: {
+        where: { status: "active", deletedAt: null },
+        orderBy: { sortOrder: "asc" },
+      },
       _count: { select: { foods: { where: { status: "active", deletedAt: null } } } },
     },
   });
@@ -166,7 +177,10 @@ const getCategoryById = catchServiceAsync(async (id: string) => {
   const category = await prisma.category.findUnique({
     where: { id, status: "active", deletedAt: null },
     include: {
-      subCategories: { where: { status: "active", deletedAt: null }, orderBy: { sortOrder: "asc" } },
+      subCategories: {
+        where: { status: "active", deletedAt: null },
+        orderBy: { sortOrder: "asc" },
+      },
       _count: { select: { foods: { where: { status: "active", deletedAt: null } } } },
     },
   });
@@ -219,9 +233,14 @@ const listFavorites = catchServiceAsync(async (userId: string) => {
       food: {
         include: {
           category: { select: { id: true, name: true, slug: true } },
-          variants: { where: { status: "active" }, select: { id: true, name: true, price: true, discountPrice: true, servingSize: true } },
-          addons: { where: { status: "active" }, include: { items: { where: { status: "active" } } } },
-          rating: { select: { averageRating: true, totalReview: true } },
+          variants: {
+            where: { status: "active" },
+            select: { id: true, name: true, price: true, discountPrice: true, servingSize: true },
+          },
+          addons: {
+            where: { status: "active" },
+            include: { items: { where: { status: "active" } } },
+          },
           labels: true,
           tagMappings: { include: { tag: { select: { name: true } } } },
           diets: { select: { dietType: true } },
@@ -292,19 +311,9 @@ async function updateFoodRating(foodId: string) {
   const countMap: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
   starCounts.forEach((s) => (countMap[s.rating] = s._count));
 
-  await prisma.foodRating.upsert({
-    where: { foodId },
-    update: {
-      averageRating: stats._avg.rating || 0,
-      totalReview: stats._count,
-      fiveStar: countMap[5],
-      fourStar: countMap[4],
-      threeStar: countMap[3],
-      twoStar: countMap[2],
-      oneStar: countMap[1],
-    },
-    create: {
-      foodId,
+  await prisma.food.update({
+    where: { id: foodId },
+    data: {
       averageRating: stats._avg.rating || 0,
       totalReview: stats._count,
       fiveStar: countMap[5],

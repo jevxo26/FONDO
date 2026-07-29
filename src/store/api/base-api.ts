@@ -23,7 +23,9 @@ function normalizeArgs(args: AxiosBaseQueryArg): AxiosBaseQueryArgs {
   return args;
 }
 
-const axiosBaseQuery: BaseQueryFn<AxiosBaseQueryArg, unknown, AxiosBaseQueryError> = async (args) => {
+const axiosBaseQuery: BaseQueryFn<AxiosBaseQueryArg, unknown, AxiosBaseQueryError> = async (
+  args,
+) => {
   try {
     const { url, method = "GET", body, params } = normalizeArgs(args);
     let queryUrl = url;

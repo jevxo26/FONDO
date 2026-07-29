@@ -28,7 +28,12 @@ interface SidebarNavProps {
   onNavigate?: () => void;
 }
 
-export function SidebarNav({ items, sections: sectionConfig, basePath, onNavigate }: SidebarNavProps) {
+export function SidebarNav({
+  items,
+  sections: sectionConfig,
+  basePath,
+  onNavigate,
+}: SidebarNavProps) {
   const pathname = usePathname();
 
   const sections = useMemo(() => {
@@ -58,15 +63,14 @@ export function SidebarNav({ items, sections: sectionConfig, basePath, onNavigat
             <SidebarMenu className="group-data-[collapsible=icon]:gap-2">
               {section.items.map((item) => {
                 const Icon = item.icon;
-                const href = `${basePath}${item.href}`.replace(/\/+$/, '');
-                const isActive = pathname === href || (href !== basePath && pathname.startsWith(href + '/'));
+                const href = `${basePath}${item.href}`.replace(/\/+$/, "");
+                const isActive =
+                  pathname === href || (href !== basePath && pathname.startsWith(href + "/"));
 
                 return (
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton
-                      render={
-                        <Link href={href} onClick={onNavigate} />
-                      }
+                      render={<Link href={href} onClick={onNavigate} />}
                       isActive={isActive}
                       tooltip={item.label}
                       className={cn(

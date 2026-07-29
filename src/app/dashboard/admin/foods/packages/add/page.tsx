@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import type { Resolver } from "react-hook-form";
 import { useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CATEGORIES, initialDummyData, PackageFormValues, packageSchema } from "@/lib/schema/package-schema";
@@ -16,7 +17,7 @@ export default function AddPackageForm() {
   const [showPreview, setShowPreview] = useState(true);
 
   const { register, control, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<PackageFormValues>({
-    resolver: yupResolver(packageSchema) as any,
+    resolver: yupResolver(packageSchema) as Resolver<PackageFormValues>,
     defaultValues: initialDummyData,
   });
 
@@ -62,9 +63,10 @@ export default function AddPackageForm() {
     // চাইলে form reset
     reset(initialDummyData);
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Something went wrong";
     console.error(error);
-    alert(error.message);
+    alert(message);
   }
     console.group("=== PACKAGE FORM SUBMITTED DATA ===");
     console.log("Full Package Payload:", data);

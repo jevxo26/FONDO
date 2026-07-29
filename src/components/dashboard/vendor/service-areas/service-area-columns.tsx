@@ -29,9 +29,7 @@ export const serviceAreaColumns: ColumnDef<VendorServiceArea>[] = [
   },
   {
     accessorKey: "area", // Added for sorting/filtering
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Location" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Location" />,
     cell: ({ row }) => {
       const area = row.original;
       return (
@@ -43,18 +41,14 @@ export const serviceAreaColumns: ColumnDef<VendorServiceArea>[] = [
           <span className="text-xs text-muted-foreground ml-5">
             {area.upazila}, {area.district}
           </span>
-          <span className="text-xs text-muted-foreground ml-5">
-            {area.division}
-          </span>
+          <span className="text-xs text-muted-foreground ml-5">{area.division}</span>
         </div>
       );
     },
   },
   {
     accessorKey: "division", // Added for filtering
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Division" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Division" />,
     cell: ({ row }) => {
       const area = row.original;
       return <span className="text-sm">{area.division}</span>;
@@ -62,9 +56,7 @@ export const serviceAreaColumns: ColumnDef<VendorServiceArea>[] = [
   },
   {
     accessorKey: "district", // Added for filtering
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="District" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="District" />,
     cell: ({ row }) => {
       const area = row.original;
       return <span className="text-sm">{area.district}</span>;
@@ -72,9 +64,7 @@ export const serviceAreaColumns: ColumnDef<VendorServiceArea>[] = [
   },
   {
     accessorKey: "deliveryCharge",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Delivery Charge" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Delivery Charge" />,
     cell: ({ row }) => {
       const charge = row.getValue("deliveryCharge") as number;
       return (
@@ -87,9 +77,7 @@ export const serviceAreaColumns: ColumnDef<VendorServiceArea>[] = [
   },
   {
     accessorKey: "minimumOrderAmount",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Min Order" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Min Order" />,
     cell: ({ row }) => {
       const amount = row.getValue("minimumOrderAmount") as number;
       return <span className="text-sm">৳{amount}</span>;
@@ -97,9 +85,7 @@ export const serviceAreaColumns: ColumnDef<VendorServiceArea>[] = [
   },
   {
     accessorKey: "estimatedDeliveryTime",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Est. Delivery" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Est. Delivery" />,
     cell: ({ row }) => {
       const time = row.getValue("estimatedDeliveryTime") as number;
       return (
@@ -112,13 +98,18 @@ export const serviceAreaColumns: ColumnDef<VendorServiceArea>[] = [
   },
   {
     accessorKey: "isActive",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({ row }) => {
       const isActive = row.getValue("isActive") as boolean;
       return (
-        <Badge variant="outline" className={isActive ? "bg-success/10 text-success ring-success/20" : "bg-muted text-muted-foreground ring-muted-foreground/20"}>
+        <Badge
+          variant="outline"
+          className={
+            isActive
+              ? "bg-success/10 text-success ring-success/20"
+              : "bg-muted text-muted-foreground ring-muted-foreground/20"
+          }
+        >
           {isActive ? "Active" : "Inactive"}
         </Badge>
       );

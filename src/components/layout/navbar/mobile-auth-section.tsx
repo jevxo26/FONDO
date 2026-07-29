@@ -20,8 +20,11 @@ export function MobileAuthSection({ closeAndClear }: { closeAndClear: () => void
 
   if (!isAuthenticated || !user) {
     return (
-      <Link href="/login" onClick={closeAndClear}
-        className="flex w-full items-center justify-center gap-2 rounded-full border border-border py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted">
+      <Link
+        href="/login"
+        onClick={closeAndClear}
+        className="flex w-full items-center justify-center gap-2 rounded-full border border-border py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+      >
         <User className="size-4" />
         Sign In
       </Link>
@@ -35,19 +38,26 @@ export function MobileAuthSection({ closeAndClear }: { closeAndClear: () => void
           {user.firstName[0]?.toUpperCase()}
         </span>
         <div className="text-sm">
-          <p className="font-medium text-foreground">{user.firstName} {user.lastName}</p>
+          <p className="font-medium text-foreground">
+            {user.firstName} {user.lastName}
+          </p>
           <p className="text-xs text-foreground/60">{user.email}</p>
         </div>
       </div>
       {dashboardHref && (
-        <Link href={dashboardHref} onClick={closeAndClear}
-          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted">
+        <Link
+          href={dashboardHref}
+          onClick={closeAndClear}
+          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+        >
           <LayoutDashboard className="size-4" />
           Dashboard
         </Link>
       )}
-      <button onClick={handleLogout}
-        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-destructive transition-colors hover:bg-muted">
+      <button
+        onClick={handleLogout}
+        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-destructive transition-colors hover:bg-muted"
+      >
         <LogOut className="size-4" />
         Logout
       </button>

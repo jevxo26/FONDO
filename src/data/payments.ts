@@ -133,7 +133,15 @@ const refundReasons = [
   "Damaged packaging",
 ];
 
-const refundStatuses: RefundStatus[] = ["PENDING", "PENDING", "PENDING", "APPROVED", "PROCESSED", "PROCESSED", "REJECTED"];
+const refundStatuses: RefundStatus[] = [
+  "PENDING",
+  "PENDING",
+  "PENDING",
+  "APPROVED",
+  "PROCESSED",
+  "PROCESSED",
+  "REJECTED",
+];
 
 function generateRefunds(count: number): RefundRequest[] {
   const list: RefundRequest[] = [];
@@ -141,7 +149,20 @@ function generateRefunds(count: number): RefundRequest[] {
     const customer = randomItem(customerNames);
     const status = randomItem(refundStatuses);
     const day = Math.floor(rand() * 28) + 1;
-    const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][Math.floor(rand() * 12)];
+    const month = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ][Math.floor(rand() * 12)];
     list.push({
       id: `REF-${String(i).padStart(4, "0")}`,
       transactionId: `#TXN-${String(94000 + i * 7).slice(0, 5)}`,
@@ -151,7 +172,12 @@ function generateRefunds(count: number): RefundRequest[] {
       reason: randomItem(refundReasons),
       status,
       requestedAt: `${month} ${day}, 2026`,
-      processedAt: status === "PROCESSED" ? `${month} ${day + 2}, 2026` : status === "REJECTED" ? `${month} ${day + 1}, 2026` : null,
+      processedAt:
+        status === "PROCESSED"
+          ? `${month} ${day + 2}, 2026`
+          : status === "REJECTED"
+            ? `${month} ${day + 1}, 2026`
+            : null,
     });
   }
   return list;
@@ -174,13 +200,37 @@ export interface Coupon {
   createdAt: string;
 }
 
-const couponCodes = ["WELCOME20", "FONDO50", "FEAST100", "NEWUSER", "SUMMER25", "FIRSTMEAL", "LOYALTY", "WEEKEND", "HALFPRICE", "BOGO"];
+const couponCodes = [
+  "WELCOME20",
+  "FONDO50",
+  "FEAST100",
+  "NEWUSER",
+  "SUMMER25",
+  "FIRSTMEAL",
+  "LOYALTY",
+  "WEEKEND",
+  "HALFPRICE",
+  "BOGO",
+];
 
 function generateCoupons(count: number): Coupon[] {
   const list: Coupon[] = [];
   for (let i = 1; i <= count; i++) {
     const day = Math.floor(rand() * 28) + 1;
-    const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][Math.floor(rand() * 12)];
+    const month = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ][Math.floor(rand() * 12)];
     const expired = month === "Jan" || month === "Feb";
     list.push({
       id: `CPN-${String(i).padStart(4, "0")}`,
@@ -227,7 +277,15 @@ const vendorNames = [
   { name: "The Kebab House", initials: "KH" },
 ];
 
-const settlementStatuses: SettlementStatus[] = ["PENDING", "PENDING", "PROCESSING", "COMPLETED", "COMPLETED", "COMPLETED", "FAILED"];
+const settlementStatuses: SettlementStatus[] = [
+  "PENDING",
+  "PENDING",
+  "PROCESSING",
+  "COMPLETED",
+  "COMPLETED",
+  "COMPLETED",
+  "FAILED",
+];
 
 function generateSettlements(count: number): Settlement[] {
   const list: Settlement[] = [];
@@ -245,7 +303,10 @@ function generateSettlements(count: number): Settlement[] {
       netAmount: amount - fee,
       period: `Week ${Math.floor(rand() * 4) + 1}, ${["Jan", "Feb", "Mar", "Apr", "May", "Jun"][Math.floor(rand() * 6)]} 2026`,
       status,
-      processedAt: status === "COMPLETED" ? `${["Jan", "Feb", "Mar", "Apr", "May", "Jun"][Math.floor(rand() * 6)]} ${Math.floor(rand() * 28) + 1}, 2026` : null,
+      processedAt:
+        status === "COMPLETED"
+          ? `${["Jan", "Feb", "Mar", "Apr", "May", "Jun"][Math.floor(rand() * 6)]} ${Math.floor(rand() * 28) + 1}, 2026`
+          : null,
     });
   }
   return list;

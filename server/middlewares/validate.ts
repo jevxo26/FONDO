@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
+import type { Schema } from "yup";
 import AppError from "../utils/AppError";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const validate = (schema: any, source: "body" | "query" | "params" = "body") => {
+export const validate = (schema: Schema, source: "body" | "query" | "params" = "body") => {
   return async (req: Request, _res: Response, next: NextFunction) => {
     try {
       const validated = await schema.validate(req[source], {
@@ -14,9 +14,7 @@ export const validate = (schema: any, source: "body" | "query" | "params" = "bod
     } catch (err: unknown) {
       if (err instanceof Error && "errors" in err) {
         const yupErr = err as { errors?: string[] };
-        const messages = yupErr.errors?.length
-          ? yupErr.errors.join(", ")
-          : err.message;
+        const messages = yupErr.errors?.length ? yupErr.errors.join(", ") : err.message;
         next(new AppError(400, messages));
       } else {
         next(new AppError(400, "Validation failed"));

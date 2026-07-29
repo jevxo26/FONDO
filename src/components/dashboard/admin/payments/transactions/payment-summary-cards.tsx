@@ -5,10 +5,17 @@ import { GlassCard } from "@/components/dashboard/common/glass-card";
 import { Button } from "@/components/ui/button";
 
 export function PaymentSummaryCards() {
-  const totalRevenue = transactions.reduce((s, t) => s + (t.status === "SUCCESS" ? t.amount : 0), 0);
-  const pendingSettlements = settlements.filter((s) => s.status !== "COMPLETED").reduce((s, t) => s + t.netAmount, 0);
+  const totalRevenue = transactions.reduce(
+    (s, t) => s + (t.status === "SUCCESS" ? t.amount : 0),
+    0,
+  );
+  const pendingSettlements = settlements
+    .filter((s) => s.status !== "COMPLETED")
+    .reduce((s, t) => s + t.netAmount, 0);
   const pendingRefunds = refunds.filter((r) => r.status === "PENDING").length;
-  const successRate = Math.round((transactions.filter((t) => t.status === "SUCCESS").length / transactions.length) * 100);
+  const successRate = Math.round(
+    (transactions.filter((t) => t.status === "SUCCESS").length / transactions.length) * 100,
+  );
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -25,18 +32,29 @@ export function PaymentSummaryCards() {
         </div>
         <div className="flex flex-wrap gap-6 border-t border-white/10 pt-6">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Growth</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Growth
+            </p>
             <p className="flex items-center font-bold text-success">
-              <TrendingUp className="mr-1 size-4" />+12.4%
+              <TrendingUp className="mr-1 size-4" />
+              +12.4%
             </p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Successful</p>
-            <p className="font-bold text-white">{transactions.filter((t) => t.status === "SUCCESS").length} Tx</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Successful
+            </p>
+            <p className="font-bold text-white">
+              {transactions.filter((t) => t.status === "SUCCESS").length} Tx
+            </p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Avg. Order</p>
-            <p className="font-bold text-white">৳{Math.round(totalRevenue / transactions.length).toLocaleString()}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Avg. Order
+            </p>
+            <p className="font-bold text-white">
+              ৳{Math.round(totalRevenue / transactions.length).toLocaleString()}
+            </p>
           </div>
         </div>
       </DarkCard>
@@ -53,7 +71,9 @@ export function PaymentSummaryCards() {
           </div>
           <div className="flex justify-between">
             <span className="text-xs text-muted-foreground">60% processed</span>
-            <Button variant="link" className="h-auto p-0 text-xs font-bold text-primary">Process Now</Button>
+            <Button variant="link" className="h-auto p-0 text-xs font-bold text-primary">
+              Process Now
+            </Button>
           </div>
         </div>
       </GlassCard>
@@ -65,8 +85,16 @@ export function PaymentSummaryCards() {
         subtitle="Awaiting approval"
       >
         <div className="mt-4 flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">Total: ৳{refunds.filter((r) => r.status === "PENDING").reduce((s, r) => s + r.amount, 0).toLocaleString()}</span>
-          <Button variant="link" className="h-auto p-0 text-xs font-bold text-primary">Review All</Button>
+          <span className="text-xs text-muted-foreground">
+            Total: ৳
+            {refunds
+              .filter((r) => r.status === "PENDING")
+              .reduce((s, r) => s + r.amount, 0)
+              .toLocaleString()}
+          </span>
+          <Button variant="link" className="h-auto p-0 text-xs font-bold text-primary">
+            Review All
+          </Button>
         </div>
       </GlassCard>
     </div>

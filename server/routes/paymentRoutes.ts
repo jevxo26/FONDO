@@ -4,7 +4,6 @@ import { validate } from "../middlewares/validate";
 import { PaymentController } from "../controllers/paymentController";
 import {
   initiatePaymentSchema,
-  confirmPaymentSchema,
   retryPaymentSchema,
   refundPaymentSchema,
   adjustPaymentSchema,
@@ -24,12 +23,35 @@ router.get("/payments/cancel", PaymentController.cancel);
 router.post("/payments/ipn", PaymentController.ipn);
 
 // Customer
-router.post("/payments/initiate", verifyToken, validate(initiatePaymentSchema), PaymentController.initiate);
-router.post("/payments/:id/retry", verifyToken, authorize("CUSTOMER"), validate(retryPaymentSchema), PaymentController.retry);
+router.post(
+  "/payments/initiate",
+  verifyToken,
+  validate(initiatePaymentSchema),
+  PaymentController.initiate,
+);
+router.post(
+  "/payments/:id/retry",
+  verifyToken,
+  authorize("CUSTOMER"),
+  validate(retryPaymentSchema),
+  PaymentController.retry,
+);
 
 // Admin
-router.post("/payments/:id/refund", verifyToken, authorize("ADMIN", "SUPER_ADMIN"), validate(refundPaymentSchema), PaymentController.refund);
-router.post("/payments/:id/adjust", verifyToken, authorize("ADMIN", "SUPER_ADMIN"), validate(adjustPaymentSchema), PaymentController.adjust);
+router.post(
+  "/payments/:id/refund",
+  verifyToken,
+  authorize("ADMIN", "SUPER_ADMIN"),
+  validate(refundPaymentSchema),
+  PaymentController.refund,
+);
+router.post(
+  "/payments/:id/adjust",
+  verifyToken,
+  authorize("ADMIN", "SUPER_ADMIN"),
+  validate(adjustPaymentSchema),
+  PaymentController.adjust,
+);
 
 // Auth (customer sees own, admin sees all)
 router.get("/payments", verifyToken, validate(listPaymentsSchema, "query"), PaymentController.list);

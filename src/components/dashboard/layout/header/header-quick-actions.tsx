@@ -1,6 +1,5 @@
 "use client";
 
-import { Fragment } from "react";
 import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,7 +13,12 @@ import {
 import { Package, Plus, Receipt, Store, Utensils } from "lucide-react";
 
 const actions = [
-  { label: "New Food Item", desc: "Add a new food to the catalog", icon: Utensils, key: "New Food" },
+  {
+    label: "New Food Item",
+    desc: "Add a new food to the catalog",
+    icon: Utensils,
+    key: "New Food",
+  },
   { label: "New Vendor", desc: "Register a new vendor account", icon: Store, key: "New Vendor" },
   { label: "New Order", desc: "Create a manual customer order", icon: Receipt, key: "New Order" },
   { label: "New Package", desc: "Create a new meal package", icon: Package, key: "New Package" },

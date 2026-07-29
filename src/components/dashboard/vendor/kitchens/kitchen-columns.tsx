@@ -30,9 +30,7 @@ export const kitchenColumns: ColumnDef<VendorKitchen>[] = [
   },
   {
     accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Kitchen" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Kitchen" />,
     cell: ({ row }) => {
       const kitchen = row.original;
       return (
@@ -45,18 +43,12 @@ export const kitchenColumns: ColumnDef<VendorKitchen>[] = [
   },
   {
     accessorKey: "branch",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Branch" />
-    ),
-    cell: ({ row }) => (
-      <span className="text-sm">{row.getValue("branch")}</span>
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Branch" />,
+    cell: ({ row }) => <span className="text-sm">{row.getValue("branch")}</span>,
   },
   {
     accessorKey: "headChef",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Head Chef" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Head Chef" />,
     cell: ({ row }) => {
       const kitchen = row.original;
       return (
@@ -69,9 +61,7 @@ export const kitchenColumns: ColumnDef<VendorKitchen>[] = [
   },
   {
     accessorKey: "staffCount",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Staff" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Staff" />,
     cell: ({ row }) => {
       const count = row.getValue("staffCount") as number;
       return (
@@ -84,16 +74,16 @@ export const kitchenColumns: ColumnDef<VendorKitchen>[] = [
   },
   {
     accessorKey: "capacity",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Capacity" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Capacity" />,
     cell: ({ row }) => {
       const kitchen = row.original;
       const percentage = Math.round((kitchen.currentLoad / kitchen.capacity) * 100);
       return (
         <div className="flex flex-col gap-1.5 min-w-[100px]">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">{kitchen.currentLoad}/{kitchen.capacity}</span>
+            <span className="text-sm font-medium">
+              {kitchen.currentLoad}/{kitchen.capacity}
+            </span>
             <span className="text-xs text-muted-foreground">{percentage}%</span>
           </div>
           <div className="h-1.5 w-full rounded-full bg-muted/50 overflow-hidden">
@@ -110,9 +100,7 @@ export const kitchenColumns: ColumnDef<VendorKitchen>[] = [
   },
   {
     accessorKey: "preparationTime",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Prep Time" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Prep Time" />,
     cell: ({ row }) => {
       const time = row.getValue("preparationTime") as number;
       return (
@@ -125,18 +113,12 @@ export const kitchenColumns: ColumnDef<VendorKitchen>[] = [
   },
   {
     accessorKey: "dailyOrders",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Daily Orders" />
-    ),
-    cell: ({ row }) => (
-      <span className="font-medium text-sm">{row.getValue("dailyOrders")}</span>
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Daily Orders" />,
+    cell: ({ row }) => <span className="font-medium text-sm">{row.getValue("dailyOrders")}</span>,
   },
   {
     accessorKey: "rating",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Rating" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Rating" />,
     cell: ({ row }) => {
       const rating = row.getValue("rating") as number;
       return (
@@ -149,9 +131,7 @@ export const kitchenColumns: ColumnDef<VendorKitchen>[] = [
   },
   {
     accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({ row }) => {
       const status = row.getValue("status") as VendorKitchen["status"];
       const badge = getKitchenStatusBadge(status);

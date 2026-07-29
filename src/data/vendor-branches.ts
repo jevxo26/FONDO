@@ -79,7 +79,10 @@ export const branchStatuses = [
 export const getBranchStatusBadge = (status: string) => {
   const variants: Record<string, { label: string; className: string }> = {
     ACTIVE: { label: "Active", className: "bg-success/10 text-success ring-success/20" },
-    INACTIVE: { label: "Inactive", className: "bg-muted text-muted-foreground ring-muted-foreground/20" },
+    INACTIVE: {
+      label: "Inactive",
+      className: "bg-muted text-muted-foreground ring-muted-foreground/20",
+    },
   };
   return variants[status] || variants.INACTIVE;
 };

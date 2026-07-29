@@ -61,12 +61,17 @@ export function SettingsCards() {
     <div className="space-y-4">
       <div className="space-y-1">
         <h4 className="font-semibold text-sm">Preferences</h4>
-        <p className="text-xs text-muted-foreground">Configure your business preferences and notifications</p>
+        <p className="text-xs text-muted-foreground">
+          Configure your business preferences and notifications
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {settingsConfig.map((setting) => (
-          <Card key={setting.key} className="p-4 transition-all hover:shadow-[var(--shadow-elevated)]">
+          <Card
+            key={setting.key}
+            className="p-4 transition-all hover:shadow-[var(--shadow-elevated)]"
+          >
             <div className="flex items-start justify-between">
               <div className="space-y-1">
                 <Label className="text-sm font-medium">{setting.title}</Label>

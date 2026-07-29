@@ -1,22 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import type { Table } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Search, Settings2, Filter } from "lucide-react";
 import type { FacetedFilter } from "./types";
-import { Input } from "@/components/ui/input";
-import { buttonVariants } from "@/components/ui/button";
+import { DataTableSearch } from "./data-table-search";
+import { DataTableFacetedFilter } from "./data-table-faceted-filter";
+import { DataTableColumnToggle } from "./data-table-column-toggle";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -26,14 +14,6 @@ interface DataTableToolbarProps<TData> {
   enableColumnToggle?: boolean;
 }
 
-function humanize(str: string) {
-  return str
-    .replace(/_/g, " ")
-    .replace(/([A-Z])/g, " $1")
-    .replace(/^./, (s) => s.toUpperCase())
-    .trim();
-}
-
 export function DataTableToolbar<TData>({
   table,
   toolbarActions,
@@ -41,106 +21,24 @@ export function DataTableToolbar<TData>({
   enableSearch = true,
   enableColumnToggle = true,
 }: DataTableToolbarProps<TData>) {
-  const [search, setSearch] = useState("");
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-
-  useEffect(() => {
-    timeoutRef.current = setTimeout(() => {
-      table.setGlobalFilter(search || undefined);
-    }, 300);
-    return () => clearTimeout(timeoutRef.current);
-  }, [search, table]);
-
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-primary/10 bg-card px-4 py-4">
-      {enableSearch && (
-        <div className="relative w-full md:w-auto">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search across all columns..."
-            className="w-full rounded-full bg-primary/[0.04] pl-10 ring-1 ring-border/50 focus-visible:ring-primary/30 md:w-72"
-          />
-        </div>
-      )}
+      {enableSearch && <DataTableSearch table={table} />}
 
       <div className="flex flex-wrap items-center gap-3">
-        {filters?.map((filter) => {
-          const column = table.getColumn(filter.columnId);
-          const currentValue = column?.getFilterValue() as string | undefined;
-
-          return (
-            <Popover key={filter.columnId}>
-              <PopoverTrigger className={buttonVariants({ variant: "outline", size: "sm" })}>
-                {filter.icon ?? <Filter className="size-4" />}
-                {filter.title}
-                {currentValue && (
-                  <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary">
-                    {filter.options.find((o) => o.value === currentValue)?.label ?? currentValue}
-                  </span>
-                )}
-              </PopoverTrigger>
-              <PopoverContent className="w-48 p-2">
-                <p className="mb-1 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  {filter.title}
-                </p>
-                <label className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted">
-                  <Checkbox
-                    checked={!currentValue}
-                    onCheckedChange={() => column?.setFilterValue(undefined)}
-                  />
-                  All
-                </label>
-                {filter.options.map((option) => (
-                  <label
-                    key={option.value}
-                    className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted"
-                  >
-                    <Checkbox
-                      checked={currentValue === option.value}
-                      onCheckedChange={() => {
-                        if (currentValue === option.value) {
-                          column?.setFilterValue(undefined);
-                        } else {
-                          column?.setFilterValue(option.value);
-                        }
-                      }}
-                    />
-                    {option.label}
-                  </label>
-                ))}
-              </PopoverContent>
-            </Popover>
-          );
-        })}
+        {filters?.map((filter) => (
+          <DataTableFacetedFilter
+            key={filter.columnId}
+            column={table.getColumn(filter.columnId)!}
+            title={filter.title}
+            options={filter.options}
+            icon={filter.icon}
+          />
+        ))}
 
         {toolbarActions}
 
-        {enableColumnToggle && (
-          <DropdownMenu>
-            <DropdownMenuTrigger className={buttonVariants({ variant: "outline", size: "sm" })}>
-              <Settings2 className="size-4" />
-              View
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {table.getAllLeafColumns().map((column) => (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                  >
-                    {humanize(column.id)}
-                  </DropdownMenuCheckboxItem>
-                ))}
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
+        {enableColumnToggle && <DataTableColumnToggle table={table} />}
       </div>
     </div>
   );

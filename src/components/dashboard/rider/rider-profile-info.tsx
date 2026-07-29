@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bike, MapPin, Phone, User, Shield, FileText, Car, Calendar } from "lucide-react";
+import { Bike, MapPin, Phone, User, FileText, Car, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Rider } from "@/data/riders";
 
@@ -16,7 +16,9 @@ export function RiderProfileInfo({ rider }: ProfileInfoProps) {
     <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
       <div className="lg:col-span-2 space-y-6">
         <div className="rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-6 shadow-[var(--shadow-card)]">
-          <h3 className="font-heading text-lg font-semibold text-foreground">Personal Information</h3>
+          <h3 className="font-heading text-lg font-semibold text-foreground">
+            Personal Information
+          </h3>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex items-center gap-3">
               <User className="size-5 text-muted-foreground" />
@@ -50,7 +52,9 @@ export function RiderProfileInfo({ rider }: ProfileInfoProps) {
         </div>
 
         <div className="rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-6 shadow-[var(--shadow-card)]">
-          <h3 className="font-heading text-lg font-semibold text-foreground">Vehicle & Documents</h3>
+          <h3 className="font-heading text-lg font-semibold text-foreground">
+            Vehicle & Documents
+          </h3>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex items-center gap-3">
               <Car className="size-5 text-muted-foreground" />
@@ -71,16 +75,23 @@ export function RiderProfileInfo({ rider }: ProfileInfoProps) {
       </div>
 
       <div className="space-y-6">
-        <div className={cn(
-          "rounded-3xl p-6 shadow-[var(--shadow-card)] transition-all",
-          online
-            ? "bg-gradient-to-br from-success/10 via-card to-success/[0.04]"
-            : "bg-gradient-to-br from-muted via-card to-muted/50",
-        )}>
+        <div
+          className={cn(
+            "rounded-3xl p-6 shadow-[var(--shadow-card)] transition-all",
+            online
+              ? "bg-gradient-to-br from-success/10 via-card to-success/[0.04]"
+              : "bg-gradient-to-br from-muted via-card to-muted/50",
+          )}
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs uppercase tracking-widest text-muted-foreground">Status</p>
-              <p className={cn("font-heading text-xl font-bold", online ? "text-success" : "text-muted-foreground")}>
+              <p
+                className={cn(
+                  "font-heading text-xl font-bold",
+                  online ? "text-success" : "text-muted-foreground",
+                )}
+              >
                 {online ? "Online" : "Offline"}
               </p>
             </div>
@@ -112,7 +123,9 @@ export function RiderProfileInfo({ rider }: ProfileInfoProps) {
             </div>
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Total Earnings</span>
-              <span className="font-medium text-foreground">৳{rider.earnings.toLocaleString()}</span>
+              <span className="font-medium text-foreground">
+                ৳{rider.earnings.toLocaleString()}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Completed Today</span>

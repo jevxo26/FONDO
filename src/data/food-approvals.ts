@@ -9,20 +9,46 @@ function seededRandom(seed: number) {
 const rand = seededRandom(8803);
 
 const vendorNames = [
-  "Spice Route Kitchen", "Golden Wok", "Pasta Paradiso", "Tandoori House",
-  "Sweet Tooth Bakery", "Dragon Palace", "Bazaar Express", "Royal Tiffin",
+  "Spice Route Kitchen",
+  "Golden Wok",
+  "Pasta Paradiso",
+  "Tandoori House",
+  "Sweet Tooth Bakery",
+  "Dragon Palace",
+  "Bazaar Express",
+  "Royal Tiffin",
 ];
 
 const categories = ["Bengali", "Chinese", "Italian", "Indian", "Desserts"];
 
 const foodNames = [
-  "Smoked Brisket Platter", "Lamb Shawarma Wrap", "Crispy Calamari",
-  "Mushroom Risotto", "Tofu Stir-fry", "Beef Steak", "Grilled Salmon",
-  "Falafel Plate", "Chicken Quesadilla", "Avocado Toast", "Pancake Stack",
-  "Caesar Wrap", "Tom Yum Soup", "Pad Thai", "Mango Lassi",
-  "Lamb Chops", "Veggie Burger", "Fish & Chips", "Croissant Sandwich",
-  "Berry Smoothie Bowl", "Sushi Platter", "Bibimbap", "Pho Bo",
-  "Caprese Panini", "Chicken Wrap", "Bacon Cheeseburger", "Tiramisu",
+  "Smoked Brisket Platter",
+  "Lamb Shawarma Wrap",
+  "Crispy Calamari",
+  "Mushroom Risotto",
+  "Tofu Stir-fry",
+  "Beef Steak",
+  "Grilled Salmon",
+  "Falafel Plate",
+  "Chicken Quesadilla",
+  "Avocado Toast",
+  "Pancake Stack",
+  "Caesar Wrap",
+  "Tom Yum Soup",
+  "Pad Thai",
+  "Mango Lassi",
+  "Lamb Chops",
+  "Veggie Burger",
+  "Fish & Chips",
+  "Croissant Sandwich",
+  "Berry Smoothie Bowl",
+  "Sushi Platter",
+  "Bibimbap",
+  "Pho Bo",
+  "Caprese Panini",
+  "Chicken Wrap",
+  "Bacon Cheeseburger",
+  "Tiramisu",
 ];
 
 export interface ApprovalItem {
@@ -44,8 +70,13 @@ function pad(num: number) {
 
 export const approvalItems: ApprovalItem[] = foodNames.map((name, i) => {
   const statuses: ApprovalItem["status"][] = [
-    "PENDING", "PENDING", "PENDING", "PENDING", "APPROVED",
-    "REJECTED", "CHANGES_REQUESTED",
+    "PENDING",
+    "PENDING",
+    "PENDING",
+    "PENDING",
+    "APPROVED",
+    "REJECTED",
+    "CHANGES_REQUESTED",
   ];
   const status = statuses[Math.floor(rand() * statuses.length)];
 
@@ -58,11 +89,19 @@ export const approvalItems: ApprovalItem[] = foodNames.map((name, i) => {
     salePrice: rand() > 0.5 ? Math.round(120 + rand() * 400) : null,
     status,
     submittedAt: new Date(2026, Math.floor(rand() * 6), Math.floor(1 + rand() * 28))
-      .toISOString().split("T")[0],
-    reviewedAt: status === "PENDING" ? null
-      : new Date(2026, Math.floor(rand() * 6), Math.floor(1 + rand() * 28))
-          .toISOString().split("T")[0],
-    notes: status === "REJECTED" ? "Portion size too small" :
-           status === "CHANGES_REQUESTED" ? "Please update pricing" : null,
+      .toISOString()
+      .split("T")[0],
+    reviewedAt:
+      status === "PENDING"
+        ? null
+        : new Date(2026, Math.floor(rand() * 6), Math.floor(1 + rand() * 28))
+            .toISOString()
+            .split("T")[0],
+    notes:
+      status === "REJECTED"
+        ? "Portion size too small"
+        : status === "CHANGES_REQUESTED"
+          ? "Please update pricing"
+          : null,
   };
 });

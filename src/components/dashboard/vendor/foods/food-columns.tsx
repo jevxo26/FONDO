@@ -11,7 +11,10 @@ const getStockBadge = (status: VendorFood["stockStatus"]) => {
   const variants = {
     IN_STOCK: { label: "In Stock", className: "bg-success/10 text-success ring-success/20" },
     LOW_STOCK: { label: "Low Stock", className: "bg-warning/10 text-warning ring-warning/20" },
-    OUT_OF_STOCK: { label: "Out of Stock", className: "bg-destructive/10 text-destructive ring-destructive/20" },
+    OUT_OF_STOCK: {
+      label: "Out of Stock",
+      className: "bg-destructive/10 text-destructive ring-destructive/20",
+    },
   };
   return variants[status];
 };
@@ -19,7 +22,10 @@ const getStockBadge = (status: VendorFood["stockStatus"]) => {
 const getStatusBadge = (status: VendorFood["status"]) => {
   const variants = {
     ACTIVE: { label: "Active", className: "bg-success/10 text-success ring-success/20" },
-    INACTIVE: { label: "Inactive", className: "bg-muted text-muted-foreground ring-muted-foreground/20" },
+    INACTIVE: {
+      label: "Inactive",
+      className: "bg-muted text-muted-foreground ring-muted-foreground/20",
+    },
   };
   return variants[status];
 };
@@ -48,9 +54,7 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Food Item" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Food Item" />,
     cell: ({ row }) => {
       const food = row.original;
       return (
@@ -71,9 +75,7 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "category",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Category" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Category" />,
     cell: ({ row }) => (
       <div className="flex flex-col gap-0.5">
         <span className="text-sm">{row.getValue("category")}</span>
@@ -83,9 +85,7 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "kitchen",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Kitchen / Branch" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Kitchen / Branch" />,
     cell: ({ row }) => (
       <div className="flex flex-col gap-0.5">
         <span className="text-sm">{row.getValue("kitchen")}</span>
@@ -95,9 +95,7 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "price",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Price" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Price" />,
     cell: ({ row }) => {
       const price = row.getValue("price") as number;
       return (
@@ -114,27 +112,23 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "stock",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Stock" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Stock" />,
     cell: ({ row }) => {
       const stock = row.getValue("stock") as number;
       const { minStock, maxStock } = row.original;
       const percentage = Math.min((stock / maxStock) * 100, 100);
-      
+
       return (
         <div className="flex flex-col gap-1.5 min-w-[100px]">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">{stock}</span>
-            <span className="text-xs text-muted-foreground">
-              {minStock} min
-            </span>
+            <span className="text-xs text-muted-foreground">{minStock} min</span>
           </div>
           <div className="h-1.5 w-full rounded-full bg-muted/50 overflow-hidden">
             <div
               className={cn(
                 "h-full rounded-full transition-all duration-500",
-                percentage > 60 ? "bg-success" : percentage > 30 ? "bg-warning" : "bg-destructive"
+                percentage > 60 ? "bg-success" : percentage > 30 ? "bg-warning" : "bg-destructive",
               )}
               style={{ width: `${percentage}%` }}
             />
@@ -145,9 +139,7 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "stockStatus",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Stock Status" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Stock Status" />,
     cell: ({ row }) => {
       const status = row.getValue("stockStatus") as VendorFood["stockStatus"];
       const badge = getStockBadge(status);
@@ -160,9 +152,7 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Active" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Active" />,
     cell: ({ row }) => {
       const status = row.getValue("status") as VendorFood["status"];
       const badge = getStatusBadge(status);
@@ -175,9 +165,7 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "totalOrders",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Orders" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Orders" />,
     cell: ({ row }) => (
       <div className="text-center">
         <span className="font-medium text-sm">{row.getValue("totalOrders")}</span>
@@ -186,9 +174,7 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
   },
   {
     accessorKey: "rating",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Rating" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Rating" />,
     cell: ({ row }) => {
       const rating = row.getValue("rating") as number;
       return (

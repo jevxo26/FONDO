@@ -25,7 +25,10 @@ export function StatusMetrics({ activeCount, suspendedCount, totalCustomers }: S
             <span className="font-bold text-foreground">{activePercent}%</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
-            <div className="h-full rounded-full bg-primary" style={{ width: `${activePercent}%` }} />
+            <div
+              className="h-full rounded-full bg-primary"
+              style={{ width: `${activePercent}%` }}
+            />
           </div>
         </div>
         <div>
@@ -34,7 +37,10 @@ export function StatusMetrics({ activeCount, suspendedCount, totalCustomers }: S
             <span className="font-bold text-foreground">{100 - activePercent}%</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
-            <div className="h-full rounded-full bg-muted-foreground" style={{ width: `${100 - activePercent}%` }} />
+            <div
+              className="h-full rounded-full bg-muted-foreground"
+              style={{ width: `${100 - activePercent}%` }}
+            />
           </div>
         </div>
       </div>

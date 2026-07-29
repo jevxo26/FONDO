@@ -14,38 +14,85 @@ const getInternalIdByCode = async (vendorCode: string): Promise<string> => {
   return record.id;
 };
 
-const createVendor = catchServiceAsync(async (payload: { firstName: string; lastName: string; password: string; email: string; phone: string; businessName: string; ownerName?: string; tradeLicenseNumber?: string; tinNumber?: string; binNumber?: string }) => {
-  const { firstName, lastName, password, email, phone, businessName, ownerName, tradeLicenseNumber, tinNumber, binNumber } = payload;
+const createVendor = catchServiceAsync(
+  async (payload: {
+    firstName: string;
+    lastName: string;
+    password: string;
+    email: string;
+    phone: string;
+    businessName: string;
+    ownerName?: string;
+    tradeLicenseNumber?: string;
+    tinNumber?: string;
+    binNumber?: string;
+  }) => {
+    const {
+      firstName,
+      lastName,
+      password,
+      email,
+      phone,
+      businessName,
+      ownerName,
+      tradeLicenseNumber,
+      tinNumber,
+      binNumber,
+    } = payload;
 
-  const checks: Prisma.VendorWhereInput[] = [{ phone }, { email }, { tradeLicenseNumber }, { tinNumber }, { binNumber }].filter((c) => Object.values(c)[0]);
-  if (checks.length > 0) {
-    const duplicate = await prisma.vendor.findFirst({ where: { OR: checks } });
-    if (duplicate) throw new AppError(400, "Some data is already in use");
-  }
+    const checks: Prisma.VendorWhereInput[] = [
+      { phone },
+      { email },
+      { tradeLicenseNumber },
+      { tinNumber },
+      { binNumber },
+    ].filter((c) => Object.values(c)[0]);
+    if (checks.length > 0) {
+      const duplicate = await prisma.vendor.findFirst({ where: { OR: checks } });
+      if (duplicate) throw new AppError(400, "Some data is already in use");
+    }
 
-  const hashedPassword = await encryptPassword(password);
-  const uniqueVendorCode = `VEND-${String(Date.now()).slice(-7)}`;
+    const hashedPassword = await encryptPassword(password);
+    const uniqueVendorCode = `VEND-${String(Date.now()).slice(-7)}`;
 
-  return await prisma.$transaction(async (tx) => {
-    const newUser = await tx.user.create({
-      data: { firstName, lastName, email, phone, password: hashedPassword, role: Role.VENDOR },
+    return await prisma.$transaction(async (tx) => {
+      const newUser = await tx.user.create({
+        data: { firstName, lastName, email, phone, password: hashedPassword, role: Role.VENDOR },
+      });
+
+      const vendorData: Record<string, unknown> = {
+        businessName,
+        email,
+        phone,
+        vendorCode: uniqueVendorCode,
+        settings: { create: {} },
+        wallet: { create: {} },
+      };
+      if (ownerName) vendorData.ownerName = ownerName;
+      if (tradeLicenseNumber) vendorData.tradeLicenseNumber = tradeLicenseNumber;
+      if (tinNumber) vendorData.tinNumber = tinNumber;
+      if (binNumber) vendorData.binNumber = binNumber;
+
+      const newVendor = await tx.vendor.create({ data: vendorData as Prisma.VendorCreateInput });
+
+      await tx.vendorStaff.create({
+        data: {
+          vendorId: newVendor.id,
+          userId: newUser.id,
+          fullName: `${firstName} ${lastName}`,
+          phone,
+          email,
+          designation: "Owner / Administrator",
+        },
+      });
+
+      return {
+        user: { id: newUser.id, email: newUser.email, role: newUser.role },
+        vendor: newVendor,
+      };
     });
-
-    const vendorData: Record<string, unknown> = { businessName, email, phone, vendorCode: uniqueVendorCode, settings: { create: {} }, wallet: { create: {} } };
-    if (ownerName) vendorData.ownerName = ownerName;
-    if (tradeLicenseNumber) vendorData.tradeLicenseNumber = tradeLicenseNumber;
-    if (tinNumber) vendorData.tinNumber = tinNumber;
-    if (binNumber) vendorData.binNumber = binNumber;
-
-    const newVendor = await tx.vendor.create({ data: vendorData as Prisma.VendorCreateInput });
-
-    await tx.vendorStaff.create({
-      data: { vendorId: newVendor.id, userId: newUser.id, fullName: `${firstName} ${lastName}`, phone, email, designation: "Owner / Administrator" },
-    });
-
-    return { user: { id: newUser.id, email: newUser.email, role: newUser.role }, vendor: newVendor };
-  });
-});
+  },
+);
 
 const getAllVendors = catchServiceAsync(async (whereFilters: Prisma.VendorWhereInput) => {
   return prisma.vendor.findMany({
@@ -61,12 +108,14 @@ const getVendorByVendorCode = catchServiceAsync(async (vendorCode: string) => {
   });
 });
 
-const updateVendor = catchServiceAsync(async (vendorCode: string, updateData: Prisma.VendorUpdateInput) => {
-  return prisma.vendor.update({
-    where: { vendorCode },
-    data: updateData,
-  });
-});
+const updateVendor = catchServiceAsync(
+  async (vendorCode: string, updateData: Prisma.VendorUpdateInput) => {
+    return prisma.vendor.update({
+      where: { vendorCode },
+      data: updateData,
+    });
+  },
+);
 
 const softDeleteVendor = catchServiceAsync(async (vendorCode: string) => {
   return prisma.vendor.update({
@@ -76,23 +125,31 @@ const softDeleteVendor = catchServiceAsync(async (vendorCode: string) => {
 });
 
 // Profile Sub-resource Data Operations
-const upsertProfile = catchServiceAsync(async (vendorCode: string, profileData: Prisma.VendorProfileUpdateInput) => {
-  const vendorId = await getInternalIdByCode(vendorCode);
-  return prisma.vendorProfile.upsert({
-    where: { vendorId },
-    create: { ...profileData, vendorId } as Prisma.VendorProfileCreateInput,
-    update: profileData,
-  });
-});
+const upsertProfile = catchServiceAsync(
+  async (vendorCode: string, profileData: Prisma.VendorProfileUpdateInput) => {
+    const vendorId = await getInternalIdByCode(vendorCode);
+    return prisma.vendorProfile.upsert({
+      where: { vendorId },
+      create: { ...profileData, vendorId } as Prisma.VendorProfileCreateInput,
+      update: profileData,
+    });
+  },
+);
 
 // Logistic Infrastructure Operations
-const createBranch = catchServiceAsync(async (vendorCode: string, data: Prisma.VendorBranchCreateInput) => {
-  const vendorId = await getInternalIdByCode(vendorCode);
-  const trackingCode = `BR-${String(Date.now()).slice(-6)}`;
-  return prisma.vendorBranch.create({
-    data: { ...data, branchCode: trackingCode, vendor: { connect: { id: vendorId } } } as Prisma.VendorBranchCreateInput,
-  });
-});
+const createBranch = catchServiceAsync(
+  async (vendorCode: string, data: Prisma.VendorBranchCreateInput) => {
+    const vendorId = await getInternalIdByCode(vendorCode);
+    const trackingCode = `BR-${String(Date.now()).slice(-6)}`;
+    return prisma.vendorBranch.create({
+      data: {
+        ...data,
+        branchCode: trackingCode,
+        vendor: { connect: { id: vendorId } },
+      } as Prisma.VendorBranchCreateInput,
+    });
+  },
+);
 
 const getBranchesByVendorCode = catchServiceAsync(async (vendorCode: string) => {
   const vendorId = await getInternalIdByCode(vendorCode);
@@ -102,37 +159,47 @@ const getBranchesByVendorCode = catchServiceAsync(async (vendorCode: string) => 
   });
 });
 
-const createKitchen = catchServiceAsync(async (branchId: string, data: Prisma.VendorKitchenCreateInput) => {
-  const kCode = `KIT-${String(Date.now()).slice(-6)}`;
+const createKitchen = catchServiceAsync(
+  async (branchId: string, data: Prisma.VendorKitchenCreateInput) => {
+    const kCode = `KIT-${String(Date.now()).slice(-6)}`;
 
-  // Resolve core vendor mapping from targeted branch identity reference parameters
-  const targetBranch = await prisma.vendorBranch.findUnique({ where: { id: branchId }, select: { vendorId: true } });
-  if (!targetBranch) throw new Error("Targeted deployment branch mapping configuration unresolved.");
+    // Resolve core vendor mapping from targeted branch identity reference parameters
+    const targetBranch = await prisma.vendorBranch.findUnique({
+      where: { id: branchId },
+      select: { vendorId: true },
+    });
+    if (!targetBranch)
+      throw new Error("Targeted deployment branch mapping configuration unresolved.");
 
-  return prisma.vendorKitchen.create({
-    data: {
-      ...data,
-      kitchenCode: kCode,
-      vendor: { connect: { id: targetBranch.vendorId } },
-      branch: { connect: { id: branchId } },
-    } as Prisma.VendorKitchenCreateInput,
-  });
-});
+    return prisma.vendorKitchen.create({
+      data: {
+        ...data,
+        kitchenCode: kCode,
+        vendor: { connect: { id: targetBranch.vendorId } },
+        branch: { connect: { id: branchId } },
+      } as Prisma.VendorKitchenCreateInput,
+    });
+  },
+);
 
 // Compliance Audit Methods
-const addDocument = catchServiceAsync(async (vendorCode: string, data: Prisma.VendorDocumentCreateInput) => {
-  const vendorId = await getInternalIdByCode(vendorCode);
-  return prisma.vendorDocument.create({
-    data: { ...data, vendor: { connect: { id: vendorId } } } as Prisma.VendorDocumentCreateInput,
-  });
-});
+const addDocument = catchServiceAsync(
+  async (vendorCode: string, data: Prisma.VendorDocumentCreateInput) => {
+    const vendorId = await getInternalIdByCode(vendorCode);
+    return prisma.vendorDocument.create({
+      data: { ...data, vendor: { connect: { id: vendorId } } } as Prisma.VendorDocumentCreateInput,
+    });
+  },
+);
 
-const updateDocumentStatus = catchServiceAsync(async (id: string, verificationStatus: VerificationStatus, verifiedBy: string) => {
-  return prisma.vendorDocument.update({
-    where: { id },
-    data: { verificationStatus, verifiedBy, verifiedAt: new Date() },
-  });
-});
+const updateDocumentStatus = catchServiceAsync(
+  async (id: string, verificationStatus: VerificationStatus, verifiedBy: string) => {
+    return prisma.vendorDocument.update({
+      where: { id },
+      data: { verificationStatus, verifiedBy, verifiedAt: new Date() },
+    });
+  },
+);
 
 // Financial Ledger Ledger Methods
 const getWallet = catchServiceAsync(async (vendorCode: string) => {
@@ -145,7 +212,7 @@ const getSettlements = catchServiceAsync(async (vendorCode: string) => {
   return prisma.vendorSettlement.findMany({ where: { vendorId }, orderBy: { createdAt: "desc" } });
 });
 
-const createSettlementInvoice = catchServiceAsync(async (vendorCode: string, data: any) => {
+const createSettlementInvoice = catchServiceAsync(async (vendorCode: string, data: { grossAmount: number; totalCommission: number; totalPayable: number }) => {
   const vendorId = await getInternalIdByCode(vendorCode);
   const sNum = `SETL-${Date.now()}`;
   return prisma.vendorSettlement.create({
@@ -160,23 +227,30 @@ const createSettlementInvoice = catchServiceAsync(async (vendorCode: string, dat
 });
 
 // Config Flag Updates
-const saveSettings = catchServiceAsync(async (vendorCode: string, payload: Prisma.VendorSettingsUpdateInput) => {
-  const vendorId = await getInternalIdByCode(vendorCode);
-  return prisma.vendorSettings.update({
-    where: { vendorId },
-    data: payload,
-  });
-});
+const saveSettings = catchServiceAsync(
+  async (vendorCode: string, payload: Prisma.VendorSettingsUpdateInput) => {
+    const vendorId = await getInternalIdByCode(vendorCode);
+    return prisma.vendorSettings.update({
+      where: { vendorId },
+      data: payload,
+    });
+  },
+);
 
-const configureOperatingHours = catchServiceAsync(async (vendorCode: string, hours: Array<{ day: string; openingTime: string; closingTime: string }>) => {
-  const vendorId = await getInternalIdByCode(vendorCode);
-  return prisma.$transaction([
-    prisma.vendorOperatingHour.deleteMany({ where: { vendorId } }),
-    prisma.vendorOperatingHour.createMany({
-      data: hours.map((h) => ({ ...h, vendorId })),
-    }),
-  ]);
-});
+const configureOperatingHours = catchServiceAsync(
+  async (
+    vendorCode: string,
+    hours: Array<{ day: string; openingTime: string; closingTime: string }>,
+  ) => {
+    const vendorId = await getInternalIdByCode(vendorCode);
+    return prisma.$transaction([
+      prisma.vendorOperatingHour.deleteMany({ where: { vendorId } }),
+      prisma.vendorOperatingHour.createMany({
+        data: hours.map((h) => ({ ...h, vendorId })),
+      }),
+    ]);
+  },
+);
 
 export const VendorService = {
   createVendor,

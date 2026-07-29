@@ -13,18 +13,12 @@ export function OperatingHoursSection() {
 
   const toggleDay = (index: number) => {
     setHours((prev) =>
-      prev.map((item, i) =>
-        i === index ? { ...item, isClosed: !item.isClosed } : item
-      )
+      prev.map((item, i) => (i === index ? { ...item, isClosed: !item.isClosed } : item)),
     );
   };
 
   const updateTime = (index: number, field: "opening" | "closing", value: string) => {
-    setHours((prev) =>
-      prev.map((item, i) =>
-        i === index ? { ...item, [field]: value } : item
-      )
-    );
+    setHours((prev) => prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)));
   };
 
   return (
@@ -63,13 +57,8 @@ export function OperatingHoursSection() {
                 )}
               </div>
               <div className="flex items-center gap-2">
-                <Switch
-                  checked={!day.isClosed}
-                  onCheckedChange={() => toggleDay(index)}
-                />
-                <Label className="text-xs cursor-pointer">
-                  {day.isClosed ? "Closed" : "Open"}
-                </Label>
+                <Switch checked={!day.isClosed} onCheckedChange={() => toggleDay(index)} />
+                <Label className="text-xs cursor-pointer">{day.isClosed ? "Closed" : "Open"}</Label>
               </div>
             </div>
           </Card>

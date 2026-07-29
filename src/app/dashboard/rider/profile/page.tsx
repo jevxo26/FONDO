@@ -7,7 +7,11 @@ export default function RiderProfilePage() {
   const rider = riders[0];
   return (
     <div>
-      <PageHeader title="My Profile" description="View and update your rider profile." icon={User} />
+      <PageHeader
+        title="My Profile"
+        description="View and update your rider profile."
+        icon={User}
+      />
       <RiderProfileInfo rider={rider} />
     </div>
   );

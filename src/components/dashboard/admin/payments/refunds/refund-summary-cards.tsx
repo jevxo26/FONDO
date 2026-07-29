@@ -27,15 +27,23 @@ export function RefundSummaryCards() {
         </div>
         <div className="flex flex-wrap gap-6 border-t border-white/10 pt-6">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Processed</p>
-            <p className="flex items-center font-bold text-success">{processed}/{total}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Processed
+            </p>
+            <p className="flex items-center font-bold text-success">
+              {processed}/{total}
+            </p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Rate</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Rate
+            </p>
             <p className="flex items-center font-bold text-white">{processRate}%</p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Avg Time</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Avg Time
+            </p>
             <p className="font-bold text-white">{avgProcessing} Days</p>
           </div>
         </div>

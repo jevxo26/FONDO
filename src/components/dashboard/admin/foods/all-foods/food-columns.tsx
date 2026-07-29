@@ -48,9 +48,7 @@ export const foodColumns: ColumnDef<AdminFoodItem>[] = [
   {
     accessorKey: "vendor",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Vendor" />,
-    cell: ({ row }) => (
-      <span className="text-sm text-muted-foreground">{row.original.vendor}</span>
-    ),
+    cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.vendor}</span>,
   },
   {
     accessorKey: "foodType",

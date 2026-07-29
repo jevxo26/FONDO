@@ -1,5 +1,5 @@
-import { CheckCircle, CreditCard, XCircle, Undo2, Banknote, Download, Plus } from "lucide-react";
-import { transactions, refunds, settlements } from "@/data/payments";
+import { CheckCircle, CreditCard, XCircle, Undo2, Download, Plus } from "lucide-react";
+import { transactions } from "@/data/payments";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { PaymentSummaryCards } from "@/components/dashboard/admin/payments/transactions/payment-summary-cards";
@@ -31,7 +31,13 @@ export default function PaymentsPage() {
       />
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Total Transactions" value={total} icon={CreditCard} accent="right" />
-        <StatCard label="Successful" value={success} variant="success" icon={CheckCircle} accent="right" />
+        <StatCard
+          label="Successful"
+          value={success}
+          variant="success"
+          icon={CheckCircle}
+          accent="right"
+        />
         <StatCard label="Failed" value={failed} variant="danger" icon={XCircle} accent="right" />
         <StatCard label="Refunded" value={refunded} variant="warning" icon={Undo2} accent="right" />
       </div>

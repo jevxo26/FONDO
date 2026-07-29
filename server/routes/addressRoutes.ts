@@ -2,10 +2,7 @@ import { Router } from "express";
 import { AddressController } from "../controllers/addressController";
 import { verifyToken } from "../middlewares/authMiddleware";
 import { validate } from "../middlewares/validate";
-import {
-  createAddressSchema,
-  updateAddressSchema,
-} from "../validations/address.validation";
+import { createAddressSchema, updateAddressSchema } from "../validations/address.validation";
 
 const router = Router();
 

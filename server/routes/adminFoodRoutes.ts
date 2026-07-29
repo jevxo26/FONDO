@@ -3,18 +3,25 @@ import { AdminFoodController } from "../controllers/adminFoodController";
 import { authorize, verifyToken } from "../middlewares/authMiddleware";
 import { validate } from "../middlewares/validate";
 import {
-  createFoodSchema, updateFoodSchema,
-  createCategorySchema, updateCategorySchema,
-  createSubCategorySchema, updateSubCategorySchema,
-  createVariantSchema, updateVariantSchema,
-  createAddonSchema, updateAddonSchema,
-  createAddonItemSchema, updateAddonItemSchema,
+  createFoodSchema,
+  updateFoodSchema,
+  createCategorySchema,
+  updateCategorySchema,
+  createSubCategorySchema,
+  updateSubCategorySchema,
+  createVariantSchema,
+  updateVariantSchema,
+  createAddonSchema,
+  updateAddonSchema,
+  createAddonItemSchema,
+  updateAddonItemSchema,
   updateNutritionSchema,
   createIngredientSchema,
   createAllergenSchema,
   createPriceSchema,
   createDiscountSchema,
-  addFoodTagsSchema, createTagSchema,
+  addFoodTagsSchema,
+  createTagSchema,
   createLabelSchema,
   updateAvailabilitySchema,
   createScheduleSchema,
@@ -36,12 +43,24 @@ router.put("/categories/:id", validate(updateCategorySchema), AdminFoodControlle
 router.delete("/categories/:id", AdminFoodController.deleteCategory);
 
 // SubCategory
-router.post("/categories/:categoryId/subcategories", validate(createSubCategorySchema), AdminFoodController.createSubCategory);
-router.put("/subcategories/:id", validate(updateSubCategorySchema), AdminFoodController.updateSubCategory);
+router.post(
+  "/categories/:categoryId/subcategories",
+  validate(createSubCategorySchema),
+  AdminFoodController.createSubCategory,
+);
+router.put(
+  "/subcategories/:id",
+  validate(updateSubCategorySchema),
+  AdminFoodController.updateSubCategory,
+);
 router.delete("/subcategories/:id", AdminFoodController.deleteSubCategory);
 
 // Variant
-router.post("/foods/:foodId/variants", validate(createVariantSchema), AdminFoodController.createVariant);
+router.post(
+  "/foods/:foodId/variants",
+  validate(createVariantSchema),
+  AdminFoodController.createVariant,
+);
 router.put("/variants/:id", validate(updateVariantSchema), AdminFoodController.updateVariant);
 router.delete("/variants/:id", AdminFoodController.deleteVariant);
 
@@ -51,27 +70,51 @@ router.put("/addons/:id", validate(updateAddonSchema), AdminFoodController.updat
 router.delete("/addons/:id", AdminFoodController.deleteAddon);
 
 // Addon Item
-router.post("/addons/:addonId/items", validate(createAddonItemSchema), AdminFoodController.createAddonItem);
-router.put("/addon-items/:id", validate(updateAddonItemSchema), AdminFoodController.updateAddonItem);
+router.post(
+  "/addons/:addonId/items",
+  validate(createAddonItemSchema),
+  AdminFoodController.createAddonItem,
+);
+router.put(
+  "/addon-items/:id",
+  validate(updateAddonItemSchema),
+  AdminFoodController.updateAddonItem,
+);
 router.delete("/addon-items/:id", AdminFoodController.deleteAddonItem);
 
 // Nutrition
 router.get("/foods/:foodId/nutrition", AdminFoodController.getNutrition);
-router.patch("/foods/:foodId/nutrition", validate(updateNutritionSchema), AdminFoodController.updateNutrition);
+router.patch(
+  "/foods/:foodId/nutrition",
+  validate(updateNutritionSchema),
+  AdminFoodController.updateNutrition,
+);
 
 // Ingredient
-router.post("/foods/:foodId/ingredients", validate(createIngredientSchema), AdminFoodController.createIngredient);
+router.post(
+  "/foods/:foodId/ingredients",
+  validate(createIngredientSchema),
+  AdminFoodController.createIngredient,
+);
 router.delete("/ingredients/:id", AdminFoodController.deleteIngredient);
 
 // Allergen
-router.post("/foods/:foodId/allergens", validate(createAllergenSchema), AdminFoodController.createAllergen);
+router.post(
+  "/foods/:foodId/allergens",
+  validate(createAllergenSchema),
+  AdminFoodController.createAllergen,
+);
 router.delete("/allergens/:id", AdminFoodController.deleteAllergen);
 
 // Price
 router.post("/foods/:foodId/prices", validate(createPriceSchema), AdminFoodController.createPrice);
 
 // Discount
-router.post("/foods/:foodId/discounts", validate(createDiscountSchema), AdminFoodController.createDiscount);
+router.post(
+  "/foods/:foodId/discounts",
+  validate(createDiscountSchema),
+  AdminFoodController.createDiscount,
+);
 router.delete("/discounts/:id", AdminFoodController.deleteDiscount);
 
 // Tags
@@ -84,13 +127,25 @@ router.post("/foods/:foodId/labels", validate(createLabelSchema), AdminFoodContr
 router.delete("/labels/:id", AdminFoodController.deleteLabel);
 
 // Availability
-router.patch("/foods/:foodId/availability", validate(updateAvailabilitySchema), AdminFoodController.updateAvailability);
+router.patch(
+  "/foods/:foodId/availability",
+  validate(updateAvailabilitySchema),
+  AdminFoodController.updateAvailability,
+);
 
 // Schedule
-router.post("/foods/:foodId/schedules", validate(createScheduleSchema), AdminFoodController.createSchedule);
+router.post(
+  "/foods/:foodId/schedules",
+  validate(createScheduleSchema),
+  AdminFoodController.createSchedule,
+);
 router.delete("/schedules/:id", AdminFoodController.deleteSchedule);
 
 // Visibility
-router.patch("/foods/:foodId/visibility", validate(updateVisibilitySchema), AdminFoodController.updateVisibility);
+router.patch(
+  "/foods/:foodId/visibility",
+  validate(updateVisibilitySchema),
+  AdminFoodController.updateVisibility,
+);
 
 export default router;

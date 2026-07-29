@@ -25,15 +25,21 @@ export function RiderEarningsSummaryCards() {
         </div>
         <div className="flex flex-wrap gap-6 border-t border-white/10 pt-6">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Pending</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Pending
+            </p>
             <p className="font-bold text-warning">৳{pending.toLocaleString()}</p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Bonus Paid</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Bonus Paid
+            </p>
             <p className="font-bold text-success">৳{totalBonus.toLocaleString()}</p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Top Earner</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Top Earner
+            </p>
             <p className="font-bold text-white">{topEarner.name}</p>
           </div>
         </div>

@@ -37,7 +37,7 @@ export const addressesApi = api.injectEndpoints({
       invalidatesTags: ["Cart"],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

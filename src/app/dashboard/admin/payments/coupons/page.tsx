@@ -19,8 +19,12 @@ export default function PaymentsCouponsPage() {
         icon={TicketPercent}
         actions={
           <>
-            <Button variant="outline" className="rounded-full"><Download className="size-[18px]" /> Export</Button>
-            <Button className="rounded-full"><Plus className="size-[18px]" /> New Coupon</Button>
+            <Button variant="outline" className="rounded-full">
+              <Download className="size-[18px]" /> Export
+            </Button>
+            <Button className="rounded-full">
+              <Plus className="size-[18px]" /> New Coupon
+            </Button>
           </>
         }
       />

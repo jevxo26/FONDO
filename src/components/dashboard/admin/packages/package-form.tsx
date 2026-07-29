@@ -1,21 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import type { Resolver } from "react-hook-form";
+import {
+  CATEGORIES,
+  initialDummyData,
+  PackageFormValues,
+  packageSchema,
+} from "@/lib/schema/package-schema";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { CATEGORIES, initialDummyData, PackageFormValues, packageSchema } from "@/lib/schema/package-schema";
-import { HeaderBar } from "./header-bar";
-import { GeneralInfoSection } from "./general-info";
-import { DaysScheduleSection } from "./day-shedule";
-import { PriceSummarySidebar } from "./price-summary";
+import { useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { CardPreview } from "./card-preview";
-
+import { DaysScheduleSection } from "./day-shedule";
+import { GeneralInfoSection } from "./general-info";
+import { HeaderBar } from "./header-bar";
+import { PriceSummarySidebar } from "./price-summary";
 
 export default function AddPackageForm() {
   const [showPreview, setShowPreview] = useState(true);
 
-  const { register, control, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<PackageFormValues>({
-    resolver: yupResolver(packageSchema) as any,
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<PackageFormValues>({
+    resolver: yupResolver(packageSchema) as Resolver<PackageFormValues>,
     defaultValues: initialDummyData,
   });
 
@@ -32,11 +44,12 @@ export default function AddPackageForm() {
   const customTypeNameWatched = useWatch({ control, name: "customTypeName" });
   const isCustomizableWatched = useWatch({ control, name: "isCustomizable" });
 
-  const selectedCategoryName = CATEGORIES.find((c) => c.id === categoryIdWatched)?.name || "Meal Package";
+  const selectedCategoryName =
+    CATEGORIES.find((c) => c.id === categoryIdWatched)?.name || "Meal Package";
   const totalMealsCount = daysWatched.reduce((acc, day) => acc + (day?.meals?.length || 0), 0);
   const totalFoodsCount = daysWatched.reduce(
     (acc, day) => acc + (day?.meals?.reduce((mAcc, m) => mAcc + (m?.foods?.length || 0), 0) || 0),
-    0
+    0,
   );
 
   const onSubmit = (data: PackageFormValues) => {
@@ -59,7 +72,11 @@ export default function AddPackageForm() {
 
         {/* Form Body Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <form id="package-form" onSubmit={handleSubmit(onSubmit)} className="lg:col-span-2 space-y-6">
+          <form
+            id="package-form"
+            onSubmit={handleSubmit(onSubmit)}
+            className="lg:col-span-2 space-y-6"
+          >
             <GeneralInfoSection
               register={register}
               errors={errors}

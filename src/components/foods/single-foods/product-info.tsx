@@ -15,9 +15,19 @@ interface Props {
   onToggleFav: () => void;
 }
 
-export function ProductInfo({ food, isFavorited, isFavPending, onToggleFav, children }: Props & { children?: React.ReactNode }) {
+export function ProductInfo({
+  food,
+  isFavorited,
+  isFavPending,
+  onToggleFav,
+  children,
+}: Props & { children?: React.ReactNode }) {
   const discountPercent = food.variants[0]?.discountPrice
-    ? Math.round(((Number(food.variants[0].price) - Number(food.variants[0].discountPrice)) / Number(food.variants[0].price)) * 100)
+    ? Math.round(
+        ((Number(food.variants[0].price) - Number(food.variants[0].discountPrice)) /
+          Number(food.variants[0].price)) *
+          100,
+      )
     : null;
 
   return (
@@ -26,8 +36,13 @@ export function ProductInfo({ food, isFavorited, isFavPending, onToggleFav, chil
         <span className="inline-flex items-center rounded-full bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success">
           &middot; In stock
         </span>
-        <Button variant="ghost" size="icon" onClick={onToggleFav} disabled={isFavPending}
-          className="rounded-full border border-border bg-card shadow-sm hover:text-destructive">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onToggleFav}
+          disabled={isFavPending}
+          className="rounded-full border border-border bg-card shadow-sm hover:text-destructive"
+        >
           <Heart className={`size-4 ${isFavorited ? "fill-destructive text-destructive" : ""}`} />
         </Button>
       </div>
@@ -41,8 +56,10 @@ export function ProductInfo({ food, isFavorited, isFavPending, onToggleFav, chil
           {Array.from({ length: 5 }).map((_, i) => (
             <Star key={i} className="size-3.5 fill-primary text-primary" />
           ))}
-          <span className="ml-1 font-semibold text-foreground">{food.rating?.averageRating ?? "4.9"}</span>
-          <span>({food.rating?.totalReview ?? 892} reviews)</span>
+          <span className="ml-1 font-semibold text-foreground">
+            {food.averageRating ?? "4.9"}
+          </span>
+          <span>({food.totalReview ?? 892} reviews)</span>
         </div>
         <span>&middot;</span>
         <span>{food.servingSize ?? ""}</span>
@@ -57,7 +74,9 @@ export function ProductInfo({ food, isFavorited, isFavPending, onToggleFav, chil
           ৳{food.variants[0]?.discountPrice ?? food.variants[0]?.price ?? 0}
         </span>
         {food.variants[0]?.discountPrice && (
-          <span className="font-sans text-lg text-muted-foreground line-through">৳{food.variants[0].price}</span>
+          <span className="font-sans text-lg text-muted-foreground line-through">
+            ৳{food.variants[0].price}
+          </span>
         )}
         {discountPercent && (
           <span className="rounded-md bg-destructive/10 px-2 py-0.5 text-xs font-semibold text-destructive">
@@ -67,15 +86,35 @@ export function ProductInfo({ food, isFavorited, isFavPending, onToggleFav, chil
       </div>
 
       <p className="mt-1 text-xs text-muted-foreground">Free delivery on orders of ৳2,000+</p>
-      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{food.shortDescription ?? ""}</p>
+      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+        {food.shortDescription ?? ""}
+      </p>
 
       <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
-        <div><span className="text-muted-foreground">Preparation:</span><p className="font-medium">{food.preparationTime ?? 0} min</p></div>
-        <div><span className="text-muted-foreground">Serving:</span><p className="font-medium">{food.servingSize ?? ""}</p></div>
-        <div><span className="text-muted-foreground">Calories:</span><p className="font-medium">{food.calories ?? 0} kcal</p></div>
-        <div><span className="text-muted-foreground">Food Type:</span><p className="font-medium capitalize">{food.foodType}</p></div>
-        <div><span className="text-muted-foreground">Spice Level:</span><p className="font-medium capitalize">{food.spiceLevel}</p></div>
-        <div><span className="text-muted-foreground">Protein:</span><p className="font-medium">{food.protein ?? 0}g</p></div>
+        <div>
+          <span className="text-muted-foreground">Preparation:</span>
+          <p className="font-medium">{food.preparationTime ?? 0} min</p>
+        </div>
+        <div>
+          <span className="text-muted-foreground">Serving:</span>
+          <p className="font-medium">{food.servingSize ?? ""}</p>
+        </div>
+        <div>
+          <span className="text-muted-foreground">Calories:</span>
+          <p className="font-medium">{food.calories ?? 0} kcal</p>
+        </div>
+        <div>
+          <span className="text-muted-foreground">Food Type:</span>
+          <p className="font-medium capitalize">{food.foodType}</p>
+        </div>
+        <div>
+          <span className="text-muted-foreground">Spice Level:</span>
+          <p className="font-medium capitalize">{food.spiceLevel}</p>
+        </div>
+        <div>
+          <span className="text-muted-foreground">Protein:</span>
+          <p className="font-medium">{food.protein ?? 0}g</p>
+        </div>
       </div>
       {children}
     </motion.div>

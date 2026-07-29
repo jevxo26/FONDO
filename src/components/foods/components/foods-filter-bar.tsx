@@ -17,7 +17,10 @@ export function FoodsFilterBar({ totalCount, sortBy, onSortChange, onPageReset }
         <span className="text-[11px] text-muted-foreground/80 font-light">Sort By:</span>
         <select
           value={sortBy}
-          onChange={(e) => { onSortChange(e.target.value); onPageReset(); }}
+          onChange={(e) => {
+            onSortChange(e.target.value);
+            onPageReset();
+          }}
           className="bg-transparent text-[11px] font-bold uppercase tracking-wider text-foreground border-none focus:outline-none cursor-pointer"
         >
           <option value="default">Default Framework</option>

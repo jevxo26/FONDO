@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Download, Gift, Wallet, Search, TrendingUp, TrendingDown, Clock } from "lucide-react";
+import { Download, Gift, Wallet, Search, TrendingUp, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
@@ -26,7 +26,9 @@ const walletTxnColumns: ColumnDef<AdminWalletTransaction>[] = [
     accessorKey: "id",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Transaction ID" />,
     cell: ({ row }) => (
-      <span className="font-mono text-sm font-bold text-foreground">{row.original.id.slice(0, 8)}</span>
+      <span className="font-mono text-sm font-bold text-foreground">
+        {row.original.id.slice(0, 8)}
+      </span>
     ),
   },
   {
@@ -50,7 +52,9 @@ const walletTxnColumns: ColumnDef<AdminWalletTransaction>[] = [
       const txn = row.original;
       const isCredit = ["TOPUP", "CREDIT", "REFUND"].includes(txn.transactionType);
       return (
-        <span className={`flex items-center gap-1.5 font-bold ${isCredit ? "text-success" : "text-destructive"}`}>
+        <span
+          className={`flex items-center gap-1.5 font-bold ${isCredit ? "text-success" : "text-destructive"}`}
+        >
           {isCredit ? "+" : "-"}৳{Number(txn.amount).toLocaleString()}
         </span>
       );
@@ -60,7 +64,9 @@ const walletTxnColumns: ColumnDef<AdminWalletTransaction>[] = [
     accessorKey: "balanceAfter",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Balance" />,
     cell: ({ row }) => (
-      <span className="font-bold text-foreground">৳{Number(row.original.balanceAfter).toLocaleString()}</span>
+      <span className="font-bold text-foreground">
+        ৳{Number(row.original.balanceAfter).toLocaleString()}
+      </span>
     ),
   },
   {
@@ -77,9 +83,7 @@ const walletTxnColumns: ColumnDef<AdminWalletTransaction>[] = [
 export default function WalletsPage() {
   const [selectedCustomer, setSelectedCustomer] = useState<AdminCustomer | null>(null);
 
-  const { data, isLoading } = useAdminCustomerWallet(
-    selectedCustomer?.id ?? "",
-  );
+  const { data, isLoading } = useAdminCustomerWallet(selectedCustomer?.id ?? "");
 
   const wallet = data?.wallet;
   const transactions = data?.transactions ?? [];
@@ -115,9 +119,12 @@ export default function WalletsPage() {
           <div className="flex size-16 items-center justify-center rounded-full bg-muted">
             <Search className="size-6 text-muted-foreground" />
           </div>
-          <h3 className="mt-4 font-fraunces text-lg font-bold text-foreground">Select a Customer</h3>
+          <h3 className="mt-4 font-fraunces text-lg font-bold text-foreground">
+            Select a Customer
+          </h3>
           <p className="mt-1 max-w-md text-sm text-muted-foreground">
-            Search for a customer above to view their wallet balance, transaction history, and manage rewards.
+            Search for a customer above to view their wallet balance, transaction history, and
+            manage rewards.
           </p>
         </div>
       ) : (
@@ -136,20 +143,20 @@ export default function WalletsPage() {
               icon={Clock}
               accent="bottom"
             />
-        <StatCard
-          label="Transaction Count"
-          value={transactions.length}
-          variant="success"
-          icon={TrendingUp}
-          accent="bottom"
-        />
-        <StatCard
-          label="Wallet Status"
-          value={wallet?.status ?? "—"}
-          variant="default"
-          icon={Clock}
-          accent="bottom"
-        />
+            <StatCard
+              label="Transaction Count"
+              value={transactions.length}
+              variant="success"
+              icon={TrendingUp}
+              accent="bottom"
+            />
+            <StatCard
+              label="Wallet Status"
+              value={wallet?.status ?? "—"}
+              variant="default"
+              icon={Clock}
+              accent="bottom"
+            />
           </div>
           <div className="mt-8">
             <DataTable
@@ -159,7 +166,9 @@ export default function WalletsPage() {
               pageSize={transactions.length || 10}
               enableSearch={false}
               enableColumnToggle={false}
-              emptyMessage={wallet ? "No wallet transactions yet." : "No wallet found for this customer."}
+              emptyMessage={
+                wallet ? "No wallet transactions yet." : "No wallet found for this customer."
+              }
             />
           </div>
         </>

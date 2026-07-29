@@ -9,7 +9,7 @@ export default function VendorKitchensPage() {
   const activeKitchens = vendorKitchens.filter((k) => k.status === "ACTIVE").length;
   const totalStaff = vendorKitchens.reduce((acc, k) => acc + k.staffCount, 0);
   const avgPrepTime = Math.round(
-    vendorKitchens.reduce((acc, k) => acc + k.preparationTime, 0) / vendorKitchens.length
+    vendorKitchens.reduce((acc, k) => acc + k.preparationTime, 0) / vendorKitchens.length,
   );
   const totalCapacity = vendorKitchens.reduce((acc, k) => acc + k.capacity, 0);
   const totalLoad = vendorKitchens.reduce((acc, k) => acc + k.currentLoad, 0);
@@ -46,7 +46,9 @@ export default function VendorKitchensPage() {
         <StatCard
           label="Capacity Used"
           value={`${capacityPercentage}%`}
-          variant={capacityPercentage > 80 ? "danger" : capacityPercentage > 60 ? "warning" : "success"}
+          variant={
+            capacityPercentage > 80 ? "danger" : capacityPercentage > 60 ? "warning" : "success"
+          }
           icon={AlertCircle}
           accent="right"
         />
@@ -54,9 +56,7 @@ export default function VendorKitchensPage() {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-fraunces text-xl font-semibold tracking-tight">
-            Kitchen List
-          </h3>
+          <h3 className="font-fraunces text-xl font-semibold tracking-tight">Kitchen List</h3>
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
             {activeKitchens} Active · {vendorKitchens.length} Total
           </p>

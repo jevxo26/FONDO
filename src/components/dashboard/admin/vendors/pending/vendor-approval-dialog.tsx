@@ -2,23 +2,9 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import {
-  Download,
-  Eye,
-  FileText,
-  MapPin,
-  Tag,
-  User,
-  Clock,
-  X,
-} from "lucide-react";
+import { Download, Eye, FileText, MapPin, Tag, User, Clock, X } from "lucide-react";
 import { documents, getStatusVariant, getInitials } from "@/data/vendors";
 import type { ApprovalVendor as Vendor } from "@/data/vendors";
 
@@ -96,12 +82,17 @@ export function VendorApprovalDialog({
             </div>
             <div className="space-y-2">
               {documents.map((doc, index) => (
-                <div key={index} className="border rounded-lg p-3 flex justify-between items-center hover:bg-muted/30 transition-colors">
+                <div
+                  key={index}
+                  className="border rounded-lg p-3 flex justify-between items-center hover:bg-muted/30 transition-colors"
+                >
                   <div className="flex items-center gap-3">
                     <FileText className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <p className="text-sm font-medium">{doc.name}</p>
-                      <p className="text-xs text-muted-foreground">{doc.size} &bull; {doc.date}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {doc.size} &bull; {doc.date}
+                      </p>
                     </div>
                   </div>
                   <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -127,10 +118,19 @@ export function VendorApprovalDialog({
           </div>
 
           <div className="flex gap-3 pt-4 border-t">
-            <Button variant="outline" className="flex-1 gap-2" onClick={onReject} disabled={isDisabled}>
+            <Button
+              variant="outline"
+              className="flex-1 gap-2"
+              onClick={onReject}
+              disabled={isDisabled}
+            >
               <X className="h-4 w-4" /> Reject Application
             </Button>
-            <Button className="flex-1 bg-black text-white hover:bg-gray-800 gap-2" onClick={onApprove} disabled={isDisabled}>
+            <Button
+              className="flex-1 bg-black text-white hover:bg-gray-800 gap-2"
+              onClick={onApprove}
+              disabled={isDisabled}
+            >
               <Clock className="h-4 w-4" /> Approve Vendor
             </Button>
           </div>

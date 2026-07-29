@@ -4,7 +4,7 @@ import { DataTable } from "@/components/common/table";
 import type { RowAction, FacetedFilter } from "@/components/common/table";
 import { salesColumns } from "./report-sales-columns";
 import type { SalesEntry } from "@/data/reports";
-import { CheckCircle, Eye, Store, TrendingUp } from "lucide-react";
+import { CheckCircle, Eye, Store } from "lucide-react";
 
 const rowActions: RowAction<SalesEntry>[] = [
   {

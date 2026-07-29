@@ -8,7 +8,7 @@ import FoodsLoading from "./loading";
 
 export default function AllFoodsPage() {
   const { isLoading } = useGetFoods();
-  if(isLoading) return <FoodsLoading></FoodsLoading>
+  if (isLoading) return <FoodsLoading></FoodsLoading>;
   return (
     <FoodsProvider>
       <main className="min-h-screen bg-background text-foreground">

@@ -8,15 +8,16 @@ import { OperatingHoursSection } from "@/components/dashboard/vendor/settings/op
 import { DocumentsSection } from "@/components/dashboard/vendor/settings/documents-section";
 import { DangerZone } from "@/components/dashboard/vendor/settings/danger-zone";
 import { Separator } from "@/components/ui/separator";
-import { vendorSettings, vendorOperatingHours, vendorDocuments } from "@/data/vendor-settings";
+import { vendorSettings, vendorOperatingHours } from "@/data/vendor-settings";
 
 export default function VendorSettingsPage() {
   const isProfileComplete = true; // Based on document verification status
   const notificationsEnabled = vendorSettings.notificationEnabled && vendorSettings.emailEnabled;
   const openHours = vendorOperatingHours.filter((d) => !d.isClosed);
-  const hoursString = openHours.length > 0 
-    ? `${openHours[0].opening} - ${openHours[openHours.length - 1].closing}` 
-    : "Closed";
+  const hoursString =
+    openHours.length > 0
+      ? `${openHours[0].opening} - ${openHours[openHours.length - 1].closing}`
+      : "Closed";
 
   return (
     <div className="space-y-8">
@@ -68,7 +69,9 @@ export default function VendorSettingsPage() {
         <section className="space-y-4">
           <div className="space-y-1">
             <h3 className="font-fraunces text-xl font-semibold tracking-tight">Documents</h3>
-            <p className="text-sm text-muted-foreground">Upload and manage business verification documents</p>
+            <p className="text-sm text-muted-foreground">
+              Upload and manage business verification documents
+            </p>
           </div>
           <div className="rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-6 shadow-[var(--shadow-card)]">
             <DocumentsSection />
@@ -106,7 +109,9 @@ export default function VendorSettingsPage() {
         {/* Danger Zone */}
         <section className="space-y-4">
           <div className="space-y-1">
-            <h3 className="font-fraunces text-xl font-semibold tracking-tight text-destructive">Account</h3>
+            <h3 className="font-fraunces text-xl font-semibold tracking-tight text-destructive">
+              Account
+            </h3>
             <p className="text-sm text-muted-foreground">Manage your account settings</p>
           </div>
           <div className="rounded-3xl p-6">

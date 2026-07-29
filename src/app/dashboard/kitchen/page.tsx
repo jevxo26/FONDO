@@ -21,34 +21,52 @@ export default function KitchenQueuePage() {
       return apiOrders.map((o) => ({
         id: o.id,
         orderNumber: o.orderNumber,
-        customerName: o.deliveryAddress?.receiverName || "Customer",
-        customerPhone: o.deliveryAddress?.receiverPhone || "",
-        deliveryAddress: `${o.deliveryAddress?.area || ""}, ${o.deliveryAddress?.district || ""}`,
+        customerName: `${o.customer.firstName} ${o.customer.lastName}`,
+        customerPhone: o.customer.phone,
+        deliveryAddress: `${o.customer.firstName} ${o.customer.lastName}`,
         deliveryTime: "ASAP",
-        mealType: "Lunch",
-        status: o.status === "PREPARING" ? "PREPARING" : o.status === "READY_FOR_PICKUP" ? "READY" : "QUEUED",
+        mealType: "LUNCH" as const,
+        status:
+          o.orderStatus === "PREPARING"
+            ? "PREPARING"
+            : o.orderStatus === "READY_FOR_PICKUP"
+              ? "READY"
+              : "QUEUED",
         items: o.items.map((i) => ({
+          id: i.id,
           name: i.food?.name || "Dish Item",
           quantity: i.quantity,
-          variant: i.variant?.name,
-          addons: [],
+          status: "QUEUED",
         })),
-        createdAt: o.createdAt,
+        priority: 0,
+        notes: null,
+        placedAt: o.placedAt,
+        estimatedReadyAt: "",
+        createdAt: o.placedAt,
       }));
     }
     return fallbackKitchenOrders;
   }, [apiOrders, localOrders]);
 
-  const handleStatusChange = async (id: string, newStatus: KitchenOrder["status"], orderNum: string) => {
+  const handleStatusChange = async (
+    id: string,
+    newStatus: KitchenOrder["status"],
+    orderNum: string,
+  ) => {
     if (isUpdating) return;
     try {
-      const backendStatus = newStatus === "PREPARING" ? "PREPARING" : newStatus === "READY" ? "READY_FOR_PICKUP" : "CONFIRMED";
+      const backendStatus =
+        newStatus === "PREPARING"
+          ? "PREPARING"
+          : newStatus === "READY"
+            ? "READY_FOR_PICKUP"
+            : "CONFIRMED";
       await updateOrderStatus({ orderId: id, status: backendStatus }).unwrap();
       toast.success(`${orderNum} status updated to ${newStatus}`);
     } catch {
       // Fallback local update
       setLocalOrders((prev) =>
-        (prev || orders).map((o) => (o.id === id ? { ...o, status: newStatus } : o))
+        (prev || orders).map((o) => (o.id === id ? { ...o, status: newStatus } : o)),
       );
       toast.success(`${orderNum} marked ${newStatus} (Offline mode)`);
     }
@@ -62,6 +80,17 @@ export default function KitchenQueuePage() {
     <div>
       <PageHeader
         title="Today's Kitchen Queue"
+        description="View and manage today's meal preparation queue."
+        icon={ChefHat}
+      />
+      <KitchenSummaryCards
+        queued={queued.length}
+        preparing={preparing.length}
+        ready={ready.length}
+        total={orders.length}
+      />
+      <PageHeader
+        title="Today's Kitchen Queue"
         description="View and manage today's meal preparation queue in real-time."
         icon={ChefHat}
       />
@@ -72,12 +101,39 @@ export default function KitchenQueuePage() {
         </div>
       ) : (
         <>
-          <KitchenSummaryCards queued={queued.length} preparing={preparing.length} ready={ready.length} total={orders.length} />
+          <KitchenSummaryCards
+            queued={queued.length}
+            preparing={preparing.length}
+            ready={ready.length}
+            total={orders.length}
+          />
 
           {preparing.length > 0 && (
             <div className="mt-10">
               <h2 className="font-heading text-lg font-semibold text-foreground">In Preparation</h2>
-              <p className="text-sm text-muted-foreground">{preparing.length} orders currently being cooked</p>
+              <p className="text-sm text-muted-foreground">
+                {preparing.length} orders currently being cooked
+              </p>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                {preparing.map((order) => (
+                  <KitchenOrderCard
+                    key={order.id}
+                    order={order}
+                    onMarkReady={(o) => {
+                      handleStatusChange(o.id, "READY", o.orderNumber);
+                      toast.success(`${o.orderNumber} marked ready`);
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+          {preparing.length > 0 && (
+            <div className="mt-10">
+              <h2 className="font-heading text-lg font-semibold text-foreground">In Preparation</h2>
+              <p className="text-sm text-muted-foreground">
+                {preparing.length} orders currently being cooked
+              </p>
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 {preparing.map((order) => (
                   <KitchenOrderCard
@@ -92,7 +148,9 @@ export default function KitchenQueuePage() {
 
           {queued.length > 0 && (
             <div className="mt-10">
-              <h2 className="font-heading text-lg font-semibold text-foreground">Queued (Next to Prepare)</h2>
+              <h2 className="font-heading text-lg font-semibold text-foreground">
+                Queued (Next to Prepare)
+              </h2>
               <p className="text-sm text-muted-foreground">{queued.length} orders waiting</p>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {queued.slice(0, 6).map((order) => (
@@ -104,7 +162,9 @@ export default function KitchenQueuePage() {
                 ))}
               </div>
               {queued.length > 6 && (
-                <p className="mt-2 text-center text-xs text-muted-foreground">+{queued.length - 6} more queued orders</p>
+                <p className="mt-2 text-center text-xs text-muted-foreground">
+                  +{queued.length - 6} more queued orders
+                </p>
               )}
             </div>
           )}
@@ -112,7 +172,9 @@ export default function KitchenQueuePage() {
           {preparing.length === 0 && queued.length === 0 && (
             <div className="mt-16 flex flex-col items-center justify-center gap-4 text-center">
               <CookingPot className="size-12 text-muted-foreground/40" />
-              <p className="text-sm text-muted-foreground">No active orders in the kitchen queue.</p>
+              <p className="text-sm text-muted-foreground">
+                No active orders in the kitchen queue.
+              </p>
             </div>
           )}
         </>
@@ -120,4 +182,3 @@ export default function KitchenQueuePage() {
     </div>
   );
 }
-

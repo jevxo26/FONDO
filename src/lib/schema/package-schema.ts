@@ -69,6 +69,64 @@ export const packageSchema = yup.object().shape({
 
 export type PackageFormValues = yup.InferType<typeof packageSchema>;
 
+export interface PackageBenefit {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+}
+
+export interface PackageNutrition {
+  dailyCalories: number | string;
+  dailyProtein: number | string;
+  dailyCarbohydrate: number | string;
+  dailyFat: number | string;
+  dailyFiber: number | string;
+  dailySugar: number | string;
+  dailySodium: number | string;
+}
+
+export interface PackageRules {
+  minimumOrderDays: number | string;
+  maximumOrderDays: number | string;
+  minimumMealsPerDay: number | string;
+  maximumMealsPerDay: number | string;
+  advancePaymentRequired: boolean;
+  allowPause: boolean;
+  allowResume: boolean;
+  allowSkipMeal: boolean;
+  allowCancellation: boolean;
+  deliveryDays: string[];
+  deliveryTimeStart: string;
+  deliveryTimeEnd: string;
+  mealCutoffTime: string;
+}
+
+export interface PackageFormData {
+  name: string;
+  slug: string;
+  packageCode: string;
+  description: string;
+  category: string;
+  tags: string[];
+  status: string;
+  price: number;
+  discountPrice: number | string;
+  currency: string;
+  vat: number;
+  deliveryCharge: number;
+  packageType: string;
+  durationDays: number | string;
+  totalMeals: number | string;
+  isCustomizable: boolean;
+  thumbnail: string;
+  coverImage: string;
+  gallery: string[];
+  benefits: PackageBenefit[];
+  nutrition: PackageNutrition;
+  rules: PackageRules;
+}
+
 export const CATEGORIES = [
   { id: "7a7bcb9c-4933-4e6d-b1ab-795d1c9bc85b", name: "Weight Gain & Muscle Building" },
   { id: "8b8cd12a-3211-4e6a-c2bc-886e2d9bc99c", name: "Weight Loss & Keto" },

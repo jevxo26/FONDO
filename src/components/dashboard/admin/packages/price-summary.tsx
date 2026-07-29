@@ -1,5 +1,6 @@
 import React from "react";
 import { DollarSign } from "lucide-react";
+import type { FieldErrors } from "react-hook-form";
 import { UseFormRegister } from "react-hook-form";
 import { inputStyles, PackageFormValues } from "@/lib/schema/package-schema";
 import { FormField } from "@/components/common/form-field";
@@ -16,7 +17,7 @@ export function PriceSummarySidebar({
   totalFoodsCount,
 }: {
   register: UseFormRegister<PackageFormValues>;
-  errors: any;
+  errors: FieldErrors<PackageFormValues>;
   packageTypeWatched: string;
   price: number;
   discountPrice: number;

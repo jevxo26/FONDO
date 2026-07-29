@@ -12,7 +12,9 @@ const createVendor = catchAsync(async (req: Request, res: Response) => {
 
 const getAllVendors = catchAsync(async (req: Request, res: Response) => {
   const statusString = Array.isArray(req.query.status) ? req.query.status[0] : req.query.status;
-  const verificationString = Array.isArray(req.query.verificationStatus) ? req.query.verificationStatus[0] : req.query.verificationStatus;
+  const verificationString = Array.isArray(req.query.verificationStatus)
+    ? req.query.verificationStatus[0]
+    : req.query.verificationStatus;
 
   const filters = {
     status: statusString ? (statusString as VendorStatus) : undefined,
@@ -33,7 +35,7 @@ const getVendorByVendorCode = catchAsync(async (req: Request, res: Response) => 
 const updateVendor = catchAsync(async (req: Request, res: Response) => {
   const vendorCode = req.params.vendorCode as string; // Explicitly cast to string
   // CRITICAL: Strip out protected fields from the payload
-  const { id, vendorCode: _, email, phone, tradeLicenseNumber, tinNumber, binNumber, createdAt, updatedAt, ...allowedData } = req.body;
+  const { ...allowedData } = req.body;
 
   const result = await VendorService.updateVendor(vendorCode, allowedData);
   sendResponse(res, { statusCode: 200, message: "Vendor modifications persisted", data: result });
@@ -48,7 +50,7 @@ const softDeleteVendor = catchAsync(async (req: Request, res: Response) => {
 // Profile Sub-resource Controls
 const upsertVendorProfile = catchAsync(async (req: Request, res: Response) => {
   const vendorCode = req.params.vendorCode as string; // Explicitly cast to string
-  const { id, vendorId, createdAt, updatedAt, ...allowedProfileData } = req.body;
+  const { ...allowedProfileData } = req.body;
   const result = await VendorService.upsertProfile(vendorCode, allowedProfileData);
   sendResponse(res, { statusCode: 200, message: "Profile parameters recorded", data: result });
 });
@@ -56,9 +58,13 @@ const upsertVendorProfile = catchAsync(async (req: Request, res: Response) => {
 // Branch & Production Units Controls
 const addBranch = catchAsync(async (req: Request, res: Response) => {
   const vendorCode = req.params.vendorCode as string; // Explicitly cast to string
-  const { id, vendorId, branchCode, createdAt, updatedAt, ...allowedBranchData } = req.body;
+  const { ...allowedBranchData } = req.body;
   const result = await VendorService.createBranch(vendorCode, allowedBranchData);
-  sendResponse(res, { statusCode: 201, message: "Operational branch layout tracking initialized", data: result });
+  sendResponse(res, {
+    statusCode: 201,
+    message: "Operational branch layout tracking initialized",
+    data: result,
+  });
 });
 
 const getVendorBranches = catchAsync(async (req: Request, res: Response) => {
@@ -69,15 +75,19 @@ const getVendorBranches = catchAsync(async (req: Request, res: Response) => {
 
 const addKitchenToBranch = catchAsync(async (req: Request, res: Response) => {
   const branchId = req.params.branchId as string; // Explicitly cast to string
-  const { id, kitchenCode, createdAt, updatedAt, ...allowedKitchenData } = req.body;
+  const { ...allowedKitchenData } = req.body;
   const result = await VendorService.createKitchen(branchId, allowedKitchenData);
-  sendResponse(res, { statusCode: 201, message: "Production unit attached to targeted branch space", data: result });
+  sendResponse(res, {
+    statusCode: 201,
+    message: "Production unit attached to targeted branch space",
+    data: result,
+  });
 });
 
 // Compliance Documentation Controls
 const uploadDocument = catchAsync(async (req: Request, res: Response) => {
   const vendorCode = req.params.vendorCode as string; // Explicitly cast to string
-  const { id, vendorId, verificationStatus, verifiedAt, verifiedBy, ...allowedDocData } = req.body;
+  const { ...allowedDocData } = req.body;
   const result = await VendorService.addDocument(vendorCode, allowedDocData);
   sendResponse(res, { statusCode: 201, message: "Compliance filing tracked", data: result });
 });
@@ -85,7 +95,11 @@ const uploadDocument = catchAsync(async (req: Request, res: Response) => {
 const verifyDocument = catchAsync(async (req: Request, res: Response) => {
   const docId = req.params.docId as string; // Explicitly cast to string
   const { status, verifiedBy } = req.body;
-  const result = await VendorService.updateDocumentStatus(docId, status as VerificationStatus, verifiedBy);
+  const result = await VendorService.updateDocumentStatus(
+    docId,
+    status as VerificationStatus,
+    verifiedBy,
+  );
   sendResponse(res, { statusCode: 200, message: "Audit state updated", data: result });
 });
 
@@ -111,7 +125,7 @@ const generateSettlementPeriod = catchAsync(async (req: Request, res: Response) 
 // Meta Operational Flags Configuration Controls
 const updateSettings = catchAsync(async (req: Request, res: Response) => {
   const vendorCode = req.params.vendorCode as string; // Explicitly cast to string
-  const { id, vendorId, ...allowedSettings } = req.body;
+  const { ...allowedSettings } = req.body;
   const result = await VendorService.saveSettings(vendorCode, allowedSettings);
   sendResponse(res, { statusCode: 200, message: "Operational flags updated", data: result });
 });

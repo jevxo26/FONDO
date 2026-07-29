@@ -21,14 +21,32 @@ export default function KitchenOrdersPage() {
 
   return (
     <div>
-      <PageHeader title="Order Queue" description="View and manage incoming meal orders." icon={ClipboardList} />
-      <KitchenSummaryCards queued={queued} preparing={preparing} ready={ready} total={orders.length} />
+      <PageHeader
+        title="Order Queue"
+        description="View and manage incoming meal orders."
+        icon={ClipboardList}
+      />
+      <KitchenSummaryCards
+        queued={queued}
+        preparing={preparing}
+        ready={ready}
+        total={orders.length}
+      />
       <div className="mt-8">
         <KitchenOrderTable
           data={orders}
-          onStartPrep={(o) => { updateStatus(o.id, "PREPARING"); toast.success(`${o.orderNumber} started`); }}
-          onMarkReady={(o) => { updateStatus(o.id, "READY"); toast.success(`${o.orderNumber} marked ready`); }}
-          onMarkPacked={(o) => { updateStatus(o.id, "PACKED"); toast.success(`${o.orderNumber} packed`); }}
+          onStartPrep={(o) => {
+            updateStatus(o.id, "PREPARING");
+            toast.success(`${o.orderNumber} started`);
+          }}
+          onMarkReady={(o) => {
+            updateStatus(o.id, "READY");
+            toast.success(`${o.orderNumber} marked ready`);
+          }}
+          onMarkPacked={(o) => {
+            updateStatus(o.id, "PACKED");
+            toast.success(`${o.orderNumber} packed`);
+          }}
         />
       </div>
     </div>

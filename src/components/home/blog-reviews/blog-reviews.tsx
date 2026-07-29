@@ -9,10 +9,7 @@ export function BlogReviews() {
     <section className="py-8 lg:py-12">
       <div className="wrapper">
         <SectionReveal distance={20}>
-          <SectionHeader
-            title="Our Blog & Reviews"
-            align="center"
-          />
+          <SectionHeader title="Our Blog & Reviews" align="center" />
 
           <InfiniteSlider gap={24} speed={50} className="mt-8">
             {BLOG_POSTS.map((post) => (

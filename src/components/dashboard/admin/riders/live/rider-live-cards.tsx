@@ -66,9 +66,29 @@ export function RiderLiveCards() {
       <div className="mb-6 h-px w-full bg-gradient-to-r from-primary/40 via-primary/30 to-transparent" />
 
       <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Active Riders" value={active} variant="success" icon={Truck} accent="top" className="bg-gradient-to-br from-emerald-500/25 via-emerald-500/5 to-emerald-500/2" />
-        <StatCard label="On Delivery" value={busy} variant="warning" icon={Navigation} accent="top" className="bg-gradient-to-br from-amber-500/25 via-amber-500/5 to-amber-500/2" />
-        <StatCard label="Avg Speed" value={`${avgSpeed} km/h`} icon={Gauge} accent="top" className="bg-gradient-to-br from-sky-500/25 via-sky-500/5 to-sky-500/2" />
+        <StatCard
+          label="Active Riders"
+          value={active}
+          variant="success"
+          icon={Truck}
+          accent="top"
+          className="bg-gradient-to-br from-emerald-500/25 via-emerald-500/5 to-emerald-500/2"
+        />
+        <StatCard
+          label="On Delivery"
+          value={busy}
+          variant="warning"
+          icon={Navigation}
+          accent="top"
+          className="bg-gradient-to-br from-amber-500/25 via-amber-500/5 to-amber-500/2"
+        />
+        <StatCard
+          label="Avg Speed"
+          value={`${avgSpeed} km/h`}
+          icon={Gauge}
+          accent="top"
+          className="bg-gradient-to-br from-sky-500/25 via-sky-500/5 to-sky-500/2"
+        />
         <StatCard
           label="Avg Battery"
           value={`${avgBattery}%`}
@@ -149,7 +169,10 @@ export function RiderLiveCards() {
               </div>
               <div className="h-1.5 w-full rounded-full bg-muted">
                 <div
-                  className={cn("h-1.5 rounded-full transition-all", batteryBarColor(rider.battery))}
+                  className={cn(
+                    "h-1.5 rounded-full transition-all",
+                    batteryBarColor(rider.battery),
+                  )}
                   style={{ width: `${rider.battery}%` }}
                 />
               </div>

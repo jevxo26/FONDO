@@ -24,7 +24,9 @@ const walletTxnColumns: ColumnDef<AdminWalletTransaction>[] = [
     accessorKey: "id",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Transaction ID" />,
     cell: ({ row }) => (
-      <span className="font-mono text-sm font-bold text-foreground">{row.original.id.slice(0, 8)}</span>
+      <span className="font-mono text-sm font-bold text-foreground">
+        {row.original.id.slice(0, 8)}
+      </span>
     ),
   },
   {
@@ -49,7 +51,9 @@ const walletTxnColumns: ColumnDef<AdminWalletTransaction>[] = [
       const isCredit = ["TOPUP", "CREDIT", "REFUND"].includes(txn.transactionType);
       const AmountIcon = isCredit ? TrendingUp : TrendingDown;
       return (
-        <span className={`flex items-center gap-1.5 font-bold ${isCredit ? "text-success" : "text-destructive"}`}>
+        <span
+          className={`flex items-center gap-1.5 font-bold ${isCredit ? "text-success" : "text-destructive"}`}
+        >
           <AmountIcon className="size-3.5" />
           {isCredit ? "+" : "-"}৳{Number(txn.amount).toLocaleString()}
         </span>
@@ -96,11 +100,36 @@ export default function CustomerWalletPage() {
       <div className="mb-6 flex items-center gap-3">
         <h1 className="font-fraunces text-2xl font-bold text-foreground">Wallet</h1>
         <div className="flex gap-1">
-          <Link href={`/dashboard/admin/customers/${id}`} className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary">Overview</Link>
-          <Link href={`/dashboard/admin/customers/${id}/orders`} className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary">Orders</Link>
-          <Link href={`/dashboard/admin/customers/${id}/subscriptions`} className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary">Subscriptions</Link>
-          <Link href={`/dashboard/admin/customers/${id}/payments`} className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary">Payments</Link>
-          <Link href={`/dashboard/admin/customers/${id}/wallets`} className="rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold uppercase text-primary-foreground">Wallet</Link>
+          <Link
+            href={`/dashboard/admin/customers/${id}`}
+            className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
+          >
+            Overview
+          </Link>
+          <Link
+            href={`/dashboard/admin/customers/${id}/orders`}
+            className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
+          >
+            Orders
+          </Link>
+          <Link
+            href={`/dashboard/admin/customers/${id}/subscriptions`}
+            className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
+          >
+            Subscriptions
+          </Link>
+          <Link
+            href={`/dashboard/admin/customers/${id}/payments`}
+            className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
+          >
+            Payments
+          </Link>
+          <Link
+            href={`/dashboard/admin/customers/${id}/wallets`}
+            className="rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold uppercase text-primary-foreground"
+          >
+            Wallet
+          </Link>
         </div>
       </div>
 
@@ -142,7 +171,9 @@ export default function CustomerWalletPage() {
           pageSize={transactions.length || 10}
           enableSearch={false}
           enableColumnToggle={false}
-              emptyMessage={wallet ? "No wallet transactions yet." : "No wallet found for this customer."}
+          emptyMessage={
+            wallet ? "No wallet transactions yet." : "No wallet found for this customer."
+          }
         />
       </div>
     </div>

@@ -8,8 +8,15 @@ import { Button } from "@/components/ui/button";
 export default function ReportsRevenuePage() {
   return (
     <div>
-      <PageHeader title="Revenue Report" description="Analyze platform revenue across all streams." icon={TrendingUp}
-        actions={<Button variant="outline" className="rounded-full"><Download className="size-[18px]" /> Export</Button>}
+      <PageHeader
+        title="Revenue Report"
+        description="Analyze platform revenue across all streams."
+        icon={TrendingUp}
+        actions={
+          <Button variant="outline" className="rounded-full">
+            <Download className="size-[18px]" /> Export
+          </Button>
+        }
       />
       <div className="mt-8">
         <RevenueSummaryCards />

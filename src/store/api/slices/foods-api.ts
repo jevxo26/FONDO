@@ -2,7 +2,10 @@ import { api } from "../base-api";
 import type { FoodResponse } from "@/types/food";
 import type { FoodCategoriesData } from "@/types/category";
 
-interface FoodsQueryParams { page?: number; limit?: number }
+interface FoodsQueryParams {
+  page?: number;
+  limit?: number;
+}
 
 export const foodsApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -24,11 +27,7 @@ export const foodsApi = api.injectEndpoints({
       providesTags: ["Category"],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
-export const {
-  useGetFoodsQuery,
-  useGetFoodBySlugQuery,
-  useGetFoodCategoriesQuery,
-} = foodsApi;
+export const { useGetFoodsQuery, useGetFoodBySlugQuery, useGetFoodCategoriesQuery } = foodsApi;

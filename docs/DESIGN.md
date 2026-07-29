@@ -13,29 +13,29 @@
 |-------|-------|------|-------|
 | `--background` | `#FAF5EB` | `#1A1A1A` | Page background |
 | `--foreground` | `#16100C` | `#FAF5EB` | Main text |
-| `--card` | `#FFFFFF` | `#2C2C2C` | Card background |
+| `--card` | `#FCF9F3` | `#2C2824` | Card background |
 | `--card-foreground` | `#16100C` | `#FAF5EB` | Card text |
 | `--primary` | `#CEA359` | `#CEA359` | Gold — buttons, accents, premium indicators |
 | `--primary-foreground` | `#1B0E08` | `#1B0E08` | Text on primary |
-| `--secondary` | `#FBF5EB` | `#2C2C2C` | Cream backgrounds |
+| `--secondary` | `#F5EDE0` | `#2C2824` | Cream backgrounds |
 | `--secondary-foreground` | `#1B1612` | `#FAF5EB` | Text on secondary |
-| `--muted` | `#F5F0E8` | `#2C2C2C` | Subtle backgrounds |
+| `--muted` | `#F0E8DC` | `#2C2824` | Subtle backgrounds |
 | `--muted-foreground` | `#635C57` | `#9CA3AF` | Muted text |
-| `--accent` | `#FBF5EB` | `#2C2C2C` | Accent backgrounds |
+| `--accent` | `#F5EDE0` | `#2C2824` | Accent backgrounds |
 | `--accent-foreground` | `#1B1612` | `#FAF5EB` | Text on accent |
 | `--destructive` | `#EF4444` | `#EF4444` | Error states, danger badges |
 | `--success` | `#10B981` | `#10B981` | Success states |
 | `--warning` | `#F59E0B` | `#F59E0B` | Warning states |
-| `--border` | `#DDD6CF` | `#3A3A3A` | Borders |
-| `--input` | `#DDD6CF` | `#3A3A3A` | Input borders |
+| `--border` | `#E0D5C4` | `#3D3730` | Borders |
+| `--input` | `#E0D5C4` | `#3D3730` | Input borders |
 | `--ring` | `#CEA359` | `#CEA359` | Focus rings |
-| `--sidebar` | `#FFFFFF` | `#1A1A1A` | Sidebar background |
+| `--sidebar` | `#F9F3E9` | `#1F1C19` | Sidebar background |
 | `--sidebar-foreground` | `#16100C` | `#FAF5EB` | Sidebar text |
 | `--sidebar-primary` | `#CEA359` | `#CEA359` | Sidebar primary |
 | `--sidebar-primary-foreground` | `#1B0E08` | `#1B0E08` | Sidebar primary text |
-| `--sidebar-accent` | `#FBF5EB` | `#2C2C2C` | Sidebar accent |
-| `--sidebar-accent-foreground` | `#1B1612` | `#FAF5EB` | Sidebar accent text |
-| `--sidebar-border` | `#DDD6CF` | `#3A3A3A` | Sidebar borders |
+| `--sidebar-accent` | `#F0E8DC` | `#2C2824` | Sidebar accent |
+| `--sidebar-accent-foreground` | `#16100C` | `#FAF5EB` | Sidebar accent text |
+| `--sidebar-border` | `#E0D5C4` | `#3D3730` | Sidebar borders |
 | `--sidebar-ring` | `#CEA359` | `#CEA359` | Sidebar focus ring |
 
 ### Variant System
@@ -62,22 +62,35 @@ For customer/profile tiering (bronze/silver/gold):
 ### Font Stack
 | Font | CSS Variable | Usage |
 |------|-------------|-------|
-| Fraunces | `--font-fraunces` | All headings (hero, section titles, card titles, stat values) |
+| Bai Jamjuree | `--font-heading` | All headings (hero, section titles, card titles, stat values) |
 | Inter | `--font-sans` | Body text, UI labels, buttons, badges, prices |
 
 ### Type Scale
 | Style | Font | Size | Weight | Notes |
 |-------|------|------|--------|-------|
-| Display | Fraunces | 40px | 700 | Hero |
-| Headline-lg | Fraunces | 32px / 28px mobile | 700 | Page titles |
-| Headline-md | Fraunces | 24px | 600 | Section headers |
-| Card Title | Fraunces | 18px | 600 | Card headings |
-| Stat Value | Fraunces | 28-30px | 700 | Dashboard stat cards |
+| Display | Bai Jamjuree | 40px | 700 | Hero |
+| Headline-lg | Bai Jamjuree | 32px / 28px mobile | 700 | Page titles |
+| Headline-md | Bai Jamjuree | 24px | 600 | Section headers |
+| Card Title | Bai Jamjuree | 18px | 600 | Card headings |
+| Stat Value | Bai Jamjuree | 28-30px | 700 | Dashboard stat cards |
 | Body | Inter | 14-16px | 400 | Paragraphs |
 | Small | Inter | 12-13px | 400 | Captions, metadata |
 | Price | Inter | 18-20px | 700 | Monetary values |
 | Label | Inter | 14px | 600, 0.02em | Form labels |
 | Badge | Inter | 10-11px | 700, uppercase | Status badges, pills |
+
+### Font Size CSS Variables (in `@theme inline`)
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--font-size-display` | 40px | Hero |
+| `--font-size-h1` | 32px | Page titles |
+| `--font-size-h2` | 24px | Section headers |
+| `--font-size-card-title` | 18px | Card headings |
+| `--font-size-body` | 15px | Paragraphs |
+| `--font-size-small` | 12px | Captions, metadata |
+| `--font-size-price` | 19px | Monetary values |
+| `--font-size-label` | 14px | Form labels |
+| `--font-size-badge` | 11px | Status badges, pills |
 
 **Labels rule:** Use `text-[10px] uppercase tracking-widest` for stat labels and metadata to keep them compact and consistent.
 
@@ -97,7 +110,7 @@ For customer/profile tiering (bronze/silver/gold):
   margin-inline: auto;
   width: 100%;
   max-width: 1440px;
-  padding-inline: 1rem;
+  padding-inline: var(--space-container);
 }
 ```
 
@@ -195,9 +208,9 @@ For tiered/profile cards, a 4px (`h-1`) colored stripe at the top of the card si
 - Gold: `bg-primary`
 
 ### 7.8 Stat Value Emphasis
-Stat values always use `font-fraunces` with `tracking-tight` for a premium editorial feel:
+Stat values always use `font-heading` with `tracking-tight` for a premium editorial feel:
 ```
-<p className="font-fraunces text-[30px] font-bold leading-tight tracking-tighter ...">{value}</p>
+<p className="font-heading text-[30px] font-bold leading-tight tracking-tighter ...">{value}</p>
 ```
 
 ### 7.9 Label Convention

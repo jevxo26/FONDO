@@ -111,83 +111,85 @@ export const updateStatus = catchServiceAsync(
   },
 );
 
-export const assignVendor = catchServiceAsync(
-  async (orderId: string, vendorId: string) => {
-    const order = await prisma.order.findUnique({ where: { id: orderId } });
-    if (!order) throw new AppError(404, "Order not found");
+export const assignVendor = catchServiceAsync(async (orderId: string, vendorId: string) => {
+  const order = await prisma.order.findUnique({ where: { id: orderId } });
+  if (!order) throw new AppError(404, "Order not found");
 
-    const vendor = await prisma.vendor.findUnique({ where: { id: vendorId } });
-    if (!vendor) throw new AppError(404, "Vendor not found");
+  const vendor = await prisma.vendor.findUnique({ where: { id: vendorId } });
+  if (!vendor) throw new AppError(404, "Vendor not found");
 
-    return prisma.$transaction(async (tx) => {
-      const updated = await tx.order.update({
-        where: { id: orderId },
-        data: { vendorId },
+  return prisma.$transaction(async (tx) => {
+    const updated = await tx.order.update({
+      where: { id: orderId },
+      data: { vendorId },
+    });
+
+    await tx.orderStatusHistory.create({
+      data: {
+        orderId,
+        previousStatus: order.orderStatus,
+        currentStatus: order.orderStatus,
+        changedBy: "admin",
+        remarks: `Vendor assigned: ${vendor.businessName}`,
+      },
+    });
+
+    return updated;
+  });
+});
+
+export const assignRider = catchServiceAsync(async (orderId: string, riderId: string) => {
+  const order = await prisma.order.findUnique({ where: { id: orderId } });
+  if (!order) throw new AppError(404, "Order not found");
+
+  const rider = await prisma.rider.findUnique({ where: { id: riderId } });
+  if (!rider) throw new AppError(404, "Rider not found");
+
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.delivery.findUnique({ where: { orderId } });
+    if (existing) {
+      await tx.delivery.update({
+        where: { orderId },
+        data: { riderId, deliveryStatus: "ASSIGNED" },
       });
-
-      await tx.orderStatusHistory.create({
+    } else {
+      const code = `DEL-${order.orderNumber}`;
+      await tx.delivery.create({
         data: {
           orderId,
-          previousStatus: order.orderStatus,
-          currentStatus: order.orderStatus,
-          changedBy: "admin",
-          remarks: `Vendor assigned: ${vendor.businessName}`,
+          riderId,
+          vendorId: order.vendorId,
+          deliveryCode: code,
+          deliveryStatus: "ASSIGNED",
         },
       });
+    }
 
-      return updated;
+    await tx.order.update({
+      where: { id: orderId },
+      data: { deliveryStatus: "ASSIGNED" },
     });
-  },
-);
 
-export const assignRider = catchServiceAsync(
-  async (orderId: string, riderId: string) => {
-    const order = await prisma.order.findUnique({ where: { id: orderId } });
-    if (!order) throw new AppError(404, "Order not found");
-
-    const rider = await prisma.rider.findUnique({ where: { id: riderId } });
-    if (!rider) throw new AppError(404, "Rider not found");
-
-    return prisma.$transaction(async (tx) => {
-      const existing = await tx.delivery.findUnique({ where: { orderId } });
-      if (existing) {
-        await tx.delivery.update({
-          where: { orderId },
-          data: { riderId, deliveryStatus: "ASSIGNED" },
-        });
-      } else {
-        const code = `DEL-${order.orderNumber}`;
-        await tx.delivery.create({
-          data: {
-            orderId,
-            riderId,
-            vendorId: order.vendorId,
-            deliveryCode: code,
-            deliveryStatus: "ASSIGNED",
-          },
-        });
-      }
-
-      await tx.order.update({
-        where: { id: orderId },
-        data: { deliveryStatus: "ASSIGNED" },
-      });
-
-      await tx.orderStatusHistory.create({
-        data: {
-          orderId,
-          previousStatus: order.orderStatus,
-          currentStatus: order.orderStatus,
-          changedBy: "admin",
-          remarks: `Rider assigned: ${rider.fullName}`,
-        },
-      });
+    await tx.orderStatusHistory.create({
+      data: {
+        orderId,
+        previousStatus: order.orderStatus,
+        currentStatus: order.orderStatus,
+        changedBy: "admin",
+        remarks: `Rider assigned: ${rider.fullName}`,
+      },
     });
-  },
-);
+  });
+});
 
 export const processRefund = catchServiceAsync(
-  async (orderId: string, amount: number, refundMethod: string | undefined, reason: string, processedBy: string) => {
+  async (
+    orderId: string,
+    amount: number,
+    refundMethod: string | undefined,
+    reason: string,
+    processedBy: string,
+  ) => {
     const order = await prisma.order.findUnique({ where: { id: orderId } });
     if (!order) throw new AppError(404, "Order not found");
     if (order.orderStatus !== "CANCELLED") {

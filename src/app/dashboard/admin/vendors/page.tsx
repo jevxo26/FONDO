@@ -20,9 +20,27 @@ export default function VendorsPage() {
       />
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-4">
         <StatCard label="Total Vendors" value={vendors.length} icon={Store} accent="right" />
-        <StatCard label="Active" value={active} variant="success" icon={CheckCircle} accent="right" />
-        <StatCard label="Pending Approval" value={pending} variant="warning" icon={Clock} accent="right" />
-        <StatCard label="Total Balance" value={`৳${totalBalance.toLocaleString()}`} variant="default" icon={Wallet} accent="right" />
+        <StatCard
+          label="Active"
+          value={active}
+          variant="success"
+          icon={CheckCircle}
+          accent="right"
+        />
+        <StatCard
+          label="Pending Approval"
+          value={pending}
+          variant="warning"
+          icon={Clock}
+          accent="right"
+        />
+        <StatCard
+          label="Total Balance"
+          value={`৳${totalBalance.toLocaleString()}`}
+          variant="default"
+          icon={Wallet}
+          accent="right"
+        />
       </div>
       <div className="mt-8">
         <VendorsTable vendors={vendors} />

@@ -20,21 +20,29 @@ export function useAdminCustomer(id: string) {
 }
 
 export function useAdminCustomerOrders(customerId: string) {
-  const { data, isLoading, error } = useGetAdminCustomerOrdersQuery(customerId, { skip: !customerId });
+  const { data, isLoading, error } = useGetAdminCustomerOrdersQuery(customerId, {
+    skip: !customerId,
+  });
   return { data, isLoading, error };
 }
 
 export function useAdminCustomerSubscriptions(customerId: string) {
-  const { data, isLoading, error } = useGetAdminCustomerSubscriptionsQuery(customerId, { skip: !customerId });
+  const { data, isLoading, error } = useGetAdminCustomerSubscriptionsQuery(customerId, {
+    skip: !customerId,
+  });
   return { data, isLoading, error };
 }
 
 export function useAdminCustomerWallet(customerId: string) {
-  const { data, isLoading, error } = useGetAdminCustomerWalletQuery(customerId, { skip: !customerId });
+  const { data, isLoading, error } = useGetAdminCustomerWalletQuery(customerId, {
+    skip: !customerId,
+  });
   return { data, isLoading, error };
 }
 
 export function useAdminCustomerPayments(customerId: string) {
-  const { data, isLoading, error } = useGetAdminCustomerPaymentsQuery(customerId, { skip: !customerId });
+  const { data, isLoading, error } = useGetAdminCustomerPaymentsQuery(customerId, {
+    skip: !customerId,
+  });
   return { data, isLoading, error };
 }

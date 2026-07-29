@@ -24,9 +24,13 @@ const subscriptionColumns: ColumnDef<AdminSubscription>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
     cell: ({ row }) => (
       <div>
-        <p className="text-sm font-bold text-foreground">৳{row.original.totalAmount.toLocaleString()}</p>
+        <p className="text-sm font-bold text-foreground">
+          ৳{row.original.totalAmount.toLocaleString()}
+        </p>
         {row.original.remainingAmount > 0 && (
-          <p className="text-[11px] text-destructive">৳{row.original.remainingAmount.toLocaleString()} due</p>
+          <p className="text-[11px] text-destructive">
+            ৳{row.original.remainingAmount.toLocaleString()} due
+          </p>
         )}
       </div>
     ),
@@ -40,7 +44,9 @@ const subscriptionColumns: ColumnDef<AdminSubscription>[] = [
   {
     accessorKey: "duration",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Duration" />,
-    cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.duration} days</span>,
+    cell: ({ row }) => (
+      <span className="text-sm text-muted-foreground">{row.original.duration} days</span>
+    ),
   },
   {
     accessorKey: "startDate",
@@ -79,11 +85,36 @@ export default function CustomerSubscriptionsPage() {
       <div className="mb-6 flex items-center gap-3">
         <h1 className="font-fraunces text-2xl font-bold text-foreground">Subscriptions</h1>
         <div className="flex gap-1">
-          <Link href={`/dashboard/admin/customers/${id}`} className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary">Overview</Link>
-          <Link href={`/dashboard/admin/customers/${id}/orders`} className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary">Orders</Link>
-          <Link href={`/dashboard/admin/customers/${id}/subscriptions`} className="rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold uppercase text-primary-foreground">Subscriptions</Link>
-          <Link href={`/dashboard/admin/customers/${id}/payments`} className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary">Payments</Link>
-          <Link href={`/dashboard/admin/customers/${id}/wallets`} className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary">Wallet</Link>
+          <Link
+            href={`/dashboard/admin/customers/${id}`}
+            className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
+          >
+            Overview
+          </Link>
+          <Link
+            href={`/dashboard/admin/customers/${id}/orders`}
+            className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
+          >
+            Orders
+          </Link>
+          <Link
+            href={`/dashboard/admin/customers/${id}/subscriptions`}
+            className="rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold uppercase text-primary-foreground"
+          >
+            Subscriptions
+          </Link>
+          <Link
+            href={`/dashboard/admin/customers/${id}/payments`}
+            className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
+          >
+            Payments
+          </Link>
+          <Link
+            href={`/dashboard/admin/customers/${id}/wallets`}
+            className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
+          >
+            Wallet
+          </Link>
         </div>
       </div>
 
@@ -91,7 +122,13 @@ export default function CustomerSubscriptionsPage() {
         <StatCard label="Total Subscriptions" value={total} icon={CreditCard} accent="top" />
         <StatCard label="Active" value={active} variant="success" icon={CheckCircle} accent="top" />
         <StatCard label="Paused" value={paused} variant="warning" icon={PauseCircle} accent="top" />
-        <StatCard label="Expired / Cancelled" value={expired} variant="danger" icon={XCircle} accent="top" />
+        <StatCard
+          label="Expired / Cancelled"
+          value={expired}
+          variant="danger"
+          icon={XCircle}
+          accent="top"
+        />
       </div>
 
       <div className="mt-6">

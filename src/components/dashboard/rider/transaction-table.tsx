@@ -22,11 +22,14 @@ const columns: ColumnDef<WalletTransaction>[] = [
     cell: ({ row }) => {
       const t = row.original.type;
       return (
-        <span className={cn("rounded-full px-2 py-0.5 text-[11px] font-semibold", {
-          "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300": t === "CREDIT",
-          "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300": t === "DEBIT",
-          "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300": t === "WITHDRAWAL",
-        })}>
+        <span
+          className={cn("rounded-full px-2 py-0.5 text-[11px] font-semibold", {
+            "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300": t === "CREDIT",
+            "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300": t === "DEBIT",
+            "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300":
+              t === "WITHDRAWAL",
+          })}
+        >
           {t}
         </span>
       );
@@ -47,7 +50,9 @@ const columns: ColumnDef<WalletTransaction>[] = [
   {
     accessorKey: "balanceAfter",
     header: "Balance",
-    cell: ({ row }) => <span className="text-foreground">৳{row.original.balanceAfter.toLocaleString()}</span>,
+    cell: ({ row }) => (
+      <span className="text-foreground">৳{row.original.balanceAfter.toLocaleString()}</span>
+    ),
   },
 ];
 

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import type { AuthRequest } from "../types/auth.types";
 import { catchAsync } from "../utils/catchAsync";
 import { sendResponse } from "../utils/sendResponse";
@@ -72,7 +72,12 @@ export const CartController = {
   addFoodToMeal: catchAsync(async (_req: AuthRequest, res: Response) => {
     const mealId = _req.params.mealId as string;
     const { foodId, quantity, isReplacement } = _req.body;
-    const cart = await cartService.addFoodToMeal(mealId, foodId, quantity ?? 1, isReplacement ?? false);
+    const cart = await cartService.addFoodToMeal(
+      mealId,
+      foodId,
+      quantity ?? 1,
+      isReplacement ?? false,
+    );
     sendResponse(res, { statusCode: 201, data: cart });
   }),
 

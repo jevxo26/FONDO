@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/components/dashboard/admin/packages/package-registration/media-step.tsx
 "use client";
 
@@ -20,7 +21,10 @@ export function MediaStep({ data, onChange }: MediaStepProps) {
   };
 
   const removeGalleryImage = (index: number) => {
-    onChange("gallery", gallery.filter((_: any, i: number) => i !== index));
+    onChange(
+      "gallery",
+      gallery.filter((_: any, i: number) => i !== index),
+    );
   };
 
   const updateGalleryImage = (index: number, value: string) => {
@@ -113,9 +117,7 @@ export function MediaStep({ data, onChange }: MediaStepProps) {
         </div>
 
         {gallery.length === 0 && (
-          <p className="text-sm text-muted-foreground text-center py-4">
-            No gallery images added.
-          </p>
+          <p className="text-sm text-muted-foreground text-center py-4">No gallery images added.</p>
         )}
       </div>
     </div>

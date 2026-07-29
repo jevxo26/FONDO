@@ -8,16 +8,11 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-export default function Pagination({
-  currentPage,
-  totalPages,
-  onPageChange,
-}: PaginationProps) {
+export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
   if (totalPages <= 1) return null;
 
   return (
     <div className="flex justify-center items-center gap-2 py-8">
-
       <button
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
@@ -34,9 +29,7 @@ export default function Pagination({
             key={page}
             onClick={() => onPageChange(page)}
             className={`h-10 w-10 rounded-xl border ${
-              page === currentPage
-                ? "bg-primary text-primary-foreground border-primary"
-                : ""
+              page === currentPage ? "bg-primary text-primary-foreground border-primary" : ""
             }`}
           >
             {page}
@@ -51,7 +44,6 @@ export default function Pagination({
       >
         <ChevronRight className="mx-auto h-4 w-4" />
       </button>
-
     </div>
   );
 }

@@ -7,59 +7,58 @@ import { createRefreshToken, createToken } from "../utils/jwtService";
 import { sendUserDataAsResponse } from "../utils/responseStyle";
 import prisma from "../lib/prisma";
 import { trackFailedLogin } from "./authOtpService";
+import { sendWelcomeEmail } from "./emailService";
 
-export const loginUser = catchServiceAsync(
-  async (identifier: string, password: string) => {
-    const isEmail = identifier.includes("@");
-    const user = await prisma.user.findFirst({
-      where: isEmail ? { email: identifier } : { phone: identifier },
-    });
+export const loginUser = catchServiceAsync(async (identifier: string, password: string) => {
+  const isEmail = identifier.includes("@");
+  const user = await prisma.user.findFirst({
+    where: isEmail ? { email: identifier } : { phone: identifier },
+  });
 
-    if (!user || !user.password) {
-      throw new AppError(401, "Invalid email/phone or password");
-    }
+  if (!user || !user.password) {
+    throw new AppError(401, "Invalid email/phone or password");
+  }
 
-    const isMatch = await isPasswordValid(password, user.password);
-    if (!isMatch) {
-      await trackFailedLogin(user.id);
-      throw new AppError(401, "Invalid email/phone or password");
-    }
+  const isMatch = await isPasswordValid(password, user.password);
+  if (!isMatch) {
+    await trackFailedLogin(user.id);
+    throw new AppError(401, "Invalid email/phone or password");
+  }
 
-    const token = createToken(user.id, user.email, user.role);
-    const refreshToken = createRefreshToken(user.id);
+  const token = createToken(user.id, user.email, user.role);
+  const refreshToken = createRefreshToken(user.id);
 
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { lastLoginAt: new Date() },
-    });
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { lastLoginAt: new Date() },
+  });
 
-    await prisma.userSession.create({
-      data: {
-        userId: user.id,
-        accessToken: token,
-        refreshToken,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        status: "active",
-      },
-    });
+  await prisma.userSession.create({
+    data: {
+      userId: user.id,
+      accessToken: token,
+      refreshToken,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      status: "active",
+    },
+  });
 
-    await prisma.userLoginHistory.create({
-      data: {
-        userId: user.id,
-        loginMethod: isEmail ? "email" : "phone",
-        loginStatus: "success",
-        loggedInAt: new Date(),
-      },
-    });
+  await prisma.userLoginHistory.create({
+    data: {
+      userId: user.id,
+      loginMethod: isEmail ? "email" : "phone",
+      loginStatus: "success",
+      loggedInAt: new Date(),
+    },
+  });
 
-    const updatedUser = await prisma.user.findUnique({
-      where: { id: user.id },
-      select: sendUserDataAsResponse,
-    });
+  const updatedUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: sendUserDataAsResponse,
+  });
 
-    return { user: updatedUser, token, refreshToken };
-  },
-);
+  return { user: updatedUser, token, refreshToken };
+});
 
 export const registerUser = catchServiceAsync(
   async (data: {
@@ -97,12 +96,11 @@ export const registerUser = catchServiceAsync(
         gender: data.gender as Prisma.UserCreateInput["gender"],
         avatar: data.avatar,
         dateOfBirth: data.dateOfBirth,
-        profile: { create: {} },
-        notificationSetting: { create: {} },
-        security: { create: {} },
       },
       select: sendUserDataAsResponse,
     });
+
+    sendWelcomeEmail({ id: user.id, firstName: user.firstName, email: user.email });
 
     return user;
   },
@@ -173,12 +171,10 @@ export const getMe = catchServiceAsync(async (userId: string) => {
     where: { id: userId },
     select: {
       ...sendUserDataAsResponse,
-      profile: true,
       addresses: {
         where: { deletedAt: null },
         orderBy: { isDefault: "desc" },
       },
-      notificationSetting: true,
     },
   });
 

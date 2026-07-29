@@ -8,7 +8,8 @@ export default function EngagementBanner() {
           Share Your Food Flow Experience
         </h2>
         <p className="font-sans text-xs sm:text-sm opacity-90 leading-relaxed font-light">
-          Your feedback helps our culinary artisans keep traditional recipes alive while improving real-world kitchen distribution logistics for our community.
+          Your feedback helps our culinary artisans keep traditional recipes alive while improving
+          real-world kitchen distribution logistics for our community.
         </p>
         <div className="pt-2">
           <button className="px-8 py-3.5 bg-background text-foreground font-sans font-bold text-xs rounded-xl shadow-[var(--shadow-elevated)] hover:opacity-95 transition-all uppercase tracking-widest">

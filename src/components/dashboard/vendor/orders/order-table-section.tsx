@@ -25,19 +25,16 @@ export function VendorOrderTableSection() {
   const [orders, setOrders] = useState<VendorOrder[]>(vendorOrders);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<VendorOrder | null>(null);
-  const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS);
+  const [filters] = useState<Filters>(INITIAL_FILTERS);
 
   const filteredData = useMemo(() => {
     return orders.filter((item) => {
       const matchStatus = filters.status === "ALL" || item.status === filters.status;
-      const matchPayment = filters.paymentStatus === "ALL" || item.paymentStatus === filters.paymentStatus;
+      const matchPayment =
+        filters.paymentStatus === "ALL" || item.paymentStatus === filters.paymentStatus;
       return matchStatus && matchPayment;
     });
   }, [orders, filters]);
-
-  const handleFilterChange = useCallback((key: keyof Filters) => (value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  }, []);
 
   const handleViewOrder = useCallback((order: VendorOrder) => {
     setSelectedOrder(order);
@@ -49,8 +46,8 @@ export function VendorOrderTableSection() {
       prev.map((item) =>
         item.id === order.id
           ? { ...item, status: newStatus, updatedAt: new Date().toISOString() }
-          : item
-      )
+          : item,
+      ),
     );
   }, []);
 
@@ -81,7 +78,7 @@ export function VendorOrderTableSection() {
         },
       },
     ],
-    [handleViewOrder, handleUpdateStatus]
+    [handleViewOrder, handleUpdateStatus],
   );
 
   const facetedFilters: FacetedFilter[] = useMemo(
@@ -97,7 +94,7 @@ export function VendorOrderTableSection() {
         options: paymentStatuses.map((s) => ({ label: s.label, value: s.value })),
       },
     ],
-    []
+    [],
   );
 
   const toolbarActions = (

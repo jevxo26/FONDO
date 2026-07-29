@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const data = [
-  { day: 'Mon', revenue: 12400 },
-  { day: 'Tue', revenue: 18200 },
-  { day: 'Wed', revenue: 15800 },
-  { day: 'Thu', revenue: 21200 },
-  { day: 'Fri', revenue: 26800 },
-  { day: 'Sat', revenue: 22400 },
-  { day: 'Sun', revenue: 19600 },
+  { day: "Mon", revenue: 12400 },
+  { day: "Tue", revenue: 18200 },
+  { day: "Wed", revenue: 15800 },
+  { day: "Thu", revenue: 21200 },
+  { day: "Fri", revenue: 26800 },
+  { day: "Sat", revenue: 22400 },
+  { day: "Sun", revenue: 19600 },
 ];
 
 export function RevenueChart() {
@@ -36,20 +36,35 @@ export function RevenueChart() {
                   <stop offset="100%" stopColor="var(--primary)" stopOpacity={0.4} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" strokeOpacity={0.5} />
-              <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }} />
-              <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }} tickFormatter={(v: number) => `৳${(v / 1000).toFixed(0)}K`} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke="var(--border)"
+                strokeOpacity={0.5}
+              />
+              <XAxis
+                dataKey="day"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+              />
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                tickFormatter={(v: number) => `৳${(v / 1000).toFixed(0)}K`}
+              />
               <Tooltip
                 contentStyle={{
-                  borderRadius: '12px',
-                  border: '1px solid var(--border)',
-                  background: 'var(--card)',
-                  boxShadow: 'var(--shadow-elevated)',
-                  padding: '12px 16px',
-                  fontSize: '13px',
+                  borderRadius: "12px",
+                  border: "1px solid var(--border)",
+                  background: "var(--card)",
+                  boxShadow: "var(--shadow-elevated)",
+                  padding: "12px 16px",
+                  fontSize: "13px",
                 }}
-                formatter={(value) => [`৳${Number(value).toLocaleString()}`, 'Revenue']}
-                cursor={{ fill: 'var(--primary)', opacity: 0.06 }}
+                formatter={(value) => [`৳${Number(value).toLocaleString()}`, "Revenue"]}
+                cursor={{ fill: "var(--primary)", opacity: 0.06 }}
               />
               <Bar dataKey="revenue" radius={[6, 6, 0, 0]} fill="url(#goldBar)" />
             </BarChart>

@@ -45,9 +45,7 @@ export const settlementColumns: ColumnDef<Settlement>[] = [
   {
     accessorKey: "period",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Period" />,
-    cell: ({ row }) => (
-      <span className="text-sm text-muted-foreground">{row.original.period}</span>
-    ),
+    cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.period}</span>,
   },
   {
     accessorKey: "status",

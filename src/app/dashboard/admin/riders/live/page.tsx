@@ -1,5 +1,5 @@
 import { MapPin, Truck, Clock, Navigation, Wifi } from "lucide-react";
-import { riders, riderLiveData } from "@/data/riders";
+import { riderLiveData } from "@/data/riders";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { RiderLiveCards } from "@/components/dashboard/admin/riders/live/rider-live-cards";
@@ -8,7 +8,9 @@ import { GlassCard } from "@/components/dashboard/common/glass-card";
 export default function RidersLivePage() {
   const activeNow = riderLiveData.length;
   const totalDelivering = riderLiveData.filter((r) => r.currentOrder).length;
-  const avgBattery = Math.round(riderLiveData.reduce((s, r) => s + r.battery, 0) / riderLiveData.length);
+  const avgBattery = Math.round(
+    riderLiveData.reduce((s, r) => s + r.battery, 0) / riderLiveData.length,
+  );
 
   return (
     <div>
@@ -19,8 +21,20 @@ export default function RidersLivePage() {
       />
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Live Riders" value={activeNow} icon={Wifi} accent="right" />
-        <StatCard label="On Delivery" value={totalDelivering} variant="success" icon={Navigation} accent="right" />
-        <StatCard label="Avg Battery" value={`${avgBattery}%`} variant="warning" icon={Truck} accent="right" />
+        <StatCard
+          label="On Delivery"
+          value={totalDelivering}
+          variant="success"
+          icon={Navigation}
+          accent="right"
+        />
+        <StatCard
+          label="Avg Battery"
+          value={`${avgBattery}%`}
+          variant="warning"
+          icon={Truck}
+          accent="right"
+        />
         <StatCard label="Coverage" value="8 Zones" variant="default" icon={MapPin} accent="right" />
       </div>
       <div className="mt-8">

@@ -108,14 +108,14 @@ export const adminCategories: AdminCategory[] = categoryData.map((cat, i) => ({
   icon: cat.icon,
   image: imgs[i % imgs.length],
   sortOrder: i + 1,
-  status: rand() > 0.12 ? "ACTIVE" as const : "DRAFT" as const,
+  status: rand() > 0.12 ? ("ACTIVE" as const) : ("DRAFT" as const),
   subCategories: cat.subs.map((sub, j) => ({
     id: `subcat_${pad(i + 1)}_${pad(j + 1)}`,
     name: sub.name,
     slug: sub.name.toLowerCase().replace(/\s+/g, "-"),
     description: sub.desc,
     itemCount: sub.items,
-    status: rand() > 0.1 ? "ACTIVE" as const : "DRAFT" as const,
+    status: rand() > 0.1 ? ("ACTIVE" as const) : ("DRAFT" as const),
     sortOrder: j + 1,
   })),
   createdAt: new Date(2025, Math.floor(rand() * 12), Math.floor(1 + rand() * 28))

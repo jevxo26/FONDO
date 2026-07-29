@@ -99,7 +99,10 @@ export const getDocumentStatusBadge = (status: string) => {
   const variants: Record<string, { label: string; className: string }> = {
     VERIFIED: { label: "Verified", className: "bg-success/10 text-success ring-success/20" },
     PENDING: { label: "Pending", className: "bg-warning/10 text-warning ring-warning/20" },
-    REJECTED: { label: "Rejected", className: "bg-destructive/10 text-destructive ring-destructive/20" },
+    REJECTED: {
+      label: "Rejected",
+      className: "bg-destructive/10 text-destructive ring-destructive/20",
+    },
   };
   return variants[status] || variants.PENDING;
 };

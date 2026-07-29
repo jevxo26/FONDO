@@ -3,7 +3,9 @@ export function LoginHistoryTable() {
     <div className="space-y-6">
       <div>
         <h3 className="font-heading text-xl font-normal text-foreground">Security Logs</h3>
-        <p className="font-sans text-[11px] text-muted-foreground/70 mt-1">Recent system logins. Read-only audit.</p>
+        <p className="font-sans text-[11px] text-muted-foreground/70 mt-1">
+          Recent system logins. Read-only audit.
+        </p>
       </div>
       <div className="overflow-x-auto rounded-xl border border-border">
         <table className="w-full text-left border-collapse text-xs">

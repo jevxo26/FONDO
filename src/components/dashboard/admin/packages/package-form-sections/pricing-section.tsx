@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Input } from "@/components/ui/input";
@@ -36,7 +37,9 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
           <Input
             type="number"
             value={data.discountPrice || ""}
-            onChange={(e) => onChange("discountPrice", e.target.value ? parseFloat(e.target.value) : undefined)}
+            onChange={(e) =>
+              onChange("discountPrice", e.target.value ? parseFloat(e.target.value) : undefined)
+            }
             placeholder="Optional"
           />
         </div>

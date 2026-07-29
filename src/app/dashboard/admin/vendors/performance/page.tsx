@@ -8,11 +8,17 @@ import { DarkCard } from "@/components/dashboard/common/dark-card";
 
 export default function VendorsPerformancePage() {
   const totalOrders = vendorPerformanceData.reduce((s, v) => s + v.orders, 0);
-  const avgRating = (vendorPerformanceData.reduce((s, v) => s + v.rating, 0) / vendorPerformanceData.length).toFixed(1);
-  const avgOnTime = Math.round(vendorPerformanceData.reduce((s, v) => s + v.onTimeRate, 0) / vendorPerformanceData.length);
+  const avgRating = (
+    vendorPerformanceData.reduce((s, v) => s + v.rating, 0) / vendorPerformanceData.length
+  ).toFixed(1);
+  const avgOnTime = Math.round(
+    vendorPerformanceData.reduce((s, v) => s + v.onTimeRate, 0) / vendorPerformanceData.length,
+  );
   const totalComplaints = vendorPerformanceData.reduce((s, v) => s + v.complaints, 0);
   const topVendor = vendorPerformanceData.reduce((best, v) => (v.rating > best.rating ? v : best));
-  const bestOnTime = vendorPerformanceData.reduce((best, v) => (v.onTimeRate > best.onTimeRate ? v : best));
+  const bestOnTime = vendorPerformanceData.reduce((best, v) =>
+    v.onTimeRate > best.onTimeRate ? v : best,
+  );
 
   return (
     <div>
@@ -23,9 +29,27 @@ export default function VendorsPerformancePage() {
       />
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Avg. Vendor Rating" value={avgRating} icon={Star} accent="left" />
-        <StatCard label="Total Orders" value={totalOrders.toLocaleString()} variant="success" icon={BarChart3} accent="left" />
-        <StatCard label="On-Time Rate" value={`${avgOnTime}%`} variant="default" icon={TrendingUp} accent="left" />
-        <StatCard label="Quality Alerts" value={totalComplaints} variant="danger" icon={TrendingDown} accent="left" />
+        <StatCard
+          label="Total Orders"
+          value={totalOrders.toLocaleString()}
+          variant="success"
+          icon={BarChart3}
+          accent="left"
+        />
+        <StatCard
+          label="On-Time Rate"
+          value={`${avgOnTime}%`}
+          variant="default"
+          icon={TrendingUp}
+          accent="left"
+        />
+        <StatCard
+          label="Quality Alerts"
+          value={totalComplaints}
+          variant="danger"
+          icon={TrendingDown}
+          accent="left"
+        />
       </div>
       <div className="mt-8">
         <PerformanceTableSection data={vendorPerformanceData} />

@@ -23,29 +23,33 @@ export const riderEarningsColumns: ColumnDef<RiderEarning>[] = [
   {
     accessorKey: "deliveries",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Deliveries" />,
-    cell: ({ row }) => (
-      <span className="font-bold text-foreground">{row.original.deliveries}</span>
-    ),
+    cell: ({ row }) => <span className="font-bold text-foreground">{row.original.deliveries}</span>,
   },
   {
     accessorKey: "basePay",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Base Pay" />,
     cell: ({ row }) => (
-      <span className="text-sm text-muted-foreground">৳{row.original.basePay.toLocaleString()}</span>
+      <span className="text-sm text-muted-foreground">
+        ৳{row.original.basePay.toLocaleString()}
+      </span>
     ),
   },
   {
     accessorKey: "bonus",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Bonus" />,
     cell: ({ row }) => (
-      <span className="text-sm font-semibold text-success">+৳{row.original.bonus.toLocaleString()}</span>
+      <span className="text-sm font-semibold text-success">
+        +৳{row.original.bonus.toLocaleString()}
+      </span>
     ),
   },
   {
     accessorKey: "tips",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Tips" />,
     cell: ({ row }) => (
-      <span className="text-sm font-semibold text-primary">+৳{row.original.tips.toLocaleString()}</span>
+      <span className="text-sm font-semibold text-primary">
+        +৳{row.original.tips.toLocaleString()}
+      </span>
     ),
   },
   {
@@ -62,7 +66,9 @@ export const riderEarningsColumns: ColumnDef<RiderEarning>[] = [
     cell: ({ row }) => {
       const s = row.original.status;
       const v: Record<string, "default" | "secondary" | "outline"> = {
-        PAID: "default", PROCESSING: "secondary", PENDING: "outline",
+        PAID: "default",
+        PROCESSING: "secondary",
+        PENDING: "outline",
       };
       return <Badge variant={v[s]}>{s}</Badge>;
     },

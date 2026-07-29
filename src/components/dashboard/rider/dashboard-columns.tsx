@@ -8,7 +8,9 @@ export const dashboardColumns: ColumnDef<RiderDelivery>[] = [
   {
     accessorKey: "deliveryCode",
     header: "Code",
-    cell: ({ row }) => <span className="font-medium text-foreground">{row.original.deliveryCode}</span>,
+    cell: ({ row }) => (
+      <span className="font-medium text-foreground">{row.original.deliveryCode}</span>
+    ),
   },
   {
     accessorKey: "customerName",
@@ -28,6 +30,8 @@ export const dashboardColumns: ColumnDef<RiderDelivery>[] = [
   {
     accessorKey: "estimatedDeliveryTime",
     header: "ETA",
-    cell: ({ row }) => <span className="text-muted-foreground">{row.original.estimatedDeliveryTime}</span>,
+    cell: ({ row }) => (
+      <span className="text-muted-foreground">{row.original.estimatedDeliveryTime}</span>
+    ),
   },
 ];

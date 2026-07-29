@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
-import { StatCard } from "@/components/dashboard/common/stat-card";
 import { RecentActivity } from "@/components/dashboard/admin/overview/recent-activity";
 import { RevenueChart } from "@/components/dashboard/admin/overview/revenue-chart";
-import { BarChart3, TrendingUp, Truck, Users, Wallet, Loader2 } from "lucide-react";
+import { StatCard } from "@/components/dashboard/common/stat-card";
 import { useGetOrdersQuery } from "@/store/api/slices/orders-api";
+import { BarChart3, Loader2, TrendingUp, Truck, Users, Wallet } from "lucide-react";
+import { useMemo } from "react";
 
 export default function DashboardPage() {
   const { data: apiOrders, isLoading } = useGetOrdersQuery();
@@ -15,7 +15,7 @@ export default function DashboardPage() {
     const pendingOrders = apiOrders
       ? apiOrders.filter((o) => o.status === "PENDING" || o.status === "PREPARING").length
       : 5;
-    
+
     return [
       {
         label: "Total Revenue",
@@ -108,4 +108,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

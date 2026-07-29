@@ -12,12 +12,34 @@ export default function KitchenMealsPage() {
 
   return (
     <div>
-      <PageHeader title="Meals" description="Manage today's meal production schedule." icon={UtensilsCrossed} />
+      <PageHeader
+        title="Meals"
+        description="Manage today's meal production schedule."
+        icon={UtensilsCrossed}
+      />
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Today's Meals" value={total} icon={UtensilsCrossed} accent="right" />
-        <StatCard label="Prepared" value={prepared} variant="success" icon={UtensilsCrossed} accent="right" />
-        <StatCard label="In Progress" value={inProgress} variant="warning" icon={UtensilsCrossed} accent="right" />
-        <StatCard label="Shortfall" value={shortfall} variant="danger" icon={UtensilsCrossed} accent="right" />
+        <StatCard
+          label="Prepared"
+          value={prepared}
+          variant="success"
+          icon={UtensilsCrossed}
+          accent="right"
+        />
+        <StatCard
+          label="In Progress"
+          value={inProgress}
+          variant="warning"
+          icon={UtensilsCrossed}
+          accent="right"
+        />
+        <StatCard
+          label="Shortfall"
+          value={shortfall}
+          variant="danger"
+          icon={UtensilsCrossed}
+          accent="right"
+        />
       </div>
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
         {mealSlots.map((slot) => (

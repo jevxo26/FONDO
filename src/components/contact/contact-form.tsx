@@ -6,7 +6,10 @@ import { ContactFormFields } from "./contact-form-fields";
 
 export default function ContactMain() {
   const [formData, setFormData] = useState({
-    name: "", phone: "", email: "", message: "",
+    name: "",
+    phone: "",
+    email: "",
+    message: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -23,7 +26,11 @@ export default function ContactMain() {
       <div className="wrapper">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           <ContactInfoSidebar />
-          <ContactFormFields formData={formData} onChange={handleInputChange} onSubmit={handleSubmit} />
+          <ContactFormFields
+            formData={formData}
+            onChange={handleInputChange}
+            onSubmit={handleSubmit}
+          />
         </div>
       </div>
     </section>

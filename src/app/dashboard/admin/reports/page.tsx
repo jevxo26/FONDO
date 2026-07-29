@@ -12,7 +12,11 @@ export default function ReportsPage() {
         title="Sales Report"
         description="View sales performance across all channels."
         icon={BarChart3}
-        actions={<Button variant="outline" className="rounded-full"><Download className="size-[18px]" /> Export Report</Button>}
+        actions={
+          <Button variant="outline" className="rounded-full">
+            <Download className="size-[18px]" /> Export Report
+          </Button>
+        }
       />
       <div className="mt-8">
         <ReportSummaryCards />

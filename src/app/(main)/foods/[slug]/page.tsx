@@ -14,22 +14,25 @@ interface PageProps {
 export default async function FoodDetails({ params }: PageProps) {
   const { slug } = await params;
 
+  let food: Food;
+  let relatedFoods: Food[];
+
   try {
-    const food = await apiFetch<Food>(`/api/foods/slug/${slug}`);
-    const related = await apiFetch<{ items: Food[] }>("/api/foods?page=1&limit=5&sortBy=popularity");
-
-    const relatedFoods = related.items
-      .filter((f) => f.slug !== slug)
-      .slice(0, 4);
-
-    return (
-      <>
-        <ProductHero food={food} />
-        <ProductTabs food={food} />
-        <RelatedFoods foods={relatedFoods} />
-      </>
+    food = await apiFetch<Food>(`/api/foods/slug/${slug}`);
+    const related = await apiFetch<{ items: Food[] }>(
+      "/api/foods?page=1&limit=5&sortBy=popularity",
     );
+    relatedFoods = related.items.filter((f) => f.slug !== slug).slice(0, 4);
   } catch {
     notFound();
+    return null;
   }
+
+  return (
+    <>
+      <ProductHero food={food} />
+      <ProductTabs food={food} />
+      <RelatedFoods foods={relatedFoods} />
+    </>
+  );
 }

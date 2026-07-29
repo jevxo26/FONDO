@@ -45,7 +45,7 @@ export function PendingTableSection() {
       label: "Reject",
       icon: <XCircle className="size-4" />,
       variant: "destructive",
-      onClick: (_vendor) => {
+      onClick: () => {
         // Quick reject from dropdown
       },
     },

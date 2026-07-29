@@ -7,9 +7,7 @@ import { CookingPot, Timer, Utensils, CheckCircle } from "lucide-react";
 
 export default function KitchenQueuePage() {
   const preparing = orders.filter((o) => o.orderStatus === "PREPARING");
-  const queued = orders.filter(
-    (o) => o.orderStatus === "CONFIRMED" || o.orderStatus === "PENDING",
-  );
+  const queued = orders.filter((o) => o.orderStatus === "CONFIRMED" || o.orderStatus === "PENDING");
   const ready = orders.filter((o) => o.orderStatus === "READY_FOR_PICKUP");
 
   return (
@@ -66,7 +64,9 @@ export default function KitchenQueuePage() {
                       </div>
                     ))}
                     {detail.items.length > 3 && (
-                      <p className="text-xs text-muted-foreground">+{detail.items.length - 3} more items</p>
+                      <p className="text-xs text-muted-foreground">
+                        +{detail.items.length - 3} more items
+                      </p>
                     )}
                   </div>
                   <div className="mt-4 flex items-center justify-between border-t border-border/40 pt-3">
@@ -94,7 +94,9 @@ export default function KitchenQueuePage() {
 
       {queued.length > 0 && (
         <div className="mt-8">
-          <h2 className="mb-4 font-heading text-lg font-bold text-foreground">Queued (Next to Prepare)</h2>
+          <h2 className="mb-4 font-heading text-lg font-bold text-foreground">
+            Queued (Next to Prepare)
+          </h2>
           <div className="space-y-2">
             {queued.slice(0, 5).map((order, i) => (
               <div

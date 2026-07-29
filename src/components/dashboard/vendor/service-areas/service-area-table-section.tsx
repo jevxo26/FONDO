@@ -26,33 +26,30 @@ const INITIAL_FILTERS: Filters = {
 export function VendorServiceAreaTableSection() {
   const [areas, setAreas] = useState<VendorServiceArea[]>(vendorServiceAreas);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS);
+  const [filters] = useState<Filters>(INITIAL_FILTERS);
 
   const filteredData = useMemo(() => {
     return areas.filter((item) => {
       const matchDivision = filters.division === "ALL" || item.division === filters.division;
       const matchDistrict = filters.district === "ALL" || item.district === filters.district;
-      const matchStatus = filters.isActive === "ALL" || 
+      const matchStatus =
+        filters.isActive === "ALL" ||
         (filters.isActive === "true" ? item.isActive : !item.isActive);
       return matchDivision && matchDistrict && matchStatus;
     });
   }, [areas, filters]);
 
-  const handleFilterChange = useCallback((key: keyof Filters) => (value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  }, []);
-
   const handleToggleStatus = useCallback((area: VendorServiceArea) => {
     setAreas((prev) =>
       prev.map((item) =>
         item.id === area.id
-          ? { 
-              ...item, 
+          ? {
+              ...item,
               isActive: !item.isActive,
-              updatedAt: new Date().toISOString()
+              updatedAt: new Date().toISOString(),
             }
-          : item
-      )
+          : item,
+      ),
     );
   }, []);
 
@@ -81,7 +78,7 @@ export function VendorServiceAreaTableSection() {
         },
       },
     ],
-    [handleToggleStatus]
+    [handleToggleStatus],
   );
 
   const facetedFilters: FacetedFilter[] = useMemo(
@@ -105,7 +102,7 @@ export function VendorServiceAreaTableSection() {
         ],
       },
     ],
-    []
+    [],
   );
 
   const toolbarActions = (
@@ -135,10 +132,7 @@ export function VendorServiceAreaTableSection() {
         enableColumnToggle
         initialSort={initialSort}
       />
-      <AddServiceAreaModal
-        open={isAddModalOpen}
-        onOpenChange={setIsAddModalOpen}
-      />
+      <AddServiceAreaModal open={isAddModalOpen} onOpenChange={setIsAddModalOpen} />
     </>
   );
 }

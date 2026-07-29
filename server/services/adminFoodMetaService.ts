@@ -17,10 +17,10 @@ import { catchServiceAsync } from "../utils/catchServiceAsync";
 import prisma from "../lib/prisma";
 
 export const getNutrition = catchServiceAsync(async (foodId: string) => {
-  const nutrition = await prisma.foodNutrition.findUnique({ where: { foodId } });
-  if (!nutrition) throw new AppError(404, "Nutrition info not found");
+  const food = await prisma.food.findUnique({ where: { id: foodId }, select: { calories: true, protein: true, fat: true, carbohydrate: true, fiber: true, sugar: true, sodium: true, cholesterol: true, servingSize: true } });
+  if (!food) throw new AppError(404, "Food not found");
 
-  return nutrition;
+  return food;
 });
 
 export const updateNutrition = catchServiceAsync(
@@ -28,11 +28,7 @@ export const updateNutrition = catchServiceAsync(
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
-    return prisma.foodNutrition.upsert({
-      where: { foodId },
-      update: data as unknown as Prisma.FoodNutritionUpdateInput,
-      create: { foodId, ...data } as unknown as Prisma.FoodNutritionCreateInput,
-    });
+    return prisma.food.update({ where: { id: foodId }, data });
   },
 );
 
@@ -41,7 +37,9 @@ export const createIngredient = catchServiceAsync(
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
-    return prisma.foodIngredient.create({ data: { ...data, foodId } as unknown as Prisma.FoodIngredientCreateInput });
+    return prisma.foodIngredient.create({
+      data: { ...data, foodId } as unknown as Prisma.FoodIngredientCreateInput,
+    });
   },
 );
 
@@ -57,7 +55,9 @@ export const createAllergen = catchServiceAsync(
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
-    return prisma.foodAllergen.create({ data: { ...data, foodId } as unknown as Prisma.FoodAllergenCreateInput });
+    return prisma.foodAllergen.create({
+      data: { ...data, foodId } as unknown as Prisma.FoodAllergenCreateInput,
+    });
   },
 );
 
@@ -73,7 +73,9 @@ export const createPrice = catchServiceAsync(
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
-    return prisma.foodPrice.create({ data: { ...data, foodId } as unknown as Prisma.FoodPriceCreateInput });
+    return prisma.foodPrice.create({
+      data: { ...data, foodId } as unknown as Prisma.FoodPriceCreateInput,
+    });
   },
 );
 
@@ -82,7 +84,9 @@ export const createDiscount = catchServiceAsync(
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
-    return prisma.foodDiscount.create({ data: { ...data, foodId } as unknown as Prisma.FoodDiscountCreateInput });
+    return prisma.foodDiscount.create({
+      data: { ...data, foodId } as unknown as Prisma.FoodDiscountCreateInput,
+    });
   },
 );
 
@@ -90,29 +94,30 @@ export const deleteDiscount = catchServiceAsync(async (id: string) => {
   const discount = await prisma.foodDiscount.findUnique({ where: { id } });
   if (!discount) throw new AppError(404, "Discount not found");
 
-  return prisma.foodDiscount.update({ where: { id }, data: { status: "inactive" } as unknown as Prisma.FoodDiscountUpdateInput });
+  return prisma.foodDiscount.update({
+    where: { id },
+    data: { status: "inactive" } as unknown as Prisma.FoodDiscountUpdateInput,
+  });
 });
 
-export const addFoodTags = catchServiceAsync(
-  async (foodId: string, tagIds: string[]) => {
-    const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
-    if (!food) throw new AppError(404, "Food not found");
+export const addFoodTags = catchServiceAsync(async (foodId: string, tagIds: string[]) => {
+  const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
+  if (!food) throw new AppError(404, "Food not found");
 
-    const existing = await prisma.foodTagMapping.findMany({
-      where: { foodId, tagId: { in: tagIds } },
-    });
-    const existingTagIds = new Set(existing.map((e) => e.tagId));
-    const newTagIds = tagIds.filter((t) => !existingTagIds.has(t));
+  const existing = await prisma.foodTagMapping.findMany({
+    where: { foodId, tagId: { in: tagIds } },
+  });
+  const existingTagIds = new Set(existing.map((e) => e.tagId));
+  const newTagIds = tagIds.filter((t) => !existingTagIds.has(t));
 
-    if (newTagIds.length === 0) return { count: 0 };
+  if (newTagIds.length === 0) return { count: 0 };
 
-    await prisma.foodTagMapping.createMany({
-      data: newTagIds.map((tagId) => ({ foodId, tagId })),
-    });
+  await prisma.foodTagMapping.createMany({
+    data: newTagIds.map((tagId) => ({ foodId, tagId })),
+  });
 
-    return { count: newTagIds.length };
-  },
-);
+  return { count: newTagIds.length };
+});
 
 export const removeFoodTag = catchServiceAsync(async (foodId: string, tagId: string) => {
   const mapping = await prisma.foodTagMapping.findFirst({
@@ -135,7 +140,9 @@ export const createLabel = catchServiceAsync(
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
-    return prisma.foodLabel.create({ data: { ...data, foodId } as unknown as Prisma.FoodLabelCreateInput });
+    return prisma.foodLabel.create({
+      data: { ...data, foodId } as unknown as Prisma.FoodLabelCreateInput,
+    });
   },
 );
 
@@ -164,7 +171,9 @@ export const createSchedule = catchServiceAsync(
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
-    return prisma.foodSchedule.create({ data: { ...data, foodId } as unknown as Prisma.FoodScheduleCreateInput });
+    return prisma.foodSchedule.create({
+      data: { ...data, foodId } as unknown as Prisma.FoodScheduleCreateInput,
+    });
   },
 );
 
@@ -172,7 +181,10 @@ export const deleteSchedule = catchServiceAsync(async (id: string) => {
   const schedule = await prisma.foodSchedule.findUnique({ where: { id } });
   if (!schedule) throw new AppError(404, "Schedule not found");
 
-  return prisma.foodSchedule.update({ where: { id }, data: { status: "deleted" } as unknown as Prisma.FoodScheduleUpdateInput });
+  return prisma.foodSchedule.update({
+    where: { id },
+    data: { status: "deleted" } as unknown as Prisma.FoodScheduleUpdateInput,
+  });
 });
 
 export const updateVisibility = catchServiceAsync(
@@ -187,5 +199,3 @@ export const updateVisibility = catchServiceAsync(
     });
   },
 );
-
-

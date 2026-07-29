@@ -9,9 +9,6 @@ export default function OrderAnalyticsPage() {
   const completed = orders.filter(
     (o) => o.orderStatus === "COMPLETED" || o.orderStatus === "DELIVERED",
   ).length;
-  const cancelled = orders.filter(
-    (o) => o.orderStatus === "CANCELLED" || o.orderStatus === "REFUNDED",
-  ).length;
   const completionRate = Math.round((completed / orders.length) * 100);
 
   return (
@@ -42,12 +39,7 @@ export default function OrderAnalyticsPage() {
           variant="warning"
           accent="right"
         />
-        <StatCard
-          label="Total Orders"
-          value={orders.length}
-          icon={Users}
-          accent="right"
-        />
+        <StatCard label="Total Orders" value={orders.length} icon={Users} accent="right" />
       </div>
 
       <div className="mt-8">
@@ -56,7 +48,8 @@ export default function OrderAnalyticsPage() {
             Order Volume (Last 30 Days)
           </h2>
           <p className="text-sm text-muted-foreground">
-            Charts and detailed order analytics will appear here — revenue trends, order volume by hour, vendor performance, delivery times.
+            Charts and detailed order analytics will appear here — revenue trends, order volume by
+            hour, vendor performance, delivery times.
           </p>
         </div>
       </div>

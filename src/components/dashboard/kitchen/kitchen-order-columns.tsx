@@ -9,7 +9,9 @@ export const kitchenOrderColumns: ColumnDef<KitchenOrder>[] = [
   {
     accessorKey: "orderNumber",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Order" />,
-    cell: ({ row }) => <span className="font-medium text-foreground">{row.original.orderNumber}</span>,
+    cell: ({ row }) => (
+      <span className="font-medium text-foreground">{row.original.orderNumber}</span>
+    ),
   },
   {
     accessorKey: "customerName",
@@ -22,7 +24,11 @@ export const kitchenOrderColumns: ColumnDef<KitchenOrder>[] = [
     enableSorting: false,
     cell: ({ row }) => {
       const items = row.original.items;
-      return <span className="text-muted-foreground">{items.map((i) => `${i.quantity}x ${i.name}`).join(", ")}</span>;
+      return (
+        <span className="text-muted-foreground">
+          {items.map((i) => `${i.quantity}x ${i.name}`).join(", ")}
+        </span>
+      );
     },
   },
   {
@@ -38,6 +44,8 @@ export const kitchenOrderColumns: ColumnDef<KitchenOrder>[] = [
   {
     accessorKey: "estimatedReadyAt",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Est. Ready" />,
-    cell: ({ row }) => <span className="text-muted-foreground">{row.original.estimatedReadyAt}</span>,
+    cell: ({ row }) => (
+      <span className="text-muted-foreground">{row.original.estimatedReadyAt}</span>
+    ),
   },
 ];

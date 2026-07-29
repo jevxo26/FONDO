@@ -1,4 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -6,10 +7,10 @@ const getAllPackages = async (query: any) => {
   const { categoryId, packageType, search } = query;
   return await prisma.package.findMany({
     where: {
-      status: 'active',
+      status: "active",
       packageCategoryId: categoryId || undefined,
       packageType: packageType || undefined,
-      name: search ? { contains: search, mode: 'insensitive' } : undefined,
+      name: search ? { contains: search, mode: "insensitive" } : undefined,
     },
     include: {
       packageCategory: true,
@@ -22,7 +23,7 @@ const getAllPackages = async (query: any) => {
             include: {
               foods: {
                 include: {
-                  food: true, 
+                  food: true,
                 },
               },
             },
@@ -64,8 +65,48 @@ const getPackageById = async (id: string) => {
 const createVendorPackage = async (vendorId: string, data: any) => {
   return await prisma.package.create({
     data: {
-      ...data,
-      // If your schema stores the vendor ID in the package, include it here.
+      packageCode: data.packageCode,
+      name: data.name,
+      slug: data.slug,
+      description: data.description,
+      thumbnail: data.thumbnail,
+      coverImage: data.coverImage,
+      packageType: data.packageType,
+      durationDays: data.durationDays,
+      totalMeals: data.totalMeals,
+      price: data.price,
+      discountPrice: data.discountPrice,
+      currency: data.currency,
+      isCustomizable: data.isCustomizable,
+      status: data.status,
+
+      packageCategory: {
+        connect: {
+          id: data.packageCategoryId,
+        },
+      },
+
+      days: {
+        create: data.days.map((day: any) => ({
+          dayNumber: day.dayNumber,
+          title: day.title,
+          description: day.description,
+
+          meals: {
+            create: day.meals.map((meal: any) => ({
+              mealType: meal.mealType,
+              mealTime: meal.mealTime,
+
+              foods: {
+                create: meal.foods.map((food: any) => ({
+                  foodId: food.foodId,
+                  quantity: food.quantity,
+                })),
+              },
+            })),
+          },
+        })),
+      },
     },
   });
 };
@@ -80,8 +121,8 @@ const createCustomMealRequest = async (customerId: string, data: any) => {
       name,
       totalDays,
       totalPrice,
-      vendorApprovalStatus: 'pending',
-      paymentStatus: 'pending',
+      vendorApprovalStatus: "pending",
+      paymentStatus: "pending",
       days: {
         create: days.map((day: any) => ({
           dayNumber: day.dayNumber,
@@ -110,7 +151,7 @@ const createCustomMealRequest = async (customerId: string, data: any) => {
 const getPendingCustomRequests = async () => {
   return await prisma.customMealPlan.findMany({
     where: {
-      vendorApprovalStatus: 'pending',
+      vendorApprovalStatus: "pending",
       acceptedByVendorId: null,
     },
     include: {
@@ -124,17 +165,18 @@ const getPendingCustomRequests = async () => {
 const vendorAcceptCustomRequest = async (planId: string, vendorId: string) => {
   const plan = await prisma.customMealPlan.findUnique({
     where: { id: planId },
-    include: { customer: true }
+    include: { customer: true },
   });
 
-  if (!plan) throw new Error('Custom meal plan not found');
-  if (plan.acceptedByVendorId) throw new Error('This request has already been accepted by another vendor');
+  if (!plan) throw new Error("Custom meal plan not found");
+  if (plan.acceptedByVendorId)
+    throw new Error("This request has already been accepted by another vendor");
 
   const updatedPlan = await prisma.customMealPlan.update({
     where: { id: planId },
     data: {
       acceptedByVendorId: vendorId,
-      vendorApprovalStatus: 'accepted',
+      vendorApprovalStatus: "accepted",
     },
   });
 
@@ -142,9 +184,9 @@ const vendorAcceptCustomRequest = async (planId: string, vendorId: string) => {
   await prisma.notification.create({
     data: {
       userId: plan.customerId,
-      title: 'Custom Meal Plan Approved!',
+      title: "Custom Meal Plan Approved!",
       message: `Your custom meal plan "${plan.name}" has been approved by the vendor. You can proceed to payment.`,
-      type: 'ORDER',
+      type: "ORDER",
     },
   });
 
@@ -155,14 +197,15 @@ const vendorAcceptCustomRequest = async (planId: string, vendorId: string) => {
 const confirmCustomOrderPayment = async (planId: string) => {
   const plan = await prisma.customMealPlan.findUnique({ where: { id: planId } });
 
-  if (!plan) throw new Error('Custom meal plan not found');
-  if (plan.vendorApprovalStatus !== 'accepted') throw new Error('Vendor has not accepted this request yet');
+  if (!plan) throw new Error("Custom meal plan not found");
+  if (plan.vendorApprovalStatus !== "accepted")
+    throw new Error("Vendor has not accepted this request yet");
 
   return await prisma.customMealPlan.update({
     where: { id: planId },
     data: {
-      paymentStatus: 'paid',
-      status: 'active',
+      paymentStatus: "paid",
+      status: "active",
     },
   });
 };
@@ -176,7 +219,7 @@ const createPackageCategory = async (data: any) => {
 
 const getAllCategories = async () => {
   return await prisma.packageCategory.findMany({
-    where: { status: 'active' },
+    where: { status: "active" },
   });
 };
 
@@ -189,5 +232,5 @@ export const PackageService = {
   vendorAcceptCustomRequest,
   confirmCustomOrderPayment,
   createPackageCategory,
-  getAllCategories
+  getAllCategories,
 };

@@ -34,10 +34,14 @@ export function TransactionList({ transactions }: TransactionListProps) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-foreground">{tx.title}</p>
-              <p className="text-[10px] text-muted-foreground truncate">#{tx.id} - {tx.description}</p>
+              <p className="text-[10px] text-muted-foreground truncate">
+                #{tx.id} - {tx.description}
+              </p>
             </div>
             <div className="text-right shrink-0">
-              <p className={`text-sm font-bold ${tx.type === "CREDIT" ? "text-success" : "text-destructive"}`}>
+              <p
+                className={`text-sm font-bold ${tx.type === "CREDIT" ? "text-success" : "text-destructive"}`}
+              >
                 {tx.type === "CREDIT" ? "+" : "-"}৳{tx.amount.toLocaleString()}
               </p>
               <p className="text-[10px] text-muted-foreground">{tx.time}</p>
@@ -45,7 +49,10 @@ export function TransactionList({ transactions }: TransactionListProps) {
           </div>
         ))}
       </div>
-      <Button variant="ghost" className="mt-3 w-full gap-1 text-xs font-bold text-muted-foreground hover:text-primary">
+      <Button
+        variant="ghost"
+        className="mt-3 w-full gap-1 text-xs font-bold text-muted-foreground hover:text-primary"
+      >
         View All <ArrowUpRight className="size-3" />
       </Button>
     </GlassCard>

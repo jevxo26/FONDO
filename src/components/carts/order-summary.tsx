@@ -38,7 +38,7 @@ export function OrderSummary({ subtotal, savings, deliveryCharges }: OrderSummar
         </div>
       </div>
 
-{/* Total Aggregate Row */}
+      {/* Total Aggregate Row */}
       <div className="flex items-center justify-between border-t border-border/40 pt-5">
         <span className="font-sans text-sm font-medium text-secondary-foreground">Total</span>
         <span className="font-sans text-xl font-bold text-secondary-foreground">

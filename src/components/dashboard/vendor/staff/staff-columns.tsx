@@ -31,9 +31,7 @@ export const staffColumns: ColumnDef<VendorStaff>[] = [
   },
   {
     accessorKey: "fullName",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Staff" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Staff" />,
     cell: ({ row }) => {
       const staff = row.original;
       return (
@@ -54,9 +52,7 @@ export const staffColumns: ColumnDef<VendorStaff>[] = [
   },
   {
     accessorKey: "designation",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Designation" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Designation" />,
     cell: ({ row }) => {
       const staff = row.original;
       return (
@@ -80,18 +76,12 @@ export const staffColumns: ColumnDef<VendorStaff>[] = [
   },
   {
     accessorKey: "branch",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Branch" />
-    ),
-    cell: ({ row }) => (
-      <span className="text-sm">{row.getValue("branch")}</span>
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Branch" />,
+    cell: ({ row }) => <span className="text-sm">{row.getValue("branch")}</span>,
   },
   {
     accessorKey: "shift",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Shift" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Shift" />,
     cell: ({ row }) => {
       const shift = row.getValue("shift") as string;
       const shiftColors = {
@@ -100,7 +90,10 @@ export const staffColumns: ColumnDef<VendorStaff>[] = [
         Night: "bg-purple-500/10 text-purple-500",
       };
       return (
-        <Badge variant="outline" className={cn("ring-1", shiftColors[shift as keyof typeof shiftColors] || "bg-muted")}>
+        <Badge
+          variant="outline"
+          className={cn("ring-1", shiftColors[shift as keyof typeof shiftColors] || "bg-muted")}
+        >
           {shift}
         </Badge>
       );
@@ -108,23 +101,17 @@ export const staffColumns: ColumnDef<VendorStaff>[] = [
   },
   {
     accessorKey: "salary",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Salary" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Salary" />,
     cell: ({ row }) => {
       const salary = row.getValue("salary") as number;
       return (
-        <span className="font-fraunces font-semibold text-sm">
-          ৳{salary.toLocaleString()}
-        </span>
+        <span className="font-fraunces font-semibold text-sm">৳{salary.toLocaleString()}</span>
       );
     },
   },
   {
     accessorKey: "joiningDate",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Joined" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Joined" />,
     cell: ({ row }) => {
       const date = row.getValue("joiningDate") as string;
       return <span className="text-sm">{new Date(date).toLocaleDateString()}</span>;
@@ -132,9 +119,7 @@ export const staffColumns: ColumnDef<VendorStaff>[] = [
   },
   {
     accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({ row }) => {
       const status = row.getValue("status") as VendorStaff["status"];
       const badge = getStaffStatusBadge(status);

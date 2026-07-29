@@ -10,7 +10,7 @@ export default function VendorServiceAreasPage() {
   const activeAreas = vendorServiceAreas.filter((a) => a.isActive).length;
   const inactiveAreas = vendorServiceAreas.filter((a) => !a.isActive).length;
   const avgDeliveryCharge = Math.round(
-    vendorServiceAreas.reduce((acc, a) => acc + a.deliveryCharge, 0) / totalAreas
+    vendorServiceAreas.reduce((acc, a) => acc + a.deliveryCharge, 0) / totalAreas,
   );
 
   return (
@@ -22,12 +22,7 @@ export default function VendorServiceAreasPage() {
       />
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          label="Total Areas"
-          value={totalAreas.toString()}
-          icon={MapPin}
-          accent="right"
-        />
+        <StatCard label="Total Areas" value={totalAreas.toString()} icon={MapPin} accent="right" />
         <StatCard
           label="Active"
           value={activeAreas.toString()}
@@ -53,9 +48,7 @@ export default function VendorServiceAreasPage() {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-fraunces text-xl font-semibold tracking-tight">
-            Service Area List
-          </h3>
+          <h3 className="font-fraunces text-xl font-semibold tracking-tight">Service Area List</h3>
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
             {activeAreas} Active · {totalAreas} Total
           </p>

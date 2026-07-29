@@ -32,7 +32,8 @@ export default function VendorEarningsPage() {
     .reduce((acc, s) => acc + s.netAmount, 0);
 
   // Get current wallet balance
-  const currentBalance = vendorWalletTransactions[vendorWalletTransactions.length - 1]?.balanceAfter || 0;
+  const currentBalance =
+    vendorWalletTransactions[vendorWalletTransactions.length - 1]?.balanceAfter || 0;
 
   return (
     <div className="space-y-8">
@@ -74,9 +75,7 @@ export default function VendorEarningsPage() {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-fraunces text-xl font-semibold tracking-tight">
-            Earnings Overview
-          </h3>
+          <h3 className="font-fraunces text-xl font-semibold tracking-tight">Earnings Overview</h3>
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
             Balance: ৳{currentBalance.toLocaleString()}
           </p>

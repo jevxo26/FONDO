@@ -7,8 +7,16 @@ import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { cn } from "@/lib/utils";
 import {
-  Ban, Check, CheckCircle, Clock, CookingPot, LayoutList,
-  Package, Receipt, Truck, XCircle,
+  Ban,
+  Check,
+  CheckCircle,
+  Clock,
+  CookingPot,
+  LayoutList,
+  Package,
+  Receipt,
+  Truck,
+  XCircle,
 } from "lucide-react";
 import type { CustomerOrder, OrderStatus } from "@/data/orders";
 
@@ -89,8 +97,20 @@ export default function AllOrdersPage() {
 
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Total Orders" value={total} icon={Receipt} accent="right" />
-        <StatCard label="Active" value={activeOrders} variant="success" icon={Clock} accent="right" />
-        <StatCard label="Completed" value={completed} variant="success" icon={CheckCircle} accent="right" />
+        <StatCard
+          label="Active"
+          value={activeOrders}
+          variant="success"
+          icon={Clock}
+          accent="right"
+        />
+        <StatCard
+          label="Completed"
+          value={completed}
+          variant="success"
+          icon={CheckCircle}
+          accent="right"
+        />
         <StatCard label="Cancelled" value={cancelled} variant="danger" icon={Ban} accent="right" />
       </div>
 

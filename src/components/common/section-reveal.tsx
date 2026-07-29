@@ -5,7 +5,15 @@ import { motion, useReducedMotion, type Variants, type HTMLMotionProps } from "f
 import { cn } from "@/lib/utils";
 
 type Direction = "up" | "down" | "left" | "right";
-type Variant = "fadeSlide" | "fadeScale" | "clipReveal" | "rotateReveal" | "blurReveal" | "maskReveal" | "perspectiveReveal" | "elasticSlide";
+type Variant =
+  | "fadeSlide"
+  | "fadeScale"
+  | "clipReveal"
+  | "rotateReveal"
+  | "blurReveal"
+  | "maskReveal"
+  | "perspectiveReveal"
+  | "elasticSlide";
 
 interface SectionRevealProps {
   children: React.ReactNode;
@@ -196,7 +204,11 @@ export const SectionRevealItem = forwardRef<HTMLDivElement, ItemProps>(function 
       case "maskReveal":
         return {
           hidden: { opacity: 0, clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)" },
-          visible: { opacity: 1, clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", transition: itemT },
+          visible: {
+            opacity: 1,
+            clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+            transition: itemT,
+          },
         };
       case "perspectiveReveal":
         return {

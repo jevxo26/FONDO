@@ -4,13 +4,12 @@ import type { LucideIcon } from "lucide-react";
 import {
   Building2,
   ClipboardList,
-  LayoutDashboard,
   Settings,
   Users,
   Utensils,
   Wallet,
   Landmark,
-  MapPin, // ← Added for Service Areas
+  MapPin,
 } from "lucide-react";
 
 export interface SidebarItem {

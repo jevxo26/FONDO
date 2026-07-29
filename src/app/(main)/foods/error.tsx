@@ -21,9 +21,7 @@ export default function FoodsError({
         <h2 className="font-heading text-2xl font-semibold text-foreground mb-2">
           Something went wrong
         </h2>
-        <p className="font-sans text-sm text-muted-foreground mb-6">
-          {handleApiError(error)}
-        </p>
+        <p className="font-sans text-sm text-muted-foreground mb-6">{handleApiError(error)}</p>
         <Button onClick={reset} variant="default" className="rounded-xl">
           Try again
         </Button>

@@ -101,7 +101,12 @@ function pad(num: number) {
 }
 
 export const mealPlans: MealPlan[] = planNames.map((item, i) => {
-  const price = i === 1 ? 12000 + Math.round(rand() * 3000) * 100 : i === 4 ? 6000 + Math.round(rand() * 1000) * 100 : 2500 + Math.round(rand() * 1500) * 100;
+  const price =
+    i === 1
+      ? 12000 + Math.round(rand() * 3000) * 100
+      : i === 4
+        ? 6000 + Math.round(rand() * 1000) * 100
+        : 2500 + Math.round(rand() * 1500) * 100;
   return {
     id: `plan_${pad(i + 1)}`,
     name: item.name,
@@ -114,7 +119,7 @@ export const mealPlans: MealPlan[] = planNames.map((item, i) => {
     mealsPerDayDescription: item.mealsDesc,
     subscriberCount: item.subscribers,
     isPopular: rand() > 0.5,
-    status: rand() > 0.15 ? "ACTIVE" : "DRAFT" as const,
+    status: rand() > 0.15 ? "ACTIVE" : ("DRAFT" as const),
     createdAt: new Date(2025, Math.floor(rand() * 12), Math.floor(1 + rand() * 28))
       .toISOString()
       .split("T")[0],

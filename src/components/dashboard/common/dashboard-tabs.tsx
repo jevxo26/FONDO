@@ -26,9 +26,7 @@ export function DashboardTabs({ tabs, className }: DashboardTabsProps) {
     >
       {tabs.map((tab) => {
         const href = tab.href;
-        const isActive =
-          href === pathname ||
-          (href !== tabs[0].href && pathname.startsWith(href));
+        const isActive = href === pathname || (href !== tabs[0].href && pathname.startsWith(href));
 
         return (
           <Link

@@ -19,15 +19,15 @@ export const riderColumns: ColumnDef<Rider>[] = [
   {
     accessorKey: "zone",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Zone" />,
-    cell: ({ row }) => (
-      <span className="text-sm text-muted-foreground">{row.original.zone}</span>
-    ),
+    cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.zone}</span>,
   },
   {
     accessorKey: "vehicleType",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Vehicle" />,
     cell: ({ row }) => (
-      <span className="text-xs font-bold uppercase text-muted-foreground">{row.original.vehicleType}</span>
+      <span className="text-xs font-bold uppercase text-muted-foreground">
+        {row.original.vehicleType}
+      </span>
     ),
   },
   {
@@ -46,9 +46,7 @@ export const riderColumns: ColumnDef<Rider>[] = [
   {
     accessorKey: "rating",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Rating" />,
-    cell: ({ row }) => (
-      <span className="font-bold text-foreground">{row.original.rating}</span>
-    ),
+    cell: ({ row }) => <span className="font-bold text-foreground">{row.original.rating}</span>,
   },
   {
     accessorKey: "completedToday",

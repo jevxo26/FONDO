@@ -12,7 +12,8 @@ export default function MissionVision() {
           </div>
           <h3 className="font-heading text-xl font-normal text-[#16100C]">Our Mission</h3>
           <p className="font-sans text-xs text-[#16100C]/70 leading-relaxed font-light">
-            To make healthy eating accessible, affordable, and delicious for everyone, showing that premium nutrition is never a luxury, but a daily standard.
+            To make healthy eating accessible, affordable, and delicious for everyone, showing that
+            premium nutrition is never a luxury, but a daily standard.
           </p>
         </div>
         {/* Vision Card */}
@@ -22,7 +23,8 @@ export default function MissionVision() {
           </div>
           <h3 className="font-heading text-xl font-normal text-[#16100C]">Our Vision</h3>
           <p className="font-sans text-xs text-[#16100C]/70 leading-relaxed font-light">
-            To become Bangladesh&apos;s most trusted personalized food subscription platform, nurturing a healthier nation one plate at a time.
+            To become Bangladesh&apos;s most trusted personalized food subscription platform,
+            nurturing a healthier nation one plate at a time.
           </p>
         </div>
       </div>

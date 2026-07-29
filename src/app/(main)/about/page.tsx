@@ -15,7 +15,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#FAF5EB] text-[#16100C] selection:bg-[#CEA359]/20 overflow-x-hidden">
       {/* 1. Hero Section */}
-      <HeroSection/>
+      <HeroSection />
 
       {/* 2. Our Story (The Story Behind Food Flow) */}
       <OurStory />

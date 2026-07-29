@@ -91,6 +91,7 @@ export function DataTable<TData>({
     ];
   }, [columns, rowActions]);
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns: allColumns,
@@ -154,7 +155,7 @@ export function DataTable<TData>({
                   </TableRow>
                 ))
               ) : table.getRowModel().rows.length ? (
-                table.getRowModel().rows.map((row, rowIndex) => (
+                table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}

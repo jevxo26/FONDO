@@ -34,10 +34,14 @@ export function FoodsProvider({ children }: { children: React.ReactNode }) {
         setActiveCategory,
         activeSubCategory,
         setActiveSubCategory,
-        searchQuery, setSearchQuery,
-        foodTypeFilter, setFoodTypeFilter,
-        sortBy, setSortBy,
-        currentPage, setCurrentPage
+        searchQuery,
+        setSearchQuery,
+        foodTypeFilter,
+        setFoodTypeFilter,
+        sortBy,
+        setSortBy,
+        currentPage,
+        setCurrentPage,
       }}
     >
       {children}

@@ -13,7 +13,9 @@ export default function VendorDetailsPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl font-bold tracking-tight md:text-3xl">Vendor Details</h1>
-          <p className="text-sm text-muted-foreground md:text-base">Detailed profile for vendor ID: {id}</p>
+          <p className="text-sm text-muted-foreground md:text-base">
+            Detailed profile for vendor ID: {id}
+          </p>
         </div>
         <div className="flex shrink-0 flex-wrap gap-2">
           <Button variant="outline">Edit Info</Button>

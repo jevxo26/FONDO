@@ -1,0 +1,49 @@
+<h2 style="margin: 0 0 4px; font-size: 22px;">Order Confirmed &#x2705;</h2>
+<p style="color: #52525b; margin: 0 0 20px;">
+  Thank you, <strong>{{firstName}}</strong>! Your order <strong>{{orderNumber}}</strong> has been placed.
+</p>
+
+<table role="presentation" style="background: #fafafa; border-radius: 12px; padding: 16px 20px; width: 100%; margin-bottom: 20px;">
+  <tr>
+    <td style="font-size: 13px; color: #71717a; padding: 4px 0;">Order Number</td>
+    <td style="text-align: right; font-weight: 600; padding: 4px 0;">{{orderNumber}}</td>
+  </tr>
+  <tr>
+    <td style="font-size: 13px; color: #71717a; padding: 4px 0;">Placed On</td>
+    <td style="text-align: right; padding: 4px 0;">{{placedAt}}</td>
+  </tr>
+  <tr>
+    <td style="font-size: 13px; color: #71717a; padding: 4px 0;">Delivery</td>
+    <td style="text-align: right; padding: 4px 0;">{{deliveryDate}}</td>
+  </tr>
+</table>
+
+{{#if items.length}}
+<h3 style="font-size: 15px; margin: 0 0 8px;">Order Items</h3>
+<table role="presentation" class="order-table">
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th class="text-right">Qty</th>
+      <th class="text-right">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each items}}
+    <tr>
+      <td>{{name}}</td>
+      <td class="text-right">{{quantity}}</td>
+      <td class="text-right">{{totalPrice}}</td>
+    </tr>
+    {{/each}}
+    <tr class="total-row">
+      <td colspan="2" style="text-align: right;">Total</td>
+      <td class="text-right">{{totalAmount}}</td>
+    </tr>
+  </tbody>
+</table>
+{{/if}}
+
+<p style="text-align: center; margin-top: 24px;">
+  <a href="{{orderUrl}}" class="btn btn-primary">View Order</a>
+</p>

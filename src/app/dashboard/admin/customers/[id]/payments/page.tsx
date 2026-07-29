@@ -16,7 +16,9 @@ const paymentColumns: ColumnDef<AdminPayment>[] = [
     accessorKey: "paymentNumber",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Payment #" />,
     cell: ({ row }) => (
-      <span className="font-mono text-sm font-bold text-foreground">{row.original.paymentNumber}</span>
+      <span className="font-mono text-sm font-bold text-foreground">
+        {row.original.paymentNumber}
+      </span>
     ),
   },
   {
@@ -48,9 +50,7 @@ const paymentColumns: ColumnDef<AdminPayment>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Date" />,
     cell: ({ row }) => (
       <span className="text-sm text-muted-foreground">
-        {row.original.paymentDate
-          ? new Date(row.original.paymentDate).toLocaleDateString()
-          : "—"}
+        {row.original.paymentDate ? new Date(row.original.paymentDate).toLocaleDateString() : "—"}
       </span>
     ),
   },
@@ -71,9 +71,10 @@ export default function CustomerPaymentsPage() {
 
   const payments = data ?? [];
   const total = payments.length;
-  const completed = payments.filter((p) => p.status === "COMPLETED").length;
   const failed = payments.filter((p) => p.status === "FAILED").length;
-  const refunded = payments.filter((p) => p.status === "REFUNDED" || p.status === "PARTIALLY_REFUNDED").length;
+  const refunded = payments.filter(
+    (p) => p.status === "REFUNDED" || p.status === "PARTIALLY_REFUNDED",
+  ).length;
   const totalRevenue = payments
     .filter((p) => p.status === "COMPLETED")
     .reduce((s, p) => s + Number(p.amount), 0);
@@ -91,17 +92,48 @@ export default function CustomerPaymentsPage() {
       <div className="mb-6 flex items-center gap-3">
         <h1 className="font-fraunces text-2xl font-bold text-foreground">Payments</h1>
         <div className="flex gap-1">
-          <Link href={`/dashboard/admin/customers/${id}`} className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary">Overview</Link>
-          <Link href={`/dashboard/admin/customers/${id}/orders`} className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary">Orders</Link>
-          <Link href={`/dashboard/admin/customers/${id}/subscriptions`} className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary">Subscriptions</Link>
-          <Link href={`/dashboard/admin/customers/${id}/payments`} className="rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold uppercase text-primary-foreground">Payments</Link>
-          <Link href={`/dashboard/admin/customers/${id}/wallets`} className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary">Wallet</Link>
+          <Link
+            href={`/dashboard/admin/customers/${id}`}
+            className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
+          >
+            Overview
+          </Link>
+          <Link
+            href={`/dashboard/admin/customers/${id}/orders`}
+            className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
+          >
+            Orders
+          </Link>
+          <Link
+            href={`/dashboard/admin/customers/${id}/subscriptions`}
+            className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
+          >
+            Subscriptions
+          </Link>
+          <Link
+            href={`/dashboard/admin/customers/${id}/payments`}
+            className="rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold uppercase text-primary-foreground"
+          >
+            Payments
+          </Link>
+          <Link
+            href={`/dashboard/admin/customers/${id}/wallets`}
+            className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-bold uppercase text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
+          >
+            Wallet
+          </Link>
         </div>
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Total Payments" value={total} icon={CreditCard} accent="top" />
-        <StatCard label="Revenue Collected" value={`৳${totalRevenue.toLocaleString()}`} variant="success" icon={CheckCircle} accent="top" />
+        <StatCard
+          label="Revenue Collected"
+          value={`৳${totalRevenue.toLocaleString()}`}
+          variant="success"
+          icon={CheckCircle}
+          accent="top"
+        />
         <StatCard label="Failed" value={failed} variant="danger" icon={XCircle} accent="top" />
         <StatCard label="Refunded" value={refunded} variant="warning" icon={Ban} accent="top" />
       </div>

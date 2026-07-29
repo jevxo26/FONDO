@@ -1,5 +1,4 @@
 import React from "react";
-import { Star } from "lucide-react";
 import Image from "next/image";
 
 export default function ReviewsHero() {
@@ -13,22 +12,26 @@ export default function ReviewsHero() {
   return (
     <section className="py-[var(--space-section)] bg-background animate-fadeIn">
       <div className="wrapper grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        
         {/* Left Column Text Panel */}
         <div className="lg:col-span-6 space-y-6">
           <h1 className="font-heading text-4xl md:text-6xl font-normal leading-tight">
             Customer Reviews
           </h1>
           <p className="font-sans text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl">
-            See what thousands of active sub-continent food enthusiasts say about our high-protein, heritage-inspired nutritional plan boxes delivered fresh daily.
+            See what thousands of active sub-continent food enthusiasts say about our high-protein,
+            heritage-inspired nutritional plan boxes delivered fresh daily.
           </p>
-          
+
           {/* Quick Metrics Metrics Layout Row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-border/60">
             {summaryStats.map((stat, idx) => (
               <div key={idx} className="space-y-1">
-                <div className="font-heading text-xl md:text-2xl font-normal text-foreground">{stat.value}</div>
-                <div className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground">{stat.label}</div>
+                <div className="font-heading text-xl md:text-2xl font-normal text-foreground">
+                  {stat.value}
+                </div>
+                <div className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
@@ -38,10 +41,10 @@ export default function ReviewsHero() {
         <div className="lg:col-span-6 flex flex-col items-center lg:items-end">
           <div className="relative w-full max-w-lg aspect-[4/3] rounded-2xl overflow-hidden border border-border shadow-[var(--shadow-card)]">
             <Image
-            width={800}
-            height={600} 
-              src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800&auto=format&fit=crop" 
-              alt="Food Flow fresh ingredients box delivery unpackaging" 
+              width={800}
+              height={600}
+              src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800&auto=format&fit=crop"
+              alt="Food Flow fresh ingredients box delivery unpackaging"
               className="w-full h-full object-cover"
             />
             {/* Floating Trust Verification Badge */}
@@ -57,7 +60,6 @@ export default function ReviewsHero() {
             </div>
           </div>
         </div>
-
       </div>
     </section>
   );

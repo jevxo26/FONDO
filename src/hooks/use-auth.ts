@@ -3,7 +3,12 @@
 import { useCallback, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAppSelector } from "@/store/store";
-import { useLoginMutation, useRegisterMutation, useFetchMeQuery, useLogoutMutation } from "@/store/api/slices/auth-api";
+import {
+  useLoginMutation,
+  useRegisterMutation,
+  useFetchMeQuery,
+  useLogoutMutation,
+} from "@/store/api/slices/auth-api";
 import { getToken } from "@/lib/token";
 import type { RegisterInput } from "@/lib/validations/auth";
 
@@ -16,14 +21,12 @@ export function useAuth() {
   useFetchMeQuery(undefined, { skip: !getToken() || isAuthenticated });
 
   const login = useCallback(
-    (identity: string, password: string) =>
-      loginMutation({ identity, password }).unwrap(),
+    (identity: string, password: string) => loginMutation({ identity, password }).unwrap(),
     [loginMutation],
   );
 
   const register = useCallback(
-    (data: Omit<RegisterInput, "confirmPassword">) =>
-      registerMutation(data).unwrap(),
+    (data: Omit<RegisterInput, "confirmPassword">) => registerMutation(data).unwrap(),
     [registerMutation],
   );
 

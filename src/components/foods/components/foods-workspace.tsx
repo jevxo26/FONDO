@@ -2,8 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { useFoods } from "./foods-provider";
-import { useFoodCategories } from "@/hooks/use-food-categories";
-import { useGetFoods } from "@/hooks/use-foods";
+import { useFoodCategories, useGetFoods } from "@/store/api/slices/foods-api";
 import FoodGrid from "./food-grid";
 import Pagination from "./pagination";
 import { Food } from "@/types/food";

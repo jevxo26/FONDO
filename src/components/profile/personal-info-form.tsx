@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
-import { useChangePassword, useUpdateProfile } from "@/hooks/use-profile";
+import { useChangePassword, useUpdateProfile } from "@/store/api/slices/profile-api";
 import { handleApiError } from "@/lib/api-error";
 import { Input } from "@/components/ui/input";
 import { FormField } from "@/components/common/form-field";

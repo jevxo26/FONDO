@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, CreditCard, CheckCircle, PauseCircle, XCircle } from "lucide-react";
 import { DataTable } from "@/components/common/table";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { useAdminCustomerSubscriptions } from "@/hooks/use-admin-customers";
+import { useAdminCustomerSubscriptions } from "@/store/api/slices/admin-customers-api";
 import type { AdminSubscription } from "@/types/admin";
 import { DataTableColumnHeader } from "@/components/common/table";
 import type { ColumnDef } from "@tanstack/react-table";

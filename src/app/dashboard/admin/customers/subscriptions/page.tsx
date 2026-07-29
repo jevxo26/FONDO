@@ -9,7 +9,7 @@ import { DataTableColumnHeader } from "@/components/common/table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { SubscriptionStatusBadge } from "@/components/dashboard/admin/customers/subscriptions/subscription-status-badge";
 import { CustomerSearch } from "@/components/dashboard/admin/customers/common/customer-search";
-import { useAdminCustomerSubscriptions } from "@/hooks/use-admin-customers";
+import { useAdminCustomerSubscriptions } from "@/store/api/slices/admin-customers-api";
 import type { AdminSubscription, AdminCustomer } from "@/types/admin";
 
 const subscriptionColumns: ColumnDef<AdminSubscription>[] = [

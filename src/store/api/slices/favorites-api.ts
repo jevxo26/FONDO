@@ -1,5 +1,6 @@
 import { api } from "../base-api";
 import { getErrorMessage } from "../utils";
+import { createMutationWrapper } from "../mutation-wrapper";
 import type { Food } from "@/types/food";
 import { toast } from "sonner";
 
@@ -60,3 +61,15 @@ export const favoritesApi = api.injectEndpoints({
 
 export const { useGetFavoritesQuery, useToggleFavoriteMutation, useRemoveFavoriteMutation } =
   favoritesApi;
+
+export const useFavorites = () => useGetFavoritesQuery();
+
+export function useToggleFavorite() {
+  const [trigger, { isLoading }] = useToggleFavoriteMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useRemoveFavorite() {
+  const [trigger, { isLoading }] = useRemoveFavoriteMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}

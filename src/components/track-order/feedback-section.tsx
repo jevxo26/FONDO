@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Star, Loader2 } from "lucide-react";
-import { useSubmitFeedback } from "@/hooks/use-orders";
+import { useSubmitFeedback } from "@/store/api/slices/orders-api";
 import { handleApiError } from "@/lib/api-error";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";

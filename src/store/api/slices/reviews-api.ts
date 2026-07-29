@@ -1,5 +1,6 @@
-import { api } from "../base-api";
 import type { ReviewListResponse } from "@/types/food-review";
+import { api } from "../base-api";
+import { createMutationWrapper } from "../mutation-wrapper";
 
 export const reviewsApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -40,3 +41,23 @@ export const {
   useUpdateReviewMutation,
   useDeleteReviewMutation,
 } = reviewsApi;
+
+export const useFoodReviews = (foodId: string) => {
+  const { data, isLoading, error } = useGetFoodReviewsQuery(foodId, { skip: !foodId });
+  return { data, isLoading, error };
+};
+
+export function useCreateReview() {
+  const [trigger, { isLoading }] = useCreateReviewMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useUpdateReview() {
+  const [trigger, { isLoading }] = useUpdateReviewMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useDeleteReview() {
+  const [trigger, { isLoading }] = useDeleteReviewMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}

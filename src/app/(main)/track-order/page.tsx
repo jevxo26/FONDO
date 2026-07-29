@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Check, Truck, CreditCard, Smartphone, Loader2 } from "lucide-react";
-import { useOrder } from "@/hooks/use-orders";
+import { useOrder } from "@/store/api/slices/orders-api";
 import { handleApiError } from "@/lib/api-error";
 import FeedbackSection from "@/components/track-order/feedback-section";
 import InvoiceSection from "@/components/track-order/invoice-section";

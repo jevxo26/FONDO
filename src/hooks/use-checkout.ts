@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useAddresses, useCreateAddress } from "@/hooks/use-addresses";
-import { useApplyCoupon, useRemoveCoupon, useSelectAddress } from "@/hooks/use-coupon";
-import { useCart } from "@/hooks/use-cart";
-import { usePaymentMethods } from "@/hooks/use-payment-methods";
-import { usePlaceOrder } from "@/hooks/use-orders";
-import { useClearCart } from "@/hooks/use-cart";
-import { useInitiatePayment } from "@/hooks/use-payments";
+import { useAddresses, useCreateAddress, useSelectAddress } from "@/store/api/slices/addresses-api";
+import { useApplyCoupon, useRemoveCoupon } from "@/store/api/slices/coupon-api";
+import { useCart, useClearCart } from "@/store/api/slices/cart-api";
+import { usePaymentMethods } from "@/store/api/slices/payments-api";
+import { usePlaceOrder } from "@/store/api/slices/orders-api";
+import { useInitiatePayment } from "@/store/api/slices/payments-api";
 import { handleApiError } from "@/lib/api-error";
 import type { CheckoutFormData, DeliverySchedule, FulfillmentType } from "@/types/checkout-type";
 import type { Address } from "@/types/address";
@@ -130,7 +129,7 @@ export default function useCheckout(): UseCheckoutReturn {
 
   const handleRemoveCoupon = async () => {
     try {
-      await removeCoupon.mutateAsync();
+      await removeCoupon.mutateAsync(undefined);
       setAppliedCoupon(null);
       toast.success("Coupon removed");
     } catch (error) {

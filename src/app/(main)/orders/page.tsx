@@ -4,7 +4,7 @@ import { Suspense, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowLeft, Loader2, Package, XCircle, Star, Receipt, Clock, MapPin } from "lucide-react";
-import { useOrders, useCancelOrder } from "@/hooks/use-orders";
+import { useOrders, useCancelOrder } from "@/store/api/slices/orders-api";
 import { handleApiError } from "@/lib/api-error";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";

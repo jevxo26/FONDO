@@ -4,7 +4,7 @@ import { CartItemCard } from "@/components/carts/cart-item-card";
 import { OrderSummary } from "@/components/carts/order-summary";
 import { SectionReveal } from "@/components/common/section-reveal";
 import { Button } from "@/components/ui/button";
-import { useCart, useClearCart, useRemoveFromCart, useUpdateCartItem } from "@/hooks/use-cart";
+import { useCart, useClearCart, useRemoveFromCart, useUpdateCartItem } from "@/store/api/slices/cart-api";
 import { handleApiError } from "@/lib/api-error";
 import { Loader2, ShoppingCart, Trash2 } from "lucide-react";
 import Link from "next/link";

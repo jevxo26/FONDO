@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Loader2, Receipt } from "lucide-react";
-import { useInvoice } from "@/hooks/use-orders";
+import { useInvoice } from "@/store/api/slices/orders-api";
 
 interface InvoiceSectionProps {
   orderId: string;

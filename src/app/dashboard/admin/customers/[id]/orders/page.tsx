@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, ShoppingBag, CheckCircle, Clock, Timer } from "lucide-react";
 import { DataTable } from "@/components/common/table";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { useAdminCustomerOrders } from "@/hooks/use-admin-customers";
+import { useAdminCustomerOrders } from "@/store/api/slices/admin-customers-api";
 import type { AdminCustomerOrder } from "@/types/admin";
 import { orderColumns } from "@/components/dashboard/admin/customers/orders/order-columns";
 import { useMemo } from "react";

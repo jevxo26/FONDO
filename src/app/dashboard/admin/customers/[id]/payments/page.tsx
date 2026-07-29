@@ -6,7 +6,7 @@ import { ArrowLeft, CreditCard, CheckCircle, XCircle, Ban } from "lucide-react";
 import { DataTable } from "@/components/common/table";
 import { DataTableColumnHeader } from "@/components/common/table";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { useAdminCustomerPayments } from "@/hooks/use-admin-customers";
+import { useAdminCustomerPayments } from "@/store/api/slices/admin-customers-api";
 import type { AdminPayment } from "@/types/admin";
 import type { ColumnDef } from "@tanstack/react-table";
 import { PaymentStatusBadge } from "@/components/dashboard/admin/customers/payments/payment-status-badge";

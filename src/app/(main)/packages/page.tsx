@@ -1,4 +1,3 @@
-"use client";
 import PackagesFaq from "@/components/packeges/package-faq";
 import { PackagesProvider } from "@/components/packeges/packages-provider";
 import PackagesComparison from "@/components/packeges/packege-comparison";

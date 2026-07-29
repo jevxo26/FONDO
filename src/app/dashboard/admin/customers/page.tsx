@@ -19,7 +19,7 @@ import { DarkCard } from "@/components/dashboard/common/dark-card";
 import { GlassCard } from "@/components/dashboard/common/glass-card";
 import { CustomerCard } from "@/components/dashboard/common/customer-card";
 import { StatusMetrics } from "@/components/dashboard/admin/customers/profiles/customer-status";
-import { useAdminCustomers } from "@/hooks/use-admin-customers";
+import { useAdminCustomers } from "@/store/api/slices/admin-customers-api";
 
 function timeAgo(dateStr: string | null): string {
   if (!dateStr) return "Never";

@@ -4,7 +4,6 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -162,13 +161,14 @@ export function SidebarNavDropdown({
             <div className="relative">
               <div className="absolute left-[11px] top-0 bottom-2 w-px bg-gradient-to-b from-primary/30 via-primary/15 to-transparent" />
               <TreeChildren
-                children={item.children}
                 basePath={basePath}
                 pathname={pathname}
                 onNavigate={onNavigate}
                 lineLeft={11}
                 linkMargin="ml-6"
-              />
+              >
+                {item.children}
+              </TreeChildren>
             </div>
           </PopoverContent>
         </Popover>
@@ -206,13 +206,14 @@ export function SidebarNavDropdown({
         <div className="relative mt-0.5 group-data-[collapsible=icon]:hidden">
           <div className="absolute left-[23px] top-0 bottom-2 w-px bg-gradient-to-b from-primary/30 via-primary/15 to-transparent" />
           <TreeChildren
-            children={item.children}
             basePath={basePath}
             pathname={pathname}
             onNavigate={onNavigate}
             lineLeft={23}
             linkMargin="ml-9"
-          />
+          >
+            {item.children}
+          </TreeChildren>
         </div>
       )}
     </SidebarMenuItem>

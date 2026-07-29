@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useOrder } from "@/hooks/use-orders";
+import { useOrder } from "@/store/api/slices/orders-api";
 import Link from "next/link";
 import { Check, Package, Home, Clock } from "lucide-react";
 import { Suspense } from "react";

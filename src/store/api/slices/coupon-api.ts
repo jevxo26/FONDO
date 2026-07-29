@@ -1,4 +1,5 @@
 import { api } from "../base-api";
+import { createMutationWrapper } from "../mutation-wrapper";
 
 export const couponApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -20,3 +21,13 @@ export const couponApi = api.injectEndpoints({
 });
 
 export const { useApplyCouponMutation, useRemoveCouponMutation } = couponApi;
+
+export function useApplyCoupon() {
+  const [trigger, { isLoading }] = useApplyCouponMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useRemoveCoupon() {
+  const [trigger, { isLoading }] = useRemoveCouponMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}

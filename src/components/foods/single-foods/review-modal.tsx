@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Star, X } from "lucide-react";
 import { Review } from "@/types/food-review";
-import { useCreateReview, useUpdateReview } from "@/hooks/use-review";
+import { useCreateReview, useUpdateReview } from "@/store/api/slices/reviews-api";
 
 interface ReviewModalProps {
   open: boolean;

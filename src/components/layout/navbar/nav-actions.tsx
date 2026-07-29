@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ROLE_DASHBOARD } from "@/data/navigation";
 import { useAuth } from "@/hooks/use-auth";
-import { useCart } from "@/hooks/use-cart";
+import { useCart } from "@/store/api/slices/cart-api";
 import { useFavorites } from "@/hooks/use-favorites";
 import { toggleMobileMenu } from "@/store/slices/uiSlice";
 import { useAppDispatch } from "@/store/store";

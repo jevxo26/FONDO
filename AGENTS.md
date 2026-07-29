@@ -36,7 +36,7 @@ src/                  # Next.js 16 App Router (frontend only)
   components/common/  # Shared: cards, table/, section-header
   data/{domain}.ts    # Static data, constants
   store/              # Redux Toolkit (store.ts, api/, slices/)
-  lib/{domain}/       # Domain libs as dirs (cart-storage/, validations/)
+  lib/{domain}/       # Domain libs as dirs (validations/)
   hooks/              # Custom React hooks
   hooks/forms/        # Form-specific logic hooks (useCheckout, useReviewForm)
   types/              # Shared TypeScript types (one file per domain)
@@ -71,7 +71,6 @@ prisma/
 - **Redux Toolkit** for global state (auth, UI) — slices in `store/slices/`
 - **RTK Query** for all API calls (single paradigm with Redux) — api slices in `store/api/slices/`
 - Typed hooks: `useAppDispatch`, `useAppSelector` from `@/store/store`
-- Components never call RTK Query hooks directly — always wrap in `src/hooks/`
 
 ### Business Logic
 - **Components never contain business logic** — extract into hooks in `src/hooks/` or `src/hooks/forms/`
@@ -107,10 +106,85 @@ prisma/
 - 401 auto-triggers `/auth/refresh`, queues concurrent failed requests
 
 ### Data Fetching (RTK Query)
-- Each domain gets one file in `src/store/api/slices/{domain}-api.ts`
+- API endpoints defined in `src/store/api/slices/{domain}-api.ts` — one file per domain
+- Each file exports both RTK Query hooks AND wrapped mutation hooks:
+  - **Queries**: `useXxxQuery()` returns `{ data, isLoading, error }` — use directly in page/component
+  - **Mutations**: Use the wrapped `useXxx()` hook that returns `{ mutate, mutateAsync, isPending }` with `onSuccess`/`onError`/`onSettled` callbacks
+- Copy `src/store/api/slices/example-api.ts` to start a new domain
 - Tag constants declared in `src/store/api/tags.ts` (shared across domains, cross-invalidation via shared tag strings)
-- Mutation hooks (`src/hooks/`) wrap RTK Query triggers — expose `{ mutate, mutateAsync, isPending }` shape with `onSuccess`/`onError`
-- Components call `mutate(data)` and read `isPending` — do NOT pass inline callbacks to `mutate()` (exception: redirect)
+
+### Adding a New API Call
+
+1. **Copy** `src/store/api/slices/example-api.ts` → `src/store/api/slices/{domain}-api.ts`
+2. **Edit types**: Replace `Item`, `CreatePayload`, `UpdatePayload` with your domain types
+3. **Edit paths**: Swap `/examples` with real endpoint paths
+4. **Edit tags**: Add domain tag to `src/store/api/tags.ts`
+5. **Use** in component:
+   ```tsx
+   import { useListExamplesQuery, useCreateExample } from "@/store/api/slices/examples-api";
+
+   // Query
+   const { data, isLoading } = useListExamplesQuery();
+
+   // Mutation
+   const { mutate, isPending } = useCreateExample();
+   mutate({ name: "foo" }, { onSuccess: () => toast.success("Created") });
+   ```
+
+### Server-Side Data Fetching (Next.js Server Components)
+
+- Use `apiFetch<T>(endpoint, options?)` from `@/lib/api` (already exists, wraps `fetch` with Next.js cache)
+- Response envelope `{ success, message, data }` unwrapped automatically — callers receive `T` directly
+- Supports `revalidate` (seconds) and `tags` (on-demand revalidation) via `next` config
+- Auth token read from `refreshToken` cookie automatically
+- On error: throws `ApiError(statusCode, message)` — caught by `error.tsx` boundary
+
+```tsx
+// src/app/(main)/foods/[slug]/page.tsx — Server Component
+import { apiFetch } from "@/lib/api";
+
+export default async function FoodDetails({ params }) {
+  const { slug } = await params;
+  const food = await apiFetch<Food>(`/api/foods/slug/${slug}`);
+  return <ProductHero food={food} />;
+}
+```
+
+#### Hybrid: Server fetch + Client interaction
+
+Use when page needs interactivity (filters, search, pagination). Server fetches initial data, client seeds RTK Query cache:
+
+```tsx
+// page.tsx — Server Component
+import { apiFetch } from "@/lib/api";
+import { ClientWrapper } from "./client-wrapper";
+import type { FoodResponse } from "@/types/food";
+
+export default async function Page() {
+  const data = await apiFetch<FoodResponse>("/api/foods");
+  return <ClientWrapper initialData={data} />;
+}
+```
+
+```tsx
+// client-wrapper.tsx — Client Component
+"use client";
+
+import { useRef } from "react";
+import { store } from "@/store/store";
+import { foodsApi } from "@/store/api/slices/foods-api";
+import { useGetFoodsQuery } from "@/store/api/slices/foods-api";
+
+export function ClientWrapper({ initialData }) {
+  const seeded = useRef(false);
+  if (!seeded.current) {
+    seeded.current = true;
+    store.dispatch(foodsApi.util.upsertQueryData("getFoods", undefined, initialData));
+  }
+  // Child components call useGetFoods() and get cached data instantly
+  return <InteractiveChild />;
+}
+```
 
 ### Loading States
 - Buttons: `disabled={isPending}`, icon swaps to `<Loader2 className="animate-spin" />`

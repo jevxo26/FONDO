@@ -1,4 +1,5 @@
 import { api } from "../base-api";
+import { createMutationWrapper } from "../mutation-wrapper";
 import type { UpdateProfilePayload, ChangePasswordPayload } from "@/types/user";
 
 export const profileApi = api.injectEndpoints({
@@ -16,3 +17,13 @@ export const profileApi = api.injectEndpoints({
 });
 
 export const { useUpdateProfileMutation, useChangePasswordMutation } = profileApi;
+
+export function useUpdateProfile() {
+  const [trigger, { isLoading }] = useUpdateProfileMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useChangePassword() {
+  const [trigger, { isLoading }] = useChangePasswordMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}

@@ -34,3 +34,4 @@ export function createMutationWrapper<TVariables, TData = void>(
 
   return { mutate, mutateAsync };
 }
+

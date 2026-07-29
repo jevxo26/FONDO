@@ -1,5 +1,6 @@
 import { api } from "../base-api";
 import { getErrorMessage } from "../utils";
+import { createMutationWrapper } from "../mutation-wrapper";
 import type { Cart, CartItem } from "@/types/cart";
 import { toast } from "sonner";
 
@@ -7,8 +8,6 @@ interface AddToCartPayload {
   foodId: string;
   quantity: number;
   unitPrice: number;
-  name?: string;
-  thumbnail?: string | null;
 }
 interface UpdateCartItemPayload {
   itemId: string;
@@ -22,7 +21,7 @@ function createTempItem(payload: AddToCartPayload): CartItem {
     quantity: payload.quantity,
     unitPrice: payload.unitPrice,
     totalPrice: payload.quantity * payload.unitPrice,
-    food: { id: payload.foodId, name: payload.name ?? "", thumbnail: payload.thumbnail ?? null },
+    food: { id: payload.foodId, name: "", thumbnail: null },
   };
 }
 
@@ -153,3 +152,25 @@ export const {
   useUpdateCartItemMutation,
   useClearCartMutation,
 } = cartApi;
+
+export const useCart = () => useGetCartQuery();
+
+export function useAddToCart() {
+  const [trigger, { isLoading }] = useAddToCartMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useRemoveFromCart() {
+  const [trigger, { isLoading }] = useRemoveFromCartMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useUpdateCartItem() {
+  const [trigger, { isLoading }] = useUpdateCartItemMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useClearCart() {
+  const [trigger, { isLoading }] = useClearCartMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}

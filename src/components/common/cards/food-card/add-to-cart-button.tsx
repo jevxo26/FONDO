@@ -2,23 +2,19 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useAddToCart } from "@/hooks/use-cart";
+import { useAddToCart } from "@/store/api/slices/cart-api";
 import { Check, Plus, ShoppingBag } from "lucide-react";
 
 interface AddToCartButtonProps {
   foodId: string;
   price: number;
   quantity?: number;
-  name?: string;
-  thumbnail?: string | null;
 }
 
 export default function AddToCartButton({
   foodId,
   price,
   quantity = 1,
-  name,
-  thumbnail,
 }: AddToCartButtonProps) {
   const [justAdded, setJustAdded] = useState(false);
   const addToCart = useAddToCart();
@@ -26,7 +22,7 @@ export default function AddToCartButton({
   const handleClick = () => {
     if (justAdded || addToCart.isPending) return;
     setJustAdded(true);
-    addToCart.mutate({ foodId, quantity, unitPrice: price, name, thumbnail });
+    addToCart.mutate({ foodId, quantity, unitPrice: price });
     setTimeout(() => setJustAdded(false), 400);
   };
 

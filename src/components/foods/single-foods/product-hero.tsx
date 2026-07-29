@@ -1,6 +1,6 @@
 "use client";
 
-import { useAddToCart } from "@/hooks/use-cart";
+import { useAddToCart } from "@/store/api/slices/cart-api";
 import { useFavorites, useRemoveFavorite, useToggleFavorite } from "@/hooks/use-favorites";
 import type { Food } from "@/types/food";
 import { motion } from "framer-motion";
@@ -33,8 +33,6 @@ export function ProductHero({ food }: { food: Food }) {
       foodId: food.id,
       quantity,
       unitPrice: currentPrice,
-      name: food.name,
-      thumbnail: food.thumbnail,
     });
   };
 
@@ -45,8 +43,6 @@ export function ProductHero({ food }: { food: Food }) {
         foodId: food.id,
         quantity,
         unitPrice: currentPrice,
-        name: food.name,
-        thumbnail: food.thumbnail,
       },
       { onSuccess: () => router.push("/checkout") },
     );

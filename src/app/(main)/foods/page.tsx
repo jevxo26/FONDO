@@ -3,7 +3,7 @@
 import FoodsHero from "@/components/foods/components/foods-hero";
 import { FoodsProvider } from "@/components/foods/components/foods-provider";
 import FoodsWorkspace from "@/components/foods/components/foods-workspace";
-import { useGetFoods } from "@/hooks/use-foods";
+import { useGetFoods } from "@/store/api/slices/foods-api";
 import FoodsLoading from "./loading";
 
 export default function AllFoodsPage() {

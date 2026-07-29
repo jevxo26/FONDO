@@ -1,6 +1,6 @@
 "use client";
 
-import { useOrders } from "@/hooks/use-orders";
+import { useOrders } from "@/store/api/slices/orders-api";
 import Link from "next/link";
 
 export function OrderHistory() {

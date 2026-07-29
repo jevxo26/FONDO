@@ -1,5 +1,3 @@
-"use client";
-
 import HowItWorks from "@/components/about/abou-work";
 import FoodoAdvantage from "@/components/about/about-advantage";
 import CateredNeeds from "@/components/about/about-created-need";

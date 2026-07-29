@@ -1,4 +1,5 @@
 import { api } from "../base-api";
+import { createMutationWrapper } from "../mutation-wrapper";
 import type { Payment, InitiatePaymentPayload, InitiatePaymentResponse } from "@/types/payment";
 
 export interface PaymentMethod {
@@ -44,3 +45,28 @@ export const {
   useRetryPaymentMutation,
   useGetPaymentMethodsQuery,
 } = paymentsApi;
+
+export const usePaymentMethods = () => {
+  const { data, isLoading, error } = useGetPaymentMethodsQuery();
+  return { data, isLoading, error };
+};
+
+export const usePayments = () => {
+  const { data, isLoading, error } = useGetPaymentsQuery();
+  return { data, isLoading, error };
+};
+
+export const usePayment = (id: string) => {
+  const { data, isLoading, error } = useGetPaymentQuery(id, { skip: !id });
+  return { data, isLoading, error };
+};
+
+export function useInitiatePayment() {
+  const [trigger, { isLoading }] = useInitiatePaymentMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useRetryPayment() {
+  const [trigger, { isLoading }] = useRetryPaymentMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}

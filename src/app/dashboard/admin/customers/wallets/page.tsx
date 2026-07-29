@@ -9,7 +9,7 @@ import { DataTable } from "@/components/common/table";
 import { DataTableColumnHeader } from "@/components/common/table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { CustomerSearch } from "@/components/dashboard/admin/customers/common/customer-search";
-import { useAdminCustomerWallet } from "@/hooks/use-admin-customers";
+import { useAdminCustomerWallet } from "@/store/api/slices/admin-customers-api";
 import type { AdminWalletTransaction, AdminCustomer } from "@/types/admin";
 
 const typeConfig: Record<string, { dot: string; label: string }> = {

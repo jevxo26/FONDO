@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useAdminCustomers } from "@/hooks/use-admin-customers";
+import { useAdminCustomers } from "@/store/api/slices/admin-customers-api";
 import type { AdminCustomer } from "@/types/admin";
 
 interface CustomerSearchProps {

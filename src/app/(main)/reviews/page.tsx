@@ -1,5 +1,3 @@
-"use client";
-
 import FeaturedStories from "@/components/reviews/featured-stories";
 import FilteredFeed from "@/components/reviews/filtered-feed";
 import ReviewsDashboard from "@/components/reviews/review-dashboard";

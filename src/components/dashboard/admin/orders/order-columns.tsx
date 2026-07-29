@@ -6,7 +6,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { CustomerOrder } from "@/data/orders";
 import { DataTableColumnHeader } from "@/components/common/table";
 import { OrderStatusBadge } from "@/components/dashboard/admin/customers/orders/order-status-badge";
-import { useUpdateOrderStatus } from "@/hooks/use-orders";
+import { useUpdateOrderStatus } from "@/store/api/slices/orders-api";
 import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,

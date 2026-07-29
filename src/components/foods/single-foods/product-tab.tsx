@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DescriptionTab from "./description-tab";
 import ReviewsTab from "./reviews-tab";
 import QaTab from "./qa-tab";
-import { useFoodReviews } from "@/hooks/use-review";
+import { useFoodReviews } from "@/store/api/slices/reviews-api";
 
 export function ProductTabs({ food }: { food: Food }) {
   const [activeTab, setActiveTab] = useState("details");

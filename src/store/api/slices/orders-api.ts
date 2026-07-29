@@ -1,4 +1,5 @@
 import { api } from "../base-api";
+import { createMutationWrapper } from "../mutation-wrapper";
 import type {
   Order,
   OrderFeedback,
@@ -67,3 +68,38 @@ export const {
   useGetInvoiceQuery,
   useUpdateOrderStatusMutation,
 } = ordersApi;
+
+export const useOrders = () => {
+  const { data, isLoading, error } = useGetOrdersQuery();
+  return { data, isLoading, error };
+};
+
+export const useOrder = (id: string) => {
+  const { data, isLoading, error } = useGetOrderQuery(id, { skip: !id });
+  return { data, isLoading, error };
+};
+
+export const useInvoice = (orderId: string) => {
+  const { data, isLoading, error } = useGetInvoiceQuery(orderId, { skip: !orderId });
+  return { data, isLoading, error };
+};
+
+export function usePlaceOrder() {
+  const [trigger, { isLoading }] = usePlaceOrderMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useCancelOrder() {
+  const [trigger, { isLoading }] = useCancelOrderMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useSubmitFeedback() {
+  const [trigger, { isLoading }] = useSubmitFeedbackMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useUpdateOrderStatus() {
+  const [trigger, { isLoading }] = useUpdateOrderStatusMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}

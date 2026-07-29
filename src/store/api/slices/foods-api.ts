@@ -1,6 +1,6 @@
-import { api } from "../base-api";
-import type { FoodResponse } from "@/types/food";
 import type { FoodCategoriesData } from "@/types/category";
+import type { FoodResponse } from "@/types/food";
+import { api } from "../base-api";
 
 interface FoodsQueryParams {
   page?: number;
@@ -31,3 +31,18 @@ export const foodsApi = api.injectEndpoints({
 });
 
 export const { useGetFoodsQuery, useGetFoodBySlugQuery, useGetFoodCategoriesQuery } = foodsApi;
+
+export const useGetFoods = (params?: { page?: number; limit?: number }) => {
+  const { data, isLoading, error } = useGetFoodsQuery(params ?? undefined);
+  return { data, isLoading, error };
+};
+
+export const useGetFoodBySlug = (slug: string) => {
+  const { data, isLoading, error } = useGetFoodBySlugQuery(slug, { skip: !slug });
+  return { data, isLoading, error };
+};
+
+export const useFoodCategories = () => {
+  const { data, isLoading, error } = useGetFoodCategoriesQuery();
+  return { data, isLoading, error };
+};

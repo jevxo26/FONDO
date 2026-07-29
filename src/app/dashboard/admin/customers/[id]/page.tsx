@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, XCircle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAdminCustomer, useAdminCustomerOrders } from "@/hooks/use-admin-customers";
+import { useAdminCustomer, useAdminCustomerOrders } from "@/store/api/slices/admin-customers-api";
 import CustomerProfileHeader from "@/components/dashboard/admin/customers/detail/customer-profile-header";
 import CustomerStatCards from "@/components/dashboard/admin/customers/detail/customer-stat-cards";
 import CustomerRecentOrders from "@/components/dashboard/admin/customers/detail/customer-recent-orders";

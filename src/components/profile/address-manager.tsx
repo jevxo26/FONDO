@@ -6,7 +6,7 @@ import {
   useCreateAddress,
   useDeleteAddress,
   useSetDefaultAddress,
-} from "@/hooks/use-addresses";
+} from "@/store/api/slices/addresses-api";
 import { handleApiError } from "@/lib/api-error";
 import { toast } from "sonner";
 import { AddressCard } from "./address-card";

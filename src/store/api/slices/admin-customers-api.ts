@@ -57,3 +57,33 @@ export const {
   useGetAdminCustomerPaymentsQuery,
   useGetAllAdminOrdersQuery,
 } = adminCustomersApi;
+
+export const useAdminCustomers = () => {
+  const { data, isLoading, error } = useGetAdminCustomersQuery();
+  return { data, isLoading, error };
+};
+
+export const useAdminCustomer = (id: string) => {
+  const { data, isLoading, error } = useGetAdminCustomerQuery(id, { skip: !id });
+  return { data, isLoading, error };
+};
+
+export const useAdminCustomerOrders = (customerId: string) => {
+  const { data, isLoading, error } = useGetAdminCustomerOrdersQuery(customerId, { skip: !customerId });
+  return { data, isLoading, error };
+};
+
+export const useAdminCustomerSubscriptions = (customerId: string) => {
+  const { data, isLoading, error } = useGetAdminCustomerSubscriptionsQuery(customerId, { skip: !customerId });
+  return { data, isLoading, error };
+};
+
+export const useAdminCustomerWallet = (customerId: string) => {
+  const { data, isLoading, error } = useGetAdminCustomerWalletQuery(customerId, { skip: !customerId });
+  return { data, isLoading, error };
+};
+
+export const useAdminCustomerPayments = (customerId: string) => {
+  const { data, isLoading, error } = useGetAdminCustomerPaymentsQuery(customerId, { skip: !customerId });
+  return { data, isLoading, error };
+};

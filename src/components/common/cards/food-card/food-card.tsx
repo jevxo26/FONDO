@@ -17,7 +17,7 @@ interface FoodCardFood {
   shortDescription?: string;
   preparationTime?: number;
   variants: Array<{ price: string | number; discountPrice?: string | number | null }>;
-  rating?: { averageRating: number };
+  averageRating?: number;
 }
 
 export default function FoodCard({ food }: { food: FoodCardFood }) {
@@ -33,7 +33,6 @@ export default function FoodCard({ food }: { food: FoodCardFood }) {
   const removeFavorite = useRemoveFavorite();
 
   const isFavorited = favorites.some((f) => f.id === food.id);
-  const isFavPending = toggleFavorite.isPending || removeFavorite.isPending;
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-4xl bg-card p-4 shadow-[var(--shadow-card)] border border-border/40 active:scale-[0.98] transition-transform duration-200">
@@ -55,7 +54,6 @@ export default function FoodCard({ food }: { food: FoodCardFood }) {
           variant="ghost"
           size="icon"
           onClick={() => (isFavorited ? removeFavorite : toggleFavorite).mutate(food)}
-          disabled={isFavPending}
           className="absolute right-3 top-3 size-9 rounded-full bg-background/90 backdrop-blur-sm shadow-sm hover:text-destructive"
         >
           <Heart className={`size-4 ${mounted && isFavorited ? "fill-destructive text-destructive" : ""}`} />
@@ -94,7 +92,7 @@ export default function FoodCard({ food }: { food: FoodCardFood }) {
         <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
             <Star className="size-3.5 fill-primary text-primary" />
-            <span className="font-semibold text-foreground">{food.rating?.averageRating}</span>
+            <span className="font-semibold text-foreground">{food.averageRating ?? "4.9"}</span>
           </div>
           <div className="flex items-center gap-1">
             <Clock className="size-3.5" />

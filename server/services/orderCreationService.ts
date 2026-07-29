@@ -13,7 +13,7 @@ export const createOrderFromCart = catchServiceAsync(
       discount: import("@prisma/client/runtime/library").Decimal;
       deliveryCharge: import("@prisma/client/runtime/library").Decimal;
       vat: import("@prisma/client/runtime/library").Decimal;
-      totalAmount?: import("@prisma/client/runtime/library").Decimal | null;
+      grandTotal: import("@prisma/client/runtime/library").Decimal;
       couponId?: string | null;
       items: Array<{
         id: string;
@@ -47,12 +47,7 @@ export const createOrderFromCart = catchServiceAsync(
   ) => {
     const orderNumber = generateOrderNumber();
 
-    const totalAmount =
-      cart.totalAmount ??
-      Number(cart.subtotal) -
-        Number(cart.discount) +
-        Number(cart.deliveryCharge) +
-        Number(cart.vat);
+    const totalAmount = Number(cart.grandTotal);
 
     const itemFoodIds = cart.items.map((i) => i.foodId);
     const mealFoodIds = cart.meals.flatMap((m) => m.foods.map((f) => f.foodId));
@@ -169,11 +164,6 @@ export const createOrderFromCart = catchServiceAsync(
       await tx.cart.update({
         where: { id: cart.id },
         data: { status: "converted" },
-      });
-
-      await tx.cartSummary.update({
-        where: { cartId: cart.id },
-        data: { grandTotal: totalAmount },
       });
 
       return created;

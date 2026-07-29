@@ -57,9 +57,9 @@ export function ProductInfo({
             <Star key={i} className="size-3.5 fill-primary text-primary" />
           ))}
           <span className="ml-1 font-semibold text-foreground">
-            {food.rating?.averageRating ?? "4.9"}
+            {food.averageRating ?? "4.9"}
           </span>
-          <span>({food.rating?.totalReview ?? 892} reviews)</span>
+          <span>({food.totalReview ?? 892} reviews)</span>
         </div>
         <span>&middot;</span>
         <span>{food.servingSize ?? ""}</span>

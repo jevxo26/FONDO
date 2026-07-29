@@ -7,6 +7,7 @@ import { createRefreshToken, createToken } from "../utils/jwtService";
 import { sendUserDataAsResponse } from "../utils/responseStyle";
 import prisma from "../lib/prisma";
 import { trackFailedLogin } from "./authOtpService";
+import { sendWelcomeEmail } from "./emailService";
 
 export const loginUser = catchServiceAsync(async (identifier: string, password: string) => {
   const isEmail = identifier.includes("@");
@@ -95,12 +96,11 @@ export const registerUser = catchServiceAsync(
         gender: data.gender as Prisma.UserCreateInput["gender"],
         avatar: data.avatar,
         dateOfBirth: data.dateOfBirth,
-        profile: { create: {} },
-        notificationSetting: { create: {} },
-        security: { create: {} },
       },
       select: sendUserDataAsResponse,
     });
+
+    sendWelcomeEmail({ id: user.id, firstName: user.firstName, email: user.email });
 
     return user;
   },
@@ -171,12 +171,10 @@ export const getMe = catchServiceAsync(async (userId: string) => {
     where: { id: userId },
     select: {
       ...sendUserDataAsResponse,
-      profile: true,
       addresses: {
         where: { deletedAt: null },
         orderBy: { isDefault: "desc" },
       },
-      notificationSetting: true,
     },
   });
 

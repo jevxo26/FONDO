@@ -161,8 +161,8 @@ export const changePassword = catchServiceAsync(
         where: { id: userId },
         data: { password: hashedPassword },
       }),
-      prisma.userSecurity.update({
-        where: { userId },
+      prisma.user.update({
+        where: { id: userId },
         data: { passwordChangedAt: new Date() },
       }),
       prisma.userSession.updateMany({
@@ -176,26 +176,17 @@ export const changePassword = catchServiceAsync(
 );
 
 export async function trackFailedLogin(userId: string) {
-  const security = await prisma.userSecurity.findUnique({
-    where: { userId },
-  });
+  const user = await prisma.user.findUnique({ where: { id: userId }, select: { failedLoginCount: true } });
 
-  const failedCount = (security?.failedLoginCount || 0) + 1;
+  const failedCount = (user?.failedLoginCount || 0) + 1;
 
-  await prisma.userSecurity.upsert({
-    where: { userId },
-    update: {
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
       failedLoginCount: failedCount,
       lastFailedLoginAt: new Date(),
       accountLocked: failedCount >= 5,
-      accountLockedUntil: failedCount >= 5 ? new Date(Date.now() + 30 * 60 * 1000) : undefined,
-    },
-    create: {
-      userId,
-      failedLoginCount: failedCount,
-      lastFailedLoginAt: new Date(),
-      accountLocked: failedCount >= 5,
-      accountLockedUntil: failedCount >= 5 ? new Date(Date.now() + 30 * 60 * 1000) : undefined,
+      accountLockedUntil: failedCount >= 5 ? new Date(Date.now() + 30 * 60 * 1000) : null,
     },
   });
 }

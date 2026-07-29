@@ -55,7 +55,7 @@ const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
                         {food.name}
                       </h4>
                       <div className="flex items-center gap-0.5 shrink-0 text-primary font-bold text-[10px] mt-0.5">
-                        <Star className="size-3 fill-current" /> {food.rating.averageRating}
+                        <Star className="size-3 fill-current" /> {food.averageRating}
                       </div>
                     </div>
 

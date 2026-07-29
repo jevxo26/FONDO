@@ -9,7 +9,7 @@ export interface WishlistItem {
   shortDescription?: string;
   preparationTime?: number;
   variants: Array<{ price: number; discountPrice?: number | null }>;
-  rating?: { averageRating: number };
+  averageRating?: number;
 }
 
 function readWishlist(): WishlistItem[] {
@@ -73,7 +73,7 @@ export function saveWishlist(
     shortDescription?: string;
     preparationTime?: number;
     variants: Array<{ price: string | number; discountPrice?: string | number | null }>;
-    rating?: { averageRating: number };
+  averageRating?: number;
   }>,
 ) {
   const items: WishlistItem[] = apiItems.map((f) => ({
@@ -88,7 +88,7 @@ export function saveWishlist(
       price: Number(v.price),
       ...(v.discountPrice != null ? { discountPrice: Number(v.discountPrice) } : {}),
     })),
-    rating: f.rating ? { averageRating: f.rating.averageRating } : undefined,
+    averageRating: f.averageRating,
   }));
   writeWishlist(items);
 }

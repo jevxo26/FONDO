@@ -3,6 +3,7 @@ import type { Prisma } from "@prisma/client";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import * as sslcommerz from "./sslcommerz";
+import { sendPaymentReceipt } from "./emailService";
 
 function generatePaymentNumber(): string {
   return `PAY-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
@@ -156,6 +157,8 @@ export const handleSuccess = catchServiceAsync(async (query: Record<string, stri
       where: { paymentId: payment.id, gatewayTransactionId: tran_id },
       data: { status: "success", gatewayTransactionId: val_id, processedAt: new Date() },
     });
+
+    sendPaymentReceipt(payment.id);
   } else {
     await prisma.payment.update({
       where: { id: payment.id },

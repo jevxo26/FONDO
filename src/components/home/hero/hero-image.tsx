@@ -79,7 +79,7 @@ export function HeroImage({ foods }: HeroImageProps) {
                       <Timer className="size-4 text-primary" />
                     </div>
                     <span className="inline-flex items-center gap-1 font-sans text-xs font-semibold leading-snug text-foreground">
-                      {food.preparationTime ?? 0} min &middot; {food.rating.averageRating}
+                      {food.preparationTime ?? 0} min &middot; {food.averageRating}
                       <Star className="size-3 fill-foreground flex items-center" />
                     </span>
                   </div>

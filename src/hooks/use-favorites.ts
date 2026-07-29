@@ -20,7 +20,7 @@ interface FoodLike {
   shortDescription?: string;
   preparationTime?: number;
   variants: Array<{ price: string | number; discountPrice?: string | number | null }>;
-  rating?: { averageRating: number };
+  averageRating?: number;
 }
 
 function toWishlistItem(food: FoodLike): wishlistStorage.WishlistItem {
@@ -36,7 +36,7 @@ function toWishlistItem(food: FoodLike): wishlistStorage.WishlistItem {
       price: Number(v.price),
       ...(v.discountPrice != null ? { discountPrice: Number(v.discountPrice) } : {}),
     })),
-    rating: food.rating ? { averageRating: food.rating.averageRating } : undefined,
+    averageRating: food.averageRating,
   };
 }
 
@@ -72,11 +72,10 @@ export function useFavorites() {
 
 export function useToggleFavorite() {
   const { isAuthenticated } = useAuth();
-  const [trigger, { isLoading }] = useToggleFavoriteMutation();
+  const [trigger] = useToggleFavoriteMutation();
 
   const mutate = useCallback(
     (food: FoodLike, options?: { onSettled?: () => void }) => {
-      if (isLoading) return;
       wishlistStorage.addToWishlist(toWishlistItem(food));
       if (isAuthenticated) {
         trigger(food as never)
@@ -88,7 +87,7 @@ export function useToggleFavorite() {
         options?.onSettled?.();
       }
     },
-    [trigger, isLoading, isAuthenticated],
+    [trigger, isAuthenticated],
   );
 
   const mutateAsync = useCallback(
@@ -101,16 +100,15 @@ export function useToggleFavorite() {
     [trigger, isAuthenticated],
   );
 
-  return { mutate, mutateAsync, isPending: isLoading };
+  return { mutate, mutateAsync, isPending: false };
 }
 
 export function useRemoveFavorite() {
   const { isAuthenticated } = useAuth();
-  const [trigger, { isLoading }] = useRemoveFavoriteMutation();
+  const [trigger] = useRemoveFavoriteMutation();
 
   const mutate = useCallback(
     (food: { id: string }, options?: { onSettled?: () => void }) => {
-      if (isLoading) return;
       wishlistStorage.removeFromWishlist(food.id);
       if (isAuthenticated) {
         trigger(food as never)
@@ -122,7 +120,7 @@ export function useRemoveFavorite() {
         options?.onSettled?.();
       }
     },
-    [trigger, isLoading, isAuthenticated],
+    [trigger, isAuthenticated],
   );
 
   const mutateAsync = useCallback(
@@ -135,5 +133,5 @@ export function useRemoveFavorite() {
     [trigger, isAuthenticated],
   );
 
-  return { mutate, mutateAsync, isPending: isLoading };
+  return { mutate, mutateAsync, isPending: false };
 }

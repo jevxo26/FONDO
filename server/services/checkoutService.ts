@@ -2,12 +2,12 @@ import prisma from "../lib/prisma";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import { createOrderFromCart, createOrderFromItems } from "./orderService";
+import { sendOrderConfirmation } from "./emailService";
 
 export const getSummary = catchServiceAsync(async (cartId: string) => {
   const cart = await prisma.cart.findUnique({
     where: { id: cartId },
     include: {
-      summary: true,
       items: {
         include: {
           food: { select: { id: true, name: true, thumbnail: true } },
@@ -28,7 +28,7 @@ export const getSummary = catchServiceAsync(async (cartId: string) => {
   let couponData = null;
   if (cart.couponId) {
     const coupon = await prisma.coupon.findUnique({ where: { id: cart.couponId } });
-    if (coupon && coupon.status === "active" && new Date() <= coupon.endDate!) {
+    if (coupon && coupon.status === "active" && (!coupon.endDate || new Date() <= coupon.endDate)) {
       couponData = { code: coupon.couponCode, discountAmount: Number(cart.discount) };
     }
   }
@@ -58,11 +58,7 @@ export const getSummary = catchServiceAsync(async (cartId: string) => {
     discount: Number(cart.discount),
     deliveryCharge: Number(cart.deliveryCharge),
     vat: Number(cart.vat),
-    grandTotal:
-      Number(cart.subtotal) -
-      Number(cart.discount) +
-      Number(cart.deliveryCharge) +
-      Number(cart.vat),
+    grandTotal: Number(cart.grandTotal),
     itemCount: cart.items.length,
     mealCount: cart.meals.length,
     appliedCoupon: couponData,
@@ -79,7 +75,7 @@ export const applyCoupon = catchServiceAsync(async (cartId: string, couponCode: 
   const coupon = await prisma.coupon.findUnique({ where: { couponCode } });
   if (!coupon) throw new AppError(404, "Coupon not found");
   if (coupon.status !== "active") throw new AppError(400, "Coupon is not active");
-  if (new Date() > coupon.endDate!) throw new AppError(400, "Coupon has expired");
+  if (coupon.endDate && new Date() > coupon.endDate) throw new AppError(400, "Coupon has expired");
 
   if (Number(cart.subtotal) < Number(coupon.minimumOrderAmount ?? 0)) {
     throw new AppError(400, `Minimum order amount of ${coupon.minimumOrderAmount} required`);
@@ -157,22 +153,28 @@ export const placeOrder = catchServiceAsync(
       if (!address) throw new AppError(404, "Address not found");
     }
 
+    let result;
+
     if (items && items.length > 0) {
-      return createOrderFromItems(customerId, items, paymentMethodId, addressId, notes);
+      result = await createOrderFromItems(customerId, items, paymentMethodId, addressId, notes);
+    } else {
+      if (!cartId) throw new AppError(400, "Cart ID or items required");
+
+      const cart = await prisma.cart.findUnique({
+        where: { id: cartId },
+        include: { items: { include: { addons: true } }, meals: { include: { foods: true } } },
+      });
+      if (!cart) throw new AppError(404, "Cart not found");
+      if (cart.status !== "active") throw new AppError(400, "Cart is not active");
+      if (cart.items.length === 0 && cart.meals.length === 0) {
+        throw new AppError(400, "Cart is empty");
+      }
+
+      result = await createOrderFromCart(cart, paymentMethodId, customerId, notes, addressId);
     }
 
-    if (!cartId) throw new AppError(400, "Cart ID or items required");
+    sendOrderConfirmation(result.orderId);
 
-    const cart = await prisma.cart.findUnique({
-      where: { id: cartId },
-      include: { items: { include: { addons: true } }, meals: { include: { foods: true } } },
-    });
-    if (!cart) throw new AppError(404, "Cart not found");
-    if (cart.status !== "active") throw new AppError(400, "Cart is not active");
-    if (cart.items.length === 0 && cart.meals.length === 0) {
-      throw new AppError(400, "Cart is empty");
-    }
-
-    return createOrderFromCart(cart, paymentMethodId, customerId, notes, addressId);
+    return result;
   },
 );

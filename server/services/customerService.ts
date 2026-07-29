@@ -51,7 +51,6 @@ export const getCustomerDetail = catchServiceAsync(async (customerId: string) =>
   const user = await prisma.user.findFirst({
     where: { id: customerId, role: "CUSTOMER", deletedAt: null },
     include: {
-      profile: true,
       addresses: true,
       wallet: { include: { transactions: { orderBy: { createdAt: "desc" }, take: 10 } } },
       _count: { select: { orders: true, subscriptions: true, payments: true } },
@@ -85,7 +84,6 @@ export const getCustomerDetail = catchServiceAsync(async (customerId: string) =>
     isEmailVerified: user.isEmailVerified,
     lastLoginAt: user.lastLoginAt,
     joinedAt: user.createdAt,
-    profile: user.profile,
     addresses: user.addresses,
     wallet: user.wallet,
     totalOrders: user._count?.orders ?? 0,

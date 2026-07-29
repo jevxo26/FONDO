@@ -44,9 +44,8 @@ export const cartApi = api.injectEndpoints({
             } else {
               draft.items.unshift(createTempItem(arg));
             }
-            if (draft.summary) {
-              draft.summary.subtotal = draft.items.reduce((s, i) => s + i.totalPrice, 0);
-            }
+            draft.subtotal = draft.items.reduce((s, i) => s + i.totalPrice, 0);
+            draft.grandTotal = draft.subtotal - draft.discount + draft.deliveryCharge + draft.vat;
           }),
         );
         try {
@@ -113,9 +112,8 @@ export const cartApi = api.injectEndpoints({
         const patch = dispatch(
           cartApi.util.updateQueryData("getCart", undefined, (draft) => {
             draft.items = [];
-            if (draft.summary) {
-              draft.summary.subtotal = 0;
-            }
+            draft.subtotal = 0;
+            draft.grandTotal = -draft.discount + draft.deliveryCharge + draft.vat;
           }),
         );
         try {

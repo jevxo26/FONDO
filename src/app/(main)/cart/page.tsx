@@ -8,10 +8,16 @@ import { useCart, useClearCart, useRemoveFromCart, useUpdateCartItem } from "@/h
 import { handleApiError } from "@/lib/api-error";
 import { Loader2, ShoppingCart, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { CartItem as CartItemType } from "@/types/cart";
 
 export default function CartPageView() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
+
   const { data: cart, isLoading, error } = useCart();
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveFromCart();
@@ -101,7 +107,7 @@ export default function CartPageView() {
               Your Cart
             </h1>
             <p className="font-sans text-xs text-muted-foreground mt-1">
-              {itemCount} {itemCount === 1 ? "item" : "items"} in your cart
+              {mounted ? `${itemCount} ${itemCount === 1 ? "item" : "items"} in your cart` : "items in your cart"}
             </p>
           </div>
           {items.length > 0 && (

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from "express";
-import { PackageService } from "../services/package.service";
+import { PackageService } from "../services/packageService";
 
 const getPackages = async (req: Request, res: Response): Promise<Response> => {
   try {

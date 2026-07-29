@@ -12,12 +12,94 @@ import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import prisma from "../lib/prisma";
 
+function toCategoryCreate(
+  data: InferType<typeof createCategorySchema>,
+): Prisma.CategoryCreateInput {
+  return {
+    name: data.name!,
+    slug: data.slug!,
+    description: data.description,
+    icon: data.icon,
+    image: data.image,
+    sortOrder: data.sortOrder,
+  };
+}
+
+function toCategoryUpdate(
+  data: InferType<typeof updateCategorySchema>,
+): Prisma.CategoryUpdateInput {
+  return {
+    name: data.name,
+    slug: data.slug,
+    description: data.description,
+    icon: data.icon,
+    image: data.image,
+    sortOrder: data.sortOrder,
+  };
+}
+
+function toSubCategoryCreate(
+  data: InferType<typeof createSubCategorySchema>,
+  categoryId: string,
+): Prisma.SubCategoryCreateInput {
+  return {
+    name: data.name!,
+    slug: data.slug!,
+    category: { connect: { id: categoryId } },
+    description: data.description,
+    icon: data.icon,
+    image: data.image,
+    sortOrder: data.sortOrder,
+  };
+}
+
+function toSubCategoryUpdate(
+  data: InferType<typeof updateSubCategorySchema>,
+): Prisma.SubCategoryUpdateInput {
+  return {
+    name: data.name,
+    slug: data.slug,
+    description: data.description,
+    icon: data.icon,
+    image: data.image,
+    sortOrder: data.sortOrder,
+  };
+}
+
+function toVariantCreate(
+  data: InferType<typeof createVariantSchema>,
+  foodId: string,
+): Prisma.FoodVariantCreateInput {
+  return {
+    name: data.name!,
+    price: data.price!,
+    food: { connect: { id: foodId } },
+    description: data.description,
+    discountPrice: data.discountPrice,
+    weight: data.weight,
+    servingSize: data.servingSize,
+  };
+}
+
+function toVariantUpdate(
+  data: InferType<typeof updateVariantSchema>,
+): Prisma.FoodVariantUpdateInput {
+  return {
+    name: data.name,
+    price: data.price,
+    description: data.description,
+    discountPrice: data.discountPrice,
+    weight: data.weight,
+    servingSize: data.servingSize,
+  };
+}
+
 export const createCategory = catchServiceAsync(
   async (data: InferType<typeof createCategorySchema>) => {
-    const existing = await prisma.category.findUnique({ where: { slug: data.slug } });
+    const existing = await prisma.category.findUnique({ where: { slug: data.slug! } });
     if (existing) throw new AppError(400, "A category with this slug already exists");
 
-    return prisma.category.create({ data: data as unknown as Prisma.CategoryCreateInput });
+    return prisma.category.create({ data: toCategoryCreate(data) });
   },
 );
 
@@ -35,7 +117,7 @@ export const updateCategory = catchServiceAsync(
 
     return prisma.category.update({
       where: { id },
-      data: data as unknown as Prisma.CategoryUpdateInput,
+      data: toCategoryUpdate(data),
     });
   },
 );
@@ -46,7 +128,7 @@ export const deleteCategory = catchServiceAsync(async (id: string) => {
 
   return prisma.category.update({
     where: { id },
-    data: { deletedAt: new Date(), status: "inactive" } as unknown as Prisma.CategoryUpdateInput,
+    data: { deletedAt: new Date(), status: "inactive" },
   });
 });
 
@@ -55,11 +137,11 @@ export const createSubCategory = catchServiceAsync(
     const cat = await prisma.category.findFirst({ where: { id: categoryId, deletedAt: null } });
     if (!cat) throw new AppError(404, "Category not found");
 
-    const existing = await prisma.subCategory.findUnique({ where: { slug: data.slug } });
+    const existing = await prisma.subCategory.findUnique({ where: { slug: data.slug! } });
     if (existing) throw new AppError(400, "A subcategory with this slug already exists");
 
     return prisma.subCategory.create({
-      data: { ...data, categoryId } as unknown as Prisma.SubCategoryCreateInput,
+      data: toSubCategoryCreate(data, categoryId),
     });
   },
 );
@@ -78,7 +160,7 @@ export const updateSubCategory = catchServiceAsync(
 
     return prisma.subCategory.update({
       where: { id },
-      data: data as unknown as Prisma.SubCategoryUpdateInput,
+      data: toSubCategoryUpdate(data),
     });
   },
 );
@@ -89,7 +171,7 @@ export const deleteSubCategory = catchServiceAsync(async (id: string) => {
 
   return prisma.subCategory.update({
     where: { id },
-    data: { deletedAt: new Date(), status: "inactive" } as unknown as Prisma.SubCategoryUpdateInput,
+    data: { deletedAt: new Date(), status: "inactive" },
   });
 });
 
@@ -99,7 +181,7 @@ export const createVariant = catchServiceAsync(
     if (!food) throw new AppError(404, "Food not found");
 
     return prisma.foodVariant.create({
-      data: { ...data, foodId } as unknown as Prisma.FoodVariantCreateInput,
+      data: toVariantCreate(data, foodId),
     });
   },
 );
@@ -111,7 +193,7 @@ export const updateVariant = catchServiceAsync(
 
     return prisma.foodVariant.update({
       where: { id },
-      data: data as unknown as Prisma.FoodVariantUpdateInput,
+      data: toVariantUpdate(data),
     });
   },
 );
@@ -122,6 +204,6 @@ export const deleteVariant = catchServiceAsync(async (id: string) => {
 
   return prisma.foodVariant.update({
     where: { id },
-    data: { status: "deleted" } as unknown as Prisma.FoodVariantUpdateInput,
+    data: { status: "deleted" },
   });
 });

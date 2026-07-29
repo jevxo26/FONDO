@@ -54,7 +54,9 @@ function toCart(totals: cartStorage.CartTotals): Cart {
     deliveryCharge: totals.deliveryCharge,
     discount: totals.discount,
     vat: totals.vat,
-    totalAmount: totals.totalAmount,
+    itemCount: totals.itemCount,
+    mealCount: 0,
+    grandTotal: totals.totalAmount,
   };
 }
 
@@ -80,14 +82,13 @@ export function useCart() {
 }
 
 export function useAddToCart() {
-  const [trigger, { isLoading }] = useAddToCartMutation();
+  const [trigger] = useAddToCartMutation();
 
   const mutate = useCallback(
     (
       args: AddToCartArgs,
       options?: { onSuccess?: () => void; onError?: (e: unknown) => void; onSettled?: () => void },
     ) => {
-      if (isLoading) return;
       cartStorage.addItem(args.foodId, args.name, args.unitPrice, args.quantity, args.thumbnail);
       trigger({ foodId: args.foodId, quantity: args.quantity, unitPrice: args.unitPrice })
         .unwrap()
@@ -101,7 +102,7 @@ export function useAddToCart() {
         })
         .finally(() => options?.onSettled?.());
     },
-    [trigger, isLoading],
+    [trigger],
   );
 
   const mutateAsync = useCallback(
@@ -116,15 +117,14 @@ export function useAddToCart() {
     [trigger],
   );
 
-  return { mutate, mutateAsync, isPending: isLoading };
+  return { mutate, mutateAsync, isPending: false };
 }
 
 export function useRemoveFromCart() {
-  const [trigger, { isLoading }] = useRemoveFromCartMutation();
+  const [trigger] = useRemoveFromCartMutation();
 
   const mutate = useCallback(
     (itemId: string, options?: { onSettled?: () => void }) => {
-      if (isLoading) return;
       cartStorage.removeItem(itemId);
       trigger(itemId)
         .unwrap()
@@ -132,7 +132,7 @@ export function useRemoveFromCart() {
         .catch((err) => toast.error(handleApiError(err)))
         .finally(() => options?.onSettled?.());
     },
-    [trigger, isLoading],
+    [trigger],
   );
 
   const mutateAsync = useCallback(
@@ -142,22 +142,21 @@ export function useRemoveFromCart() {
     [trigger],
   );
 
-  return { mutate, mutateAsync, isPending: isLoading };
+  return { mutate, mutateAsync, isPending: false };
 }
 
 export function useUpdateCartItem() {
-  const [trigger, { isLoading }] = useUpdateCartItemMutation();
+  const [trigger] = useUpdateCartItemMutation();
 
   const mutate = useCallback(
     (args: UpdateCartArgs, options?: { onSettled?: () => void }) => {
-      if (isLoading) return;
       cartStorage.updateQuantity(args.itemId, args.quantity);
       trigger({ itemId: args.itemId, quantity: args.quantity })
         .unwrap()
         .catch((err) => toast.error(handleApiError(err)))
         .finally(() => options?.onSettled?.());
     },
-    [trigger, isLoading],
+    [trigger],
   );
 
   const mutateAsync = useCallback(
@@ -167,27 +166,26 @@ export function useUpdateCartItem() {
     [trigger],
   );
 
-  return { mutate, mutateAsync, isPending: isLoading };
+  return { mutate, mutateAsync, isPending: false };
 }
 
 export function useClearCart() {
-  const [trigger, { isLoading }] = useClearCartMutation();
+  const [trigger] = useClearCartMutation();
 
   const mutate = useCallback(
     (_?: undefined, options?: { onSettled?: () => void }) => {
-      if (isLoading) return;
       cartStorage.clearCart();
       trigger()
         .unwrap()
         .catch((err) => toast.error(handleApiError(err)))
         .finally(() => options?.onSettled?.());
     },
-    [trigger, isLoading],
+    [trigger],
   );
 
   const mutateAsync = useCallback(async () => {
     return trigger().unwrap();
   }, [trigger]);
 
-  return { mutate, mutateAsync, isPending: isLoading };
+  return { mutate, mutateAsync, isPending: false };
 }

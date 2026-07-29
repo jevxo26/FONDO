@@ -1,5 +1,5 @@
 import type { InferType } from "yup";
-import type { Prisma } from "@prisma/client";
+import type { FoodType, Prisma } from "@prisma/client";
 import type { createFoodSchema, updateFoodSchema } from "../validations/adminFood.validation";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
@@ -28,20 +28,16 @@ export const createFood = catchServiceAsync(async (data: InferType<typeof create
       fat: data.fat,
       carbohydrate: data.carbohydrate,
       servingSize: data.servingSize,
-      foodType: data.foodType,
+      foodType: data.foodType as FoodType,
       spiceLevel: data.spiceLevel,
       isFeatured: data.isFeatured ?? false,
       isPopular: data.isPopular ?? false,
       isRecommended: data.isRecommended ?? false,
       status: data.status ?? "draft",
-      nutrition: { create: {} },
-      rating: { create: {} },
       visibility: { create: {} },
-    } as unknown as Prisma.FoodCreateInput,
+    },
     include: {
       category: { select: { id: true, name: true, slug: true } },
-      nutrition: true,
-      rating: true,
       visibility: true,
     },
   });

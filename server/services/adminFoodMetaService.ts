@@ -17,10 +17,10 @@ import { catchServiceAsync } from "../utils/catchServiceAsync";
 import prisma from "../lib/prisma";
 
 export const getNutrition = catchServiceAsync(async (foodId: string) => {
-  const nutrition = await prisma.foodNutrition.findUnique({ where: { foodId } });
-  if (!nutrition) throw new AppError(404, "Nutrition info not found");
+  const food = await prisma.food.findUnique({ where: { id: foodId }, select: { calories: true, protein: true, fat: true, carbohydrate: true, fiber: true, sugar: true, sodium: true, cholesterol: true, servingSize: true } });
+  if (!food) throw new AppError(404, "Food not found");
 
-  return nutrition;
+  return food;
 });
 
 export const updateNutrition = catchServiceAsync(
@@ -28,11 +28,7 @@ export const updateNutrition = catchServiceAsync(
     const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
     if (!food) throw new AppError(404, "Food not found");
 
-    return prisma.foodNutrition.upsert({
-      where: { foodId },
-      update: data as unknown as Prisma.FoodNutritionUpdateInput,
-      create: { foodId, ...data } as unknown as Prisma.FoodNutritionCreateInput,
-    });
+    return prisma.food.update({ where: { id: foodId }, data });
   },
 );
 

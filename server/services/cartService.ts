@@ -17,7 +17,6 @@ const cartInclude = {
       foods: { include: { food: { select: { id: true, name: true } } } },
     },
   },
-  summary: true,
 } as const;
 
 function calcTotals(
@@ -49,15 +48,6 @@ function buildTotals(subtotal: number, discount: number) {
   return { discount, deliveryCharge, vat };
 }
 
-function computeTotalAmount(
-  subtotal: number,
-  discount: number,
-  deliveryCharge: number,
-  vat: number,
-) {
-  return subtotal - discount + deliveryCharge + vat;
-}
-
 export const getActiveCart = catchServiceAsync(async (userId: string) => {
   let cart = await prisma.cart.findFirst({
     where: { customerId: userId },
@@ -87,15 +77,7 @@ export const getActiveCart = catchServiceAsync(async (userId: string) => {
     });
   }
 
-  return {
-    ...cart,
-    totalAmount: computeTotalAmount(
-      Number(cart.subtotal),
-      Number(cart.discount),
-      Number(cart.deliveryCharge),
-      Number(cart.vat),
-    ),
-  };
+  return cart;
 });
 
 export const initCart = catchServiceAsync(
@@ -313,7 +295,7 @@ export const clearCart = catchServiceAsync(async (cart: { id: string; customerId
 
   await _logHistory(cart.id, "CLEAR", cart.customerId, "Cart cleared");
   const updated = await prisma.cart.findUnique({ where: { id: cart.id }, include: cartInclude });
-  return { ...updated!, totalAmount: 0 };
+  return updated!;
 });
 
 async function _recalculateAndReturn(cartId: string, userId?: string) {
@@ -330,27 +312,19 @@ async function _recalculateAndReturn(cartId: string, userId?: string) {
     const cart = await tx.cart.findUnique({ where: { id: cartId } });
     if (cart?.couponId) {
       const coupon = await tx.coupon.findUnique({ where: { id: cart.couponId } });
-      if (coupon && coupon.status === "active" && new Date() <= coupon.endDate!) {
+      if (coupon && coupon.status === "active" && (!coupon.endDate || new Date() <= coupon.endDate)) {
         discount = applyDiscount(subtotal, coupon.discountValue, coupon.discountType);
       }
     }
 
     const totals = buildTotals(subtotal, discount);
-    const totalAmount = computeTotalAmount(subtotal, discount, totals.deliveryCharge, totals.vat);
-
+    const grandTotal = subtotal - discount + totals.deliveryCharge + totals.vat;
     const mealCount = await tx.cartMeal.count({ where: { cartId } });
 
-    await Promise.all([
-      tx.cart.update({
-        where: { id: cartId },
-        data: { subtotal, ...totals },
-      }),
-      tx.cartSummary.upsert({
-        where: { cartId },
-        create: { cartId, itemCount, mealCount, subtotal, ...totals, grandTotal: totalAmount },
-        update: { itemCount, mealCount, subtotal, ...totals, grandTotal: totalAmount },
-      }),
-    ]);
+    await tx.cart.update({
+      where: { id: cartId },
+      data: { subtotal, ...totals, itemCount, mealCount, grandTotal },
+    });
 
     if (userId) {
       await tx.cartHistory.create({
@@ -363,7 +337,7 @@ async function _recalculateAndReturn(cartId: string, userId?: string) {
       include: cartInclude,
     });
 
-    return { ...result!, totalAmount };
+    return result!;
   });
 }
 

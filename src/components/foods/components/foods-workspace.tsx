@@ -74,7 +74,7 @@ export default function FoodsWorkspace() {
           return Number(b.variants[0].price) - Number(a.variants[0].price);
 
         case "rating":
-          return b.rating.averageRating - a.rating.averageRating;
+          return (b.averageRating ?? 0) - (a.averageRating ?? 0);
 
         default:
           return 0;

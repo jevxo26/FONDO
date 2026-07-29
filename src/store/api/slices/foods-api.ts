@@ -27,7 +27,7 @@ export const foodsApi = api.injectEndpoints({
       providesTags: ["Category"],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const { useGetFoodsQuery, useGetFoodBySlugQuery, useGetFoodCategoriesQuery } = foodsApi;

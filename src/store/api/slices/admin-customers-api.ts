@@ -45,7 +45,7 @@ export const adminCustomersApi = api.injectEndpoints({
       providesTags: ["Order"],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

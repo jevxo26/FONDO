@@ -55,7 +55,7 @@ export const ordersApi = api.injectEndpoints({
       invalidatesTags: ["Order"],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

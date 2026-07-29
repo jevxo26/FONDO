@@ -31,7 +31,7 @@ export const reviewsApi = api.injectEndpoints({
       invalidatesTags: ["Review"],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -32,11 +31,6 @@ import { toast } from "sonner";
 export function NavActions() {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
 
   const { user, isAuthenticated, logout } = useAuth();
   const { data: cart } = useCart();
@@ -64,7 +58,7 @@ export function NavActions() {
         className="relative flex size-9 items-center justify-center rounded-full bg-destructive/20 transition-colors hover:bg-destructive/30"
       >
         <Heart className="size-4 text-foreground" />
-        {mounted && favoritesCount > 0 && (
+        {favoritesCount > 0 && (
           <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground leading-none">
             {favoritesCount > 9 ? "9+" : favoritesCount}
           </span>
@@ -75,7 +69,7 @@ export function NavActions() {
         className="relative flex size-9 items-center justify-center rounded-full bg-secondary transition-colors hover:bg-secondary"
       >
         <ShoppingCart className="size-4 text-foreground" />
-        {mounted && cartCount > 0 && (
+        {cartCount > 0 && (
           <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground leading-none">
             {cartCount > 9 ? "9+" : cartCount}
           </span>

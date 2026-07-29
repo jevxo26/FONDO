@@ -16,15 +16,15 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 | Command | What it does |
 |---|---|
-| `npm run dev` | `nodemon --watch server --watch tsconfig.server.json --ext ts --ts-node --project tsconfig.server.json server/index.ts` — Express 5 + Next.js turbopack on port 3000. **NOT** `next dev`. |
-| `npm run build` | `next build && tsc --project tsconfig.server.json` → outputs `dist/` |
-| `npm run start` | `NODE_ENV=production node dist/server/index.js` |
-| `npm run lint` | `eslint` |
-| `npm run format` | `prettier --write "{src,server}/**/*.{ts,tsx,js,jsx,json}"` |
-| `npx prisma generate` | Generate Prisma client after schema changes |
-| `npx prisma migrate dev` | Run migrations against PostgreSQL |
-| `npx prisma studio` | Open Prisma Studio to browse data |
-| `npx shadcn@latest add @shadcn/<name>` | Add shadcn component (style: `base-nova`) |
+| `pnpm dev` | `nodemon --watch server --watch tsconfig.server.json --ext ts --ts-node --project tsconfig.server.json server/index.ts` — Express 5 + Next.js turbopack on port 3000. **NOT** `next dev`. |
+| `pnpm build` | `next build && tsc --project tsconfig.server.json` → outputs `dist/` |
+| `pnpm start` | `NODE_ENV=production node dist/server/index.js` |
+| `pnpm lint` | `eslint` |
+| `pnpm format` | `prettier --write "{src,server}/**/*.{ts,tsx,js,jsx,json}"` |
+| `pnpm prisma generate` | Generate Prisma client after schema changes |
+| `pnpm prisma migrate dev` | Run migrations against PostgreSQL |
+| `pnpm prisma studio` | Open Prisma Studio to browse data |
+| `pnpm dlx shadcn@latest add @shadcn/<name>` | Add shadcn component (style: `base-nova`) |
 
 ## Architecture
 
@@ -156,5 +156,5 @@ prisma/
 ## Known Gaps
 
 - **No test framework** — no jest/vitest in `package.json`, no test files exist. Tests are not yet set up.
-- **Prisma needs schema sync** — `npx prisma generate` after any schema change, `npx prisma migrate dev` after model additions.
+- **Prisma needs schema sync** — `pnpm prisma generate` after any schema change, `pnpm prisma migrate dev` after model additions.
 - **Neon connection pool limit** — Free tier ~9 connections. Keep concurrent API calls low. Guard mutations with `if (isPending) return`.

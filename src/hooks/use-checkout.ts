@@ -9,9 +9,9 @@ import { useApplyCoupon, useRemoveCoupon, useSelectAddress } from "@/hooks/use-c
 import { useCart } from "@/hooks/use-cart";
 import { usePaymentMethods } from "@/hooks/use-payment-methods";
 import { usePlaceOrder } from "@/hooks/use-orders";
+import { useClearCart } from "@/hooks/use-cart";
 import { useInitiatePayment } from "@/hooks/use-payments";
 import { handleApiError } from "@/lib/api-error";
-import { clearCart } from "@/lib/cart-storage";
 import type { CheckoutFormData, DeliverySchedule, FulfillmentType } from "@/types/checkout-type";
 import type { Address } from "@/types/address";
 import type { PaymentMethod } from "@/types/payment";
@@ -66,6 +66,7 @@ export default function useCheckout(): UseCheckoutReturn {
 
   const placeOrder = usePlaceOrder();
   const initiatePayment = useInitiatePayment();
+  const clearCart = useClearCart();
   const createAddress = useCreateAddress();
   const selectAddress = useSelectAddress();
   const applyCoupon = useApplyCoupon();
@@ -191,7 +192,7 @@ export default function useCheckout(): UseCheckoutReturn {
         ...(hasSchedule ? { deliverySchedule } : {}),
       });
 
-      clearCart();
+      clearCart.mutate(undefined);
 
       const codMethod = paymentMethods.find((pm) => pm.code === "cod");
       if (codMethod && data.paymentMethodId === codMethod.id) {

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useFavorites, useRemoveFavorite, useToggleFavorite } from "@/hooks/use-favorites";
 import { ArrowUpRight, Clock, Heart, ShoppingBag, Star } from "lucide-react";
@@ -21,12 +20,6 @@ interface FoodCardFood {
 }
 
 export default function FoodCard({ food }: { food: FoodCardFood }) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
-
   const defaultVariant = food.variants?.[0];
   const { data: favorites = [] } = useFavorites();
   const toggleFavorite = useToggleFavorite();
@@ -56,7 +49,7 @@ export default function FoodCard({ food }: { food: FoodCardFood }) {
           onClick={() => (isFavorited ? removeFavorite : toggleFavorite).mutate(food)}
           className="absolute right-3 top-3 size-9 rounded-full bg-background/90 backdrop-blur-sm shadow-sm hover:text-destructive"
         >
-          <Heart className={`size-4 ${mounted && isFavorited ? "fill-destructive text-destructive" : ""}`} />
+          <Heart className={`size-4 ${isFavorited ? "fill-destructive text-destructive" : ""}`} />
         </Button>
 
         <div
@@ -105,8 +98,6 @@ export default function FoodCard({ food }: { food: FoodCardFood }) {
         </p>
         <AddToCartButton
           foodId={food.id}
-          name={food.name}
-          thumbnail={food.thumbnail}
           price={Number(defaultVariant?.discountPrice ?? defaultVariant?.price ?? 0)}
         />
       </div>

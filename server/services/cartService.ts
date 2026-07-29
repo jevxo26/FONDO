@@ -299,46 +299,44 @@ export const clearCart = catchServiceAsync(async (cart: { id: string; customerId
 });
 
 async function _recalculateAndReturn(cartId: string, userId?: string) {
-  return prisma.$transaction(async (tx) => {
-    const items = await tx.cartItem.findMany({
-      where: { cartId },
-      include: { addons: true },
-    });
+  return prisma.$transaction(
+    async (tx) => {
+      const [items, cart, mealCount] = await Promise.all([
+        tx.cartItem.findMany({ where: { cartId }, include: { addons: true } }),
+        tx.cart.findUnique({ where: { id: cartId }, include: cartInclude }),
+        tx.cartMeal.count({ where: { cartId } }),
+      ]);
 
-    const subtotal = calcTotals(items);
-    const itemCount = items.length;
-    let discount = 0;
+      if (!cart) throw new AppError(404, "Cart not found");
 
-    const cart = await tx.cart.findUnique({ where: { id: cartId } });
-    if (cart?.couponId) {
-      const coupon = await tx.coupon.findUnique({ where: { id: cart.couponId } });
-      if (coupon && coupon.status === "active" && (!coupon.endDate || new Date() <= coupon.endDate)) {
-        discount = applyDiscount(subtotal, coupon.discountValue, coupon.discountType);
+      const subtotal = calcTotals(items);
+      const itemCount = items.length;
+      let discount = 0;
+
+      if (cart.couponId) {
+        const coupon = await tx.coupon.findUnique({ where: { id: cart.couponId } });
+        if (coupon && coupon.status === "active" && (!coupon.endDate || new Date() <= coupon.endDate)) {
+          discount = applyDiscount(subtotal, coupon.discountValue, coupon.discountType);
+        }
       }
-    }
 
-    const totals = buildTotals(subtotal, discount);
-    const grandTotal = subtotal - discount + totals.deliveryCharge + totals.vat;
-    const mealCount = await tx.cartMeal.count({ where: { cartId } });
+      const totals = buildTotals(subtotal, discount);
+      const grandTotal = subtotal - discount + totals.deliveryCharge + totals.vat;
 
-    await tx.cart.update({
-      where: { id: cartId },
-      data: { subtotal, ...totals, itemCount, mealCount, grandTotal },
-    });
+      if (userId) {
+        await tx.cartHistory.create({
+          data: { cartId, action: "INIT", performedBy: userId, remarks: "Cart initialized" },
+        });
+      }
 
-    if (userId) {
-      await tx.cartHistory.create({
-        data: { cartId, action: "INIT", performedBy: userId, remarks: "Cart initialized" },
-      });
-    }
-
-    const result = await tx.cart.findUnique({
-      where: { id: cartId },
-      include: cartInclude,
-    });
-
-    return result!;
-  });
+      return tx.cart.update({
+        where: { id: cartId },
+        data: { subtotal, ...totals, itemCount, mealCount, grandTotal },
+        include: cartInclude,
+      })!;
+    },
+    { timeout: 20000 },
+  );
 }
 
 async function _logHistory(cartId: string, action: string, performedBy: string, remarks?: string) {

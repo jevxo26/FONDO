@@ -7,16 +7,12 @@ import { Check, Plus, ShoppingBag } from "lucide-react";
 
 interface AddToCartButtonProps {
   foodId: string;
-  name: string;
-  thumbnail?: string;
   price: number;
   quantity?: number;
 }
 
 export default function AddToCartButton({
   foodId,
-  name,
-  thumbnail,
   price,
   quantity = 1,
 }: AddToCartButtonProps) {
@@ -24,9 +20,9 @@ export default function AddToCartButton({
   const addToCart = useAddToCart();
 
   const handleClick = () => {
-    if (justAdded) return;
+    if (justAdded || addToCart.isPending) return;
     setJustAdded(true);
-    addToCart.mutate({ foodId, name, thumbnail, quantity, unitPrice: price });
+    addToCart.mutate({ foodId, quantity, unitPrice: price });
     setTimeout(() => setJustAdded(false), 400);
   };
 
@@ -34,7 +30,7 @@ export default function AddToCartButton({
     <Button
       variant="accent"
       onClick={handleClick}
-      disabled={justAdded}
+      disabled={justAdded || addToCart.isPending}
       className="mt-5 w-full justify-between rounded-full py-6 pl-5 pr-3"
     >
       <div className="flex items-center gap-2">

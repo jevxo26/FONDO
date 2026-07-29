@@ -7,7 +7,7 @@ import type { CustomerOrder } from "@/data/orders";
 import { DataTableColumnHeader } from "@/components/common/table";
 import { OrderStatusBadge } from "@/components/dashboard/admin/customers/orders/order-status-badge";
 import { useUpdateOrderStatus } from "@/hooks/use-orders";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,10 +48,10 @@ function RowDropdown({ row }: { row: CustomerOrder }) {
   const router = useRouter();
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Button variant="ghost" size="icon" className="size-8">
-          <MoreHorizontal className="size-4" />
-        </Button>
+      <DropdownMenuTrigger
+        className={buttonVariants({ variant: "ghost", size: "icon", className: "size-8" })}
+      >
+        <MoreHorizontal className="size-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-44">
         <DropdownMenuItem onClick={() => router.push(`/dashboard/admin/orders/${row.id}`)}>

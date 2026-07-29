@@ -12,7 +12,7 @@ export const profileApi = api.injectEndpoints({
       query: (body) => ({ url: "/auth/change-password", method: "POST", body }),
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const { useUpdateProfileMutation, useChangePasswordMutation } = profileApi;

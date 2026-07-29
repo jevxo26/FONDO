@@ -16,7 +16,7 @@ export const couponApi = api.injectEndpoints({
       invalidatesTags: ["Cart"],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const { useApplyCouponMutation, useRemoveCouponMutation } = couponApi;

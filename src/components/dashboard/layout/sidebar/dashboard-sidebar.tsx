@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,7 @@ interface SidebarItem {
   label: string;
   href: string;
   icon: LucideIcon;
+  children?: { label: string; href: string; icon: LucideIcon }[];
 }
 
 interface DashboardSidebarProps {
@@ -40,7 +42,7 @@ export function DashboardSidebar({
   sections,
   basePath,
   panelLabel,
-  logoIcon: LogoIcon,
+  logoIcon: _LogoIcon,
   showOverview = true,
   userName = "User",
   userRole = "Staff",
@@ -64,8 +66,14 @@ export function DashboardSidebar({
               size="lg"
               render={<Link href="/" onClick={() => isMobile && setOpenMobile(false)} />}
             >
-              <div className="flex size-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 shadow-[0_0_24px_rgba(206,163,89,0.25)] group-data-[collapsible=icon]:size-8">
-                <LogoIcon className="size-5 text-white group-data-[collapsible=icon]:size-4" />
+              <div className="flex size-10 items-center justify-center rounded-lg overflow-hidden shadow-[0_0_24px_rgba(206,163,89,0.25)] group-data-[collapsible=icon]:size-8">
+                <Image
+                  src="/images/logo.png"
+                  alt="FONDO"
+                  width={40}
+                  height={40}
+                  className="size-full object-cover"
+                />
               </div>
               <div className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
                 <span className="font-heading text-xl font-bold">FONDO</span>
@@ -90,7 +98,7 @@ export function DashboardSidebar({
               >
                 <LayoutDashboard
                   className={cn(
-                    "size-5 group-data-[collapsible=icon]:size-4 transition-all duration-300",
+                    "size-5 group-data-[collapsible=icon]:size-5 transition-all duration-300",
                     pathname === basePath && "text-primary",
                   )}
                 />

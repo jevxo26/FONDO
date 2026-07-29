@@ -46,12 +46,7 @@ export function CouponSection({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Tooltip>
-            <TooltipTrigger>
-              <Percent className="size-3.5 text-muted-foreground/60" />
-            </TooltipTrigger>
-            <TooltipContent>Apply discount coupon</TooltipContent>
-          </Tooltip>
+          <Percent className="size-3.5 text-muted-foreground/60" />
           {open ? (
             <ChevronUp className="size-4 text-muted-foreground" />
           ) : (

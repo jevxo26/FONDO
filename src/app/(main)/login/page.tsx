@@ -26,7 +26,8 @@ export default function LoginPage() {
       await login(data.identity, data.password);
       toast.success("Login successful");
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Invalid email/phone or password";
+      const apiError = err as { message?: string };
+      const message = apiError?.message || (err instanceof Error ? err.message : "Login failed");
       toast.error(message);
     }
   };
@@ -43,7 +44,8 @@ export default function LoginPage() {
       await login(email, password);
       toast.success(`Logged in as ${email}`);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Login failed";
+      const apiError = err as { message?: string };
+      const message = apiError?.message || (err instanceof Error ? err.message : "Login failed");
       toast.error(message);
     }
   };

@@ -173,7 +173,8 @@ export const placeOrder = catchServiceAsync(
       result = await createOrderFromCart(cart, paymentMethodId, customerId, notes, addressId);
     }
 
-    sendOrderConfirmation(result.orderId);
+    sendOrderConfirmation(result.orderId)
+      .catch((err) => console.error("[Email] Order confirmation send error:", err));
 
     return result;
   },

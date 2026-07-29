@@ -158,7 +158,8 @@ export const handleSuccess = catchServiceAsync(async (query: Record<string, stri
       data: { status: "success", gatewayTransactionId: val_id, processedAt: new Date() },
     });
 
-    sendPaymentReceipt(payment.id);
+    sendPaymentReceipt(payment.id)
+      .catch((err) => console.error("[Email] Payment receipt send error:", err));
   } else {
     await prisma.payment.update({
       where: { id: payment.id },

@@ -16,6 +16,7 @@ export interface SidebarItem {
   label: string;
   href: string;
   icon: LucideIcon;
+  children?: { label: string; href: string; icon: LucideIcon }[];
 }
 
 export const sidebarItems: SidebarItem[] = [

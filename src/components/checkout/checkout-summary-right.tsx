@@ -16,7 +16,7 @@ export function CheckoutSummary({
   savings,
   isSubmitting,
 }: CheckoutSummaryProps) {
-  const total = subtotal + deliveryFee - savings;
+  const total = Number(subtotal) + Number(deliveryFee) - Number(savings);
 
   return (
     <div className="rounded-[32px] border border-border/50 bg-card p-6 shadow-[var(--shadow-card)] flex flex-col gap-6">

@@ -49,33 +49,17 @@ function buildTotals(subtotal: number, discount: number) {
 }
 
 export const getActiveCart = catchServiceAsync(async (userId: string) => {
-  let cart = await prisma.cart.findFirst({
+  const cart = await prisma.cart.upsert({
     where: { customerId: userId },
-    orderBy: { createdAt: "desc" },
+    create: { customerId: userId, status: "active" },
+    update: {
+      status: "active",
+      packageId: null,
+      customMealPlanId: null,
+      couponId: null,
+    },
     include: cartInclude,
   });
-
-  if (!cart) {
-    cart = await prisma.cart.create({
-      data: { customerId: userId, status: "active" },
-      include: cartInclude,
-    });
-  } else if (cart.status !== "active") {
-    cart = await prisma.cart.update({
-      where: { id: cart.id },
-      data: {
-        status: "active",
-        subtotal: 0,
-        discount: 0,
-        deliveryCharge: 0,
-        vat: 0,
-        packageId: null,
-        customMealPlanId: null,
-        couponId: null,
-      },
-      include: cartInclude,
-    });
-  }
 
   return cart;
 });

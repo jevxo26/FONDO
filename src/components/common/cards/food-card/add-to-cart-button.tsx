@@ -9,12 +9,16 @@ interface AddToCartButtonProps {
   foodId: string;
   price: number;
   quantity?: number;
+  name?: string;
+  thumbnail?: string | null;
 }
 
 export default function AddToCartButton({
   foodId,
   price,
   quantity = 1,
+  name,
+  thumbnail,
 }: AddToCartButtonProps) {
   const [justAdded, setJustAdded] = useState(false);
   const addToCart = useAddToCart();
@@ -22,7 +26,7 @@ export default function AddToCartButton({
   const handleClick = () => {
     if (justAdded || addToCart.isPending) return;
     setJustAdded(true);
-    addToCart.mutate({ foodId, quantity, unitPrice: price });
+    addToCart.mutate({ foodId, quantity, unitPrice: price, name, thumbnail });
     setTimeout(() => setJustAdded(false), 400);
   };
 

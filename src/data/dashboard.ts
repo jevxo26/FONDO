@@ -1,20 +1,123 @@
 import type { LucideIcon } from "lucide-react";
-import { BarChart3, CreditCard, Receipt, Store, Truck, Users, Utensils } from "lucide-react";
+import {
+  Apple,
+  BarChart3,
+  Bike,
+  CalendarDays,
+  ChefHat,
+  Clock,
+  CreditCard,
+  DollarSign,
+  Gift,
+  Grid3x3,
+  Landmark,
+  LayoutDashboard,
+  Package,
+  Radio,
+  Receipt,
+  Repeat,
+  Store,
+  ThumbsUp,
+  Ticket,
+  TrendingUp,
+  Truck,
+  Undo2,
+  Users,
+  Utensils,
+  Wallet,
+} from "lucide-react";
 
 export interface SidebarItem {
   label: string;
   href: string;
   icon: LucideIcon;
+  children?: { label: string; href: string; icon: LucideIcon }[];
 }
 
 export const sidebarItems: SidebarItem[] = [
-  { label: "Customers", href: "/customers", icon: Users },
-  { label: "Vendors", href: "/vendors", icon: Store },
-  { label: "Foods", href: "/foods", icon: Utensils },
-  { label: "Orders", href: "/orders", icon: Receipt },
-  { label: "Payments", href: "/payments", icon: CreditCard },
-  { label: "Riders", href: "/riders", icon: Truck },
-  { label: "Reports", href: "/reports", icon: BarChart3 },
+  {
+    label: "Customers",
+    href: "/customers",
+    icon: Users,
+    children: [
+      { label: "Profiles", href: "/customers", icon: Users },
+      { label: "Orders", href: "/customers/orders", icon: Receipt },
+      { label: "Subscriptions", href: "/customers/subscriptions", icon: Repeat },
+      { label: "Payments", href: "/customers/payments", icon: CreditCard },
+      { label: "Wallets", href: "/customers/wallets", icon: Wallet },
+    ],
+  },
+  {
+    label: "Vendors",
+    href: "/vendors",
+    icon: Store,
+    children: [
+      { label: "All Vendors", href: "/vendors", icon: Store },
+      { label: "Pending Approval", href: "/vendors/pending", icon: Clock },
+      { label: "Performance", href: "/vendors/performance", icon: TrendingUp },
+      { label: "Settlement", href: "/vendors/settlement", icon: DollarSign },
+    ],
+  },
+  {
+    label: "Foods",
+    href: "/foods",
+    icon: Utensils,
+    children: [
+      { label: "All Foods", href: "/foods", icon: Utensils },
+      { label: "Approval", href: "/foods/approval", icon: ThumbsUp },
+      { label: "Categories", href: "/foods/categories", icon: Grid3x3 },
+      { label: "Inventory", href: "/foods/inventory", icon: Package },
+      { label: "Meal Plans", href: "/foods/meal-plans", icon: CalendarDays },
+      { label: "Nutrition", href: "/foods/nutrition", icon: Apple },
+      { label: "Packages", href: "/foods/packages", icon: Gift },
+    ],
+  },
+  {
+    label: "Orders",
+    href: "/orders",
+    icon: Receipt,
+    children: [
+      { label: "All Orders", href: "/orders", icon: Receipt },
+      { label: "Kitchen Display", href: "/orders/kitchen", icon: ChefHat },
+      { label: "Analytics", href: "/orders/analytics", icon: BarChart3 },
+    ],
+  },
+  {
+    label: "Payments",
+    href: "/payments",
+    icon: CreditCard,
+    children: [
+      { label: "All Payments", href: "/payments", icon: CreditCard },
+      { label: "Coupons", href: "/payments/coupons", icon: Ticket },
+      { label: "Refunds", href: "/payments/refunds", icon: Undo2 },
+      { label: "Settlements", href: "/payments/settlements", icon: Landmark },
+    ],
+  },
+  {
+    label: "Riders",
+    href: "/riders",
+    icon: Truck,
+    children: [
+      { label: "All Riders", href: "/riders", icon: Truck },
+      { label: "Earnings", href: "/riders/earnings", icon: Wallet },
+      { label: "Live Tracking", href: "/riders/live", icon: Radio },
+      { label: "Performance", href: "/riders/performance", icon: TrendingUp },
+    ],
+  },
+  {
+    label: "Reports",
+    href: "/reports",
+    icon: BarChart3,
+    children: [
+      { label: "Overview", href: "/reports", icon: LayoutDashboard },
+      { label: "Revenue", href: "/reports/revenue", icon: DollarSign },
+      { label: "Customers", href: "/reports/customers", icon: Users },
+      { label: "Vendors", href: "/reports/vendors", icon: Store },
+      { label: "Riders", href: "/reports/riders", icon: Bike },
+      { label: "Inventory", href: "/reports/inventory", icon: Package },
+      { label: "Subscriptions", href: "/reports/subscriptions", icon: Repeat },
+    ],
+  },
 ];
 
 export const sectionConfig = [

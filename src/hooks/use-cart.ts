@@ -12,6 +12,8 @@ export interface AddToCartArgs {
   foodId: string;
   quantity: number;
   unitPrice: number;
+  name?: string;
+  thumbnail?: string | null;
 }
 
 export interface UpdateCartArgs {
@@ -31,7 +33,7 @@ export function useAddToCart() {
       args: AddToCartArgs,
       options?: { onSuccess?: () => void; onError?: (e: unknown) => void; onSettled?: () => void },
     ) => {
-      trigger({ foodId: args.foodId, quantity: args.quantity, unitPrice: args.unitPrice })
+      trigger({ foodId: args.foodId, quantity: args.quantity, unitPrice: args.unitPrice, name: args.name, thumbnail: args.thumbnail })
         .unwrap()
         .then(() => options?.onSuccess?.())
         .catch((err) => options?.onError?.(err))
@@ -42,7 +44,7 @@ export function useAddToCart() {
 
   const mutateAsync = useCallback(
     async (args: AddToCartArgs) => {
-      return trigger({ foodId: args.foodId, quantity: args.quantity, unitPrice: args.unitPrice }).unwrap();
+      return trigger({ foodId: args.foodId, quantity: args.quantity, unitPrice: args.unitPrice, name: args.name, thumbnail: args.thumbnail }).unwrap();
     },
     [trigger],
   );

@@ -100,7 +100,8 @@ export const registerUser = catchServiceAsync(
       select: sendUserDataAsResponse,
     });
 
-    sendWelcomeEmail({ id: user.id, firstName: user.firstName, email: user.email });
+    sendWelcomeEmail({ id: user.id, firstName: user.firstName, email: user.email })
+      .catch((err) => console.error("[Email] Welcome email send error:", err));
 
     return user;
   },

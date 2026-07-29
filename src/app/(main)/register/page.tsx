@@ -24,7 +24,8 @@ export default function RegisterPage() {
       toast.success("Registration successful! Please sign in.");
       router.push("/login");
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Registration failed";
+      const apiError = err as { message?: string };
+      const message = apiError?.message || (err instanceof Error ? err.message : "Registration failed");
       toast.error(message);
     }
   };

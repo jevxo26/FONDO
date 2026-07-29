@@ -7,6 +7,8 @@ interface AddToCartPayload {
   foodId: string;
   quantity: number;
   unitPrice: number;
+  name?: string;
+  thumbnail?: string | null;
 }
 interface UpdateCartItemPayload {
   itemId: string;
@@ -20,7 +22,7 @@ function createTempItem(payload: AddToCartPayload): CartItem {
     quantity: payload.quantity,
     unitPrice: payload.unitPrice,
     totalPrice: payload.quantity * payload.unitPrice,
-    food: { id: payload.foodId, name: "", thumbnail: null },
+    food: { id: payload.foodId, name: payload.name ?? "", thumbnail: payload.thumbnail ?? null },
   };
 }
 

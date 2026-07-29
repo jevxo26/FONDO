@@ -33,6 +33,8 @@ export function ProductHero({ food }: { food: Food }) {
       foodId: food.id,
       quantity,
       unitPrice: currentPrice,
+      name: food.name,
+      thumbnail: food.thumbnail,
     });
   };
 
@@ -43,6 +45,8 @@ export function ProductHero({ food }: { food: Food }) {
         foodId: food.id,
         quantity,
         unitPrice: currentPrice,
+        name: food.name,
+        thumbnail: food.thumbnail,
       },
       { onSuccess: () => router.push("/checkout") },
     );

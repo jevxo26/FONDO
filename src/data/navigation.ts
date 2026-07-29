@@ -1,16 +1,15 @@
 import {
+  Bike,
   BookOpen,
-  Clock,
-  Flame,
-  Grid3x3,
   HelpCircle,
   Info,
   Mail,
   MessageSquareText,
   Package,
-  Sparkles,
+  Store,
   Truck,
   Utensils,
+  UtensilsCrossed,
 } from "lucide-react";
 import type { ComponentType } from "react";
 
@@ -32,17 +31,16 @@ interface NavLink {
 
 export const childIcons: Record<string, ComponentType<{ className?: string }>> = {
   "/foods": Utensils,
-  "/foods#best-sellers": Flame,
-  "/foods#combos": Package,
-  "/foods#categories": Grid3x3,
-  "/foods#todays-special": Sparkles,
-  "/foods#new-arrivals": Clock,
-  "/about": Info,
+  "/packages": Package,
+  "/meals": UtensilsCrossed,
   "/reviews": MessageSquareText,
-  "/contact": Mail,
-  "/traking-page": Truck,
-  "/faq": HelpCircle,
   "/our-story": BookOpen,
+  "/about": Info,
+  "/apply/vendor": Store,
+  "/apply/rider": Bike,
+  "/contact": Mail,
+  "/faq": HelpCircle,
+  "/traking-page": Truck,
 };
 
 export const mainNavLinks: NavLink[] = [
@@ -51,20 +49,20 @@ export const mainNavLinks: NavLink[] = [
     label: "Foods",
     children: [
       { href: "/foods", label: "All Foods" },
-      { href: "/foods#best-sellers", label: "Best Sellers" },
-      { href: "/foods#combos", label: "Combos" },
-      { href: "/foods#categories", label: "Categories" },
-      { href: "/foods#todays-special", label: "Today's Special" },
-      { href: "/foods#new-arrivals", label: "New Arrivals" },
+      { href: "/packages", label: "Packages" },
+      { href: "/meals", label: "Meals" },
+      { href: "/reviews", label: "Reviews" },
     ],
   },
   { href: "/packages", label: "Packages" },
+  { href: "/meals", label: "Meals" },
   {
     label: "More",
     children: [
       { href: "/our-story", label: "Our Story" },
       { href: "/about", label: "About" },
-      { href: "/reviews", label: "Reviews" },
+      { href: "/apply/vendor", label: "Apply as Vendor" },
+      { href: "/apply/rider", label: "Apply as Rider" },
       { href: "/contact", label: "Contact" },
       { href: "/faq", label: "FAQ" },
     ],
@@ -73,12 +71,16 @@ export const mainNavLinks: NavLink[] = [
 
 export const mobileNavLinks: { href: string; label: string }[] = [
   { href: "/", label: "Home" },
-  { href: "/foods", label: "Foods" },
+  { href: "/foods", label: "All Foods" },
+  { href: "/packages", label: "Packages" },
+  { href: "/meals", label: "Meals" },
+  { href: "/reviews", label: "Reviews" },
   { href: "/our-story", label: "Our Story" },
   { href: "/about", label: "About" },
-  { href: "/reviews", label: "Reviews" },
+  { href: "/apply/vendor", label: "Apply as Vendor" },
+  { href: "/apply/rider", label: "Apply as Rider" },
   { href: "/contact", label: "Contact" },
-  { href: "/traking-page", label: "Track Order" },
   { href: "/faq", label: "FAQ" },
+  { href: "/traking-page", label: "Track Order" },
   { href: "/wishlist", label: "Wishlist" },
 ];

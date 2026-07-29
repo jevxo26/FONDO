@@ -212,7 +212,7 @@ export default function useCheckout(): UseCheckoutReturn {
     }
   };
 
-  const savings = cart?.discount ?? 0;
+  const savings = Number(cart?.discount ?? 0);
 
   return {
     cart,

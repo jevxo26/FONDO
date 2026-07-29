@@ -90,9 +90,9 @@ const CheckoutForm = () => {
 
       <div className="lg:col-span-4 lg:sticky lg:top-24">
         <CheckoutSummary
-          subtotal={cart?.subtotal ?? 0}
-          deliveryFee={currentFulfillment === "delivery" ? (cart?.deliveryCharge ?? 60) : 0}
-          savings={cart?.discount ?? 0}
+          subtotal={Number(cart?.subtotal ?? 0)}
+          deliveryFee={currentFulfillment === "delivery" ? Number(cart?.deliveryCharge ?? 60) : 0}
+          savings={Number(cart?.discount ?? 0)}
           isSubmitting={
             placeOrder.isPending || initiatePayment.isPending || createAddress.isPending
           }

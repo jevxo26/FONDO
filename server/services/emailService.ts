@@ -40,20 +40,25 @@ interface SendMailParams {
 }
 
 async function sendMail({ to, subject, templateName, data }: SendMailParams) {
-  const html = renderEmail(templateName, { ...data, unsubscribeUrl: "#", supportUrl: "#" });
-  const transport = await getTransporter();
-  const info = await transport.sendMail({
-    from: env.SMTP_FROM,
-    to,
-    subject,
-    html,
-  });
+  try {
+    const html = renderEmail(templateName, { ...data, unsubscribeUrl: "#", supportUrl: "#" });
+    const transport = await getTransporter();
+    const info = await transport.sendMail({
+      from: env.SMTP_FROM,
+      to,
+      subject,
+      html,
+    });
 
-  if (isTestAccount) {
-    console.log("[Email Dev Preview URL]", nodemailer.getTestMessageUrl(info));
+    if (isTestAccount) {
+      console.log("[Email Dev Preview URL]", nodemailer.getTestMessageUrl(info));
+    }
+
+    console.log(`[Email] Sent "${subject}" to ${to}`);
+    return info;
+  } catch (err) {
+    console.error(`[Email] Failed to send "${subject}" to ${to}:`, err instanceof Error ? err.message : err);
   }
-
-  return info;
 }
 
 export async function sendWelcomeEmail(user: { id: string; firstName: string; email: string }) {
@@ -69,7 +74,8 @@ export async function sendWelcomeEmail(user: { id: string; firstName: string; em
 }
 
 export async function sendOrderConfirmation(orderId: string) {
-  const order = await prisma.order.findUnique({
+  try {
+    const order = await prisma.order.findUnique({
     where: { id: orderId },
     include: {
       customer: { select: { id: true, firstName: true, email: true } },
@@ -117,10 +123,14 @@ export async function sendOrderConfirmation(orderId: string) {
       orderUrl: `${env.BASE_URL}/orders/${order.id}`,
     },
   });
+  } catch (err) {
+    console.error(`[Email] Failed to send order confirmation for ${orderId}:`, err instanceof Error ? err.message : err);
+  }
 }
 
 export async function sendPaymentReceipt(paymentId: string) {
-  const payment = await prisma.payment.findUnique({
+  try {
+    const payment = await prisma.payment.findUnique({
     where: { id: paymentId },
     include: {
       customer: { select: { id: true, firstName: true, email: true } },
@@ -154,4 +164,7 @@ export async function sendPaymentReceipt(paymentId: string) {
       orderUrl: `${env.BASE_URL}/orders/${payment.order.id}`,
     },
   });
+  } catch (err) {
+    console.error(`[Email] Failed to send payment receipt for ${paymentId}:`, err instanceof Error ? err.message : err);
+  }
 }

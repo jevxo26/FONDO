@@ -99,6 +99,8 @@ export default function FoodCard({ food }: { food: FoodCardFood }) {
         <AddToCartButton
           foodId={food.id}
           price={Number(defaultVariant?.discountPrice ?? defaultVariant?.price ?? 0)}
+          name={food.name}
+          thumbnail={food.thumbnail}
         />
       </div>
     </div>

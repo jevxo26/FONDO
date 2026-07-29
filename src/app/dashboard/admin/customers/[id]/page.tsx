@@ -6,7 +6,6 @@ import { ArrowLeft, XCircle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAdminCustomer, useAdminCustomerOrders } from "@/hooks/use-admin-customers";
 import CustomerProfileHeader from "@/components/dashboard/admin/customers/detail/customer-profile-header";
-import CustomerTabNav from "@/components/dashboard/admin/customers/detail/customer-tab-nav";
 import CustomerStatCards from "@/components/dashboard/admin/customers/detail/customer-stat-cards";
 import CustomerRecentOrders from "@/components/dashboard/admin/customers/detail/customer-recent-orders";
 import CustomerAccountInfo from "@/components/dashboard/admin/customers/detail/customer-account-info";
@@ -76,8 +75,6 @@ export default function CustomerDetailPage() {
         statusLabel={status.label}
         statusStyle={status.style}
       />
-
-      <CustomerTabNav customerId={id} />
 
       <CustomerStatCards
         totalOrders={customer.totalOrders}

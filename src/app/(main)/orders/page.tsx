@@ -138,60 +138,43 @@ function OrdersContent() {
                     </span>
                     <div className="mt-2 flex gap-2 justify-end">
                       <Tooltip>
-                        <TooltipTrigger>
-                          <Link href={`/track-order?orderId=${order.id}`}>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5"
-                            >
-                              <MapPin className="size-3 mr-1" /> Track
-                            </Button>
-                          </Link>
+                        <TooltipTrigger
+                          render={<Link href={`/track-order?orderId=${order.id}`} />}
+                          className="inline-flex items-center gap-1 rounded-lg border border-border bg-background px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider hover:bg-muted transition-colors"
+                        >
+                          <MapPin className="size-3" /> Track
                         </TooltipTrigger>
                         <TooltipContent>Track delivery status</TooltipContent>
                       </Tooltip>
                       {["PENDING", "CONFIRMED"].includes(order.orderStatus) && (
                         <Tooltip>
-                          <TooltipTrigger>
-                            <button
-                              onClick={() => handleCancel(order.id)}
-                              disabled={cancelOrder.isPending}
-                              className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 border border-destructive/20 text-destructive rounded-lg hover:bg-destructive/10 transition-colors disabled:opacity-50"
-                            >
-                              <XCircle className="size-3" /> Cancel
-                            </button>
+                          <TooltipTrigger
+                            onClick={() => handleCancel(order.id)}
+                            disabled={cancelOrder.isPending}
+                            className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 border border-destructive/20 text-destructive rounded-lg hover:bg-destructive/10 transition-colors disabled:opacity-50"
+                          >
+                            <XCircle className="size-3" /> Cancel
                           </TooltipTrigger>
                           <TooltipContent>Cancel this order</TooltipContent>
                         </Tooltip>
                       )}
                       {["DELIVERED", "COMPLETED"].includes(order.orderStatus) && (
                         <Tooltip>
-                          <TooltipTrigger>
-                            <Link href={`/track-order?orderId=${order.id}`}>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5"
-                              >
-                                <Star className="size-3 mr-1" /> Review
-                              </Button>
-                            </Link>
+                          <TooltipTrigger
+                            render={<Link href={`/track-order?orderId=${order.id}`} />}
+                            className="inline-flex items-center gap-1 rounded-lg border border-border bg-background px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider hover:bg-muted transition-colors"
+                          >
+                            <Star className="size-3" /> Review
                           </TooltipTrigger>
                           <TooltipContent>Leave a review</TooltipContent>
                         </Tooltip>
                       )}
                       <Tooltip>
-                        <TooltipTrigger>
-                          <Link href={`/track-order?orderId=${order.id}&showInvoice=true`}>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5"
-                            >
-                              <Receipt className="size-3 mr-1" /> Invoice
-                            </Button>
-                          </Link>
+                        <TooltipTrigger
+                          render={<Link href={`/track-order?orderId=${order.id}&showInvoice=true`} />}
+                          className="inline-flex items-center gap-1 rounded-lg border border-border bg-background px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider hover:bg-muted transition-colors"
+                        >
+                          <Receipt className="size-3" /> Invoice
                         </TooltipTrigger>
                         <TooltipContent>View order invoice</TooltipContent>
                       </Tooltip>

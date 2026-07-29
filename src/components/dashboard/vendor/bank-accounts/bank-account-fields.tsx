@@ -2,6 +2,7 @@
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Select,
   SelectContent,
@@ -10,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { bankNames, bankAccountTypes } from "@/data/vendor-bank-accounts";
+import { Building2, Wallet, MapPin, User, Hash, GitBranch, Info } from "lucide-react";
 
 interface BankAccountFieldsProps {
   formData: {
@@ -27,10 +29,19 @@ export function BankAccountFields({ formData, onFieldChange }: BankAccountFields
   const isMobileBanking = formData.accountType === "MOBILE_BANKING";
 
   return (
-    <>
+    <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label>Bank / Provider</Label>
+          <div className="flex items-center gap-1.5">
+            <Building2 className="size-4 text-muted-foreground/60" />
+            <Label>Bank / Provider</Label>
+            <Tooltip>
+              <TooltipTrigger>
+                <Info className="size-3 text-muted-foreground/50" />
+              </TooltipTrigger>
+              <TooltipContent>Select your bank or mobile banking provider</TooltipContent>
+            </Tooltip>
+          </div>
           <Select
             value={formData.bankName}
             onValueChange={(value) => {
@@ -54,7 +65,16 @@ export function BankAccountFields({ formData, onFieldChange }: BankAccountFields
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>Account Type</Label>
+          <div className="flex items-center gap-1.5">
+            <Wallet className="size-4 text-muted-foreground/60" />
+            <Label>Account Type</Label>
+            <Tooltip>
+              <TooltipTrigger>
+                <Info className="size-3 text-muted-foreground/50" />
+              </TooltipTrigger>
+              <TooltipContent>Choose account type or mobile banking</TooltipContent>
+            </Tooltip>
+          </div>
           <Select
             value={formData.accountType}
             onValueChange={(value) => {
@@ -84,7 +104,10 @@ export function BankAccountFields({ formData, onFieldChange }: BankAccountFields
       </div>
       {!isMobileBanking && (
         <div className="space-y-2">
-          <Label>Branch Name</Label>
+          <div className="flex items-center gap-1.5">
+            <MapPin className="size-4 text-muted-foreground/60" />
+            <Label>Branch Name</Label>
+          </div>
           <Input
             placeholder="e.g., Gulshan Branch"
             value={formData.branchName}
@@ -93,7 +116,10 @@ export function BankAccountFields({ formData, onFieldChange }: BankAccountFields
         </div>
       )}
       <div className="space-y-2">
-        <Label>Account Name</Label>
+        <div className="flex items-center gap-1.5">
+          <User className="size-4 text-muted-foreground/60" />
+          <Label>Account Name</Label>
+        </div>
         <Input
           placeholder="e.g., FONDO Kitchen"
           value={formData.accountName}
@@ -102,7 +128,10 @@ export function BankAccountFields({ formData, onFieldChange }: BankAccountFields
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label>Account Number</Label>
+          <div className="flex items-center gap-1.5">
+            <Hash className="size-4 text-muted-foreground/60" />
+            <Label>Account Number</Label>
+          </div>
           <Input
             placeholder={isMobileBanking ? "e.g., 01712345678" : "e.g., 1234567890"}
             value={formData.accountNumber}
@@ -111,7 +140,10 @@ export function BankAccountFields({ formData, onFieldChange }: BankAccountFields
         </div>
         {!isMobileBanking && (
           <div className="space-y-2">
-            <Label>Routing Number</Label>
+            <div className="flex items-center gap-1.5">
+              <GitBranch className="size-4 text-muted-foreground/60" />
+              <Label>Routing Number</Label>
+            </div>
             <Input
               placeholder="e.g., 010123456"
               value={formData.routingNumber}
@@ -120,6 +152,6 @@ export function BankAccountFields({ formData, onFieldChange }: BankAccountFields
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }

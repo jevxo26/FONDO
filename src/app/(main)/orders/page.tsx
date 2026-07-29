@@ -3,11 +3,12 @@
 import { Suspense, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { ArrowLeft, Loader2, Package, XCircle, Star, Receipt } from "lucide-react";
+import { ArrowLeft, Loader2, Package, XCircle, Star, Receipt, Clock, MapPin } from "lucide-react";
 import { useOrders, useCancelOrder } from "@/hooks/use-orders";
 import { handleApiError } from "@/lib/api-error";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SectionReveal } from "@/components/common/section-reveal";
 
 function OrdersContent() {
@@ -43,13 +44,17 @@ function OrdersContent() {
     return (
       <main className="flex-1 py-8 lg:py-12">
         <div className="wrapper">
-          <div className="py-16 text-center border border-dashed border-border rounded-3xl bg-card">
-            <p className="font-sans text-sm text-destructive">{handleApiError(error)}</p>
-            <Link href="/menu">
-              <Button variant="default" className="mt-4 rounded-xl">
-                Return to Menu
-              </Button>
-            </Link>
+          <div className="py-16 text-center rounded-3xl bg-gradient-to-br from-primary/[0.02] via-card to-primary/[0.01] shadow-[var(--shadow-card)] relative overflow-hidden">
+            <div className="pointer-events-none absolute -top-6 -right-6 z-0 size-36 rounded-full bg-primary/8 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-8 -left-8 z-0 size-24 rounded-full bg-primary/5 blur-2xl" />
+            <div className="relative z-10">
+              <p className="font-sans text-sm text-destructive">{handleApiError(error)}</p>
+              <Link href="/menu">
+                <Button variant="default" className="mt-4 rounded-xl">
+                  Return to Menu
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </main>
@@ -77,22 +82,30 @@ function OrdersContent() {
         </div>
 
         {orders.length === 0 ? (
-          <div className="py-16 text-center border border-dashed border-border rounded-3xl bg-card">
-            <Package className="size-8 mx-auto mb-3 text-muted-foreground" />
-            <p className="font-sans text-sm text-muted-foreground">No orders yet.</p>
-            <Link href="/menu">
-              <Button variant="default" className="mt-4 rounded-xl">
-                Browse Menu
-              </Button>
-            </Link>
+          <div className="py-16 text-center rounded-3xl bg-gradient-to-br from-primary/[0.02] via-card to-primary/[0.01] shadow-[var(--shadow-card)] relative overflow-hidden">
+            <div className="pointer-events-none absolute -top-6 -right-6 z-0 size-36 rounded-full bg-primary/8 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-8 -left-8 z-0 size-24 rounded-full bg-primary/5 blur-2xl" />
+            <div className="relative z-10">
+              <Package className="size-8 mx-auto mb-3 text-muted-foreground" />
+              <p className="font-sans text-sm text-muted-foreground">No orders yet.</p>
+              <Link href="/menu">
+                <Button variant="default" className="mt-4 rounded-xl">
+                  Browse Menu
+                </Button>
+              </Link>
+            </div>
           </div>
         ) : (
           <SectionReveal className="flex flex-col gap-4" stagger>
             {orders.map((order) => (
               <div
                 key={order.id}
-                className="rounded-3xl bg-card border border-border/40 p-6 shadow-[var(--shadow-card)]"
+                className="rounded-3xl bg-gradient-to-br from-primary/[0.02] via-card to-primary/[0.01] p-6 shadow-[var(--shadow-card)] relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)]"
               >
+                <div className="pointer-events-none absolute -top-6 -right-6 z-0 size-36 rounded-full bg-primary/8 blur-3xl" />
+                <div className="pointer-events-none absolute -bottom-8 -left-8 z-0 size-24 rounded-full bg-primary/5 blur-2xl" />
+                <div className="pointer-events-none absolute right-3 top-3 z-10 size-[7px] rotate-45 border border-primary/30" />
+                <div className="relative z-10">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <Link
@@ -101,7 +114,8 @@ function OrdersContent() {
                     >
                       {order.orderNumber}
                     </Link>
-                    <p className="font-sans text-xs text-muted-foreground mt-1">
+                    <p className="font-sans text-xs text-muted-foreground mt-1 flex items-center gap-1.5">
+                      <Clock className="size-3 text-muted-foreground/60" />
                       {new Date(order.placedAt).toLocaleDateString("en-BD", {
                         year: "numeric",
                         month: "long",
@@ -112,7 +126,8 @@ function OrdersContent() {
                       <span className="px-2 py-0.5 rounded-md font-semibold bg-primary/10 text-primary uppercase tracking-wider text-[10px]">
                         {order.orderStatus}
                       </span>
-                      <span>
+                      <span className="flex items-center gap-1">
+                        <Package className="size-3 text-muted-foreground/60" />
                         {order.items.length} {order.items.length === 1 ? "item" : "items"}
                       </span>
                     </div>
@@ -122,44 +137,64 @@ function OrdersContent() {
                       ৳{order.totalAmount}
                     </span>
                     <div className="mt-2 flex gap-2 justify-end">
-                      <Link href={`/track-order?orderId=${order.id}`}>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5"
-                        >
-                          Track
-                        </Button>
-                      </Link>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Link href={`/track-order?orderId=${order.id}`}>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5"
+                            >
+                              <MapPin className="size-3 mr-1" /> Track
+                            </Button>
+                          </Link>
+                        </TooltipTrigger>
+                        <TooltipContent>Track delivery status</TooltipContent>
+                      </Tooltip>
                       {["PENDING", "CONFIRMED"].includes(order.orderStatus) && (
-                        <button
-                          onClick={() => handleCancel(order.id)}
-                          disabled={cancelOrder.isPending}
-                          className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 border border-destructive/20 text-destructive rounded-lg hover:bg-destructive/10 transition-colors disabled:opacity-50"
-                        >
-                          <XCircle className="size-3" /> Cancel
-                        </button>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <button
+                              onClick={() => handleCancel(order.id)}
+                              disabled={cancelOrder.isPending}
+                              className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 border border-destructive/20 text-destructive rounded-lg hover:bg-destructive/10 transition-colors disabled:opacity-50"
+                            >
+                              <XCircle className="size-3" /> Cancel
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Cancel this order</TooltipContent>
+                        </Tooltip>
                       )}
                       {["DELIVERED", "COMPLETED"].includes(order.orderStatus) && (
-                        <Link href={`/track-order?orderId=${order.id}`}>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5"
-                          >
-                            <Star className="size-3 mr-1" /> Review
-                          </Button>
-                        </Link>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Link href={`/track-order?orderId=${order.id}`}>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5"
+                              >
+                                <Star className="size-3 mr-1" /> Review
+                              </Button>
+                            </Link>
+                          </TooltipTrigger>
+                          <TooltipContent>Leave a review</TooltipContent>
+                        </Tooltip>
                       )}
-                      <Link href={`/track-order?orderId=${order.id}&showInvoice=true`}>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5"
-                        >
-                          <Receipt className="size-3 mr-1" /> Invoice
-                        </Button>
-                      </Link>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Link href={`/track-order?orderId=${order.id}&showInvoice=true`}>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="rounded-lg text-[10px] font-bold uppercase tracking-wider h-auto px-3 py-1.5"
+                            >
+                              <Receipt className="size-3 mr-1" /> Invoice
+                            </Button>
+                          </Link>
+                        </TooltipTrigger>
+                        <TooltipContent>View order invoice</TooltipContent>
+                      </Tooltip>
                     </div>
                   </div>
                 </div>
@@ -184,7 +219,8 @@ function OrdersContent() {
                   </div>
                 )}
               </div>
-            ))}
+            </div>
+          ))}
           </SectionReveal>
         )}
       </div>

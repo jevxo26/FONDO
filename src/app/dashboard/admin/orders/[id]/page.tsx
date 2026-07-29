@@ -3,6 +3,7 @@
 import { toast } from "sonner";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useGetOrderQuery, useUpdateOrderStatusMutation } from "@/store/api/slices/orders-api";
 import { useGetAllAdminOrdersQuery } from "@/store/api/slices/admin-customers-api";
 import type { Order, OrderItem, OrderTimeline as OrderTimelineType } from "@/types/order";
@@ -13,10 +14,6 @@ import OrderTimeline from "@/components/dashboard/admin/orders/order-detail/orde
 import OrderItemsPricing from "@/components/dashboard/admin/orders/order-detail/order-items-pricing";
 import OrderCustomerInfo from "@/components/dashboard/admin/orders/order-detail/order-customer-info";
 import OrderVendorRiderInfo from "@/components/dashboard/admin/orders/order-detail/order-vendor-rider-info";
-
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
 
 function OrderDetailContent({ orderId }: { orderId: string }) {
   const { data: order, isLoading, error } = useGetOrderQuery(orderId);
@@ -110,8 +107,7 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
   );
 }
 
-// eslint-disable-next-line @next/next/no-async-client-component
-export default async function OrderDetailPage({ params }: PageProps) {
-  const { id } = await params;
+export default function OrderDetailPage() {
+  const { id } = useParams<{ id: string }>();
   return <OrderDetailContent orderId={id} />;
 }

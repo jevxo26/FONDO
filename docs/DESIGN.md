@@ -62,17 +62,17 @@ For customer/profile tiering (bronze/silver/gold):
 ### Font Stack
 | Font | CSS Variable | Usage |
 |------|-------------|-------|
-| Fraunces | `--font-fraunces` | All headings (hero, section titles, card titles, stat values) |
+| Bai Jamjuree | `--font-heading` | All headings (hero, section titles, card titles, stat values) |
 | Inter | `--font-sans` | Body text, UI labels, buttons, badges, prices |
 
 ### Type Scale
 | Style | Font | Size | Weight | Notes |
 |-------|------|------|--------|-------|
-| Display | Fraunces | 40px | 700 | Hero |
-| Headline-lg | Fraunces | 32px / 28px mobile | 700 | Page titles |
-| Headline-md | Fraunces | 24px | 600 | Section headers |
-| Card Title | Fraunces | 18px | 600 | Card headings |
-| Stat Value | Fraunces | 28-30px | 700 | Dashboard stat cards |
+| Display | Bai Jamjuree | 40px | 700 | Hero |
+| Headline-lg | Bai Jamjuree | 32px / 28px mobile | 700 | Page titles |
+| Headline-md | Bai Jamjuree | 24px | 600 | Section headers |
+| Card Title | Bai Jamjuree | 18px | 600 | Card headings |
+| Stat Value | Bai Jamjuree | 28-30px | 700 | Dashboard stat cards |
 | Body | Inter | 14-16px | 400 | Paragraphs |
 | Small | Inter | 12-13px | 400 | Captions, metadata |
 | Price | Inter | 18-20px | 700 | Monetary values |
@@ -208,9 +208,9 @@ For tiered/profile cards, a 4px (`h-1`) colored stripe at the top of the card si
 - Gold: `bg-primary`
 
 ### 7.8 Stat Value Emphasis
-Stat values always use `font-fraunces` with `tracking-tight` for a premium editorial feel:
+Stat values always use `font-heading` with `tracking-tight` for a premium editorial feel:
 ```
-<p className="font-fraunces text-[30px] font-bold leading-tight tracking-tighter ...">{value}</p>
+<p className="font-heading text-[30px] font-bold leading-tight tracking-tighter ...">{value}</p>
 ```
 
 ### 7.9 Label Convention

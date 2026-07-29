@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useRequireAuth, useAuth } from "@/hooks/use-auth";
 import { ROLE_DASHBOARD } from "@/data/navigation";
-import { PageTransition } from "@/components/providers/page-transition";
+
 
 export default function DashboardLayout({
   children,
@@ -31,7 +31,5 @@ export default function DashboardLayout({
     }
   }, [isAuthenticated, user, pathname, router]);
 
-  return (
-    <PageTransition>{children}</PageTransition>
-  );
+  return <>{children}</>;
 }

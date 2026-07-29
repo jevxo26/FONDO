@@ -29,11 +29,7 @@ export default function PackageDetailPage({ params }: PackageDetailPageProps) {
               Back
             </Button>
           </Link>
-          <PageHeader
-            title={pkg.name}
-            description={pkg.description}
-            icon={Package}
-          />
+          <PageHeader title={pkg.name} description={pkg.description} icon={Package} />
         </div>
         <Link href={`/dashboard/admin/packages/${pkg.id}/edit`}>
           <Button className="gap-2">

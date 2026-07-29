@@ -1,6 +1,9 @@
 "use client";
 
-import { useUpdateProfileMutation, useChangePasswordMutation } from "@/store/api/slices/profile-api";
+import {
+  useUpdateProfileMutation,
+  useChangePasswordMutation,
+} from "@/store/api/slices/profile-api";
 import { createMutationWrapper } from "@/store/api/mutation-wrapper";
 
 export function useUpdateProfile() {

@@ -12,7 +12,12 @@ export function createMutationWrapper<TVariables, TData = void>(
     options?: {
       onSuccess?: (data: TData, variables: TVariables, context: unknown) => void;
       onError?: (error: unknown, variables: TVariables, context: unknown) => void;
-      onSettled?: (data: TData | undefined, error: unknown, variables: TVariables, context: unknown) => void;
+      onSettled?: (
+        data: TData | undefined,
+        error: unknown,
+        variables: TVariables,
+        context: unknown,
+      ) => void;
     },
   ) => {
     mutateAsync(body).then(

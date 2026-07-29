@@ -36,7 +36,10 @@ export function ComboCard({ combo, className }: ComboCardProps) {
             Most Popular
           </Badge>
         ) : combo.saveAmount ? (
-          <Badge variant="outline" className="bg-primary/15 text-primary border-primary/20 uppercase">
+          <Badge
+            variant="outline"
+            className="bg-primary/15 text-primary border-primary/20 uppercase"
+          >
             Save ৳{combo.saveAmount}
           </Badge>
         ) : null}
@@ -73,9 +76,7 @@ export function ComboCard({ combo, className }: ComboCardProps) {
       {/* Bottom row: price + button */}
       <div className="mt-6 flex items-end justify-between">
         <div className="flex flex-col">
-          <span className="font-heading text-2xl font-bold text-foreground">
-            ৳{combo.price}
-          </span>
+          <span className="font-heading text-2xl font-bold text-foreground">৳{combo.price}</span>
           <span className="text-xs text-foreground/45">all inclusive</span>
         </div>
         <Button

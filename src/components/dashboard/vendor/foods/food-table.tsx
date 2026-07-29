@@ -7,7 +7,13 @@ import { foodColumns } from "./food-columns";
 import { AddFoodModal } from "./add-food-modal";
 import { Button } from "@/components/ui/button";
 import { Plus, Pencil, DollarSign, Package, BookOpen, BarChart, RefreshCw } from "lucide-react";
-import { vendorFoods, foodCategories, foodStatuses, stockStatuses, kitchens } from "@/data/vendor-foods";
+import {
+  vendorFoods,
+  foodCategories,
+  foodStatuses,
+  stockStatuses,
+  kitchens,
+} from "@/data/vendor-foods";
 import type { VendorFood } from "@/types/vendor";
 import type { RowAction, FacetedFilter, InitialSort } from "@/components/common/table/types";
 
@@ -25,38 +31,29 @@ const INITIAL_FILTERS: Filters = {
   kitchen: "ALL",
 };
 
-// Map filter values to display labels
-const getFilterOptions = (filterValue: string, options: Array<{ value: string; label: string }>) => {
-  const found = options.find((opt) => opt.value === filterValue);
-  return found ? found.label : filterValue;
-};
-
 export function VendorFoodTableSection() {
   const [foods, setFoods] = useState<VendorFood[]>(vendorFoods);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS);
+  const [filters] = useState<Filters>(INITIAL_FILTERS);
 
   const filteredData = useMemo(() => {
     return foods.filter((item) => {
       const matchCategory = filters.category === "ALL" || item.category === filters.category;
       const matchStatus = filters.status === "ALL" || item.status === filters.status;
-      const matchStockStatus = filters.stockStatus === "ALL" || item.stockStatus === filters.stockStatus;
+      const matchStockStatus =
+        filters.stockStatus === "ALL" || item.stockStatus === filters.stockStatus;
       const matchKitchen = filters.kitchen === "ALL" || item.kitchen === filters.kitchen;
       return matchCategory && matchStatus && matchStockStatus && matchKitchen;
     });
   }, [foods, filters]);
-
-  const handleFilterChange = useCallback((key: keyof Filters) => (value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  }, []);
 
   const handleToggleStatus = useCallback((food: VendorFood) => {
     setFoods((prev) =>
       prev.map((item) =>
         item.id === food.id
           ? { ...item, status: item.status === "ACTIVE" ? "INACTIVE" : "ACTIVE" }
-          : item
-      )
+          : item,
+      ),
     );
   }, []);
 
@@ -99,7 +96,7 @@ export function VendorFoodTableSection() {
         onClick: handleToggleStatus,
       },
     ],
-    [handleToggleStatus]
+    [handleToggleStatus],
   );
 
   // Build faceted filters for the DataTable
@@ -126,7 +123,7 @@ export function VendorFoodTableSection() {
         options: kitchens.map((k) => ({ label: k.label, value: k.value })),
       },
     ],
-    []
+    [],
   );
 
   const toolbarActions = (
@@ -155,10 +152,7 @@ export function VendorFoodTableSection() {
         enableColumnToggle
         initialSort={initialSort}
       />
-      <AddFoodModal 
-        open={isAddModalOpen} 
-        onOpenChange={setIsAddModalOpen} 
-      />
+      <AddFoodModal open={isAddModalOpen} onOpenChange={setIsAddModalOpen} />
     </>
   );
 }

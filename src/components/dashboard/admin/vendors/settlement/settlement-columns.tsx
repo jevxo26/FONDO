@@ -7,9 +7,12 @@ import { Badge } from "@/components/ui/badge";
 
 function getSettlementVariant(status: string) {
   switch (status) {
-    case "Settled": return "default";
-    case "Flagged": return "destructive";
-    default: return "secondary";
+    case "Settled":
+      return "default";
+    case "Flagged":
+      return "destructive";
+    default:
+      return "secondary";
   }
 }
 

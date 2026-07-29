@@ -13,17 +13,17 @@ export function useFoodReviews(foodId: string) {
   return { data, isLoading, error };
 }
 
-export function useCreateReview(_foodId: string) {
+export function useCreateReview() {
   const [trigger, { isLoading }] = useCreateReviewMutation();
   return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 
-export function useUpdateReview(_foodId: string) {
+export function useUpdateReview() {
   const [trigger, { isLoading }] = useUpdateReviewMutation();
   return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 
-export function useDeleteReview(_foodId: string) {
+export function useDeleteReview() {
   const [trigger, { isLoading }] = useDeleteReviewMutation();
   return { ...createMutationWrapper(trigger), isPending: isLoading };
 }

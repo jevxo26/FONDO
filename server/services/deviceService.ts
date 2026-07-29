@@ -42,21 +42,19 @@ const registerDevice = catchServiceAsync(
   },
 );
 
-const unregisterDevice = catchServiceAsync(
-  async (userId: string, deviceId: string) => {
-    const device = await prisma.userDevice.findFirst({
-      where: { id: deviceId, userId },
-    });
+const unregisterDevice = catchServiceAsync(async (userId: string, deviceId: string) => {
+  const device = await prisma.userDevice.findFirst({
+    where: { id: deviceId, userId },
+  });
 
-    if (!device) {
-      throw new AppError(404, "Device not found");
-    }
+  if (!device) {
+    throw new AppError(404, "Device not found");
+  }
 
-    return prisma.userDevice.delete({
-      where: { id: deviceId },
-    });
-  },
-);
+  return prisma.userDevice.delete({
+    where: { id: deviceId },
+  });
+});
 
 export const DeviceService = {
   listDevices,

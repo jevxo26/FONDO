@@ -6,9 +6,6 @@ import { RiderSummaryCards } from "@/components/dashboard/admin/riders/all-rider
 import { Button } from "@/components/ui/button";
 
 export default function RidersPage() {
-  const total = riders.length;
-  const totalEarn = riders.reduce((s, r) => s + r.earnings, 0);
-
   return (
     <div>
       <PageHeader
@@ -17,8 +14,12 @@ export default function RidersPage() {
         icon={Truck}
         actions={
           <>
-            <Button variant="outline" className="rounded-full"><Download className="size-[18px]" /> Export</Button>
-            <Button className="rounded-full"><UserPlus className="size-[18px]" /> Add Rider</Button>
+            <Button variant="outline" className="rounded-full">
+              <Download className="size-[18px]" /> Export
+            </Button>
+            <Button className="rounded-full">
+              <UserPlus className="size-[18px]" /> Add Rider
+            </Button>
           </>
         }
       />

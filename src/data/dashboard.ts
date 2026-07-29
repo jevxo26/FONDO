@@ -1,13 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import {
-  BarChart3,
-  CreditCard,
-  Receipt,
-  Store,
-  Truck,
-  Users,
-  Utensils,
-} from "lucide-react";
+import { BarChart3, CreditCard, Receipt, Store, Truck, Users, Utensils } from "lucide-react";
 
 export interface SidebarItem {
   label: string;

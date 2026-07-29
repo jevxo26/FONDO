@@ -21,13 +21,17 @@ export function AddressCard({ address, onSetDefault, onDelete }: Props) {
       </div>
       <div className="flex justify-between items-center mt-4 pt-2 border-t border-border">
         {!address.isDefault && (
-          <button onClick={() => onSetDefault(address.id)}
-            className="text-[10px] font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
+          <button
+            onClick={() => onSetDefault(address.id)}
+            className="text-[10px] font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors"
+          >
             Set default
           </button>
         )}
-        <button onClick={() => onDelete(address.id)}
-          className="p-1.5 text-destructive hover:bg-destructive/10 rounded-lg transition-colors ml-auto">
+        <button
+          onClick={() => onDelete(address.id)}
+          className="p-1.5 text-destructive hover:bg-destructive/10 rounded-lg transition-colors ml-auto"
+        >
           <Trash2 className="size-3.5" />
         </button>
       </div>

@@ -47,6 +47,9 @@ export const PackagesContext = createContext<PackagesContextType | undefined>(un
 
 export function usePackages() {
   const context = useContext(PackagesContext);
-  if (!context) throw new Error("usePackages must be executed within a valid PackagesProvider component block.");
+  if (!context)
+    throw new Error(
+      "usePackages must be executed within a valid PackagesProvider component block.",
+    );
   return context;
 }

@@ -67,11 +67,6 @@ const statusFilter: FacetedFilter = {
 
 export function VendorsTable({ vendors }: { vendors: Vendor[] }) {
   return (
-    <DataTable
-      data={vendors}
-      columns={columns}
-      rowActions={rowActions}
-      filters={[statusFilter]}
-    />
+    <DataTable data={vendors} columns={columns} rowActions={rowActions} filters={[statusFilter]} />
   );
 }

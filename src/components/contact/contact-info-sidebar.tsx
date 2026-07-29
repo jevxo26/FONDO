@@ -13,12 +13,17 @@ export function ContactInfoSidebar() {
       {CONTACT_INFO.map((item) => {
         const Icon = item.icon;
         return (
-          <div key={item.label} className="flex items-center gap-5 p-5 rounded-2xl bg-secondary border border-border/40 shadow-sm transition-colors hover:border-primary/30">
+          <div
+            key={item.label}
+            className="flex items-center gap-5 p-5 rounded-2xl bg-secondary border border-border/40 shadow-sm transition-colors hover:border-primary/30"
+          >
             <div className="size-12 rounded-full border border-primary/30 flex items-center justify-center bg-card shrink-0">
               <Icon className="size-5 text-primary" />
             </div>
             <div className="flex flex-col gap-0.5">
-              <span className="font-sans text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">{item.label}</span>
+              <span className="font-sans text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">
+                {item.label}
+              </span>
               <span className="font-sans text-sm font-bold text-foreground">{item.value}</span>
             </div>
           </div>

@@ -16,9 +16,7 @@ export const approvalColumns: ColumnDef<ApprovalItem>[] = [
   {
     accessorKey: "foodName",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Food Item" />,
-    cell: ({ row }) => (
-      <span className="font-medium text-foreground">{row.original.foodName}</span>
-    ),
+    cell: ({ row }) => <span className="font-medium text-foreground">{row.original.foodName}</span>,
   },
   {
     accessorKey: "vendorName",
@@ -48,12 +46,17 @@ export const approvalColumns: ColumnDef<ApprovalItem>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({ row }) => {
       const status = row.original.status;
-      const label = status === "CHANGES_REQUESTED" ? "Changes Req." : status.charAt(0) + status.slice(1).toLowerCase();
+      const label =
+        status === "CHANGES_REQUESTED"
+          ? "Changes Req."
+          : status.charAt(0) + status.slice(1).toLowerCase();
       return (
-        <span className={cn(
-          "inline-block rounded-full px-2.5 py-0.5 text-xs font-medium",
-          statusStyles[status],
-        )}>
+        <span
+          className={cn(
+            "inline-block rounded-full px-2.5 py-0.5 text-xs font-medium",
+            statusStyles[status],
+          )}
+        >
           {label}
         </span>
       );

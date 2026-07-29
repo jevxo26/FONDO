@@ -14,10 +14,7 @@ const get = catchAsync(async (req: AuthRequest, res: Response) => {
 });
 
 const update = catchAsync(async (req: AuthRequest, res: Response) => {
-  const settings = await NotificationService.updateSettings(
-    req.user!.userId,
-    req.body,
-  );
+  const settings = await NotificationService.updateSettings(req.user!.userId, req.body);
 
   sendResponse(res, {
     statusCode: 200,

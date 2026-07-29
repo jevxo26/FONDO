@@ -56,13 +56,27 @@ const riderNames = [
 ];
 
 const zones: RiderZone[] = [
-  "Gulshan", "Banani", "Uttara", "Mirpur",
-  "Dhanmondi", "Mohammadpur", "Motijheel", "Bashundhara",
+  "Gulshan",
+  "Banani",
+  "Uttara",
+  "Mirpur",
+  "Dhanmondi",
+  "Mohammadpur",
+  "Motijheel",
+  "Bashundhara",
 ];
 
 const vehicles = ["Bicycle", "Motorcycle", "Scooter", "Electric Bike"];
 
-const statuses: RiderStatus[] = ["ACTIVE", "ACTIVE", "ACTIVE", "BUSY", "BUSY", "OFFLINE", "ON_LEAVE"];
+const statuses: RiderStatus[] = [
+  "ACTIVE",
+  "ACTIVE",
+  "ACTIVE",
+  "BUSY",
+  "BUSY",
+  "OFFLINE",
+  "ON_LEAVE",
+];
 
 function randomItem<T>(arr: T[]): T {
   return arr[Math.floor(rand() * arr.length)];
@@ -171,22 +185,23 @@ export interface RiderEarning {
   status: "PAID" | "PENDING" | "PROCESSING";
 }
 
-const weekEndings = [
-  "Jun 28, 2026", "Jul 5, 2026", "Jul 12, 2026", "Jul 19, 2026",
-];
+const weekEndings = ["Jun 28, 2026", "Jul 5, 2026", "Jul 12, 2026", "Jul 19, 2026"];
 
 export const riderEarnings: RiderEarning[] = riderNames.slice(0, 15).flatMap((r, i) =>
-  weekEndings.map((w, wi) => ({
-    id: `ERN-${String(i * 4 + wi + 1).padStart(4, "0")}`,
-    name: r.name,
-    weekEnding: w,
-    deliveries: Math.floor(rand() * 35) + 5,
-    basePay: Math.floor(rand() * 8000) + 2000,
-    bonus: Math.floor(rand() * 3000),
-    tips: Math.floor(rand() * 1500),
-    total: 0,
-    status: (wi < 2 ? "PAID" : wi === 2 ? "PROCESSING" : "PENDING") as "PAID" | "PENDING" | "PROCESSING",
-  })).map((e) => ({ ...e, total: e.basePay + e.bonus + e.tips })),
+  weekEndings
+    .map((w, wi) => ({
+      id: `ERN-${String(i * 4 + wi + 1).padStart(4, "0")}`,
+      name: r.name,
+      weekEnding: w,
+      deliveries: Math.floor(rand() * 35) + 5,
+      basePay: Math.floor(rand() * 8000) + 2000,
+      bonus: Math.floor(rand() * 3000),
+      tips: Math.floor(rand() * 1500),
+      total: 0,
+      status: (wi < 2 ? "PAID" : wi === 2 ? "PROCESSING" : "PENDING") as
+        "PAID" | "PENDING" | "PROCESSING",
+    }))
+    .map((e) => ({ ...e, total: e.basePay + e.bonus + e.tips })),
 );
 
 // --- Rider-Specific Delivery ---
@@ -222,9 +237,16 @@ export interface RiderDelivery {
 function generateDeliveries(count: number): RiderDelivery[] {
   const list: RiderDelivery[] = [];
   const customerNames = [
-    "Rahim Uddin", "Karina Begum", "Faruk Hossain", "Shamim Akhtar",
-    "Nasrin Sultana", "Jahangir Alam", "Sharmin Akhter", "Rafiq Hasan",
-    "Tanvir Ahmed", "Nusrat Jahan",
+    "Rahim Uddin",
+    "Karina Begum",
+    "Faruk Hossain",
+    "Shamim Akhtar",
+    "Nasrin Sultana",
+    "Jahangir Alam",
+    "Sharmin Akhter",
+    "Rafiq Hasan",
+    "Tanvir Ahmed",
+    "Nusrat Jahan",
   ];
   const addresses = [
     "House 12, Road 5, Gulshan 1",
@@ -234,12 +256,24 @@ function generateDeliveries(count: number): RiderDelivery[] {
     "House 45, Road 12, Dhanmondi 6A",
   ];
   const foodItems = [
-    "Chicken Biryani", "Beef Curry", "Daal + Rice", "Paratha + Egg Curry",
-    "Fish Fry + Rice", "Vegetable Khichuri", "Chicken Roast", "Polao + Beef",
+    "Chicken Biryani",
+    "Beef Curry",
+    "Daal + Rice",
+    "Paratha + Egg Curry",
+    "Fish Fry + Rice",
+    "Vegetable Khichuri",
+    "Chicken Roast",
+    "Polao + Beef",
   ];
   const statusPool: DeliveryStatus[] = [
-    "ASSIGNED", "ACCEPTED", "PICKED_UP", "ON_THE_WAY",
-    "DELIVERED", "DELIVERED", "DELIVERED", "DELIVERED",
+    "ASSIGNED",
+    "ACCEPTED",
+    "PICKED_UP",
+    "ON_THE_WAY",
+    "DELIVERED",
+    "DELIVERED",
+    "DELIVERED",
+    "DELIVERED",
   ];
 
   for (let i = 1; i <= count; i++) {
@@ -263,8 +297,14 @@ function generateDeliveries(count: number): RiderDelivery[] {
       items,
       status,
       estimatedDeliveryTime: `${String(hour).padStart(2, "0")}:${String(min).padStart(2, "0")}`,
-      actualPickupTime: status !== "ASSIGNED" ? `${String(hour - 1).padStart(2, "0")}:${String(min).padStart(2, "0")}` : null,
-      actualDeliveryTime: status === "DELIVERED" ? `${String(hour + 1).padStart(2, "0")}:${String(min).padStart(2, "0")}` : null,
+      actualPickupTime:
+        status !== "ASSIGNED"
+          ? `${String(hour - 1).padStart(2, "0")}:${String(min).padStart(2, "0")}`
+          : null,
+      actualDeliveryTime:
+        status === "DELIVERED"
+          ? `${String(hour + 1).padStart(2, "0")}:${String(min).padStart(2, "0")}`
+          : null,
       priority: Math.floor(rand() * 3),
       createdAt: `Jul ${day}, 2026`,
     });
@@ -295,12 +335,29 @@ export interface WalletTransaction {
 function generateTransactions(count: number): WalletTransaction[] {
   let balance = 12500;
   const list: WalletTransaction[] = [];
-  const days = ["Jun 28", "Jun 30", "Jul 2", "Jul 5", "Jul 8", "Jul 11", "Jul 14", "Jul 17", "Jul 19"];
-  const types: ("CREDIT" | "DEBIT" | "WITHDRAWAL")[] = ["CREDIT", "CREDIT", "CREDIT", "DEBIT", "WITHDRAWAL"];
+  const days = [
+    "Jun 28",
+    "Jun 30",
+    "Jul 2",
+    "Jul 5",
+    "Jul 8",
+    "Jul 11",
+    "Jul 14",
+    "Jul 17",
+    "Jul 19",
+  ];
+  const types: ("CREDIT" | "DEBIT" | "WITHDRAWAL")[] = [
+    "CREDIT",
+    "CREDIT",
+    "CREDIT",
+    "DEBIT",
+    "WITHDRAWAL",
+  ];
 
   for (let i = 0; i < count; i++) {
     const type = randomItem(types);
-    const amount = type === "CREDIT" ? Math.floor(rand() * 3000) + 500 : Math.floor(rand() * 5000) + 1000;
+    const amount =
+      type === "CREDIT" ? Math.floor(rand() * 3000) + 500 : Math.floor(rand() * 5000) + 1000;
     const bBefore = balance;
     balance = type === "CREDIT" ? balance + amount : balance - amount;
     list.push({
@@ -309,7 +366,12 @@ function generateTransactions(count: number): WalletTransaction[] {
       amount,
       balanceBefore: bBefore,
       balanceAfter: balance,
-      description: type === "CREDIT" ? "Delivery payment" : type === "DEBIT" ? "Adjustment" : "Withdrawal to bKash",
+      description:
+        type === "CREDIT"
+          ? "Delivery payment"
+          : type === "DEBIT"
+            ? "Adjustment"
+            : "Withdrawal to bKash",
       createdAt: randomItem(days),
     });
   }
@@ -347,7 +409,13 @@ const reviewTexts = [
 
 export const riderRatings: DeliveryRating[] = Array.from({ length: 8 }, (_, i) => ({
   id: `RAT-${String(i + 1).padStart(4, "0")}`,
-  customerName: randomItem(["Rahim Uddin", "Karina Begum", "Faruk Hossain", "Shamim Akhtar", "Nasrin Sultana"]),
+  customerName: randomItem([
+    "Rahim Uddin",
+    "Karina Begum",
+    "Faruk Hossain",
+    "Shamim Akhtar",
+    "Nasrin Sultana",
+  ]),
   rating: Math.floor(rand() * 2) + 4,
   review: randomItem(reviewTexts),
   date: `Jul ${Math.floor(rand() * 19) + 1}, 2026`,

@@ -26,13 +26,16 @@ export const authApi = api.injectEndpoints({
       },
     }),
 
-    register: builder.mutation<User, {
-      firstName: string;
-      lastName: string;
-      phone: string;
-      email: string;
-      password: string;
-    }>({
+    register: builder.mutation<
+      User,
+      {
+        firstName: string;
+        lastName: string;
+        phone: string;
+        email: string;
+        password: string;
+      }
+    >({
       query: (body) => ({ url: "/auth/register", method: "POST", body }),
     }),
 
@@ -66,7 +69,7 @@ export const authApi = api.injectEndpoints({
       query: (body) => ({ url: "/auth/change-password", method: "POST", body }),
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

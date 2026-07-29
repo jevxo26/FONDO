@@ -108,7 +108,8 @@ function pad(num: number) {
 }
 
 export const foodPackages: FoodPackage[] = packageData.map((item, i) => {
-  const basePrice = i === 4 ? 15000 : i === 0 ? 8500 : i === 1 ? 7000 : i === 2 ? 2500 : i === 3 ? 5000 : 3200;
+  const basePrice =
+    i === 4 ? 15000 : i === 0 ? 8500 : i === 1 ? 7000 : i === 2 ? 2500 : i === 3 ? 5000 : 3200;
   return {
     id: `pkg_${pad(i + 1)}`,
     name: item.name,
@@ -122,7 +123,7 @@ export const foodPackages: FoodPackage[] = packageData.map((item, i) => {
     price: basePrice,
     discountPrice: rand() > 0.5 ? Math.round(basePrice * (0.7 + rand() * 0.2)) : null,
     subscriberCount: item.subs,
-    status: rand() > 0.12 ? "ACTIVE" as const : "DRAFT" as const,
+    status: rand() > 0.12 ? ("ACTIVE" as const) : ("DRAFT" as const),
     createdAt: new Date(2025, Math.floor(rand() * 12), Math.floor(1 + rand() * 28))
       .toISOString()
       .split("T")[0],

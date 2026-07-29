@@ -2,7 +2,7 @@ import { riders } from "@/data/riders";
 import { DarkCard } from "@/components/dashboard/common/dark-card";
 import { GlassCard } from "@/components/dashboard/common/glass-card";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { Truck, Award, MapPin, DollarSign, TrendingUp } from "lucide-react";
+import { Award, MapPin, DollarSign } from "lucide-react";
 
 export function RiderSummaryCards() {
   const total = riders.length;

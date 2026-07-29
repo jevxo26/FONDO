@@ -25,18 +25,24 @@ export const salesColumns: ColumnDef<SalesEntry>[] = [
   {
     accessorKey: "revenue",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Revenue" />,
-    cell: ({ row }) => <span className="font-bold text-foreground">৳{row.original.revenue.toLocaleString()}</span>,
+    cell: ({ row }) => (
+      <span className="font-bold text-foreground">৳{row.original.revenue.toLocaleString()}</span>
+    ),
   },
   {
     accessorKey: "cost",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Cost" />,
-    cell: ({ row }) => <span className="text-sm text-destructive">-৳{row.original.cost.toLocaleString()}</span>,
+    cell: ({ row }) => (
+      <span className="text-sm text-destructive">-৳{row.original.cost.toLocaleString()}</span>
+    ),
   },
   {
     accessorKey: "profit",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Profit" />,
     cell: ({ row }) => (
-      <span className={`font-bold ${row.original.profit > 0 ? "text-success" : "text-destructive"}`}>
+      <span
+        className={`font-bold ${row.original.profit > 0 ? "text-success" : "text-destructive"}`}
+      >
         ৳{row.original.profit.toLocaleString()}
       </span>
     ),

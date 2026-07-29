@@ -3,6 +3,7 @@ import type { Prisma } from "@prisma/client";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import * as sslcommerz from "./sslcommerz";
+import { sendPaymentReceipt } from "./emailService";
 
 function generatePaymentNumber(): string {
   return `PAY-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
@@ -13,7 +14,10 @@ async function getGateway(code?: string) {
     const gw = await prisma.paymentGateway.findUnique({ where: { code } });
     if (gw && gw.status === "active") return gw;
   }
-  const gw = await prisma.paymentGateway.findFirst({ where: { status: "active" }, orderBy: { createdAt: "asc" } });
+  const gw = await prisma.paymentGateway.findFirst({
+    where: { status: "active" },
+    orderBy: { createdAt: "asc" },
+  });
   if (!gw) throw new AppError(503, "No active payment gateway");
   return gw;
 }
@@ -23,7 +27,16 @@ export const listPaymentMethods = catchServiceAsync(async () => {
 });
 
 export const initiatePayment = catchServiceAsync(
-  async (customerId: string, data: { orderId: string; paymentMethodId?: string; amount: number; currency?: string; gatewayCode?: string }) => {
+  async (
+    customerId: string,
+    data: {
+      orderId: string;
+      paymentMethodId?: string;
+      amount: number;
+      currency?: string;
+      gatewayCode?: string;
+    },
+  ) => {
     const gateway = await getGateway(data.gatewayCode);
     const order = await prisma.order.findUnique({ where: { id: data.orderId } });
     if (!order) throw new AppError(404, "Order not found");
@@ -40,7 +53,14 @@ export const initiatePayment = catchServiceAsync(
     const payment = existingPayment
       ? await prisma.payment.update({
           where: { id: existingPayment.id },
-          data: { transactionId: tranId, paymentMethodId: data.paymentMethodId, amount: data.amount, currency: data.currency || "BDT", status: "PENDING", gatewayId: gateway.id },
+          data: {
+            transactionId: tranId,
+            paymentMethodId: data.paymentMethodId,
+            amount: data.amount,
+            currency: data.currency || "BDT",
+            status: "PENDING",
+            gatewayId: gateway.id,
+          },
         })
       : await prisma.payment.create({
           data: {
@@ -60,7 +80,11 @@ export const initiatePayment = catchServiceAsync(
     if (!customer) throw new AppError(404, "Customer not found");
 
     const result = await sslcommerz.initPayment(
-      { storeId: gateway.storeId!, secretKey: gateway.secretKey!, sandboxMode: gateway.sandboxMode },
+      {
+        storeId: gateway.storeId!,
+        secretKey: gateway.secretKey!,
+        sandboxMode: gateway.sandboxMode,
+      },
       {
         totalAmount: data.amount,
         tranId,
@@ -76,7 +100,10 @@ export const initiatePayment = catchServiceAsync(
     );
 
     if (result.status !== "success") {
-      await prisma.payment.update({ where: { id: payment.id }, data: { status: "FAILED", failureReason: result.failedreason } });
+      await prisma.payment.update({
+        where: { id: payment.id },
+        data: { status: "FAILED", failureReason: result.failedreason },
+      });
       throw new AppError(502, `Gateway error: ${result.failedreason || "Unknown"}`);
     }
 
@@ -104,7 +131,8 @@ export const handleSuccess = catchServiceAsync(async (query: Record<string, stri
   if (!payment) throw new AppError(404, "Payment not found");
 
   const gateway = payment.gatewayId
-    ? (await prisma.paymentGateway.findUnique({ where: { id: payment.gatewayId } })) ?? (await getGateway())
+    ? ((await prisma.paymentGateway.findUnique({ where: { id: payment.gatewayId } })) ??
+      (await getGateway()))
     : await getGateway();
 
   const validation = await sslcommerz.validatePayment(
@@ -113,14 +141,29 @@ export const handleSuccess = catchServiceAsync(async (query: Record<string, stri
   );
 
   if (validation.validated) {
-    await prisma.payment.update({ where: { id: payment.id }, data: { status: "COMPLETED", paymentDate: new Date(), gatewayResponse: query as unknown as Prisma.InputJsonValue } });
-    await prisma.order.update({ where: { id: payment.orderId }, data: { paymentStatus: "COMPLETED" } });
+    await prisma.payment.update({
+      where: { id: payment.id },
+      data: {
+        status: "COMPLETED",
+        paymentDate: new Date(),
+        gatewayResponse: query as unknown as Prisma.InputJsonValue,
+      },
+    });
+    await prisma.order.update({
+      where: { id: payment.orderId },
+      data: { paymentStatus: "COMPLETED" },
+    });
     await prisma.paymentTransaction.updateMany({
       where: { paymentId: payment.id, gatewayTransactionId: tran_id },
       data: { status: "success", gatewayTransactionId: val_id, processedAt: new Date() },
     });
+
+    sendPaymentReceipt(payment.id);
   } else {
-    await prisma.payment.update({ where: { id: payment.id }, data: { status: "FAILED", failureReason: "Validation failed" } });
+    await prisma.payment.update({
+      where: { id: payment.id },
+      data: { status: "FAILED", failureReason: "Validation failed" },
+    });
   }
 
   return { success: validation.validated, orderId: payment.orderId, transactionId: tran_id };
@@ -164,89 +207,140 @@ export const handleIpn = catchServiceAsync(async (body: Record<string, string>) 
     const payment = await prisma.payment.findFirst({ where: { transactionId: tran_id } });
     if (!payment) throw new AppError(404, "Payment not found");
 
-  const gateway = payment.gatewayId
-    ? (await prisma.paymentGateway.findUnique({ where: { id: payment.gatewayId } })) ?? (await getGateway())
-    : await getGateway();
+    const gateway = payment.gatewayId
+      ? ((await prisma.paymentGateway.findUnique({ where: { id: payment.gatewayId } })) ??
+        (await getGateway()))
+      : await getGateway();
     const validation = await sslcommerz.validatePayment(
-      { storeId: gateway.storeId!, secretKey: gateway.secretKey!, sandboxMode: gateway.sandboxMode },
+      {
+        storeId: gateway.storeId!,
+        secretKey: gateway.secretKey!,
+        sandboxMode: gateway.sandboxMode,
+      },
       val_id,
     );
     if (validation.validated) {
-      await prisma.payment.update({ where: { id: payment.id }, data: { status: "COMPLETED", paymentDate: new Date(), gatewayResponse: body as unknown as Prisma.InputJsonValue } });
-      await prisma.order.update({ where: { id: payment.orderId }, data: { paymentStatus: "COMPLETED" } });
+      await prisma.payment.update({
+        where: { id: payment.id },
+        data: {
+          status: "COMPLETED",
+          paymentDate: new Date(),
+          gatewayResponse: body as unknown as Prisma.InputJsonValue,
+        },
+      });
+      await prisma.order.update({
+        where: { id: payment.orderId },
+        data: { paymentStatus: "COMPLETED" },
+      });
     }
   }
 
   return { success: true };
 });
 
-export const retryPayment = catchServiceAsync(async (customerId: string, paymentId: string, data?: { paymentMethodId?: string }) => {
-  const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
-  if (!payment) throw new AppError(404, "Payment not found");
-  if (payment.customerId !== customerId) throw new AppError(403, "Not your payment");
-  if (payment.status === "COMPLETED") throw new AppError(409, "Payment already successful");
+export const retryPayment = catchServiceAsync(
+  async (customerId: string, paymentId: string, data?: { paymentMethodId?: string }) => {
+    const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
+    if (!payment) throw new AppError(404, "Payment not found");
+    if (payment.customerId !== customerId) throw new AppError(403, "Not your payment");
+    if (payment.status === "COMPLETED") throw new AppError(409, "Payment already successful");
 
-  const attemptCount = await prisma.paymentAttempt.count({ where: { paymentId } });
+    const attemptCount = await prisma.paymentAttempt.count({ where: { paymentId } });
 
-  await prisma.paymentAttempt.create({
-    data: { paymentId, attemptNumber: attemptCount + 1, paymentMethod: data?.paymentMethodId, status: "retry" },
-  });
-
-  return initiatePayment(customerId, {
-    orderId: payment.orderId,
-    paymentMethodId: data?.paymentMethodId || payment.paymentMethodId || undefined,
-    amount: Number(payment.amount),
-    currency: payment.currency,
-  });
-});
-
-export const refundPayment = catchServiceAsync(async (adminId: string, paymentId: string, data: { amount: number; reason: string }) => {
-  const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
-  if (!payment) throw new AppError(404, "Payment not found");
-  if (payment.status !== "COMPLETED") throw new AppError(400, "Can only refund successful payments");
-
-  const gateway = payment.gatewayId
-    ? (await prisma.paymentGateway.findUnique({ where: { id: payment.gatewayId } })) ?? (await getGateway())
-    : await getGateway();
-
-  const refund = await prisma.paymentRefund.create({
-    data: { paymentId, orderId: payment.orderId, refundAmount: data.amount, reason: data.reason, status: "pending", processedBy: adminId },
-  });
-
-  if (gateway.storeId && gateway.secretKey) {
-    const lastTxn = await prisma.paymentTransaction.findFirst({
-      where: { paymentId, status: "success" },
-      orderBy: { processedAt: "desc" },
+    await prisma.paymentAttempt.create({
+      data: {
+        paymentId,
+        attemptNumber: attemptCount + 1,
+        paymentMethod: data?.paymentMethodId,
+        status: "retry",
+      },
     });
 
-    if (lastTxn?.gatewayTransactionId) {
-      const result = await sslcommerz.initRefund(
-        { storeId: gateway.storeId, secretKey: gateway.secretKey, sandboxMode: gateway.sandboxMode },
-        lastTxn.gatewayTransactionId,
-        data.amount,
-        data.reason,
-      );
+    return initiatePayment(customerId, {
+      orderId: payment.orderId,
+      paymentMethodId: data?.paymentMethodId || payment.paymentMethodId || undefined,
+      amount: Number(payment.amount),
+      currency: payment.currency,
+    });
+  },
+);
 
-      if (result.status === "success") {
-        await prisma.paymentRefund.update({
-          where: { id: refund.id },
-          data: { status: "processed", gatewayRefundId: result.refundRefId, processedAt: new Date() },
-        });
-        await prisma.payment.update({ where: { id: paymentId }, data: { status: "REFUNDED" } });
+export const refundPayment = catchServiceAsync(
+  async (adminId: string, paymentId: string, data: { amount: number; reason: string }) => {
+    const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
+    if (!payment) throw new AppError(404, "Payment not found");
+    if (payment.status !== "COMPLETED")
+      throw new AppError(400, "Can only refund successful payments");
+
+    const gateway = payment.gatewayId
+      ? ((await prisma.paymentGateway.findUnique({ where: { id: payment.gatewayId } })) ??
+        (await getGateway()))
+      : await getGateway();
+
+    const refund = await prisma.paymentRefund.create({
+      data: {
+        paymentId,
+        orderId: payment.orderId,
+        refundAmount: data.amount,
+        reason: data.reason,
+        status: "pending",
+        processedBy: adminId,
+      },
+    });
+
+    if (gateway.storeId && gateway.secretKey) {
+      const lastTxn = await prisma.paymentTransaction.findFirst({
+        where: { paymentId, status: "success" },
+        orderBy: { processedAt: "desc" },
+      });
+
+      if (lastTxn?.gatewayTransactionId) {
+        const result = await sslcommerz.initRefund(
+          {
+            storeId: gateway.storeId,
+            secretKey: gateway.secretKey,
+            sandboxMode: gateway.sandboxMode,
+          },
+          lastTxn.gatewayTransactionId,
+          data.amount,
+          data.reason,
+        );
+
+        if (result.status === "success") {
+          await prisma.paymentRefund.update({
+            where: { id: refund.id },
+            data: {
+              status: "processed",
+              gatewayRefundId: result.refundRefId,
+              processedAt: new Date(),
+            },
+          });
+          await prisma.payment.update({ where: { id: paymentId }, data: { status: "REFUNDED" } });
+        }
       }
     }
-  }
 
-  return refund;
-});
+    return refund;
+  },
+);
 
 export const adjustPayment = catchServiceAsync(
-  async (adminId: string, paymentId: string, data: { adjustmentType: string; amount: number; reason: string }) => {
+  async (
+    adminId: string,
+    paymentId: string,
+    data: { adjustmentType: string; amount: number; reason: string },
+  ) => {
     const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
     if (!payment) throw new AppError(404, "Payment not found");
 
     return prisma.paymentAdjustment.create({
-      data: { paymentId, adjustmentType: data.adjustmentType, amount: data.amount, reason: data.reason, approvedBy: adminId },
+      data: {
+        paymentId,
+        adjustmentType: data.adjustmentType,
+        amount: data.amount,
+        reason: data.reason,
+        approvedBy: adminId,
+      },
     });
   },
 );

@@ -35,7 +35,20 @@ function generateSalesEntries(count: number): SalesEntry[] {
   const list: SalesEntry[] = [];
   for (let i = 1; i <= count; i++) {
     const day = Math.floor(rand() * 30) + 1;
-    const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][Math.floor(rand() * 12)];
+    const month = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ][Math.floor(rand() * 12)];
     const revenue = Math.floor(rand() * 80000) + 5000;
     const cost = Math.floor(revenue * (0.4 + rand() * 0.3));
     list.push({
@@ -56,7 +69,8 @@ export const salesEntries = generateSalesEntries(35);
 
 // --- Revenue ---
 
-export type RevenueSource = "PLATFORM_FEE" | "DELIVERY_FEE" | "COMMISSION" | "SUBSCRIPTION" | "ADVERTISING";
+export type RevenueSource =
+  "PLATFORM_FEE" | "DELIVERY_FEE" | "COMMISSION" | "SUBSCRIPTION" | "ADVERTISING";
 
 export interface RevenueEntry {
   id: string;
@@ -66,7 +80,16 @@ export interface RevenueEntry {
   status: "SETTLED" | "PENDING" | "DISPUTED";
 }
 
-const revenueSources: RevenueSource[] = ["PLATFORM_FEE", "PLATFORM_FEE", "DELIVERY_FEE", "DELIVERY_FEE", "COMMISSION", "COMMISSION", "SUBSCRIPTION", "ADVERTISING"];
+const revenueSources: RevenueSource[] = [
+  "PLATFORM_FEE",
+  "PLATFORM_FEE",
+  "DELIVERY_FEE",
+  "DELIVERY_FEE",
+  "COMMISSION",
+  "COMMISSION",
+  "SUBSCRIPTION",
+  "ADVERTISING",
+];
 const revenueStatuses = ["SETTLED", "SETTLED", "SETTLED", "PENDING", "PENDING", "DISPUTED"];
 
 function generateRevenueEntries(count: number): RevenueEntry[] {
@@ -101,9 +124,18 @@ export interface VendorReportEntry {
 }
 
 const vendorNamesForReport = [
-  "Fresh Meals", "Spice House", "Bistro Dhaka", "Golden Wok",
-  "Pizza Nova", "Curry Leaf", "Sweet Tooth", "The Kebab House",
-  "Tandoori Nights", "Sushi Zen", "Green Bowl", "Burger Lab",
+  "Fresh Meals",
+  "Spice House",
+  "Bistro Dhaka",
+  "Golden Wok",
+  "Pizza Nova",
+  "Curry Leaf",
+  "Sweet Tooth",
+  "The Kebab House",
+  "Tandoori Nights",
+  "Sushi Zen",
+  "Green Bowl",
+  "Burger Lab",
 ];
 
 const vendorReportStatuses = ["ACTIVE", "ACTIVE", "ACTIVE", "ACTIVE", "SUSPENDED", "PENDING"];
@@ -136,9 +168,18 @@ export interface RiderReportEntry {
 }
 
 const riderNamesForReport = [
-  "Hasan Ali", "Mizanur Rahman", "Shahriar Kabir", "Jannatul Ferdous",
-  "Tahmina Akhtar", "Rafiul Islam", "Sharmin Sultana", "Imran Hossain",
-  "Nadia Parvin", "Tanvir Ahamed", "Mehedi Hasan", "Rokeya Begum",
+  "Hasan Ali",
+  "Mizanur Rahman",
+  "Shahriar Kabir",
+  "Jannatul Ferdous",
+  "Tahmina Akhtar",
+  "Rafiul Islam",
+  "Sharmin Sultana",
+  "Imran Hossain",
+  "Nadia Parvin",
+  "Tanvir Ahamed",
+  "Mehedi Hasan",
+  "Rokeya Begum",
 ];
 
 export const riderReportData: RiderReportEntry[] = riderNamesForReport.map((name, i) => {
@@ -172,13 +213,34 @@ export interface CustomerReportEntry {
 }
 
 const customerNamesForReport = [
-  "Tasnim Jahan", "Fahim Ahmed", "Mahmud Hassan", "Sarah Karim",
-  "Rafiq Hasan", "Nusrat Jahan", "Kazi Fahim", "Sadia Islam",
-  "Tanvir Ahmed", "Farzana Rahman", "Mehedi Hasan", "Arif Molla",
-  "Jannatul Ferdous", "Sumi Khatun", "Rahim Uddin",
+  "Tasnim Jahan",
+  "Fahim Ahmed",
+  "Mahmud Hassan",
+  "Sarah Karim",
+  "Rafiq Hasan",
+  "Nusrat Jahan",
+  "Kazi Fahim",
+  "Sadia Islam",
+  "Tanvir Ahmed",
+  "Farzana Rahman",
+  "Mehedi Hasan",
+  "Arif Molla",
+  "Jannatul Ferdous",
+  "Sumi Khatun",
+  "Rahim Uddin",
 ];
 
-const segments: CustomerSegment[] = ["ACTIVE", "ACTIVE", "ACTIVE", "ACTIVE", "AT_RISK", "AT_RISK", "CHURNED", "NEW", "NEW"];
+const segments: CustomerSegment[] = [
+  "ACTIVE",
+  "ACTIVE",
+  "ACTIVE",
+  "ACTIVE",
+  "AT_RISK",
+  "AT_RISK",
+  "CHURNED",
+  "NEW",
+  "NEW",
+];
 
 export const customerReportData: CustomerReportEntry[] = customerNamesForReport.map((name, i) => {
   const orders = Math.floor(rand() * 80) + 1;
@@ -209,17 +271,38 @@ export interface SubscriptionReportEntry {
 }
 
 const plans = [
-  "7-Day Wellness", "10-Day Balanced", "15-Day High Protein",
-  "Monthly Regular", "Monthly Premium",
+  "7-Day Wellness",
+  "10-Day Balanced",
+  "15-Day High Protein",
+  "Monthly Regular",
+  "Monthly Premium",
 ];
 
-const subStatuses = ["ACTIVE", "ACTIVE", "ACTIVE", "EXPIRED", "EXPIRED", "CANCELLED", "RENEWED", "RENEWED"];
+const subStatuses = [
+  "ACTIVE",
+  "ACTIVE",
+  "ACTIVE",
+  "EXPIRED",
+  "EXPIRED",
+  "CANCELLED",
+  "RENEWED",
+  "RENEWED",
+];
 
 const subCustomerNames = customerNamesForReport.slice(0, 12);
 
 export const subscriptionReportData: SubscriptionReportEntry[] = subCustomerNames.map((name, i) => {
   const plan = randomItem(plans);
-  const price = plan === "Monthly Premium" ? 24000 : plan === "Monthly Regular" ? 18000 : plan === "15-Day High Protein" ? 11250 : plan === "10-Day Balanced" ? 6500 : 4550;
+  const price =
+    plan === "Monthly Premium"
+      ? 24000
+      : plan === "Monthly Regular"
+        ? 18000
+        : plan === "15-Day High Protein"
+          ? 11250
+          : plan === "10-Day Balanced"
+            ? 6500
+            : 4550;
   const status = randomItem(subStatuses) as "ACTIVE" | "EXPIRED" | "CANCELLED" | "RENEWED";
   return {
     id: `SUB-${String(i + 1).padStart(4, "0")}`,
@@ -280,8 +363,6 @@ const inventoryItems = [
   { name: "Mayonnaise (500g)", category: "Condiments", unit: "pieces" },
 ];
 
-const invStatuses = ["IN_STOCK", "IN_STOCK", "IN_STOCK", "IN_STOCK", "LOW_STOCK", "LOW_STOCK", "OUT_OF_STOCK", "OVERSTOCKED"];
-
 export const inventoryReportData: InventoryReportEntry[] = inventoryItems.map((item, i) => {
   const stock = Math.floor(rand() * 80);
   const min = 5 + Math.floor(rand() * 15);
@@ -293,7 +374,14 @@ export const inventoryReportData: InventoryReportEntry[] = inventoryItems.map((i
     minStock: min,
     unit: item.unit,
     usageRate: Number((1 + rand() * 8).toFixed(1)),
-    status: stock === 0 ? "OUT_OF_STOCK" : stock < min ? "LOW_STOCK" : stock > min * 3 ? "OVERSTOCKED" : "IN_STOCK",
+    status:
+      stock === 0
+        ? "OUT_OF_STOCK"
+        : stock < min
+          ? "LOW_STOCK"
+          : stock > min * 3
+            ? "OVERSTOCKED"
+            : "IN_STOCK",
     lastRestocked: `${["Jan", "Feb", "Mar", "Apr", "May", "Jun"][Math.floor(rand() * 6)]} ${Math.floor(rand() * 28) + 1}, 2026`,
   };
 });

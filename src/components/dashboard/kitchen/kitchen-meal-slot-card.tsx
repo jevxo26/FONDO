@@ -23,17 +23,22 @@ interface KitchenMealSlotCardProps {
 export function KitchenMealSlotCard({ slot }: KitchenMealSlotCardProps) {
   const Icon = mealIcons[slot.mealType];
   const colorClass = mealColors[slot.mealType];
-  const progressPercent = slot.totalMeals > 0 ? Math.round((slot.prepared / slot.totalMeals) * 100) : 0;
+  const progressPercent =
+    slot.totalMeals > 0 ? Math.round((slot.prepared / slot.totalMeals) * 100) : 0;
 
   return (
-    <div className={cn("rounded-3xl bg-gradient-to-br p-6 shadow-[var(--shadow-card)]", colorClass)}>
+    <div
+      className={cn("rounded-3xl bg-gradient-to-br p-6 shadow-[var(--shadow-card)]", colorClass)}
+    >
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
             <Icon className="size-5" />
           </div>
           <div>
-            <p className="font-heading text-lg font-bold text-foreground capitalize">{slot.mealType.toLowerCase()}</p>
+            <p className="font-heading text-lg font-bold text-foreground capitalize">
+              {slot.mealType.toLowerCase()}
+            </p>
             <p className="text-xs text-muted-foreground">{slot.time}</p>
           </div>
         </div>
@@ -42,10 +47,19 @@ export function KitchenMealSlotCard({ slot }: KitchenMealSlotCardProps) {
 
       <div className="mt-6 flex items-center justify-between text-sm">
         <div className="flex items-center gap-4">
-          <div><span className="text-success font-semibold">{slot.prepared}</span> <span className="text-muted-foreground">prepared</span></div>
-          <div><span className="text-primary font-semibold">{slot.inProgress}</span> <span className="text-muted-foreground">in progress</span></div>
+          <div>
+            <span className="text-success font-semibold">{slot.prepared}</span>{" "}
+            <span className="text-muted-foreground">prepared</span>
+          </div>
+          <div>
+            <span className="text-primary font-semibold">{slot.inProgress}</span>{" "}
+            <span className="text-muted-foreground">in progress</span>
+          </div>
           {slot.shortfall > 0 && (
-            <div><span className="text-destructive font-semibold">{slot.shortfall}</span> <span className="text-muted-foreground">shortfall</span></div>
+            <div>
+              <span className="text-destructive font-semibold">{slot.shortfall}</span>{" "}
+              <span className="text-muted-foreground">shortfall</span>
+            </div>
           )}
         </div>
       </div>
@@ -65,11 +79,16 @@ export function KitchenMealSlotCard({ slot }: KitchenMealSlotCardProps) {
             <div key={item.id}>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-foreground">{item.name}</span>
-                <span className="text-muted-foreground">{item.prepared}/{item.total}</span>
+                <span className="text-muted-foreground">
+                  {item.prepared}/{item.total}
+                </span>
               </div>
               <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
                 <div
-                  className={cn("h-full rounded-full transition-all", itemProgress >= 100 ? "bg-success" : "bg-primary")}
+                  className={cn(
+                    "h-full rounded-full transition-all",
+                    itemProgress >= 100 ? "bg-success" : "bg-primary",
+                  )}
                   style={{ width: `${itemProgress}%` }}
                 />
               </div>

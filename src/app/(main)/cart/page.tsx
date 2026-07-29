@@ -5,7 +5,6 @@ import { OrderSummary } from "@/components/carts/order-summary";
 import { SectionReveal } from "@/components/common/section-reveal";
 import { Button } from "@/components/ui/button";
 import { useCart, useClearCart, useRemoveFromCart, useUpdateCartItem } from "@/hooks/use-cart";
-import { useAppDispatch } from "@/store/store";
 import { handleApiError } from "@/lib/api-error";
 import { Loader2, ShoppingCart, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -13,7 +12,6 @@ import { useState } from "react";
 import type { CartItem as CartItemType } from "@/types/cart";
 
 export default function CartPageView() {
-  const dispatch = useAppDispatch();
   const { data: cart, isLoading, error } = useCart();
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveFromCart();
@@ -75,13 +73,17 @@ export default function CartPageView() {
     return (
       <main className="flex-1 py-8 lg:py-12">
         <div className="wrapper">
-          <div className="py-16 text-center border border-dashed border-border rounded-3xl bg-card">
-            <p className="font-sans text-sm text-destructive">{handleApiError(error)}</p>
-            <Link href="/foods">
-              <Button variant="default" className="mt-4 rounded-xl">
-                Return to Menu
-              </Button>
-            </Link>
+          <div className="py-16 text-center rounded-3xl bg-gradient-to-br from-primary/[0.02] via-card to-primary/[0.01] shadow-[var(--shadow-card)] relative overflow-hidden">
+            <div className="pointer-events-none absolute -top-6 -right-6 z-0 size-36 rounded-full bg-primary/8 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-8 -left-8 z-0 size-24 rounded-full bg-primary/5 blur-2xl" />
+            <div className="relative z-10">
+              <p className="font-sans text-sm text-destructive">{handleApiError(error)}</p>
+              <Link href="/foods">
+                <Button variant="default" className="mt-4 rounded-xl">
+                  Return to Menu
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </main>
@@ -150,14 +152,18 @@ export default function CartPageView() {
             </div>
           </div>
         ) : (
-          <div className="py-16 text-center border border-dashed border-border rounded-3xl bg-card">
-            <ShoppingCart className="size-8 mx-auto mb-3 text-muted-foreground" />
-            <p className="font-sans text-sm text-muted-foreground">Your active cart is empty.</p>
-            <Link href="/foods">
-              <Button variant="default" className="mt-4 rounded-xl">
-                Return to Menu
-              </Button>
-            </Link>
+          <div className="py-16 text-center rounded-3xl bg-gradient-to-br from-primary/[0.02] via-card to-primary/[0.01] shadow-[var(--shadow-card)] relative overflow-hidden">
+            <div className="pointer-events-none absolute -top-6 -right-6 z-0 size-36 rounded-full bg-primary/8 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-8 -left-8 z-0 size-24 rounded-full bg-primary/5 blur-2xl" />
+            <div className="relative z-10">
+              <ShoppingCart className="size-8 mx-auto mb-3 text-muted-foreground" />
+              <p className="font-sans text-sm text-muted-foreground">Your active cart is empty.</p>
+              <Link href="/foods">
+                <Button variant="default" className="mt-4 rounded-xl">
+                  Return to Menu
+                </Button>
+              </Link>
+            </div>
           </div>
         )}
       </div>

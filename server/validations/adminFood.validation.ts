@@ -15,7 +15,10 @@ export const createFoodSchema = yup.object({
   fat: yup.number().optional(),
   carbohydrate: yup.number().optional(),
   servingSize: yup.string().optional(),
-  foodType: yup.mixed().oneOf(["VEG", "NON_VEG", "VEGAN", "SEAFOOD"]).required("Food type is required"),
+  foodType: yup
+    .mixed()
+    .oneOf(["VEG", "NON_VEG", "VEGAN", "SEAFOOD"])
+    .required("Food type is required"),
   spiceLevel: yup.string().optional(),
   isFeatured: yup.boolean().optional(),
   isPopular: yup.boolean().optional(),
@@ -197,7 +200,10 @@ export const updateAvailabilitySchema = yup.object({
 });
 
 export const createScheduleSchema = yup.object({
-  mealType: yup.mixed().oneOf(["BREAKFAST", "LUNCH", "DINNER", "SNACKS"]).required("Meal type is required"),
+  mealType: yup
+    .mixed()
+    .oneOf(["BREAKFAST", "LUNCH", "DINNER", "SNACKS"])
+    .required("Meal type is required"),
   startTime: yup.string().required("Start time is required (HH:mm)"),
   endTime: yup.string().required("End time is required (HH:mm)"),
   status: yup.string().optional(),

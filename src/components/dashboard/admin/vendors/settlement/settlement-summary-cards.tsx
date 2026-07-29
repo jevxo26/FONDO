@@ -2,7 +2,7 @@ import { vendorSettlements } from "@/data/vendors";
 import { DarkCard } from "@/components/dashboard/common/dark-card";
 import { GlassCard } from "@/components/dashboard/common/glass-card";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { Wallet, AlertTriangle, TrendingUp, CheckCircle, Banknote } from "lucide-react";
+import { TrendingUp, CheckCircle, Banknote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 
@@ -56,20 +56,30 @@ export function SettlementSummaryCards() {
         </div>
         <div className="flex flex-wrap gap-6 border-t border-white/10 pt-6">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Settled</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Settled
+            </p>
             <p className="font-bold text-success">{totalSettled}</p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Flagged</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Flagged
+            </p>
             <p className="font-bold text-destructive">{totalFlagged}</p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Outstanding</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Outstanding
+            </p>
             <p className="font-bold text-warning">৳{outstandingAmount.toLocaleString()}</p>
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Avg</p>
-            <p className="font-bold text-white">৳{Math.round(totalAmount / vendorSettlements.length).toLocaleString()}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Avg
+            </p>
+            <p className="font-bold text-white">
+              ৳{Math.round(totalAmount / vendorSettlements.length).toLocaleString()}
+            </p>
           </div>
         </div>
         <Button variant="link" className="mt-4 h-auto gap-1 p-0 text-xs font-bold text-primary">

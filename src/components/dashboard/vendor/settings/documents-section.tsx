@@ -3,7 +3,14 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Upload, FileText, CheckCircle, Clock, XCircle } from "lucide-react";
 import { vendorDocuments, getDocumentStatusBadge } from "@/data/vendor-settings";
 import { format } from "date-fns";
@@ -27,7 +34,9 @@ export function DocumentsSection() {
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <h4 className="font-semibold text-sm">Business Documents</h4>
-          <p className="text-xs text-muted-foreground">Upload and manage your business verification documents</p>
+          <p className="text-xs text-muted-foreground">
+            Upload and manage your business verification documents
+          </p>
         </div>
         <Button size="sm" className="gap-2">
           <Upload className="h-4 w-4" />
@@ -67,9 +76,14 @@ export function DocumentsSection() {
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-sm">{format(new Date(doc.expiryDate), "MMM d, yyyy")}</span>
+                      <span className="text-sm">
+                        {format(new Date(doc.expiryDate), "MMM d, yyyy")}
+                      </span>
                       {isExpired && (
-                        <Badge variant="outline" className="text-destructive ring-destructive/20 text-[10px]">
+                        <Badge
+                          variant="outline"
+                          className="text-destructive ring-destructive/20 text-[10px]"
+                        >
                           Expired
                         </Badge>
                       )}

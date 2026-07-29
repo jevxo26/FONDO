@@ -7,7 +7,11 @@ import { walletBalance, walletTransactions } from "@/data/riders";
 export default function RiderEarningsPage() {
   return (
     <div>
-      <PageHeader title="Earnings" description="Track your delivery earnings and tips." icon={DollarSign} />
+      <PageHeader
+        title="Earnings"
+        description="Track your delivery earnings and tips."
+        icon={DollarSign}
+      />
       <EarningsSummaryCards today="৳1,850" week="৳11,200" pending="৳4,500" rating={4.8} />
       <div className="mt-10">
         <WalletSection balance={walletBalance} transactions={walletTransactions} />

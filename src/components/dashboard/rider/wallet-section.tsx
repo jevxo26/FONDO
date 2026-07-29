@@ -21,7 +21,9 @@ export function WalletSection({ balance, transactions }: WalletSectionProps) {
               <Wallet className="size-6" />
             </div>
             <div>
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Available Balance</p>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Available Balance
+              </p>
               <p className="font-heading text-3xl font-bold text-foreground">
                 ৳{balance.balance.toLocaleString()}
               </p>
@@ -41,10 +43,12 @@ export function WalletSection({ balance, transactions }: WalletSectionProps) {
             </div>
           </div>
         </div>
-        <div className={cn(
-          "rounded-3xl bg-gradient-to-br from-success/10 via-card to-success/[0.04] p-6 shadow-[var(--shadow-card)]",
-          "flex cursor-pointer items-center gap-3 transition-all hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]",
-        )}>
+        <div
+          className={cn(
+            "rounded-3xl bg-gradient-to-br from-success/10 via-card to-success/[0.04] p-6 shadow-[var(--shadow-card)]",
+            "flex cursor-pointer items-center gap-3 transition-all hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]",
+          )}
+        >
           <div className="flex size-12 items-center justify-center rounded-xl bg-success/10 text-success ring-1 ring-success/20">
             <ArrowUpRight className="size-6" />
           </div>
@@ -55,7 +59,9 @@ export function WalletSection({ balance, transactions }: WalletSectionProps) {
         </div>
       </div>
       <div className="mt-6">
-        <h4 className="font-heading text-base font-semibold text-foreground">Transaction History</h4>
+        <h4 className="font-heading text-base font-semibold text-foreground">
+          Transaction History
+        </h4>
         <TransactionTable data={transactions} />
       </div>
     </div>

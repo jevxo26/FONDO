@@ -20,8 +20,20 @@ export default function FoodsApprovalPage() {
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-4">
         <StatCard label="Total Items" value={total} icon={ClipboardCheck} accent="right" />
         <StatCard label="Pending" value={pending} variant="warning" icon={Clock} accent="right" />
-        <StatCard label="Approved" value={approved} variant="success" icon={CheckCircle} accent="right" />
-        <StatCard label="Rejected" value={rejected} variant="danger" icon={XCircle} accent="right" />
+        <StatCard
+          label="Approved"
+          value={approved}
+          variant="success"
+          icon={CheckCircle}
+          accent="right"
+        />
+        <StatCard
+          label="Rejected"
+          value={rejected}
+          variant="danger"
+          icon={XCircle}
+          accent="right"
+        />
       </div>
       <div className="mt-8">
         <ApprovalTableSection />

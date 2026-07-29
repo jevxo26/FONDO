@@ -2,10 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const requiredVars = [
-  "DATABASE_URL",
-  "JWT_SECRET",
-] as const;
+const requiredVars = ["DATABASE_URL", "JWT_SECRET"] as const;
 
 for (const varName of requiredVars) {
   if (!process.env[varName]) {
@@ -26,4 +23,10 @@ export const env = {
   SSLCOMMERZ_STORE_ID: process.env.SSLCOMMERZ_STORE_ID || "",
   SSLCOMMERZ_STORE_PASSWD: process.env.SSLCOMMERZ_STORE_PASSWD || "",
   SSLCOMMERZ_IS_LIVE: process.env.SSLCOMMERZ_IS_LIVE === "true",
+
+  SMTP_HOST: process.env.SMTP_HOST || "",
+  SMTP_PORT: parseInt(process.env.SMTP_PORT || "587", 10),
+  SMTP_USER: process.env.SMTP_USER || "",
+  SMTP_PASS: process.env.SMTP_PASS || "",
+  SMTP_FROM: process.env.SMTP_FROM || "FONDO <noreply@fondo.app>",
 } as const;

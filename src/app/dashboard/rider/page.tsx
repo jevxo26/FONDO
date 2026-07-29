@@ -17,8 +17,20 @@ export default function RiderDashboardPage() {
       <PageHeader title="Dashboard" description="Your delivery overview." icon={Bike} />
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
         <StatCard label="Active Deliveries" value={activeCount} icon={MapPin} accent="right" />
-        <StatCard label="Completed Today" value={completedCount} variant="success" icon={Package} accent="right" />
-        <StatCard label="Earnings Today" value="৳1,850" variant="default" icon={DollarSign} accent="right" />
+        <StatCard
+          label="Completed Today"
+          value={completedCount}
+          variant="success"
+          icon={Package}
+          accent="right"
+        />
+        <StatCard
+          label="Earnings Today"
+          value="৳1,850"
+          variant="default"
+          icon={DollarSign}
+          accent="right"
+        />
       </div>
       <div className="mt-8">
         <h3 className="font-heading text-lg font-semibold text-foreground">Active Deliveries</h3>

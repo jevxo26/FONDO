@@ -34,12 +34,16 @@ const reportColumns: ColumnDef<AdminCustomer>[] = [
   {
     accessorKey: "fullName",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Customer" />,
-    cell: ({ row }) => <span className="text-sm font-bold text-foreground">{row.original.fullName}</span>,
+    cell: ({ row }) => (
+      <span className="text-sm font-bold text-foreground">{row.original.fullName}</span>
+    ),
   },
   {
     accessorKey: "totalOrders",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Orders" />,
-    cell: ({ row }) => <span className="font-bold text-foreground">{row.original.totalOrders}</span>,
+    cell: ({ row }) => (
+      <span className="font-bold text-foreground">{row.original.totalOrders}</span>
+    ),
   },
   {
     accessorKey: "totalSpent",
@@ -52,7 +56,9 @@ const reportColumns: ColumnDef<AdminCustomer>[] = [
     id: "avgOrderValue",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Avg Order" />,
     cell: ({ row }) => (
-      <span className="text-sm text-muted-foreground">৳{avgOrderValue(row.original).toLocaleString()}</span>
+      <span className="text-sm text-muted-foreground">
+        ৳{avgOrderValue(row.original).toLocaleString()}
+      </span>
     ),
   },
   {
@@ -64,7 +70,9 @@ const reportColumns: ColumnDef<AdminCustomer>[] = [
   {
     id: "lifetimeDays",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Lifetime" />,
-    cell: ({ row }) => <span className="text-sm text-muted-foreground">{lifetimeDays(row.original)} days</span>,
+    cell: ({ row }) => (
+      <span className="text-sm text-muted-foreground">{lifetimeDays(row.original)} days</span>
+    ),
   },
   {
     accessorKey: "lastOrderDate",

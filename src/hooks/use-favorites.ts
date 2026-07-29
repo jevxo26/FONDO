@@ -1,99 +1,71 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import * as wishlistStorage from "@/lib/wishlist-storage";
-
-interface FoodLike {
-  id: string;
-  name: string;
-  thumbnail?: string;
-  slug: string;
-  servingSize?: string;
-  shortDescription?: string;
-  preparationTime?: number;
-  variants: Array<{ price: string | number; discountPrice?: string | number | null }>;
-  rating?: { averageRating: number };
-}
-
-function toWishlistItem(food: FoodLike): wishlistStorage.WishlistItem {
-  return {
-    id: food.id,
-    name: food.name,
-    thumbnail: food.thumbnail,
-    slug: food.slug,
-    servingSize: food.servingSize,
-    shortDescription: food.shortDescription,
-    preparationTime: food.preparationTime,
-    variants: food.variants.map((v) => ({
-      price: Number(v.price),
-      ...(v.discountPrice != null ? { discountPrice: Number(v.discountPrice) } : {}),
-    })),
-    rating: food.rating ? { averageRating: food.rating.averageRating } : undefined,
-  };
-}
+import { useCallback } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import {
+  useGetFavoritesQuery,
+  useToggleFavoriteMutation,
+  useRemoveFavoriteMutation,
+} from "@/store/api/slices/favorites-api";
+import type { Food } from "@/types/food";
 
 export function useFavorites() {
-  const [items, setItems] = useState<wishlistStorage.WishlistItem[]>(() =>
-    wishlistStorage.getWishlist(),
-  );
-
-  useEffect(() => {
-    const handler = () => setItems(wishlistStorage.getWishlist());
-    window.addEventListener("fondo-wishlist-changed", handler);
-    return () => window.removeEventListener("fondo-wishlist-changed", handler);
-  }, []);
-
-  return { data: items, isLoading: false, error: null };
+  const { isAuthenticated } = useAuth();
+  return useGetFavoritesQuery(undefined, { skip: !isAuthenticated });
 }
 
 export function useToggleFavorite() {
-  const [isPending, setIsPending] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const [trigger, { isLoading }] = useToggleFavoriteMutation();
 
   const mutate = useCallback(
-    (food: FoodLike, options?: { onSettled?: () => void }) => {
-      if (isPending) return;
-      setIsPending(true);
-      try {
-        wishlistStorage.addToWishlist(toWishlistItem(food));
+    (food: Food | { id: string }, options?: { onSettled?: () => void }) => {
+      if (!isAuthenticated) {
         options?.onSettled?.();
-      } catch {
-        options?.onSettled?.();
-      } finally {
-        setIsPending(false);
+        return;
       }
+      trigger(food as Food)
+        .unwrap()
+        .finally(() => options?.onSettled?.());
     },
-    [isPending],
+    [trigger, isAuthenticated],
   );
 
-  const mutateAsync = useCallback(async (food: FoodLike) => {
-    wishlistStorage.addToWishlist(toWishlistItem(food));
-  }, []);
+  const mutateAsync = useCallback(
+    async (food: Food | { id: string }) => {
+      if (!isAuthenticated) return;
+      return trigger(food as Food).unwrap();
+    },
+    [trigger, isAuthenticated],
+  );
 
-  return { mutate, mutateAsync, isPending };
+  return { mutate, mutateAsync, isPending: isLoading };
 }
 
 export function useRemoveFavorite() {
-  const [isPending, setIsPending] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const [trigger, { isLoading }] = useRemoveFavoriteMutation();
 
   const mutate = useCallback(
     (food: { id: string }, options?: { onSettled?: () => void }) => {
-      if (isPending) return;
-      setIsPending(true);
-      try {
-        wishlistStorage.removeFromWishlist(food.id);
+      if (!isAuthenticated) {
         options?.onSettled?.();
-      } catch {
-        options?.onSettled?.();
-      } finally {
-        setIsPending(false);
+        return;
       }
+      trigger(food as Food)
+        .unwrap()
+        .finally(() => options?.onSettled?.());
     },
-    [isPending],
+    [trigger, isAuthenticated],
   );
 
-  const mutateAsync = useCallback(async (food: { id: string }) => {
-    wishlistStorage.removeFromWishlist(food.id);
-  }, []);
+  const mutateAsync = useCallback(
+    async (food: { id: string }) => {
+      if (!isAuthenticated) return;
+      return trigger(food as Food).unwrap();
+    },
+    [trigger, isAuthenticated],
+  );
 
-  return { mutate, mutateAsync, isPending };
+  return { mutate, mutateAsync, isPending: isLoading };
 }

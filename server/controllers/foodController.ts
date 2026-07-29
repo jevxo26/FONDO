@@ -91,11 +91,7 @@ const listReviews = catchAsync(async (req: Request, res: Response) => {
 
 const createReview = catchAsync(async (req: AuthRequest, res: Response) => {
   const foodId = req.params.foodId as string;
-  const review = await FoodService.createReview(
-    foodId,
-    req.user!.userId,
-    req.body,
-  );
+  const review = await FoodService.createReview(foodId, req.user!.userId, req.body);
 
   sendResponse(res, {
     statusCode: 201,

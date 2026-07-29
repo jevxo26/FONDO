@@ -28,21 +28,19 @@ export function ProductHero({ food }: { food: Food }) {
   const currentPrice = Number(food.variants[0]?.discountPrice ?? food.variants[0]?.price ?? 0);
 
   const handleAddToCart = () => {
+    if (addToCart.isPending) return;
     addToCart.mutate({
       foodId: food.id,
-      name: food.name,
-      thumbnail: food.thumbnail,
       quantity,
       unitPrice: currentPrice,
     });
   };
 
   const handleBuyNow = () => {
+    if (addToCart.isPending) return;
     addToCart.mutate(
       {
         foodId: food.id,
-        name: food.name,
-        thumbnail: food.thumbnail,
         quantity,
         unitPrice: currentPrice,
       },

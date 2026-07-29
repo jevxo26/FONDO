@@ -78,8 +78,20 @@ function OrdersContent() {
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Total Orders" value={total} icon={ShoppingBag} accent="bottom" />
         <StatCard label="Pending" value={pending} variant="warning" icon={Clock} accent="bottom" />
-        <StatCard label="In Progress" value={inProgress} variant="danger" icon={Timer} accent="bottom" />
-        <StatCard label="Completed" value={completed} variant="success" icon={CheckCircle} accent="bottom" />
+        <StatCard
+          label="In Progress"
+          value={inProgress}
+          variant="danger"
+          icon={Timer}
+          accent="bottom"
+        />
+        <StatCard
+          label="Completed"
+          value={completed}
+          variant="success"
+          icon={CheckCircle}
+          accent="bottom"
+        />
       </div>
 
       {customerFilter && (
@@ -109,7 +121,14 @@ function OrdersContent() {
 
 export default function CustomerOrdersPage() {
   return (
-    <Suspense fallback={<div className="space-y-6"><Skeleton className="h-12 w-full" /><Skeleton className="h-64 w-full" /></div>}>
+    <Suspense
+      fallback={
+        <div className="space-y-6">
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-64 w-full" />
+        </div>
+      }
+    >
       <OrdersContent />
     </Suspense>
   );

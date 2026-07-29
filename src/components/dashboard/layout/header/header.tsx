@@ -23,11 +23,9 @@ export function DashboardHeader() {
   const { user, logout } = useAuth();
 
   const userName = user ? `${user.firstName} ${user.lastName}` : "User";
-  const initials =
-    user
-      ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`
-      : "U";
-  const roleLabel = user?.role?.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) ?? "User";
+  const initials = user ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}` : "U";
+  const roleLabel =
+    user?.role?.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) ?? "User";
 
   const handleLogout = async () => {
     await logout();
@@ -86,10 +84,14 @@ export function DashboardHeader() {
               <div className="flex cursor-pointer items-center gap-3">
                 <div className="hidden text-right md:block">
                   <p className="text-sm font-semibold text-foreground">{userName}</p>
-                  <p className="text-[10px] uppercase tracking-tighter text-muted-foreground">{roleLabel}</p>
+                  <p className="text-[10px] uppercase tracking-tighter text-muted-foreground">
+                    {roleLabel}
+                  </p>
                 </div>
                 <Avatar className="size-9 ring-2 ring-primary/30 ring-offset-2 ring-offset-card shadow-[0_0_12px_rgba(206,163,89,0.15)]">
-                  <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">{initials}</AvatarFallback>
+                  <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
+                    {initials}
+                  </AvatarFallback>
                 </Avatar>
               </div>
             </DropdownMenuTrigger>

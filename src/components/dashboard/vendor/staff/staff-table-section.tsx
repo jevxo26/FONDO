@@ -6,7 +6,13 @@ import { DataTable } from "@/components/common/table";
 import { staffColumns } from "./staff-columns";
 import { Button } from "@/components/ui/button";
 import { Plus, Pencil, UserCog, Trash2 } from "lucide-react";
-import { vendorStaff, staffStatuses, staffDesignations, staffShifts, staffBranches } from "@/data/vendor-staff";
+import {
+  vendorStaff,
+  staffStatuses,
+  staffDesignations,
+  staffShifts,
+  staffBranches,
+} from "@/data/vendor-staff";
 import type { VendorStaff } from "@/types/vendor";
 import type { RowAction, FacetedFilter, InitialSort } from "@/components/common/table/types";
 import { AddStaffModal } from "./add-staff-modal";
@@ -31,21 +37,18 @@ export function VendorStaffTableSection() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [selectedStaff, setSelectedStaff] = useState<VendorStaff | null>(null);
-  const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS);
+  const [filters] = useState<Filters>(INITIAL_FILTERS);
 
   const filteredData = useMemo(() => {
     return staff.filter((item) => {
       const matchStatus = filters.status === "ALL" || item.status === filters.status;
-      const matchDesignation = filters.designation === "ALL" || item.designation === filters.designation;
+      const matchDesignation =
+        filters.designation === "ALL" || item.designation === filters.designation;
       const matchShift = filters.shift === "ALL" || item.shift === filters.shift;
       const matchBranch = filters.branch === "ALL" || item.branch === filters.branch;
       return matchStatus && matchDesignation && matchShift && matchBranch;
     });
   }, [staff, filters]);
-
-  const handleFilterChange = useCallback((key: keyof Filters) => (value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  }, []);
 
   const handleAssignRole = useCallback((staff: VendorStaff) => {
     setSelectedStaff(staff);
@@ -77,7 +80,7 @@ export function VendorStaffTableSection() {
         },
       },
     ],
-    [handleAssignRole]
+    [handleAssignRole],
   );
 
   const facetedFilters: FacetedFilter[] = useMemo(
@@ -103,7 +106,7 @@ export function VendorStaffTableSection() {
         options: staffBranches.map((b) => ({ label: b.label, value: b.value })),
       },
     ],
-    []
+    [],
   );
 
   const toolbarActions = (
@@ -132,10 +135,7 @@ export function VendorStaffTableSection() {
         enableColumnToggle
         initialSort={initialSort}
       />
-      <AddStaffModal
-        open={isAddModalOpen}
-        onOpenChange={setIsAddModalOpen}
-      />
+      <AddStaffModal open={isAddModalOpen} onOpenChange={setIsAddModalOpen} />
       <AssignRoleModal
         open={isRoleModalOpen}
         onOpenChange={setIsRoleModalOpen}
@@ -143,9 +143,7 @@ export function VendorStaffTableSection() {
         onAssign={(staff, roles) => {
           console.log("Assign roles", staff, roles);
           setStaff((prev) =>
-            prev.map((item) =>
-              item.id === staff.id ? { ...item, roles } : item
-            )
+            prev.map((item) => (item.id === staff.id ? { ...item, roles } : item)),
           );
         }}
       />

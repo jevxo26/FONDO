@@ -12,7 +12,11 @@ export default function RidersEarningsPage() {
         title="Earnings"
         description="View rider earnings and payout history."
         icon={Wallet}
-        actions={<Button variant="outline" className="rounded-full"><Download className="size-[18px]" /> Export</Button>}
+        actions={
+          <Button variant="outline" className="rounded-full">
+            <Download className="size-[18px]" /> Export
+          </Button>
+        }
       />
       <div className="mt-8">
         <RiderEarningsSummaryCards />

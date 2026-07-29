@@ -34,7 +34,7 @@ export const paymentsApi = api.injectEndpoints({
       providesTags: ["PaymentMethod"],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

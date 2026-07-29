@@ -9,18 +9,44 @@ function seededRandom(seed: number) {
 const rand = seededRandom(5501);
 
 const foodNames = [
-  "Royal Mutton Kacchi", "Chicken Biryani", "Special Tehari", "Mutton Rezala",
-  "Shorshe Ilish", "Prawn Malai Curry", "Chicken Korma", "Kacchi Biryani",
-  "Beef Bhuna", "Vegetable Khichuri", "Kung Pao Chicken", "Fried Rice",
-  "Spring Rolls", "Mapo Tofu", "Chow Mein", "Margherita Pizza",
-  "Pasta Alfredo", "Lasagna", "Risotto", "Minestrone Soup",
-  "Butter Chicken", "Palak Paneer", "Dal Makhani", "Chicken Tikka",
-  "Gulab Jamun", "Firni", "Chocolate Mousse",
+  "Royal Mutton Kacchi",
+  "Chicken Biryani",
+  "Special Tehari",
+  "Mutton Rezala",
+  "Shorshe Ilish",
+  "Prawn Malai Curry",
+  "Chicken Korma",
+  "Kacchi Biryani",
+  "Beef Bhuna",
+  "Vegetable Khichuri",
+  "Kung Pao Chicken",
+  "Fried Rice",
+  "Spring Rolls",
+  "Mapo Tofu",
+  "Chow Mein",
+  "Margherita Pizza",
+  "Pasta Alfredo",
+  "Lasagna",
+  "Risotto",
+  "Minestrone Soup",
+  "Butter Chicken",
+  "Palak Paneer",
+  "Dal Makhani",
+  "Chicken Tikka",
+  "Gulab Jamun",
+  "Firni",
+  "Chocolate Mousse",
 ];
 
 const vendors = [
-  "Fresh Meals", "Spice House", "Bistro Dhaka", "Golden Wok",
-  "Pizza Nova", "Curry Leaf", "Sweet Tooth", "The Kebab House",
+  "Fresh Meals",
+  "Spice House",
+  "Bistro Dhaka",
+  "Golden Wok",
+  "Pizza Nova",
+  "Curry Leaf",
+  "Sweet Tooth",
+  "The Kebab House",
 ];
 
 export interface InventoryItem {
@@ -50,7 +76,8 @@ export const inventoryItems: InventoryItem[] = foodNames.map((name, i) => {
     currentStock,
     minStock,
     unit: units[Math.floor(rand() * units.length)] || "portions",
-    status: currentStock === 0 ? "OUT_OF_STOCK" : currentStock < minStock ? "LOW_STOCK" : "IN_STOCK",
+    status:
+      currentStock === 0 ? "OUT_OF_STOCK" : currentStock < minStock ? "LOW_STOCK" : "IN_STOCK",
     lastRestocked: new Date(2025, Math.floor(rand() * 12), Math.floor(1 + rand() * 28))
       .toISOString()
       .split("T")[0],

@@ -9,14 +9,14 @@ interface HeaderBreadcrumbsProps {
 }
 
 function humanize(s: string) {
-  return s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()).trim();
+  return s
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .trim();
 }
 
 export function HeaderBreadcrumbs({ pathname }: HeaderBreadcrumbsProps) {
-  const segments = pathname
-    .replace("/dashboard", "")
-    .split("/")
-    .filter(Boolean);
+  const segments = pathname.replace("/dashboard", "").split("/").filter(Boolean);
 
   const currentPage = segments.length > 0 ? humanize(segments[segments.length - 1]) : "Overview";
 

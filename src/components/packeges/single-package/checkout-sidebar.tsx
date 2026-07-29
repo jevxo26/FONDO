@@ -6,8 +6,10 @@ export default function CheckoutSidebar() {
     <div className="w-full space-y-4">
       {/* Primary Price Computation Card */}
       <div className="bg-card border border-border/40 rounded-3xl p-6 shadow-sm space-y-6">
-        <h3 className="font-heading text-lg font-medium border-b border-border/20 pb-3">Subscription Architecture</h3>
-        
+        <h3 className="font-heading text-lg font-medium border-b border-border/20 pb-3">
+          Subscription Architecture
+        </h3>
+
         <div className="space-y-3 font-sans text-xs">
           <div className="flex justify-between text-muted-foreground">
             <span>Signature Slim-Down base</span>
@@ -19,12 +21,16 @@ export default function CheckoutSidebar() {
           </div>
           <div className="flex justify-between text-muted-foreground">
             <span>Logistics & Shipping Eco Cells</span>
-            <span className="text-success font-bold uppercase tracking-wider text-[10px]">Free Delivery</span>
+            <span className="text-success font-bold uppercase tracking-wider text-[10px]">
+              Free Delivery
+            </span>
           </div>
-          
+
           <div className="border-t border-border/20 pt-4 mt-2 flex justify-between items-end">
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase font-bold text-muted-foreground/70">Total Allocation</span>
+              <span className="text-[10px] uppercase font-bold text-muted-foreground/70">
+                Total Allocation
+              </span>
               <span className="text-[10px] text-muted-foreground">VAT Inclusive configuration</span>
             </div>
             <span className="text-xl font-bold text-primary">৳11,520</span>
@@ -48,7 +54,9 @@ export default function CheckoutSidebar() {
           </div>
           <div>
             <h4 className="text-xs font-bold">Unsure about macros?</h4>
-            <p className="text-[10px] text-muted-foreground/70">Talk to our heritage concierge advisors</p>
+            <p className="text-[10px] text-muted-foreground/70">
+              Talk to our heritage concierge advisors
+            </p>
           </div>
         </div>
         <span className="relative flex h-2 w-2 mr-1">

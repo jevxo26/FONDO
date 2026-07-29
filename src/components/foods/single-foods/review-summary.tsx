@@ -72,7 +72,10 @@ export default function ReviewSummary({ foodId, reviews }: ReviewSummaryProps) {
       {/* Right Column: Progress Bars */}
       <div className="md:col-span-8 flex flex-col gap-2.5">
         {ratingRows.map((row) => (
-          <div key={row.star} className="flex items-center gap-4 text-xs font-sans text-muted-foreground">
+          <div
+            key={row.star}
+            className="flex items-center gap-4 text-xs font-sans text-muted-foreground"
+          >
             <span className="w-3 font-bold">{row.star}</span>
             <Star className="size-3.5 fill-primary text-primary shrink-0" />
             <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">

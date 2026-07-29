@@ -1,5 +1,11 @@
 import { api } from "../base-api";
-import type { Order, OrderFeedback, OrderInvoice, PlaceOrderPayload, PlaceOrderResponse } from "@/types/order";
+import type {
+  Order,
+  OrderFeedback,
+  OrderInvoice,
+  PlaceOrderPayload,
+  PlaceOrderResponse,
+} from "@/types/order";
 
 export const ordersApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -23,8 +29,15 @@ export const ordersApi = api.injectEndpoints({
       invalidatesTags: ["Order"],
     }),
 
-    submitFeedback: builder.mutation<OrderFeedback, { orderId: string; rating: number; review?: string }>({
-      query: ({ orderId, ...body }) => ({ url: `/orders/${orderId}/feedback`, method: "POST", body }),
+    submitFeedback: builder.mutation<
+      OrderFeedback,
+      { orderId: string; rating: number; review?: string }
+    >({
+      query: ({ orderId, ...body }) => ({
+        url: `/orders/${orderId}/feedback`,
+        method: "POST",
+        body,
+      }),
       invalidatesTags: ["Order"],
     }),
 
@@ -42,7 +55,7 @@ export const ordersApi = api.injectEndpoints({
       invalidatesTags: ["Order"],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

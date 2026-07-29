@@ -1,15 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import * as cartStorage from "@/lib/cart-storage";
-import type { Cart, CartItem } from "@/types/cart";
-
+import { useCallback } from "react";
+import {
+  useGetCartQuery,
+  useAddToCartMutation,
+  useRemoveFromCartMutation,
+  useUpdateCartItemMutation,
+  useClearCartMutation,
+} from "@/store/api/slices/cart-api";
 export interface AddToCartArgs {
   foodId: string;
-  name: string;
   quantity: number;
   unitPrice: number;
-  thumbnail?: string;
 }
 
 export interface UpdateCartArgs {
@@ -17,151 +19,96 @@ export interface UpdateCartArgs {
   quantity: number;
 }
 
-function toCartItem(s: cartStorage.StoredCartItem): CartItem {
-  return {
-    id: s.id,
-    foodId: s.foodId,
-    quantity: s.quantity,
-    unitPrice: s.unitPrice,
-    totalPrice: s.totalPrice,
-    food: { id: s.foodId, name: s.name, thumbnail: s.thumbnail ?? null },
-    addons: s.addons?.map((a) => ({
-      id: a.addonItemId,
-      cartItemId: s.id,
-      addonItemId: a.addonItemId,
-      name: a.name,
-      quantity: a.quantity,
-      price: a.price,
-    })),
-    packageMealId: s.packageMealId,
-  };
-}
-
-function toCart(totals: cartStorage.CartTotals): Cart {
-  return {
-    id: "local",
-    items: totals.items.map(toCartItem),
-    subtotal: totals.subtotal,
-    deliveryCharge: totals.deliveryCharge,
-    discount: totals.discount,
-    vat: totals.vat,
-    totalAmount: totals.totalAmount,
-  };
-}
-
 export function useCart() {
-  const [cart, setCart] = useState<Cart>(() => toCart(cartStorage.getCart()));
-
-  useEffect(() => {
-    const handler = () => setCart(toCart(cartStorage.getCart()));
-    window.addEventListener("fondo-cart-changed", handler);
-    return () => window.removeEventListener("fondo-cart-changed", handler);
-  }, []);
-
-  return { data: cart, isLoading: false, error: null };
+  return useGetCartQuery();
 }
 
 export function useAddToCart() {
-  const [isPending, setIsPending] = useState(false);
+  const [trigger, { isLoading }] = useAddToCartMutation();
 
   const mutate = useCallback(
-    (args: AddToCartArgs, options?: { onSuccess?: () => void; onSettled?: () => void }) => {
-      if (isPending) return;
-      setIsPending(true);
-      try {
-        cartStorage.addItem(args.foodId, args.name, args.unitPrice, args.quantity, args.thumbnail);
-        options?.onSuccess?.();
-        options?.onSettled?.();
-      } catch {
-        options?.onSettled?.();
-      } finally {
-        setIsPending(false);
-      }
+    (
+      args: AddToCartArgs,
+      options?: { onSuccess?: () => void; onError?: (e: unknown) => void; onSettled?: () => void },
+    ) => {
+      trigger({ foodId: args.foodId, quantity: args.quantity, unitPrice: args.unitPrice })
+        .unwrap()
+        .then(() => options?.onSuccess?.())
+        .catch((err) => options?.onError?.(err))
+        .finally(() => options?.onSettled?.());
     },
-    [isPending],
+    [trigger],
   );
 
-  const mutateAsync = useCallback(async (args: AddToCartArgs) => {
-    cartStorage.addItem(args.foodId, args.name, args.unitPrice, args.quantity, args.thumbnail);
-  }, []);
+  const mutateAsync = useCallback(
+    async (args: AddToCartArgs) => {
+      return trigger({ foodId: args.foodId, quantity: args.quantity, unitPrice: args.unitPrice }).unwrap();
+    },
+    [trigger],
+  );
 
-  return { mutate, mutateAsync, isPending };
+  return { mutate, mutateAsync, isPending: isLoading };
 }
 
 export function useRemoveFromCart() {
-  const [isPending, setIsPending] = useState(false);
+  const [trigger, { isLoading }] = useRemoveFromCartMutation();
 
   const mutate = useCallback(
     (itemId: string, options?: { onSettled?: () => void }) => {
-      if (isPending) return;
-      setIsPending(true);
-      try {
-        cartStorage.removeItem(itemId);
-        options?.onSettled?.();
-      } catch {
-        options?.onSettled?.();
-      } finally {
-        setIsPending(false);
-      }
+      trigger(itemId)
+        .unwrap()
+        .finally(() => options?.onSettled?.());
     },
-    [isPending],
+    [trigger],
   );
 
-  const mutateAsync = useCallback(async (itemId: string) => {
-    cartStorage.removeItem(itemId);
-  }, []);
+  const mutateAsync = useCallback(
+    async (itemId: string) => {
+      return trigger(itemId).unwrap();
+    },
+    [trigger],
+  );
 
-  return { mutate, mutateAsync, isPending };
+  return { mutate, mutateAsync, isPending: isLoading };
 }
 
 export function useUpdateCartItem() {
-  const [isPending, setIsPending] = useState(false);
+  const [trigger, { isLoading }] = useUpdateCartItemMutation();
 
   const mutate = useCallback(
     (args: UpdateCartArgs, options?: { onSettled?: () => void }) => {
-      if (isPending) return;
-      setIsPending(true);
-      try {
-        cartStorage.updateQuantity(args.itemId, args.quantity);
-        options?.onSettled?.();
-      } catch {
-        options?.onSettled?.();
-      } finally {
-        setIsPending(false);
-      }
+      trigger({ itemId: args.itemId, quantity: args.quantity })
+        .unwrap()
+        .finally(() => options?.onSettled?.());
     },
-    [isPending],
+    [trigger],
   );
 
-  const mutateAsync = useCallback(async (args: UpdateCartArgs) => {
-    cartStorage.updateQuantity(args.itemId, args.quantity);
-  }, []);
+  const mutateAsync = useCallback(
+    async (args: UpdateCartArgs) => {
+      return trigger({ itemId: args.itemId, quantity: args.quantity }).unwrap();
+    },
+    [trigger],
+  );
 
-  return { mutate, mutateAsync, isPending };
+  return { mutate, mutateAsync, isPending: isLoading };
 }
 
 export function useClearCart() {
-  const [isPending, setIsPending] = useState(false);
+  const [trigger, { isLoading }] = useClearCartMutation();
 
   const mutate = useCallback(
     (_?: undefined, options?: { onSettled?: () => void }) => {
-      if (isPending) return;
-      setIsPending(true);
-      try {
-        cartStorage.clearCart();
-        options?.onSettled?.();
-      } catch {
-        options?.onSettled?.();
-      } finally {
-        setIsPending(false);
-      }
+      trigger()
+        .unwrap()
+        .finally(() => options?.onSettled?.());
     },
-    [isPending],
+    [trigger],
   );
 
   const mutateAsync = useCallback(async () => {
-    cartStorage.clearCart();
-  }, []);
+    return trigger().unwrap();
+  }, [trigger]);
 
-  return { mutate, mutateAsync, isPending };
+  return { mutate, mutateAsync, isPending: isLoading };
 }

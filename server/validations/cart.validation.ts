@@ -9,7 +9,10 @@ export const addItemSchema = yup.object({
   foodId: yup.string().required("Food ID is required"),
   packageMealId: yup.string().optional(),
   quantity: yup.number().integer().min(1).default(1),
-  unitPrice: yup.number().positive("Unit price must be positive").required("Unit price is required"),
+  unitPrice: yup
+    .number()
+    .positive("Unit price must be positive")
+    .required("Unit price is required"),
 });
 
 export const updateItemSchema = yup.object({
@@ -56,8 +59,10 @@ export const placeOrderSchema = yup.object({
   paymentMethodId: yup.string().required("Payment method ID is required"),
   items: yup.array().of(orderItemSchema).optional(),
   notes: yup.string().optional(),
-  deliverySchedule: yup.object({
-    deliveryDate: yup.date().optional(),
-    deliverySlot: yup.string().optional(),
-  }).optional(),
+  deliverySchedule: yup
+    .object({
+      deliveryDate: yup.date().optional(),
+      deliverySlot: yup.string().optional(),
+    })
+    .optional(),
 });

@@ -6,9 +6,7 @@ import type { FacetedFilter, RowAction } from "@/components/common/table";
 import { approvalColumns } from "./approval-columns";
 import { approvalItems, type ApprovalItem } from "@/data/food-approvals";
 import { adminFoods } from "@/data/foods";
-import {
-  Eye, ListChecks, Tag, CheckCircle, XCircle, FileEdit,
-} from "lucide-react";
+import { Eye, ListChecks, Tag, CheckCircle, XCircle, FileEdit } from "lucide-react";
 
 const statusFilter: FacetedFilter = {
   columnId: "status",

@@ -30,6 +30,7 @@ export interface CartMealFood {
   cartMealId: string;
   foodId: string;
   quantity: number;
+  isReplacement?: boolean;
   food: { id: string; name: string };
 }
 
@@ -41,25 +42,16 @@ export interface CartMeal {
   foods: CartMealFood[];
 }
 
-export interface CartSummary {
-  id: string;
-  subtotal: number;
-  deliveryCharge: number;
-  discount: number;
-  vat: number;
-  totalAmount: number;
-}
-
 export interface Cart {
   id: string;
   items: CartItem[];
   meals?: CartMeal[];
-  summary?: CartSummary;
   subtotal: number;
   deliveryCharge: number;
   discount: number;
   vat: number;
-  totalAmount: number;
+  itemCount: number;
+  mealCount: number;
+  grandTotal: number;
   status?: string;
-  mealCount?: number;
 }

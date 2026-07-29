@@ -21,19 +21,33 @@ export default function KitchenQueuePage() {
 
   return (
     <div>
-      <PageHeader title="Today's Kitchen Queue" description="View and manage today's meal preparation queue." icon={ChefHat} />
-      <KitchenSummaryCards queued={queued.length} preparing={preparing.length} ready={ready.length} total={orders.length} />
+      <PageHeader
+        title="Today's Kitchen Queue"
+        description="View and manage today's meal preparation queue."
+        icon={ChefHat}
+      />
+      <KitchenSummaryCards
+        queued={queued.length}
+        preparing={preparing.length}
+        ready={ready.length}
+        total={orders.length}
+      />
 
       {preparing.length > 0 && (
         <div className="mt-10">
           <h2 className="font-heading text-lg font-semibold text-foreground">In Preparation</h2>
-          <p className="text-sm text-muted-foreground">{preparing.length} orders currently being cooked</p>
+          <p className="text-sm text-muted-foreground">
+            {preparing.length} orders currently being cooked
+          </p>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {preparing.map((order) => (
               <KitchenOrderCard
                 key={order.id}
                 order={order}
-                onMarkReady={(o) => { updateStatus(o.id, "READY"); toast.success(`${o.orderNumber} marked ready`); }}
+                onMarkReady={(o) => {
+                  updateStatus(o.id, "READY");
+                  toast.success(`${o.orderNumber} marked ready`);
+                }}
               />
             ))}
           </div>
@@ -42,19 +56,26 @@ export default function KitchenQueuePage() {
 
       {queued.length > 0 && (
         <div className="mt-10">
-          <h2 className="font-heading text-lg font-semibold text-foreground">Queued (Next to Prepare)</h2>
+          <h2 className="font-heading text-lg font-semibold text-foreground">
+            Queued (Next to Prepare)
+          </h2>
           <p className="text-sm text-muted-foreground">{queued.length} orders waiting</p>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {queued.slice(0, 6).map((order) => (
               <KitchenOrderCard
                 key={order.id}
                 order={order}
-                onStartPrep={(o) => { updateStatus(o.id, "PREPARING"); toast.success(`${o.orderNumber} started`); }}
+                onStartPrep={(o) => {
+                  updateStatus(o.id, "PREPARING");
+                  toast.success(`${o.orderNumber} started`);
+                }}
               />
             ))}
           </div>
           {queued.length > 6 && (
-            <p className="mt-2 text-center text-xs text-muted-foreground">+{queued.length - 6} more queued orders</p>
+            <p className="mt-2 text-center text-xs text-muted-foreground">
+              +{queued.length - 6} more queued orders
+            </p>
           )}
         </div>
       )}

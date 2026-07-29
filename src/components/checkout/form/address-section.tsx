@@ -1,7 +1,9 @@
 import { Input } from "@/components/ui/input";
+import { FormField } from "@/components/common/form-field";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { Address } from "@/types/address";
 import type { FulfillmentType, CheckoutFormData } from "@/types/checkout-type";
-import { Check, MapPin } from "lucide-react";
+import { Check, MapPin, User, Phone, Globe, Building2, MapPinned, Home, HelpCircle } from "lucide-react";
 import type { UseFormRegister } from "react-hook-form";
 
 interface Props {
@@ -24,8 +26,11 @@ export function AddressSection({
   fulfillment,
 }: Props) {
   return (
-    <div className="bg-card rounded-2xl border border-border/40 p-6 shadow-sm flex flex-col gap-4">
-      <h2 className="font-sans text-base font-semibold text-foreground">Delivery Details</h2>
+    <div className="rounded-2xl bg-card border border-border/40 p-5 shadow-sm flex flex-col gap-4">
+      <div className="flex items-center gap-2">
+        <MapPin className="size-4 text-primary" />
+        <h2 className="font-sans text-sm font-semibold text-foreground">Delivery Details</h2>
+      </div>
 
       {fulfillment === "delivery" && addresses.length > 0 && (
         <div className="flex flex-col gap-2">
@@ -40,9 +45,13 @@ export function AddressSection({
                   : "border-border bg-background hover:border-border/80"
               }`}
             >
-              <MapPin
-                className={`size-4 shrink-0 ${selectedAddressId === addr.id ? "text-primary" : "text-muted-foreground"}`}
-              />
+              <div className={`flex size-8 items-center justify-center rounded-lg ${
+                selectedAddressId === addr.id ? "bg-primary/10" : "bg-muted"
+              }`}>
+                <MapPin
+                  className={`size-4 ${selectedAddressId === addr.id ? "text-primary" : "text-muted-foreground"}`}
+                />
+              </div>
               <div className="flex-1 min-w-0">
                 <p className="font-sans text-xs font-semibold text-foreground">
                   {addr.label}
@@ -53,7 +62,8 @@ export function AddressSection({
                   )}
                 </p>
                 <p className="font-sans text-[11px] text-muted-foreground mt-0.5 truncate">
-                  {addr.area}{addr.district ? `, ${addr.district}` : ""}
+                  {addr.area}
+                  {addr.district ? `, ${addr.district}` : ""}
                 </p>
               </div>
               {selectedAddressId === addr.id && <Check className="size-4 text-primary shrink-0" />}
@@ -63,75 +73,66 @@ export function AddressSection({
       )}
 
       {showNewAddress && (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           {fulfillment === "delivery" && addresses.length > 0 && (
-            <p className="text-[10px] text-muted-foreground">Or enter a new address:</p>
+            <div className="flex items-center gap-2">
+              <div className="h-px flex-1 bg-gradient-to-r from-primary/30 to-transparent" />
+              <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Or enter new address</span>
+              <div className="h-px flex-1 bg-gradient-to-l from-primary/30 to-transparent" />
+            </div>
           )}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="font-sans text-xs font-medium text-foreground mb-1 block">Receiver Name</label>
-              <Input
-                type="text"
-                placeholder="Full name"
-                {...register("receiverName", { required: fulfillment === "delivery" })}
-                className={errors.receiverName ? "border-destructive/50 h-8 text-xs" : "h-8 text-xs"}
-              />
-              {errors.receiverName && <p className="text-[10px] text-destructive mt-0.5">{errors.receiverName.message}</p>}
-            </div>
-            <div>
-              <label className="font-sans text-xs font-medium text-foreground mb-1 block">Phone</label>
-              <Input
-                type="tel"
-                placeholder="+880 1XXX XXXXXX"
-                {...register("receiverPhone", { required: fulfillment === "delivery" })}
-                className={errors.receiverPhone ? "border-destructive/50 h-8 text-xs" : "h-8 text-xs"}
-              />
-              {errors.receiverPhone && <p className="text-[10px] text-destructive mt-0.5">{errors.receiverPhone.message}</p>}
-            </div>
-            <div>
-              <label className="font-sans text-xs font-medium text-foreground mb-1 block">Division</label>
-              <Input
-                type="text"
-                placeholder="e.g. Dhaka"
-                {...register("division", { required: !selectedAddressId })}
-                className={errors.division ? "border-destructive/50 h-8 text-xs" : "h-8 text-xs"}
-              />
-            </div>
-            <div>
-              <label className="font-sans text-xs font-medium text-foreground mb-1 block">District</label>
-              <Input
-                type="text"
-                placeholder="e.g. Dhaka"
-                {...register("district", { required: !selectedAddressId })}
-                className={errors.district ? "border-destructive/50 h-8 text-xs" : "h-8 text-xs"}
-              />
-            </div>
-            <div>
-              <label className="font-sans text-xs font-medium text-foreground mb-1 block">Area / Thana</label>
-              <Input
-                type="text"
-                placeholder="e.g. Gulshan"
-                {...register("area", { required: !selectedAddressId })}
-                className={errors.area ? "border-destructive/50 h-8 text-xs" : "h-8 text-xs"}
-              />
-            </div>
-            <div>
-              <label className="font-sans text-xs font-medium text-foreground mb-1 block">Road / Street</label>
-              <Input
-                type="text"
-                placeholder="Road / colony name"
-                {...register("road")}
-                className="h-8 text-xs"
-              />
-            </div>
-            <div>
-              <label className="font-sans text-xs font-medium text-foreground mb-1 block">House</label>
-              <Input
-                type="text"
-                placeholder="House / building"
-                {...register("house")}
-                className="h-8 text-xs"
-              />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField label="Receiver Name" htmlFor="receiverName" error={errors.receiverName} required={fulfillment === "delivery"}>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/60 pointer-events-none" />
+                <Input id="receiverName" type="text" placeholder="Full name" className="pl-9 h-9 text-xs" {...register("receiverName", { required: fulfillment === "delivery" })} />
+              </div>
+            </FormField>
+            <FormField label="Phone" htmlFor="receiverPhone" error={errors.receiverPhone} required={fulfillment === "delivery"}>
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/60 pointer-events-none" />
+                <Input id="receiverPhone" type="tel" placeholder="+880 1XXX XXXXXX" className="pl-9 h-9 text-xs" {...register("receiverPhone", { required: fulfillment === "delivery" })} />
+              </div>
+            </FormField>
+            <FormField label="Division" htmlFor="division" error={errors.division} required={!selectedAddressId}>
+              <div className="relative">
+                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/60 pointer-events-none" />
+                <Input id="division" type="text" placeholder="e.g. Dhaka" className="pl-9 h-9 text-xs" {...register("division", { required: !selectedAddressId })} />
+              </div>
+            </FormField>
+            <FormField label="District" htmlFor="district" error={errors.district} required={!selectedAddressId}>
+              <div className="relative">
+                <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/60 pointer-events-none" />
+                <Input id="district" type="text" placeholder="e.g. Dhaka" className="pl-9 h-9 text-xs" {...register("district", { required: !selectedAddressId })} />
+              </div>
+            </FormField>
+            <FormField label="Area / Thana" htmlFor="area" error={errors.area} required={!selectedAddressId}>
+              <div className="relative">
+                <MapPinned className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/60 pointer-events-none" />
+                <Input id="area" type="text" placeholder="e.g. Gulshan" className="pl-9 h-9 text-xs" {...register("area", { required: !selectedAddressId })} />
+              </div>
+            </FormField>
+            <FormField label="Road / Street" htmlFor="road">
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/60 pointer-events-none" />
+                <Input id="road" type="text" placeholder="Road / colony name" className="pl-9 h-9 text-xs" {...register("road")} />
+              </div>
+            </FormField>
+            <FormField label="House" htmlFor="house">
+              <div className="relative">
+                <Home className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/60 pointer-events-none" />
+                <Input id="house" type="text" placeholder="House / building" className="pl-9 h-9 text-xs" {...register("house")} />
+              </div>
+            </FormField>
+            <div className="flex items-end">
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                    <HelpCircle className="size-3" /> Fields marked with * are required
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>Required for delivery address</TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </div>

@@ -11,7 +11,12 @@ interface KitchenOrderCardProps {
   onMarkPacked?: (order: KitchenOrder) => void;
 }
 
-export function KitchenOrderCard({ order, onStartPrep, onMarkReady, onMarkPacked }: KitchenOrderCardProps) {
+export function KitchenOrderCard({
+  order,
+  onStartPrep,
+  onMarkReady,
+  onMarkPacked,
+}: KitchenOrderCardProps) {
   return (
     <div className="rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-5 shadow-[var(--shadow-card)]">
       <div className="flex items-start justify-between">
@@ -27,7 +32,9 @@ export function KitchenOrderCard({ order, onStartPrep, onMarkReady, onMarkPacked
       <div className="mt-4 space-y-2">
         {order.items.slice(0, 4).map((item) => (
           <div key={item.id} className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">{item.quantity}x {item.name}</span>
+            <span className="text-muted-foreground">
+              {item.quantity}x {item.name}
+            </span>
           </div>
         ))}
         {order.items.length > 4 && (

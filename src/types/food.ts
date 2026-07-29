@@ -45,7 +45,13 @@ export interface Food {
 
   addons: Addon[];
 
-  rating: Rating;
+  averageRating?: number;
+  totalReview?: number;
+  fiveStar?: number;
+  fourStar?: number;
+  threeStar?: number;
+  twoStar?: number;
+  oneStar?: number;
 
   labels: FoodLabel[];
 
@@ -68,11 +74,6 @@ export interface Variant {
   price: string;
   discountPrice: string | null;
   servingSize: string;
-}
-
-export interface Rating {
-  averageRating: number;
-  totalReview: number;
 }
 
 export interface FoodLabel {
@@ -113,7 +114,7 @@ export interface Addon {
 
 export interface Discount {
   id: string;
-  discountType: "PERCENTAGE" | "FIXED";
+  discountType: "PERCENTAGE" | "FLAT";
   discountValue: number;
   startDate?: string;
   endDate?: string;

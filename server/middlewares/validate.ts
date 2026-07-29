@@ -14,9 +14,7 @@ export const validate = (schema: any, source: "body" | "query" | "params" = "bod
     } catch (err: unknown) {
       if (err instanceof Error && "errors" in err) {
         const yupErr = err as { errors?: string[] };
-        const messages = yupErr.errors?.length
-          ? yupErr.errors.join(", ")
-          : err.message;
+        const messages = yupErr.errors?.length ? yupErr.errors.join(", ") : err.message;
         next(new AppError(400, messages));
       } else {
         next(new AppError(400, "Validation failed"));

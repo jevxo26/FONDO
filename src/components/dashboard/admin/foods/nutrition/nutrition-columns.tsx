@@ -9,9 +9,7 @@ export const nutritionColumns: ColumnDef<NutritionItem>[] = [
   {
     accessorKey: "foodName",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Food Item" />,
-    cell: ({ row }) => (
-      <span className="font-medium text-foreground">{row.original.foodName}</span>
-    ),
+    cell: ({ row }) => <span className="font-medium text-foreground">{row.original.foodName}</span>,
   },
   {
     accessorKey: "calories",

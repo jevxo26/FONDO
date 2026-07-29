@@ -1,53 +1,65 @@
-import { StatCard } from "@/components/dashboard/common/stat-card";
+"use client";
 
+import { useMemo } from "react";
+import { StatCard } from "@/components/dashboard/common/stat-card";
 import { RecentActivity } from "@/components/dashboard/admin/overview/recent-activity";
 import { RevenueChart } from "@/components/dashboard/admin/overview/revenue-chart";
-import { BarChart3, TrendingUp, Truck, Users, Wallet } from "lucide-react";
-
-const stats = [
-  {
-    label: "Total Revenue",
-    value: "৳428.5K",
-    trend: "up" as const,
-    trendValue: "+12.5%",
-    icon: Wallet,
-    variant: "default" as const,
-  },
-  {
-    label: "Orders Today",
-    value: "156",
-    trend: "up" as const,
-    trendValue: "+23.1%",
-    icon: TrendingUp,
-    variant: "success" as const,
-  },
-  {
-    label: "Active Customers",
-    value: "1,882",
-    trend: "up" as const,
-    trendValue: "+8.2%",
-    icon: Users,
-    variant: "default" as const,
-  },
-  {
-    label: "Pending Settlements",
-    value: "৳46.5K",
-    trend: "down" as const,
-    trendValue: "-2 vendors",
-    icon: BarChart3,
-    variant: "warning" as const,
-  },
-  {
-    label: "Active Riders",
-    value: "42",
-    trend: "up" as const,
-    trendValue: "+3",
-    icon: Truck,
-    variant: "success" as const,
-  },
-];
+import { BarChart3, TrendingUp, Truck, Users, Wallet, Loader2 } from "lucide-react";
+import { useGetOrdersQuery } from "@/store/api/slices/orders-api";
 
 export default function DashboardPage() {
+  const { data: apiOrders, isLoading } = useGetOrdersQuery();
+
+  const stats = useMemo(() => {
+    const totalOrders = apiOrders ? apiOrders.length : 156;
+    const pendingOrders = apiOrders
+      ? apiOrders.filter((o) => o.status === "PENDING" || o.status === "PREPARING").length
+      : 5;
+    
+    return [
+      {
+        label: "Total Revenue",
+        value: "৳428.5K",
+        trend: "up" as const,
+        trendValue: "+12.5%",
+        icon: Wallet,
+        variant: "default" as const,
+      },
+      {
+        label: "Total Orders",
+        value: totalOrders.toString(),
+        trend: "up" as const,
+        trendValue: "+23.1%",
+        icon: TrendingUp,
+        variant: "success" as const,
+      },
+      {
+        label: "Active Customers",
+        value: "1,882",
+        trend: "up" as const,
+        trendValue: "+8.2%",
+        icon: Users,
+        variant: "default" as const,
+      },
+      {
+        label: "Pending Orders",
+        value: pendingOrders.toString(),
+        trend: "down" as const,
+        trendValue: "In queue",
+        icon: BarChart3,
+        variant: "warning" as const,
+      },
+      {
+        label: "Active Riders",
+        value: "42",
+        trend: "up" as const,
+        trendValue: "+3",
+        icon: Truck,
+        variant: "success" as const,
+      },
+    ];
+  }, [apiOrders]);
+
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -71,21 +83,29 @@ export default function DashboardPage() {
       </div>
       <div className="mt-2 h-px w-24 bg-gradient-to-r from-primary/40 to-transparent" />
 
-      <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-        {stats.map((stat) => (
-          <StatCard key={stat.label} {...stat} />
-        ))}
-      </div>
-
-      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <RevenueChart />
+      {isLoading ? (
+        <div className="mt-12 flex justify-center">
+          <Loader2 className="size-8 animate-spin text-primary" />
         </div>
-        <div>
-          <RecentActivity />
-        </div>
-      </div>
+      ) : (
+        <>
+          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+            {stats.map((stat) => (
+              <StatCard key={stat.label} {...stat} />
+            ))}
+          </div>
 
+          <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <RevenueChart />
+            </div>
+            <div>
+              <RecentActivity />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
+

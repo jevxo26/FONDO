@@ -2,19 +2,22 @@ import React from "react";
 import { Layers } from "lucide-react";
 import type { FieldErrors } from "react-hook-form";
 import { UseFormRegister, UseFormSetValue } from "react-hook-form";
-import { CATEGORIES, inputStyles, PackageFormValues } from "@/lib/schema/package-schema";
+import { inputStyles, PackageFormValues } from "@/lib/schema/package-schema";
 import { FormField } from "@/components/common/form-field";
+import { PackageCategory } from "@prisma/client";
 
 export function GeneralInfoSection({
   register,
   errors,
   packageTypeWatched,
   setValue,
+  categories
 }: {
   register: UseFormRegister<PackageFormValues>;
   errors: FieldErrors<PackageFormValues>;
   packageTypeWatched: string;
   setValue: UseFormSetValue<PackageFormValues>;
+  categories?: PackageCategory[]
 }) {
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -22,7 +25,7 @@ export function GeneralInfoSection({
     setValue("slug", generatedSlug, { shouldValidate: true });
   };
 
-  
+
 
   return (
     <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-5">
@@ -55,7 +58,7 @@ export function GeneralInfoSection({
         <FormField label="Package Category" error={errors.packageCategoryId} required className="md:col-span-2">
           <select {...register("packageCategoryId")} className={inputStyles}>
             <option value="">Select Category...</option>
-            {CATEGORIES.map((cat) => (
+            {categories?.map((cat) => (
               <option key={cat.id} value={cat.id}>{cat.name}</option>
             ))}
           </select>

@@ -12,6 +12,7 @@ export const TAG_TYPES = [
   "AdminCustomer",
   "Wallet",
   "Coupon",
+  "Package",
 ] as const;
 
 export type TagType = (typeof TAG_TYPES)[number];

@@ -11,6 +11,7 @@ export function PriceSummarySidebar({
   packageTypeWatched,
   price,
   discountPrice,
+  discountPercent,
   customTypeNameWatched,
   durationWatched,
   totalMealsCount,
@@ -21,6 +22,7 @@ export function PriceSummarySidebar({
   packageTypeWatched: string;
   price: number;
   discountPrice: number;
+  discountPercent: number;
   customTypeNameWatched?: string;
   durationWatched?: number;
   totalMealsCount: number;
@@ -51,11 +53,15 @@ export function PriceSummarySidebar({
         </FormField>
 
         <FormField label="Standard Price (BDT)" error={errors.price} required>
-          <input type="number" {...register("price")} form="package-form" className={inputStyles} />
+          <input type="number" {...register("price")} form="package-form" className={`${inputStyles} bg-muted/50`} readOnly />
+        </FormField>
+
+        <FormField label="Discount (%)" error={errors.discountPercent} required>
+          <input type="number" {...register("discountPercent")} form="package-form" className={inputStyles} min={0} max={100} />
         </FormField>
 
         <FormField label="Discounted Price (BDT)" error={errors.discountPrice} required>
-          <input type="number" {...register("discountPrice")} form="package-form" className={inputStyles} />
+          <input type="number" {...register("discountPrice")} form="package-form" className={`${inputStyles} bg-muted/50`} readOnly />
         </FormField>
       </div>
 
@@ -80,6 +86,10 @@ export function PriceSummarySidebar({
           <span className="font-semibold text-foreground">
             {packageTypeWatched === "CUSTOM" ? customTypeNameWatched || "Custom Plan" : packageTypeWatched}
           </span>
+        </div>
+        <div className="flex justify-between">
+          <span>Discount:</span>
+          <span className="font-semibold text-foreground">{discountPercent}%</span>
         </div>
         <div className="flex justify-between">
           <span>Total Duration:</span>

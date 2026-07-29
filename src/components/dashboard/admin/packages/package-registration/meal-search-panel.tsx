@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Input } from "@/components/ui/input";
@@ -13,13 +12,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Search } from "lucide-react";
+import type { VendorFood } from "@/types/vendor";
 
 interface MealSearchPanelProps {
   searchQuery: string;
   onSearchChange: (q: string) => void;
-
-  filteredFoods: any[];
-  onSelectFood: (food: any) => void;
+  filteredFoods: VendorFood[];
+  onSelectFood: (food: VendorFood) => void;
   selectedMealType: string;
   onMealTypeChange: (type: string) => void;
 }
@@ -87,7 +86,7 @@ export function MealSearchPanel({
 
       {searchQuery && filteredFoods.length > 0 && (
         <div className="border rounded-lg max-h-48 overflow-y-auto">
-          {filteredFoods.slice(0, 5).map((food) => (
+          {filteredFoods.slice(0, 5).map((food: VendorFood) => (
             <div
               key={food.id}
               className="flex items-center justify-between p-2 hover:bg-muted/50 cursor-pointer border-b last:border-0"

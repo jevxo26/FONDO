@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// src/components/dashboard/admin/packages/package-form-sections/benefits-section.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -16,10 +14,11 @@ import {
 import { Card } from "@/components/ui/card";
 import { Plus, Trash2 } from "lucide-react";
 import { benefitIcons } from "@/data/admin-packages";
+import type { PackageFormData, PackageBenefit } from "@/lib/schema/package-schema";
 
 interface BenefitsSectionProps {
-  data: any;
-  onChange: (field: string, value: any) => void;
+  data: PackageFormData;
+  onChange: (field: string, value: unknown) => void;
 }
 
 export function BenefitsSection({ data, onChange }: BenefitsSectionProps) {
@@ -35,7 +34,7 @@ export function BenefitsSection({ data, onChange }: BenefitsSectionProps) {
   const removeBenefit = (index: number) => {
     onChange(
       "benefits",
-      benefits.filter((_: any, i: number) => i !== index),
+      benefits.filter((_: unknown, i: number) => i !== index),
     );
   };
 
@@ -55,7 +54,7 @@ export function BenefitsSection({ data, onChange }: BenefitsSectionProps) {
         </Button>
       </div>
 
-      {benefits.map((benefit: any, index: number) => (
+      {benefits.map((benefit: PackageBenefit, index: number) => (
         <Card key={benefit.id || index} className="p-4 relative">
           <Button
             type="button"
@@ -72,7 +71,9 @@ export function BenefitsSection({ data, onChange }: BenefitsSectionProps) {
               <Label>Icon</Label>
               <Select
                 value={benefit.icon || ""}
-                onValueChange={(value) => updateBenefit(index, "icon", value)}
+                onValueChange={(value) => {
+                  if (value) updateBenefit(index, "icon", value);
+                }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select icon" />

@@ -1,12 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import type { PackageRules } from "@/lib/schema/package-schema";
 
 interface RulesToggleSwitchesProps {
-  rules: any;
-  onUpdate: (field: string, value: any) => void;
+  rules: PackageRules;
+  onUpdate: (field: string, value: unknown) => void;
 }
 
 export function RulesToggleSwitches({ rules, onUpdate }: RulesToggleSwitchesProps) {

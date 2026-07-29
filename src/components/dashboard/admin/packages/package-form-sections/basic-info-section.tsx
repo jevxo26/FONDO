@@ -14,12 +14,11 @@ import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { packageCategories, packageTags } from "@/data/admin-packages";
 import { useState } from "react";
+import type { PackageFormData } from "@/lib/schema/package-schema";
 
 interface BasicInfoSectionProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onChange: (field: string, value: any) => void;
+  data: PackageFormData;
+  onChange: (field: string, value: unknown) => void;
 }
 
 export function BasicInfoSection({ data, onChange }: BasicInfoSectionProps) {

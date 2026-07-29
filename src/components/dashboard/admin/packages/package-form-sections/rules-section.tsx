@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// src/components/dashboard/admin/packages/package-form-sections/rules-section.tsx
 "use client";
 
 import { Input } from "@/components/ui/input";
@@ -7,16 +5,17 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { daysOfWeek } from "@/data/admin-packages";
+import type { PackageFormData } from "@/lib/schema/package-schema";
 
 interface RulesSectionProps {
-  data: any;
-  onChange: (field: string, value: any) => void;
+  data: PackageFormData;
+  onChange: (field: string, value: unknown) => void;
 }
 
 export function RulesSection({ data, onChange }: RulesSectionProps) {
   const rules = data.rules || {};
 
-  const updateRules = (field: string, value: any) => {
+  const updateRules = (field: string, value: unknown) => {
     onChange("rules", { ...rules, [field]: value });
   };
 

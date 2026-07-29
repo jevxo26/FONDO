@@ -1,18 +1,18 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { PackageFormData } from "@/lib/schema/package-schema";
 
 interface NutritionSectionProps {
-  data: any;
-  onChange: (field: string, value: any) => void;
+  data: PackageFormData;
+  onChange: (field: string, value: unknown) => void;
 }
 
 export function NutritionSection({ data, onChange }: NutritionSectionProps) {
   const nutrition = data.nutrition || {};
 
-  const updateNutrition = (field: string, value: any) => {
+  const updateNutrition = (field: string, value: unknown) => {
     onChange("nutrition", { ...nutrition, [field]: value });
   };
 
@@ -34,7 +34,7 @@ export function NutritionSection({ data, onChange }: NutritionSectionProps) {
             <Label>{field.label}</Label>
             <Input
               type="number"
-              value={nutrition[field.key] || ""}
+              value={String((nutrition as unknown as Record<string, unknown>)[field.key] ?? "")}
               onChange={(e) => updateNutrition(field.key, parseFloat(e.target.value))}
               placeholder={field.placeholder}
             />

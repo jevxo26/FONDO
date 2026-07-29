@@ -1,12 +1,12 @@
+import type { UseFormRegister, FieldErrors } from "react-hook-form";
+import type { CheckoutFormData } from "@/types/checkout-type";
 import { FormField } from "@/components/common/form-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 interface Props {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  register: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  errors: any;
+  register: UseFormRegister<CheckoutFormData>;
+  errors: FieldErrors<CheckoutFormData>;
   fulfillment: string;
 }
 

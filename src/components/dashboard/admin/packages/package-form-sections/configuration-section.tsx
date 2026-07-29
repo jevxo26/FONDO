@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Input } from "@/components/ui/input";
@@ -12,10 +11,11 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { packageTypes } from "@/data/admin-packages";
+import type { PackageFormData } from "@/lib/schema/package-schema";
 
 interface ConfigurationSectionProps {
-  data: any;
-  onChange: (field: string, value: any) => void;
+  data: PackageFormData;
+  onChange: (field: string, value: unknown) => void;
 }
 
 export function ConfigurationSection({ data, onChange }: ConfigurationSectionProps) {

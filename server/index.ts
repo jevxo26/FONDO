@@ -39,7 +39,12 @@ app
     // Logging
     server.use(
       morgan("[:date[iso]] :method :url :status :response-time ms - :res[content-length]", {
-        skip: (req) => req.url.startsWith("/_next/") || req.url.includes("favicon.ico"),
+        skip: (req) =>
+          req.url.startsWith("/_next/") ||
+          req.url.includes("favicon.ico") ||
+          req.url.startsWith("/__nextjs") ||
+          req.url.startsWith("/.well-known") ||
+          req.url === "/sw.js",
       }),
     );
 

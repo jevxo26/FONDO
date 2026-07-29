@@ -13,7 +13,7 @@ export default function VendorOverviewPage() {
   const totalFoods = apiFoods?.items ? apiFoods.items.length : 47;
   const totalOrders = apiOrders ? apiOrders.length : 23;
   const pendingOrders = apiOrders
-    ? apiOrders.filter((o) => o.status === "PENDING" || o.status === "PREPARING").length
+    ? apiOrders.filter((o) => o.orderStatus === "PENDING" || o.orderStatus === "PREPARING").length
     : 5;
 
   const isLoading = ordersLoading || foodsLoading;

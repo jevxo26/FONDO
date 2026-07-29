@@ -1,11 +1,19 @@
 import React, { useState } from "react";
+import type { FieldErrors } from "react-hook-form";
 import { Control, useFieldArray, UseFormRegister } from "react-hook-form";
 import { Plus, Trash2, Calendar, ChevronDown, ChevronUp, Utensils } from "lucide-react";
 import { inputStyles, PackageFormValues, PRESET_FOODS } from "@/lib/schema/package-schema";
 import { FormField } from "@/components/common/form-field";
 
+interface MealFoodsBuilderProps {
+  dayIndex: number;
+  mealIndex: number;
+  control: Control<PackageFormValues>;
+  register: UseFormRegister<PackageFormValues>;
+  errors: FieldErrors<PackageFormValues>;
+}
 
-function MealFoodsBuilder({ dayIndex, mealIndex, control, register, errors }: any) {
+function MealFoodsBuilder({ dayIndex, mealIndex, control, register, errors }: MealFoodsBuilderProps) {
   const { fields, append, remove } = useFieldArray({
     control,
     name: `days.${dayIndex}.meals.${mealIndex}.foods` as const,
@@ -58,7 +66,14 @@ function MealFoodsBuilder({ dayIndex, mealIndex, control, register, errors }: an
   );
 }
 
-function DayMealsBuilder({ dayIndex, control, register, errors }: any) {
+interface DayMealsBuilderProps {
+  dayIndex: number;
+  control: Control<PackageFormValues>;
+  register: UseFormRegister<PackageFormValues>;
+  errors: FieldErrors<PackageFormValues>;
+}
+
+function DayMealsBuilder({ dayIndex, control, register, errors }: DayMealsBuilderProps) {
   const { fields, append, remove } = useFieldArray({ control, name: `days.${dayIndex}.meals` as const });
 
   return (
@@ -117,8 +132,8 @@ function DayMealsBuilder({ dayIndex, control, register, errors }: any) {
 export function DaysScheduleSection({ control, register, errors, daysWatched }: {
   control: Control<PackageFormValues>;
   register: UseFormRegister<PackageFormValues>;
-  errors: any;
-  daysWatched: any[];
+  errors: FieldErrors<PackageFormValues>;
+  daysWatched: NonNullable<PackageFormValues["days"]>;
 }) {
   const [expandedDay, setExpandedDay] = useState<number | null>(0);
   const { fields, append, remove } = useFieldArray({ control, name: "days" });

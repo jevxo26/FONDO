@@ -1,5 +1,6 @@
 "use client";
 
+import type { Resolver } from "react-hook-form";
 import {
   CATEGORIES,
   initialDummyData,
@@ -26,7 +27,7 @@ export default function AddPackageForm() {
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<PackageFormValues>({
-    resolver: yupResolver(packageSchema) as any,
+    resolver: yupResolver(packageSchema) as Resolver<PackageFormValues>,
     defaultValues: initialDummyData,
   });
 

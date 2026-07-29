@@ -11,12 +11,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import type { PackageFormData } from "@/lib/schema/package-schema";
 
 interface BasicInfoStepProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onChange: (field: string, value: any) => void;
+  data: PackageFormData;
+  onChange: (field: string, value: unknown) => void;
 }
 
 export function BasicInfoStep({ data, onChange }: BasicInfoStepProps) {
@@ -70,7 +69,7 @@ export function BasicInfoStep({ data, onChange }: BasicInfoStepProps) {
         packageCode={data.packageCode || defaultCode}
         category={data.category || ""}
         onFieldChange={(field, value) => {
-          if (field === "name") handleNameChange(value);
+          if (field === "name") handleNameChange(value as string);
           else onChange(field, value);
         }}
       />

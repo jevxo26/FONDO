@@ -1,9 +1,75 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { PrismaClient } from "@prisma/client";
+import { Prisma, MealType } from "@prisma/client";
+import prisma from "../lib/prisma";
 
-const prisma = new PrismaClient();
+interface PackageQuery {
+  categoryId?: string;
+  packageType?: string;
+  search?: string;
+}
 
-const getAllPackages = async (query: any) => {
+interface FoodInput {
+  foodId: string;
+  quantity: number;
+}
+
+interface MealInput {
+  mealType: MealType;
+  mealTime: string;
+  foods: FoodInput[];
+}
+
+interface DayInput {
+  dayNumber: number;
+  title?: string | null;
+  description?: string | null;
+  meals: MealInput[];
+}
+
+interface VendorPackageInput {
+  packageCode: string;
+  name: string;
+  slug: string;
+  description: string;
+  thumbnail: string;
+  coverImage: string;
+  packageType: string;
+  durationDays: number;
+  totalMeals: number;
+  price: number;
+  discountPrice?: number;
+  currency: string;
+  isCustomizable: boolean;
+  status: string;
+  packageCategoryId: string;
+  days: DayInput[];
+}
+
+interface CustomMealFoodInput {
+  foodId: string;
+  quantity?: number;
+  isExtra?: boolean;
+}
+
+interface CustomMealInput {
+  mealType: MealType;
+  mealTime?: string | null;
+  foods: CustomMealFoodInput[];
+}
+
+interface CustomMealDayInput {
+  dayNumber: number;
+  meals: CustomMealInput[];
+}
+
+interface CustomMealRequestInput {
+  packageId?: string;
+  name: string;
+  totalDays: number;
+  totalPrice: number;
+  days: CustomMealDayInput[];
+}
+
+const getAllPackages = async (query: PackageQuery) => {
   const { categoryId, packageType, search } = query;
   return await prisma.package.findMany({
     where: {
@@ -34,7 +100,6 @@ const getAllPackages = async (query: any) => {
   });
 };
 
-// Package details with all related information.
 const getPackageById = async (id: string) => {
   return await prisma.package.findUnique({
     where: { id },
@@ -62,7 +127,7 @@ const getPackageById = async (id: string) => {
   });
 };
 
-const createVendorPackage = async (vendorId: string, data: any) => {
+const createVendorPackage = async (vendorId: string, data: VendorPackageInput) => {
   return await prisma.package.create({
     data: {
       packageCode: data.packageCode,
@@ -87,18 +152,18 @@ const createVendorPackage = async (vendorId: string, data: any) => {
       },
 
       days: {
-        create: data.days.map((day: any) => ({
+        create: data.days.map((day: DayInput) => ({
           dayNumber: day.dayNumber,
           title: day.title,
           description: day.description,
 
           meals: {
-            create: day.meals.map((meal: any) => ({
+            create: day.meals.map((meal: MealInput) => ({
               mealType: meal.mealType,
               mealTime: meal.mealTime,
 
               foods: {
-                create: meal.foods.map((food: any) => ({
+                create: meal.foods.map((food: FoodInput) => ({
                   foodId: food.foodId,
                   quantity: food.quantity,
                 })),
@@ -111,7 +176,7 @@ const createVendorPackage = async (vendorId: string, data: any) => {
   });
 };
 
-const createCustomMealRequest = async (customerId: string, data: any) => {
+const createCustomMealRequest = async (customerId: string, data: CustomMealRequestInput) => {
   const { packageId, name, totalDays, totalPrice, days } = data;
 
   return await prisma.customMealPlan.create({
@@ -124,14 +189,14 @@ const createCustomMealRequest = async (customerId: string, data: any) => {
       vendorApprovalStatus: "pending",
       paymentStatus: "pending",
       days: {
-        create: days.map((day: any) => ({
+        create: days.map((day: CustomMealDayInput) => ({
           dayNumber: day.dayNumber,
           meals: {
-            create: day.meals.map((meal: any) => ({
+            create: day.meals.map((meal: CustomMealInput) => ({
               mealType: meal.mealType,
               mealTime: meal.mealTime,
               foods: {
-                create: meal.foods.map((food: any) => ({
+                create: meal.foods.map((food: CustomMealFoodInput) => ({
                   foodId: food.foodId,
                   quantity: food.quantity || 1,
                   isExtra: food.isExtra || false,
@@ -180,7 +245,6 @@ const vendorAcceptCustomRequest = async (planId: string, vendorId: string) => {
     },
   });
 
-  // TO REVIEW
   await prisma.notification.create({
     data: {
       userId: plan.customerId,
@@ -193,7 +257,6 @@ const vendorAcceptCustomRequest = async (planId: string, vendorId: string) => {
   return updatedPlan;
 };
 
-// Order confirm after confirm
 const confirmCustomOrderPayment = async (planId: string) => {
   const plan = await prisma.customMealPlan.findUnique({ where: { id: planId } });
 
@@ -210,8 +273,7 @@ const confirmCustomOrderPayment = async (planId: string) => {
   });
 };
 
-// admin or vendor
-const createPackageCategory = async (data: any) => {
+const createPackageCategory = async (data: Prisma.PackageCategoryCreateInput) => {
   return await prisma.packageCategory.create({
     data,
   });

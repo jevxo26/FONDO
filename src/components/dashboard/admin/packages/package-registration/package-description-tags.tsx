@@ -17,8 +17,7 @@ interface PackageDescriptionTagsProps {
   description: string;
   tags: string[];
   selectedTag: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onFieldChange: (field: string, value: any) => void;
+  onFieldChange: (field: string, value: unknown) => void;
   onAddTag: (value: string | null) => void;
   onRemoveTag: (tag: string) => void;
 }

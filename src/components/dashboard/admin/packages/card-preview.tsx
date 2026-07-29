@@ -1,5 +1,21 @@
 import React from "react";
 import { Sparkles, Tag, Clock, Utensils } from "lucide-react";
+import type { PackageFormValues } from "@/lib/schema/package-schema";
+
+interface CardPreviewProps {
+  thumbnailWatched?: string;
+  nameWatched?: string;
+  packageTypeWatched?: string;
+  customTypeNameWatched?: string;
+  isCustomizableWatched?: boolean;
+  selectedCategoryName?: string;
+  descriptionWatched?: string;
+  durationWatched?: number;
+  totalMealsCount: number;
+  price: number;
+  discountPrice: number;
+  daysWatched: NonNullable<PackageFormValues["days"]>;
+}
 
 export function CardPreview({
   thumbnailWatched,
@@ -14,7 +30,7 @@ export function CardPreview({
   price,
   discountPrice,
   daysWatched,
-}: any) {
+}: CardPreviewProps) {
   return (
     <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-6">
       <div className="border-b border-border pb-3 flex items-center justify-between">
@@ -29,6 +45,7 @@ export function CardPreview({
         <div className="md:col-span-1 bg-background border border-border rounded-2xl overflow-hidden shadow-md flex flex-col justify-between">
           <div>
             <div className="relative h-48 w-full bg-muted overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={thumbnailWatched || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&auto=format&fit=crop&q=80"}
                 alt={nameWatched || "Package"}
@@ -71,24 +88,24 @@ export function CardPreview({
           </h3>
 
           <div className="space-y-3 max-h-[320px] overflow-y-auto pr-2">
-            {daysWatched.map((day: any, idx: number) => (
+            {daysWatched?.map((day, idx) => (
               <div key={idx} className="bg-muted/30 p-3 rounded-xl border border-border/60 space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-foreground">{day.title || `Day ${idx + 1}`}</span>
-                  <span className="text-[10px] text-muted-foreground bg-background px-2 py-0.5 rounded border border-border">{day.meals?.length || 0} Meals</span>
+                  <span className="text-xs font-bold text-foreground">{day?.title || `Day ${idx + 1}`}</span>
+                  <span className="text-[10px] text-muted-foreground bg-background px-2 py-0.5 rounded border border-border">{day?.meals?.length || 0} Meals</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                  {day.meals?.map((meal: any, mIdx: number) => (
+                  {day?.meals?.map((meal, mIdx) => (
                     <div key={mIdx} className="bg-card p-2.5 rounded-lg border border-border/80 text-xs">
                       <div className="flex justify-between items-center text-primary font-semibold mb-1 text-[11px]">
-                        <span>{meal.mealType}</span>
-                        <span className="text-muted-foreground text-[10px]">{meal.mealTime}</span>
+                        <span>{meal?.mealType}</span>
+                        <span className="text-muted-foreground text-[10px]">{meal?.mealTime}</span>
                       </div>
                       <ul className="space-y-1 text-muted-foreground text-[11px]">
-                        {meal.foods?.map((food: any, fIdx: number) => (
+                        {meal?.foods?.map((food, fIdx) => (
                           <li key={fIdx} className="flex items-center justify-between">
-                            <span className="line-clamp-1">{food.name || "Unnamed"}</span>
-                            <span className="font-medium text-foreground ml-2">x{food.quantity}</span>
+                            <span className="line-clamp-1">{food?.name || "Unnamed"}</span>
+                            <span className="font-medium text-foreground ml-2">x{food?.quantity}</span>
                           </li>
                         ))}
                       </ul>

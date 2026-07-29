@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// src/components/dashboard/admin/packages/package-registration-form.tsx
 "use client";
 
 import { useState } from "react";
@@ -8,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight, Save, X } from "lucide-react";
 import { toast } from "sonner";
+import type { PackageFormData } from "@/lib/schema/package-schema";
 
 // ✅ Import from package-registration folder (newly created)
 import { BasicInfoStep } from "./package-registration/basic-info-step";
@@ -20,7 +19,7 @@ import { MediaStep } from "./package-registration/media-step";
 
 // ReviewStep - inline component
 
-const ReviewStep = ({ data }: { data: any }) => {
+const ReviewStep = ({ data }: { data: PackageFormData }) => {
   return (
     <div className="space-y-6">
       <h3 className="font-fraunces text-lg font-semibold">Review Package</h3>
@@ -72,7 +71,7 @@ const ReviewStep = ({ data }: { data: any }) => {
 };
 
 interface PackageRegistrationFormProps {
-  initialData?: any;
+  initialData?: Partial<PackageFormData>;
   isEdit?: boolean;
 }
 
@@ -87,6 +86,53 @@ const STEPS = [
   { id: 8, label: "Review" },
 ];
 
+const INITIAL_FORM_DATA: PackageFormData = {
+  name: "",
+  slug: "",
+  packageCode: "",
+  description: "",
+  category: "",
+  tags: [],
+  status: "DRAFT",
+  price: 0,
+  discountPrice: "",
+  currency: "BDT",
+  vat: 0,
+  deliveryCharge: 0,
+  packageType: "",
+  durationDays: "",
+  totalMeals: "",
+  isCustomizable: true,
+  thumbnail: "",
+  coverImage: "",
+  gallery: [],
+  benefits: [],
+  nutrition: {
+    dailyCalories: "",
+    dailyProtein: "",
+    dailyCarbohydrate: "",
+    dailyFat: "",
+    dailyFiber: "",
+    dailySugar: "",
+    dailySodium: "",
+  },
+  rules: {
+    minimumOrderDays: "",
+    maximumOrderDays: "",
+    minimumMealsPerDay: "",
+    maximumMealsPerDay: "",
+    advancePaymentRequired: false,
+    allowPause: false,
+    allowResume: false,
+    allowSkipMeal: false,
+    allowCancellation: false,
+    deliveryDays: [],
+    deliveryTimeStart: "",
+    deliveryTimeEnd: "",
+    mealCutoffTime: "",
+  },
+};
+
 export function PackageRegistrationForm({
   initialData,
   isEdit = false,
@@ -95,56 +141,13 @@ export function PackageRegistrationForm({
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
 
-  const [formData, setFormData] = useState<any>({
-    name: "",
-    slug: "",
-    packageCode: "",
-    description: "",
-    category: "",
-    tags: [],
-    status: "DRAFT",
-    price: 0,
-    discountPrice: "",
-    currency: "BDT",
-    vat: 0,
-    deliveryCharge: 0,
-    packageType: "",
-    durationDays: "",
-    totalMeals: "",
-    isCustomizable: true,
-    thumbnail: "",
-    coverImage: "",
-    gallery: [],
-    benefits: [],
-    nutrition: {
-      dailyCalories: "",
-      dailyProtein: "",
-      dailyCarbohydrate: "",
-      dailyFat: "",
-      dailyFiber: "",
-      dailySugar: "",
-      dailySodium: "",
-    },
-    rules: {
-      minimumOrderDays: "",
-      maximumOrderDays: "",
-      minimumMealsPerDay: "",
-      maximumMealsPerDay: "",
-      advancePaymentRequired: false,
-      allowPause: false,
-      allowResume: false,
-      allowSkipMeal: false,
-      allowCancellation: false,
-      deliveryDays: [],
-      deliveryTimeStart: "",
-      deliveryTimeEnd: "",
-      mealCutoffTime: "",
-    },
+  const [formData, setFormData] = useState<PackageFormData>({
+    ...INITIAL_FORM_DATA,
     ...initialData,
   });
 
-  const updateField = (field: string, value: any) => {
-    setFormData((prev: any) => ({ ...prev, [field]: value }));
+  const updateField = (field: string, value: unknown) => {
+    setFormData((prev: PackageFormData) => ({ ...prev, [field]: value as never }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

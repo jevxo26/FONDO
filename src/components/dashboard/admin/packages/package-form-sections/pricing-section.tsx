@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Input } from "@/components/ui/input";
@@ -11,10 +10,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { currencies } from "@/data/admin-packages";
+import type { PackageFormData } from "@/lib/schema/package-schema";
 
 interface PricingSectionProps {
-  data: any;
-  onChange: (field: string, value: any) => void;
+  data: PackageFormData;
+  onChange: (field: string, value: unknown) => void;
 }
 
 export function PricingSection({ data, onChange }: PricingSectionProps) {

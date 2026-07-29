@@ -1,12 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { PackageRules } from "@/lib/schema/package-schema";
 
 interface RulesOrderLimitsProps {
-  rules: any;
-  onUpdate: (field: string, value: any) => void;
+  rules: PackageRules;
+  onUpdate: (field: string, value: unknown) => void;
 }
 
 export function RulesOrderLimits({ rules, onUpdate }: RulesOrderLimitsProps) {

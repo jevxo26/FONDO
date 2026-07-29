@@ -1,6 +1,5 @@
 import { Prisma, Role, VerificationStatus } from "@prisma/client";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from "../lib/prisma";
 import { encryptPassword } from "../utils/bcryptService";
 import AppError from "../utils/AppError";
@@ -213,7 +212,7 @@ const getSettlements = catchServiceAsync(async (vendorCode: string) => {
   return prisma.vendorSettlement.findMany({ where: { vendorId }, orderBy: { createdAt: "desc" } });
 });
 
-const createSettlementInvoice = catchServiceAsync(async (vendorCode: string, data: any) => {
+const createSettlementInvoice = catchServiceAsync(async (vendorCode: string, data: { grossAmount: number; totalCommission: number; totalPayable: number }) => {
   const vendorId = await getInternalIdByCode(vendorCode);
   const sNum = `SETL-${Date.now()}`;
   return prisma.vendorSettlement.create({

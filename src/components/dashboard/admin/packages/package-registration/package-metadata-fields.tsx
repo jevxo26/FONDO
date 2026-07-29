@@ -15,8 +15,7 @@ interface PackageMetadataFieldsProps {
   packageType: string;
   durationDays: number;
   totalMeals: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onFieldChange: (field: string, value: any) => void;
+  onFieldChange: (field: string, value: unknown) => void;
 }
 
 export function PackageMetadataFields({

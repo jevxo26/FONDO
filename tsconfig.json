@@ -22,6 +22,7 @@
         "name": "next"
       }
     ],
+    "types": ["node"],
     "paths": {
       "@/*": [
         "./src/*"
@@ -37,8 +38,5 @@
     "**/*.mts",
     "app/dashboard/components/txt"
   ],
-  "exclude": [
-    "node_modules",
-    "server"
-  ]
+  "exclude": ["node_modules"]
 }

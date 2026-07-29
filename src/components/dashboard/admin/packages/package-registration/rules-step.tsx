@@ -1,19 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { RulesOrderLimits } from "./rules-order-limits";
 import { RulesToggleSwitches } from "./rules-toggle-switches";
 import { RulesDeliverySchedule } from "./rules-delivery-schedule";
+import type { PackageFormData } from "@/lib/schema/package-schema";
 
 interface RulesStepProps {
-  data: any;
-  onChange: (field: string, value: any) => void;
+  data: PackageFormData;
+  onChange: (field: string, value: unknown) => void;
 }
 
 export function RulesStep({ data, onChange }: RulesStepProps) {
   const rules = data.rules || {};
 
-  const updateRules = (field: string, value: any) => {
+  const updateRules = (field: string, value: unknown) => {
     onChange("rules", { ...rules, [field]: value });
   };
 

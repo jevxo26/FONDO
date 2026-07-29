@@ -13,7 +13,7 @@ export default function DashboardPage() {
   const stats = useMemo(() => {
     const totalOrders = apiOrders ? apiOrders.length : 156;
     const pendingOrders = apiOrders
-      ? apiOrders.filter((o) => o.status === "PENDING" || o.status === "PREPARING").length
+      ? apiOrders.filter((o) => o.orderStatus === "PENDING" || o.orderStatus === "PREPARING").length
       : 5;
 
     return [

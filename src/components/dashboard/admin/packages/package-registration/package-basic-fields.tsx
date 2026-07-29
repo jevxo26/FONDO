@@ -16,8 +16,7 @@ interface PackageBasicFieldsProps {
   slug: string;
   packageCode: string;
   category: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onFieldChange: (field: string, value: any) => void;
+  onFieldChange: (field: string, value: unknown) => void;
 }
 
 export function PackageBasicFields({

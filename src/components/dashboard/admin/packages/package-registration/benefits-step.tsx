@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// src/components/dashboard/admin/packages/package-registration/benefits-step.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -16,10 +14,11 @@ import {
 import { Card } from "@/components/ui/card";
 import { Plus, Trash2 } from "lucide-react";
 import { mockBenefitIcons } from "@/data/package-registration-data";
+import type { PackageFormData, PackageBenefit } from "@/lib/schema/package-schema";
 
 interface BenefitsStepProps {
-  data: any;
-  onChange: (field: string, value: any) => void;
+  data: PackageFormData;
+  onChange: (field: string, value: unknown) => void;
 }
 
 export function BenefitsStep({ data, onChange }: BenefitsStepProps) {
@@ -35,7 +34,7 @@ export function BenefitsStep({ data, onChange }: BenefitsStepProps) {
   const removeBenefit = (index: number) => {
     onChange(
       "benefits",
-      benefits.filter((_: any, i: number) => i !== index),
+      benefits.filter((_: unknown, i: number) => i !== index),
     );
   };
 
@@ -58,7 +57,7 @@ export function BenefitsStep({ data, onChange }: BenefitsStepProps) {
         </Button>
       </div>
 
-      {benefits.map((benefit: any, index: number) => (
+      {benefits.map((benefit: PackageBenefit, index: number) => (
         <Card key={benefit.id || index} className="p-4 relative">
           <Button
             type="button"

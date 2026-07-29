@@ -21,24 +21,28 @@ export default function KitchenQueuePage() {
       return apiOrders.map((o) => ({
         id: o.id,
         orderNumber: o.orderNumber,
-        customerName: o.deliveryAddress?.receiverName || "Customer",
-        customerPhone: o.deliveryAddress?.receiverPhone || "",
-        deliveryAddress: `${o.deliveryAddress?.area || ""}, ${o.deliveryAddress?.district || ""}`,
+        customerName: `${o.customer.firstName} ${o.customer.lastName}`,
+        customerPhone: o.customer.phone,
+        deliveryAddress: `${o.customer.firstName} ${o.customer.lastName}`,
         deliveryTime: "ASAP",
-        mealType: "Lunch",
+        mealType: "LUNCH" as const,
         status:
-          o.status === "PREPARING"
+          o.orderStatus === "PREPARING"
             ? "PREPARING"
-            : o.status === "READY_FOR_PICKUP"
+            : o.orderStatus === "READY_FOR_PICKUP"
               ? "READY"
               : "QUEUED",
         items: o.items.map((i) => ({
+          id: i.id,
           name: i.food?.name || "Dish Item",
           quantity: i.quantity,
-          variant: i.variant?.name,
-          addons: [],
+          status: "QUEUED",
         })),
-        createdAt: o.createdAt,
+        priority: 0,
+        notes: null,
+        placedAt: o.placedAt,
+        estimatedReadyAt: "",
+        createdAt: o.placedAt,
       }));
     }
     return fallbackKitchenOrders;
@@ -116,7 +120,7 @@ export default function KitchenQueuePage() {
                     key={order.id}
                     order={order}
                     onMarkReady={(o) => {
-                      updateStatus(o.id, "READY");
+                      handleStatusChange(o.id, "READY", o.orderNumber);
                       toast.success(`${o.orderNumber} marked ready`);
                     }}
                   />

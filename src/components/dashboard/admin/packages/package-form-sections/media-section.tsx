@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// src/components/dashboard/admin/packages/package-form-sections/media-section.tsx
 "use client";
 
 import { Input } from "@/components/ui/input";
@@ -7,10 +5,11 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
+import type { PackageFormData } from "@/lib/schema/package-schema";
 
 interface MediaSectionProps {
-  data: any;
-  onChange: (field: string, value: any) => void;
+  data: PackageFormData;
+  onChange: (field: string, value: unknown) => void;
 }
 
 export function MediaSection({ data, onChange }: MediaSectionProps) {
@@ -23,7 +22,7 @@ export function MediaSection({ data, onChange }: MediaSectionProps) {
   const removeGalleryImage = (index: number) => {
     onChange(
       "gallery",
-      gallery.filter((_: any, i: number) => i !== index),
+      gallery.filter((_: unknown, i: number) => i !== index),
     );
   };
 

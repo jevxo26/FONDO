@@ -1,14 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { mockDaysOfWeek } from "@/data/package-registration-data";
+import type { PackageRules } from "@/lib/schema/package-schema";
 
 interface RulesDeliveryScheduleProps {
-  rules: any;
-  onUpdate: (field: string, value: any) => void;
+  rules: PackageRules;
+  onUpdate: (field: string, value: unknown) => void;
 }
 
 export function RulesDeliverySchedule({ rules, onUpdate }: RulesDeliveryScheduleProps) {

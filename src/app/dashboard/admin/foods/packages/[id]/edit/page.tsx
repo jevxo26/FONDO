@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/dashboard/common/page-header";
 import { PackageRegistrationForm } from "@/components/dashboard/admin/packages/package-registration-form";
 import { Package } from "lucide-react";
 import { foodPackages } from "@/data/packages";
+import type { PackageFormData } from "@/lib/schema/package-schema";
 
 interface EditPackagePageProps {
   params: {
@@ -21,7 +22,7 @@ export default function EditPackagePage({ params }: EditPackagePageProps) {
   return (
     <div className="space-y-8">
       <PageHeader title="Edit Package" description={`Editing "${pkg.name}"`} icon={Package} />
-      <PackageRegistrationForm initialData={pkg} isEdit />
+      <PackageRegistrationForm initialData={pkg as unknown as Partial<PackageFormData>} isEdit />
     </div>
   );
 }

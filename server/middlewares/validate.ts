@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
+import type { Schema } from "yup";
 import AppError from "../utils/AppError";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const validate = (schema: any, source: "body" | "query" | "params" = "body") => {
+export const validate = (schema: Schema, source: "body" | "query" | "params" = "body") => {
   return async (req: Request, _res: Response, next: NextFunction) => {
     try {
       const validated = await schema.validate(req[source], {

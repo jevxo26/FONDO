@@ -1,6 +1,6 @@
-
 import React from "react";
 import { Layers } from "lucide-react";
+import type { FieldErrors } from "react-hook-form";
 import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { CATEGORIES, inputStyles, PackageFormValues } from "@/lib/schema/package-schema";
 import { FormField } from "@/components/common/form-field";
@@ -12,7 +12,7 @@ export function GeneralInfoSection({
   setValue,
 }: {
   register: UseFormRegister<PackageFormValues>;
-  errors: any;
+  errors: FieldErrors<PackageFormValues>;
   packageTypeWatched: string;
   setValue: UseFormSetValue<PackageFormValues>;
 }) {

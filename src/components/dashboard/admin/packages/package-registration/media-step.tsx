@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// src/components/dashboard/admin/packages/package-registration/media-step.tsx
 "use client";
 
 import { Input } from "@/components/ui/input";
@@ -7,10 +5,11 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
+import type { PackageFormData } from "@/lib/schema/package-schema";
 
 interface MediaStepProps {
-  data: any;
-  onChange: (field: string, value: any) => void;
+  data: PackageFormData;
+  onChange: (field: string, value: unknown) => void;
 }
 
 export function MediaStep({ data, onChange }: MediaStepProps) {
@@ -23,7 +22,7 @@ export function MediaStep({ data, onChange }: MediaStepProps) {
   const removeGalleryImage = (index: number) => {
     onChange(
       "gallery",
-      gallery.filter((_: any, i: number) => i !== index),
+      gallery.filter((_: unknown, i: number) => i !== index),
     );
   };
 
@@ -105,7 +104,7 @@ export function MediaStep({ data, onChange }: MediaStepProps) {
                 className="text-xs"
               />
               {url && (
-                /* eslint-disable-next-line @next/next/no-img-element */
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={url}
                   alt={`Gallery ${index + 1}`}

@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import type { FieldErrors } from "react-hook-form";
 import { Control, useFieldArray, UseFormRegister } from "react-hook-form";
 import { Plus, Trash2, Calendar, ChevronDown, ChevronUp, Utensils } from "lucide-react";
-import { inputStyles, PackageFormValues, PRESET_FOODS } from "@/lib/schema/package-schema";
+import { inputStyles, PackageFormValues } from "@/lib/schema/package-schema";
 import { FormField } from "@/components/common/form-field";
+import { Food } from "@/types/food";
 
 interface MealFoodsBuilderProps {
   dayIndex: number;
@@ -11,9 +12,10 @@ interface MealFoodsBuilderProps {
   control: Control<PackageFormValues>;
   register: UseFormRegister<PackageFormValues>;
   errors: FieldErrors<PackageFormValues>;
+  foods: Food[];
 }
 
-function MealFoodsBuilder({ dayIndex, mealIndex, control, register, errors }: MealFoodsBuilderProps) {
+function MealFoodsBuilder({ dayIndex, mealIndex, control, register, errors, foods }: MealFoodsBuilderProps) {
   const { fields, append, remove } = useFieldArray({
     control,
     name: `days.${dayIndex}.meals.${mealIndex}.foods` as const,
@@ -25,7 +27,7 @@ function MealFoodsBuilder({ dayIndex, mealIndex, control, register, errors }: Me
         <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
           Food Items ({fields.length})
         </label>
-        <button type="button" onClick={() => append({ name: "", quantity: 1 })} className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
+        <button type="button" onClick={() => append({ foodId: "", quantity: 1 })} className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
           <Plus className="w-3.5 h-3.5" /> Add Food
         </button>
       </div>
@@ -36,16 +38,27 @@ function MealFoodsBuilder({ dayIndex, mealIndex, control, register, errors }: Me
           return (
             <div key={field.id} className="flex items-start gap-2 bg-background p-2 rounded-lg border border-border">
               <div className="flex-1 space-y-1">
-                <input
-                  list={`preset-foods-${dayIndex}-${mealIndex}-${foodIndex}`}
-                  {...register(`days.${dayIndex}.meals.${mealIndex}.foods.${foodIndex}.name`)}
-                  placeholder="Select or type food..."
-                  className={inputStyles}
-                />
-                <datalist id={`preset-foods-${dayIndex}-${mealIndex}-${foodIndex}`}>
-                  {PRESET_FOODS.map((food, idx) => <option key={idx} value={food} />)}
-                </datalist>
-                {foodError?.name && <p className="text-[10px] text-red-500">{foodError.name.message}</p>}
+                <select {...register(`days.${dayIndex}.meals.${mealIndex}.foods.${foodIndex}.foodId`
+                )}
+                >
+                  <option value="">
+                    Select Food
+                  </option>
+
+                  {
+                    foods.map(food => (
+                      <option
+                        value={food.id}
+                        key={food.id}
+                      >
+
+                        {food.name}
+
+                      </option>
+                    ))
+                  }
+                </select>
+                {foodError?.foodId && (<p className="text-red-500">{foodError.foodId.message}</p>)}
               </div>
 
               <div className="w-24 space-y-1">
@@ -71,9 +84,10 @@ interface DayMealsBuilderProps {
   control: Control<PackageFormValues>;
   register: UseFormRegister<PackageFormValues>;
   errors: FieldErrors<PackageFormValues>;
+  foods: Food[];
 }
 
-function DayMealsBuilder({ dayIndex, control, register, errors }: DayMealsBuilderProps) {
+function DayMealsBuilder({ dayIndex, control, register, errors, foods }: DayMealsBuilderProps) {
   const { fields, append, remove } = useFieldArray({ control, name: `days.${dayIndex}.meals` as const });
 
   return (
@@ -84,7 +98,7 @@ function DayMealsBuilder({ dayIndex, control, register, errors }: DayMealsBuilde
         </span>
         <button
           type="button"
-          onClick={() => append({ mealType: "BREAKFAST", mealTime: "08:00 AM", foods: [{ name: "", quantity: 1 }] })}
+          onClick={() => append({ mealType: "BREAKFAST", mealTime: "08:00 AM", foods: [{ foodId: "", quantity: 1 }] })}
           className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-primary bg-primary/10 rounded-md hover:bg-primary/20 transition"
         >
           <Plus className="w-3.5 h-3.5" /> Add Meal
@@ -120,7 +134,7 @@ function DayMealsBuilder({ dayIndex, control, register, errors }: DayMealsBuilde
                 </FormField>
               </div>
 
-              <MealFoodsBuilder dayIndex={dayIndex} mealIndex={mealIndex} control={control} register={register} errors={errors} />
+              <MealFoodsBuilder dayIndex={dayIndex} mealIndex={mealIndex} control={control} register={register} errors={errors} foods={foods ?? []} />
             </div>
           );
         })}
@@ -129,11 +143,12 @@ function DayMealsBuilder({ dayIndex, control, register, errors }: DayMealsBuilde
   );
 }
 
-export function DaysScheduleSection({ control, register, errors, daysWatched }: {
+export function DaysScheduleSection({ control, register, errors, daysWatched, foods }: {
   control: Control<PackageFormValues>;
   register: UseFormRegister<PackageFormValues>;
   errors: FieldErrors<PackageFormValues>;
   daysWatched: NonNullable<PackageFormValues["days"]>;
+  foods?: Food[];
 }) {
   const [expandedDay, setExpandedDay] = useState<number | null>(0);
   const { fields, append, remove } = useFieldArray({ control, name: "days" });
@@ -149,7 +164,7 @@ export function DaysScheduleSection({ control, register, errors, daysWatched }: 
           type="button"
           onClick={() => {
             const newDayNum = fields.length + 1;
-            append({ dayNumber: newDayNum, title: `Day ${newDayNum} Schedule`, meals: [{ mealType: "BREAKFAST", mealTime: "08:00 AM", foods: [{ name: "", quantity: 1 }] }] });
+            append({ dayNumber: newDayNum, title: `Day ${newDayNum} Schedule`, description: "", meals: [{ mealType: "BREAKFAST", mealTime: "08:00 AM", foods: [{ foodId: "", quantity: 1 }] }] });
             setExpandedDay(fields.length);
           }}
           className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition"
@@ -195,7 +210,7 @@ export function DaysScheduleSection({ control, register, errors, daysWatched }: 
                     </FormField>
                   </div>
 
-                  <DayMealsBuilder dayIndex={dayIndex} control={control} register={register} errors={errors} />
+                  <DayMealsBuilder dayIndex={dayIndex} control={control} register={register} errors={errors} foods={foods ?? []} />
                 </div>
               )}
             </div>

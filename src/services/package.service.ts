@@ -1,13 +1,67 @@
-import { api } from "@/lib/api-client";
+"use client";
 
-export interface PackageCategory {
-  id: string;
-  name: string;
-  status: string;
+import {
+
+  useCreatePackageMutation,
+  useDeletePackageMutation,
+  useGetPackageByIdQuery,
+  useGetPackagesQuery,
+  useUpdatePackageMutation,
+
+} from "@/store/api/slices/packages-api";
+
+export function useGetPackages(params?: string) {
+  const { data, isLoading, error } = useGetPackagesQuery(params);
+  return { data, isLoading, error };
 }
 
-export const packageService = {
-  getCategories: async () => {
-    return api.get<PackageCategory[]>("/package/categories");
-  },
-};
+export function useGetPackage(id: string) {
+
+  const { data, isLoading, error } = useGetPackageByIdQuery(id, {
+    skip: !id,
+  });
+
+  return { data, isLoading, error };
+
+}
+
+export function useCreatePackage() {
+
+  const [createPackage, result] = useCreatePackageMutation();
+
+  return {
+
+    createPackage,
+
+    ...result,
+
+  };
+
+}
+
+export function useUpdatePackage() {
+
+  const [updatePackage, result] = useUpdatePackageMutation();
+
+  return {
+
+    updatePackage,
+
+    ...result,
+
+  };
+
+}
+export function useDeletePackage() {
+
+  const [deletePackage, result] = useDeletePackageMutation();
+
+  return {
+
+    deletePackage,
+
+    ...result,
+
+  };
+
+}

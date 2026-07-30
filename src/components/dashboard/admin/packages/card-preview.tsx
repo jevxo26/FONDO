@@ -1,6 +1,7 @@
 import React from "react";
 import { Sparkles, Tag, Clock, Utensils } from "lucide-react";
 import type { PackageFormValues } from "@/lib/schema/package-schema";
+import type { Food } from "@/types/food";
 
 interface CardPreviewProps {
   thumbnailWatched?: string;
@@ -14,7 +15,9 @@ interface CardPreviewProps {
   totalMealsCount: number;
   price: number;
   discountPrice: number;
+  discountPercent: number;
   daysWatched: NonNullable<PackageFormValues["days"]>;
+  allFoods: Food[];
 }
 
 export function CardPreview({
@@ -29,7 +32,9 @@ export function CardPreview({
   totalMealsCount,
   price,
   discountPrice,
+  discountPercent,
   daysWatched,
+  allFoods,
 }: CardPreviewProps) {
   return (
     <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-6">
@@ -87,7 +92,7 @@ export function CardPreview({
             <Utensils className="w-4 h-4 text-primary" /> Included Meals Preview
           </h3>
 
-          <div className="space-y-3 max-h-[320px] overflow-y-auto pr-2">
+          <div className="space-y-3 max-h-80 overflow-y-auto pr-2">
             {daysWatched?.map((day, idx) => (
               <div key={idx} className="bg-muted/30 p-3 rounded-xl border border-border/60 space-y-2">
                 <div className="flex justify-between items-center">
@@ -102,12 +107,15 @@ export function CardPreview({
                         <span className="text-muted-foreground text-[10px]">{meal?.mealTime}</span>
                       </div>
                       <ul className="space-y-1 text-muted-foreground text-[11px]">
-                        {meal?.foods?.map((food, fIdx) => (
-                          <li key={fIdx} className="flex items-center justify-between">
-                            <span className="line-clamp-1">{food?.name || "Unnamed"}</span>
-                            <span className="font-medium text-foreground ml-2">x{food?.quantity}</span>
-                          </li>
-                        ))}
+                        {meal?.foods?.map((food, fIdx) => {
+                          const matchedFood = allFoods.find((item) => item.id === food?.foodId);
+                          return (
+                            <li key={fIdx} className="flex items-center justify-between">
+                              <span className="line-clamp-1">{matchedFood?.name ?? food?.foodId ?? "Unnamed"}</span>
+                              <span className="font-medium text-foreground ml-2">x{food?.quantity}</span>
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   ))}

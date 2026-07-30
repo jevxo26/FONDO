@@ -145,7 +145,7 @@ export function PackagesProvider({
         }
 
         // ২. ক্যাটাগরি আইডি (packageCategoryId) দিয়ে ফিল্টার
-        if (selectedCategoryId !== "all" && pkg.packageCategoryId === selectedCategoryId) {
+        if (selectedCategoryId !== "all" && pkg.packageCategoryId !== selectedCategoryId) {
           return false;
         }
 
@@ -226,38 +226,37 @@ export function PackagesProvider({
 
   return (
     <PackagesContext.Provider
-      value= {{
-    searchQuery,
-      setSearchQuery,
-      selectedCategoryId,
-      setSelectedCategoryId,
-      selectedDuration,
-      setSelectedDuration,
-      maxPrice,
-      setMaxPrice,
-      maxCalories,
-      setMaxCalories,
-      isVegetarian,
-      setIsVegetarian,
-      isHighProtein,
-      setIsHighProtein,
-      isCustomizable,
-      setIsCustomizable,
-      sortBy,
-      setSortBy,
-      comparedIds,
-      toggleComparison,
-      resetFilters,
-      rawPackages,
-      setRawPackages,
-      categories,
-      setCategories,
-      processedPackages,
-      }
-}
+      value={{
+        searchQuery,
+        setSearchQuery,
+        selectedCategoryId,
+        setSelectedCategoryId,
+        selectedDuration,
+        setSelectedDuration,
+        maxPrice,
+        setMaxPrice,
+        maxCalories,
+        setMaxCalories,
+        isVegetarian,
+        setIsVegetarian,
+        isHighProtein,
+        setIsHighProtein,
+        isCustomizable,
+        setIsCustomizable,
+        sortBy,
+        setSortBy,
+        comparedIds,
+        toggleComparison,
+        resetFilters,
+        rawPackages,
+        setRawPackages,
+        categories,
+        setCategories,
+        processedPackages,
+      }}
     >
-  { children }
-  </PackagesContext.Provider>
+      {children}
+    </PackagesContext.Provider>
   );
 }
 

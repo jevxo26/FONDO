@@ -32,7 +32,7 @@ export function CardPreview({
   totalMealsCount,
   price,
   discountPrice,
-  discountPercent,
+  discountPercent: _discountPercent,
   daysWatched,
   allFoods,
 }: CardPreviewProps) {

@@ -1,3 +1,5 @@
+"use client";
+
 // Location: src/components/packages/packages-workspace.tsx
 import { SlidersHorizontal, ArrowUpDown } from "lucide-react";
 import { usePackages } from "./packages-context";
@@ -8,7 +10,6 @@ const CATEGORIES = ["All", "Weight Loss", "Weight Gain", "Regular", "Diabetic", 
 
 export default function PackagesWorkspace() {
   const packageCategories = useGetPackageCategoriesQuery(5)
-  const AllCategories = packageCategories.data
   console.log(packageCategories.data)
   const {
     selectedCategory,

@@ -110,6 +110,10 @@ export const packageSchema = yup.object({
 export type PackageFormValues =
   yup.InferType<typeof packageSchema>;
 
+export type PackageFormData = PackageFormValues;
+
+export type { PackageBenefit, PackageNutrition, PackageRules } from "@/types/admin-package";
+
 export const initialValues: PackageFormValues = {
   packageCode: "",
 

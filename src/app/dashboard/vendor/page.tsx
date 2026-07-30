@@ -14,7 +14,6 @@ import {
   Loader2,
   Store,
   Utensils,
-  TrendingUp,
   Package,
 } from "lucide-react";
 

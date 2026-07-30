@@ -1,6 +1,7 @@
 // src/components/dashboard/vendor/overview/recent-activity.tsx
 "use client";
 
+import React from "react";
 import {
   Clock,
   Package,
@@ -17,7 +18,7 @@ interface Activity {
   type: "order" | "payment" | "user" | "alert" | "delivery" | "food";
   text: string;
   time: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 interface RecentActivityProps {

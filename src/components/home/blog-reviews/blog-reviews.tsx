@@ -11,7 +11,7 @@ export function BlogReviews() {
         <SectionReveal distance={20}>
           <SectionHeader title="Our Blog & Reviews" align="center" />
 
-          <InfiniteSlider gap={24} speed={50} className="mt-8">
+          <InfiniteSlider gap={24} speed={50} reverse className="mt-8">
             {BLOG_POSTS.map((post) => (
               <BlogReviewCard key={post.id} post={post} />
             ))}

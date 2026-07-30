@@ -7,7 +7,7 @@ import { HeaderBar } from "@/components/dashboard/admin/packages/header-bar";
 import { PriceSummarySidebar } from "@/components/dashboard/admin/packages/price-summary";
 import { initialValues, PackageFormValues, packageSchema } from "@/lib/schema/package-schema";
 import { useGetFoods } from "@/store/api/slices/foods-api";
-import { useCreatePackage } from "@/store/api/slices/packages-api";
+import { useCreatePackage, useGetPackageCategoriesQuery } from "@/store/api/slices/packages-api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { PackageCategory } from "@prisma/client";
 import { useEffect, useState } from "react";
@@ -39,8 +39,8 @@ const getPackageCode = (value: string) => {
 };
 
 export default function AddPackageForm() {
-  const { data: categories } = useGetPackageCategoriesQuery(10);
-  const { data: foods } = useGetFoods(1, 500);
+  const { data: categories } = useGetPackageCategoriesQuery(undefined);
+  const { data: foods } = useGetFoods({ page: 1, limit: 500 });
   const [showPreview, setShowPreview] = useState(true);
 
   const {

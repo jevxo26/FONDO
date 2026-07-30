@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { usePackages } from "./packages-context";
 import PackageCard from "./packages-card";

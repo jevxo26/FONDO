@@ -1,3 +1,5 @@
+"use client";
+
 import { usePackages } from "./packages-context";
 
 export default function PackagesComparison() {

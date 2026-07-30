@@ -64,7 +64,7 @@ export const {
 
 // Query wrappers
 export function useGetPackageCategories() {
-    const { data, isLoading, error } = useGetPackageCategoriesQuery();
+    const { data, isLoading, error } = useGetPackageCategoriesQuery(undefined);
     return { data, isLoading, error };
 }
 

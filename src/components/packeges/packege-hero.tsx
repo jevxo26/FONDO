@@ -1,3 +1,5 @@
+"use client";
+
 // Location: src/components/packages/packages-hero.tsx
 import { Search } from "lucide-react";
 import { usePackages } from "./packages-context";

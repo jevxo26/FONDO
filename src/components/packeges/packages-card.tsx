@@ -1,87 +1,133 @@
 "use client";
 
-import React from "react";
-import { usePackages } from "./packages-context";
-import type { MealPackage } from "./packages-context";
-import { Check, Clock, Flame, Star, Utensils } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  Check,
+  Clock,
+  Star,
+  Utensils,
+  Settings,
+} from "lucide-react";
+
+import { usePackages, type MealPackage } from "./packages-context";
 
 interface PackageCardProps {
   pkg: MealPackage;
 }
 
-const PackageCard = ({ pkg }: PackageCardProps) => {
+export default function PackageCard({ pkg }: PackageCardProps) {
   const { toggleComparison, comparedIds } = usePackages();
-  const hasDiscount = pkg.discountPrice !== null;
+
   const isCompared = comparedIds.includes(pkg.id);
+
+  const finalPrice = Number(pkg.discountPrice ?? pkg.price);
+  const originalPrice = Number(pkg.price);
+
   return (
-    <article
-      key={pkg.id}
-      className="group bg-card border border-border rounded-2xl overflow-hidden shadow-sm flex flex-col transition-all hover:-translate-y-1 hover:shadow-md"
-    >
-      <div className="relative">
+    <article className="group bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all">
+      {/* Image */}
+      <div className="relative overflow-hidden">
         <Image
-          width={500}
-          height={500}
-          src={pkg.thumbnail}
+          src={pkg.thumbnail || "/placeholder.jpg"}
           alt={pkg.name}
-          className="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105"
+          width={600}
+          height={400}
+          className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        <span className="absolute top-3 left-3 px-2 py-1 bg-card/90 text-[9px] font-bold uppercase rounded-lg shadow-sm">
-          {pkg.category}
+
+        <span className="absolute top-3 left-3 bg-primary text-primary-foreground text-[10px] px-2 py-1 rounded-lg">
+          {pkg.packageCategory?.name ?? "Package"}
         </span>
+
+        {pkg.isCustomizable && (
+          <span className="absolute top-3 right-3 bg-green-600 text-white text-[10px] px-2 py-1 rounded-lg">
+            Customizable
+          </span>
+        )}
       </div>
 
-      <div className="p-4 flex flex-col grow gap-3">
-        <div className="flex items-center justify-between gap-2">
-          <h3 className="font-heading text-base font-medium text-foreground line-clamp-1">
+      {/* Body */}
+      <div className="p-4 flex flex-col gap-4">
+        {/* Title */}
+        <div className="flex justify-between gap-2">
+          <h3 className="font-semibold line-clamp-1">
             {pkg.name}
           </h3>
-          <div className="flex items-center gap-0.5 text-[10px] bg-secondary px-1.5 py-0.5 rounded border border-border font-bold">
-            <Star className="size-3 text-warning fill-warning" /> {pkg.rating}
+
+          <div className="flex items-center gap-1 text-xs">
+            <Star
+              size={14}
+              className="fill-yellow-400 text-yellow-400"
+            />
+            {pkg.rating ?? 0}
           </div>
         </div>
 
-        <p className="text-[11px] text-muted-foreground line-clamp-2 h-8 leading-relaxed">
+        {/* Description */}
+        <p className="text-sm text-muted-foreground line-clamp-2">
           {pkg.description}
         </p>
 
-        <div className="grid grid-cols-3 gap-1 bg-secondary p-2 border border-border/40 rounded-xl text-center text-[10px] font-bold">
+        {/* Info */}
+        <div className="grid grid-cols-3 gap-2 text-center bg-muted rounded-xl p-3">
           <div>
-            <Clock className="size-3 mx-auto text-primary mb-0.5" />
-            {pkg.duration} Days
+            <Clock className="mx-auto mb-1 size-4 text-primary" />
+            <p className="text-xs font-medium">
+              {pkg.durationDays} Days
+            </p>
           </div>
+
           <div>
-            <Utensils className="size-3 mx-auto text-primary mb-0.5" />
-            {pkg.mealsPerDay}/Day
+            <Utensils className="mx-auto mb-1 size-4 text-primary" />
+            <p className="text-xs font-medium">
+              {pkg.totalMeals} Meals
+            </p>
           </div>
+
           <div>
-            <Flame className="size-3 mx-auto text-primary mb-0.5" />
-            {pkg.calories} kcal
+            <Settings className="mx-auto mb-1 size-4 text-primary" />
+            <p className="text-xs font-medium">
+              {pkg.packageType}
+            </p>
           </div>
         </div>
 
-        <div className="flex items-end justify-between pt-2 mt-auto">
-          <div className="flex flex-col">
-            {hasDiscount && (
-              <span className="text-[9px] line-through opacity-50">৳{pkg.price}</span>
+        {/* Price */}
+        <div className="flex justify-between items-end">
+          <div>
+            {pkg.discountPrice && (
+              <p className="text-xs line-through text-muted-foreground">
+                ৳{originalPrice}
+              </p>
             )}
-            <span className="text-xs font-black text-foreground">
-              ৳{pkg.discountPrice ?? pkg.price}
-            </span>
+
+            <p className="text-lg font-bold text-primary">
+              ৳{finalPrice}
+            </p>
           </div>
-          <div className="flex gap-1.5">
+
+          <div className="flex gap-2">
             <button
               onClick={() => toggleComparison(pkg.id)}
-              className={`p-1.5 border rounded-lg text-[10px] font-bold flex items-center gap-1 transition-colors ${isCompared ? "bg-primary/10 border-primary text-primary" : "border-border hover:bg-muted"}`}
+              className={`border rounded-lg px-3 py-2 text-xs transition ${
+                isCompared
+                  ? "bg-primary text-white border-primary"
+                  : "border-border"
+              }`}
             >
-              <Check className={`size-3 ${isCompared ? "block" : "hidden"}`} /> Compare
+              <Check
+                size={14}
+                className={`inline mr-1 ${
+                  isCompared ? "block" : "hidden"
+                }`}
+              />
+              Compare
             </button>
-            {/* <button className="h-7 px-3 bg-primary text-primary-foreground font-bold text-[10px] rounded-lg shadow-sm hover:opacity-90">Details</button> */}
+
             <Link
-              href={`/packages/${pkg.id}`}
-              className="p-1.5 border  bg-primary text-primary-foreground font-bold text-[10px] rounded-lg shadow-sm hover:opacity-90"
+              href={`/packages/${pkg.slug}`}
+              className="bg-primary text-primary-foreground rounded-lg px-3 py-2 text-xs"
             >
               Details
             </Link>
@@ -90,6 +136,4 @@ const PackageCard = ({ pkg }: PackageCardProps) => {
       </div>
     </article>
   );
-};
-
-export default PackageCard;
+}

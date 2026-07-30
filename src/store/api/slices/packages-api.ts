@@ -5,9 +5,8 @@ export const packagesApi = api.injectEndpoints({
     endpoints: (builder) => ({
 
         getPackages: builder.query({
-            query: (params) => ({
+            query: () => ({
                 url: "/package",
-                params,
             }),
             providesTags: ["Package"],
         }),
@@ -68,9 +67,9 @@ export function useGetPackageCategories() {
     return { data, isLoading, error };
 }
 
-export function useGetPackages(params?: string) {
-    const { data, isLoading, error } = useGetPackagesQuery(params);
-    return { data, isLoading, error };
+export function useGetPackages() {
+    const { data, isLoading } = useGetPackagesQuery(undefined);
+        return { data, isLoading};
 }
 
 export function useGetPackage(id: string) {

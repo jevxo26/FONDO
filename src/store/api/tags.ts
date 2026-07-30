@@ -1,18 +1,13 @@
+// src/store/api/tags.ts
 export const TAG_TYPES = [
-  "Cart",
-  "Order",
-  "Favorite",
   "Food",
   "Category",
-  "Address",
-  "Payment",
-  "PaymentMethod",
-  "Profile",
-  "Review",
-  "AdminCustomer",
-  "Wallet",
-  "Coupon",
+  "Vendor",
+  "VendorFood",
+  "Order",
   "Package",
+  "User",
+  "Profile",
 ] as const;
 
 export type TagType = (typeof TAG_TYPES)[number];

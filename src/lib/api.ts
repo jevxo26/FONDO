@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+// src/lib/api.ts
 import { ApiError } from "./api-error";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
@@ -18,7 +18,10 @@ export async function apiFetch<T>(endpoint: string, options?: ServerFetchOptions
   const { revalidate = 60, tags, headers: optionHeaders, ...fetchOptions } = options ?? {};
 
   let authHeader: Record<string, string> = {};
+  
+  // Dynamic import to avoid client-side issues
   try {
+    const { cookies } = await import("next/headers");
     const cookieStore = await cookies();
     const refreshToken = cookieStore.get("refreshToken");
     if (refreshToken?.value) {
@@ -26,6 +29,7 @@ export async function apiFetch<T>(endpoint: string, options?: ServerFetchOptions
     }
   } catch {
     // called from client — no cookies() available
+    // Client-side will handle token separately
   }
 
   const res = await fetch(`${BASE_URL}${endpoint}`, {
@@ -48,5 +52,35 @@ export async function apiFetch<T>(endpoint: string, options?: ServerFetchOptions
 
   const result: ApiResponse<T> = await res.json();
 
+  return result.data;
+}
+
+// Client-side fetch function for components
+export async function clientFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("token");
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+  }
+
+  const res = await fetch(`${BASE_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      ...headers,
+      ...(options?.headers as Record<string, string> | undefined),
+    },
+  });
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new ApiError(res.status, body.message || "Failed to fetch data");
+  }
+
+  const result = await res.json();
   return result.data;
 }

@@ -2,60 +2,61 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/common/table";
 import { foodColumns } from "./food-columns";
-import { AddFoodModal } from "./add-food-modal";
 import { Button } from "@/components/ui/button";
 import { Plus, Pencil, DollarSign, Package, BookOpen, BarChart, RefreshCw } from "lucide-react";
-import {
-  vendorFoods,
-  foodCategories,
-  foodStatuses,
-  stockStatuses,
-  kitchens,
-} from "@/data/vendor-foods";
 import type { VendorFood } from "@/types/vendor";
 import type { RowAction, FacetedFilter, InitialSort } from "@/components/common/table/types";
+import { toast } from "sonner";
 
-interface Filters {
-  category: string;
-  status: string;
-  stockStatus: string;
-  kitchen: string;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+
+interface VendorFoodTableSectionProps {
+  initialFoods: VendorFood[];
 }
 
-const INITIAL_FILTERS: Filters = {
-  category: "ALL",
-  status: "ALL",
-  stockStatus: "ALL",
-  kitchen: "ALL",
-};
+export function VendorFoodTableSection({ initialFoods }: VendorFoodTableSectionProps) {
+  const router = useRouter();
+  const [foods, setFoods] = useState<VendorFood[]>(initialFoods);
 
-export function VendorFoodTableSection() {
-  const [foods, setFoods] = useState<VendorFood[]>(vendorFoods);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [filters] = useState<Filters>(INITIAL_FILTERS);
+  const handleToggleStatus = useCallback(async (food: VendorFood) => {
+    try {
+      const newStatus = food.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
 
-  const filteredData = useMemo(() => {
-    return foods.filter((item) => {
-      const matchCategory = filters.category === "ALL" || item.category === filters.category;
-      const matchStatus = filters.status === "ALL" || item.status === filters.status;
-      const matchStockStatus =
-        filters.stockStatus === "ALL" || item.stockStatus === filters.stockStatus;
-      const matchKitchen = filters.kitchen === "ALL" || item.kitchen === filters.kitchen;
-      return matchCategory && matchStatus && matchStockStatus && matchKitchen;
-    });
-  }, [foods, filters]);
+      const token = localStorage.getItem("token");
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
 
-  const handleToggleStatus = useCallback((food: VendorFood) => {
-    setFoods((prev) =>
-      prev.map((item) =>
-        item.id === food.id
-          ? { ...item, status: item.status === "ACTIVE" ? "INACTIVE" : "ACTIVE" }
-          : item,
-      ),
-    );
+      const response = await fetch(`${BASE_URL}/api/vendor/foods/${food.id}/status`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update status: ${response.status}`);
+      }
+
+      setFoods((prev) =>
+        prev.map((item) => (item.id === food.id ? { ...item, status: newStatus } : item)),
+      );
+
+      toast.success(`Food ${newStatus === "ACTIVE" ? "activated" : "deactivated"} successfully`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Failed to update status";
+      toast.error(message);
+    }
   }, []);
+
+  const handleAddFood = useCallback(() => {
+    router.push("/dashboard/vendor/foods/add");
+  }, [router]);
 
   const rowActions: RowAction<VendorFood>[] = useMemo(
     () => [
@@ -99,35 +100,44 @@ export function VendorFoodTableSection() {
     [handleToggleStatus],
   );
 
-  // Build faceted filters for the DataTable
   const facetedFilters: FacetedFilter[] = useMemo(
     () => [
       {
         columnId: "category",
         title: "Category",
-        options: foodCategories.map((c) => ({ label: c.label, value: c.value })),
+        options: [
+          { label: "All", value: "ALL" },
+          { label: "Appetizer", value: "APPETIZER" },
+          { label: "Main Course", value: "MAIN_COURSE" },
+          { label: "Dessert", value: "DESSERT" },
+          { label: "Beverage", value: "BEVERAGE" },
+        ],
       },
       {
         columnId: "status",
         title: "Status",
-        options: foodStatuses.map((s) => ({ label: s.label, value: s.value })),
+        options: [
+          { label: "All", value: "ALL" },
+          { label: "Active", value: "ACTIVE" },
+          { label: "Inactive", value: "INACTIVE" },
+        ],
       },
       {
         columnId: "stockStatus",
         title: "Stock",
-        options: stockStatuses.map((s) => ({ label: s.label, value: s.value })),
-      },
-      {
-        columnId: "kitchen",
-        title: "Kitchen",
-        options: kitchens.map((k) => ({ label: k.label, value: k.value })),
+        options: [
+          { label: "All", value: "ALL" },
+          { label: "In Stock", value: "IN_STOCK" },
+          { label: "Low Stock", value: "LOW_STOCK" },
+          { label: "Out of Stock", value: "OUT_OF_STOCK" },
+        ],
       },
     ],
     [],
   );
 
   const toolbarActions = (
-    <Button onClick={() => setIsAddModalOpen(true)} className="gap-2">
+    <Button onClick={handleAddFood} className="gap-2">
       <Plus className="h-4 w-4" />
       Add Food
     </Button>
@@ -139,20 +149,17 @@ export function VendorFoodTableSection() {
   };
 
   return (
-    <>
-      <DataTable
-        columns={foodColumns}
-        data={filteredData}
-        pageSize={10}
-        enableSorting
-        rowActions={rowActions}
-        toolbarActions={toolbarActions}
-        filters={facetedFilters}
-        enableSearch
-        enableColumnToggle
-        initialSort={initialSort}
-      />
-      <AddFoodModal open={isAddModalOpen} onOpenChange={setIsAddModalOpen} />
-    </>
+    <DataTable
+      columns={foodColumns}
+      data={foods}
+      pageSize={10}
+      enableSorting
+      rowActions={rowActions}
+      toolbarActions={toolbarActions}
+      filters={facetedFilters}
+      enableSearch
+      enableColumnToggle
+      initialSort={initialSort}
+    />
   );
 }

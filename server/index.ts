@@ -2,6 +2,7 @@ import cookieParser from "cookie-parser";
 import compression from "compression";
 import cors from "cors";
 import express, { Request, Response } from "express";
+import path from "path";
 import helmet from "helmet";
 import morgan from "morgan";
 import next from "next";
@@ -21,6 +22,7 @@ import couponRoutes from "./routes/couponRoutes";
 import paymentRoutes from "./routes/paymentRoutes";
 import walletRoutes from "./routes/walletRoutes";
 import settlementRoutes from "./routes/settlementRoutes";
+import uploadRoutes from "./routes/uploadRoutes";
 import prisma from "./lib/prisma";
 
 const dev = env.NODE_ENV !== "production";
@@ -66,6 +68,10 @@ app
     server.use(express.json());
     server.use(cookieParser());
     server.use(compression());
+    server.use(
+      "/uploads",
+      express.static(path.join(process.cwd(), "public", "uploads"))
+    );
 
     // Database
     try {
@@ -137,6 +143,7 @@ app
     server.use("/api", walletRoutes);
     server.use("/api", settlementRoutes);
     server.use("/api", orderRoutes);
+    server.use("/api/upload", uploadRoutes);
 
     // Next.js handler for all other routes
     server.use((req: Request, res: Response) => {

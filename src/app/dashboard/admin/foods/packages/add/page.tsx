@@ -1,30 +1,57 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import type { PackageCategory } from "@prisma/client";
 import type { Resolver } from "react-hook-form";
 import { useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { CATEGORIES, initialDummyData, PackageFormValues, packageSchema } from "@/lib/schema/package-schema";
+import { initialValues, PackageFormValues, packageSchema } from "@/lib/schema/package-schema";
 import { HeaderBar } from "@/components/dashboard/admin/packages/header-bar";
 import { GeneralInfoSection } from "@/components/dashboard/admin/packages/general-info";
 import { DaysScheduleSection } from "@/components/dashboard/admin/packages/day-shedule";
 import { PriceSummarySidebar } from "@/components/dashboard/admin/packages/price-summary";
 import { CardPreview } from "@/components/dashboard/admin/packages/card-preview";
+import { useGetPackageCategories } from "@/hooks/use-package";
+import { useGetFoods } from "@/hooks/use-foods";
+import { useCreatePackage } from "@/services/package.service";
 
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
 
+const normalizePackageCode = (value: string) =>
+  value
+    .trim()
+    .replace(/[^a-zA-Z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "")
+    .toUpperCase();
+
+const getUniqueSuffix = () => {
+  return Math.floor(Math.random() * 100000).toString().padStart(5, "0");
+};
+
+const getPackageCode = (value: string) => {
+  const base = normalizePackageCode(value || "PKG");
+  return `${base}-${getUniqueSuffix()}`;
+};
 
 export default function AddPackageForm() {
+  const { data: categories } = useGetPackageCategories();
+  const { data: foods } = useGetFoods(1, 500);
   const [showPreview, setShowPreview] = useState(true);
 
   const { register, control, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<PackageFormValues>({
     resolver: yupResolver(packageSchema) as Resolver<PackageFormValues>,
-    defaultValues: initialDummyData,
+    defaultValues: initialValues,
   });
 
   // Dynamic Watches
   const packageTypeWatched = useWatch({ control, name: "packageType" });
   const price = useWatch({ control, name: "price" }) || 0;
   const discountPrice = useWatch({ control, name: "discountPrice" }) || 0;
+  const discountPercent = useWatch({ control, name: "discountPercent" }) || 0;
   const daysWatched = useWatch({ control, name: "days" }) || [];
   const nameWatched = useWatch({ control, name: "name" });
   const descriptionWatched = useWatch({ control, name: "description" });
@@ -34,44 +61,70 @@ export default function AddPackageForm() {
   const customTypeNameWatched = useWatch({ control, name: "customTypeName" });
   const isCustomizableWatched = useWatch({ control, name: "isCustomizable" });
 
-  const selectedCategoryName = CATEGORIES.find((c) => c.id === categoryIdWatched)?.name || "Meal Package";
+  const selectedCategoryName = categories?.find((c: PackageCategory) => c.id === categoryIdWatched)?.name || "Meal Package";
+  const selectedCategory = categories?.find((c: PackageCategory) => c.id === categoryIdWatched);
   const totalMealsCount = daysWatched.reduce((acc, day) => acc + (day?.meals?.length || 0), 0);
   const totalFoodsCount = daysWatched.reduce(
     (acc, day) => acc + (day?.meals?.reduce((mAcc, m) => mAcc + (m?.foods?.length || 0), 0) || 0),
     0
   );
 
+  const filteredFoods = foods?.items.filter((food) => {
+    const matchCategory = food.category.name === selectedCategory?.name;
+    const matchDiet = food.diets?.some((d) => d.dietType === selectedCategory?.name);
+    return matchCategory || matchDiet;
+  });
+
+  const selectedFoodPriceItems = daysWatched.flatMap((day) =>
+    day.meals?.flatMap((meal) =>
+      meal.foods?.map((foodItem) => ({ foodId: foodItem.foodId, quantity: foodItem.quantity })) ?? [],
+    ) ?? [],
+  );
+
+  const getFoodPrice = (foodId: string) => {
+    const food = foods?.items.find((item) => item.id === foodId);
+    const variant = food?.variants?.[0];
+    return Number(variant?.price ?? 0);
+  };
+
+  const computedPrice = selectedFoodPriceItems.reduce(
+    (sum, item) => sum + item.quantity * getFoodPrice(item.foodId),
+    0,
+  );
+
+  const computedDiscountPrice = Math.round(
+    selectedFoodPriceItems.reduce((sum, item) => sum + item.quantity * getFoodPrice(item.foodId), 0) * (1 - Math.min(100, Math.max(0, discountPercent)) / 100),
+  );
+
+  useEffect(() => {
+    setValue("price", computedPrice, { shouldValidate: true });
+    setValue("discountPrice", computedDiscountPrice, { shouldValidate: true });
+  }, [computedPrice, computedDiscountPrice, setValue]);
+
+  const { createPackage } = useCreatePackage();
+
+  const allFoodItems = foods?.items ?? [];
+
   const onSubmit = async (data: PackageFormValues) => {
     try {
-    const response = await fetch("/api/package", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+      const packageCode = getPackageCode(data.packageCode || data.name);
+      const slug = `${slugify(data.slug || data.name)}-${getUniqueSuffix()}`;
 
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.message || "Failed to create package");
+      await createPackage({
+        ...data,
+        packageCode,
+        slug,
+        price: computedPrice,
+        discountPrice: computedDiscountPrice,
+        totalMeals: totalMealsCount,
+      }).unwrap();
+      alert("Package created successfully.");
+      reset(initialValues);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Unable to submit package.";
+      console.error(error);
+      alert(message);
     }
-
-    console.log("Package Created:", result);
-    alert("Package created successfully!");
-
-    // চাইলে form reset
-    reset(initialDummyData);
-
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Something went wrong";
-    console.error(error);
-    alert(message);
-  }
-    console.group("=== PACKAGE FORM SUBMITTED DATA ===");
-    console.log("Full Package Payload:", data);
-    console.groupEnd();
-    alert("প্যাকেজ সফলভাবে সাবমিট হয়েছে! কনসোল চেক করুন।");
   };
 
   return (
@@ -79,7 +132,7 @@ export default function AddPackageForm() {
       <div className="wrapper max-w-6xl mx-auto space-y-8 px-4">
         {/* Top Header Bar */}
         <HeaderBar
-          onReset={() => reset(initialDummyData)}
+          onReset={() => reset(initialValues)}
           showPreview={showPreview}
           setShowPreview={setShowPreview}
           isSubmitting={isSubmitting}
@@ -93,6 +146,7 @@ export default function AddPackageForm() {
               errors={errors}
               packageTypeWatched={packageTypeWatched}
               setValue={setValue}
+              categories={categories}
             />
 
             <DaysScheduleSection
@@ -100,6 +154,7 @@ export default function AddPackageForm() {
               register={register}
               errors={errors}
               daysWatched={daysWatched}
+              foods={filteredFoods}
             />
           </form>
 
@@ -110,6 +165,7 @@ export default function AddPackageForm() {
               errors={errors}
               packageTypeWatched={packageTypeWatched}
               price={price}
+              discountPercent={discountPercent}
               discountPrice={discountPrice}
               customTypeNameWatched={customTypeNameWatched}
               durationWatched={durationWatched}
@@ -133,7 +189,9 @@ export default function AddPackageForm() {
             totalMealsCount={totalMealsCount}
             price={price}
             discountPrice={discountPrice}
+            discountPercent={discountPercent}
             daysWatched={daysWatched}
+            allFoods={allFoodItems}
           />
         )}
       </div>

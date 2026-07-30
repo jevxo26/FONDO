@@ -2,10 +2,14 @@
 import { SlidersHorizontal, ArrowUpDown } from "lucide-react";
 import { usePackages } from "./packages-context";
 import PackageGrid from "./package-grid";
+import { useGetPackageCategoriesQuery } from "@/store/api/slices/packages-api";
 
 const CATEGORIES = ["All", "Weight Loss", "Weight Gain", "Regular", "Diabetic", "High Protein"];
 
 export default function PackagesWorkspace() {
+  const packageCategories = useGetPackageCategoriesQuery(5)
+  const AllCategories = packageCategories.data
+  console.log(packageCategories.data)
   const {
     selectedCategory,
     setSelectedCategory,
@@ -34,11 +38,10 @@ export default function PackagesWorkspace() {
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
-            className={`h-9 px-4 rounded-xl text-xs font-semibold whitespace-nowrap border transition-all ${
-              selectedCategory === cat
-                ? "bg-primary text-primary-foreground border-primary"
-                : "bg-card border-border hover:bg-muted"
-            }`}
+            className={`h-9 px-4 rounded-xl text-xs font-semibold whitespace-nowrap border transition-all ${selectedCategory === cat
+              ? "bg-primary text-primary-foreground border-primary"
+              : "bg-card border-border hover:bg-muted"
+              }`}
           >
             {cat}
           </button>

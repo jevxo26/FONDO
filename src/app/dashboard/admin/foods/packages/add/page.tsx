@@ -11,9 +11,9 @@ import { GeneralInfoSection } from "@/components/dashboard/admin/packages/genera
 import { DaysScheduleSection } from "@/components/dashboard/admin/packages/day-shedule";
 import { PriceSummarySidebar } from "@/components/dashboard/admin/packages/price-summary";
 import { CardPreview } from "@/components/dashboard/admin/packages/card-preview";
-import { useGetPackageCategories } from "@/hooks/use-package";
 import { useGetFoods } from "@/hooks/use-foods";
 import { useCreatePackage } from "@/services/package.service";
+import { useGetPackageCategoriesQuery } from "@/store/api/slices/packages-api";
 
 const slugify = (value: string) =>
   value
@@ -38,7 +38,7 @@ const getPackageCode = (value: string) => {
 };
 
 export default function AddPackageForm() {
-  const { data: categories } = useGetPackageCategories();
+  const { data: categories } = useGetPackageCategoriesQuery(10);
   const { data: foods } = useGetFoods(1, 500);
   const [showPreview, setShowPreview] = useState(true);
 

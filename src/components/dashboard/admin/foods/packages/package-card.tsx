@@ -149,7 +149,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
               size="sm"
               className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8"
             >
-              <BarChart3 className="mr-1.5 size-[15px]" />
+              <BarChart3 className="mr-1.5 size-3.75" />
               Analytics
             </Button>
           </div>

@@ -6,5 +6,8 @@
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "prettier.configPath": ".prettierrc",
-  "prettier.requireConfig": true
+  "prettier.requireConfig": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }

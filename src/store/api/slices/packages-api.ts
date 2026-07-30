@@ -1,4 +1,5 @@
 import { api } from "../base-api";
+import { createMutationWrapper } from "../mutation-wrapper";
 
 export const packagesApi = api.injectEndpoints({
     endpoints: (builder) => ({
@@ -60,3 +61,35 @@ export const {
     useDeletePackageMutation,
 
 } = packagesApi;
+
+// Query wrappers
+export function useGetPackageCategories() {
+    const { data, isLoading, error } = useGetPackageCategoriesQuery();
+    return { data, isLoading, error };
+}
+
+export function useGetPackages(params?: string) {
+    const { data, isLoading, error } = useGetPackagesQuery(params);
+    return { data, isLoading, error };
+}
+
+export function useGetPackage(id: string) {
+    const { data, isLoading, error } = useGetPackageByIdQuery(id, { skip: !id });
+    return { data, isLoading, error };
+}
+
+// Mutation wrappers — example-api pattern
+export function useCreatePackage() {
+    const [createPackage, { isLoading }] = useCreatePackageMutation();
+    return { createPackage, isPending: isLoading };
+}
+
+export function useUpdatePackage() {
+    const [updatePackage, { isLoading }] = useUpdatePackageMutation();
+    return { updatePackage, ...createMutationWrapper(updatePackage), isPending: isLoading };
+}
+
+export function useDeletePackage() {
+    const [deletePackage, { isLoading }] = useDeletePackageMutation();
+    return { deletePackage, ...createMutationWrapper(deletePackage), isPending: isLoading };
+}

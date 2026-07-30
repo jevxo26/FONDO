@@ -11,9 +11,8 @@ import { GeneralInfoSection } from "@/components/dashboard/admin/packages/genera
 import { DaysScheduleSection } from "@/components/dashboard/admin/packages/day-shedule";
 import { PriceSummarySidebar } from "@/components/dashboard/admin/packages/price-summary";
 import { CardPreview } from "@/components/dashboard/admin/packages/card-preview";
-import { useGetPackageCategories } from "@/hooks/use-package";
-import { useGetFoods } from "@/hooks/use-foods";
-import { useCreatePackage } from "@/services/package.service";
+import { useGetPackageCategories, useCreatePackage } from "@/store/api/slices/packages-api";
+import { useGetFoods } from "@/store/api/slices/foods-api";
 
 const slugify = (value: string) =>
   value

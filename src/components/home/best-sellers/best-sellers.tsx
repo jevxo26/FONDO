@@ -3,7 +3,7 @@ import { SectionHeader } from "@/components/common/section-header";
 import { SectionReveal, SectionRevealItem } from "@/components/common/section-reveal";
 import { Button } from "@/components/ui/button";
 import type { Food } from "@/types/food";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 interface BestSellersProps {
@@ -12,24 +12,27 @@ interface BestSellersProps {
 
 export function BestSellers({ foods }: BestSellersProps) {
   return (
-    <section className="py-8 lg:py-12">
+    <section className="relative py-8 lg:py-12">
       <div className="wrapper">
-        <SectionHeader
-          title="Best Sellers"
-          description="Near Dhanmondi, Dhaka"
-          action={
-            <Button
-              variant="outline"
-              size="lg"
-              className="gap-2 h-auto py-3 px-4 rounded-full"
-              nativeButton={false}
-              render={<Link href="/foods" />}
-            >
-              View Full Menu
-              <ArrowRight className="size-4" />
-            </Button>
-          }
-        />
+        <SectionReveal distance={20}>
+          <SectionHeader
+            title="Best Sellers"
+            description="Near Dhanmondi, Dhaka"
+            action={
+              <Button
+                variant="outline"
+                size="lg"
+                className="group gap-2 rounded-full h-auto py-3 px-4"
+                nativeButton={false}
+                render={<Link href="/foods" />}
+              >
+                <Sparkles className="size-3.5 text-primary" />
+                View Full Menu
+                <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+              </Button>
+            }
+          />
+        </SectionReveal>
         <SectionReveal
           variant="perspectiveReveal"
           stagger

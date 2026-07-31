@@ -9,13 +9,20 @@ export default function MainLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <div className="relative isolate flex min-h-screen flex-col bg-background">
+      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-premium-gradient" />
+        <div className="absolute -top-40 -right-40 size-[600px] rounded-full bg-primary/20 blur-[120px]" />
+        <div className="absolute top-1/3 -left-40 size-[450px] rounded-full bg-amber-500/12 blur-[100px]" />
+        <div className="absolute bottom-0 left-1/2 size-[500px] -translate-x-1/2 rounded-full bg-amber-900/10 blur-[130px]" />
+      </div>
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
       <Navbar />
       <MobileNav />
       <main className="flex-1">
         <PageTransition>{children}</PageTransition>
       </main>
       <Footer />
-    </>
+    </div>
   );
 }

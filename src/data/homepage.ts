@@ -1,11 +1,12 @@
-import { Flame, Leaf, ShieldCheck, Truck } from "lucide-react";
+import { Award, ChefHat, Flame, Leaf, ShieldCheck, Truck } from "lucide-react";
 
 export const TRUST_FEATURES = [
   { icon: Leaf, label: "Fresh daily" },
   { icon: ShieldCheck, label: "100% Halal" },
   { icon: Truck, label: "Fast delivery" },
   { icon: Flame, label: "Coal slow oven" },
-  { icon: Leaf, label: "Fresh daily" },
+  { icon: Award, label: "Premium quality" },
+  { icon: ChefHat, label: "Chef curated" },
 ];
 
 export const CATEGORY_CARDS = [
@@ -119,6 +120,7 @@ export const COMBOS = [
     serves: "4–5",
     popular: true,
     saveAmount: 320,
+    image: "/images/home/card_1.png",
     items: ["2× Mutton Kacchi", "1× Chicken Roast", "4× Borhani", "2× Firni"],
     freeDrink: true,
     price: 1840,
@@ -129,6 +131,7 @@ export const COMBOS = [
     serves: "3–4",
     popular: false,
     saveAmount: 220,
+    image: "/images/home/card_2.png",
     items: ["2× Chicken Tehari", "6× Seekh Kebab", "3× Borhani", "1× Firni"],
     freeDrink: true,
     price: 1240,
@@ -139,6 +142,7 @@ export const COMBOS = [
     serves: "2",
     popular: false,
     saveAmount: 140,
+    image: "/images/home/card_4.png",
     items: ["1× Mutton Kacchi", "4× Seekh Kebab", "2× Borhani", "1× Firni"],
     freeDrink: true,
     price: 820,
@@ -149,16 +153,7 @@ export const COMBOS = [
     serves: "5–6",
     popular: false,
     saveAmount: 380,
-    items: ["3× Chicken Tehari", "1× Roast Chicken", "6× Borhani"],
-    freeDrink: false,
-    price: 2120,
-  },
-  {
-    id: 5,
-    title: "Office Lunch",
-    serves: "5–6",
-    popular: false,
-    saveAmount: 380,
+    image: "/images/home/card_3.png",
     items: ["3× Chicken Tehari", "1× Roast Chicken", "6× Borhani"],
     freeDrink: false,
     price: 2120,

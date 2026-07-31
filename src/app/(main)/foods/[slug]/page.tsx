@@ -18,9 +18,10 @@ export default async function FoodDetails({ params }: PageProps) {
   let relatedFoods: Food[];
 
   try {
-    food = await apiFetch<Food>(`/api/foods/slug/${slug}`);
+    food = await apiFetch<Food>(`/api/foods/slug/${slug}`, { auth: false });
     const related = await apiFetch<{ items: Food[] }>(
       "/api/foods?page=1&limit=5&sortBy=popularity",
+      { auth: false },
     );
     relatedFoods = related.items.filter((f) => f.slug !== slug).slice(0, 4);
   } catch {

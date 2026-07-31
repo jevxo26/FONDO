@@ -27,7 +27,3 @@ export interface Review {
     avatar: string | null;
   };
 }
-
-export interface ReviewListResponse {
-  items: Review[];
-}

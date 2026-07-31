@@ -18,8 +18,8 @@ const listFoods = catchServiceAsync(
     sortOrder?: "asc" | "desc";
   }) => {
     const page = params.page || 1;
-    const limit = params.limit || 20;
-    const skip = (page - 1) * limit;
+    const limit = params.limit;
+    const skip = limit ? (page - 1) * limit : undefined;
 
     const where: Prisma.FoodWhereInput = { status: "active", deletedAt: null };
 
@@ -107,7 +107,79 @@ const listFoods = catchServiceAsync(
       discount: f.discounts[0] || null,
     }));
 
-    return { items: mapped, total, page, limit, totalPages: Math.ceil(total / limit) };
+    return {
+      items: mapped,
+      total,
+      page: limit ? page : 1,
+      limit: limit ?? total,
+      totalPages: limit ? Math.ceil(total / limit) : 1,
+    };
+  },
+);
+
+const listVendorFoods = catchServiceAsync(async (params: { vendorId: string }) => {
+    const where: Prisma.VendorFoodWhereInput = { vendorId: params.vendorId, deletedAt: null };
+
+    const [items, kitchens, branches] = await Promise.all([
+      prisma.vendorFood.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        include: {
+          food: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              foodCode: true,
+              thumbnail: true,
+              status: true,
+              category: { select: { id: true, name: true, slug: true } },
+              subCategory: { select: { id: true, name: true, slug: true } },
+            },
+          },
+          prices: { where: { status: "active" }, orderBy: { createdAt: "desc" }, take: 1 },
+          stock: true,
+          preparationTime: true,
+          performance: true,
+        },
+      }),
+      prisma.vendorKitchen.findMany({ where: { vendorId: params.vendorId }, select: { id: true, kitchenName: true } }),
+      prisma.vendorBranch.findMany({ where: { vendorId: params.vendorId }, select: { id: true, branchName: true } }),
+    ]);
+
+    const kitchenName = new Map(kitchens.map((k) => [k.id, k.kitchenName]));
+    const branchName = new Map(branches.map((b) => [b.id, b.branchName]));
+
+    return items.map((vf) => {
+      const priceRecord = vf.prices[0];
+      const stockRecord = vf.stock;
+      return {
+        id: vf.id,
+        foodId: vf.foodId,
+        name: vf.food.name,
+        category: vf.food.category?.name ?? "",
+        subCategory: vf.food.subCategory?.name ?? "",
+        sku: vf.vendorSku ?? vf.food.foodCode ?? "",
+        kitchen: vf.kitchenId ? (kitchenName.get(vf.kitchenId) ?? "") : "",
+        branch: vf.branchId ? (branchName.get(vf.branchId) ?? "") : "",
+        price: priceRecord ? Number(priceRecord.sellingPrice) : 0,
+        costPrice: priceRecord ? Number(priceRecord.costPrice) : 0,
+        stock: stockRecord?.availableQuantity ?? 0,
+        minStock: stockRecord?.minimumStock ?? 0,
+        maxStock: stockRecord?.maximumStock ?? 0,
+        stockStatus: stockRecord?.stockStatus ?? "OUT_OF_STOCK",
+        status: vf.status === "active" ? "ACTIVE" : "INACTIVE",
+        preparationTime: vf.preparationTime?.averagePreparationTime ?? 0,
+        isFeatured: false,
+        isPopular: false,
+        image: vf.food.thumbnail ?? "",
+        vendorFoodCode: vf.vendorFoodCode ?? "",
+        priority: vf.priority,
+        isPrimary: vf.isPrimary,
+        totalOrders: vf.performance?.totalOrders ?? 0,
+        rating: vf.performance?.customerRating ?? 0,
+      };
+    });
   },
 );
 
@@ -253,24 +325,14 @@ const listFavorites = catchServiceAsync(async (userId: string) => {
   return favorites.map((f) => f.food);
 });
 
-const listReviews = catchServiceAsync(
-  async (foodId: string, page: number = 1, limit: number = 20) => {
-    const skip = (page - 1) * limit;
-
-    const [items, total] = await Promise.all([
-      prisma.foodReview.findMany({
-        where: { foodId, status: "approved" },
-        orderBy: { createdAt: "desc" },
-        skip,
-        take: limit,
-        include: {
-          customer: { select: { id: true, firstName: true, lastName: true, avatar: true } },
-        },
-      }),
-      prisma.foodReview.count({ where: { foodId, status: "approved" } }),
-    ]);
-
-    return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
+const listReviews = catchServiceAsync(async (foodId: string) => {
+    return prisma.foodReview.findMany({
+      where: { foodId, status: "approved" },
+      orderBy: { createdAt: "desc" },
+      include: {
+        customer: { select: { id: true, firstName: true, lastName: true, avatar: true } },
+      },
+    });
   },
 );
 
@@ -327,6 +389,7 @@ async function updateFoodRating(foodId: string) {
 
 export const FoodService = {
   listFoods,
+  listVendorFoods,
   getFoodBySlug,
   getFoodById,
   listCategories,

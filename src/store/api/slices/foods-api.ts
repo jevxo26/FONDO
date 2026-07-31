@@ -1,5 +1,6 @@
 import type { FoodCategoriesData } from "@/types/category";
 import type { FoodResponse } from "@/types/food";
+import type { VendorFood } from "@/types/vendor";
 import { api } from "../base-api";
 
 interface FoodsQueryParams {
@@ -11,9 +12,20 @@ export const foodsApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getFoods: builder.query<FoodResponse, FoodsQueryParams | void>({
       query: (params) => {
-        const { page = 1, limit = 12 } = params ?? {};
-        return { url: "/foods", params: { page, limit } };
+        const { page, limit } = params ?? {};
+        return {
+          url: "/foods",
+          params: {
+            ...(page ? { page } : {}),
+            ...(limit ? { limit } : {}),
+          },
+        };
       },
+      providesTags: ["Food"],
+    }),
+
+    getVendorFoods: builder.query<VendorFood[], void>({
+      query: () => "/foods/vendor/foods",
       providesTags: ["Food"],
     }),
 
@@ -30,10 +42,15 @@ export const foodsApi = api.injectEndpoints({
   overrideExisting: true,
 });
 
-export const { useGetFoodsQuery, useGetFoodBySlugQuery, useGetFoodCategoriesQuery } = foodsApi;
+export const { useGetFoodsQuery, useGetFoodBySlugQuery, useGetFoodCategoriesQuery, useGetVendorFoodsQuery } = foodsApi;
 
 export const useGetFoods = (params?: { page?: number; limit?: number }) => {
   const { data, isLoading, error } = useGetFoodsQuery(params ?? undefined);
+  return { data, isLoading, error };
+};
+
+export const useGetVendorFoods = () => {
+  const { data, isLoading, error } = useGetVendorFoodsQuery();
   return { data, isLoading, error };
 };
 

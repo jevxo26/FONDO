@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { FoodController } from "../controllers/foodController";
-import { verifyToken } from "../middlewares/authMiddleware";
+import { authorize, verifyToken } from "../middlewares/authMiddleware";
 import { validate } from "../middlewares/validate";
 import { createReviewSchema } from "../validations/food.validation";
 
@@ -15,6 +15,7 @@ router.get("/tags/list", FoodController.listTags);
 
 // Authenticated — static routes before :id catch-all
 router.get("/favorites", verifyToken, FoodController.listFavorites);
+router.get("/vendor/foods", verifyToken, authorize("VENDOR"), FoodController.listVendorFoods);
 
 // Dynamic catch-all (must be last)
 router.get("/:id", FoodController.getById);

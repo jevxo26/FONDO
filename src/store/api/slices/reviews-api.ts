@@ -1,10 +1,10 @@
-import type { ReviewListResponse } from "@/types/food-review";
+import type { Review } from "@/types/food-review";
 import { api } from "../base-api";
 import { createMutationWrapper } from "../mutation-wrapper";
 
 export const reviewsApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getFoodReviews: builder.query<ReviewListResponse, string>({
+    getFoodReviews: builder.query<Review[], string>({
       query: (foodId) => `/foods/${foodId}/reviews`,
       providesTags: ["Review"],
     }),

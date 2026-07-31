@@ -3,11 +3,13 @@ import { AuthRequest } from "../types/auth.types";
 import { catchAsync } from "../utils/catchAsync";
 import { sendResponse } from "../utils/sendResponse";
 import { FoodService } from "../services/foodService";
+import prisma from "../lib/prisma";
+import AppError from "../utils/AppError";
 
 const list = catchAsync(async (req: Request, res: Response) => {
   const result = await FoodService.listFoods({
     page: parseInt(req.query.page as string) || 1,
-    limit: parseInt(req.query.limit as string) || 20,
+    limit: req.query.limit ? parseInt(req.query.limit as string) : undefined,
     categoryId: req.query.categoryId as string,
     foodType: req.query.foodType as string,
     spiceLevel: req.query.spiceLevel as string,
@@ -34,6 +36,22 @@ const getById = catchAsync(async (req: Request, res: Response) => {
   const food = await FoodService.getFoodById(id);
 
   sendResponse(res, { statusCode: 200, data: food });
+});
+
+const listVendorFoods = catchAsync(async (req: AuthRequest, res: Response) => {
+  const userId = req.user!.userId;
+  const vendor = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { vendorId: true },
+  });
+
+  if (!vendor?.vendorId) {
+    throw new AppError(403, "No vendor account linked to this user");
+  }
+
+  const result = await FoodService.listVendorFoods({ vendorId: vendor.vendorId });
+
+  sendResponse(res, { statusCode: 200, data: result });
 });
 
 const listCategories = catchAsync(async (_req: Request, res: Response) => {
@@ -81,10 +99,8 @@ const listFavorites = catchAsync(async (req: AuthRequest, res: Response) => {
 
 const listReviews = catchAsync(async (req: Request, res: Response) => {
   const foodId = req.params.foodId as string;
-  const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 20;
 
-  const result = await FoodService.listReviews(foodId, page, limit);
+  const result = await FoodService.listReviews(foodId);
 
   sendResponse(res, { statusCode: 200, data: result });
 });
@@ -102,6 +118,7 @@ const createReview = catchAsync(async (req: AuthRequest, res: Response) => {
 
 export const FoodController = {
   list,
+  listVendorFoods,
   getBySlug,
   getById,
   listCategories,

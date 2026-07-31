@@ -11,7 +11,7 @@ import { useFoodReviews } from "@/store/api/slices/reviews-api";
 export function ProductTabs({ food }: { food: Food }) {
   const [activeTab, setActiveTab] = useState("details");
   const { data } = useFoodReviews(food.id);
-  const allReviews = data?.items ?? [];
+  const allReviews = data ?? [];
 
   const tabTriggerClass =
     "rounded-xl bg-card border border-border text-muted-foreground " +

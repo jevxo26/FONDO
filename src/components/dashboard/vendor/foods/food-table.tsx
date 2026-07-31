@@ -6,14 +6,14 @@ import { DataTable } from "@/components/common/table";
 import { foodColumns } from "./food-columns";
 import { AddFoodModal } from "./add-food-modal";
 import { Button } from "@/components/ui/button";
-import { Plus, Pencil, DollarSign, Package, BookOpen, BarChart, RefreshCw } from "lucide-react";
+import { Plus, Pencil, DollarSign, Package, BookOpen, BarChart, RefreshCw, Loader2 } from "lucide-react";
 import {
-  vendorFoods,
   foodCategories,
   foodStatuses,
   stockStatuses,
   kitchens,
 } from "@/data/vendor-foods";
+import { useGetVendorFoods } from "@/store/api/slices/foods-api";
 import type { VendorFood } from "@/types/vendor";
 import type { RowAction, FacetedFilter, InitialSort } from "@/components/common/table/types";
 
@@ -32,9 +32,12 @@ const INITIAL_FILTERS: Filters = {
 };
 
 export function VendorFoodTableSection() {
-  const [foods, setFoods] = useState<VendorFood[]>(vendorFoods);
+  const { data, isLoading, error } = useGetVendorFoods();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [filters] = useState<Filters>(INITIAL_FILTERS);
+  const [localFoods, setLocalFoods] = useState<VendorFood[] | null>(null);
+
+  const foods = useMemo(() => localFoods ?? data ?? [], [localFoods, data]);
 
   const filteredData = useMemo(() => {
     return foods.filter((item) => {
@@ -48,14 +51,15 @@ export function VendorFoodTableSection() {
   }, [foods, filters]);
 
   const handleToggleStatus = useCallback((food: VendorFood) => {
-    setFoods((prev) =>
-      prev.map((item) =>
+    setLocalFoods((prev) => {
+      const base = prev ?? data ?? [];
+      return base.map((item) =>
         item.id === food.id
           ? { ...item, status: item.status === "ACTIVE" ? "INACTIVE" : "ACTIVE" }
           : item,
-      ),
-    );
-  }, []);
+      );
+    });
+  }, [data]);
 
   const rowActions: RowAction<VendorFood>[] = useMemo(
     () => [
@@ -137,6 +141,40 @@ export function VendorFoodTableSection() {
     id: "name",
     desc: false,
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center rounded-xl border border-border bg-card py-16">
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin" />
+          <span className="text-sm">Loading foods...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center rounded-xl border border-destructive/20 bg-destructive/5 py-16">
+        <p className="text-sm text-destructive">
+          Failed to load foods. Please try again.
+        </p>
+      </div>
+    );
+  }
+
+  if (foods.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border bg-card py-16">
+        <Package className="h-8 w-8 text-muted-foreground" />
+        <p className="text-sm text-muted-foreground">No foods found yet.</p>
+        <Button onClick={() => setIsAddModalOpen(true)} className="gap-2">
+          <Plus className="h-4 w-4" />
+          Add Food
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <>

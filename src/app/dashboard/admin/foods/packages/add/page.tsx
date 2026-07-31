@@ -50,6 +50,7 @@ export default function AddPackageForm() {
     reset,
     setValue,
     formState: { errors, isSubmitting },
+    watch
   } = useForm<PackageFormValues>({
     resolver: yupResolver(packageSchema) as Resolver<PackageFormValues>,
     defaultValues: initialValues,
@@ -163,6 +164,7 @@ export default function AddPackageForm() {
               packageTypeWatched={packageTypeWatched}
               setValue={setValue}
               categories={categories}
+              watch={watch}
             />
 
             <DaysScheduleSection

@@ -37,6 +37,21 @@ export const daySchema = yup.object({
     .required(),
 });
 
+const imageFieldSchema = yup
+  .string()
+  .trim()
+  .required("Image is required")
+  .test("valid-image-path", "Please upload a valid image", (value) => {
+    if (!value) return false;
+
+    const trimmed = value.trim();
+    return (
+      /^https?:\/\//i.test(trimmed) ||
+      /^\//.test(trimmed) ||
+      /^data:image\//i.test(trimmed)
+    );
+  });
+
 export const packageSchema = yup.object({
   packageCode: yup.string().required(),
 
@@ -46,15 +61,9 @@ export const packageSchema = yup.object({
 
   description: yup.string().required(),
 
-  thumbnail: yup
-    .string()
-    .url()
-    .required(),
+  thumbnail: imageFieldSchema,
 
-  coverImage: yup
-    .string()
-    .url()
-    .required(),
+  coverImage: imageFieldSchema,
 
   packageType: yup
     .string()

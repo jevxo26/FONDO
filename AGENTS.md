@@ -105,6 +105,15 @@ prisma/
 - Errors throw `ApiError(statusCode, message)` — use `handleApiError(error)` for user messages
 - 401 auto-triggers `/auth/refresh`, queues concurrent failed requests
 
+### Data Fetching — Which Tool
+
+**One rule: if the page is a server page, use `apiFetch`. If the page is a client page, use RTK Query. Never mix (no server-fetch-then-seed-RTK-cache pattern).**
+
+| Page type | Tool | Example |
+|---|---|---|
+| Server page (no hooks/state, public/SEO) | `apiFetch<T>()` — Next.js server fetch + cache | homepage, food detail |
+| Client page (hooks, state, interactivity) | RTK Query hooks — `useXxxQuery()` / `useXxx()` directly | dashboards, filters, forms |
+
 ### Data Fetching (RTK Query)
 - API endpoints defined in `src/store/api/slices/{domain}-api.ts` — one file per domain
 - Each file exports both RTK Query hooks AND wrapped mutation hooks:
@@ -133,6 +142,8 @@ prisma/
 
 ### Server-Side Data Fetching (Next.js Server Components)
 
+Use only for **server pages** — public/SEO pages with no hooks or interactivity. Client/interactive pages use RTK Query (see above).
+
 - Use `apiFetch<T>(endpoint, options?)` from `@/lib/api` (already exists, wraps `fetch` with Next.js cache)
 - Response envelope `{ success, message, data }` unwrapped automatically — callers receive `T` directly
 - Supports `revalidate` (seconds) and `tags` (on-demand revalidation) via `next` config
@@ -147,42 +158,6 @@ export default async function FoodDetails({ params }) {
   const { slug } = await params;
   const food = await apiFetch<Food>(`/api/foods/slug/${slug}`);
   return <ProductHero food={food} />;
-}
-```
-
-#### Hybrid: Server fetch + Client interaction
-
-Use when page needs interactivity (filters, search, pagination). Server fetches initial data, client seeds RTK Query cache:
-
-```tsx
-// page.tsx — Server Component
-import { apiFetch } from "@/lib/api";
-import { ClientWrapper } from "./client-wrapper";
-import type { FoodResponse } from "@/types/food";
-
-export default async function Page() {
-  const data = await apiFetch<FoodResponse>("/api/foods");
-  return <ClientWrapper initialData={data} />;
-}
-```
-
-```tsx
-// client-wrapper.tsx — Client Component
-"use client";
-
-import { useRef } from "react";
-import { store } from "@/store/store";
-import { foodsApi } from "@/store/api/slices/foods-api";
-import { useGetFoodsQuery } from "@/store/api/slices/foods-api";
-
-export function ClientWrapper({ initialData }) {
-  const seeded = useRef(false);
-  if (!seeded.current) {
-    seeded.current = true;
-    store.dispatch(foodsApi.util.upsertQueryData("getFoods", undefined, initialData));
-  }
-  // Child components call useGetFoods() and get cached data instantly
-  return <InteractiveChild />;
 }
 ```
 

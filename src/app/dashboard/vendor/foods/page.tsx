@@ -1,18 +1,13 @@
+"use client";
+
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { ClientWrapper } from "./client-wrapper";
-import { apiFetch } from "@/lib/api";
-import type { VendorFood } from "@/types/vendor";
-
+import { VendorFoodTableSection } from "@/components/dashboard/vendor/foods/food-table-section";
+import { useGetVendorFoods } from "@/store/api/slices/foods-api";
 import { Utensils, PlusCircle, AlertCircle, Package } from "lucide-react";
 
-export const dynamic = "force-dynamic";
-
-export default async function VendorFoodsPage() {
-  const data = await apiFetch<VendorFood[]>("/api/foods/vendor/foods", {
-    revalidate: 0,
-    tags: ["Food"],
-  });
+export default function VendorFoodsPage() {
+  const { data } = useGetVendorFoods();
 
   const foods = data ?? [];
   const activeItems = foods.filter((f) => f.status === "ACTIVE").length;
@@ -64,7 +59,7 @@ export default async function VendorFoodsPage() {
             {activeItems} Active
           </p>
         </div>
-        <ClientWrapper initialData={data} />
+        <VendorFoodTableSection />
       </div>
     </div>
   );

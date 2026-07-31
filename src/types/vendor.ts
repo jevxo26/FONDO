@@ -1,4 +1,34 @@
 // src/types/vendor.ts
+export interface Vendor {
+  id: string;
+  name: string;
+  code: string;
+  email: string;
+  phone: string;
+  address: string;
+  logo?: string;
+  description?: string;
+  status: "ACTIVE" | "INACTIVE" | "PENDING" | "SUSPENDED";
+  rating: number;
+  totalOrders: number;
+  totalRevenue: number;
+  commissionRate: number;
+  vendorType: string;
+  ownerName: string;
+  ownerPhone: string;
+  ownerEmail: string;
+  businessLicense: string;
+  taxId: string;
+  website?: string;
+  socialMedia?: {
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface VendorFood {
   id: string;
   foodId: string;
@@ -40,7 +70,6 @@ export interface RowAction<TData> {
   onClick: (data: TData) => void;
 }
 
-// src/types/vendor.ts (add these types)
 export interface VendorOrderItem {
   name: string;
   quantity: number;
@@ -56,15 +85,15 @@ export interface VendorOrder {
   totalItems: number;
   totalAmount: number;
   status:
-    | "PENDING"
-    | "CONFIRMED"
-    | "PREPARING"
-    | "READY_FOR_PICKUP"
-    | "PICKED_UP"
-    | "ON_THE_WAY"
-    | "DELIVERED"
-    | "COMPLETED"
-    | "CANCELLED";
+  | "PENDING"
+  | "CONFIRMED"
+  | "PREPARING"
+  | "READY_FOR_PICKUP"
+  | "PICKED_UP"
+  | "ON_THE_WAY"
+  | "DELIVERED"
+  | "COMPLETED"
+  | "CANCELLED";
   paymentStatus: "PAID" | "PENDING" | "REFUNDED";
   deliveryAddress: string;
   deliveryDate: string;
@@ -72,7 +101,7 @@ export interface VendorOrder {
   createdAt: string;
   updatedAt: string;
 }
-// src/types/vendor.ts (add these types)
+
 export interface VendorKitchen {
   id: string;
   name: string;
@@ -91,7 +120,6 @@ export interface VendorKitchen {
   updatedAt: string;
 }
 
-// src/types/vendor.ts (add these types)
 export interface VendorStaff {
   id: string;
   userId: string;
@@ -110,7 +138,7 @@ export interface VendorStaff {
   createdAt: string;
   updatedAt: string;
 }
-// src/types/vendor.ts (add these types)
+
 export interface VendorSettlement {
   id: string;
   settlementNumber: string;
@@ -140,7 +168,7 @@ export interface VendorWalletTransaction {
   remarks: string;
   createdAt: string;
 }
-// src/types/vendor.ts (add these types)
+
 export interface VendorSettings {
   id: string;
   vendorId: string;
@@ -182,7 +210,6 @@ export interface VendorHoliday {
   description: string;
 }
 
-// src/types/vendor.ts (add these types)
 export interface VendorBranch {
   id: string;
   vendorId: string;
@@ -204,7 +231,8 @@ export interface VendorBranch {
   status: "ACTIVE" | "INACTIVE";
   createdAt: string;
   updatedAt: string;
-} // src/types/vendor.ts (add these types)
+}
+
 export interface VendorBankAccount {
   id: string;
   vendorId: string;
@@ -219,7 +247,7 @@ export interface VendorBankAccount {
   createdAt: string;
   updatedAt: string;
 }
-// src/types/vendor.ts (add these types)
+
 export interface VendorServiceArea {
   id: string;
   vendorId: string;

@@ -1,35 +1,29 @@
 // src/components/dashboard/vendor/foods/food-table-section.tsx
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
 import { DataTable } from "@/components/common/table";
-import { foodColumns } from "./food-columns";
-import { AddFoodModal } from "./add-food-modal";
+import type { FacetedFilter, InitialSort, RowAction } from "@/components/common/table/types";
 import { Button } from "@/components/ui/button";
-import { Plus, Pencil, DollarSign, Package, BookOpen, BarChart, RefreshCw, Loader2 } from "lucide-react";
-import {
-  foodCategories,
-  foodStatuses,
-  stockStatuses,
-  kitchens,
-} from "@/data/vendor-foods";
 import { useGetVendorFoods } from "@/store/api/slices/foods-api";
 import type { VendorFood } from "@/types/vendor";
-import type { RowAction, FacetedFilter, InitialSort } from "@/components/common/table/types";
+import {
+  BarChart,
+  BookOpen,
+  DollarSign,
+  Loader2,
+  Package,
+  Pencil,
+  Plus,
+  RefreshCw,
+} from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
+import { foodColumns } from "./food-columns";
 
-interface Filters {
-  category: string;
-  status: string;
-  stockStatus: string;
-  kitchen: string;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+
+interface VendorFoodTableSectionProps {
+  initialFoods: VendorFood[];
 }
-
-const INITIAL_FILTERS: Filters = {
-  category: "ALL",
-  status: "ALL",
-  stockStatus: "ALL",
-  kitchen: "ALL",
-};
 
 export function VendorFoodTableSection() {
   const { data, isLoading, error } = useGetVendorFoods();
@@ -50,16 +44,19 @@ export function VendorFoodTableSection() {
     });
   }, [foods, filters]);
 
-  const handleToggleStatus = useCallback((food: VendorFood) => {
-    setLocalFoods((prev) => {
-      const base = prev ?? data ?? [];
-      return base.map((item) =>
-        item.id === food.id
-          ? { ...item, status: item.status === "ACTIVE" ? "INACTIVE" : "ACTIVE" }
-          : item,
-      );
-    });
-  }, [data]);
+  const handleToggleStatus = useCallback(
+    (food: VendorFood) => {
+      setLocalFoods((prev) => {
+        const base = prev ?? data ?? [];
+        return base.map((item) =>
+          item.id === food.id
+            ? { ...item, status: item.status === "ACTIVE" ? "INACTIVE" : "ACTIVE" }
+            : item,
+        );
+      });
+    },
+    [data],
+  );
 
   const rowActions: RowAction<VendorFood>[] = useMemo(
     () => [
@@ -103,35 +100,44 @@ export function VendorFoodTableSection() {
     [handleToggleStatus],
   );
 
-  // Build faceted filters for the DataTable
   const facetedFilters: FacetedFilter[] = useMemo(
     () => [
       {
         columnId: "category",
         title: "Category",
-        options: foodCategories.map((c) => ({ label: c.label, value: c.value })),
+        options: [
+          { label: "All", value: "ALL" },
+          { label: "Appetizer", value: "APPETIZER" },
+          { label: "Main Course", value: "MAIN_COURSE" },
+          { label: "Dessert", value: "DESSERT" },
+          { label: "Beverage", value: "BEVERAGE" },
+        ],
       },
       {
         columnId: "status",
         title: "Status",
-        options: foodStatuses.map((s) => ({ label: s.label, value: s.value })),
+        options: [
+          { label: "All", value: "ALL" },
+          { label: "Active", value: "ACTIVE" },
+          { label: "Inactive", value: "INACTIVE" },
+        ],
       },
       {
         columnId: "stockStatus",
         title: "Stock",
-        options: stockStatuses.map((s) => ({ label: s.label, value: s.value })),
-      },
-      {
-        columnId: "kitchen",
-        title: "Kitchen",
-        options: kitchens.map((k) => ({ label: k.label, value: k.value })),
+        options: [
+          { label: "All", value: "ALL" },
+          { label: "In Stock", value: "IN_STOCK" },
+          { label: "Low Stock", value: "LOW_STOCK" },
+          { label: "Out of Stock", value: "OUT_OF_STOCK" },
+        ],
       },
     ],
     [],
   );
 
   const toolbarActions = (
-    <Button onClick={() => setIsAddModalOpen(true)} className="gap-2">
+    <Button onClick={handleAddFood} className="gap-2">
       <Plus className="h-4 w-4" />
       Add Food
     </Button>
@@ -156,9 +162,7 @@ export function VendorFoodTableSection() {
   if (error) {
     return (
       <div className="flex items-center justify-center rounded-xl border border-destructive/20 bg-destructive/5 py-16">
-        <p className="text-sm text-destructive">
-          Failed to load foods. Please try again.
-        </p>
+        <p className="text-sm text-destructive">Failed to load foods. Please try again.</p>
       </div>
     );
   }
@@ -177,20 +181,17 @@ export function VendorFoodTableSection() {
   }
 
   return (
-    <>
-      <DataTable
-        columns={foodColumns}
-        data={filteredData}
-        pageSize={10}
-        enableSorting
-        rowActions={rowActions}
-        toolbarActions={toolbarActions}
-        filters={facetedFilters}
-        enableSearch
-        enableColumnToggle
-        initialSort={initialSort}
-      />
-      <AddFoodModal open={isAddModalOpen} onOpenChange={setIsAddModalOpen} />
-    </>
+    <DataTable
+      columns={foodColumns}
+      data={foods}
+      pageSize={10}
+      enableSorting
+      rowActions={rowActions}
+      toolbarActions={toolbarActions}
+      filters={facetedFilters}
+      enableSearch
+      enableColumnToggle
+      initialSort={initialSort}
+    />
   );
 }

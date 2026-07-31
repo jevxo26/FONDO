@@ -60,6 +60,6 @@ export const useGetFoodBySlug = (slug: string) => {
 };
 
 export const useFoodCategories = () => {
-  const { data, isLoading, error } = useGetFoodCategoriesQuery();
+  const { data, isLoading, error, } = useGetFoodCategoriesQuery();
   return { data, isLoading, error };
 };

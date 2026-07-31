@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { VendorFoodTableSection } from "@/components/dashboard/vendor/foods/food-table-section";
 import { useGetVendorFoods } from "@/store/api/slices/foods-api";
-import { Utensils, PlusCircle, AlertCircle, Package } from "lucide-react";
+import { AlertCircle, Package, PlusCircle, Utensils } from "lucide-react";
 
 export default function VendorFoodsPage() {
   const { data } = useGetVendorFoods();
@@ -59,7 +59,7 @@ export default function VendorFoodsPage() {
             {activeItems} Active
           </p>
         </div>
-        <VendorFoodTableSection />
+        <VendorFoodTableSection initialFoods={foods} />
       </div>
     </div>
   );

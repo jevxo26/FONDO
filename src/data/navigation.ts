@@ -1,6 +1,7 @@
 import {
   Bike,
   BookOpen,
+  Combine,
   HelpCircle,
   Info,
   Mail,
@@ -9,7 +10,6 @@ import {
   Store,
   Truck,
   Utensils,
-  UtensilsCrossed,
 } from "lucide-react";
 import type { ComponentType } from "react";
 
@@ -32,7 +32,7 @@ interface NavLink {
 export const childIcons: Record<string, ComponentType<{ className?: string }>> = {
   "/foods": Utensils,
   "/packages": Package,
-  "/meals": UtensilsCrossed,
+  "/combos": Combine,
   "/reviews": MessageSquareText,
   "/our-story": BookOpen,
   "/about": Info,
@@ -50,12 +50,12 @@ export const mainNavLinks: NavLink[] = [
     children: [
       { href: "/foods", label: "All Foods" },
       { href: "/packages", label: "Packages" },
-      { href: "/meals", label: "Meals" },
+      { href: "/combos", label: "Combos" },
       { href: "/reviews", label: "Reviews" },
     ],
   },
   { href: "/packages", label: "Packages" },
-  { href: "/meals", label: "Meals" },
+  { href: "/track-order", label: "Track Order" },
   {
     label: "More",
     children: [
@@ -73,8 +73,9 @@ export const mobileNavLinks: { href: string; label: string }[] = [
   { href: "/", label: "Home" },
   { href: "/foods", label: "All Foods" },
   { href: "/packages", label: "Packages" },
-  { href: "/meals", label: "Meals" },
+  { href: "/combos", label: "Combos" },
   { href: "/reviews", label: "Reviews" },
+  { href: "/track-order", label: "Track Order" },
   { href: "/our-story", label: "Our Story" },
   { href: "/about", label: "About" },
   { href: "/apply/vendor", label: "Apply as Vendor" },

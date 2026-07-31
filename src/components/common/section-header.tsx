@@ -18,7 +18,7 @@ export function SectionHeader({
   return (
     <div
       className={cn(
-        "flex items-center gap-4",
+        "flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4",
         align === "center" && "justify-center text-center",
         align === "left" && "w-full",
         className,
@@ -33,7 +33,7 @@ export function SectionHeader({
         </h2>
         {description && <p className="text-sm text-muted-foreground lg:text-base">{description}</p>}
       </div>
-      {action && <div className="ml-auto shrink-0">{action}</div>}
+      {action && <div className="w-full sm:ml-auto sm:w-auto shrink-0">{action}</div>}
     </div>
   );
 }

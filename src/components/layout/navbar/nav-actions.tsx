@@ -15,18 +15,14 @@ import { ROLE_DASHBOARD } from "@/data/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { useCart } from "@/store/api/slices/cart-api";
 import { useFavorites } from "@/hooks/use-favorites";
-import { toggleMobileMenu } from "@/store/slices/uiSlice";
-import { useAppDispatch } from "@/store/store";
 import {
   ChevronDown,
   Heart,
   LayoutDashboard,
   LogOut,
-  Menu,
   ShoppingBag,
   ShoppingCart,
   Settings,
-  Truck,
   User,
 } from "lucide-react";
 import Link from "next/link";
@@ -45,7 +41,6 @@ const roleLabels: Record<string, string> = {
 };
 
 export function NavActions() {
-  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const { user, isAuthenticated, logout } = useAuth();
@@ -74,7 +69,7 @@ export function NavActions() {
     <div className="flex items-center gap-2">
       <Link
         href="/wishlist"
-        className="relative flex size-9 items-center justify-center rounded-full bg-destructive/20 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-destructive/30 active:scale-[0.95]"
+        className="relative flex size-10 items-center justify-center rounded-full bg-destructive/20 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-destructive/30 active:scale-[0.95]"
       >
         <Heart className="size-4 text-foreground" />
         {favoritesCount > 0 && (
@@ -85,7 +80,7 @@ export function NavActions() {
       </Link>
       <Link
         href="/cart"
-        className="relative flex size-9 items-center justify-center rounded-full bg-secondary transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-secondary active:scale-[0.95]"
+        className="relative hidden size-10 items-center justify-center rounded-full bg-secondary transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-secondary active:scale-[0.95] lg:flex"
       >
         <ShoppingCart className="size-4 text-foreground" />
         {cartCount > 0 && (
@@ -93,13 +88,6 @@ export function NavActions() {
             {cartCount > 9 ? "9+" : cartCount}
           </span>
         )}
-      </Link>
-      <Link
-        href="/track-order"
-        className="hidden items-center gap-2 rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-secondary transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-foreground/90 active:scale-[0.98] lg:flex"
-      >
-        <Truck className="size-4 text-secondary" />
-        Track Order
       </Link>
 
       {isAuthenticated && user ? (
@@ -206,16 +194,6 @@ export function NavActions() {
           Sign In
         </Link>
       )}
-
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => dispatch(toggleMobileMenu())}
-        className="rounded-full hover:bg-black/5 lg:hidden active:scale-[0.95] transition-all duration-300"
-        aria-label="Open menu"
-      >
-        <Menu className="size-5" />
-      </Button>
     </div>
   );
 }

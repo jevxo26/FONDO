@@ -3,10 +3,12 @@
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { toggleSearch } from "@/store/slices/uiSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 
 export function SearchForm() {
-  const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useAppDispatch();
+  const isOpen = useAppSelector((state) => state.ui.isSearchOpen);
 
   return (
     <>
@@ -32,8 +34,8 @@ export function SearchForm() {
 
       {/* Search icon — below 2xl */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex size-9 items-center justify-center rounded-full bg-muted border border-border 2xl:hidden"
+        onClick={() => dispatch(toggleSearch())}
+        className="flex size-10 items-center justify-center rounded-full bg-muted border border-border 2xl:hidden"
         aria-label="Toggle search"
       >
         {isOpen ? (

@@ -33,7 +33,7 @@ export function Navbar() {
               <span className="text-[20px] font-bold text-foreground">FONDO</span>
             </Link>
 
-            <NavigationMenu className="hidden md:flex">
+            <NavigationMenu className="hidden lg:flex">
               <NavigationMenuList className="gap-0 md:gap-1 lg:gap-2 xl:gap-3">
                 {mainNavLinks.map((link) => (
                   <NavigationMenuItem key={link.label}>

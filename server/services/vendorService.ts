@@ -65,6 +65,7 @@ const createVendor = catchServiceAsync(
         email,
         phone,
         vendorCode: uniqueVendorCode,
+        userId: newUser.id,
         settings: { create: {} },
         wallet: { create: {} },
       };

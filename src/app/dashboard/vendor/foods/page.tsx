@@ -144,8 +144,6 @@ const MOCK_FOODS: VendorFood[] = [
 
 export default function VendorFoodsPage() {
   const { data, isLoading, isError } = useGetVendorFoodsQuery();
-
-  // API fail হলে mock data ব্যবহার করব
   const foods = data?.items?.length ? data.items : MOCK_FOODS;
   const totalItems = foods.length;
   const activeItems = foods.filter((f) => f.status === "ACTIVE").length;

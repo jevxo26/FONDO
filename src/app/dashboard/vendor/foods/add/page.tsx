@@ -1,4 +1,3 @@
-// src/app/dashboard/vendor/foods/add/page.tsx
 "use client";
 
 import { NutritionSectionFood } from "@/components/dashboard/vendor/foods/nutrition-section";

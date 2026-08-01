@@ -2,14 +2,6 @@
 import type { VendorFood } from "@/types/vendor";
 import { api } from "../base-api";
 
-interface VendorFoodsResponse {
-    items: VendorFood[];
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-}
-
 interface UpdateFoodStatusPayload {
     id: string;
     status: "ACTIVE" | "INACTIVE";
@@ -70,14 +62,6 @@ export interface CreateVendorFoodPayload {
 
 export const vendorFoodApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        getVendorFoods: builder.query<VendorFoodsResponse, void>({
-            query: () => ({
-                url: "/vendor/foods",
-                method: "GET",
-            }),
-            providesTags: ["VendorFood"],
-        }),
-
         updateFoodStatus: builder.mutation<VendorFood, UpdateFoodStatusPayload>({
             query: ({ id, status }) => ({
                 url: `/vendor/foods/${id}/status`,
@@ -100,7 +84,6 @@ export const vendorFoodApi = api.injectEndpoints({
 });
 
 export const {
-    useGetVendorFoodsQuery,
     useUpdateFoodStatusMutation,
     useCreateVendorFoodMutation,
 } = vendorFoodApi;

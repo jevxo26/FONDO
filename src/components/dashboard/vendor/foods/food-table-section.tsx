@@ -16,33 +16,20 @@ import {
   Plus,
   RefreshCw,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import { foodColumns } from "./food-columns";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-
-interface VendorFoodTableSectionProps {
-  initialFoods: VendorFood[];
-}
-
 export function VendorFoodTableSection() {
+  const router = useRouter();
   const { data, isLoading, error } = useGetVendorFoods();
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [filters] = useState<Filters>(INITIAL_FILTERS);
   const [localFoods, setLocalFoods] = useState<VendorFood[] | null>(null);
 
   const foods = useMemo(() => localFoods ?? data ?? [], [localFoods, data]);
 
-  const filteredData = useMemo(() => {
-    return foods.filter((item) => {
-      const matchCategory = filters.category === "ALL" || item.category === filters.category;
-      const matchStatus = filters.status === "ALL" || item.status === filters.status;
-      const matchStockStatus =
-        filters.stockStatus === "ALL" || item.stockStatus === filters.stockStatus;
-      const matchKitchen = filters.kitchen === "ALL" || item.kitchen === filters.kitchen;
-      return matchCategory && matchStatus && matchStockStatus && matchKitchen;
-    });
-  }, [foods, filters]);
+  const handleAddFood = useCallback(() => {
+    router.push("/dashboard/vendor/foods/add");
+  }, [router]);
 
   const handleToggleStatus = useCallback(
     (food: VendorFood) => {
@@ -117,7 +104,6 @@ export function VendorFoodTableSection() {
         columnId: "status",
         title: "Status",
         options: [
-          { label: "All", value: "ALL" },
           { label: "Active", value: "ACTIVE" },
           { label: "Inactive", value: "INACTIVE" },
         ],
@@ -126,7 +112,6 @@ export function VendorFoodTableSection() {
         columnId: "stockStatus",
         title: "Stock",
         options: [
-          { label: "All", value: "ALL" },
           { label: "In Stock", value: "IN_STOCK" },
           { label: "Low Stock", value: "LOW_STOCK" },
           { label: "Out of Stock", value: "OUT_OF_STOCK" },
@@ -172,7 +157,7 @@ export function VendorFoodTableSection() {
       <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border bg-card py-16">
         <Package className="h-8 w-8 text-muted-foreground" />
         <p className="text-sm text-muted-foreground">No foods found yet.</p>
-        <Button onClick={() => setIsAddModalOpen(true)} className="gap-2">
+        <Button onClick={handleAddFood} className="gap-2">
           <Plus className="h-4 w-4" />
           Add Food
         </Button>

@@ -131,8 +131,9 @@ export default function AddFoodPage() {
 
       reset(initialValues);
       router.push("/dashboard/vendor/foods");
-    } catch (error: any) {
-      const message = error?.data?.message || error?.message || "Failed to create food.";
+    } catch (error) {
+      const err = error as { data?: { message?: string }; message?: string };
+      const message = err?.data?.message || err?.message || "Failed to create food.";
       toast.error(message);
       console.error(error);
     }

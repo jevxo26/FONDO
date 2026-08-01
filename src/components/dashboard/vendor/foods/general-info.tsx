@@ -6,7 +6,7 @@ import { FoodFormValues } from "@/lib/schema/food-schema";
 import { Vendor } from "@/data/vendors";
 import { Info } from "lucide-react";
 import { FieldErrors, UseFormRegister, UseFormSetValue, Control, useWatch } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 interface Category {
   id: string;
@@ -33,22 +33,20 @@ export function GeneralInfoSection({
   categories,
   vendorIdFromUrl,
 }: GeneralInfoSectionProps) {
-  const [subCategories, setSubCategories] = useState<{ id: string; name: string }[]>([]);
-
   const categoryIdWatched = useWatch({
     control,
     name: "categoryId",
   });
 
-  useEffect(() => {
-    if (categoryIdWatched && categories?.items) {
-      const selectedCategory = categories.items.find((cat) => cat.id === categoryIdWatched);
-      setSubCategories(selectedCategory?.subCategories || []);
-      setValue("subCategoryId", "");
-    } else {
-      setSubCategories([]);
-    }
-  }, [categoryIdWatched, categories, setValue]);
+  const subCategories = useMemo(() => {
+    const selectedCategory = categories?.items?.find((cat) => cat.id === categoryIdWatched);
+    return selectedCategory?.subCategories || [];
+  }, [categoryIdWatched, categories]);
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    register("categoryId").onChange(e);
+    setValue("subCategoryId", "");
+  };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -95,7 +93,7 @@ export function GeneralInfoSection({
         </FormField>
 
         <FormField label="Category" error={errors.categoryId} required>
-          <select {...register("categoryId")} className={inputStyles}>
+          <select {...register("categoryId")} onChange={handleCategoryChange} className={inputStyles}>
             <option value="">Select Category...</option>
             {categories?.items?.map((cat) => (
               <option key={cat.id} value={cat.id}>

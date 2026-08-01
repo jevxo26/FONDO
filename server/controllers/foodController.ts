@@ -40,16 +40,25 @@ const getById = catchAsync(async (req: Request, res: Response) => {
 
 const listVendorFoods = catchAsync(async (req: AuthRequest, res: Response) => {
   const userId = req.user!.userId;
-  const vendor = await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { vendorId: true },
   });
 
-  if (!vendor?.vendorId) {
+  let vendorId = user?.vendorId ?? null;
+  if (!vendorId) {
+    const staff = await prisma.vendorStaff.findFirst({
+      where: { userId },
+      select: { vendorId: true },
+    });
+    vendorId = staff?.vendorId ?? null;
+  }
+
+  if (!vendorId) {
     throw new AppError(403, "No vendor account linked to this user");
   }
 
-  const result = await FoodService.listVendorFoods({ vendorId: vendor.vendorId });
+  const result = await FoodService.listVendorFoods({ vendorId });
 
   sendResponse(res, { statusCode: 200, data: result });
 });

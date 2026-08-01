@@ -202,6 +202,12 @@ export default async function FoodDetails({ params }) {
 - **Fraunces** (serif) for headings — loaded in `layout.tsx`
 - **Inter** (sans-serif) for UI
 
+## Commits
+
+- **Never auto-commit.** Only commit when the user explicitly asks.
+- After finishing a task, provide a short suggested commit message instead (under 72 chars, conventional format, e.g. `feat(scope): summary`).
+- If the user says "commit", then stage intended files only and commit.
+
 ## Known Gaps
 
 - **No test framework** — no jest/vitest in `package.json`, no test files exist. Tests are not yet set up.

@@ -59,7 +59,7 @@ export default function VendorFoodsPage() {
             {activeItems} Active
           </p>
         </div>
-        <VendorFoodTableSection initialFoods={foods} />
+        <VendorFoodTableSection />
       </div>
     </div>
   );

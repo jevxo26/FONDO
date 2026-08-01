@@ -65,7 +65,6 @@ const createVendor = catchServiceAsync(
         email,
         phone,
         vendorCode: uniqueVendorCode,
-        userId: newUser.id,
         settings: { create: {} },
         wallet: { create: {} },
       };
@@ -75,6 +74,11 @@ const createVendor = catchServiceAsync(
       if (binNumber) vendorData.binNumber = binNumber;
 
       const newVendor = await tx.vendor.create({ data: vendorData as Prisma.VendorCreateInput });
+
+      await tx.user.update({
+        where: { id: newUser.id },
+        data: { vendorId: newVendor.id },
+      });
 
       await tx.vendorStaff.create({
         data: {

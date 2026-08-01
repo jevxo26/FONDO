@@ -14,4 +14,5 @@ export interface User {
   lastLoginAt: string;
   createdAt: string;
   updatedAt: string;
+  permissions?: string[];
 }

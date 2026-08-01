@@ -26,11 +26,18 @@ import {
   updateAvailabilitySchema,
   createScheduleSchema,
   updateVisibilitySchema,
+  createFoodImageSchema,
 } from "../validations/adminFood.validation";
 
 const router = Router();
 
 router.use(verifyToken, authorize("ADMIN", "SUPER_ADMIN"));
+
+// Queries
+router.get("/foods", AdminFoodController.listFoods);
+router.get("/foods/:id", AdminFoodController.getFood);
+router.get("/categories", AdminFoodController.listCategories);
+router.get("/tags", AdminFoodController.listTags);
 
 // Food
 router.post("/foods", validate(createFoodSchema), AdminFoodController.createFood);
@@ -108,6 +115,15 @@ router.delete("/allergens/:id", AdminFoodController.deleteAllergen);
 
 // Price
 router.post("/foods/:foodId/prices", validate(createPriceSchema), AdminFoodController.createPrice);
+router.delete("/prices/:id", AdminFoodController.deletePrice);
+
+// Food Image
+router.post(
+  "/foods/:foodId/images",
+  validate(createFoodImageSchema),
+  AdminFoodController.createFoodImage,
+);
+router.delete("/food-images/:id", AdminFoodController.deleteFoodImage);
 
 // Discount
 router.post(

@@ -22,6 +22,8 @@ export const TAG_TYPES = [
   "AdminPayment",
   "VendorSettlement",
   "PlatformRevenue",
+  "Role",
+  "Permission",
 ] as const;
 
 export type TagType = (typeof TAG_TYPES)[number];

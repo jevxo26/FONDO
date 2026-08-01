@@ -8,6 +8,7 @@ import { sendUserDataAsResponse } from "../utils/responseStyle";
 import prisma from "../lib/prisma";
 import { trackFailedLogin } from "./authOtpService";
 import { sendWelcomeEmail } from "./emailService";
+import { getUserPermissions } from "./rbacService";
 
 export const loginUser = catchServiceAsync(async (identifier: string, password: string) => {
   const isEmail = identifier.includes("@");
@@ -25,7 +26,8 @@ export const loginUser = catchServiceAsync(async (identifier: string, password: 
     throw new AppError(401, "Invalid email/phone or password");
   }
 
-  const token = createToken(user.id, user.email, user.role);
+  const permissions = await getUserPermissions(user.id);
+  const token = createToken(user.id, user.email, user.role, permissions);
   const refreshToken = createRefreshToken(user.id);
 
   await prisma.user.update({
@@ -100,8 +102,9 @@ export const registerUser = catchServiceAsync(
       select: sendUserDataAsResponse,
     });
 
-    sendWelcomeEmail({ id: user.id, firstName: user.firstName, email: user.email })
-      .catch((err) => console.error("[Email] Welcome email send error:", err));
+    sendWelcomeEmail({ id: user.id, firstName: user.firstName, email: user.email }).catch((err) =>
+      console.error("[Email] Welcome email send error:", err),
+    );
 
     return user;
   },
@@ -133,7 +136,8 @@ export const refreshToken = catchServiceAsync(async (token: string) => {
     throw new AppError(401, "User not found");
   }
 
-  const newAccessToken = createToken(user.id, user.email, user.role);
+  const permissions = await getUserPermissions(user.id);
+  const newAccessToken = createToken(user.id, user.email, user.role, permissions);
 
   await prisma.userSession.update({
     where: { id: session.id },

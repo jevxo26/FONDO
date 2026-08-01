@@ -17,6 +17,7 @@ import {
   Radio,
   Receipt,
   Repeat,
+  ShieldCheck,
   Store,
   ThumbsUp,
   Ticket,
@@ -74,6 +75,11 @@ export const sidebarItems: SidebarItem[] = [
     ],
   },
   {
+    label: "Roles & Permissions",
+    href: "/roles",
+    icon: ShieldCheck,
+  },
+  {
     label: "Orders",
     href: "/orders",
     icon: Receipt,
@@ -123,7 +129,7 @@ export const sidebarItems: SidebarItem[] = [
 ];
 
 export const sectionConfig = [
-  { label: "Management", items: ["Customers", "Vendors", "Foods"] },
+  { label: "Management", items: ["Customers", "Vendors", "Foods", "Roles & Permissions"] },
   { label: "Operations", items: ["Orders", "Payments", "Riders"] },
   { label: "Analytics", items: ["Reports"] },
 ] as const;

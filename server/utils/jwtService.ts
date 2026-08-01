@@ -1,11 +1,17 @@
 import jwt from "jsonwebtoken";
 
-export const createToken = (id: string, email: string, role: string): string => {
+export const createToken = (
+  id: string,
+  email: string,
+  role: string,
+  permissions: string[] = [],
+): string => {
   return jwt.sign(
     {
       userId: id,
       email: email,
       role: role,
+      permissions: permissions,
     },
     (process.env.JWT_SECRET as string) || "fallback_secret",
     {

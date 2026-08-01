@@ -5,6 +5,30 @@ import * as adminFoodService from "../services/adminFoodService";
 import * as adminFoodCatalogService from "../services/adminFoodCatalogService";
 import * as adminFoodAddonService from "../services/adminFoodAddonService";
 import * as adminFoodMetaService from "../services/adminFoodMetaService";
+import * as adminFoodQueryService from "../services/adminFoodQueryService";
+
+// ─── Queries ────────────────────────────────────────────────
+
+const listFoods = catchAsync(async (req: Request, res: Response) => {
+  const foods = await adminFoodQueryService.listAdminFoods(req.query as never);
+  sendResponse(res, { statusCode: 200, data: foods });
+});
+
+const getFood = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const food = await adminFoodQueryService.getAdminFoodById(id);
+  sendResponse(res, { statusCode: 200, data: food });
+});
+
+const listCategories = catchAsync(async (_req: Request, res: Response) => {
+  const categories = await adminFoodQueryService.listAdminCategories();
+  sendResponse(res, { statusCode: 200, data: categories });
+});
+
+const listTags = catchAsync(async (_req: Request, res: Response) => {
+  const tags = await adminFoodQueryService.listAdminTags();
+  sendResponse(res, { statusCode: 200, data: tags });
+});
 
 // ─── Food ──────────────────────────────────────────────────
 
@@ -188,6 +212,28 @@ const deleteDiscount = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, { statusCode: 200, message: "Discount removed" });
 });
 
+// ─── Price ──────────────────────────────────────────────────
+
+const deletePrice = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  await adminFoodMetaService.deletePrice(id);
+  sendResponse(res, { statusCode: 200, message: "Price removed" });
+});
+
+// ─── Food Image ─────────────────────────────────────────────
+
+const createFoodImage = catchAsync(async (req: Request, res: Response) => {
+  const foodId = req.params.foodId as string;
+  const image = await adminFoodMetaService.createFoodImage(foodId, req.body.image);
+  sendResponse(res, { statusCode: 201, message: "Food image added", data: image });
+});
+
+const deleteFoodImage = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  await adminFoodMetaService.deleteFoodImage(id);
+  sendResponse(res, { statusCode: 200, message: "Food image removed" });
+});
+
 // ─── Tags ──────────────────────────────────────────────────
 
 const addFoodTags = catchAsync(async (req: Request, res: Response) => {
@@ -253,6 +299,10 @@ const updateVisibility = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const AdminFoodController = {
+  listFoods,
+  getFood,
+  listCategories,
+  listTags,
   createFood,
   updateFood,
   deleteFood,
@@ -278,8 +328,11 @@ export const AdminFoodController = {
   createAllergen,
   deleteAllergen,
   createPrice,
+  deletePrice,
   createDiscount,
   deleteDiscount,
+  createFoodImage,
+  deleteFoodImage,
   addFoodTags,
   removeFoodTag,
   createTag,

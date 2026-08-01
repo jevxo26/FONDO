@@ -50,6 +50,7 @@ export default function AddPackageForm() {
     reset,
     setValue,
     formState: { errors, isSubmitting },
+    watch
   } = useForm<PackageFormValues>({
     resolver: yupResolver(packageSchema) as Resolver<PackageFormValues>,
     defaultValues: initialValues,
@@ -71,18 +72,12 @@ export default function AddPackageForm() {
 
   const selectedCategoryName =
     categories?.find((c: PackageCategory) => c.id === categoryIdWatched)?.name || "Meal Package";
-  const selectedCategory = categories?.find((c: PackageCategory) => c.id === categoryIdWatched);
   const totalMealsCount = daysWatched.reduce((acc, day) => acc + (day?.meals?.length || 0), 0);
   const totalFoodsCount = daysWatched.reduce(
     (acc, day) => acc + (day?.meals?.reduce((mAcc, m) => mAcc + (m?.foods?.length || 0), 0) || 0),
     0,
   );
-
-  const filteredFoods = foods?.items.filter((food) => {
-    const matchCategory = food.category.name === selectedCategory?.name;
-    const matchDiet = food.diets?.some((d) => d.dietType === selectedCategory?.name);
-    return matchCategory || matchDiet;
-  });
+  const filteredFoods = foods?.items
 
   const selectedFoodPriceItems = daysWatched.flatMap(
     (day) =>
@@ -169,6 +164,7 @@ export default function AddPackageForm() {
               packageTypeWatched={packageTypeWatched}
               setValue={setValue}
               categories={categories}
+              watch={watch}
             />
 
             <DaysScheduleSection

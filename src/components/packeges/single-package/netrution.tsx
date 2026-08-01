@@ -1,26 +1,113 @@
-import React from "react";
+"use client";
 
-export default function NutrientDashboard() {
-  const macros = [
-    { label: "Daily Energy", value: "1,500", unit: "kcal" },
-    { label: "Target Protein", value: "110", unit: "grams" },
-    { label: "Carbohydrates", value: "95", unit: "grams" },
-    { label: "Healthy Fats", value: "55", unit: "grams" },
+import { useMemo } from "react";
+
+interface Props {
+  days: any[];
+}
+
+export default function NutrientDashboard({ days }: Props) {
+  const nutrition = useMemo(() => {
+    let calories = 0;
+    let protein = 0;
+    let carbohydrate = 0;
+    let fat = 0;
+    let fiber = 0;
+    let sugar = 0;
+    let sodium = 0;
+    let cholesterol = 0;
+
+    days?.forEach((day) => {
+      day.meals?.forEach((meal: any) => {
+        meal.foods?.forEach((item: any) => {
+          const food = item.food;
+
+          if (!food) return;
+
+          calories += Number(food.calories ?? 0);
+          protein += Number(food.protein ?? 0);
+          carbohydrate += Number(food.carbohydrate ?? 0);
+          fat += Number(food.fat ?? 0);
+          fiber += Number(food.fiber ?? 0);
+          sugar += Number(food.sugar ?? 0);
+          sodium += Number(food.sodium ?? 0);
+          cholesterol += Number(food.cholesterol ?? 0);
+        });
+      });
+    });
+
+    return {
+      calories,
+      protein,
+      carbohydrate,
+      fat,
+      fiber,
+      sugar,
+      sodium,
+      cholesterol,
+    };
+  }, [days]);
+
+  const cards = [
+    {
+      label: "Calories",
+      value: nutrition.calories,
+      unit: "kcal",
+    },
+    {
+      label: "Protein",
+      value: nutrition.protein,
+      unit: "g",
+    },
+    {
+      label: "Carbohydrates",
+      value: nutrition.carbohydrate,
+      unit: "g",
+    },
+    {
+      label: "Fat",
+      value: nutrition.fat,
+      unit: "g",
+    },
+    {
+      label: "Fiber",
+      value: nutrition.fiber,
+      unit: "g",
+    },
+    {
+      label: "Sugar",
+      value: nutrition.sugar,
+      unit: "g",
+    },
+    {
+      label: "Sodium",
+      value: nutrition.sodium,
+      unit: "mg",
+    },
+    {
+      label: "Cholesterol",
+      value: nutrition.cholesterol,
+      unit: "mg",
+    },
   ];
 
   return (
     <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {macros.map((macro, idx) => (
+      {cards.map((card) => (
         <div
-          key={idx}
+          key={card.label}
           className="bg-card border border-border/20 rounded-2xl p-4 text-center shadow-sm"
         >
           <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground/70 block mb-1">
-            {macro.label}
+            {card.label}
           </span>
-          <div className="font-heading text-2xl font-medium text-foreground">{macro.value}</div>
-          <span className="text-[10px] font-sans text-muted-foreground/60 lowercase">
-            {macro.unit}
+
+          <div className="font-heading text-2xl font-medium text-foreground">
+            {card.value}
+          </div>
+
+          <span className="text-[10px] text-muted-foreground">
+            {card.unit}
           </span>
         </div>
       ))}

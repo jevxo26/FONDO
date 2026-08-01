@@ -2,88 +2,65 @@
 
 import { createContext, useContext, useState, useMemo, ReactNode } from "react";
 
-// API থেকে আসা ক্যাটাগরির টাইপ
-export interface PackageCategory {
+export interface MealPackage {
   id: string;
+  packageCode: string;
   name: string;
   slug: string;
-  description?: string;
-  image?: string;
-  status: string;
-}
-
-// API থেকে আসা খাবারের টাইপ
-export interface ApiFood {
-  id: string;
-  name: string;
-  calories?: number | null;
-  protein?: number | null;
-  foodType: "VEG" | "NON_VEG" | "SEAFOOD" | string;
-}
-
-// API থেকে আসা প্যাকেজের টাইপ (রিয়েল ডাটা স্ট্রাকচার)
-export interface ApiPackage {
-  id: string;
-  packageCode?: string;
-  name: string;
-  slug?: string;
   description: string;
   thumbnail: string;
-  coverImage?: string;
-  packageType?: string;
+  coverImage: string;
+  packageType: string;
   durationDays: number;
   totalMeals: number;
-  price: string | number;
-  discountPrice?: string | number | null;
-  currency?: string;
+  price: string;
+  discountPrice: string | null;
+  currency: string;
   isCustomizable: boolean;
-  status?: string;
+  rating: number | null;
   packageCategoryId: string;
-  packageCategory?: PackageCategory | null;
-  rating?: number | null;
-  days?: Array<{
+  packageCategory: {
     id: string;
-    dayNumber: number;
-    meals?: Array<{
-      id: string;
-      mealType: string;
-      foods?: Array<{
-        food?: ApiFood;
-      }>;
-    }>;
-  }>;
+    name: string;
+    slug: string;
+  } | null;
 }
 
 interface PackagesContextType {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
-  selectedCategoryId: string;
-  setSelectedCategoryId: (categoryId: string) => void;
+
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
+
   selectedDuration: number | null;
   setSelectedDuration: (duration: number | null) => void;
+
   maxPrice: number;
   setMaxPrice: (price: number) => void;
+
   maxCalories: number;
   setMaxCalories: (calories: number) => void;
+
   isVegetarian: boolean;
   setIsVegetarian: (val: boolean) => void;
+
   isHighProtein: boolean;
   setIsHighProtein: (val: boolean) => void;
+
   isCustomizable: boolean;
   setIsCustomizable: (val: boolean) => void;
+
   sortBy: string;
   setSortBy: (sort: string) => void;
+
   comparedIds: string[];
   toggleComparison: (id: string) => void;
-  resetFilters: () => void;
-  rawPackages: ApiPackage[];
-  setRawPackages: (packages: ApiPackage[]) => void;
-  categories: PackageCategory[];
-  setCategories: (categories: PackageCategory[]) => void;
-  processedPackages: ApiPackage[];
 }
 
-export const PackagesContext = createContext<PackagesContextType | undefined>(undefined);
+export const PackagesContext = createContext<
+  PackagesContextType | undefined
+>(undefined);
 
 export function PackagesProvider({
   children,
@@ -264,10 +241,12 @@ export function PackagesProvider({
 // কাস্টম হুক
 export function usePackages() {
   const context = useContext(PackagesContext);
+
   if (!context) {
     throw new Error(
-      "usePackages must be executed within a valid PackagesProvider component block."
+      "usePackages must be used inside PackagesProvider"
     );
   }
+
   return context;
 }

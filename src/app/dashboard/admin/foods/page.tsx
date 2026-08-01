@@ -1,13 +1,13 @@
 "use client";
 
+import { FoodTableSection } from "@/components/dashboard/admin/foods/all-foods/food-table-section";
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-import { FoodTableSection } from "@/components/dashboard/admin/foods/all-foods/food-table-section";
 import { Button } from "@/components/ui/button";
 import { useAdminFoods } from "@/store/api/slices/admin-food-api";
-import { useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { Archive, CheckCircle, FileEdit, Plus, Utensils } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 
 export default function FoodsPage() {
   const router = useRouter();

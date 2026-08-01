@@ -37,6 +37,21 @@ export const daySchema = yup.object({
     .required(),
 });
 
+const imageFieldSchema = yup
+  .string()
+  .trim()
+  .required("Image is required")
+  .test("valid-image-path", "Please upload a valid image", (value) => {
+    if (!value) return false;
+
+    const trimmed = value.trim();
+    return (
+      /^https?:\/\//i.test(trimmed) ||
+      /^\//.test(trimmed) ||
+      /^data:image\//i.test(trimmed)
+    );
+  });
+
 export const packageSchema = yup.object({
   packageCode: yup.string().required(),
 
@@ -46,15 +61,9 @@ export const packageSchema = yup.object({
 
   description: yup.string().required(),
 
-  thumbnail: yup
-    .string()
-    .url()
-    .required(),
+  thumbnail: imageFieldSchema,
 
-  coverImage: yup
-    .string()
-    .url()
-    .required(),
+  coverImage: imageFieldSchema,
 
   packageType: yup
     .string()
@@ -150,4 +159,4 @@ export const initialValues: PackageFormValues = {
   days: [],
 };
 
-export const inputStyles = "w-full px-3.5 py-2 text-sm bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground placeholder:text-muted-foreground shadow-sm";
+export const inputStyles = "w-full px-3.5 py-2 text-sm bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground placeholder:text-muted-foreground shadow-sm";

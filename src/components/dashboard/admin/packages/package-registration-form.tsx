@@ -53,6 +53,7 @@ export default function PackageRegistrationForm({ initialData, isEdit }: Props) 
     control,
     handleSubmit,
     reset,
+    watch,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<PackageFormValues>({
@@ -186,6 +187,7 @@ export default function PackageRegistrationForm({ initialData, isEdit }: Props) 
               packageTypeWatched={packageTypeWatched}
               setValue={setValue}
               categories={categories}
+              watch={watch}
             />
 
             <DaysScheduleSection

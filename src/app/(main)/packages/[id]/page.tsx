@@ -14,13 +14,11 @@ export default function SinglePackage() {
   const { id } = useParams<{ id: string }>();
   const { data: singlePackage, isLoading, error } = useGetPackageByIdQuery(id, { skip: !id });
 
-  // কাস্টম ফুড এবং প্রাইস ট্র্যাক করার জন্য স্টেট
-  const [customDays, setCustomDays] = useState<any[]>([]);
+  const [customDays, setCustomDays] = useState([]);
 
   if (isLoading || error) return <FoodsLoading />;
   if (!singlePackage) return <div>Package not found.</div>;
 
-  // মোট এক্সট্রা প্রাইস হিসাব করা
   const extraPrice = customDays.reduce((total, day) => {
     return (
       total +
@@ -45,7 +43,7 @@ export default function SinglePackage() {
               singlePackage={singlePackage}
               customDays={customDays}
               setCustomDays={setCustomDays}
-              totalPrice={Number(singlePackage.discount ?? singlePackage.price) + extraPrice}
+              totalPrice={singlePackage.price + extraPrice}
             />
           </div>
 

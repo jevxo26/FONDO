@@ -4,9 +4,6 @@ import React, { useState } from "react";
 import { SlidersHorizontal, ChevronDown, Plus, Minus, Trash2, Send } from "lucide-react";
 import { useGetFoods } from "@/store/api/slices/foods-api";
 import { useCreateCustomMealRequestMutation } from "@/store/api/slices/packages-api";
-import { useAuth } from "@/hooks/use-auth";
-// ১. ইমপোর্টে Mutation যুক্ত করুন
-// ২. কম্পোনেন্টের ভেতর:
 interface CustomFood {
   foodId: string;
   name: string;
@@ -49,9 +46,6 @@ export default function PackageCustomization({
   const [isOpen, setIsOpen] = useState(false);
   const [activeDay, setActiveDay] = useState<number>(1);
   const [activeMealType, setActiveMealType] = useState<string>("BREAKFAST");
-  const {user} = useAuth()
-  const customerId = user?.id
-  console.log(user)
   // RTK Query Mutations & Queries
   const { data: foodsData, isLoading: isFoodsLoading } = useGetFoods({ limit: 50 });
   const [createCustomMealRequest, { isLoading: isSubmitting }] = useCreateCustomMealRequestMutation();
@@ -150,7 +144,6 @@ const handleSubmitCustomRequest = async () => {
   }
 
   try {
-    // 🔑 ব্যাকএন্ড Prisma Schema যেভাবে চায় ঠিক সেভাবে ডাটা Formatter:
     const payload = {
       packageId: singlePackage?.id,
       name: singlePackage?.name || "Custom Meal Plan",
@@ -162,15 +155,13 @@ const handleSubmitCustomRequest = async () => {
           mealType: meal.mealType, // e.g., "BREAKFAST", "LUNCH", "DINNER"
           mealTime: meal.mealTime || "08:00 AM",
           foods: meal.foods.map((food: any) => ({
-            foodId: food.foodId || food.id, // 👈 নিশ্চিত করুন মূল ফুডের Database ID যাচ্ছে
+            foodId: food.foodId || food.id, 
             quantity: Number(food.quantity || 1),
             isExtra: Boolean(food.isExtra),
           })),
         })),
       })),
     };
-
-    console.log("Sending Payload:", payload);
 
     // Redux Toolkit Request / Axios Request
     await createCustomMealRequest(payload).unwrap();

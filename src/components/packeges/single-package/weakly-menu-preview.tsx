@@ -1,61 +1,108 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 
-export default function WeeklyMenuPreview() {
-  const [activeDay, setActiveDay] = useState("Mon");
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+interface Props {
+  days: any[];
+}
 
-  const menuData = {
-    Breakfast: { name: "Ancient Grain & Spiced Almond Porridge", cal: "380 kcal" },
-    Lunch: { name: "Saffron-Infused Sea Bass with Braised Wild Greens", cal: "560 kcal" },
-    Dinner: { name: "Slow-Simmered Lentil & Heirloom Spinach Dal", cal: "440 kcal" },
-  };
+export default function WeeklyMenuPreview({ days }: Props) {
+  const [activeDay, setActiveDay] = useState<number>(1);
+
+  useEffect(() => {
+    if (days?.length) {
+      setActiveDay(days[0].dayNumber);
+    }
+  }, [days]);
+
+  const selectedDay = useMemo(() => {
+    return days?.find((day) => day.dayNumber === activeDay);
+  }, [days, activeDay]);
 
   return (
     <section className="bg-card border border-border/20 rounded-3xl p-6 lg:p-8 shadow-sm space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="font-heading text-xl text-foreground">Weekly Menu Manifest</h2>
+          <h2 className="font-heading text-xl text-foreground">
+            Weekly Menu Manifest
+          </h2>
+
           <p className="text-[11px] text-muted-foreground/70">
-            Explore scheduled ancestral rotations for the current week
+            Explore your meal schedule day by day.
           </p>
         </div>
-        {/* Day selection tabs */}
-        <div className="flex gap-1 overflow-x-auto pb-1 sm:pb-0 bg-background border border-border/30 p-1 rounded-xl">
-          {days.map((day) => (
+
+        {/* Day Tabs */}
+        <div className="flex gap-1 overflow-x-auto pb-1 bg-background border border-border/30 p-1 rounded-xl">
+          {days?.map((day) => (
             <button
-              key={day}
-              onClick={() => setActiveDay(day)}
+              key={day.id}
+              onClick={() => setActiveDay(day.dayNumber)}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeDay === day
+                activeDay === day.dayNumber
                   ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground/70 hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {day}
+              Day {day.dayNumber}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Meals distribution structure */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-        {Object.entries(menuData).map(([mealType, dish]) => (
+      {/* Day Title */}
+      <div>
+        <h3 className="font-heading text-lg">
+          {selectedDay?.title || `Day ${activeDay}`}
+        </h3>
+
+        {selectedDay?.description && (
+          <p className="text-xs text-muted-foreground mt-1">
+            {selectedDay.description}
+          </p>
+        )}
+      </div>
+
+      {/* Meals */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {selectedDay?.meals?.map((meal: any) => (
           <div
-            key={mealType}
-            className="bg-background border border-border/20 rounded-xl p-4 flex flex-col justify-between space-y-4"
+            key={meal.id}
+            className="bg-background border border-border/20 rounded-xl p-4 flex flex-col gap-4"
           >
             <div>
               <span className="text-[9px] uppercase tracking-wider font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">
-                {mealType}
+                {meal.mealType}
               </span>
-              <h4 className="font-heading text-sm font-medium text-foreground mt-3 leading-snug">
-                {dish.name}
+
+              <h4 className="font-heading text-sm font-medium mt-3">
+                {meal.mealTime}
               </h4>
             </div>
-            <div className="text-[11px] font-sans text-muted-foreground/60 text-right border-t border-border/20 pt-2">
-              Allocated Energy: <span className="font-bold text-foreground">{dish.cal}</span>
+
+            <div className="border-t border-border pt-3">
+              <p className="text-[11px] font-semibold mb-2">
+                Foods ({meal.foods?.length || 0})
+              </p>
+
+              {meal.foods?.length ? (
+                <ul className="space-y-1">
+                  {meal.foods.map((food: any, index: number) => (
+                    <li
+                      key={food.id}
+                      className="text-xs text-muted-foreground flex justify-between"
+                    >
+                      <span>Food #{index + 1}</span>
+
+                      <span>x{food.quantity}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  No foods assigned.
+                </p>
+              )}
             </div>
           </div>
         ))}

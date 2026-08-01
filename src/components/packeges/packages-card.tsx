@@ -126,7 +126,7 @@ export default function PackageCard({ pkg }: PackageCardProps) {
             </button>
 
             <Link
-              href={`/packages/${pkg.slug}`}
+              href={`/packages/${pkg.id}`}
               className="bg-primary text-primary-foreground rounded-lg px-3 py-2 text-xs"
             >
               Details

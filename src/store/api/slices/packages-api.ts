@@ -46,6 +46,14 @@ export const packagesApi = api.injectEndpoints({
         getPackageCategories: builder.query({
             query: () => "/package/categories",
         }),
+        createCustomMealRequest: builder.mutation({
+            query: (body) => ({
+                url: "/package/custom-request",
+                method: "POST",
+                body,
+            }),
+            invalidatesTags: ["Package"],
+        }),
 
     }),
 });
@@ -58,6 +66,7 @@ export const {
     useCreatePackageMutation,
     useUpdatePackageMutation,
     useDeletePackageMutation,
+    useCreateCustomMealRequestMutation,
 
 } = packagesApi;
 
@@ -69,7 +78,7 @@ export function useGetPackageCategories() {
 
 export function useGetPackages() {
     const { data, isLoading } = useGetPackagesQuery(undefined);
-        return { data, isLoading};
+    return { data, isLoading };
 }
 
 export function useGetPackage(id: string) {
@@ -91,4 +100,14 @@ export function useUpdatePackage() {
 export function useDeletePackage() {
     const [deletePackage, { isLoading }] = useDeletePackageMutation();
     return { deletePackage, ...createMutationWrapper(deletePackage), isPending: isLoading };
+}
+
+export function useCreateCustomMealRequest() {
+  const [createCustomMealRequest, { isLoading }] =
+    useCreateCustomMealRequestMutation();
+
+  return {
+    createCustomMealRequest,
+    isPending: isLoading,
+  };
 }

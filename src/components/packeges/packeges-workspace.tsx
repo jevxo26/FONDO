@@ -12,6 +12,7 @@ import {
 } from "@/store/api/slices/packages-api";
 
 import FoodsLoading from "@/app/(main)/foods/loading";
+import { Category } from "@/types/food";
 
 export default function PackagesWorkspace() {
   const { data: categories = [], isLoading: categoryLoading } =
@@ -146,7 +147,7 @@ export default function PackagesWorkspace() {
           All
         </button>
 
-        {categories.map((cat) => (
+        {categories.map((cat:Category) => (
           <button
             key={cat.id}
             onClick={() => setSelectedCategory(cat.id)}

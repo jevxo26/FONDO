@@ -4,6 +4,7 @@ import type {
   Order,
   OrderFeedback,
   OrderInvoice,
+  OrderRefund,
   PlaceOrderPayload,
   PlaceOrderResponse,
 } from "@/types/order";
@@ -55,6 +56,41 @@ export const ordersApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Order"],
     }),
+
+    assignRider: builder.mutation<void, { orderId: string; riderId: string }>({
+      query: ({ orderId, riderId }) => ({
+        url: `/orders/${orderId}/assign-rider`,
+        method: "PATCH",
+        body: { riderId },
+      }),
+      invalidatesTags: ["Order"],
+    }),
+
+    updateMealStatus: builder.mutation<void, { mealId: string; status: string }>({
+      query: ({ mealId, status }) => ({
+        url: `/order-meals/${mealId}/status`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: ["Order"],
+    }),
+
+    listRefunds: builder.query<OrderRefund[], string>({
+      query: (orderId) => `/orders/${orderId}/refunds`,
+      providesTags: ["Order"],
+    }),
+
+    processRefund: builder.mutation<
+      OrderRefund,
+      { orderId: string; amount: number; refundMethod?: string; reason: string }
+    >({
+      query: ({ orderId, ...body }) => ({
+        url: `/orders/${orderId}/refund`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Order"],
+    }),
   }),
   overrideExisting: true,
 });
@@ -67,6 +103,10 @@ export const {
   useSubmitFeedbackMutation,
   useGetInvoiceQuery,
   useUpdateOrderStatusMutation,
+  useAssignRiderMutation,
+  useUpdateMealStatusMutation,
+  useListRefundsQuery,
+  useProcessRefundMutation,
 } = ordersApi;
 
 export const useOrders = () => {
@@ -103,3 +143,23 @@ export function useUpdateOrderStatus() {
   const [trigger, { isLoading }] = useUpdateOrderStatusMutation();
   return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
+
+export function useAssignRider() {
+  const [trigger, { isLoading }] = useAssignRiderMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useUpdateMealStatus() {
+  const [trigger, { isLoading }] = useUpdateMealStatusMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useProcessRefund() {
+  const [trigger, { isLoading }] = useProcessRefundMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export const useRefunds = (orderId: string) => {
+  const { data, isLoading, error } = useListRefundsQuery(orderId, { skip: !orderId });
+  return { data, isLoading, error };
+};

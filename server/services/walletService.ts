@@ -199,3 +199,42 @@ export const approveWithdraw = catchServiceAsync(async (adminId: string, withdra
 
   return { success: true };
 });
+
+export const listAllWithdrawals = catchServiceAsync(async (status?: string) => {
+  const where = status ? { status } : {};
+  return prisma.walletWithdraw.findMany({
+    where,
+    include: {
+      wallet: {
+        select: {
+          walletNumber: true,
+          customerId: true,
+          customer: { select: { firstName: true, lastName: true, phone: true } },
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+});
+
+export const rejectWithdraw = catchServiceAsync(async (adminId: string, withdrawId: string) => {
+  const withdraw = await prisma.walletWithdraw.findUnique({
+    where: { id: withdrawId },
+    include: { wallet: true },
+  });
+  if (!withdraw) throw new AppError(404, "Withdraw request not found");
+  if (withdraw.status !== "pending") throw new AppError(400, "Withdraw already processed");
+
+  await prisma.$transaction([
+    prisma.walletWithdraw.update({
+      where: { id: withdrawId },
+      data: { status: "rejected", approvedBy: adminId, processedAt: new Date() },
+    }),
+    prisma.customerWallet.update({
+      where: { id: withdraw.wallet.id },
+      data: { holdBalance: { decrement: Number(withdraw.amount) } },
+    }),
+  ]);
+
+  return { success: true };
+});

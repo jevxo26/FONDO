@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
+import type { AuthRequest } from "../types/auth.types";
 import { catchAsync } from "../utils/catchAsync";
 import { sendResponse } from "../utils/sendResponse";
 import { VendorService } from "../services/vendorService";
 import { VendorStatus, VerificationStatus } from "@prisma/client";
+import prisma from "../lib/prisma";
+import AppError from "../utils/AppError";
 
 // Core System Controls
 const createVendor = catchAsync(async (req: Request, res: Response) => {
@@ -136,6 +139,30 @@ const setOperatingHours = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, { statusCode: 200, message: "Availability parameters deployed", data: result });
 });
 
+// Current Vendor Profile (authenticated vendor user)
+const getMyVendor = catchAsync(async (req: AuthRequest, res: Response) => {
+  const userId = req.user!.userId;
+  const vendor = await prisma.vendor.findFirst({
+    where: { user: { id: userId } },
+    select: {
+      id: true,
+      vendorCode: true,
+      businessName: true,
+      ownerName: true,
+      phone: true,
+      email: true,
+      logo: true,
+      status: true,
+      isActive: true,
+      isOnline: true,
+    },
+  });
+  if (!vendor) {
+    throw new AppError(404, "No vendor profile found for this user");
+  }
+  sendResponse(res, { statusCode: 200, data: vendor });
+});
+
 export const VendorController = {
   createVendor,
   getAllVendors,
@@ -153,4 +180,5 @@ export const VendorController = {
   generateSettlementPeriod,
   updateSettings,
   setOperatingHours,
+  getMyVendor,
 };

@@ -33,11 +33,23 @@ router.post(
 );
 
 // Admin
+router.get(
+  "/wallet/withdrawals",
+  verifyToken,
+  authorize("ADMIN", "SUPER_ADMIN"),
+  WalletController.listWithdrawals,
+);
 router.patch(
   "/wallet/withdraw/:id/approve",
   verifyToken,
   authorize("ADMIN", "SUPER_ADMIN"),
   WalletController.approveWithdraw,
+);
+router.patch(
+  "/wallet/withdraw/:id/reject",
+  verifyToken,
+  authorize("ADMIN", "SUPER_ADMIN"),
+  WalletController.rejectWithdraw,
 );
 
 export default router;

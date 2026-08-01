@@ -1,7 +1,16 @@
 import { Router } from "express";
 import { VendorController } from "../controllers/vendorController";
+import { verifyToken, authorize } from "../middlewares/authMiddleware";
 
 const router = Router();
+
+// Current vendor profile (authenticated vendor user)
+router.get(
+  "/my-profile",
+  verifyToken,
+  authorize("VENDOR", "VENDOR_STAFF", "KITCHEN_STAFF"),
+  VendorController.getMyVendor,
+);
 
 // --- Core Vendor Lifecycle ---
 router.post("/add", VendorController.createVendor);

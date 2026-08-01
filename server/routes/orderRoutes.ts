@@ -26,7 +26,16 @@ router.post(
   validate(submitFeedbackSchema),
   OrderController.submitFeedback,
 );
-router.get("/orders/:orderId/invoice", verifyToken, OrderController.getInvoice);
+router.get(
+  "/orders/:orderId/invoice",
+  verifyToken,
+  OrderController.getInvoice,
+);
+router.get(
+  "/orders/:orderId/invoice/download",
+  verifyToken,
+  OrderController.downloadInvoice,
+);
 
 // Admin-only
 router.delete("/orders/:id", verifyToken, authorize("SUPER_ADMIN"), OrderController.softDelete);

@@ -40,4 +40,17 @@ export const WalletController = {
     const result = await walletService.approveWithdraw(adminId, id);
     sendResponse(res, { statusCode: 200, data: result });
   }),
+
+  listWithdrawals: catchAsync(async (req: AuthRequest, res: Response) => {
+    const status = req.query.status as string | undefined;
+    const result = await walletService.listAllWithdrawals(status);
+    sendResponse(res, { statusCode: 200, data: result });
+  }),
+
+  rejectWithdraw: catchAsync(async (req: AuthRequest, res: Response) => {
+    const adminId = req.user!.userId;
+    const id = req.params.id as string;
+    const result = await walletService.rejectWithdraw(adminId, id);
+    sendResponse(res, { statusCode: 200, data: result });
+  }),
 };

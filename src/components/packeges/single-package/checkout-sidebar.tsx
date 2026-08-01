@@ -31,9 +31,9 @@ export default function CheckoutSidebar({
         days: customDays,
       };
 
-      const res = await createCustomMealRequest(payload).unwrap();
-      alert("Custom meal request submitted successfully!");
-      console.log(res);
+      // const res = await createCustomMealRequest(payload).unwrap();
+      // alert("Custom meal request submitted successfully!");
+      // console.log(res);
     } catch (err) {
       console.error("Failed to submit custom meal request:", err);
       alert("Something went wrong!");

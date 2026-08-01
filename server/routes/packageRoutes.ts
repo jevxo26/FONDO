@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { PackageController } from "../controllers/packageController";
+import { verifyToken } from "../middlewares/authMiddleware";
 // import { verifyAuth, verifyVendor } from "../middlewares/auth.middleware";
 
 const router = Router();
@@ -18,7 +19,7 @@ router.get("/vendor/open-requests", PackageController.getVendorOpenRequests); //
 router.patch("/vendor/accept-request/:id", PackageController.acceptCustomRequest); // verifyVendor
 
 // --- Customer Routes ---
-router.post("/custom-request", PackageController.createCustomRequest); // verifyAuth
+router.post("/custom-request", verifyToken, PackageController.createCustomRequest);
 router.post("/custom-request/:id/pay", PackageController.payForCustomOrder); // verifyAuth
 
 export default router;

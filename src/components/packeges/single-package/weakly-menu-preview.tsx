@@ -4,20 +4,84 @@ import React, { useMemo, useState, useEffect } from "react";
 
 interface Props {
   days: any[];
+  customDays?: any[];
 }
 
-export default function WeeklyMenuPreview({ days }: Props) {
+export default function WeeklyMenuPreview({ days = [], customDays = [] }: Props) {
   const [activeDay, setActiveDay] = useState<number>(1);
 
+  // মূল প্যাকেজের খাবার এবং কাস্টম সিলেক্ট করা খাবারগুলো একত্রিত (Merge) করা
+  const mergedDays = useMemo(() => {
+    if (!days?.length && !customDays?.length) return [];
+
+    // মূল দিনগুলোর তালিকা তৈরি
+    const result = days.map((day) => ({
+      ...day,
+      meals: day.meals?.map((meal: any) => ({
+        ...meal,
+        foods: [...(meal.foods || [])],
+      })) || [],
+    }));
+
+    // কাস্টম যুক্ত করা দিন এবং খাবারগুলো মার্জ করা
+    customDays.forEach((cDay) => {
+      let targetDay = result.find((d) => d.dayNumber === cDay.dayNumber);
+
+      if (!targetDay) {
+        targetDay = {
+          id: `custom-day-${cDay.dayNumber}`,
+          dayNumber: cDay.dayNumber,
+          title: `Day ${cDay.dayNumber}`,
+          description: "Customized Daily Menu Plan",
+          meals: [],
+        };
+        result.push(targetDay);
+      }
+
+      cDay.meals?.forEach((cMeal: any) => {
+        let targetMeal = targetDay.meals.find(
+          (m: any) => m.mealType?.toUpperCase() === cMeal.mealType?.toUpperCase()
+        );
+
+        if (!targetMeal) {
+          targetMeal = {
+            id: `custom-meal-${cMeal.mealType}`,
+            mealType: cMeal.mealType,
+            mealTime: cMeal.mealTime || "Scheduled Time",
+            foods: [],
+          };
+          targetDay.meals.push(targetMeal);
+        }
+
+        cMeal.foods?.forEach((cf: any) => {
+          const existingIndex = targetMeal.foods.findIndex(
+            (f: any) => (f.foodId || f.id) === cf.foodId && f.isExtra
+          );
+
+          if (existingIndex > -1) {
+            targetMeal.foods[existingIndex].quantity = cf.quantity;
+          } else {
+            targetMeal.foods.push({
+              ...cf,
+              isExtra: true,
+            });
+          }
+        });
+      });
+    });
+
+    return result.sort((a, b) => a.dayNumber - b.dayNumber);
+  }, [days, customDays]);
+
   useEffect(() => {
-    if (days?.length) {
+    if (days?.length && !activeDay) {
       setActiveDay(days[0].dayNumber);
     }
-  }, [days]);
+  }, [days, activeDay]);
 
   const selectedDay = useMemo(() => {
-    return days?.find((day) => day.dayNumber === activeDay);
-  }, [days, activeDay]);
+    return mergedDays?.find((day) => day.dayNumber === activeDay);
+  }, [mergedDays, activeDay]);
 
   return (
     <section className="bg-card border border-border/20 rounded-3xl p-6 lg:p-8 shadow-sm space-y-6">
@@ -26,19 +90,18 @@ export default function WeeklyMenuPreview({ days }: Props) {
           <h2 className="font-heading text-xl text-foreground">
             Weekly Menu Manifest
           </h2>
-
           <p className="text-[11px] text-muted-foreground/70">
-            Explore your meal schedule day by day.
+            Explore your meal schedule day by day, including custom additions.
           </p>
         </div>
 
-        {/* Day Tabs */}
+        {/* Day Selection Buttons */}
         <div className="flex gap-1 overflow-x-auto pb-1 bg-background border border-border/30 p-1 rounded-xl">
-          {days?.map((day) => (
+          {mergedDays?.map((day) => (
             <button
-              key={day.id}
+              key={day.id || day.dayNumber}
               onClick={() => setActiveDay(day.dayNumber)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
                 activeDay === day.dayNumber
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
@@ -50,12 +113,10 @@ export default function WeeklyMenuPreview({ days }: Props) {
         </div>
       </div>
 
-      {/* Day Title */}
       <div>
-        <h3 className="font-heading text-lg">
+        <h3 className="font-heading text-lg font-medium">
           {selectedDay?.title || `Day ${activeDay}`}
         </h3>
-
         {selectedDay?.description && (
           <p className="text-xs text-muted-foreground mt-1">
             {selectedDay.description}
@@ -63,49 +124,95 @@ export default function WeeklyMenuPreview({ days }: Props) {
         )}
       </div>
 
-      {/* Meals */}
+      {/* Meals Grid (Breakfast, Lunch, Dinner) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {selectedDay?.meals?.map((meal: any) => (
-          <div
-            key={meal.id}
-            className="bg-background border border-border/20 rounded-xl p-4 flex flex-col gap-4"
-          >
-            <div>
-              <span className="text-[9px] uppercase tracking-wider font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">
-                {meal.mealType}
-              </span>
+        {selectedDay?.meals?.length ? (
+          selectedDay.meals.map((meal: any) => (
+            <div
+              key={meal.id || meal.mealType}
+              className="bg-background border border-border/30 rounded-2xl p-4 flex flex-col justify-between gap-4 shadow-sm"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] uppercase tracking-wider font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-md">
+                  {meal.mealType}
+                </span>
+                {meal.mealTime && (
+                  <span className="text-[10px] text-muted-foreground font-medium">
+                    {meal.mealTime}
+                  </span>
+                )}
+              </div>
 
-              <h4 className="font-heading text-sm font-medium mt-3">
-                {meal.mealTime}
-              </h4>
-            </div>
-
-            <div className="border-t border-border pt-3">
-              <p className="text-[11px] font-semibold mb-2">
-                Foods ({meal.foods?.length || 0})
-              </p>
-
-              {meal.foods?.length ? (
-                <ul className="space-y-1">
-                  {meal.foods.map((food: any, index: number) => (
-                    <li
-                      key={food.id}
-                      className="text-xs text-muted-foreground flex justify-between"
-                    >
-                      <span>Food #{index + 1}</span>
-
-                      <span>x{food.quantity}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-xs text-muted-foreground">
-                  No foods assigned.
+              <div className="border-t border-border/30 pt-3 flex-1 flex flex-col">
+                <p className="text-[11px] font-semibold text-foreground/80 mb-2 flex items-center justify-between">
+                  <span>Foods Allocated</span>
+                  <span className="text-muted-foreground text-[10px]">
+                    ({meal.foods?.length || 0})
+                  </span>
                 </p>
-              )}
+
+                {meal.foods?.length ? (
+                  <ul className="space-y-2 my-auto">
+                    {meal.foods.map((foodItem: any, index: number) => {
+                      const foodObj = foodItem.food || foodItem;
+                      const name = foodObj.name || `Food Item #${index + 1}`;
+                      const thumbnail = foodObj.thumbnail || foodItem.thumbnail;
+                      const price = foodObj.variants?.[0]?.price || foodItem.price;
+
+                      return (
+                        <li
+                          key={foodItem.id || `${foodItem.foodId}-${index}`}
+                          className="text-xs text-muted-foreground flex items-center justify-between gap-2 p-2 rounded-xl bg-card/60 border border-border/20"
+                        >
+                          <div className="flex items-center gap-2 overflow-hidden">
+                            {thumbnail && (
+                              <img
+                                src={thumbnail}
+                                alt={name}
+                                className="size-8 rounded-lg object-cover flex-shrink-0"
+                              />
+                            )}
+                            <div className="truncate">
+                              <p className="font-medium text-foreground text-[11px] truncate">
+                                {name}
+                              </p>
+                              {price && (
+                                <p className="text-[10px] text-muted-foreground">
+                                  ৳{price}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 flex-shrink-0">
+                            {foodItem.isExtra && (
+                              <span className="text-[8px] bg-primary/15 text-primary px-1.5 py-0.5 rounded font-bold uppercase">
+                                Custom
+                              </span>
+                            )}
+                            <span className="text-xs font-bold text-foreground bg-muted px-1.5 py-0.5 rounded">
+                              x{foodItem.quantity || 1}
+                            </span>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <div className="py-4 text-center">
+                    <p className="text-xs text-muted-foreground/60 italic">
+                      No foods assigned.
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
+          ))
+        ) : (
+          <div className="col-span-full py-8 text-center text-muted-foreground text-xs bg-background rounded-2xl border border-dashed border-border/40">
+            No meals scheduled for Day {activeDay}.
           </div>
-        ))}
+        )}
       </div>
     </section>
   );

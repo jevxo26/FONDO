@@ -40,12 +40,12 @@ export default function SinglePackage() {
           <div className="lg:col-span-8 flex flex-col gap-8">
             <HeroSection package={singlePackage} />
             <PhilosophySection package={singlePackage} />
-            <WeeklyMenuPreview days={singlePackage.days} />
+            <WeeklyMenuPreview days={singlePackage.days} customDays={customDays} />
             <PackageCustomization
               singlePackage={singlePackage}
               customDays={customDays}
               setCustomDays={setCustomDays}
-              onPriceChange={() => {}}
+              totalPrice={Number(singlePackage.discount ?? singlePackage.price) + extraPrice}
             />
           </div>
 

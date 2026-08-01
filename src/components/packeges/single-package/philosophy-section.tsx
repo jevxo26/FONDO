@@ -24,11 +24,11 @@ export default function PhilosophySection({
         </p>
 
         <blockquote className="border-l-2 border-primary pl-3 text-xs italic text-primary/80 font-heading">
-          "
+          &quot;
           {pkg?.rule?.title ??
             pkg?.packageCode ??
             "Healthy food, healthy life."}
-          "
+          &quot;
         </blockquote>
       </div>
 

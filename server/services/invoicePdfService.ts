@@ -90,8 +90,8 @@ export const generateInvoicePdf = catchServiceAsync(async (orderId: string) => {
       doc.fontSize(10).fillColor("#000000").font("Helvetica")
         .text(item.food?.name ?? "Unknown item", 50, y)
         .text(String(item.quantity), 300, y)
-        .text(formatCurrency(item.unitPrice), 370, y)
-        .text(formatCurrency(item.totalPrice), 470, y);
+        .text(formatCurrency(Number(item.unitPrice)), 370, y)
+        .text(formatCurrency(Number(item.totalPrice)), 470, y);
       y += 25;
     });
     // Totals

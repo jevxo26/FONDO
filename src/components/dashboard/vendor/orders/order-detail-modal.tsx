@@ -8,46 +8,38 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { format } from "date-fns";
 import { getOrderStatusBadge } from "@/data/vendor-orders";
-import type { VendorOrder } from "@/types/vendor";
-import { Clock, MapPin, Phone, User, Package, Calendar } from "lucide-react";
+import { Clock, User, Package, Loader2 } from "lucide-react";
+import type { VendorOrderListItem } from "@/store/api/slices/vendor-orders-api";
 
 interface OrderDetailModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  order: VendorOrder | null;
-  onUpdateStatus: (order: VendorOrder, status: VendorOrder["status"]) => void;
+  order: VendorOrderListItem | null;
+  onUpdateStatus: (orderId: string, status: string) => void;
+  updateStatusPending?: boolean;
 }
 
-const STATUS_FLOW: VendorOrder["status"][] = [
-  "PENDING",
-  "CONFIRMED",
-  "PREPARING",
-  "READY_FOR_PICKUP",
-  "PICKED_UP",
-  "ON_THE_WAY",
-  "DELIVERED",
-  "COMPLETED",
-];
+const STATUS_FLOW: Record<string, string> = {
+  PENDING: "CONFIRMED",
+  CONFIRMED: "PREPARING",
+  PREPARING: "READY_FOR_PICKUP",
+};
 
 export function OrderDetailModal({
   open,
   onOpenChange,
   order,
   onUpdateStatus,
+  updateStatusPending,
 }: OrderDetailModalProps) {
   if (!order) return null;
 
-  const currentStatusIndex = STATUS_FLOW.indexOf(order.status);
-  const nextStatus =
-    currentStatusIndex < STATUS_FLOW.length - 1 ? STATUS_FLOW[currentStatusIndex + 1] : null;
+  const nextStatus = STATUS_FLOW[order.orderStatus] ?? null;
+  const statusBadge = getOrderStatusBadge(order.orderStatus);
 
   const handleNextStatus = () => {
-    if (nextStatus) {
-      onUpdateStatus(order, nextStatus);
-    }
+    if (nextStatus) onUpdateStatus(order.id, nextStatus);
   };
-
-  const statusBadge = getOrderStatusBadge(order.status);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -67,15 +59,14 @@ export function OrderDetailModal({
                 {statusBadge.label}
               </Badge>
               <div className="flex gap-2">
-                {nextStatus && order.status !== "CANCELLED" && order.status !== "COMPLETED" && (
-                  <Button onClick={handleNextStatus} size="sm">
-                    Mark as {nextStatus.replace(/_/g, " ")}
+                {nextStatus && order.orderStatus !== "CANCELLED" && order.orderStatus !== "COMPLETED" && (
+                  <Button onClick={handleNextStatus} size="sm" disabled={updateStatusPending}>
+                    {updateStatusPending && <Loader2 className="mr-1 size-3 animate-spin" />}
+                    Mark as {nextStatus.replace(/_/g, " ").toLowerCase()}
                   </Button>
                 )}
-                {order.status === "CANCELLED" && (
-                  <Button variant="outline" size="sm" disabled>
-                    Order Cancelled
-                  </Button>
+                {order.orderStatus === "CANCELLED" && (
+                  <Button variant="outline" size="sm" disabled>Order Cancelled</Button>
                 )}
               </div>
             </div>
@@ -90,59 +81,13 @@ export function OrderDetailModal({
                 </h4>
                 <div className="flex items-center gap-2 text-sm">
                   <User className="h-4 w-4 text-muted-foreground" />
-                  <span>{order.customerName}</span>
+                  <span>{order.customer.firstName} {order.customer.lastName}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Phone className="h-4 w-4 text-muted-foreground" />
-                  <span>{order.customerPhone}</span>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <h4 className="text-xs uppercase tracking-widest text-muted-foreground">
-                  Delivery
-                </h4>
-                <div className="flex items-center gap-2 text-sm">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">{order.deliveryAddress}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <span>
-                    {format(new Date(order.deliveryDate), "MMM d, yyyy")} • {order.deliverySlot}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <Separator className="border-primary/10" />
-
-            {/* Order Summary */}
-            <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-1">
-                <p className="text-xs uppercase tracking-widest text-muted-foreground">Payment</p>
-                <Badge
-                  variant="outline"
-                  className={
-                    order.paymentStatus === "PAID"
-                      ? "bg-success/10 text-success"
-                      : "bg-warning/10 text-warning"
-                  }
-                >
-                  {order.paymentStatus}
-                </Badge>
               </div>
               <div className="space-y-1">
-                <p className="text-xs uppercase tracking-widest text-muted-foreground">
-                  Total Items
-                </p>
-                <p className="font-medium text-sm">{order.totalItems}</p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-xs uppercase tracking-widest text-muted-foreground">
-                  Total Amount
-                </p>
+                <p className="text-xs uppercase tracking-widest text-muted-foreground">Total Amount</p>
                 <p className="font-fraunces text-xl font-bold tracking-tight text-primary">
-                  ৳{order.totalAmount}
+                  ৳{Number(order.totalAmount).toLocaleString()}
                 </p>
               </div>
             </div>
@@ -153,18 +98,18 @@ export function OrderDetailModal({
             <div className="space-y-3">
               <h4 className="text-xs uppercase tracking-widest text-muted-foreground">Items</h4>
               <div className="space-y-2">
-                {order.items.map((item, index) => (
+                {order.items.map((item) => (
                   <div
-                    key={index}
+                    key={item.id}
                     className="flex items-center justify-between rounded-lg bg-muted/30 p-3"
                   >
                     <div className="flex items-center gap-3">
                       <Package className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm font-medium">{item.name}</span>
+                      <span className="text-sm font-medium">{item.food?.name ?? "Unknown"}</span>
                       <span className="text-xs text-muted-foreground">×{item.quantity}</span>
                     </div>
                     <span className="font-fraunces text-sm font-semibold">
-                      ৳{item.price * item.quantity}
+                      ৳{Number(item.totalPrice).toLocaleString()}
                     </span>
                   </div>
                 ))}
@@ -183,18 +128,9 @@ export function OrderDetailModal({
                   <Clock className="h-4 w-4 text-muted-foreground" />
                   <span>Order placed</span>
                   <span className="text-xs text-muted-foreground">
-                    {format(new Date(order.createdAt), "MMM d, h:mm a")}
+                    {format(new Date(order.placedAt), "MMM d, h:mm a")}
                   </span>
                 </div>
-                {order.status !== "PENDING" && (
-                  <div className="flex items-center gap-3 text-sm">
-                    <Clock className="h-4 w-4 text-muted-foreground" />
-                    <span>Status updated</span>
-                    <span className="text-xs text-muted-foreground">
-                      {format(new Date(order.updatedAt), "MMM d, h:mm a")}
-                    </span>
-                  </div>
-                )}
               </div>
             </div>
           </div>

@@ -1,56 +1,38 @@
 "use client";
 
 import { DataTable } from "@/components/common/table";
-import type { RowAction, FacetedFilter } from "@/components/common/table";
+import type { FacetedFilter } from "@/components/common/table";
 import { paymentColumns } from "./payment-columns";
-import type { PaymentTransaction } from "@/data/payments";
-import { CheckCircle, Eye, Landmark, Undo2 } from "lucide-react";
+import { CreditCard } from "lucide-react";
+import type { Payment } from "@/types/payment";
 
-const rowActions: RowAction<PaymentTransaction>[] = [
-  {
-    label: "View Details",
-    icon: <Eye className="size-4" />,
-    onClick: (row) => console.log("View Details", row.id),
-  },
-  {
-    label: "Issue Refund",
-    icon: <Undo2 className="size-4" />,
-    variant: "destructive",
-    onClick: (row) => console.log("Issue Refund", row.id),
-  },
-];
+interface PaymentTableSectionProps {
+  data: Payment[];
+  isLoading?: boolean;
+}
 
 const statusFilter: FacetedFilter = {
   columnId: "status",
   title: "Status",
-  icon: <CheckCircle className="size-4" />,
+  icon: <CreditCard className="size-4" />,
   options: [
-    { label: "Success", value: "SUCCESS" },
+    { label: "Completed", value: "COMPLETED" },
+    { label: "Pending", value: "PENDING" },
     { label: "Failed", value: "FAILED" },
     { label: "Refunded", value: "REFUNDED" },
   ],
 };
 
-const methodFilter: FacetedFilter = {
-  columnId: "method",
-  title: "Method",
-  icon: <Landmark className="size-4" />,
-  options: [
-    { label: "bKash", value: "bKash" },
-    { label: "Nagad", value: "Nagad" },
-    { label: "Visa", value: "Visa" },
-    { label: "Mastercard", value: "Mastercard" },
-    { label: "Heritage Wallet", value: "Heritage Wallet" },
-  ],
-};
-
-export function PaymentTableSection({ data }: { data: PaymentTransaction[] }) {
+export function PaymentTableSection({ data, isLoading }: PaymentTableSectionProps) {
   return (
     <DataTable
       columns={paymentColumns}
       data={data}
-      rowActions={rowActions}
-      filters={[statusFilter, methodFilter]}
+      isLoading={isLoading}
+      pageSize={10}
+      filters={[statusFilter]}
+      emptyMessage="No payments found."
     />
   );
 }
+

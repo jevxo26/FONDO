@@ -1,52 +1,35 @@
 "use client";
 
-import { useState } from "react";
-import { toast } from "sonner";
-import { ClipboardList } from "lucide-react";
-import { kitchenOrders, type KitchenOrder } from "@/data/kitchen";
+import { ClipboardList, Loader2 } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { KitchenSummaryCards } from "@/components/dashboard/kitchen/kitchen-summary-cards";
 import { KitchenOrderTable } from "@/components/dashboard/kitchen/kitchen-order-table";
+import { useKitchenQueuePage } from "@/hooks/use-kitchen-queue";
 
 export default function KitchenOrdersPage() {
-  const [orders, setOrders] = useState(kitchenOrders);
+  const { orders, queued, preparing, ready, isLoading, handleStartPrep, handleMarkReady } =
+    useKitchenQueuePage();
 
-  const updateStatus = (id: string, status: KitchenOrder["status"]) => {
-    setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status } : o)));
-  };
-
-  const queued = orders.filter((o) => o.status === "QUEUED").length;
-  const preparing = orders.filter((o) => o.status === "PREPARING").length;
-  const ready = orders.filter((o) => o.status === "READY").length;
+  if (isLoading) {
+    return (
+      <div>
+        <PageHeader title="Order Queue" description="View and manage incoming meal orders." icon={ClipboardList} />
+        <div className="mt-12 flex justify-center">
+          <Loader2 className="size-8 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
-      <PageHeader
-        title="Order Queue"
-        description="View and manage incoming meal orders."
-        icon={ClipboardList}
-      />
-      <KitchenSummaryCards
-        queued={queued}
-        preparing={preparing}
-        ready={ready}
-        total={orders.length}
-      />
+      <PageHeader title="Order Queue" description="View and manage incoming meal orders." icon={ClipboardList} />
+      <KitchenSummaryCards queued={queued.length} preparing={preparing.length} ready={ready.length} total={orders.length} />
       <div className="mt-8">
         <KitchenOrderTable
           data={orders}
-          onStartPrep={(o) => {
-            updateStatus(o.id, "PREPARING");
-            toast.success(`${o.orderNumber} started`);
-          }}
-          onMarkReady={(o) => {
-            updateStatus(o.id, "READY");
-            toast.success(`${o.orderNumber} marked ready`);
-          }}
-          onMarkPacked={(o) => {
-            updateStatus(o.id, "PACKED");
-            toast.success(`${o.orderNumber} packed`);
-          }}
+          onStartPrep={(o) => handleStartPrep(o.id, o.orderNumber)}
+          onMarkReady={(o) => handleMarkReady(o.id, o.orderNumber)}
         />
       </div>
     </div>

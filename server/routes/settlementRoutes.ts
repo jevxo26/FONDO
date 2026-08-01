@@ -39,6 +39,12 @@ router.get(
 );
 
 // Admin endpoints
+router.get(
+  "/admin/settlements",
+  verifyToken,
+  authorize("ADMIN", "SUPER_ADMIN"),
+  SettlementController.listAllSettlements,
+);
 router.post(
   "/admin/settlements",
   verifyToken,

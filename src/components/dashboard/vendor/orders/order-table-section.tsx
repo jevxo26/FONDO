@@ -1,57 +1,46 @@
-// src/components/dashboard/vendor/orders/order-table-section.tsx
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
 import { DataTable } from "@/components/common/table";
-import { orderColumns } from "./order-columns";
+import { vendorOrderColumns } from "./vendor-order-columns";
 import { OrderDetailModal } from "./order-detail-modal";
 import { Button } from "@/components/ui/button";
-import { Eye, Package, RefreshCw, XCircle } from "lucide-react";
-import { vendorOrders, orderStatuses, paymentStatuses } from "@/data/vendor-orders";
-import type { VendorOrder } from "@/types/vendor";
+import { Eye, RefreshCw, XCircle } from "lucide-react";
+import { orderStatuses, paymentStatuses } from "@/data/vendor-orders";
+import type { VendorOrderListItem } from "@/store/api/slices/vendor-orders-api";
 import type { RowAction, FacetedFilter, InitialSort } from "@/components/common/table/types";
 
-interface Filters {
-  status: string;
-  paymentStatus: string;
+interface VendorOrderTableSectionProps {
+  orders: VendorOrderListItem[];
+  isLoading?: boolean;
+  onUpdateStatus: (orderId: string, status: string) => void;
+  updateStatusPending?: boolean;
 }
 
-const INITIAL_FILTERS: Filters = {
-  status: "ALL",
-  paymentStatus: "ALL",
-};
-
-export function VendorOrderTableSection() {
-  const [orders, setOrders] = useState<VendorOrder[]>(vendorOrders);
+export function VendorOrderTableSection({
+  orders,
+  isLoading,
+  onUpdateStatus,
+  updateStatusPending,
+}: VendorOrderTableSectionProps) {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<VendorOrder | null>(null);
-  const [filters] = useState<Filters>(INITIAL_FILTERS);
+  const [selectedOrder, setSelectedOrder] = useState<VendorOrderListItem | null>(null);
 
-  const filteredData = useMemo(() => {
-    return orders.filter((item) => {
-      const matchStatus = filters.status === "ALL" || item.status === filters.status;
-      const matchPayment =
-        filters.paymentStatus === "ALL" || item.paymentStatus === filters.paymentStatus;
-      return matchStatus && matchPayment;
-    });
-  }, [orders, filters]);
-
-  const handleViewOrder = useCallback((order: VendorOrder) => {
+  const handleViewOrder = useCallback((order: VendorOrderListItem) => {
     setSelectedOrder(order);
     setIsDetailModalOpen(true);
   }, []);
 
-  const handleUpdateStatus = useCallback((order: VendorOrder, newStatus: VendorOrder["status"]) => {
-    setOrders((prev) =>
-      prev.map((item) =>
-        item.id === order.id
-          ? { ...item, status: newStatus, updatedAt: new Date().toISOString() }
-          : item,
-      ),
-    );
-  }, []);
+  const getNextStatus = (currentStatus: string): string | null => {
+    const flow: Record<string, string> = {
+      PENDING: "CONFIRMED",
+      CONFIRMED: "PREPARING",
+      PREPARING: "READY_FOR_PICKUP",
+    };
+    return flow[currentStatus] ?? null;
+  };
 
-  const rowActions: RowAction<VendorOrder>[] = useMemo(
+  const rowActions: RowAction<VendorOrderListItem>[] = useMemo(
     () => [
       {
         label: "View Details",
@@ -59,67 +48,60 @@ export function VendorOrderTableSection() {
         variant: "default" as const,
         onClick: handleViewOrder,
       },
-      {
-        label: "Update Status",
-        icon: <RefreshCw className="h-4 w-4" />,
-        variant: "default" as const,
-        onClick: (order: VendorOrder) => {
-          console.log("Update status", order);
-        },
-      },
+      ...(orders.some((o) => getNextStatus(o.orderStatus))
+        ? [
+            {
+              label: "Update Status",
+              icon: <RefreshCw className="h-4 w-4" />,
+              variant: "default" as const,
+              onClick: (order: VendorOrderListItem) => {
+                const next = getNextStatus(order.orderStatus);
+                if (next) onUpdateStatus(order.id, next);
+              },
+            },
+          ]
+        : []),
       {
         label: "Cancel Order",
         icon: <XCircle className="h-4 w-4" />,
         variant: "destructive" as const,
-        onClick: (order: VendorOrder) => {
-          if (order.status !== "CANCELLED" && order.status !== "COMPLETED") {
-            handleUpdateStatus(order, "CANCELLED");
+        onClick: (order: VendorOrderListItem) => {
+          if (order.orderStatus !== "CANCELLED" && order.orderStatus !== "COMPLETED") {
+            onUpdateStatus(order.id, "CANCELLED");
           }
         },
       },
     ],
-    [handleViewOrder, handleUpdateStatus],
+    [handleViewOrder, onUpdateStatus, orders],
   );
 
   const facetedFilters: FacetedFilter[] = useMemo(
     () => [
       {
-        columnId: "status",
+        columnId: "orderStatus",
         title: "Status",
-        options: orderStatuses.map((s) => ({ label: s.label, value: s.value })),
+        options: orderStatuses.filter((s) => s.value !== "ALL").map((s) => ({ label: s.label, value: s.value })),
       },
       {
         columnId: "paymentStatus",
         title: "Payment",
-        options: paymentStatuses.map((s) => ({ label: s.label, value: s.value })),
+        options: paymentStatuses.filter((s) => s.value !== "ALL").map((s) => ({ label: s.label, value: s.value })),
       },
     ],
     [],
   );
 
-  const toolbarActions = (
-    <div className="flex gap-2">
-      <Button variant="outline" size="sm" className="h-9 gap-1.5">
-        <Package className="h-4 w-4" />
-        <span className="hidden sm:inline">Export</span>
-      </Button>
-    </div>
-  );
-
-  const initialSort: InitialSort = {
-    id: "createdAt",
-    desc: true, // Show newest first
-  };
+  const initialSort: InitialSort = { id: "placedAt", desc: true };
 
   return (
     <>
       <DataTable
-        columns={orderColumns}
-        data={filteredData}
+        columns={vendorOrderColumns}
+        data={orders}
+        isLoading={isLoading}
         pageSize={10}
         enableSorting
         rowActions={rowActions}
-        toolbarActions={toolbarActions}
         filters={facetedFilters}
         enableSearch
         enableColumnToggle
@@ -129,7 +111,8 @@ export function VendorOrderTableSection() {
         open={isDetailModalOpen}
         onOpenChange={setIsDetailModalOpen}
         order={selectedOrder}
-        onUpdateStatus={handleUpdateStatus}
+        onUpdateStatus={onUpdateStatus}
+        updateStatusPending={updateStatusPending}
       />
     </>
   );

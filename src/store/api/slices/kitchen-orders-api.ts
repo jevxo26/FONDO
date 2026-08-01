@@ -1,20 +1,23 @@
 import { api } from "../base-api";
-import { createMutationWrapper } from "../mutation-wrapper";
 import type { VendorOrderListItem } from "./vendor-orders-api";
+import type { KitchenOrderStatus, MealType } from "@/data/kitchen";
 
 export interface KitchenOrderAdapter {
   id: string;
   orderNumber: string;
   customerName: string;
   customerPhone: string;
-  status: "QUEUED" | "PREPARING" | "READY";
-  items: Array<{ id: string; name: string; quantity: number; status: string }>;
-  placedAt: string;
+  status: KitchenOrderStatus;
+  mealType: MealType;
+  priority: number;
   notes: string | null;
+  placedAt: string;
+  estimatedReadyAt: string;
+  items: Array<{ id: string; name: string; quantity: number; status: KitchenOrderStatus }>;
 }
 
 export function adaptToKitchenOrder(o: VendorOrderListItem): KitchenOrderAdapter {
-  const statusMap: Record<string, KitchenOrderAdapter["status"]> = {
+  const statusMap: Record<string, KitchenOrderStatus> = {
     PENDING: "QUEUED",
     CONFIRMED: "QUEUED",
     PREPARING: "PREPARING",
@@ -30,6 +33,8 @@ export function adaptToKitchenOrder(o: VendorOrderListItem): KitchenOrderAdapter
     orderNumber: o.orderNumber,
     customerName: `${o.customer.firstName} ${o.customer.lastName}`.trim(),
     customerPhone: "",
+    mealType: "LUNCH",
+    priority: 0,
     status: statusMap[o.orderStatus] ?? "QUEUED",
     items: o.items.map((i) => ({
       id: i.id,
@@ -39,6 +44,7 @@ export function adaptToKitchenOrder(o: VendorOrderListItem): KitchenOrderAdapter
     })),
     placedAt: o.placedAt,
     notes: o.notes,
+    estimatedReadyAt: "",
   };
 }
 

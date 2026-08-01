@@ -40,6 +40,11 @@ export const adminPaymentsApi = api.injectEndpoints({
     }),
 
     // Settlements (admin)
+    getAllSettlements: builder.query<VendorSettlement[], void>({
+      query: () => "/admin/settlements",
+      providesTags: ["VendorSettlement"],
+    }),
+
     createSettlement: builder.mutation<VendorSettlement, CreateSettlementPayload>({
       query: (body) => ({ url: "/admin/settlements", method: "POST", body }),
       invalidatesTags: ["VendorSettlement", "AdminPayment"],
@@ -76,6 +81,7 @@ export const {
   useGetPaymentDetailQuery,
   useRefundPaymentMutation,
   useAdjustPaymentMutation,
+  useGetAllSettlementsQuery,
   useCreateSettlementMutation,
   useProcessSettlementMutation,
   useGetSettlementDetailQuery,

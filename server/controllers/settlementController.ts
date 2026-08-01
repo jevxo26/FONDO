@@ -17,6 +17,11 @@ export const SettlementController = {
     sendResponse(res, { statusCode: 200, data: result });
   }),
 
+  listAllSettlements: catchAsync(async (_req: AuthRequest, res: Response) => {
+    const result = await settlementService.listAllSettlements();
+    sendResponse(res, { statusCode: 200, data: result });
+  }),
+
   listVendorSettlements: catchAsync(async (req: AuthRequest, res: Response) => {
     const vendorId = req.params.vendorId as string;
     const result = await settlementService.listVendorSettlements(vendorId);

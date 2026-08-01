@@ -1,78 +1,70 @@
-import { Undo2, Wallet } from "lucide-react";
-import { refunds } from "@/data/payments";
+"use client";
+
+import { useState } from "react";
+import { Undo2, Wallet as WalletIcon, Loader2 } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/common/page-header";
+import { StatCard } from "@/components/dashboard/common/stat-card";
 import { RefundTableSection } from "@/components/dashboard/admin/payments/refunds/refund-table-section";
-import { RefundSummaryCards } from "@/components/dashboard/admin/payments/refunds/refund-summary-cards";
-import { DarkCard } from "@/components/dashboard/common/dark-card";
-import { GlassCard } from "@/components/dashboard/common/glass-card";
+import { RefundDialog } from "@/components/dashboard/admin/payments/refunds/refund-dialog";
+import { useAllPayments, useRefundPayment } from "@/store/api/slices/admin-payments-api";
+import { toast } from "sonner";
+import { handleApiError } from "@/lib/api-error";
+import type { Payment } from "@/types/payment";
 
 export default function PaymentsRefundsPage() {
-  const total = refunds.length;
-  const totalAmount = refunds.reduce((s, r) => s + r.amount, 0);
-  const topReason = refunds
-    .reduce<string[]>((acc, r) => {
-      const existing = acc.find((x) => x.startsWith(r.reason));
-      if (!existing)
-        acc.push(`${r.reason} (${refunds.filter((x) => x.reason === r.reason).length})`);
-      return acc;
-    }, [])
-    .slice(0, 3);
+  const { data: payments, isLoading } = useAllPayments();
+  const refund = useRefundPayment();
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const refundable = (payments ?? []).filter((p) => ["COMPLETED", "PROCESSING"].includes(p.status));
+  const totalAmount = refundable.reduce((s, p) => s + Number(p.amount), 0);
+
+  const openRefund = (payment: Payment) => {
+    setSelectedPayment(payment);
+    setDialogOpen(true);
+  };
+
+  const handleRefund = (paymentId: string, amount: number, reason: string) => {
+    refund.mutate(
+      { paymentId, amount, reason },
+      {
+        onSuccess: () => {
+          toast.success("Refund processed");
+          setDialogOpen(false);
+          setSelectedPayment(null);
+        },
+        onError: (err) => toast.error(handleApiError(err)),
+      },
+    );
+  };
 
   return (
     <div>
-      <PageHeader
-        title="Refunds"
-        description="Process and track customer refund requests."
-        icon={Undo2}
+      <PageHeader title="Refunds" description="Process and track customer refund requests." icon={Undo2} />
+
+      <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard label="Refundable Payments" value={refundable.length} icon={Undo2} accent="right" />
+        <StatCard label="Refundable Amount" value={`৳${totalAmount.toLocaleString()}`} icon={WalletIcon} variant="warning" accent="right" />
+        <StatCard label="Total Payments" value={(payments ?? []).length} icon={Undo2} accent="right" />
+      </div>
+
+      <div className="mt-8 rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-5 shadow-[var(--shadow-card)]">
+        <h2 className="mb-4 font-heading text-lg font-bold text-foreground">Payments Eligible for Refund</h2>
+        {isLoading ? (
+          <div className="flex justify-center py-10"><Loader2 className="size-8 animate-spin text-primary" /></div>
+        ) : (
+          <RefundTableSection data={refundable} onOpenRefund={openRefund} />
+        )}
+      </div>
+
+      <RefundDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        payment={selectedPayment}
+        onRefund={handleRefund}
+        isPending={refund.isPending}
       />
-      <div className="mt-8">
-        <RefundSummaryCards />
-      </div>
-      <div className="mt-8">
-        <RefundTableSection data={refunds} />
-      </div>
-      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <DarkCard
-          icon={<Wallet className="size-40" />}
-          title="Total Refund Amount"
-          description={`Across ${total} requests`}
-        >
-          <div className="font-heading text-3xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
-            ৳{totalAmount.toLocaleString()}
-          </div>
-          <div className="mt-3 flex items-center gap-2 text-sm text-white/70">
-            <div className="h-2 w-full rounded-full bg-white/10">
-              <div
-                className="h-2 rounded-full bg-primary"
-                style={{
-                  width: `${(refunds.filter((r) => r.status === "PROCESSED").length / total) * 100}%`,
-                }}
-              />
-            </div>
-            <span className="shrink-0 text-xs">
-              {refunds.filter((r) => r.status === "PROCESSED").length}/{total} processed
-            </span>
-          </div>
-        </DarkCard>
-        <GlassCard
-          icon={<Undo2 className="size-5 text-warning" />}
-          iconBg="bg-warning/10"
-          title="Top Reasons"
-          value={topReason.length.toString()}
-          subtitle="Most common refund causes"
-        >
-          <div className="mt-4 space-y-1.5">
-            {topReason.map((r) => (
-              <div
-                key={r}
-                className="rounded-lg bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground"
-              >
-                {r}
-              </div>
-            ))}
-          </div>
-        </GlassCard>
-      </div>
     </div>
   );
 }

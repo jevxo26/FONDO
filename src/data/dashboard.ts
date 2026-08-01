@@ -1,6 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import {
   Apple,
+  Banknote,
   BarChart3,
   Bike,
   CalendarDays,
@@ -91,6 +92,7 @@ export const sidebarItems: SidebarItem[] = [
       { label: "Coupons", href: "/payments/coupons", icon: Ticket },
       { label: "Refunds", href: "/payments/refunds", icon: Undo2 },
       { label: "Settlements", href: "/payments/settlements", icon: Landmark },
+      { label: "Revenue", href: "/payments/revenue", icon: Banknote },
     ],
   },
   {

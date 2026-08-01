@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Loader2, Receipt } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader2, Receipt, FileDown } from "lucide-react";
 import { useInvoice } from "@/store/api/slices/orders-api";
 
 interface InvoiceSectionProps {
   orderId: string;
 }
 
-export default function InvoiceSection({ orderId }: InvoiceSectionProps) {
+export function InvoiceSection({ orderId }: InvoiceSectionProps) {
   const [open, setOpen] = useState(false);
   const { data: invoice, isLoading } = useInvoice(orderId);
 
@@ -34,15 +34,13 @@ export default function InvoiceSection({ orderId }: InvoiceSectionProps) {
             </div>
           ) : invoice ? (
             <div className="space-y-3 text-sm">
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Invoice #</span>
                 <span className="font-medium">{invoice.invoiceNumber}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Date</span>
-                <span className="font-medium">
-                  {new Date(invoice.invoiceDate).toLocaleDateString("en-BD")}
-                </span>
+                <span className="font-medium">{new Date(invoice.invoiceDate).toLocaleDateString("en-BD")}</span>
               </div>
               <div className="border-t border-border my-2" />
               <div className="flex justify-between">
@@ -52,9 +50,7 @@ export default function InvoiceSection({ orderId }: InvoiceSectionProps) {
               {Number(invoice.discount) > 0 && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Discount</span>
-                  <span className="text-green-600">
-                    -৳{Number(invoice.discount).toLocaleString()}
-                  </span>
+                  <span className="text-green-600">-৳{Number(invoice.discount).toLocaleString()}</span>
                 </div>
               )}
               <div className="flex justify-between">
@@ -70,6 +66,16 @@ export default function InvoiceSection({ orderId }: InvoiceSectionProps) {
                 <span>Total</span>
                 <span>৳{Number(invoice.grandTotal).toLocaleString()}</span>
               </div>
+
+              {invoice.pdfUrl && (
+                <a
+                  href={`/api/orders/${orderId}/invoice/download`}
+                  download
+                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 active:scale-[0.98]"
+                >
+                  <FileDown className="size-4" /> Download PDF
+                </a>
+              )}
             </div>
           ) : (
             <p className="text-sm text-muted-foreground text-center py-2">Invoice not available</p>
@@ -79,3 +85,5 @@ export default function InvoiceSection({ orderId }: InvoiceSectionProps) {
     </div>
   );
 }
+
+export default InvoiceSection;

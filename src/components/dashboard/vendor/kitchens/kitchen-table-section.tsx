@@ -2,15 +2,15 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/common/table";
 import { kitchenColumns } from "./kitchen-columns";
-
 import { Button } from "@/components/ui/button";
 import { Plus, Pencil, Power, Trash2 } from "lucide-react";
 import { vendorKitchens, kitchenStatuses, branches } from "@/data/vendor-kitchens";
 import type { VendorKitchen } from "@/types/vendor";
 import type { RowAction, FacetedFilter, InitialSort } from "@/components/common/table/types";
-import { AddKitchenModal } from "./add-kitchen-modal";
+import { toast } from "sonner";
 
 interface Filters {
   status: string;
@@ -23,8 +23,8 @@ const INITIAL_FILTERS: Filters = {
 };
 
 export function VendorKitchenTableSection() {
+  const router = useRouter();
   const [kitchens, setKitchens] = useState<VendorKitchen[]>(vendorKitchens);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [filters] = useState<Filters>(INITIAL_FILTERS);
 
   const filteredData = useMemo(() => {
@@ -47,6 +47,27 @@ export function VendorKitchenTableSection() {
           : item,
       ),
     );
+    toast.success(
+      `Kitchen ${kitchen.status === "ACTIVE" ? "deactivated" : "activated"} successfully`,
+    );
+  }, []);
+
+  const handleAddKitchen = useCallback(() => {
+    router.push("/dashboard/vendor/kitchens/add");
+  }, [router]);
+
+  const handleEditKitchen = useCallback(
+    (kitchen: VendorKitchen) => {
+      router.push(`/dashboard/vendor/kitchens/${kitchen.id}/edit`);
+    },
+    [router],
+  );
+
+  const handleDeleteKitchen = useCallback((kitchen: VendorKitchen) => {
+    if (confirm(`Are you sure you want to delete ${kitchen.name}?`)) {
+      setKitchens((prev) => prev.filter((item) => item.id !== kitchen.id));
+      toast.success("Kitchen deleted successfully");
+    }
   }, []);
 
   const rowActions: RowAction<VendorKitchen>[] = useMemo(
@@ -55,7 +76,7 @@ export function VendorKitchenTableSection() {
         label: "Edit Kitchen",
         icon: <Pencil className="h-4 w-4" />,
         variant: "default" as const,
-        onClick: (kitchen: VendorKitchen) => console.log("Edit kitchen", kitchen),
+        onClick: handleEditKitchen,
       },
       {
         label: "Toggle Status",
@@ -67,14 +88,10 @@ export function VendorKitchenTableSection() {
         label: "Delete",
         icon: <Trash2 className="h-4 w-4" />,
         variant: "destructive" as const,
-        onClick: (kitchen: VendorKitchen) => {
-          if (confirm(`Are you sure you want to delete ${kitchen.name}?`)) {
-            setKitchens((prev) => prev.filter((item) => item.id !== kitchen.id));
-          }
-        },
+        onClick: handleDeleteKitchen,
       },
     ],
-    [handleToggleStatus],
+    [handleToggleStatus, handleEditKitchen, handleDeleteKitchen],
   );
 
   const facetedFilters: FacetedFilter[] = useMemo(
@@ -94,7 +111,7 @@ export function VendorKitchenTableSection() {
   );
 
   const toolbarActions = (
-    <Button onClick={() => setIsAddModalOpen(true)} className="gap-2">
+    <Button onClick={handleAddKitchen} className="gap-2">
       <Plus className="h-4 w-4" />
       Add Kitchen
     </Button>
@@ -106,20 +123,17 @@ export function VendorKitchenTableSection() {
   };
 
   return (
-    <>
-      <DataTable
-        columns={kitchenColumns}
-        data={filteredData}
-        pageSize={10}
-        enableSorting
-        rowActions={rowActions}
-        toolbarActions={toolbarActions}
-        filters={facetedFilters}
-        enableSearch
-        enableColumnToggle
-        initialSort={initialSort}
-      />
-      <AddKitchenModal open={isAddModalOpen} onOpenChange={setIsAddModalOpen} />
-    </>
+    <DataTable
+      columns={kitchenColumns}
+      data={filteredData}
+      pageSize={10}
+      enableSorting
+      rowActions={rowActions}
+      toolbarActions={toolbarActions}
+      filters={facetedFilters}
+      enableSearch
+      enableColumnToggle
+      initialSort={initialSort}
+    />
   );
 }

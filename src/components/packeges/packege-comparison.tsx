@@ -1,74 +1,89 @@
 "use client";
 
+import { useGetPackagesQuery } from "@/store/api/slices/packages-api";
+import { useMemo } from "react";
 import { usePackages } from "./packages-context";
 
 export default function PackagesComparison() {
-  const { comparedIds, toggleComparison, processedPackages, categories } = usePackages();
-  const list = processedPackages.filter((p) => comparedIds.includes(p.id));
+  const { comparedIds, toggleComparison } = usePackages();
 
-  if (comparedIds.length === 0) return null;
+  const { data: packages = [] } = useGetPackagesQuery(undefined);
+
+  const comparedPackages = useMemo(() => {
+    return packages.filter((pkg) => comparedIds.includes(pkg.id));
+  }, [packages, comparedIds]);
+
+  if (!comparedPackages.length) return null;
 
   return (
     <section className="wrapper mb-16 bg-card border border-border rounded-2xl p-6 shadow-md animate-in fade-in duration-200">
-      <h2 className="font-heading text-lg font-semibold text-foreground mb-4">Plan Comparison Matrix</h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-        {/* Label Sidebar */}
-        <div className="hidden md:flex flex-col justify-between py-2 font-bold uppercase tracking-wider text-muted-foreground text-[9px]">
-          <div className="h-8 flex items-center">Plan Name</div>
-          <div className="py-2 border-b border-border/40">Category</div>
-          <div className="py-2 border-b border-border/40">Duration</div>
-          <div className="py-2 border-b border-border/40">Total Meals</div>
-          <div className="py-2 border-b border-border/40">Customizable</div>
-          <div className="py-2">Price</div>
+      <h2 className="font-heading text-lg text-foreground mb-6">Plan Comparison</h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+        {/* Left Labels */}
+        <div className="hidden md:flex flex-col font-semibold text-muted-foreground">
+          <div className="h-10 flex items-center">Package</div>
+          <div className="py-3 border-b">Category</div>
+          <div className="py-3 border-b">Duration</div>
+          <div className="py-3 border-b">Meals</div>
+          <div className="py-3 border-b">Type</div>
+          <div className="py-3 border-b">Customizable</div>
+          <div className="py-3 border-b">Rating</div>
+          <div className="py-3">Price</div>
         </div>
 
-        {/* Items */}
-        {list.map((pkg) => {
-          const categoryName =
-            pkg.packageCategory?.name ||
-            categories.find((c) => c.id === pkg.packageCategoryId)?.name ||
-            "General";
+        {comparedPackages.map((pkg) => {
+          const finalPrice = Number(pkg.discountPrice ?? pkg.price);
 
           return (
             <div
               key={pkg.id}
-              className="border border-border rounded-xl p-4 bg-background relative flex flex-col gap-2 shadow-sm"
+              className="relative border border-border rounded-xl p-4 bg-background shadow-sm flex flex-col"
             >
               <button
                 onClick={() => toggleComparison(pkg.id)}
-                className="absolute top-2 right-2 text-[10px] text-destructive font-bold hover:underline"
+                className="absolute top-3 right-3 text-xs text-red-500 hover:underline"
               >
                 ✕ Remove
               </button>
-              
-              <div className="font-heading font-medium h-8 flex items-center pr-12 text-foreground line-clamp-1">
-                {pkg.name}
+
+              <div className="font-semibold pr-10 h-10 flex items-center">{pkg.name}</div>
+
+              <div className="py-3 border-b flex justify-between">
+                <span className="md:hidden font-medium">Category</span>
+
+                {pkg.packageCategory?.name ?? "-"}
               </div>
 
-              <div className="py-2 border-b border-border/40 flex justify-between">
-                <span className="md:hidden font-bold text-muted-foreground">Category:</span>
-                {categoryName}
-              </div>
-
-              <div className="py-2 border-b border-border/40 flex justify-between">
-                <span className="md:hidden font-bold text-muted-foreground">Duration:</span>
+              <div className="py-3 border-b flex justify-between">
+                <span className="md:hidden font-medium">Duration</span>
                 {pkg.durationDays} Days
               </div>
 
-              <div className="py-2 border-b border-border/40 flex justify-between">
-                <span className="md:hidden font-bold text-muted-foreground">Total Meals:</span>
-                {pkg.totalMeals} Meals
+              <div className="py-3 border-b flex justify-between">
+                <span className="md:hidden font-medium">Meals</span>
+
+                {pkg.totalMeals}
               </div>
 
-              <div className="py-2 border-b border-border/40 flex justify-between">
-                <span className="md:hidden font-bold text-muted-foreground">Customizable:</span>
+              <div className="py-3 border-b flex justify-between">
+                <span className="md:hidden font-medium">Type</span>
+
+                {pkg.packageType}
+              </div>
+
+              <div className="py-3 border-b flex justify-between">
+                <span className="md:hidden font-medium">Customizable</span>
+
                 {pkg.isCustomizable ? "Yes" : "No"}
               </div>
 
-              <div className="pt-2 font-bold text-sm flex justify-between text-foreground">
-                <span className="md:hidden font-bold text-muted-foreground">Price:</span>
-                ৳{pkg.discountPrice ?? pkg.price}
+              <div className="py-3 border-b flex justify-between">
+                <span className="md:hidden font-medium">Rating</span>⭐ {pkg.rating ?? 0}
+              </div>
+
+              <div className="pt-3 flex justify-between font-bold text-primary">
+                <span className="md:hidden">Price</span>৳{finalPrice}
               </div>
             </div>
           );

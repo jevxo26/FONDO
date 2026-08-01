@@ -40,8 +40,9 @@ const createPackage = async (req: AuthRequest, res: Response): Promise<Response>
 };
 
 const createCustomRequest = async (req: AuthRequest, res: Response): Promise<Response> => {
+  console.log(req.body)
   try {
-    const customerId = req.user!.id;
+    const customerId = req.user?.userId;
     const result = await PackageService.createCustomMealRequest(customerId, req.body);
     return res
       .status(201)

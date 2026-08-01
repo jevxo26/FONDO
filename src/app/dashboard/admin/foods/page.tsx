@@ -19,7 +19,7 @@ export default function FoodsPage() {
         icon={Utensils}
         actions={
           <Button variant="outline" className="rounded-full">
-            <Download className="size-[18px]" />
+            <Download className="size-4.5" />
             Export Report
           </Button>
         }

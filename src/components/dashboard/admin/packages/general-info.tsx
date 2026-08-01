@@ -1,31 +1,49 @@
 import React from "react";
 import { Layers } from "lucide-react";
-import type { FieldErrors } from "react-hook-form";
-import { UseFormRegister, UseFormSetValue } from "react-hook-form";
+import type { FieldErrors, UseFormWatch } from "react-hook-form";
+import { UseFormRegister, UseFormSetValue, } from "react-hook-form";
 import { inputStyles, PackageFormValues } from "@/lib/schema/package-schema";
 import { FormField } from "@/components/common/form-field";
 import { PackageCategory } from "@prisma/client";
+import ImageUploadField from "@/components/common/image-upload";
+import { useUploadImageMutation } from "@/store/api/slices/image-upload-api";
 
 export function GeneralInfoSection({
   register,
   errors,
   packageTypeWatched,
   setValue,
-  categories
+  categories,
+  watch
 }: {
   register: UseFormRegister<PackageFormValues>;
   errors: FieldErrors<PackageFormValues>;
   packageTypeWatched: string;
   setValue: UseFormSetValue<PackageFormValues>;
   categories?: PackageCategory[]
-}) {
+  watch: UseFormWatch<PackageFormValues>
+}
+) {
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     const generatedSlug = val.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
     setValue("slug", generatedSlug, { shouldValidate: true });
   };
+  const [uploadImageApi, { isLoading }] = useUploadImageMutation();
+  const uploadImage = async (
+    file: File,
+    field: "thumbnail" | "coverImage"
+  ) => {
+    try {
 
-
+      const res = await uploadImageApi(file).unwrap();
+      setValue(field, res.url, {
+        shouldValidate: true,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-5">
@@ -68,12 +86,31 @@ export function GeneralInfoSection({
           <textarea rows={2} {...register("description")} placeholder="Brief details about package..." className={inputStyles} />
         </FormField>
 
-        <FormField label="Thumbnail Image URL" error={errors.thumbnail} required>
-          <input {...register("thumbnail")} placeholder="https://..." className={inputStyles} />
-        </FormField>
+        <FormField
+          label="Thumbnail"
+          error={errors.thumbnail}
+          required
+        >
 
-        <FormField label="Cover Image URL" error={errors.coverImage} required>
-          <input {...register("coverImage")} placeholder="https://..." className={inputStyles} />
+          <ImageUploadField
+            image={watch("thumbnail")}
+            loading={isLoading}
+            onUpload={(file) => uploadImage(file, "thumbnail")}
+          />
+
+        </FormField>
+        <FormField
+          label="Cover"
+          error={errors.coverImage}
+          required
+        >
+
+          <ImageUploadField
+            image={watch("coverImage")}
+            loading={isLoading}
+            onUpload={(file) => uploadImage(file, "coverImage")}
+          />
+
         </FormField>
 
         <FormField label="Package Type" error={errors.packageType} required className={packageTypeWatched === "CUSTOM" ? "" : "md:col-span-2"}>

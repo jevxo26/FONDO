@@ -111,13 +111,17 @@ const getCategories = async (req: Request, res: Response): Promise<Response> => 
 
 const createReview = async (req: AuthRequest, res: Response): Promise<Response> => {
   try {
-    const customerId = req.user!.id;
+    const customerId = req.user?.id || req.user?.userId;
+
+    if (!customerId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized: Customer ID not found in token"
+      });
+    }
+
     const packageId = req.params.packageId as string;
     const { rating, review, orderId } = req.body;
-
-    if (!packageId) {
-      return res.status(400).json({ success: false, message: "Package ID is required" });
-    }
 
     const result = await PackageService.createPackageReview(customerId, packageId, {
       rating: Number(rating),

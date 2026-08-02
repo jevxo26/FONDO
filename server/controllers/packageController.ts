@@ -111,7 +111,7 @@ const getCategories = async (req: Request, res: Response): Promise<Response> => 
 
 const createReview = async (req: AuthRequest, res: Response): Promise<Response> => {
   try {
-    const customerId = req.user?.id || req.user?.userId;
+    const customerId = req.user?.userId;
 
     if (!customerId) {
       return res.status(401).json({
@@ -155,7 +155,7 @@ const getPackageReviews = async (req: Request, res: Response): Promise<Response>
 
 const updateReview = async (req: AuthRequest, res: Response): Promise<Response> => {
   try {
-    const customerId = req.user!.id;
+    const customerId = req.user?.userId;
     const reviewId = req.params.reviewId as string;
     const { rating, review } = req.body;
 
@@ -176,7 +176,7 @@ const updateReview = async (req: AuthRequest, res: Response): Promise<Response> 
 
 const deleteReview = async (req: AuthRequest, res: Response): Promise<Response> => {
   try {
-    const customerId = req.user!.id;
+    const customerId = req.user?.userId;
     const reviewId = req.params.reviewId as string;
 
     const result = await PackageService.deletePackageReview(customerId, reviewId);

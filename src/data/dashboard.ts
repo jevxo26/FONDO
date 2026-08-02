@@ -27,6 +27,12 @@ import {
   Users,
   Utensils,
   Wallet,
+  Layout,
+  Image,
+  SlidersHorizontal,
+  Newspaper,
+  FileText,
+  Settings,
 } from "lucide-react";
 
 export interface SidebarItem {
@@ -113,6 +119,20 @@ export const sidebarItems: SidebarItem[] = [
     ],
   },
   {
+    label: "CMS",
+    href: "/cms",
+    icon: Layout,
+    children: [
+      { label: "Dashboard", href: "/cms", icon: LayoutDashboard },
+      { label: "Banners", href: "/cms/banners", icon: Image },
+      { label: "Sliders", href: "/cms/sliders", icon: SlidersHorizontal },
+      { label: "Blog Categories", href: "/cms/blog-categories", icon: Grid3x3 },
+      { label: "Blogs", href: "/cms/blogs", icon: Newspaper },
+      { label: "Pages", href: "/cms/pages", icon: FileText },
+      { label: "Settings", href: "/cms/settings", icon: Settings },
+    ],
+  },
+  {
     label: "Reports",
     href: "/reports",
     icon: BarChart3,
@@ -131,5 +151,6 @@ export const sidebarItems: SidebarItem[] = [
 export const sectionConfig = [
   { label: "Management", items: ["Customers", "Vendors", "Foods", "Roles & Permissions"] },
   { label: "Operations", items: ["Orders", "Payments", "Riders"] },
+  { label: "Content", items: ["CMS"] },
   { label: "Analytics", items: ["Reports"] },
 ] as const;

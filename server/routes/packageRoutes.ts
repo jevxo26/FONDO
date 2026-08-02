@@ -26,4 +26,13 @@ router.post("/:packageId/reviews", verifyToken, PackageController.createReview);
 router.patch("/reviews/:reviewId", verifyToken, PackageController.updateReview);
 router.delete("/reviews/:reviewId", verifyToken, PackageController.deleteReview);
 
+// TODO: add admin validation
+// Get Review and update status Approve / Reject [ADMIN only]
+// GET Only Pending Reviews Route
+router.get("/reviews/pending", verifyToken, PackageController.getPendingReviews);
+router.patch(
+    "/reviews/:reviewId/status",
+    verifyToken,
+    PackageController.updateReviewStatus
+);
 export default router;

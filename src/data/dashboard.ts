@@ -57,7 +57,6 @@ export const sidebarItems: SidebarItem[] = [
       { label: "All Vendors", href: "/vendors", icon: Store },
       { label: "Pending Approval", href: "/vendors/pending", icon: Clock },
       { label: "Performance", href: "/vendors/performance", icon: TrendingUp },
-      { label: "Settlement", href: "/vendors/settlement", icon: DollarSign },
     ],
   },
   {
@@ -97,6 +96,7 @@ export const sidebarItems: SidebarItem[] = [
       { label: "All Payments", href: "/payments", icon: CreditCard },
       { label: "Coupons", href: "/payments/coupons", icon: Ticket },
       { label: "Refunds", href: "/payments/refunds", icon: Undo2 },
+      { label: "Withdrawals", href: "/payments/withdrawals", icon: Wallet },
       { label: "Settlements", href: "/payments/settlements", icon: Landmark },
       { label: "Revenue", href: "/payments/revenue", icon: Banknote },
     ],

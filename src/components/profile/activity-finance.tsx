@@ -1,7 +1,13 @@
 "use client";
 
 import { useOrders } from "@/store/api/slices/orders-api";
+import { useWallet, useWalletTransactions, useTopupWallet } from "@/store/api/slices/wallet-api";
+import { handleApiError } from "@/lib/api-error";
+import { toast } from "sonner";
 import Link from "next/link";
+import { WalletTransactionList } from "@/components/wallet/wallet-transaction-list";
+
+const QUICK_TOPUPS = [500, 1000, 2000];
 
 export function OrderHistory() {
   const { data: ordersRes, isLoading } = useOrders();
@@ -62,6 +68,29 @@ export function OrderHistory() {
 }
 
 export function WalletBalance() {
+  const { data: wallet, isLoading } = useWallet();
+  const { data: transactions } = useWalletTransactions();
+  const topup = useTopupWallet();
+
+  const handleTopup = (amount: number) => {
+    if (topup.isPending) return;
+    topup.mutate(
+      { amount },
+      {
+        onSuccess: (data) => {
+          if (data.gatewayUrl) {
+            toast.success("Redirecting to payment gateway...");
+            window.location.href = data.gatewayUrl;
+          }
+        },
+        onError: (err) => toast.error(handleApiError(err)),
+      },
+    );
+  };
+
+  const balance = Number(wallet?.balance ?? 0);
+  const holdBalance = Number(wallet?.holdBalance ?? 0);
+
   return (
     <div className="space-y-6">
       <div>
@@ -75,28 +104,42 @@ export function WalletBalance() {
           <span className="text-[9px] text-background/50 uppercase tracking-widest block">
             Available Balance
           </span>
-          <h2 className="font-heading text-2xl font-bold">৳2,450.00</h2>
-          <button
-            type="button"
-            className="w-full py-2 bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-wider rounded-xl hover:bg-primary/90 transition-colors"
+          <h2 className="font-heading text-2xl font-bold">
+            ৳{isLoading ? "..." : balance.toLocaleString()}
+          </h2>
+          {!isLoading && holdBalance > 0 && (
+            <p className="text-[9px] text-background/50">On hold: ৳{holdBalance.toLocaleString()}</p>
+          )}
+          <Link
+            href="/wallet"
+            className="block w-full py-2 bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-wider rounded-xl hover:bg-primary/90 transition-colors text-center"
           >
             Top Up
-          </button>
+          </Link>
         </div>
         <div className="md:col-span-2 border border-border rounded-2xl p-4 space-y-3 bg-card">
           <h4 className="font-heading text-xs font-bold text-foreground">Quick Top Up</h4>
           <div className="flex gap-2 pt-1">
-            {["+ ৳500", "+ ৳1,000", "+ ৳2,000"].map((amt) => (
+            {QUICK_TOPUPS.map((amt) => (
               <button
                 key={amt}
                 type="button"
-                className="px-3 py-1.5 bg-muted border border-border text-foreground rounded-lg text-[10px] font-bold hover:bg-muted/80 transition-colors"
+                onClick={() => handleTopup(amt)}
+                disabled={topup.isPending}
+                className="px-3 py-1.5 bg-muted border border-border text-foreground rounded-lg text-[10px] font-bold hover:bg-muted/80 transition-colors disabled:opacity-50"
               >
-                {amt}
+                + ৳{amt.toLocaleString()}
               </button>
             ))}
           </div>
+          <p className="text-[10px] text-muted-foreground/70">
+            You&apos;ll be redirected to the payment gateway to complete the top-up.
+          </p>
         </div>
+      </div>
+      <div>
+        <h4 className="font-heading text-sm font-bold text-foreground">Recent Transactions</h4>
+        <WalletTransactionList transactions={transactions ?? []} />
       </div>
     </div>
   );

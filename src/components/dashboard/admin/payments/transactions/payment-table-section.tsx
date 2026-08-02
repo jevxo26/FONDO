@@ -1,14 +1,16 @@
 "use client";
 
 import { DataTable } from "@/components/common/table";
-import type { FacetedFilter } from "@/components/common/table";
+import type { FacetedFilter, RowAction } from "@/components/common/table";
 import { paymentColumns } from "./payment-columns";
-import { CreditCard } from "lucide-react";
+import { CreditCard, Eye, Settings2 } from "lucide-react";
 import type { Payment } from "@/types/payment";
 
 interface PaymentTableSectionProps {
   data: Payment[];
   isLoading?: boolean;
+  onView: (payment: Payment) => void;
+  onAdjust: (payment: Payment) => void;
 }
 
 const statusFilter: FacetedFilter = {
@@ -23,7 +25,20 @@ const statusFilter: FacetedFilter = {
   ],
 };
 
-export function PaymentTableSection({ data, isLoading }: PaymentTableSectionProps) {
+export function PaymentTableSection({ data, isLoading, onView, onAdjust }: PaymentTableSectionProps) {
+  const rowActions: RowAction<Payment>[] = [
+    {
+      label: "View Details",
+      icon: <Eye className="size-4" />,
+      onClick: onView,
+    },
+    {
+      label: "Adjust",
+      icon: <Settings2 className="size-4" />,
+      onClick: onAdjust,
+    },
+  ];
+
   return (
     <DataTable
       columns={paymentColumns}
@@ -31,6 +46,7 @@ export function PaymentTableSection({ data, isLoading }: PaymentTableSectionProp
       isLoading={isLoading}
       pageSize={10}
       filters={[statusFilter]}
+      rowActions={rowActions}
       emptyMessage="No payments found."
     />
   );

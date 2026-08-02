@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { BarChart3, Eye, Edit, Flame, Calendar, Utensils, Sliders, Hash } from "lucide-react";
+import { Eye, Edit, Flame, Calendar, Utensils, Sliders, Hash, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 // API Data Interface definition
@@ -154,15 +154,15 @@ export function PackageCard({ pkg }: PackageCardProps) {
           {/* Action Buttons */}
           <div className="mt-4 flex items-center gap-2">
             <Button
-  variant="ghost"
-  size="sm"
-  className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8"
->
-  <Link href={`/packages/${pkg.id}`}>
-    <Eye className="mr-1.5 size-3.75" />
-    View
-  </Link>
-</Button>
+              variant="ghost"
+              size="sm"
+              className="h-9 flex rounded-xl text-xs font-semibold hover:bg-primary/8"
+            >
+             <Link className="flex justify-between" href={`/packages/${pkg.id}`}>
+              <Eye className="mr-1.5 size-[15px]" />
+              View
+             </Link>
+            </Button>
             <Button
               variant="ghost"
               size="sm"
@@ -170,6 +170,14 @@ export function PackageCard({ pkg }: PackageCardProps) {
             >
               <Edit className="mr-1.5 size-[15px]" />
               Edit
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8"
+            >
+              <Trash2 className="mr-1.5 size-3.75" />
+              Delete
             </Button>
           </div>
         </div>

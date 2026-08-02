@@ -10,6 +10,8 @@ import {
   Truck,
   Utensils,
   UtensilsCrossed,
+  Newspaper,
+  FileText,
 } from "lucide-react";
 import type { ComponentType } from "react";
 
@@ -41,6 +43,8 @@ export const childIcons: Record<string, ComponentType<{ className?: string }>> =
   "/contact": Mail,
   "/faq": HelpCircle,
   "/traking-page": Truck,
+  "/blog": Newspaper,
+  "/pages": FileText,
 };
 
 export const mainNavLinks: NavLink[] = [
@@ -65,6 +69,8 @@ export const mainNavLinks: NavLink[] = [
       { href: "/apply/rider", label: "Apply as Rider" },
       { href: "/contact", label: "Contact" },
       { href: "/faq", label: "FAQ" },
+      { href: "/blog", label: "Blog" },
+      { href: "/pages", label: "Pages" },
     ],
   },
 ];
@@ -83,4 +89,6 @@ export const mobileNavLinks: { href: string; label: string }[] = [
   { href: "/faq", label: "FAQ" },
   { href: "/traking-page", label: "Track Order" },
   { href: "/wishlist", label: "Wishlist" },
+  { href: "/blog", label: "Blog" },
+  { href: "/pages", label: "Pages" },
 ];

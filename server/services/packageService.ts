@@ -301,15 +301,15 @@ const getAllCategories = async () => {
 };
 
 // Helper function to recalculate average ratings and breakdown dynamically
-const recalculatePackageRating = async (tx: Prisma.TransactionClient, packageId: string) => {
-  const reviews = await tx.packageReview.findMany({
-    where: { packageId },
+const recalculatePackageRating = async (packageId: string) => {
+  const approvedReviews = await prisma.packageReview.findMany({
+    where: { packageId, status: "approved" },
   });
 
-  const totalReview = reviews.length;
+  const totalReview = approvedReviews.length;
 
   if (totalReview === 0) {
-    await tx.packageRating.upsert({
+    await prisma.packageRating.upsert({
       where: { packageId },
       update: {
         averageRating: 0,
@@ -330,24 +330,20 @@ const recalculatePackageRating = async (tx: Prisma.TransactionClient, packageId:
   }
 
   let totalRatingSum = 0;
-  let fiveStar = 0;
-  let fourStar = 0;
-  let threeStar = 0;
-  let twoStar = 0;
-  let oneStar = 0;
+  let fiveStar = 0, fourStar = 0, threeStar = 0, twoStar = 0, oneStar = 0;
 
-  for (const r of reviews) {
+  approvedReviews.forEach((r) => {
     totalRatingSum += r.rating;
     if (r.rating === 5) fiveStar++;
     else if (r.rating === 4) fourStar++;
     else if (r.rating === 3) threeStar++;
     else if (r.rating === 2) twoStar++;
     else if (r.rating === 1) oneStar++;
-  }
+  });
 
-  const averageRating = parseFloat((totalRatingSum / totalReview).toFixed(2));
+  const averageRating = parseFloat((totalRatingSum / totalReview).toFixed(1));
 
-  await tx.packageRating.upsert({
+  await prisma.packageRating.upsert({
     where: { packageId },
     update: {
       averageRating,
@@ -411,13 +407,6 @@ const createPackageReview = async (
   });
 };
 
-const getReviewsByPackageId = async (packageId: string) => {
-  return await prisma.packageReview.findMany({
-    where: { packageId },
-    orderBy: { createdAt: "desc" },
-  });
-};
-
 const updatePackageReview = async (
   customerId: string,
   reviewId: string,
@@ -468,6 +457,47 @@ const deletePackageReview = async (customerId: string, reviewId: string) => {
   });
 };
 
+const updateReviewStatus = async (reviewId: string, status: "approved" | "rejected" | "pending") => {
+  const existingReview = await prisma.packageReview.findUnique({
+    where: { id: reviewId },
+  });
+
+  if (!existingReview) {
+    throw new Error("Review not found");
+  }
+
+  const updatedReview = await prisma.packageReview.update({
+    where: { id: reviewId },
+    data: { status },
+  });
+
+  await recalculatePackageRating(existingReview.packageId);
+
+  return updatedReview;
+};
+
+const getPendingReviews = async () => {
+  const reviews = await prisma.packageReview.findMany({
+    where: {
+      status: "pending",
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      package: {
+        select: {
+          id: true,
+          name: true,
+          thumbnail: true,
+        },
+      },
+    },
+  });
+
+  return reviews;
+};
+
 export const PackageService = {
   getAllPackages,
   getPackageById,
@@ -479,7 +509,8 @@ export const PackageService = {
   createPackageCategory,
   getAllCategories,
   createPackageReview,
-  getReviewsByPackageId,
   updatePackageReview,
   deletePackageReview,
+  updateReviewStatus,
+  getPendingReviews
 };

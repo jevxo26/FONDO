@@ -139,20 +139,6 @@ const createReview = async (req: AuthRequest, res: Response): Promise<Response> 
   }
 };
 
-const getPackageReviews = async (req: Request, res: Response): Promise<Response> => {
-  try {
-    const packageId = req.params.packageId as string;
-    const reviews = await PackageService.getReviewsByPackageId(packageId);
-
-    return res.status(200).json({
-      success: true,
-      data: reviews,
-    });
-  } catch (error: any) {
-    return res.status(500).json({ success: false, message: error.message });
-  }
-};
-
 const updateReview = async (req: AuthRequest, res: Response): Promise<Response> => {
   try {
     const customerId = req.user?.userId;
@@ -191,6 +177,45 @@ const deleteReview = async (req: AuthRequest, res: Response): Promise<Response> 
   }
 };
 
+const updateReviewStatus = async (req: AuthRequest, res: Response): Promise<Response> => {
+  try {
+    const reviewId = req.params.reviewId as string;
+    const { status } = req.body;
+
+    if (!["approved", "rejected", "pending"].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status. Must be 'approved', 'rejected', or 'pending'",
+      });
+    }
+
+    const result = await PackageService.updateReviewStatus(reviewId, status);
+
+    return res.status(200).json({
+      success: true,
+      message: `Review status updated to ${status} successfully`,
+      data: result,
+    });
+  } catch (error: any) {
+    return res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+const getPendingReviews = async (_req: Request, res: Response): Promise<Response> => {
+  try {
+    const reviews = await PackageService.getPendingReviews();
+
+    return res.status(200).json({
+      success: true,
+      message: "Pending reviews fetched successfully",
+      total: reviews.length,
+      data: reviews,
+    });
+  } catch (error: any) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 export const PackageController = {
   getPackages,
   getPackageDetails,
@@ -202,7 +227,8 @@ export const PackageController = {
   createCategory,
   getCategories,
   createReview,
-  getPackageReviews,
   updateReview,
   deleteReview,
+  updateReviewStatus,
+  getPendingReviews
 };

@@ -69,6 +69,17 @@ interface CustomMealRequestInput {
   days: CustomMealDayInput[];
 }
 
+interface CreateReviewInput {
+  rating: number;
+  review?: string;
+  orderId?: string;
+}
+
+interface UpdateReviewInput {
+  rating?: number;
+  review?: string;
+}
+
 const getAllPackages = async (query: PackageQuery) => {
   const { categoryId, packageType, search } = query;
   return await prisma.package.findMany({
@@ -108,7 +119,7 @@ const getPackageById = async (id: string) => {
       days: {
         include: {
           meals: {
-            include: { foods: true },
+            include: { foods: { include: { food: true } } },
           },
         },
       },
@@ -119,8 +130,12 @@ const getPackageById = async (id: string) => {
       schedule: true,
       images: true,
       tags: true,
-      reviews: true,
       rating: true,
+      reviews: {
+        where: { status: "approved" }, // Only include approved reviews publicly
+        orderBy: { createdAt: "desc" },
+        take: 10,
+      },
       customization: true,
       availability: true,
     },
@@ -285,6 +300,204 @@ const getAllCategories = async () => {
   });
 };
 
+// Helper function to recalculate average ratings and breakdown dynamically
+const recalculatePackageRating = async (packageId: string) => {
+  const approvedReviews = await prisma.packageReview.findMany({
+    where: { packageId, status: "approved" },
+  });
+
+  const totalReview = approvedReviews.length;
+
+  if (totalReview === 0) {
+    await prisma.packageRating.upsert({
+      where: { packageId },
+      update: {
+        averageRating: 0,
+        totalReview: 0,
+        fiveStar: 0,
+        fourStar: 0,
+        threeStar: 0,
+        twoStar: 0,
+        oneStar: 0,
+      },
+      create: {
+        packageId,
+        averageRating: 0,
+        totalReview: 0,
+      },
+    });
+    return;
+  }
+
+  let totalRatingSum = 0;
+  let fiveStar = 0, fourStar = 0, threeStar = 0, twoStar = 0, oneStar = 0;
+
+  approvedReviews.forEach((r) => {
+    totalRatingSum += r.rating;
+    if (r.rating === 5) fiveStar++;
+    else if (r.rating === 4) fourStar++;
+    else if (r.rating === 3) threeStar++;
+    else if (r.rating === 2) twoStar++;
+    else if (r.rating === 1) oneStar++;
+  });
+
+  const averageRating = parseFloat((totalRatingSum / totalReview).toFixed(1));
+
+  await prisma.packageRating.upsert({
+    where: { packageId },
+    update: {
+      averageRating,
+      totalReview,
+      fiveStar,
+      fourStar,
+      threeStar,
+      twoStar,
+      oneStar,
+    },
+    create: {
+      packageId,
+      averageRating,
+      totalReview,
+      fiveStar,
+      fourStar,
+      threeStar,
+      twoStar,
+      oneStar,
+    },
+  });
+};
+
+// --- Review Service CRUD Operations ---
+
+const createPackageReview = async (
+  customerId: string,
+  packageId: string,
+  data: { rating: number; review?: string; orderId?: string }
+) => {
+  if (!packageId) {
+    throw new Error("Package ID is required");
+  }
+
+  if (data.rating < 1 || data.rating > 5) {
+    throw new Error("Rating must be between 1 and 5");
+  }
+
+  // Verify the package exists before creating review
+  const packageExists = await prisma.package.findUnique({ where: { id: packageId } });
+  if (!packageExists) {
+    throw new Error("Package not found");
+  }
+
+  return await prisma.$transaction(async (tx) => {
+    const newReview = await tx.packageReview.create({
+      data: {
+        packageId,
+        customerId,
+        rating: data.rating,
+        review: data.review,
+        orderId: data.orderId,
+        status: "pending", // Status set to pending as per schema default
+      },
+    });
+
+    // Recalculate average rating for the package
+    await recalculatePackageRating(tx, packageId);
+
+    return newReview;
+  });
+};
+
+const updatePackageReview = async (
+  customerId: string,
+  reviewId: string,
+  data: UpdateReviewInput
+) => {
+  const existingReview = await prisma.packageReview.findUnique({ where: { id: reviewId } });
+
+  if (!existingReview) throw new Error("Review not found");
+  if (existingReview.customerId !== customerId) {
+    throw new Error("Unauthorized to edit this review");
+  }
+
+  if (data.rating && (data.rating < 1 || data.rating > 5)) {
+    throw new Error("Rating must be between 1 and 5");
+  }
+
+  return await prisma.$transaction(async (tx) => {
+    const updatedReview = await tx.packageReview.update({
+      where: { id: reviewId },
+      data: {
+        rating: data.rating ?? existingReview.rating,
+        review: data.review ?? existingReview.review,
+      },
+    });
+
+    await recalculatePackageRating(tx, existingReview.packageId);
+
+    return updatedReview;
+  });
+};
+
+const deletePackageReview = async (customerId: string, reviewId: string) => {
+  const existingReview = await prisma.packageReview.findUnique({ where: { id: reviewId } });
+
+  if (!existingReview) throw new Error("Review not found");
+  if (existingReview.customerId !== customerId) {
+    throw new Error("Unauthorized to delete this review");
+  }
+
+  return await prisma.$transaction(async (tx) => {
+    const deletedReview = await tx.packageReview.delete({
+      where: { id: reviewId },
+    });
+
+    await recalculatePackageRating(tx, existingReview.packageId);
+
+    return deletedReview;
+  });
+};
+
+const updateReviewStatus = async (reviewId: string, status: "approved" | "rejected" | "pending") => {
+  const existingReview = await prisma.packageReview.findUnique({
+    where: { id: reviewId },
+  });
+
+  if (!existingReview) {
+    throw new Error("Review not found");
+  }
+
+  const updatedReview = await prisma.packageReview.update({
+    where: { id: reviewId },
+    data: { status },
+  });
+
+  await recalculatePackageRating(existingReview.packageId);
+
+  return updatedReview;
+};
+
+const getPendingReviews = async () => {
+  const reviews = await prisma.packageReview.findMany({
+    where: {
+      status: "pending",
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      package: {
+        select: {
+          id: true,
+          name: true,
+          thumbnail: true,
+        },
+      },
+    },
+  });
+
+  return reviews;
+};
+
 export const PackageService = {
   getAllPackages,
   getPackageById,
@@ -295,4 +508,9 @@ export const PackageService = {
   confirmCustomOrderPayment,
   createPackageCategory,
   getAllCategories,
+  createPackageReview,
+  updatePackageReview,
+  deletePackageReview,
+  updateReviewStatus,
+  getPendingReviews
 };

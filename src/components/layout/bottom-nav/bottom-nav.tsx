@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { House, Menu, Package, ShoppingBag, Truck } from "lucide-react";
 import { motion } from "framer-motion";
+import { useSyncExternalStore } from "react";
 import { cn } from "@/lib/utils";
 import { openMobileMenu } from "@/store/slices/uiSlice";
 import { useAppDispatch } from "@/store/store";
@@ -16,14 +17,18 @@ const items = [
   { href: "/orders", label: "Orders", icon: Package },
 ] as const;
 
+const emptySubscribe = () => () => {};
+const useHydrated = () => useSyncExternalStore(emptySubscribe, () => true, () => false);
+
 export function BottomNav() {
   const pathname = usePathname();
   const dispatch = useAppDispatch();
   const { data: cart } = useCart();
+  const mounted = useHydrated();
 
   const cartCount = cart?.items?.reduce((sum, i) => sum + i.quantity, 0) ?? 0;
 
-  const isActive = (href: string) => pathname === href;
+  const isActive = (href: string) => mounted && pathname === href;
 
   return (
     <nav

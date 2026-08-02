@@ -52,12 +52,16 @@ export function RichTextEditor({
     editor.chain().focus().toggleMark(mark).run();
   };
 
-  const toggleBlock = (block: string) => {
-    editor.chain().focus().toggleNode(block, "paragraph").run();
+  const toggleHeading = (level: 1 | 2) => {
+    editor.chain().focus().toggleHeading({ level }).run();
   };
 
   const toggleList = (list: "bulletList" | "orderedList") => {
     editor.chain().focus().toggleList(list, "listItem").run();
+  };
+
+  const toggleBlockquote = () => {
+    editor.chain().focus().toggleBlockquote().run();
   };
 
   return (
@@ -86,8 +90,8 @@ export function RichTextEditor({
           type="button"
           variant="ghost"
           size="sm"
-          onClick={() => toggleBlock("heading")}
-          className={editor.isActive("heading") ? "bg-muted" : ""}
+          onClick={() => toggleHeading(1)}
+          className={editor.isActive("heading", { level: 1 }) ? "bg-muted" : ""}
         >
           <Heading1 className="h-4 w-4" />
         </Button>
@@ -95,7 +99,7 @@ export function RichTextEditor({
           type="button"
           variant="ghost"
           size="sm"
-          onClick={() => toggleBlock("heading", { level: 2 })}
+          onClick={() => toggleHeading(2)}
           className={editor.isActive("heading", { level: 2 }) ? "bg-muted" : ""}
         >
           <Heading2 className="h-4 w-4" />
@@ -124,7 +128,7 @@ export function RichTextEditor({
           type="button"
           variant="ghost"
           size="sm"
-          onClick={() => toggleBlock("blockquote")}
+          onClick={toggleBlockquote}
           className={editor.isActive("blockquote") ? "bg-muted" : ""}
         >
           <Quote className="h-4 w-4" />

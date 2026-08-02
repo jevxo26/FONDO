@@ -101,7 +101,7 @@ export function BlogForm({ onSubmit, onCancel, defaultValues }: BlogFormProps) {
 
             <FormField label="Category" error={errors.categoryId} required>
               <Select
-                onValueChange={(value) => setValue("categoryId", value)}
+                onValueChange={(value) => setValue("categoryId", value as any) }
                 defaultValue={defaultValues?.categoryId}
               >
                 <SelectTrigger className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">

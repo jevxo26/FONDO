@@ -3,7 +3,6 @@
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { PackageCard, type FoodPackage } from "@/components/dashboard/admin/foods/packages/package-card";
 import { Button } from "@/components/ui/button";
-import { foodPackages } from "@/data/packages";
 import { Package, Plus, Download } from "lucide-react";
 import Link from "next/link";
 import { useGetPackages } from "@/store/api/slices/packages-api";

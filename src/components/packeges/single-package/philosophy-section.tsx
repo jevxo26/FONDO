@@ -2,9 +2,10 @@
 
 import React from "react";
 import { Utensils, Zap } from "lucide-react";
+import type { Package } from "@/types/package";
 
 interface PhilosophySectionProps {
-  package: any;
+  package: Package;
 }
 
 export default function PhilosophySection({

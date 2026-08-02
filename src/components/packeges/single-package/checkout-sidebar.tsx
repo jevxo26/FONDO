@@ -2,12 +2,12 @@
 
 import React from "react";
 import { ShieldCheck, PhoneCall } from "lucide-react";
-import { Package } from "@prisma/client";
 import { useCreateCustomMealRequest } from "@/store/api/slices/packages-api";
+import type { CustomDay, Package } from "@/types/package";
 
 interface CheckoutSidebarProps {
   package: Package;
-  customDays: any[];
+  customDays: CustomDay[];
   extraPrice: number;
 }
 

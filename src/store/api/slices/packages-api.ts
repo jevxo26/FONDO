@@ -1,17 +1,18 @@
 import { api } from "../base-api";
 import { createMutationWrapper } from "../mutation-wrapper";
+import type { Package } from "@/types/package";
 
 export const packagesApi = api.injectEndpoints({
     endpoints: (builder) => ({
 
-        getPackages: builder.query({
+        getPackages: builder.query<Package[], void>({
             query: () => ({
                 url: "/package",
             }),
             providesTags: ["Package"],
         }),
 
-        getPackageById: builder.query({
+        getPackageById: builder.query<Package, string>({
             query: (id) => `/package/${id}`,
             providesTags: (result, error, id) => [
                 { type: "Package", id },

@@ -60,8 +60,8 @@ export default function AddKitchenPage() {
 
       reset(initialValues);
       router.push("/dashboard/vendor/kitchens");
-    } catch (error: any) {
-      const message = error?.message || "Failed to create kitchen.";
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to create kitchen.";
       toast.error(message);
       console.error(error);
     } finally {

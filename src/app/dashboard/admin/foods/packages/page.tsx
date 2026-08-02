@@ -1,7 +1,7 @@
 // src/app/dashboard/admin/foods/packages/page.tsx
 'use client'
 import { PageHeader } from "@/components/dashboard/common/page-header";
-import { PackageCard } from "@/components/dashboard/admin/foods/packages/package-card";
+import { PackageCard, type FoodPackage } from "@/components/dashboard/admin/foods/packages/package-card";
 import { Button } from "@/components/ui/button";
 import { foodPackages } from "@/data/packages";
 import { Package, Plus, Download } from "lucide-react";
@@ -35,8 +35,8 @@ export default function FoodPackagesPage() {
         }
       />
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
-        {allPackage.map((pkg) => (
-          <PackageCard key={pkg.id} pkg={pkg} />
+        {allPackage?.map((pkg) => (
+          <PackageCard key={pkg.id} pkg={pkg as unknown as FoodPackage} />
         ))}
       </div>
     </div>

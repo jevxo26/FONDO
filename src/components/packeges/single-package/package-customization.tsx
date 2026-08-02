@@ -4,28 +4,14 @@ import React, { useState } from "react";
 import { SlidersHorizontal, ChevronDown, Plus, Minus, Trash2, Send } from "lucide-react";
 import { useGetFoods } from "@/store/api/slices/foods-api";
 import { useCreateCustomMealRequestMutation } from "@/store/api/slices/packages-api";
-interface CustomFood {
-  foodId: string;
-  name: string;
-  thumbnail?: string;
-  quantity: number;
-  price: number;
-  isExtra: boolean;
-}
+import type { CustomDay, CustomMeal, CustomFood, Package } from "@/types/package";
+import type { Food } from "@/types/food";
+import { handleApiError } from "@/lib/api-error";
 
-interface CustomMeal {
-  mealType: string;
-  mealTime?: string;
-  foods: CustomFood[];
-}
-
-interface CustomDay {
-  dayNumber: number;
-  meals: CustomMeal[];
-}
+type CustomFoodOption = Food & { price?: number | string };
 
 interface PackageCustomizationProps {
-  singlePackage: any;
+  singlePackage: Package;
   customDays: CustomDay[];
   setCustomDays: React.Dispatch<React.SetStateAction<CustomDay[]>>;
   totalPrice: number;
@@ -56,7 +42,7 @@ export default function PackageCustomization({
   const selectedFoodsForMeal = currentMealData?.foods || [];
 
   // ১. ফুড এড করা
-  const handleAddFood = (food: any) => {
+  const handleAddFood = (food: CustomFoodOption) => {
     const defaultVariant = food.variants?.[0];
     const price = defaultVariant ? Number(defaultVariant.price) : Number(food.price || 0);
 
@@ -149,13 +135,13 @@ const handleSubmitCustomRequest = async () => {
       name: singlePackage?.name || "Custom Meal Plan",
       totalDays: customDays.length,
       totalPrice: totalPrice,
-      days: customDays.map((day: any, dayIdx: number) => ({
+      days: customDays.map((day: CustomDay, dayIdx: number) => ({
         dayNumber: day.dayNumber || dayIdx + 1,
-        meals: day.meals.map((meal: any) => ({
+        meals: day.meals.map((meal: CustomMeal) => ({
           mealType: meal.mealType, // e.g., "BREAKFAST", "LUNCH", "DINNER"
           mealTime: meal.mealTime || "08:00 AM",
-          foods: meal.foods.map((food: any) => ({
-            foodId: food.foodId || food.id, 
+          foods: meal.foods.map((food: CustomFood) => ({
+            foodId: food.foodId,
             quantity: Number(food.quantity || 1),
             isExtra: Boolean(food.isExtra),
           })),
@@ -167,9 +153,9 @@ const handleSubmitCustomRequest = async () => {
     await createCustomMealRequest(payload).unwrap();
     alert("Your custom meal request submitted successfully!");
 
-  } catch (error: any) {
+  } catch (error) {
     console.error("Submission error:", error);
-    alert(error?.data?.message || "Failed to submit custom meal request.");
+    alert(handleApiError(error));
   }
 };
 
@@ -301,7 +287,7 @@ const handleSubmitCustomRequest = async () => {
                 <p className="text-xs text-muted-foreground">Loading items...</p>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-1">
-                  {availableFoods.map((food: any) => {
+                  {availableFoods.map((food: CustomFoodOption) => {
                     const price = food.variants?.[0]?.price || food.price || 0;
                     return (
                       <div

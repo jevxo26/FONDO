@@ -1,9 +1,10 @@
 "use client";
 
 import MealCard from "./meal-card";
+import type { PackageDay, PackageMeal } from "@/types/package";
 
 interface DayCardProps {
-  day: any;
+  day: PackageDay;
   dayIndex: number;
   onQuantityChange: (
     dayIndex: number,
@@ -32,7 +33,7 @@ export default function DayCard({
         </p>
       </div>
 
-      {meals.map((meal: any, mealIndex: number) => (
+      {meals.map((meal: PackageMeal, mealIndex: number) => (
         <MealCard
           key={meal?.id ?? `${dayIndex}-${mealIndex}`}
           meal={meal}

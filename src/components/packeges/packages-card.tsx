@@ -5,9 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { usePackages } from "./packages-context";
+import type { Package } from "@/types/package";
 
 interface PackageCardProps {
-  pkg: ApiPackage;
+  pkg: Package;
 }
 
 export default function PackageCard({ pkg }: PackageCardProps) {

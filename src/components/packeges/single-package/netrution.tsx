@@ -1,9 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
+import type { PackageDay, PackageMeal, PackageFood } from "@/types/package";
 
 interface Props {
-  days: any[];
+  days: PackageDay[];
 }
 
 export default function NutrientDashboard({ days }: Props) {
@@ -18,8 +19,8 @@ export default function NutrientDashboard({ days }: Props) {
     let cholesterol = 0;
 
     days?.forEach((day) => {
-      day.meals?.forEach((meal: any) => {
-        meal.foods?.forEach((item: any) => {
+      day.meals?.forEach((meal: PackageMeal) => {
+        meal.foods?.forEach((item: PackageFood) => {
           const food = item.food;
 
           if (!food) return;

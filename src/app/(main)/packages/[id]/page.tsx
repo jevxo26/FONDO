@@ -9,12 +9,13 @@ import PhilosophySection from "@/components/packeges/single-package/philosophy-s
 import PackageCustomization from "@/components/packeges/single-package/package-customization";
 import { useGetPackageByIdQuery } from "@/store/api/slices/packages-api";
 import FoodsLoading from "../../foods/loading";
+import type { CustomDay } from "@/types/package";
 
 export default function SinglePackage() {
   const { id } = useParams<{ id: string }>();
   const { data: singlePackage, isLoading, error } = useGetPackageByIdQuery(id, { skip: !id });
 
-  const [customDays, setCustomDays] = useState([]);
+  const [customDays, setCustomDays] = useState<CustomDay[]>([]);
 
   if (isLoading || error) return <FoodsLoading />;
   if (!singlePackage) return <div>Package not found.</div>;
@@ -22,10 +23,10 @@ export default function SinglePackage() {
   const extraPrice = customDays.reduce((total, day) => {
     return (
       total +
-      day.meals.reduce((mealTotal: number, meal: any) => {
+      day.meals.reduce((mealTotal, meal) => {
         return (
           mealTotal +
-          meal.foods.reduce((foodTotal: number, food: any) => foodTotal + (food.price || 0) * (food.quantity || 1), 0)
+          meal.foods.reduce((foodTotal, food) => foodTotal + (food.price || 0) * (food.quantity || 1), 0)
         );
       }, 0)
     );
@@ -43,7 +44,7 @@ export default function SinglePackage() {
               singlePackage={singlePackage}
               customDays={customDays}
               setCustomDays={setCustomDays}
-              totalPrice={singlePackage.price + extraPrice}
+              totalPrice={Number(singlePackage.price ?? 0) + extraPrice}
             />
           </div>
 

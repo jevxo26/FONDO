@@ -1,10 +1,10 @@
 "use client";
 
 import PackageCard from "./packages-card";
-import type { MealPackage } from "./packages-context";
+import type { Package } from "@/types/package";
 
 interface PackageGridProps {
-  packages: MealPackage[];
+  packages: Package[];
 }
 
 export default function PackageGrid({ packages }: PackageGridProps) {

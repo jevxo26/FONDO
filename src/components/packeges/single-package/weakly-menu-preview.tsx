@@ -1,26 +1,28 @@
 "use client";
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
+import type { CustomDay, PackageDay, PackageMeal, PackageFood } from "@/types/package";
 
 interface Props {
-  days: any[];
-  customDays?: any[];
+  days?: PackageDay[];
+  customDays?: CustomDay[];
 }
 
 export default function WeeklyMenuPreview({ days = [], customDays = [] }: Props) {
-  const [activeDay, setActiveDay] = useState<number>(1);
+  const [activeDay, setActiveDay] = useState<number>(days?.[0]?.dayNumber ?? 1);
 
   // মূল প্যাকেজের খাবার এবং কাস্টম সিলেক্ট করা খাবারগুলো একত্রিত (Merge) করা
   const mergedDays = useMemo(() => {
     if (!days?.length && !customDays?.length) return [];
 
     // মূল দিনগুলোর তালিকা তৈরি
-    const result = days.map((day) => ({
+    const result: PackageDay[] = days.map((day) => ({
       ...day,
-      meals: day.meals?.map((meal: any) => ({
-        ...meal,
-        foods: [...(meal.foods || [])],
-      })) || [],
+      meals:
+        day.meals?.map((meal) => ({
+          ...meal,
+          foods: [...(meal.foods || [])],
+        })) || [],
     }));
 
     // কাস্টম যুক্ত করা দিন এবং খাবারগুলো মার্জ করা
@@ -38,9 +40,11 @@ export default function WeeklyMenuPreview({ days = [], customDays = [] }: Props)
         result.push(targetDay);
       }
 
-      cDay.meals?.forEach((cMeal: any) => {
-        let targetMeal = targetDay.meals.find(
-          (m: any) => m.mealType?.toUpperCase() === cMeal.mealType?.toUpperCase()
+      const targetMeals = (targetDay.meals = targetDay.meals ?? []);
+
+      cDay.meals?.forEach((cMeal) => {
+        let targetMeal = targetMeals.find(
+          (m) => m.mealType?.toUpperCase() === cMeal.mealType?.toUpperCase()
         );
 
         if (!targetMeal) {
@@ -50,18 +54,20 @@ export default function WeeklyMenuPreview({ days = [], customDays = [] }: Props)
             mealTime: cMeal.mealTime || "Scheduled Time",
             foods: [],
           };
-          targetDay.meals.push(targetMeal);
+          targetMeals.push(targetMeal);
         }
 
-        cMeal.foods?.forEach((cf: any) => {
-          const existingIndex = targetMeal.foods.findIndex(
-            (f: any) => (f.foodId || f.id) === cf.foodId && f.isExtra
+        const targetFoods = (targetMeal.foods = targetMeal.foods ?? []);
+
+        cMeal.foods?.forEach((cf) => {
+          const existingIndex = targetFoods.findIndex(
+            (f) => (f.foodId || f.id) === cf.foodId && f.isExtra
           );
 
           if (existingIndex > -1) {
-            targetMeal.foods[existingIndex].quantity = cf.quantity;
+            targetFoods[existingIndex].quantity = cf.quantity;
           } else {
-            targetMeal.foods.push({
+            targetFoods.push({
               ...cf,
               isExtra: true,
             });
@@ -72,12 +78,6 @@ export default function WeeklyMenuPreview({ days = [], customDays = [] }: Props)
 
     return result.sort((a, b) => a.dayNumber - b.dayNumber);
   }, [days, customDays]);
-
-  useEffect(() => {
-    if (days?.length && !activeDay) {
-      setActiveDay(days[0].dayNumber);
-    }
-  }, [days, activeDay]);
 
   const selectedDay = useMemo(() => {
     return mergedDays?.find((day) => day.dayNumber === activeDay);
@@ -127,7 +127,7 @@ export default function WeeklyMenuPreview({ days = [], customDays = [] }: Props)
       {/* Meals Grid (Breakfast, Lunch, Dinner) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {selectedDay?.meals?.length ? (
-          selectedDay.meals.map((meal: any) => (
+          selectedDay.meals.map((meal: PackageMeal) => (
             <div
               key={meal.id || meal.mealType}
               className="bg-background border border-border/30 rounded-2xl p-4 flex flex-col justify-between gap-4 shadow-sm"
@@ -153,7 +153,7 @@ export default function WeeklyMenuPreview({ days = [], customDays = [] }: Props)
 
                 {meal.foods?.length ? (
                   <ul className="space-y-2 my-auto">
-                    {meal.foods.map((foodItem: any, index: number) => {
+                    {meal.foods.map((foodItem: PackageFood, index: number) => {
                       const foodObj = foodItem.food || foodItem;
                       const name = foodObj.name || `Food Item #${index + 1}`;
                       const thumbnail = foodObj.thumbnail || foodItem.thumbnail;

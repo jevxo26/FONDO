@@ -1,9 +1,10 @@
 "use client";
 
 import { Minus, Plus } from "lucide-react";
+import type { PackageMeal, PackageFood } from "@/types/package";
 
 interface MealCardProps {
-  meal: any;
+  meal: PackageMeal;
   onQuantityChange: (
     mealIndex: number,
     foodIndex: number,
@@ -31,7 +32,7 @@ export default function MealCard({
       </div>
 
       <div className="space-y-3">
-        {foods.map((food: any, foodIndex: number) => {
+        {foods.map((food: PackageFood, foodIndex: number) => {
           const foodName = food?.food?.name ?? food?.name ?? "Food item";
           const calories = food?.food?.calories ?? food?.calories ?? 0;
           const quantity = Number(food?.quantity ?? 1);

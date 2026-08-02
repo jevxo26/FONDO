@@ -1,10 +1,11 @@
 "use client";
 
 import { Plus } from "lucide-react";
+import type { Food } from "@/types/food";
 
 interface Props {
-  foods: any[];
-  onAddFood: (food: any) => void;
+  foods: Food[];
+  onAddFood: (food: Food) => void;
 }
 
 export default function FoodSelector({

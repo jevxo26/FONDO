@@ -2,9 +2,10 @@
 
 import { Star } from "lucide-react";
 import Image from "next/image";
+import type { Package } from "@/types/package";
 
 interface HeroSectionProps {
-  package: any;
+  package: Package;
 }
 
 const IMAGE_BASE_URL =

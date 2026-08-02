@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { PackageController } from "../controllers/packageController";
-// import { verifyAuth, verifyVendor } from "../middlewares/auth.middleware";
+import { verifyToken } from "../middlewares/authMiddleware";
 
 const router = Router();
 
@@ -20,5 +20,10 @@ router.patch("/vendor/accept-request/:id", PackageController.acceptCustomRequest
 // --- Customer Routes ---
 router.post("/custom-request", PackageController.createCustomRequest); // verifyAuth
 router.post("/custom-request/:id/pay", PackageController.payForCustomOrder); // verifyAuth
+
+// --- Review Routes ---
+router.post("/:packageId/reviews", verifyToken, PackageController.createReview);
+router.patch("/reviews/:reviewId", verifyToken, PackageController.updateReview);
+router.delete("/reviews/:reviewId", verifyToken, PackageController.deleteReview);
 
 export default router;

@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { ChevronDown, House, Package, Truck, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/common/logo";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { closeMobileMenu } from "@/store/slices/uiSlice";
@@ -46,16 +46,7 @@ export function MobileNav() {
         )}
       >
         <div className="flex items-center justify-between border-b border-border px-4 py-4">
-          <Link href="/" className="flex items-center gap-2" onClick={closeAndClear}>
-            <Image
-              src="/images/logo.png"
-              alt="FONDO logo"
-              width={32}
-              height={32}
-              className="rounded-lg"
-            />
-            <span className="text-lg font-bold text-foreground">FONDO</span>
-          </Link>
+          <Logo size={40} textSize="text-lg" onClick={closeAndClear} />
           <Button
             variant="ghost"
             size="icon"

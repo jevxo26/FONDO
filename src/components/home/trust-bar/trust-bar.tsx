@@ -13,7 +13,7 @@ export function TrustBar() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-4"
+            className="grid grid-cols-2 gap-x-4 gap-y-3 py-4 sm:flex sm:flex-wrap sm:items-center sm:justify-between sm:gap-x-6 sm:gap-y-3"
           >
             {TRUST_FEATURES.map((feature, i) => (
               <div key={`${feature.label}-${i}`} className="flex items-center gap-2.5">

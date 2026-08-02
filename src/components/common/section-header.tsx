@@ -33,7 +33,7 @@ export function SectionHeader({
         </h2>
         {description && <p className="text-sm text-muted-foreground lg:text-base">{description}</p>}
       </div>
-      {action && <div className="w-full sm:ml-auto sm:w-auto shrink-0">{action}</div>}
+      {action && <div className="hidden shrink-0 sm:ml-auto sm:block">{action}</div>}
     </div>
   );
 }

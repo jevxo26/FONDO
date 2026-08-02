@@ -164,6 +164,7 @@
   body {
     @apply bg-background text-foreground;
     overscroll-behavior-y: none;
+    overflow-x: hidden;
   }
 
   html {
@@ -268,6 +269,17 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .text-gold-gradient-strong {
+    background: linear-gradient(135deg, #B8860B 0%, #DCA84A 50%, #C68F26 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gold-strong {
+    color: #B8860B;
   }
 
   .wrapper {

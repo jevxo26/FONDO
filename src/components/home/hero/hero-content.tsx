@@ -64,11 +64,11 @@ export function HeroContent() {
         />
       </motion.div>
 
-      <motion.div variants={fadeUp} className="flex items-center gap-3 sm:gap-4">
+      <motion.div variants={fadeUp} className="flex items-center gap-2.5 sm:gap-4">
         <Button
           variant="default"
           size="xl"
-          className="group relative gap-2 overflow-hidden rounded-full h-auto"
+          className="group relative gap-2 overflow-hidden rounded-full h-auto px-4 py-2.5 text-sm sm:px-6 sm:py-3 sm:text-base"
           nativeButton={false}
           render={<Link href="/foods" />}
         >
@@ -82,11 +82,13 @@ export function HeroContent() {
         <Button
           variant="outline"
           size="xl"
-          className="gap-2 rounded-full h-auto border-border/60"
+          className="gap-2 rounded-full h-auto border-border/60 px-4 py-2.5 text-sm sm:px-6 sm:py-3 sm:text-base"
           nativeButton={false}
           render={<Link href="/foods" />}
         >
-          <span className="text-sm font-medium">Browse categories</span>
+          <span className="text-sm font-medium">
+            Browse<span className="hidden sm:inline"> categories</span>
+          </span>
           <ArrowRight className="size-4 shrink-0" />
         </Button>
       </motion.div>
@@ -98,14 +100,19 @@ export function HeroContent() {
         <div className="flex items-center gap-1 text-sm text-muted-foreground">
           <Star className="size-3.5 fill-primary text-primary" />
           <span className="font-semibold text-foreground">4.9</span>
-          <span>(12k+ ratings)</span>
+          <span>
+            (12k+
+            <span className="hidden sm:inline"> ratings</span>)
+          </span>
         </div>
         <div className="flex items-center gap-1 text-sm text-muted-foreground">
           <span className="font-semibold text-foreground">28m</span>
-          <span>Avg delivery</span>
+          <span className="sm:hidden">delivery</span>
+          <span className="hidden sm:inline">Avg delivery</span>
           <span className="mx-2 inline-block size-1 rounded-full bg-primary/40" />
           <span className="font-semibold text-foreground">120K+</span>
-          <span>Plates served</span>
+          <span className="sm:hidden">served</span>
+          <span className="hidden sm:inline">Plates served</span>
         </div>
       </motion.div>
     </motion.div>

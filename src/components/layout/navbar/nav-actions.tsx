@@ -2,6 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +17,7 @@ import { ROLE_DASHBOARD } from "@/data/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { useCart } from "@/store/api/slices/cart-api";
 import { useFavorites } from "@/hooks/use-favorites";
+import { navIcon, navIconPill } from "./pill-styles";
 import {
   ChevronDown,
   Heart,
@@ -69,24 +72,43 @@ export function NavActions() {
     <div className="flex items-center gap-2">
       <Link
         href="/wishlist"
-        className="relative flex size-10 items-center justify-center rounded-full bg-destructive/20 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-destructive/30 active:scale-[0.95]"
+        className={cn(navIconPill, "text-gold-strong")}
       >
-        <Heart className="size-4 text-foreground" />
+        <Heart className={cn(navIcon)} />
         {favoritesCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground leading-none">
+          <motion.span
+            key={`fav-badge-${favoritesCount}`}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 500, damping: 15 }}
+            className="absolute -top-1 -right-1 flex size-[18px] items-center justify-center rounded-full bg-gold-gradient text-[11px] font-bold text-primary-foreground leading-none ring-2 ring-background"
+          >
             {favoritesCount > 9 ? "9+" : favoritesCount}
-          </span>
+          </motion.span>
         )}
       </Link>
       <Link
         href="/cart"
-        className="relative hidden size-10 items-center justify-center rounded-full bg-secondary transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-secondary active:scale-[0.95] lg:flex"
+        className={cn(navIconPill, "text-gold-strong")}
       >
-        <ShoppingCart className="size-4 text-foreground" />
+        <motion.span
+          key={`cart-icon-${cartCount}`}
+          animate={cartCount > 0 ? { scale: [1, 1.35, 0.9, 1] } : { scale: 1 }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          className="flex items-center justify-center"
+        >
+          <ShoppingCart className={cn(navIcon)} />
+        </motion.span>
         {cartCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground leading-none">
+          <motion.span
+            key={`cart-badge-${cartCount}`}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 500, damping: 15 }}
+            className="absolute -top-1 -right-1 flex size-[18px] items-center justify-center rounded-full bg-gold-gradient text-[11px] font-bold text-primary-foreground leading-none ring-2 ring-background"
+          >
             {cartCount > 9 ? "9+" : cartCount}
-          </span>
+          </motion.span>
         )}
       </Link>
 

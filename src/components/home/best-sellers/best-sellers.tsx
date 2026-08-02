@@ -22,7 +22,7 @@ export function BestSellers({ foods }: BestSellersProps) {
               <Button
                 variant="outline"
                 size="lg"
-                className="group gap-2 rounded-full h-auto py-3 px-4"
+                className="group hidden gap-2 rounded-full h-auto py-3 px-4 sm:inline-flex"
                 nativeButton={false}
                 render={<Link href="/foods" />}
               >
@@ -45,6 +45,20 @@ export function BestSellers({ foods }: BestSellersProps) {
             </SectionRevealItem>
           ))}
         </SectionReveal>
+
+        <div className="mt-8 flex justify-center sm:hidden">
+          <Button
+            variant="outline"
+            size="lg"
+            className="group gap-2 rounded-full h-auto px-5 py-3"
+            nativeButton={false}
+            render={<Link href="/foods" />}
+          >
+            <Sparkles className="size-3.5 text-primary" />
+            View Full Menu
+            <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+          </Button>
+        </div>
       </div>
     </section>
   );

@@ -87,25 +87,28 @@ export function SignatureDish() {
                   })}
                 </div>
 
-                <div className="flex items-center gap-3 pt-2">
+                <div className="flex items-center gap-2.5 pt-2 sm:gap-3">
                   <Button
                     size="lg"
-                    className="group h-auto gap-2 rounded-full bg-primary px-4 py-3 text-primary-foreground hover:bg-primary/90"
+                    className="group h-auto gap-2 rounded-full bg-primary px-3 py-2.5 text-sm text-primary-foreground hover:bg-primary/90 sm:px-4 sm:py-3"
                     nativeButton={false}
                     render={<Link href="/foods" />}
                   >
                     <ShoppingBag className="size-4 shrink-0" />
-                    {SIGNATURE_DISH.primaryButton.label}
+                    <span>
+                      Order<span className="hidden sm:inline"> signature</span>
+                    </span>
                     <ArrowRight className="size-3.5 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5" />
                   </Button>
                   <Button
                     variant="outline"
                     size="lg"
-                    className="h-auto gap-2 rounded-full bg-transparent px-4 py-3 text-background hover:bg-background/10 hover:text-background border-background/20"
+                    className="h-auto gap-2 rounded-full bg-transparent px-3 py-2.5 text-sm text-background hover:bg-background/10 hover:text-background border-background/20 sm:px-4 sm:py-3"
                     nativeButton={false}
                     render={<Link href="/foods" />}
                   >
-                    {SIGNATURE_DISH.secondaryButton.label}
+                    <span className="sm:hidden">Menu</span>
+                    <span className="hidden sm:inline">Explore the menu</span>
                     <ArrowRight className="size-4 shrink-0" />
                   </Button>
                 </div>

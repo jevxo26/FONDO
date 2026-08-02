@@ -81,7 +81,7 @@ export function Combos() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="group h-auto gap-2 rounded-full px-4 py-3"
+                  className="group hidden h-auto gap-2 rounded-full px-4 py-3 sm:inline-flex"
                   nativeButton={false}
                   render={<Link href="/foods" />}
                 >
@@ -113,6 +113,20 @@ export function Combos() {
               ))}
             </CarouselContent>
           </Carousel>
+
+          <div className="mt-8 flex justify-center sm:hidden">
+            <Button
+              variant="outline"
+              size="lg"
+              className="group h-auto gap-2 rounded-full px-5 py-3"
+              nativeButton={false}
+              render={<Link href="/foods" />}
+            >
+              <Sparkles className="size-3.5 text-primary" />
+              View full menu
+              <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+            </Button>
+          </div>
         </SectionReveal>
       </div>
     </section>

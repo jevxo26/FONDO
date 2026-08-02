@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { House, Menu, Package, Search, ShoppingBag } from "lucide-react";
+import { House, Menu, Package, ShoppingBag, Truck } from "lucide-react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { openMobileMenu, toggleSearch } from "@/store/slices/uiSlice";
+import { openMobileMenu } from "@/store/slices/uiSlice";
 import { useAppDispatch } from "@/store/store";
 import { useCart } from "@/store/api/slices/cart-api";
 
 const items = [
   { href: "/", label: "Home", icon: House },
-  { action: "search", label: "Search", icon: Search },
+  { href: "/track-order", label: "Track Order", icon: Truck },
   { href: "/cart", label: "Cart", icon: ShoppingBag },
   { href: "/orders", label: "Orders", icon: Package },
 ] as const;
@@ -32,23 +33,7 @@ export function BottomNav() {
       <div className="mx-auto flex w-full max-w-lg items-stretch justify-between px-2 pb-[env(safe-area-inset-bottom)]">
         {items.map((item) => {
           const Icon = item.icon;
-          const active = "href" in item && isActive(item.href);
-
-          if ("action" in item) {
-            return (
-              <button
-                key={item.label}
-                type="button"
-                onClick={() => dispatch(toggleSearch())}
-                className="flex flex-1 flex-col items-center gap-0.5 py-1.5 text-muted-foreground"
-              >
-                <span className="flex size-9 items-center justify-center rounded-full transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-foreground">
-                  <Icon className="size-5" />
-                </span>
-                <span className="text-[10px] font-semibold">{item.label}</span>
-              </button>
-            );
-          }
+          const active = isActive(item.href);
 
           return (
             <Link
@@ -64,11 +49,28 @@ export function BottomNav() {
                     : "text-muted-foreground hover:text-foreground",
                 )}
               >
-                <Icon className="size-5" />
+                <motion.span
+                  key={`icon-${item.href}-${cartCount}`}
+                  animate={
+                    item.href === "/cart" && cartCount > 0
+                      ? { scale: [1, 1.35, 0.9, 1] }
+                      : { scale: 1 }
+                  }
+                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex items-center justify-center"
+                >
+                  <Icon className="size-5" />
+                </motion.span>
                 {item.href === "/cart" && cartCount > 0 && (
-                  <span className="absolute top-1 left-1/2 ml-3 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground leading-none">
+                  <motion.span
+                    key={`cart-badge-${cartCount}`}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                    className="absolute top-1 left-1/2 ml-3 flex size-[18px] items-center justify-center rounded-full bg-gold-gradient text-[11px] font-bold text-primary-foreground leading-none ring-2 ring-background"
+                  >
                     {cartCount > 9 ? "9+" : cartCount}
-                  </span>
+                  </motion.span>
                 )}
               </span>
               <span

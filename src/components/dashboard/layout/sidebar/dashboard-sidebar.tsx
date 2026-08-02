@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/common/logo";
 import { LayoutDashboard, type LucideIcon } from "lucide-react";
 import {
   Sidebar,
@@ -66,21 +66,14 @@ export function DashboardSidebar({
               size="lg"
               render={<Link href="/" onClick={() => isMobile && setOpenMobile(false)} />}
             >
-              <div className="flex size-10 items-center justify-center rounded-lg overflow-hidden shadow-[0_0_24px_rgba(206,163,89,0.25)] group-data-[collapsible=icon]:size-8">
-                <Image
-                  src="/images/logo.png"
-                  alt="FONDO"
-                  width={40}
-                  height={40}
-                  className="size-full object-cover"
-                />
-              </div>
-              <div className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
-                <span className="font-heading text-xl font-bold">FONDO</span>
-                <span className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
-                  {panelLabel}
-                </span>
-              </div>
+              <Logo
+                href={undefined}
+                size={40}
+                textSize="text-xl"
+                subtitle={panelLabel}
+                imageBoxClassName="size-10 shadow-[0_0_24px_rgba(206,163,89,0.25)] group-data-[collapsible=icon]:size-8"
+                hideTextOnCollapse
+              />
             </SidebarMenuButton>
           </SidebarMenuItem>
 

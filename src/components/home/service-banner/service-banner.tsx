@@ -49,11 +49,11 @@ export function ServiceBanner() {
                 to you.
               </p>
 
-              <div className="flex items-center gap-3 sm:gap-6 pt-2">
+              <div className="flex items-center gap-2.5 pt-2 sm:gap-6">
                 <Button
                   variant="default"
                   size="xl"
-                  className="group relative gap-2 overflow-hidden rounded-full h-auto shadow-[var(--shadow-elevated)]"
+                  className="group relative gap-2 overflow-hidden rounded-full h-auto px-4 py-2.5 text-sm shadow-[var(--shadow-elevated)] sm:px-6 sm:py-3 sm:text-base"
                   nativeButton={false}
                   render={<Link href="/foods" />}
                 >
@@ -66,9 +66,12 @@ export function ServiceBanner() {
                 </Button>
                 <Link
                   href="/foods"
-                  className="flex items-center gap-2 rounded-full border border-background/30 bg-background/10 px-4 py-3 backdrop-blur transition-all duration-300 hover:bg-background/20 hover:shadow-[var(--shadow-elevated)] sm:px-6 sm:py-3.5"
+                  className="flex items-center gap-2 rounded-full border border-background/30 bg-background/10 px-3.5 py-2.5 text-sm backdrop-blur transition-all duration-300 hover:bg-background/20 hover:shadow-[var(--shadow-elevated)] sm:px-6 sm:py-3.5"
                 >
-                  <span className="text-sm font-semibold text-background">Explore menu</span>
+                  <span className="sm:hidden">Menu</span>
+                  <span className="hidden text-sm font-semibold text-background sm:inline">
+                    Explore menu
+                  </span>
                   <ArrowRight className="size-4 shrink-0 text-background" />
                 </Link>
               </div>

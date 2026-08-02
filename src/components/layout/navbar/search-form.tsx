@@ -1,10 +1,21 @@
 "use client";
 
-import { Search, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toggleSearch } from "@/store/slices/uiSlice";
+import { Input } from "@/components/ui/input";
+import { Search, X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { closeSearch, toggleSearch } from "@/store/slices/uiSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import { navIcon, navIconPill } from "./pill-styles";
+import Link from "next/link";
+
+const POPULAR_SEARCHES = ["Kacchi", "Tehari", "Combos", "Best Sellers"];
+
+const searchHref = (term: string) => {
+  if (term === "Combos") return "/combos";
+  if (term === "Best Sellers") return "/foods?sortBy=popularity";
+  return `/foods?category=${term.toLowerCase()}`;
+};
 
 export function SearchForm() {
   const dispatch = useAppDispatch();
@@ -12,19 +23,20 @@ export function SearchForm() {
 
   return (
     <>
-      {/* Inline search bar — 2xl+ only */}
-      <div className="hidden 2xl:flex">
-        <form className="flex h-10 w-[296px] items-center rounded-2xl border border-border bg-muted">
+      {/* Inline search bar — xl+ only */}
+      <div className="hidden xl:flex">
+        <form className="flex h-11 w-[260px] items-center gap-1 rounded-full border border-border/70 bg-secondary/50 py-1 pl-4 pr-1 shadow-[var(--shadow-card)] transition-all duration-300 focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/10 focus-within:shadow-[var(--shadow-elevated)] xl:w-[300px] 2xl:w-[320px]">
+          <Search className="size-4 shrink-0 text-primary/70" />
           <Input
             type="text"
             placeholder="Search for products..."
             size="sm"
-            className="h-full w-[195px] rounded-l-2xl border-0 bg-transparent px-4 text-base shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="h-full flex-1 rounded-full border-0 bg-transparent px-2 text-base shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
           />
           <Button
             type="submit"
             variant="default"
-            className="h-10 w-[100px] gap-1.5 rounded-r-2xl rounded-l-none px-4 text-sm font-medium text-white"
+            className="h-9 gap-1.5 rounded-full px-4 text-sm font-medium text-primary-foreground transition-all duration-300 hover:shadow-[0_0_20px_rgba(206,163,89,0.35)]"
           >
             <Search className="size-4" />
             Search
@@ -35,33 +47,51 @@ export function SearchForm() {
       {/* Search icon — below 2xl */}
       <button
         onClick={() => dispatch(toggleSearch())}
-        className="flex size-10 items-center justify-center rounded-full bg-muted border border-border 2xl:hidden"
+        className={cn(
+          navIconPill,
+          "xl:hidden",
+          isOpen
+            ? "bg-none bg-foreground text-background border-primary/40"
+            : "text-gold-strong",
+        )}
         aria-label="Toggle search"
       >
-        {isOpen ? (
-          <X className="size-4 text-foreground" />
-        ) : (
-          <Search className="size-4 text-foreground" />
-        )}
+        {isOpen ? <X className={cn(navIcon)} /> : <Search className={cn(navIcon)} />}
       </button>
 
       {isOpen && (
-        <div className="absolute inset-x-0 top-full border-b border-border bg-background px-4 py-3 2xl:hidden animate-in fade-in slide-in-from-top-2 duration-200">
-          <form className="flex h-10 w-full items-center rounded-2xl border border-border bg-muted">
+        <div className="absolute inset-x-0 top-full border-b border-primary/10 bg-background/95 px-4 py-4 backdrop-blur-xl shadow-[0_24px_50px_-20px_rgba(30,26,22,0.25)] xl:hidden animate-in fade-in slide-in-from-top-2 duration-200">
+          <form className="flex h-11 w-full items-center gap-1 rounded-full border border-border/70 bg-secondary/50 py-1 pl-4 pr-1 shadow-[var(--shadow-card)] transition-all duration-300 focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/10">
+            <Search className="size-4 shrink-0 text-primary/70" />
             <Input
               type="text"
               placeholder="Search for products..."
               size="sm"
-              className="h-full flex-1 rounded-l-2xl border-0 bg-transparent px-4 text-base shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="h-full flex-1 rounded-full border-0 bg-transparent px-2 text-base shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
             />
             <Button
               type="submit"
               variant="default"
-              className="h-10 w-[80px] gap-1 rounded-r-2xl rounded-l-none px-3 text-sm font-medium text-white"
+              aria-label="Search"
+              className="h-9 rounded-full px-4 text-primary-foreground transition-all duration-300 hover:shadow-[0_0_20px_rgba(206,163,89,0.35)]"
             >
               <Search className="size-4" />
             </Button>
           </form>
+
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <span className="text-xs text-muted-foreground">Popular:</span>
+            {POPULAR_SEARCHES.map((term) => (
+              <Link
+                key={term}
+                href={searchHref(term)}
+                onClick={() => dispatch(closeSearch())}
+                className="rounded-full border border-border/70 bg-card px-3 py-1.5 text-xs font-medium text-foreground/80 transition-colors duration-300 hover:border-primary/40 hover:text-primary"
+              >
+                {term}
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </>

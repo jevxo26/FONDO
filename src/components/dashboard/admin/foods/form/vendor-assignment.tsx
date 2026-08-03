@@ -3,6 +3,7 @@
 import { FormField } from "@/components/common/form-field";
 import type { AdminFoodFormValues } from "@/lib/schema/admin-food-schema";
 import type { AdminVendorOption } from "@/types/admin-food";
+import { FormSection } from "@/components/dashboard/common/form-section";
 import { Loader2, Store } from "lucide-react";
 import { Controller, type Control } from "react-hook-form";
 
@@ -14,22 +15,16 @@ interface VendorAssignmentProps {
 
 export function VendorAssignment({ control, vendors, loading }: VendorAssignmentProps) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-      <div className="flex items-center gap-2 border-b border-border pb-3">
-        <Store className="size-5 text-primary" />
-        <h2 className="text-base font-bold text-foreground">Vendor Assignment</h2>
-      </div>
-
-      <p className="mt-4 text-sm text-muted-foreground">
-        Link this food to one or more approved vendors. Customers never see the vendor — the
-        system assigns fulfillment based on priority.
-      </p>
-
+    <FormSection
+      icon={Store}
+      title="Vendor Assignment"
+      description="Link this food to approved vendors. Customers never see the vendor — the system assigns fulfillment by priority."
+    >
       <Controller
         control={control}
         name="vendorIds"
         render={({ field }) => (
-          <FormField label="Vendors" className="mt-4">
+          <FormField label="Vendors" className="mt-1">
             {loading ? (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Loader2 className="size-4 animate-spin" /> Loading vendors...
@@ -41,10 +36,10 @@ export function VendorAssignment({ control, vendors, loading }: VendorAssignment
                   return (
                     <label
                       key={vendor.id}
-                      className={`flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-2.5 transition-colors ${
+                      className={`flex cursor-pointer items-center gap-3 rounded-xl border px-3 py-2.5 transition-colors ${
                         checked
-                          ? "border-primary bg-primary/5"
-                          : "border-border hover:border-primary/40"
+                          ? "border-primary bg-primary/5 shadow-[0_2px_8px_rgba(206,163,89,0.15)]"
+                          : "border-border bg-card/60 hover:border-primary/40"
                       }`}
                     >
                       <input
@@ -73,6 +68,6 @@ export function VendorAssignment({ control, vendors, loading }: VendorAssignment
           </FormField>
         )}
       />
-    </div>
+    </FormSection>
   );
 }

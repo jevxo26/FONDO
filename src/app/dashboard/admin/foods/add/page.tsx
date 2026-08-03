@@ -19,6 +19,7 @@ import {
   useAdminVendorOptions,
   useCreateFood,
 } from "@/store/api/slices/admin-food-api";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { FormHeader } from "@/components/dashboard/admin/foods/form/form-header";
 import { FormSummary } from "@/components/dashboard/admin/foods/form/form-summary";
@@ -35,12 +36,21 @@ import { AllergenSection } from "@/components/dashboard/admin/foods/form/allerge
 import { TagSection } from "@/components/dashboard/admin/foods/form/tag-section";
 import { ScheduleSection } from "@/components/dashboard/admin/foods/form/schedule-section";
 import { AvailabilitySection } from "@/components/dashboard/admin/foods/form/availability-section";
+import { Info, ImagePlus, Package, Salad, Clock } from "lucide-react";
 
 const toNumber = (value: unknown): number | null | undefined => {
   if (value === null || value === undefined || value === "") return undefined;
   const n = Number(value);
   return Number.isNaN(n) ? undefined : n;
 };
+
+const TABS = [
+  { value: "basics", label: "Basics", icon: Info },
+  { value: "photos", label: "Photos", icon: ImagePlus },
+  { value: "price", label: "Price & Variants", icon: Package },
+  { value: "nutrition", label: "Nutrition & Diet", icon: Salad },
+  { value: "availability", label: "Availability", icon: Clock },
+];
 
 export default function AddFoodPage() {
   const router = useRouter();
@@ -65,7 +75,7 @@ export default function AddFoodPage() {
   const name = useWatch({ control, name: "name" });
   const thumbnail = useWatch({ control, name: "thumbnail" });
   const coverImage = useWatch({ control, name: "coverImage" });
-  const galleryImages = useWatch({ control, name: "galleryImages" });
+  const galleryImages = useWatch({ control, name: "galleryImages" }) ?? [];
   const variants = useWatch({ control, name: "variants" }) ?? [];
   const addons = useWatch({ control, name: "addons" }) ?? [];
   const prices = useWatch({ control, name: "prices" }) ?? [];
@@ -75,8 +85,6 @@ export default function AddFoodPage() {
   const allergens = useWatch({ control, name: "allergens" }) ?? [];
   const labels = useWatch({ control, name: "labels" }) ?? [];
   const diets = useWatch({ control, name: "diets" }) ?? [];
-  const isAvailable = useWatch({ control, name: "isAvailable" });
-  const isVisible = useWatch({ control, name: "isVisible" });
 
   const toggleTag = (tagId: string) => {
     const next = tagIds.includes(tagId)
@@ -149,9 +157,9 @@ export default function AddFoodPage() {
           discountValue: toNumber(d.discountValue) ?? 0,
         })),
       schedules: data.schedules.filter((s) => s.startTime && s.endTime),
-      availability: { isAvailable, availableDays: data.availabilityDays },
+      availability: { isAvailable: data.isAvailable, availableDays: data.availabilityDays },
       visibility: {
-        isVisible,
+        isVisible: data.isVisible,
         isFeatured: data.isFeatured,
         isRecommended: data.isRecommended,
       },
@@ -180,52 +188,71 @@ export default function AddFoodPage() {
         />
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <form
-            id="admin-food-form"
-            onSubmit={handleSubmit(onSubmit)}
-            className="space-y-6 lg:col-span-2"
-          >
-            <GeneralInfoSection
-              register={register}
-              errors={errors}
-              setValue={setValue}
-              control={control}
-              categories={categories}
-            />
-            <VendorAssignment
-              control={control}
-              vendors={vendorOptions}
-              loading={vendorsLoading}
-            />
-            <ImageSection
-              register={register}
-              errors={errors}
-              control={control}
-              setValue={setValue}
-              thumbnail={thumbnail}
-              coverImage={coverImage}
-              galleryImages={galleryImages}
-            />
-            <PricingSection register={register} errors={errors} control={control} />
-            <DiscountSection register={register} errors={errors} control={control} />
-            <VariantSection register={register} errors={errors} control={control} />
-            <AddonSection register={register} errors={errors} control={control} />
-            <NutritionSection register={register} errors={errors} control={control} />
-            <IngredientSection register={register} errors={errors} control={control} />
-            <AllergenSection register={register} errors={errors} control={control} />
-            <TagSection
-              register={register}
-              errors={errors}
-              control={control}
-              tags={tags}
-              tagIds={tagIds}
-              onToggleTag={toggleTag}
-            />
-            <ScheduleSection register={register} errors={errors} control={control} />
-            <AvailabilitySection errors={errors} control={control} />
-          </form>
+          <div className="lg:col-span-2">
+            <form id="admin-food-form" onSubmit={handleSubmit(onSubmit)}>
+              <Tabs defaultValue="basics" className="gap-4">
+                <TabsList className="w-full overflow-x-auto bg-muted/70 p-1">
+                  {TABS.map((tab) => (
+                    <TabsTrigger key={tab.value} value={tab.value} className="gap-1.5">
+                      <tab.icon className="size-4" />
+                      {tab.label}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
 
-          <div className="space-y-6">
+                <TabsContent value="basics" className="space-y-6">
+                  <GeneralInfoSection
+                    register={register}
+                    errors={errors}
+                    setValue={setValue}
+                    control={control}
+                    categories={categories}
+                  />
+                  <VendorAssignment control={control} vendors={vendorOptions} loading={vendorsLoading} />
+                </TabsContent>
+
+                <TabsContent value="photos">
+                  <ImageSection
+                    register={register}
+                    errors={errors}
+                    control={control}
+                    setValue={setValue}
+                    thumbnail={thumbnail}
+                    coverImage={coverImage}
+                    galleryImages={galleryImages}
+                  />
+                </TabsContent>
+
+                <TabsContent value="price" className="space-y-6">
+                  <PricingSection register={register} errors={errors} control={control} />
+                  <DiscountSection register={register} errors={errors} control={control} />
+                  <VariantSection register={register} errors={errors} control={control} />
+                  <AddonSection register={register} errors={errors} control={control} />
+                </TabsContent>
+
+                <TabsContent value="nutrition" className="space-y-6">
+                  <NutritionSection register={register} errors={errors} control={control} />
+                  <IngredientSection register={register} errors={errors} control={control} />
+                  <AllergenSection register={register} errors={errors} control={control} />
+                  <TagSection
+                    register={register}
+                    errors={errors}
+                    control={control}
+                    tags={tags}
+                    tagIds={tagIds}
+                    onToggleTag={toggleTag}
+                  />
+                </TabsContent>
+
+                <TabsContent value="availability" className="space-y-6">
+                  <ScheduleSection register={register} errors={errors} control={control} />
+                  <AvailabilitySection errors={errors} control={control} />
+                </TabsContent>
+              </Tabs>
+            </form>
+          </div>
+
+          <div className="space-y-6 lg:sticky lg:top-6 self-start">
             <FormSummary
               name={name}
               variantsCount={variants.length}

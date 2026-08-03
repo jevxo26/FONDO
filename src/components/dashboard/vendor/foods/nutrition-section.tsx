@@ -2,9 +2,10 @@
 
 import { FormField } from "@/components/common/form-field";
 import { inputStyles } from "@/lib/schema/food-schema";
-import { FoodFormValues } from "@/lib/schema/food-schema";
+import type { FoodFormValues } from "@/lib/schema/food-schema";
+import { FormSection } from "@/components/dashboard/common/form-section";
 import { Apple } from "lucide-react";
-import { FieldErrors, UseFormRegister, Control } from "react-hook-form";
+import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 
 interface NutritionSectionProps {
   register: UseFormRegister<FoodFormValues>;
@@ -14,14 +15,9 @@ interface NutritionSectionProps {
 
 export function NutritionSectionFood({ register, errors }: NutritionSectionProps) {
   return (
-    <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-5">
-      <div className="border-b border-border pb-3 flex items-center gap-2">
-        <Apple className="w-5 h-5 text-primary" />
-        <h2 className="text-base font-bold text-foreground">Nutrition</h2>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <FormField label="Calories" error={errors.nutrition?.calories} required>
+    <FormSection icon={Apple} title="Nutrition" description="Per-serving macro details.">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+        <FormField label="Calories (kcal)" error={errors.nutrition?.calories} required>
           <input
             type="number"
             {...register("nutrition.calories")}
@@ -97,6 +93,6 @@ export function NutritionSectionFood({ register, errors }: NutritionSectionProps
           />
         </FormField>
       </div>
-    </div>
+    </FormSection>
   );
 }

@@ -2,10 +2,11 @@
 
 import { FormField } from "@/components/common/form-field";
 import { inputStyles } from "@/lib/schema/food-schema";
-import { FoodFormValues } from "@/lib/schema/food-schema";
-import { Vendor } from "@/data/vendors";
+import type { FoodFormValues } from "@/lib/schema/food-schema";
+import { FormSection } from "@/components/dashboard/common/form-section";
 import { Info } from "lucide-react";
-import { FieldErrors, UseFormRegister, UseFormSetValue, Control, useWatch } from "react-hook-form";
+import type { Control, FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import { useMemo } from "react";
 
 interface Category {
@@ -19,9 +20,7 @@ interface GeneralInfoSectionProps {
   errors: FieldErrors<FoodFormValues>;
   setValue: UseFormSetValue<FoodFormValues>;
   control: Control<FoodFormValues>;
-  vendors?: Vendor[];
   categories?: Category[];
-  vendorIdFromUrl?: string;
 }
 
 export function GeneralInfoSection({
@@ -29,19 +28,14 @@ export function GeneralInfoSection({
   errors,
   setValue,
   control,
-  vendors,
   categories,
-  vendorIdFromUrl,
 }: GeneralInfoSectionProps) {
-  const categoryIdWatched = useWatch({
-    control,
-    name: "categoryId",
-  });
+  const categoryIdWatched = useWatch({ control, name: "categoryId" });
 
-  const subCategories = useMemo(() => {
-    const selectedCategory = categories?.find((cat) => cat.id === categoryIdWatched);
-    return selectedCategory?.subCategories || [];
-  }, [categoryIdWatched, categories]);
+  const subCategories = useMemo(
+    () => categories?.find((cat) => cat.id === categoryIdWatched)?.subCategories ?? [],
+    [categoryIdWatched, categories],
+  );
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     register("categoryId").onChange(e);
@@ -58,24 +52,8 @@ export function GeneralInfoSection({
   };
 
   return (
-    <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-5">
-      <div className="border-b border-border pb-3 flex items-center gap-2">
-        <Info className="w-5 h-5 text-primary" />
-        <h2 className="text-base font-bold text-foreground">General Information</h2>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField label="Vendor" error={errors.vendorId} required className="md:col-span-2">
-          <select {...register("vendorId")} className={inputStyles} disabled={!!vendorIdFromUrl}>
-            <option value="">Select Vendor...</option>
-            {vendors?.map((vendor) => (
-              <option key={vendor.id} value={vendor.id}>
-                {vendor.name} - {vendor.kitchen}
-              </option>
-            ))}
-          </select>
-        </FormField>
-
+    <FormSection icon={Info} title="Basics" description="Name, category and classification.">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <FormField label="Food Name" error={errors.name} required className="md:col-span-2">
           <input
             {...register("name")}
@@ -110,14 +88,14 @@ export function GeneralInfoSection({
             disabled={subCategories.length === 0}
           >
             <option value="">Select Sub Category...</option>
-            {subCategories.map((sub) => (
+            {subCategories.map((sub: { id: string; name: string }) => (
               <option key={sub.id} value={sub.id}>
                 {sub.name}
               </option>
             ))}
           </select>
           {subCategories.length === 0 && categoryIdWatched && (
-            <p className="text-xs text-muted-foreground mt-1">No sub categories available</p>
+            <p className="mt-1 text-xs text-muted-foreground">No sub categories available</p>
           )}
         </FormField>
 
@@ -185,6 +163,6 @@ export function GeneralInfoSection({
           </select>
         </FormField>
       </div>
-    </div>
+    </FormSection>
   );
 }

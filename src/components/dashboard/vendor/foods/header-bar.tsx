@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Eye, EyeOff, RotateCcw, Save } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Loader2, RotateCcw, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface HeaderBarProps {
@@ -9,7 +9,7 @@ interface HeaderBarProps {
   showPreview: boolean;
   setShowPreview: (value: boolean) => void;
   isSubmitting: boolean;
-  vendorId?: string;
+  businessName?: string;
 }
 
 export function HeaderBar({
@@ -17,76 +17,76 @@ export function HeaderBar({
   showPreview,
   setShowPreview,
   isSubmitting,
-  vendorId,
+  businessName,
 }: HeaderBarProps) {
   const router = useRouter();
 
-  const handleBack = () => {
-    if (vendorId) {
-      router.push(`/dashboard/admin/vendors/${vendorId}/foods`);
-    } else {
-      router.push("/dashboard/admin/foods");
-    }
-  };
-
   return (
-    <div className="flex flex-wrap items-center justify-between gap-4 bg-card p-4 rounded-2xl border border-border shadow-sm">
-      <div className="flex items-center gap-3">
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={handleBack}
-          className="text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="w-4 h-4 mr-1" />
-          Back
-        </Button>
-        <h1 className="text-lg font-bold text-foreground">Add New Food</h1>
-      </div>
+    <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br from-primary/[0.04] via-card to-primary/[0.02] p-5 shadow-[var(--shadow-card)]">
+      <div className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-primary/8 blur-3xl" />
 
-      <div className="flex items-center gap-2 flex-wrap">
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={onReset}
-          className="text-muted-foreground"
-        >
-          <RotateCcw className="w-4 h-4 mr-1" />
-          Reset
-        </Button>
+      <div className="relative flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => router.push("/dashboard/vendor/foods")}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="size-4" />
+            Back
+          </Button>
+          <div>
+            <h1 className="font-heading text-2xl font-semibold text-foreground">
+              Add New Food
+            </h1>
+            <p className="text-xs text-muted-foreground">
+              {businessName
+                ? `Submitting as ${businessName}`
+                : "Create a food item for review"}
+            </p>
+          </div>
+        </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => setShowPreview(!showPreview)}
-          className="text-muted-foreground"
-        >
-          {showPreview ? (
-            <>
-              <EyeOff className="w-4 h-4 mr-1" />
-              Hide Preview
-            </>
-          ) : (
-            <>
-              <Eye className="w-4 h-4 mr-1" />
-              Show Preview
-            </>
-          )}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onReset}
+            className="text-muted-foreground"
+          >
+            <RotateCcw className="size-4" />
+            Reset
+          </Button>
 
-        <Button
-          type="submit"
-          form="food-form"
-          size="sm"
-          disabled={isSubmitting}
-          className="bg-primary hover:bg-primary/90"
-        >
-          <Save className="w-4 h-4 mr-1" />
-          {isSubmitting ? "Saving..." : "Save Food"}
-        </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setShowPreview(!showPreview)}
+            className="text-muted-foreground"
+          >
+            {showPreview ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+            {showPreview ? "Hide Preview" : "Show Preview"}
+          </Button>
+
+          <Button
+            type="submit"
+            form="food-form"
+            size="sm"
+            disabled={isSubmitting}
+            className="bg-primary hover:bg-primary/90"
+          >
+            {isSubmitting ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Send className="size-4" />
+            )}
+            {isSubmitting ? "Submitting..." : "Submit for Approval"}
+          </Button>
+        </div>
       </div>
     </div>
   );

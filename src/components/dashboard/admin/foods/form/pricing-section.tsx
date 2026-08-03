@@ -3,6 +3,7 @@
 import { FormField } from "@/components/common/form-field";
 import { inputStyles } from "@/lib/schema/food-schema";
 import type { AdminFoodFormValues } from "@/lib/schema/admin-food-schema";
+import { FormSection } from "@/components/dashboard/common/form-section";
 import { BadgeDollarSign, Plus, Trash2 } from "lucide-react";
 import { useFieldArray, type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -17,31 +18,24 @@ export function PricingSection({ register, errors, control }: PricingSectionProp
   const { fields, append, remove } = useFieldArray({ control, name: "prices" });
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-      <div className="flex items-center justify-between border-b border-border pb-3">
-        <div className="flex items-center gap-2">
-          <BadgeDollarSign className="size-5 text-primary" />
-          <h2 className="text-base font-bold text-foreground">Pricing</h2>
-        </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => append({ basePrice: 0, salePrice: null })}
-        >
+    <FormSection
+      icon={BadgeDollarSign}
+      title="Pricing"
+      description="Base and sale price entries."
+      count={fields.length}
+      action={
+        <Button type="button" variant="outline" size="sm" onClick={() => append({ basePrice: 0, salePrice: null })}>
           <Plus className="mr-1 size-4" />
           Add Price
         </Button>
-      </div>
-
+      }
+    >
       {fields.length === 0 && (
-        <p className="mt-4 text-xs text-muted-foreground">
-          No price set yet. Add a base price for this food.
-        </p>
+        <p className="text-xs text-muted-foreground">No price set yet. Add a base price for this food.</p>
       )}
 
       {fields.map((field, index) => (
-        <div key={field.id} className="mt-4 grid grid-cols-1 gap-3 rounded-lg border border-border p-4 md:grid-cols-2">
+        <div key={field.id} className="grid grid-cols-1 gap-3 rounded-xl border border-border/60 bg-card/60 p-4 md:grid-cols-2">
           <FormField label="Base Price (৳)" error={errors.prices?.[index]?.basePrice} required>
             <input
               type="number"
@@ -76,6 +70,6 @@ export function PricingSection({ register, errors, control }: PricingSectionProp
           </FormField>
         </div>
       ))}
-    </div>
+    </FormSection>
   );
 }

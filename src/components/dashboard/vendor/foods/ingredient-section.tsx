@@ -1,10 +1,11 @@
 "use client";
 
-import { FormField } from "@/components/common/form-field";
 import { inputStyles } from "@/lib/schema/food-schema";
-import { FoodFormValues } from "@/lib/schema/food-schema";
-import { Plus, Trash2 } from "lucide-react";
-import { FieldErrors, UseFormRegister, useFieldArray, Control } from "react-hook-form";
+import type { FoodFormValues } from "@/lib/schema/food-schema";
+import { FormSection } from "@/components/dashboard/common/form-section";
+import { Plus, Salad, Trash2 } from "lucide-react";
+import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 
 interface IngredientSectionProps {
@@ -18,7 +19,6 @@ export function IngredientSection({
   control,
   register,
   errors,
-  ingredientsWatched,
 }: IngredientSectionProps) {
   const { fields, append, remove } = useFieldArray({
     control,
@@ -26,21 +26,28 @@ export function IngredientSection({
   });
 
   return (
-    <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-5">
-      <div className="border-b border-border pb-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h2 className="text-base font-bold text-foreground">Ingredients</h2>
-          <span className="text-xs text-muted-foreground">({fields.length})</span>
-        </div>
+    <FormSection
+      icon={Salad}
+      title="Ingredients"
+      description="List what goes into this dish."
+      count={fields.length}
+      action={
         <Button type="button" variant="outline" size="sm" onClick={() => append({ name: "" })}>
-          <Plus className="w-4 h-4 mr-1" />
+          <Plus className="mr-1 size-4" />
           Add Ingredient
         </Button>
-      </div>
+      }
+    >
+      {fields.length === 0 && (
+        <p className="text-xs text-muted-foreground">No ingredients listed yet.</p>
+      )}
 
       <div className="space-y-2">
         {fields.map((field, index) => (
-          <div key={field.id} className="flex items-center gap-2">
+          <div
+            key={field.id}
+            className="flex items-center gap-2 rounded-xl border border-border/60 bg-card/60 p-2"
+          >
             <input
               {...register(`ingredients.${index}.name`)}
               placeholder="e.g. Chicken Breast"
@@ -49,19 +56,19 @@ export function IngredientSection({
             <Button
               type="button"
               variant="ghost"
-              size="sm"
+              size="icon-sm"
               onClick={() => remove(index)}
-              className="text-destructive hover:text-destructive/80 flex-shrink-0"
+              className="shrink-0 text-destructive hover:text-destructive/80"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="size-4" />
             </Button>
           </div>
         ))}
       </div>
 
       {errors.ingredients && (
-        <p className="text-sm text-destructive">{errors.ingredients.message}</p>
+        <p className="mt-3 text-sm text-destructive">{errors.ingredients.message}</p>
       )}
-    </div>
+    </FormSection>
   );
 }

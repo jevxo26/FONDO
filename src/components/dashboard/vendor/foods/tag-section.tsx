@@ -1,10 +1,10 @@
 "use client";
 
-import { FormField } from "@/components/common/form-field";
-import { inputStyles } from "@/lib/schema/food-schema";
-import { FoodFormValues } from "@/lib/schema/food-schema";
+import type { FoodFormValues } from "@/lib/schema/food-schema";
+import { FormSection } from "@/components/dashboard/common/form-section";
 import { Tag } from "lucide-react";
-import { FieldErrors, UseFormRegister, Control } from "react-hook-form";
+import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
+import { cn } from "@/lib/utils";
 
 interface TagSectionProps {
   control: Control<FoodFormValues>;
@@ -36,53 +36,69 @@ const TAG_OPTIONS = [
   "Low Fat",
 ];
 
+function ChipGroup({
+  label,
+  options,
+  registerName,
+  errors,
+  register,
+}: {
+  label: string;
+  options: string[];
+  registerName: "labels" | "tags";
+  errors: FieldErrors<FoodFormValues>;
+  register: UseFormRegister<FoodFormValues>;
+}) {
+  const err = errors[registerName];
+
+  return (
+    <div>
+      <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+        {label}
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {options.map((option) => (
+          <label
+            key={option}
+            className={cn(
+              "cursor-pointer select-none rounded-full border px-3 py-1.5 text-xs font-medium transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:shadow-[0_2px_8px_rgba(206,163,89,0.25)]",
+              "border-border bg-muted text-muted-foreground hover:border-primary/40",
+            )}
+          >
+            <input type="checkbox" {...register(registerName)} value={option} className="sr-only" />
+            {option}
+          </label>
+        ))}
+      </div>
+      {err && <p className="mt-1 text-sm text-destructive">{err.message}</p>}
+    </div>
+  );
+}
+
 export function TagSection({ register, errors, labelsWatched, tagsWatched }: TagSectionProps) {
   return (
-    <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-5">
-      <div className="border-b border-border pb-3 flex items-center gap-2">
-        <Tag className="w-5 h-5 text-primary" />
-        <h2 className="text-base font-bold text-foreground">Labels & Tags</h2>
+    <FormSection
+      icon={Tag}
+      title="Labels & Tags"
+      description="Highlight the dish for customers."
+      count={(labelsWatched?.length ?? 0) + (tagsWatched?.length ?? 0)}
+    >
+      <div className="space-y-5">
+        <ChipGroup
+          label="Labels"
+          options={LABEL_OPTIONS}
+          registerName="labels"
+          errors={errors}
+          register={register}
+        />
+        <ChipGroup
+          label="Tags"
+          options={TAG_OPTIONS}
+          registerName="tags"
+          errors={errors}
+          register={register}
+        />
       </div>
-
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-foreground mb-2">Labels</label>
-          <div className="flex flex-wrap gap-3">
-            {LABEL_OPTIONS.map((label) => (
-              <label key={label} className="flex items-center gap-2 text-sm cursor-pointer">
-                <input
-                  type="checkbox"
-                  {...register("labels")}
-                  value={label}
-                  className="w-4 h-4 rounded border-input text-primary accent-primary"
-                />
-                {label}
-              </label>
-            ))}
-          </div>
-          {errors.labels && (
-            <p className="text-sm text-destructive mt-1">{errors.labels.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-foreground mb-2">Tags</label>
-          <div className="flex flex-wrap gap-3">
-            {TAG_OPTIONS.map((tag) => (
-              <label key={tag} className="flex items-center gap-2 text-sm cursor-pointer">
-                <input
-                  type="checkbox"
-                  {...register("tags")}
-                  value={tag}
-                  className="w-4 h-4 rounded border-input text-primary accent-primary"
-                />
-                {tag}
-              </label>
-            ))}
-          </div>
-          {errors.tags && <p className="text-sm text-destructive mt-1">{errors.tags.message}</p>}
-        </div>
-      </div>
-    </div>
+    </FormSection>
   );
 }

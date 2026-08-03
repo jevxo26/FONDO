@@ -3,6 +3,7 @@
 import { inputStyles } from "@/lib/schema/food-schema";
 import type { AdminFoodFormValues } from "@/lib/schema/admin-food-schema";
 import type { AdminFoodTag } from "@/types/admin-food";
+import { FormSection } from "@/components/dashboard/common/form-section";
 import { Tags, Plus, Trash2 } from "lucide-react";
 import { useFieldArray, type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,6 @@ const labelColors = [
 
 export function TagSection({
   register,
-  errors,
   control,
   tags,
   tagIds = [],
@@ -37,14 +37,16 @@ export function TagSection({
   const { fields, append, remove } = useFieldArray({ control, name: "labels" });
   const dietFields = useFieldArray({ control, name: "diets" });
 
-  return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-      <div className="flex items-center gap-2 border-b border-border pb-3">
-        <Tags className="size-5 text-primary" />
-        <h2 className="text-base font-bold text-foreground">Tags, Labels & Diets</h2>
-      </div>
+  const count = (tagIds?.length ?? 0) + fields.length + dietFields.fields.length;
 
-      <div className="mt-5">
+  return (
+    <FormSection
+      icon={Tags}
+      title="Tags, Labels & Diets"
+      description="Highlight and classify this food."
+      count={count}
+    >
+      <div>
         <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Tags</p>
         {tags && tags.length > 0 ? (
           <div className="flex flex-wrap gap-2">
@@ -56,9 +58,9 @@ export function TagSection({
                   type="button"
                   onClick={() => onToggleTag(tag.id)}
                   className={cn(
-                    "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                    "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
                     selected
-                      ? "border-primary bg-primary text-primary-foreground"
+                      ? "border-primary bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(206,163,89,0.25)]"
                       : "border-border bg-muted text-muted-foreground hover:border-primary/40",
                   )}
                 >
@@ -75,9 +77,7 @@ export function TagSection({
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
         <div>
           <div className="mb-2 flex items-center justify-between">
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Labels
-            </p>
+            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Labels</p>
             <Button
               type="button"
               variant="outline"
@@ -89,9 +89,7 @@ export function TagSection({
             </Button>
           </div>
 
-          {fields.length === 0 && (
-            <p className="text-xs text-muted-foreground">No custom labels.</p>
-          )}
+          {fields.length === 0 && <p className="text-xs text-muted-foreground">No custom labels.</p>}
 
           <div className="space-y-2">
             {fields.map((field, index) => (
@@ -134,9 +132,7 @@ export function TagSection({
             </Button>
           </div>
 
-          {dietFields.fields.length === 0 && (
-            <p className="text-xs text-muted-foreground">No diets flagged.</p>
-          )}
+          {dietFields.fields.length === 0 && <p className="text-xs text-muted-foreground">No diets flagged.</p>}
 
           <div className="space-y-2">
             {dietFields.fields.map((field, index) => (
@@ -160,6 +156,6 @@ export function TagSection({
           </div>
         </div>
       </div>
-    </div>
+    </FormSection>
   );
 }

@@ -3,6 +3,7 @@
 import { FormField } from "@/components/common/form-field";
 import { inputStyles } from "@/lib/schema/food-schema";
 import type { AdminFoodFormValues } from "@/lib/schema/admin-food-schema";
+import { FormSection } from "@/components/dashboard/common/form-section";
 import { CalendarClock, Plus, Trash2 } from "lucide-react";
 import { useFieldArray, type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -19,33 +20,31 @@ export function ScheduleSection({ register, errors, control }: ScheduleSectionPr
   const { fields, append, remove } = useFieldArray({ control, name: "schedules" });
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-      <div className="flex items-center justify-between border-b border-border pb-3">
-        <div className="flex items-center gap-2">
-          <CalendarClock className="size-5 text-primary" />
-          <h2 className="text-base font-bold text-foreground">Schedules</h2>
-        </div>
+    <FormSection
+      icon={CalendarClock}
+      title="Schedules"
+      description="Meal windows when this food is available."
+      count={fields.length}
+      action={
         <Button
           type="button"
           variant="outline"
           size="sm"
-          onClick={() =>
-            append({ mealType: "LUNCH", startTime: "12:00", endTime: "15:00" })
-          }
+          onClick={() => append({ mealType: "LUNCH", startTime: "12:00", endTime: "15:00" })}
         >
           <Plus className="mr-1 size-4" />
           Add Schedule
         </Button>
-      </div>
-
+      }
+    >
       {fields.length === 0 && (
-        <p className="mt-4 text-xs text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           No schedules yet. Set when this food is available (e.g. Lunch 12:00–15:00).
         </p>
       )}
 
       {fields.map((field, index) => (
-        <div key={field.id} className="mt-4 grid grid-cols-1 gap-3 rounded-lg border border-border p-4 md:grid-cols-3">
+        <div key={field.id} className="grid grid-cols-1 gap-3 rounded-xl border border-border/60 bg-card/60 p-4 md:grid-cols-3">
           <FormField label="Meal Type" error={errors.schedules?.[index]?.mealType}>
             <select {...register(`schedules.${index}.mealType`)} className={inputStyles}>
               {mealTypes.map((mt) => (
@@ -76,6 +75,6 @@ export function ScheduleSection({ register, errors, control }: ScheduleSectionPr
           </FormField>
         </div>
       ))}
-    </div>
+    </FormSection>
   );
 }

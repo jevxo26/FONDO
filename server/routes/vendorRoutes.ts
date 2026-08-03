@@ -13,7 +13,7 @@ const pDelete = hasPermission("vendors");
 router.get(
   "/my-profile",
   verifyToken,
-  authorize("VENDOR"),
+  authorize("VENDOR", "VENDOR_STAFF"),
   VendorController.getMyVendor,
 );
 

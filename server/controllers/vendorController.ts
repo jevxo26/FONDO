@@ -139,11 +139,29 @@ const setOperatingHours = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, { statusCode: 200, message: "Availability parameters deployed", data: result });
 });
 
-// Current Vendor Profile (authenticated vendor user)
+// Current Vendor Profile (authenticated vendor user or vendor staff)
 const getMyVendor = catchAsync(async (req: AuthRequest, res: Response) => {
   const userId = req.user!.userId;
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { vendorId: true },
+  });
+
+  let vendorId = user?.vendorId ?? null;
+  if (!vendorId) {
+    const staff = await prisma.vendorStaff.findFirst({
+      where: { userId },
+      select: { vendorId: true },
+    });
+    vendorId = staff?.vendorId ?? null;
+  }
+
+  if (!vendorId) {
+    throw new AppError(404, "No vendor profile found for this user");
+  }
+
   const vendor = await prisma.vendor.findFirst({
-    where: { user: { id: userId } },
+    where: { id: vendorId, deletedAt: null },
     select: {
       id: true,
       vendorCode: true,

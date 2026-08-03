@@ -15,14 +15,15 @@ import { VariantSection } from "@/components/dashboard/vendor/foods/variant-sect
 import { FoodFormValues, foodSchema, initialValues } from "@/lib/schema/food-schema";
 import { useGetFoodCategoriesQuery } from "@/store/api/slices/foods-api";
 import { useCreateVendorFoodMutation } from "@/store/api/slices/vendor-food-api";
-import { vendors } from "@/data/vendors";
+import { useMyVendor } from "@/store/api/slices/vendor-orders-api";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import type { Resolver } from "react-hook-form";
-import type { Vendor } from "@/data/vendors";
+import { ImagePlus, Info, Loader2, Package, Salad, Clock } from "lucide-react";
 
 const slugify = (value: string) =>
   value
@@ -30,23 +31,20 @@ const slugify = (value: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)+/g, "");
 
-// Simple mock categories - just for testing
-const MOCK_CATEGORIES = [
-  { id: "1", name: "Appetizer", subCategories: [] },
-  { id: "2", name: "Main Course", subCategories: [] },
-  { id: "3", name: "Dessert", subCategories: [] },
-  { id: "4", name: "Beverage", subCategories: [] },
+const TABS = [
+  { value: "basics", label: "Basics", icon: Info },
+  { value: "photos", label: "Photos", icon: ImagePlus },
+  { value: "price", label: "Price & Variants", icon: Package },
+  { value: "nutrition", label: "Nutrition & Diet", icon: Salad },
+  { value: "availability", label: "Availability", icon: Clock },
 ];
 
 export default function AddFoodPage() {
   const router = useRouter();
   const [showPreview, setShowPreview] = useState(true);
   const [createFood, { isLoading: isSubmitting }] = useCreateVendorFoodMutation();
-
-  const { data: categoriesData } = useGetFoodCategoriesQuery(undefined);
-
-  // Use mock categories if API fails
-  const categories = categoriesData?.length ? categoriesData : MOCK_CATEGORIES;
+  const { data: myVendor, isLoading: vendorLoading } = useMyVendor();
+  const { data: categories, isLoading: categoriesLoading } = useGetFoodCategoriesQuery(undefined);
 
   const {
     register,
@@ -60,7 +58,6 @@ export default function AddFoodPage() {
     defaultValues: initialValues,
   });
 
-  // Watches
   const nameWatched = useWatch({ control, name: "name" });
   const vendorIdWatched = useWatch({ control, name: "vendorId" });
   const categoryIdWatched = useWatch({ control, name: "categoryId" });
@@ -87,6 +84,12 @@ export default function AddFoodPage() {
   const variantCount = variantsWatched?.length || 0;
   const ingredientCount = ingredientsWatched?.length || 0;
   const calories = Number(nutritionWatched?.calories) || 0;
+
+  useEffect(() => {
+    if (myVendor?.id && !vendorIdWatched) {
+      setValue("vendorId", myVendor.id, { shouldValidate: true });
+    }
+  }, [myVendor, vendorIdWatched, setValue]);
 
   useEffect(() => {
     if (nameWatched) {
@@ -124,7 +127,7 @@ export default function AddFoodPage() {
 
       await createFood(payload).unwrap();
 
-      toast.success("Food created successfully!", { id: toastId });
+      toast.success("Food submitted for approval!", { id: toastId });
 
       reset(initialValues);
       router.push("/dashboard/vendor/foods");
@@ -136,84 +139,118 @@ export default function AddFoodPage() {
     }
   };
 
-  const selectedVendor = vendors?.find((v: Vendor) => v.id === vendorIdWatched);
   const selectedCategory = categories?.find((c) => c.id === categoryIdWatched);
 
   return (
     <section className="py-6 lg:py-8 bg-background">
-      <div className="wrapper max-w-6xl mx-auto space-y-8 px-4">
+      <div className="wrapper max-w-6xl mx-auto space-y-6 px-4">
         <HeaderBar
           onReset={() => reset(initialValues)}
           showPreview={showPreview}
           setShowPreview={setShowPreview}
           isSubmitting={isSubmitting}
+          businessName={myVendor?.businessName}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <form
-            id="food-form"
-            onSubmit={handleSubmit(onSubmit)}
-            className="lg:col-span-2 space-y-6"
-          >
-            <GeneralInfoSection
-              register={register}
-              errors={errors}
-              setValue={setValue}
-              control={control}
-              vendors={vendors}
-              categories={categories}
-            />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <form id="food-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <Tabs defaultValue="basics" className="gap-4">
+                <TabsList className="w-full overflow-x-auto bg-muted/70 p-1">
+                  {TABS.map((tab) => (
+                    <TabsTrigger key={tab.value} value={tab.value} className="gap-1.5">
+                      <tab.icon className="size-4" />
+                      {tab.label}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
 
-            <ImageSection
-              register={register}
-              errors={errors}
-              setValue={setValue}
-              control={control}
-              thumbnailWatched={thumbnailWatched}
-              coverImageWatched={coverImageWatched}
-              galleryImagesWatched={galleryImagesWatched}
-            />
+                <TabsContent value="basics">
+                  <GeneralInfoSection
+                    register={register}
+                    errors={errors}
+                    setValue={setValue}
+                    control={control}
+                    categories={categories}
+                  />
+                </TabsContent>
 
-            <PricingSection register={register} errors={errors} control={control} />
+                <TabsContent value="photos">
+                  <ImageSection
+                    register={register}
+                    errors={errors}
+                    setValue={setValue}
+                    control={control}
+                    thumbnailWatched={thumbnailWatched}
+                    coverImageWatched={coverImageWatched}
+                    galleryImagesWatched={galleryImagesWatched}
+                  />
+                </TabsContent>
 
-            <VariantSection
-              control={control}
-              register={register}
-              errors={errors}
-              setValue={setValue}
-              variantsWatched={variantsWatched}
-            />
+                <TabsContent value="price" className="space-y-6">
+                  <PricingSection register={register} errors={errors} control={control} />
+                  <VariantSection
+                    control={control}
+                    register={register}
+                    errors={errors}
+                    setValue={setValue}
+                    variantsWatched={variantsWatched}
+                  />
+                </TabsContent>
 
-            <NutritionSectionFood register={register} errors={errors} control={control} />
+                <TabsContent value="nutrition" className="space-y-6">
+                  <NutritionSectionFood register={register} errors={errors} control={control} />
+                  <IngredientSection
+                    control={control}
+                    register={register}
+                    errors={errors}
+                    ingredientsWatched={ingredientsWatched}
+                  />
+                  <AllergenSection
+                    control={control}
+                    register={register}
+                    errors={errors}
+                    allergensWatched={allergensWatched}
+                  />
+                  <TagSection
+                    control={control}
+                    register={register}
+                    errors={errors}
+                    labelsWatched={labelsWatched}
+                    tagsWatched={tagsWatched}
+                  />
+                </TabsContent>
 
-            <IngredientSection
-              control={control}
-              register={register}
-              errors={errors}
-              ingredientsWatched={ingredientsWatched}
-            />
+                <TabsContent value="availability">
+                  <AvailabilitySection register={register} errors={errors} control={control} />
+                </TabsContent>
+              </Tabs>
+            </form>
+          </div>
 
-            <AllergenSection
-              control={control}
-              register={register}
-              errors={errors}
-              allergensWatched={allergensWatched}
-            />
+          <div className="space-y-6 lg:sticky lg:top-6 self-start">
+            {showPreview && (
+              <CardPreview
+                thumbnail={thumbnailWatched}
+                name={nameWatched || "Food Name"}
+                vendorName={myVendor?.businessName || "Vendor Name"}
+                categoryName={selectedCategory?.name || "Category"}
+                foodType={foodTypeWatched || "Food Type"}
+                price={basePrice}
+                discountPrice={discountPrice}
+                nutrition={nutritionWatched}
+                labels={labelsWatched || []}
+                tags={tagsWatched || []}
+                available={availableWatched}
+                visible={visibleWatched}
+                featured={featuredWatched}
+                popular={popularWatched}
+                recommended={recommendedWatched}
+              />
+            )}
 
-            <TagSection
-              control={control}
-              register={register}
-              errors={errors}
-              labelsWatched={labelsWatched}
-              tagsWatched={tagsWatched}
-            />
-
-            <AvailabilitySection register={register} errors={errors} control={control} />
-          </form>
-
-          <div className="space-y-6">
             <SummarySidebar
-              vendorName={selectedVendor?.name || "Not selected"}
+              vendorName={myVendor?.businessName || "Not selected"}
               categoryName={selectedCategory?.name || "Not selected"}
               foodType={foodTypeWatched || "Not set"}
               status={statusWatched || "Not set"}
@@ -227,24 +264,11 @@ export default function AddFoodPage() {
           </div>
         </div>
 
-        {showPreview && (
-          <CardPreview
-            thumbnail={thumbnailWatched}
-            name={nameWatched || "Food Name"}
-            vendorName={selectedVendor?.name || "Vendor Name"}
-            categoryName={selectedCategory?.name || "Category"}
-            foodType={foodTypeWatched || "Food Type"}
-            price={basePrice}
-            discountPrice={discountPrice}
-            nutrition={nutritionWatched}
-            labels={labelsWatched || []}
-            tags={tagsWatched || []}
-            available={availableWatched}
-            visible={visibleWatched}
-            featured={featuredWatched}
-            popular={popularWatched}
-            recommended={recommendedWatched}
-          />
+        {(categoriesLoading || vendorLoading) && (
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Loader2 className="size-3.5 animate-spin" />
+            Loading vendor & categories...
+          </div>
         )}
       </div>
     </section>

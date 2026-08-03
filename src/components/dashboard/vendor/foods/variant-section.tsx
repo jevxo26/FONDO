@@ -2,16 +2,18 @@
 
 import { FormField } from "@/components/common/form-field";
 import { inputStyles } from "@/lib/schema/food-schema";
-import { FoodFormValues } from "@/lib/schema/food-schema";
-import { GripVertical, Plus, Trash2 } from "lucide-react";
-import {
+import type { FoodFormValues } from "@/lib/schema/food-schema";
+import { FormSection } from "@/components/dashboard/common/form-section";
+import { ArrowDown, ArrowUp, GripVertical, Plus, Trash2 } from "lucide-react";
+import type {
+  Control,
   FieldErrors,
   UseFormRegister,
   UseFormSetValue,
-  useFieldArray,
-  Control,
 } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 
 interface VariantSectionProps {
   control: Control<FoodFormValues>;
@@ -42,12 +44,12 @@ export function VariantSection({
   });
 
   return (
-    <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-5">
-      <div className="border-b border-border pb-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <GripVertical className="w-5 h-5 text-primary" />
-          <h2 className="text-base font-bold text-foreground">Variants</h2>
-        </div>
+    <FormSection
+      icon={GripVertical}
+      title="Variants"
+      description="Sizes or portions with their own price and stock."
+      count={fields.length}
+      action={
         <Button
           type="button"
           variant="outline"
@@ -64,134 +66,144 @@ export function VariantSection({
             })
           }
         >
-          <Plus className="w-4 h-4 mr-1" />
+          <Plus className="mr-1 size-4" />
           Add Variant
         </Button>
-      </div>
+      }
+    >
+      {fields.length === 0 && (
+        <p className="text-xs text-muted-foreground">
+          No variants yet. Add sizes/portions (e.g. Regular, Large).
+        </p>
+      )}
 
-      {fields.map((field, index) => (
-        <div key={field.id} className="border border-border rounded-lg p-4 space-y-3 relative">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-foreground">Variant #{index + 1}</span>
-            <div className="flex items-center gap-2">
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  if (index > 0) move(index, index - 1);
+      <div className="space-y-3">
+        {fields.map((field, index) => (
+          <div
+            key={field.id}
+            className="rounded-2xl border border-border/60 bg-card/60 p-4 shadow-[var(--shadow-card)]"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 font-heading text-sm font-bold text-primary">
+                  {index + 1}
+                </span>
+                <span className="text-sm font-semibold text-foreground">
+                  Variant {variantsWatched?.[index]?.variantName || `#${index + 1}`}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => index > 0 && move(index, index - 1)}
+                  disabled={index === 0}
+                  className="text-muted-foreground"
+                >
+                  <ArrowUp className="size-4" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => index < fields.length - 1 && move(index, index + 1)}
+                  disabled={index === fields.length - 1}
+                  className="text-muted-foreground"
+                >
+                  <ArrowDown className="size-4" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => remove(index)}
+                  className="text-destructive hover:text-destructive/80"
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
+              <FormField label="Variant Name" error={errors.variants?.[index]?.variantName} required>
+                <input
+                  {...register(`variants.${index}.variantName`)}
+                  placeholder="e.g. Large"
+                  className={inputStyles}
+                />
+              </FormField>
+
+              <FormField label="SKU" error={errors.variants?.[index]?.sku} required>
+                <input
+                  {...register(`variants.${index}.sku`)}
+                  placeholder="SKU-001"
+                  className={inputStyles}
+                />
+              </FormField>
+
+              <FormField label="Serving Size" error={errors.variants?.[index]?.servingSize}>
+                <input
+                  {...register(`variants.${index}.servingSize`)}
+                  placeholder="e.g. 200g"
+                  className={inputStyles}
+                />
+              </FormField>
+
+              <FormField label="Price (৳)" error={errors.variants?.[index]?.price} required>
+                <input
+                  type="number"
+                  step="0.01"
+                  {...register(`variants.${index}.price`)}
+                  placeholder="0.00"
+                  className={inputStyles}
+                />
+              </FormField>
+
+              <FormField label="Discount Price (৳)" error={errors.variants?.[index]?.discountPrice}>
+                <input
+                  type="number"
+                  step="0.01"
+                  {...register(`variants.${index}.discountPrice`)}
+                  placeholder="0.00"
+                  className={inputStyles}
+                />
+              </FormField>
+
+              <FormField label="Stock" error={errors.variants?.[index]?.stock} required>
+                <input
+                  type="number"
+                  {...register(`variants.${index}.stock`)}
+                  placeholder="0"
+                  className={inputStyles}
+                />
+              </FormField>
+            </div>
+
+            <div className="mt-4 flex items-center gap-2.5 border-t border-border/60 pt-3">
+              <Switch
+                checked={variantsWatched?.[index]?.isDefault ?? false}
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    fields.forEach((_, idx) => {
+                      setValue(`variants.${idx}.isDefault`, idx === index);
+                    });
+                  }
                 }}
-                disabled={index === 0}
-                className="text-muted-foreground"
+                id={`isDefault-${index}`}
+              />
+              <label
+                htmlFor={`isDefault-${index}`}
+                className="text-xs font-medium text-foreground cursor-pointer select-none"
               >
-                ↑
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  if (index < fields.length - 1) move(index, index + 1);
-                }}
-                disabled={index === fields.length - 1}
-                className="text-muted-foreground"
-              >
-                ↓
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => remove(index)}
-                className="text-destructive hover:text-destructive/80"
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
+                Set as Default Variant
+              </label>
             </div>
           </div>
+        ))}
+      </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <FormField label="Variant Name" error={errors.variants?.[index]?.variantName} required>
-              <input
-                {...register(`variants.${index}.variantName`)}
-                placeholder="e.g. Large"
-                className={inputStyles}
-              />
-            </FormField>
-
-            <FormField label="SKU" error={errors.variants?.[index]?.sku} required>
-              <input
-                {...register(`variants.${index}.sku`)}
-                placeholder="SKU-001"
-                className={inputStyles}
-              />
-            </FormField>
-
-            <FormField label="Serving Size" error={errors.variants?.[index]?.servingSize}>
-              <input
-                {...register(`variants.${index}.servingSize`)}
-                placeholder="e.g. 200g"
-                className={inputStyles}
-              />
-            </FormField>
-
-            <FormField label="Price" error={errors.variants?.[index]?.price} required>
-              <input
-                type="number"
-                step="0.01"
-                {...register(`variants.${index}.price`)}
-                placeholder="0.00"
-                className={inputStyles}
-              />
-            </FormField>
-
-            <FormField label="Discount Price" error={errors.variants?.[index]?.discountPrice}>
-              <input
-                type="number"
-                step="0.01"
-                {...register(`variants.${index}.discountPrice`)}
-                placeholder="0.00"
-                className={inputStyles}
-              />
-            </FormField>
-
-            <FormField label="Stock" error={errors.variants?.[index]?.stock} required>
-              <input
-                type="number"
-                {...register(`variants.${index}.stock`)}
-                placeholder="0"
-                className={inputStyles}
-              />
-            </FormField>
-          </div>
-
-          <div className="flex items-center gap-2.5 pt-2">
-            <input
-              type="checkbox"
-              id={`isDefault-${index}`}
-              {...register(`variants.${index}.isDefault`)}
-              className="w-4 h-4 rounded border-input text-primary accent-primary"
-              onChange={(e) => {
-                if (e.target.checked) {
-                  fields.forEach((_, idx) => {
-                    if (idx !== index) {
-                      setValue(`variants.${idx}.isDefault`, false);
-                    }
-                  });
-                }
-              }}
-            />
-            <label
-              htmlFor={`isDefault-${index}`}
-              className="text-xs font-medium text-foreground cursor-pointer select-none"
-            >
-              Set as Default Variant
-            </label>
-          </div>
-        </div>
-      ))}
-
-      {errors.variants && <p className="text-sm text-destructive">{errors.variants.message}</p>}
-    </div>
+      {errors.variants && <p className="mt-3 text-sm text-destructive">{errors.variants.message}</p>}
+    </FormSection>
   );
 }

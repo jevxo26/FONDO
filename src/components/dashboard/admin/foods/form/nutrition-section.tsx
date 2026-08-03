@@ -3,6 +3,7 @@
 import { FormField } from "@/components/common/form-field";
 import { inputStyles } from "@/lib/schema/food-schema";
 import type { AdminFoodFormValues } from "@/lib/schema/admin-food-schema";
+import { FormSection } from "@/components/dashboard/common/form-section";
 import { Apple } from "lucide-react";
 import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 
@@ -21,13 +22,8 @@ const macroFields = [
 
 export function NutritionSection({ register, errors, control: _control }: NutritionSectionProps) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-      <div className="flex items-center gap-2 border-b border-border pb-3">
-        <Apple className="size-5 text-primary" />
-        <h2 className="text-base font-bold text-foreground">Nutrition Facts</h2>
-      </div>
-
-      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <FormSection icon={Apple} title="Nutrition Facts" description="Per-serving macro details.">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {macroFields.map((field) => (
           <FormField key={field.name} label={field.label} error={errors[field.name]}>
             <input
@@ -41,6 +37,6 @@ export function NutritionSection({ register, errors, control: _control }: Nutrit
           </FormField>
         ))}
       </div>
-    </div>
+    </FormSection>
   );
 }

@@ -4,6 +4,7 @@ import { FormField } from "@/components/common/form-field";
 import { inputStyles } from "@/lib/schema/food-schema";
 import type { AdminFoodFormValues } from "@/lib/schema/admin-food-schema";
 import type { AdminFoodCategory } from "@/types/admin-food";
+import { FormSection } from "@/components/dashboard/common/form-section";
 import { Info } from "lucide-react";
 import { useMemo } from "react";
 import {
@@ -60,13 +61,8 @@ export function GeneralInfoSection({
   ] as const;
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-      <div className="flex items-center gap-2 border-b border-border pb-3">
-        <Info className="size-5 text-primary" />
-        <h2 className="text-base font-bold text-foreground">General Information</h2>
-      </div>
-
-      <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+    <FormSection icon={Info} title="General Information" description="Name, category and classification.">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <FormField label="Food Name" error={errors.name} required className="md:col-span-2">
           <input
             {...register("name")}
@@ -190,6 +186,6 @@ export function GeneralInfoSection({
           ))}
         </div>
       </div>
-    </div>
+    </FormSection>
   );
 }

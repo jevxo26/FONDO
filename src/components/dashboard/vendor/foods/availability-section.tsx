@@ -1,9 +1,13 @@
 "use client";
 
-import { FormField } from "@/components/common/form-field";
-import { inputStyles, FoodFormValues } from "@/lib/schema/food-schema";
+import type { FoodFormValues } from "@/lib/schema/food-schema";
+import { inputStyles } from "@/lib/schema/food-schema";
+import { FormSection } from "@/components/dashboard/common/form-section";
 import { Clock } from "lucide-react";
-import { FieldErrors, UseFormRegister, Control } from "react-hook-form";
+import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
+import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
 
 interface AvailabilitySectionProps {
   register: UseFormRegister<FoodFormValues>;
@@ -13,106 +17,104 @@ interface AvailabilitySectionProps {
 
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
-export function AvailabilitySection({ register, errors }: AvailabilitySectionProps) {
-  return (
-    <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-5">
-      <div className="border-b border-border pb-3 flex items-center gap-2">
-        <Clock className="w-5 h-5 text-primary" />
-        <h2 className="text-base font-bold text-foreground">Availability</h2>
-      </div>
+const toggles = [
+  { name: "available", label: "Available", hint: "Customers can order this food." },
+  { name: "visible", label: "Visible on menu", hint: "Show in the customer menu." },
+  { name: "featured", label: "Featured", hint: "Highlight on the home page." },
+  { name: "popular", label: "Popular", hint: "Mark as a crowd favourite." },
+  { name: "recommended", label: "Recommended", hint: "Chef's recommendation." },
+] as const;
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-foreground">Status</label>
-          <div className="flex flex-wrap gap-4">
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input
-                type="checkbox"
-                {...register("available")}
-                className="w-4 h-4 rounded border-input text-primary accent-primary"
-              />
-              Available
-            </label>
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input
-                type="checkbox"
-                {...register("visible")}
-                className="w-4 h-4 rounded border-input text-primary accent-primary"
-              />
-              Visible
-            </label>
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input
-                type="checkbox"
-                {...register("featured")}
-                className="w-4 h-4 rounded border-input text-primary accent-primary"
-              />
-              Featured
-            </label>
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input
-                type="checkbox"
-                {...register("popular")}
-                className="w-4 h-4 rounded border-input text-primary accent-primary"
-              />
-              Popular
-            </label>
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input
-                type="checkbox"
-                {...register("recommended")}
-                className="w-4 h-4 rounded border-input text-primary accent-primary"
-              />
-              Recommended
-            </label>
-          </div>
+export function AvailabilitySection({ control, errors }: AvailabilitySectionProps) {
+  const availableDays = useWatch({ control, name: "availableDays" }) ?? [];
+
+  return (
+    <FormSection icon={Clock} title="Availability" description="When and where this food is shown.">
+      <div className="space-y-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {toggles.map((t) => (
+            <Controller
+              key={t.name}
+              control={control}
+              name={t.name}
+              render={({ field }) => (
+                <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-border/60 bg-card/60 p-3.5 transition-colors hover:border-primary/40">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{t.label}</p>
+                    <p className="text-xs text-muted-foreground">{t.hint}</p>
+                  </div>
+                  <Switch checked={field.value} onCheckedChange={field.onChange} onBlur={field.onBlur} />
+                </label>
+              )}
+            />
+          ))}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">Available Days</label>
+          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            Available Days
+          </p>
           <div className="flex flex-wrap gap-2">
-            {DAYS.map((day) => (
-              <label key={day} className="flex items-center gap-2 text-sm cursor-pointer">
-                <input
-                  type="checkbox"
-                  {...register("availableDays")}
-                  value={day}
-                  className="w-4 h-4 rounded border-input text-primary accent-primary"
+            {DAYS.map((day) => {
+              const selected = availableDays.includes(day);
+              return (
+                <Controller
+                  key={day}
+                  control={control}
+                  name="availableDays"
+                  render={({ field }) => (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const next = selected
+                          ? field.value.filter((d: string) => d !== day)
+                          : [...field.value, day];
+                        field.onChange(next);
+                      }}
+                      className={cn(
+                        "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+                        selected
+                          ? "border-primary bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(206,163,89,0.25)]"
+                          : "border-border bg-muted text-muted-foreground hover:border-primary/40",
+                      )}
+                    >
+                      {day.slice(0, 3)}
+                    </button>
+                  )}
                 />
-                {day.slice(0, 3)}
-              </label>
-            ))}
+              );
+            })}
           </div>
           {errors.availableDays && (
-            <p className="text-sm text-destructive mt-1">{errors.availableDays.message}</p>
+            <p className="mt-1 text-sm text-destructive">{errors.availableDays.message}</p>
           )}
         </div>
 
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-foreground mb-2">Time Slots</label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <input
-                {...register("timeSlots.start")}
-                type="time"
-                className={inputStyles}
-                placeholder="Start Time"
-              />
-            </div>
-            <div>
-              <input
-                {...register("timeSlots.end")}
-                type="time"
-                className={inputStyles}
-                placeholder="End Time"
-              />
-            </div>
+        <div>
+          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            Time Slots
+          </p>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <Controller
+              control={control}
+              name="timeSlots.start"
+              render={({ field }) => (
+                <input type="time" {...field} className={inputStyles} placeholder="Start Time" />
+              )}
+            />
+            <Controller
+              control={control}
+              name="timeSlots.end"
+              render={({ field }) => (
+                <input type="time" {...field} className={inputStyles} placeholder="End Time" />
+              )}
+            />
           </div>
           {errors.timeSlots && (
-            <p className="text-sm text-destructive mt-1">{errors.timeSlots.message}</p>
+            <p className="mt-1 text-sm text-destructive">{errors.timeSlots.message}</p>
           )}
         </div>
       </div>
-    </div>
+    </FormSection>
   );
 }

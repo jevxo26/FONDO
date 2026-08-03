@@ -2,15 +2,16 @@
 
 import { FormField } from "@/components/common/form-field";
 import { inputStyles } from "@/lib/schema/food-schema";
-import { FoodFormValues } from "@/lib/schema/food-schema";
+import type { FoodFormValues } from "@/lib/schema/food-schema";
+import { FormSection } from "@/components/dashboard/common/form-section";
 import { Image, Plus, Trash2 } from "lucide-react";
-import {
+import type {
+  Control,
   FieldErrors,
   UseFormRegister,
   UseFormSetValue,
-  useFieldArray,
-  Control,
 } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 
 interface ImageSectionProps {
@@ -26,7 +27,6 @@ interface ImageSectionProps {
 export function ImageSection({
   register,
   errors,
-  setValue,
   control,
   thumbnailWatched,
   coverImageWatched,
@@ -38,13 +38,23 @@ export function ImageSection({
   });
 
   return (
-    <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-5">
-      <div className="border-b border-border pb-3 flex items-center gap-2">
-        <Image className="w-5 h-5 text-primary" />
-        <h2 className="text-base font-bold text-foreground">Images</h2>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <FormSection
+      icon={Image}
+      title="Photos"
+      description="Set a thumbnail, cover and gallery for the food."
+      action={
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => append({ url: "" })}
+        >
+          <Plus className="mr-1 size-4" />
+          Add Gallery Image
+        </Button>
+      }
+    >
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <FormField label="Thumbnail URL" error={errors.thumbnail} required>
           <input
             {...register("thumbnail")}
@@ -52,11 +62,12 @@ export function ImageSection({
             className={inputStyles}
           />
           {thumbnailWatched && (
-            <div className="mt-2">
+            <div className="mt-2 overflow-hidden rounded-xl border border-border/60">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={thumbnailWatched}
                 alt="Thumbnail preview"
-                className="w-32 h-32 object-cover rounded-lg border border-border"
+                className="aspect-[4/3] w-full object-cover"
                 onError={(e) => (e.currentTarget.style.display = "none")}
               />
             </div>
@@ -70,11 +81,12 @@ export function ImageSection({
             className={inputStyles}
           />
           {coverImageWatched && (
-            <div className="mt-2">
+            <div className="mt-2 overflow-hidden rounded-xl border border-border/60">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={coverImageWatched}
                 alt="Cover preview"
-                className="w-32 h-32 object-cover rounded-lg border border-border"
+                className="aspect-[4/3] w-full object-cover"
                 onError={(e) => (e.currentTarget.style.display = "none")}
               />
             </div>
@@ -82,51 +94,55 @@ export function ImageSection({
         </FormField>
 
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-foreground mb-2">Gallery Images</label>
+          <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            Gallery Images
+          </label>
 
-          {fields.map((field, index) => (
-            <div key={field.id} className="flex items-center gap-2 mb-2">
-              <input
-                {...register(`galleryImages.${index}.url`)}
-                placeholder="https://example.com/gallery.jpg"
-                className={inputStyles}
-              />
-              {galleryImagesWatched?.[index]?.url && (
-                <img
-                  src={galleryImagesWatched[index].url}
-                  alt={`Gallery ${index}`}
-                  className="w-12 h-12 object-cover rounded border border-border flex-shrink-0"
-                  onError={(e) => (e.currentTarget.style.display = "none")}
-                />
-              )}
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => remove(index)}
-                className="text-destructive hover:text-destructive/80"
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
-            </div>
-          ))}
+          {fields.length === 0 && (
+            <p className="mb-3 text-xs text-muted-foreground">
+              No gallery images yet. Add image URLs to showcase the food.
+            </p>
+          )}
 
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => append({ url: "" })}
-            className="mt-2"
-          >
-            <Plus className="w-4 h-4 mr-1" />
-            Add Gallery Image
-          </Button>
+          <div className="space-y-2">
+            {fields.map((field, index) => (
+              <div key={field.id} className="flex items-center gap-2">
+                <div className="min-w-0 flex-1">
+                  <input
+                    {...register(`galleryImages.${index}.url`)}
+                    placeholder="https://example.com/gallery.jpg"
+                    className={inputStyles}
+                  />
+                  {galleryImagesWatched?.[index]?.url && (
+                    <div className="mt-1.5 overflow-hidden rounded-lg border border-border/60">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={galleryImagesWatched[index].url}
+                        alt={`Gallery ${index + 1}`}
+                        className="aspect-video w-full object-cover"
+                        onError={(e) => (e.currentTarget.style.display = "none")}
+                      />
+                    </div>
+                  )}
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => remove(index)}
+                  className="shrink-0 text-destructive hover:text-destructive/80"
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
 
           {errors.galleryImages && (
-            <p className="text-sm text-destructive mt-1">{errors.galleryImages.message}</p>
+            <p className="mt-1 text-sm text-destructive">{errors.galleryImages.message}</p>
           )}
         </div>
       </div>
-    </div>
+    </FormSection>
   );
 }

@@ -3,6 +3,7 @@
 import { FormField } from "@/components/common/form-field";
 import { inputStyles } from "@/lib/schema/food-schema";
 import type { AdminFoodFormValues } from "@/lib/schema/admin-food-schema";
+import { FormSection } from "@/components/dashboard/common/form-section";
 import { ImageIcon, Plus, Trash2 } from "lucide-react";
 import type {
   Control,
@@ -25,7 +26,7 @@ interface ImageSectionProps {
 export function ImageSection({
   register,
   errors,
-  control,
+  control: _control,
   setValue,
   thumbnail,
   coverImage,
@@ -39,40 +40,38 @@ export function ImageSection({
     );
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-      <div className="flex items-center gap-2 border-b border-border pb-3">
-        <ImageIcon className="size-5 text-primary" />
-        <h2 className="text-base font-bold text-foreground">Images</h2>
-      </div>
-
-      <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+    <FormSection
+      icon={ImageIcon}
+      title="Images"
+      description="Thumbnail, cover and gallery photos."
+      count={galleryImages.length}
+      action={
+        <Button type="button" variant="outline" size="sm" onClick={appendImage}>
+          <Plus className="mr-1 size-4" />
+          Add Image
+        </Button>
+      }
+    >
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <FormField label="Thumbnail URL" error={errors.thumbnail}>
-          <input
-            {...register("thumbnail")}
-            placeholder="https://..."
-            className={inputStyles}
-          />
+          <input {...register("thumbnail")} placeholder="https://..." className={inputStyles} />
         </FormField>
 
         <FormField label="Cover Image URL" error={errors.coverImage}>
-          <input
-            {...register("coverImage")}
-            placeholder="https://..."
-            className={inputStyles}
-          />
+          <input {...register("coverImage")} placeholder="https://..." className={inputStyles} />
         </FormField>
       </div>
 
       {(thumbnail || coverImage) && (
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {thumbnail && (
-            <div className="relative aspect-square overflow-hidden rounded-xl border border-border">
+            <div className="relative aspect-square overflow-hidden rounded-xl border border-border/60">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={thumbnail} alt="thumbnail" className="size-full object-cover" />
             </div>
           )}
           {coverImage && (
-            <div className="relative aspect-square overflow-hidden rounded-xl border border-border">
+            <div className="relative aspect-square overflow-hidden rounded-xl border border-border/60">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={coverImage} alt="cover" className="size-full object-cover" />
             </div>
@@ -80,27 +79,14 @@ export function ImageSection({
         </div>
       )}
 
-      <div className="mt-5 border-t border-border pt-4">
-        <div className="flex items-center justify-between">
-          <p className="text-sm font-semibold text-foreground">Gallery Images</p>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={appendImage}
-          >
-            <Plus className="mr-1 size-4" />
-            Add Image
-          </Button>
-        </div>
-
+      <div className="mt-5 border-t border-border/60 pt-4">
         {galleryImages.length === 0 && (
-          <p className="mt-3 text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground">
             No gallery images yet. Add image URLs to showcase the food.
           </p>
         )}
 
-        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {galleryImages.map((_, index) => (
             <div key={index} className="flex items-start gap-2">
               <div className="relative min-w-0 flex-1">
@@ -110,7 +96,7 @@ export function ImageSection({
                   className={inputStyles}
                 />
                 {galleryImages[index] && (
-                  <div className="mt-1.5 aspect-video overflow-hidden rounded-lg border border-border">
+                  <div className="mt-1.5 aspect-video overflow-hidden rounded-lg border border-border/60">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={galleryImages[index]} alt="" className="size-full object-cover" />
                   </div>
@@ -129,6 +115,6 @@ export function ImageSection({
           ))}
         </div>
       </div>
-    </div>
+    </FormSection>
   );
 }

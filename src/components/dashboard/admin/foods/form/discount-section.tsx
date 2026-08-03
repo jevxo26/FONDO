@@ -3,6 +3,7 @@
 import { FormField } from "@/components/common/form-field";
 import { inputStyles } from "@/lib/schema/food-schema";
 import type { AdminFoodFormValues } from "@/lib/schema/admin-food-schema";
+import { FormSection } from "@/components/dashboard/common/form-section";
 import { Percent, Plus, Trash2 } from "lucide-react";
 import { useFieldArray, type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -17,12 +18,12 @@ export function DiscountSection({ register, errors, control }: DiscountSectionPr
   const { fields, append, remove } = useFieldArray({ control, name: "discounts" });
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-      <div className="flex items-center justify-between border-b border-border pb-3">
-        <div className="flex items-center gap-2">
-          <Percent className="size-5 text-primary" />
-          <h2 className="text-base font-bold text-foreground">Discounts</h2>
-        </div>
+    <FormSection
+      icon={Percent}
+      title="Discounts"
+      description="Percentage or flat discounts."
+      count={fields.length}
+      action={
         <Button
           type="button"
           variant="outline"
@@ -32,16 +33,14 @@ export function DiscountSection({ register, errors, control }: DiscountSectionPr
           <Plus className="mr-1 size-4" />
           Add Discount
         </Button>
-      </div>
-
-      {fields.length === 0 && (
-        <p className="mt-4 text-xs text-muted-foreground">No discounts applied.</p>
-      )}
+      }
+    >
+      {fields.length === 0 && <p className="text-xs text-muted-foreground">No discounts applied.</p>}
 
       {fields.map((field, index) => (
         <div
           key={field.id}
-          className="mt-4 grid grid-cols-1 gap-3 rounded-lg border border-border p-4 md:grid-cols-2"
+          className="grid grid-cols-1 gap-3 rounded-xl border border-border/60 bg-card/60 p-4 md:grid-cols-2"
         >
           <FormField label="Type" error={errors.discounts?.[index]?.discountType}>
             <select {...register(`discounts.${index}.discountType`)} className={inputStyles}>
@@ -50,11 +49,7 @@ export function DiscountSection({ register, errors, control }: DiscountSectionPr
             </select>
           </FormField>
 
-          <FormField
-            label="Value"
-            error={errors.discounts?.[index]?.discountValue}
-            required
-          >
+          <FormField label="Value" error={errors.discounts?.[index]?.discountValue} required>
             <div className="flex items-center gap-2">
               <input
                 type="number"
@@ -77,6 +72,6 @@ export function DiscountSection({ register, errors, control }: DiscountSectionPr
           </FormField>
         </div>
       ))}
-    </div>
+    </FormSection>
   );
 }

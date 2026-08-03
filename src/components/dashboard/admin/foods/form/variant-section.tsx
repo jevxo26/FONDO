@@ -3,6 +3,7 @@
 import { FormField } from "@/components/common/form-field";
 import { inputStyles } from "@/lib/schema/food-schema";
 import type { AdminFoodFormValues } from "@/lib/schema/admin-food-schema";
+import { FormSection } from "@/components/dashboard/common/form-section";
 import { GripVertical, Plus, Trash2 } from "lucide-react";
 import { useFieldArray, type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -17,12 +18,12 @@ export function VariantSection({ register, errors, control }: VariantSectionProp
   const { fields, append, remove } = useFieldArray({ control, name: "variants" });
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-      <div className="flex items-center justify-between border-b border-border pb-3">
-        <div className="flex items-center gap-2">
-          <GripVertical className="size-5 text-primary" />
-          <h2 className="text-base font-bold text-foreground">Variants</h2>
-        </div>
+    <FormSection
+      icon={GripVertical}
+      title="Variants"
+      description="Sizes or portions with their own price."
+      count={fields.length}
+      action={
         <Button
           type="button"
           variant="outline"
@@ -41,18 +42,23 @@ export function VariantSection({ register, errors, control }: VariantSectionProp
           <Plus className="mr-1 size-4" />
           Add Variant
         </Button>
-      </div>
-
+      }
+    >
       {fields.length === 0 && (
-        <p className="mt-4 text-xs text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           No variants yet. Add sizes/portions (e.g. Regular, Large).
         </p>
       )}
 
       {fields.map((field, index) => (
-        <div key={field.id} className="mt-4 space-y-3 rounded-lg border border-border p-4">
+        <div key={field.id} className="space-y-3 rounded-xl border border-border/60 bg-card/60 p-4">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-foreground">Variant #{index + 1}</span>
+            <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
+              <span className="flex size-6 items-center justify-center rounded-md bg-primary/10 font-heading text-xs font-bold text-primary">
+                {index + 1}
+              </span>
+              Variant {field.name ? `“${field.name}”` : `#${index + 1}`}
+            </span>
             <Button
               type="button"
               variant="ghost"
@@ -121,6 +127,6 @@ export function VariantSection({ register, errors, control }: VariantSectionProp
           </div>
         </div>
       ))}
-    </div>
+    </FormSection>
   );
 }

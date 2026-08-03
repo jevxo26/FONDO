@@ -1,7 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShoppingBag, Tag, Clock, Utensils, DollarSign, Package, Apple } from "lucide-react";
+import { Apple, Clock, DollarSign, Layers, List, Store, Tag, Utensils } from "lucide-react";
 
 interface SummarySidebarProps {
   vendorName: string;
@@ -16,6 +15,14 @@ interface SummarySidebarProps {
   preparationTime: number;
 }
 
+const statusPills: Record<string, string> = {
+  ACTIVE: "bg-success/10 text-success ring-success/20",
+  INACTIVE: "bg-muted text-muted-foreground ring-border",
+  DRAFT: "bg-warning/10 text-warning ring-warning/20",
+  ARCHIVED: "bg-destructive/10 text-destructive ring-destructive/20",
+  PENDING: "bg-primary/10 text-primary ring-primary/20",
+};
+
 export function SummarySidebar({
   vendorName,
   categoryName,
@@ -28,98 +35,75 @@ export function SummarySidebar({
   calories,
   preparationTime,
 }: SummarySidebarProps) {
-  const statusColors = {
-    ACTIVE: "text-green-600 bg-green-50",
-    INACTIVE: "text-red-600 bg-red-50",
-    DRAFT: "text-yellow-600 bg-yellow-50",
-    ARCHIVED: "text-gray-600 bg-gray-50",
-  };
+  const pill = statusPills[status] ?? statusPills.DRAFT;
 
-  const statusColor =
-    statusColors[status as keyof typeof statusColors] || "text-gray-600 bg-gray-50";
+  const rows = [
+    { icon: Store, label: "Vendor", value: vendorName },
+    { icon: Tag, label: "Category", value: categoryName },
+    { icon: Utensils, label: "Food Type", value: foodType },
+    { icon: Layers, label: "Variants", value: String(variantCount) },
+    { icon: List, label: "Ingredients", value: String(ingredientCount) },
+    { icon: Apple, label: "Calories", value: `${calories} kcal` },
+    { icon: Clock, label: "Prep Time", value: `${preparationTime} min` },
+  ];
 
   return (
-    <div className="sticky top-24">
-      <Card className="border-border shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
-            <Package className="w-5 h-5 text-primary" />
-            Summary
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Vendor</span>
-              <span className="font-medium text-foreground">{vendorName}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Category</span>
-              <span className="font-medium text-foreground">{categoryName}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Food Type</span>
-              <span className="font-medium text-foreground">{foodType}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Status</span>
-              <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${statusColor}`}>
-                {status}
-              </span>
-            </div>
-          </div>
+    <div className="group relative overflow-hidden rounded-3xl border border-border/40 bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-5 shadow-[var(--shadow-card)] md:p-6">
+      <div className="pointer-events-none absolute -bottom-6 -right-6 size-36 rounded-full bg-primary/8 blur-3xl" />
+      <div className="pointer-events-none absolute right-3 top-3 size-[7px] rotate-45 border border-primary/30" />
 
-          <div className="border-t border-border pt-3 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground flex items-center gap-1">
-                <DollarSign className="w-4 h-4" />
-                Base Price
-              </span>
-              <span className="font-medium text-foreground">৳{basePrice.toFixed(2)}</span>
-            </div>
-            {discountPrice > 0 && (
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground flex items-center gap-1">
-                  <DollarSign className="w-4 h-4" />
-                  Discount Price
-                </span>
-                <span className="font-medium text-green-600">৳{discountPrice.toFixed(2)}</span>
-              </div>
-            )}
-          </div>
+      <div className="relative z-10">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Item Summary</p>
+          <span
+            className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1 ${pill}`}
+          >
+            {status || "DRAFT"}
+          </span>
+        </div>
 
-          <div className="border-t border-border pt-3 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground flex items-center gap-1">
-                <Utensils className="w-4 h-4" />
-                Variants
-              </span>
-              <span className="font-medium text-foreground">{variantCount}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground flex items-center gap-1">
-                <Tag className="w-4 h-4" />
-                Ingredients
-              </span>
-              <span className="font-medium text-foreground">{ingredientCount}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground flex items-center gap-1">
-                <Apple className="w-4 h-4" />
-                Calories
-              </span>
-              <span className="font-medium text-foreground">{calories} kcal</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                Prep Time
-              </span>
-              <span className="font-medium text-foreground">{preparationTime} min</span>
-            </div>
+        <div className="mt-3 h-px w-full bg-gradient-to-r from-primary/40 via-primary/30 to-transparent" />
+
+        <div className="mt-4 flex items-end justify-between gap-2">
+          <div>
+            <p className="font-heading text-[28px] font-bold leading-tight tracking-tighter text-foreground">
+              ৳{basePrice.toFixed(2)}
+            </p>
+            <p className="mt-1 text-[10px] uppercase tracking-widest text-muted-foreground">
+              {discountPrice > 0 ? "Price" : "Base price"}
+            </p>
           </div>
-        </CardContent>
-      </Card>
+          {discountPrice > 0 && (
+            <div className="text-right">
+              <p className="font-heading text-lg font-semibold leading-tight text-success">
+                ৳{discountPrice.toFixed(2)}
+              </p>
+              <p className="mt-0.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+                Discount
+              </p>
+            </div>
+          )}
+        </div>
+
+        <dl className="mt-5 space-y-2.5">
+          {rows.map((row) => (
+            <div key={row.label} className="flex items-center justify-between gap-3 text-sm">
+              <dt className="flex items-center gap-2 text-muted-foreground">
+                <row.icon className="size-4 text-primary/70" />
+                {row.label}
+              </dt>
+              <dd className="max-w-[55%] truncate font-medium text-foreground">{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <div className="mt-5 flex items-center gap-2 rounded-xl bg-primary/5 px-3 py-2.5 ring-1 ring-primary/10">
+          <DollarSign className="size-4 shrink-0 text-primary" />
+          <p className="text-xs text-muted-foreground">
+            Submitted items are reviewed by FONDO admin before going live.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -3,11 +3,66 @@ import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import prisma from "../lib/prisma";
 
+const FOOD_LIST_INCLUDE = {
+  category: { select: { id: true, name: true, slug: true } },
+  subCategory: { select: { id: true, name: true, slug: true } },
+  variants: {
+    where: { status: "active" },
+    select: { id: true, name: true, price: true, discountPrice: true, servingSize: true },
+  },
+  addons: {
+    where: { status: "active" },
+    include: { items: { where: { status: "active" } } },
+  },
+  labels: true,
+  tagMappings: { include: { tag: { select: { name: true } } } },
+  diets: { select: { dietType: true } },
+  discounts: { where: { status: "active" }, take: 1 },
+} satisfies Prisma.FoodInclude;
+
+type FoodListItem = Prisma.FoodGetPayload<{ include: typeof FOOD_LIST_INCLUDE }>;
+
+const mapFood = (f: FoodListItem) => ({
+  id: f.id,
+  name: f.name,
+  slug: f.slug,
+  shortDescription: f.shortDescription,
+  thumbnail: f.thumbnail,
+  coverImage: f.coverImage,
+  foodType: f.foodType,
+  spiceLevel: f.spiceLevel,
+  preparationTime: f.preparationTime,
+  calories: f.calories,
+  protein: f.protein,
+  fat: f.fat,
+  carbohydrate: f.carbohydrate,
+  servingSize: f.servingSize,
+  isFeatured: f.isFeatured,
+  isPopular: f.isPopular,
+  isRecommended: f.isRecommended,
+  category: f.category,
+  subCategory: f.subCategory,
+  variants: f.variants,
+  addons: f.addons,
+  averageRating: f.averageRating,
+  totalReview: f.totalReview,
+  fiveStar: f.fiveStar,
+  fourStar: f.fourStar,
+  threeStar: f.threeStar,
+  twoStar: f.twoStar,
+  oneStar: f.oneStar,
+  labels: f.labels,
+  tags: f.tagMappings.map((tm) => tm.tag),
+  diets: f.diets,
+  discount: f.discounts[0] || null,
+});
+
 const listFoods = catchServiceAsync(
   async (params: {
     page?: number;
     limit?: number;
     categoryId?: string;
+    subCategoryId?: string;
     foodType?: string;
     spiceLevel?: string;
     dietType?: string;
@@ -24,23 +79,56 @@ const listFoods = catchServiceAsync(
     const where: Prisma.FoodWhereInput = { status: "active", deletedAt: null };
 
     if (params.categoryId) where.categoryId = params.categoryId;
+    if (params.subCategoryId) where.subCategoryId = params.subCategoryId;
     if (params.foodType) where.foodType = params.foodType as Prisma.FoodWhereInput["foodType"];
     if (params.spiceLevel) where.spiceLevel = params.spiceLevel;
     if (params.search) {
       where.OR = [
         { name: { contains: params.search, mode: "insensitive" } },
         { slug: { contains: params.search, mode: "insensitive" } },
+        { shortDescription: { contains: params.search, mode: "insensitive" } },
       ];
     }
     if (params.dietType) {
       where.diets = { some: { dietType: params.dietType } };
     }
+    if (params.minPrice !== undefined || params.maxPrice !== undefined) {
+      where.variants = {
+        some: {
+          price: {
+            ...(params.minPrice !== undefined ? { gte: params.minPrice } : {}),
+            ...(params.maxPrice !== undefined ? { lte: params.maxPrice } : {}),
+          },
+        },
+      };
+    }
+
+    // Price sort: order by minimum active variant price (Prisma relation orderBy
+    // only supports _count, so sort in memory for the price case).
+    if (params.sortBy === "price") {
+      const all = await prisma.food.findMany({ where, include: FOOD_LIST_INCLUDE });
+      const order = params.sortOrder === "desc" ? -1 : 1;
+      all.sort((a, b) => {
+        const minA = a.variants.length
+          ? Math.min(...a.variants.map((v) => Number(v.price)))
+          : Infinity;
+        const minB = b.variants.length
+          ? Math.min(...b.variants.map((v) => Number(v.price)))
+          : Infinity;
+        return (minA - minB) * order;
+      });
+      const items = skip !== undefined && limit ? all.slice(skip, skip + limit) : all;
+      return {
+        items: items.map(mapFood),
+        total: all.length,
+        page: limit ? page : 1,
+        limit: limit ?? all.length,
+        totalPages: limit ? Math.max(1, Math.ceil(all.length / limit)) : 1,
+      };
+    }
 
     const orderBy: Prisma.FoodOrderByWithRelationInput = {};
-    if (params.sortBy === "price") {
-      orderBy.variants = { _count: "asc" };
-      orderBy.prices = { _count: "asc" };
-    } else if (params.sortBy === "rating") {
+    if (params.sortBy === "rating") {
       orderBy.averageRating = params.sortOrder || "desc";
     } else if (params.sortBy === "popularity") {
       orderBy.isPopular = "desc";
@@ -54,61 +142,13 @@ const listFoods = catchServiceAsync(
         skip,
         take: limit,
         orderBy: Object.keys(orderBy).length > 0 ? orderBy : { createdAt: "desc" },
-        include: {
-          category: { select: { id: true, name: true, slug: true } },
-          variants: {
-            where: { status: "active" },
-            select: { id: true, name: true, price: true, discountPrice: true, servingSize: true },
-          },
-          addons: {
-            where: { status: "active" },
-            include: { items: { where: { status: "active" } } },
-          },
-          labels: true,
-          tagMappings: { include: { tag: { select: { name: true } } } },
-          diets: { select: { dietType: true } },
-          discounts: { where: { status: "active" }, take: 1 },
-        },
+        include: FOOD_LIST_INCLUDE,
       }),
       prisma.food.count({ where }),
     ]);
 
-    const mapped = items.map((f) => ({
-      id: f.id,
-      name: f.name,
-      slug: f.slug,
-      shortDescription: f.shortDescription,
-      thumbnail: f.thumbnail,
-      coverImage: f.coverImage,
-      foodType: f.foodType,
-      spiceLevel: f.spiceLevel,
-      preparationTime: f.preparationTime,
-      calories: f.calories,
-      protein: f.protein,
-      fat: f.fat,
-      carbohydrate: f.carbohydrate,
-      servingSize: f.servingSize,
-      isFeatured: f.isFeatured,
-      isPopular: f.isPopular,
-      isRecommended: f.isRecommended,
-      category: f.category,
-      variants: f.variants,
-      addons: f.addons,
-      averageRating: f.averageRating,
-      totalReview: f.totalReview,
-      fiveStar: f.fiveStar,
-      fourStar: f.fourStar,
-      threeStar: f.threeStar,
-      twoStar: f.twoStar,
-      oneStar: f.oneStar,
-      labels: f.labels,
-      tags: f.tagMappings.map((tm) => tm.tag),
-      diets: f.diets,
-      discount: f.discounts[0] || null,
-    }));
-
     return {
-      items: mapped,
+      items: items.map(mapFood),
       total,
       page: limit ? page : 1,
       limit: limit ?? total,
@@ -231,10 +271,15 @@ const getFoodById = catchServiceAsync(async (id: string) => {
   return food;
 });
 
-const listCategories = catchServiceAsync(async () => {
+const listCategories = catchServiceAsync(async (params?: { limit?: number; popular?: boolean }) => {
   return prisma.category.findMany({
-    where: { status: "active", deletedAt: null },
+    where: {
+      status: "active",
+      deletedAt: null,
+      ...(typeof params?.popular === "boolean" ? { popular: params.popular } : {}),
+    },
     orderBy: { sortOrder: "asc" },
+    ...(params?.limit ? { take: params.limit } : {}),
     include: {
       subCategories: {
         where: { status: "active", deletedAt: null },

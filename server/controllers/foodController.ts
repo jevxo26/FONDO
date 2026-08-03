@@ -11,6 +11,7 @@ const list = catchAsync(async (req: Request, res: Response) => {
     page: parseInt(req.query.page as string) || 1,
     limit: req.query.limit ? parseInt(req.query.limit as string) : undefined,
     categoryId: req.query.categoryId as string,
+    subCategoryId: req.query.subCategoryId as string,
     foodType: req.query.foodType as string,
     spiceLevel: req.query.spiceLevel as string,
     dietType: req.query.dietType as string,
@@ -63,8 +64,13 @@ const listVendorFoods = catchAsync(async (req: AuthRequest, res: Response) => {
   sendResponse(res, { statusCode: 200, data: result });
 });
 
-const listCategories = catchAsync(async (_req: Request, res: Response) => {
-  const categories = await FoodService.listCategories();
+const listCategories = catchAsync(async (req: Request, res: Response) => {
+  const popular =
+    req.query.popular === "true" ? true : req.query.popular === "false" ? false : undefined;
+  const categories = await FoodService.listCategories({
+    limit: req.query.limit ? parseInt(req.query.limit as string) : undefined,
+    popular,
+  });
 
   sendResponse(res, { statusCode: 200, data: categories });
 });

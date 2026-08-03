@@ -1871,6 +1871,7 @@ CREATE TABLE "payment_methods" (
 -- CreateTable
 CREATE TABLE "payment_gateways" (
     "id" TEXT NOT NULL,
+    "code" TEXT NOT NULL DEFAULT 'sslcommerz',
     "name" TEXT NOT NULL,
     "merchantId" TEXT,
     "storeId" TEXT,
@@ -1885,6 +1886,9 @@ CREATE TABLE "payment_gateways" (
 
     CONSTRAINT "payment_gateways_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "payment_gateways_code_key" ON "payment_gateways"("code");
 
 -- CreateTable
 CREATE TABLE "payment_transactions" (

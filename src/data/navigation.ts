@@ -15,15 +15,20 @@ import {
 } from "lucide-react";
 import type { ComponentType } from "react";
 
-export const ROLE_DASHBOARD: Record<string, string> = {
-  ADMIN: "/dashboard/admin",
+export const RBAC_ROLE_DASHBOARD: Record<string, string> = {
   SUPER_ADMIN: "/dashboard/admin",
+  ADMIN: "/dashboard/admin",
   VENDOR: "/dashboard/vendor",
-  VENDOR_STAFF: "/dashboard/vendor",
-  KITCHEN_STAFF: "/dashboard/kitchen",
   RIDER: "/dashboard/rider",
-  SUPPORT_AGENT: "/dashboard/admin",
 };
+
+const DASHBOARD_ROLE_PRIORITY = ["SUPER_ADMIN", "ADMIN", "VENDOR", "RIDER"];
+
+export function getDashboardPath(role: string, permissions: string[]): string | null {
+  if (DASHBOARD_ROLE_PRIORITY.includes(role)) return RBAC_ROLE_DASHBOARD[role];
+  if (permissions.length > 0) return "/dashboard/admin";
+  return null;
+}
 
 interface NavLink {
   href?: string;

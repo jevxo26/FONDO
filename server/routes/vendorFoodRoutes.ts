@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { VendorFoodController } from "../controllers/vendorFoodController";
-import { authorize, verifyToken } from "../middlewares/authMiddleware";
+import { hasPermission, verifyToken } from "../middlewares/authMiddleware";
 import { validate } from "../middlewares/validate";
 import {
   createVendorFoodSchema,
@@ -9,13 +9,15 @@ import {
 
 const router = Router();
 
-router.use(verifyToken, authorize("VENDOR", "VENDOR_STAFF"));
+const pFoods = hasPermission("foods");
 
-router.post("/", validate(createVendorFoodSchema), VendorFoodController.createFood);
-router.get("/", VendorFoodController.listFoods);
-router.get("/:id", VendorFoodController.getFood);
+router.post("/", verifyToken, pFoods, validate(createVendorFoodSchema), VendorFoodController.createFood);
+router.get("/", verifyToken, pFoods, VendorFoodController.listFoods);
+router.get("/:id", verifyToken, pFoods, VendorFoodController.getFood);
 router.patch(
   "/:id/status",
+  verifyToken,
+  pFoods,
   validate(updateVendorFoodStatusSchema),
   VendorFoodController.updateFoodStatus,
 );

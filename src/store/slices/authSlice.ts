@@ -11,7 +11,8 @@ interface AuthState {
 }
 
 const initialToken = getToken();
-const initialPermissions = (decodeJwt(initialToken ?? "")?.permissions as string[]) ?? [];
+const initialJwt = decodeJwt(initialToken ?? "");
+const initialPermissions = (initialJwt?.permissions as string[]) ?? [];
 
 const initialState: AuthState = {
   user: null,
@@ -25,9 +26,10 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setCredentials(state, action: PayloadAction<{ user: User; token: string }>) {
+      const jwt = decodeJwt(action.payload.token);
       state.user = action.payload.user;
       state.accessToken = action.payload.token;
-      state.permissions = (decodeJwt(action.payload.token)?.permissions as string[]) ?? [];
+      state.permissions = (jwt?.permissions as string[]) ?? [];
       state.isAuthenticated = true;
     },
     clearCredentials(state) {

@@ -10,11 +10,13 @@ import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { ROLE_DASHBOARD } from "@/data/navigation";
+import { getDashboardPath } from "@/data/navigation";
+import { useAppSelector } from "@/store/store";
 
 export default function LoginPage() {
   const router = useRouter();
   const { login, user, isAuthenticated, loading } = useAuth();
+  const permissions = useAppSelector((s) => s.auth.permissions);
 
   const methods = useForm<LoginInput>({
     resolver: yupResolver(loginSchema),
@@ -34,10 +36,10 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      const route = ROLE_DASHBOARD[user.role] || "/";
+      const route = getDashboardPath(user.role, permissions) ?? "/";
       router.push(route);
     }
-  }, [isAuthenticated, user, router]);
+  }, [isAuthenticated, user, permissions, router]);
 
   const quickLogin = async (email: string, password: string) => {
     try {
@@ -53,7 +55,6 @@ export default function LoginPage() {
   const devUsers = [
     { label: "Admin", email: "admin@fondo.com", role: "ADMIN" },
     { label: "Vendor", email: "vendor@fondo.com", role: "VENDOR" },
-    { label: "Kitchen", email: "kitchen@fondo.com", role: "KITCHEN_STAFF" },
     { label: "Rider", email: "rider@fondo.com", role: "RIDER" },
     { label: "Customer", email: "customer@fondo.com", role: "CUSTOMER" },
   ];

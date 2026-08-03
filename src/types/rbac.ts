@@ -1,38 +1,22 @@
-import type { User } from "@/types/auth";
-
-export interface Permission {
-  id: string;
+export interface ModulePermission {
   module: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  createdAt?: string;
-  updatedAt?: string;
+  label: string;
+  base: boolean;
+  toggleable: boolean;
+  granted: boolean;
 }
 
-export type PermissionsByModule = Record<string, Permission[]>;
-
-export interface RbacRole {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  isDefault: boolean;
-  status: string;
-  createdAt?: string;
-  updatedAt?: string;
-  rolePermissions: { permission: Permission }[];
-  _count?: { userRoles: number };
+export interface PermissionModulesResponse {
+  modules: ModulePermission[];
+  overrides: UserPermissionOverride[];
 }
 
-export interface UserRoleAssignment {
-  id: string;
-  userId: string;
-  roleId: string;
-  assignedBy: string | null;
-  assignedAt: string;
-  status: string;
-  role: Pick<RbacRole, "id" | "name" | "slug" | "description" | "status">;
+export interface UserPermissionOverride {
+  module: string;
+  type: "GRANT" | "REVOKE";
 }
 
-export type UserWithRoles = User & { roles: RbacRole[] };
+export interface ToggleModulePayload {
+  module: string;
+  enabled: boolean;
+}

@@ -46,7 +46,8 @@ export const hasPermission = (...slugs: string[]) => {
     }
 
     const permissions = req.user.permissions ?? [];
-    if (!slugs.some((slug) => permissions.includes(slug))) {
+    const allowed = permissions.includes("*") || slugs.some((slug) => permissions.includes(slug));
+    if (!allowed) {
       throw new AppError(403, `Access denied. Required permission: ${slugs.join(" or ")}`);
     }
 

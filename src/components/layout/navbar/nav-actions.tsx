@@ -13,8 +13,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ROLE_DASHBOARD } from "@/data/navigation";
+import { getDashboardPath } from "@/data/navigation";
 import { useAuth } from "@/hooks/use-auth";
+import { useAppSelector } from "@/store/store";
 import { useCart } from "@/store/api/slices/cart-api";
 import { useFavorites } from "@/hooks/use-favorites";
 import { navIcon, navIconPill } from "./pill-styles";
@@ -36,17 +37,15 @@ const roleLabels: Record<string, string> = {
   SUPER_ADMIN: "Super Admin",
   ADMIN: "Admin",
   VENDOR: "Vendor",
-  VENDOR_STAFF: "Vendor Staff",
-  KITCHEN_STAFF: "Kitchen Staff",
   RIDER: "Rider",
   CUSTOMER: "Customer",
-  SUPPORT_AGENT: "Support Agent",
 };
 
 export function NavActions() {
   const router = useRouter();
 
   const { user, isAuthenticated, logout } = useAuth();
+  const permissions = useAppSelector((s) => s.auth.permissions);
   const { data: cart } = useCart();
   const { data: favorites } = useFavorites();
 
@@ -63,7 +62,7 @@ export function NavActions() {
     }
   };
 
-  const dashboardHref = user ? ROLE_DASHBOARD[user.role] : null;
+  const dashboardHref = user ? getDashboardPath(user.role, permissions) : null;
   const initials = user ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}` : "U";
   const fullName = user ? `${user.firstName} ${user.lastName}` : "User";
   const roleLabel = user ? roleLabels[user.role] ?? user.role.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) : "";

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyToken, authorize } from "../middlewares/authMiddleware";
+import { verifyToken, authorize, hasPermission } from "../middlewares/authMiddleware";
 import { validate } from "../middlewares/validate";
 import { PaymentController } from "../controllers/paymentController";
 import {
@@ -41,14 +41,16 @@ router.post(
 router.post(
   "/payments/:id/refund",
   verifyToken,
-  authorize("ADMIN", "SUPER_ADMIN"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  hasPermission("settings"),
   validate(refundPaymentSchema),
   PaymentController.refund,
 );
 router.post(
   "/payments/:id/adjust",
   verifyToken,
-  authorize("ADMIN", "SUPER_ADMIN"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  hasPermission("settings"),
   validate(adjustPaymentSchema),
   PaymentController.adjust,
 );

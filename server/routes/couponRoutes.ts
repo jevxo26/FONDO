@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { verifyToken, authorize } from "../middlewares/authMiddleware";
+import { authorize, hasPermission, verifyToken } from "../middlewares/authMiddleware";
 import { validate } from "../middlewares/validate";
 import { CouponController } from "../controllers/couponController";
 import { createCouponSchema, updateCouponSchema } from "../validations/coupon.validation";
 
 const router = Router();
 
-router.use(verifyToken, authorize("ADMIN", "SUPER_ADMIN"));
+router.use(verifyToken, authorize("SUPER_ADMIN", "ADMIN"), hasPermission("coupons"));
 
 router.get("/", CouponController.list);
 router.get("/:id", CouponController.getById);

@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LayoutDashboard, LogOut, User } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { ROLE_DASHBOARD } from "@/data/navigation";
+import { getDashboardPath } from "@/data/navigation";
+import { useAppSelector } from "@/store/store";
 
 export function MobileAuthSection({ closeAndClear }: { closeAndClear: () => void }) {
   const router = useRouter();
   const { user, isAuthenticated, logout } = useAuth();
+  const permissions = useAppSelector((s) => s.auth.permissions);
 
   const handleLogout = async () => {
     await logout();
@@ -16,7 +18,7 @@ export function MobileAuthSection({ closeAndClear }: { closeAndClear: () => void
     router.push("/");
   };
 
-  const dashboardHref = user ? ROLE_DASHBOARD[user.role] : null;
+  const dashboardHref = user ? getDashboardPath(user.role, permissions) : null;
 
   if (!isAuthenticated || !user) {
     return (

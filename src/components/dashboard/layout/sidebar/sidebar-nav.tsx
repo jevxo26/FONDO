@@ -15,12 +15,14 @@ import {
 } from "@/components/ui/sidebar";
 import type { LucideIcon } from "lucide-react";
 import { SidebarNavDropdown } from "./sidebar-nav-dropdown";
+import { useAppSelector } from "@/store/store";
 
 export interface SidebarItem {
   label: string;
   href: string;
   icon: LucideIcon;
   children?: { label: string; href: string; icon: LucideIcon }[];
+  permission?: string;
 }
 
 interface SidebarNavProps {
@@ -38,6 +40,7 @@ export function SidebarNav({
 }: SidebarNavProps) {
   const pathname = usePathname();
   const [expanded, setExpanded] = useState<string[]>([]);
+  const permissions = useAppSelector((s) => s.auth.permissions);
 
   const toggleExpanded = (label: string) => {
     setExpanded((prev) =>
@@ -47,11 +50,19 @@ export function SidebarNav({
 
   const sections = useMemo(() => {
     const itemMap = new Map(items.map((item) => [item.label, item]));
-    return sectionConfig.map((section) => ({
-      label: section.label,
-      items: section.items.map((label) => itemMap.get(label)).filter(Boolean) as SidebarItem[],
-    }));
-  }, [items, sectionConfig]);
+    return sectionConfig
+      .map((section) => ({
+        label: section.label,
+        items: section.items
+          .map((label) => itemMap.get(label))
+          .filter((item): item is SidebarItem => {
+            if (!item) return false;
+            if (!item.permission) return true;
+            return permissions.includes("*") || permissions.includes(item.permission);
+          }),
+      }))
+      .filter((section) => section.items.length > 0);
+  }, [items, sectionConfig, permissions]);
 
   return (
     <SidebarContent>

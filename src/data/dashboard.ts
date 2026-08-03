@@ -5,7 +5,6 @@ import {
   BarChart3,
   Bike,
   CalendarDays,
-  ChefHat,
   Clock,
   CreditCard,
   DollarSign,
@@ -17,7 +16,6 @@ import {
   Radio,
   Receipt,
   Repeat,
-  ShieldCheck,
   Store,
   ThumbsUp,
   Ticket,
@@ -40,6 +38,7 @@ export interface SidebarItem {
   href: string;
   icon: LucideIcon;
   children?: { label: string; href: string; icon: LucideIcon }[];
+  permission?: string;
 }
 
 export const sidebarItems: SidebarItem[] = [
@@ -47,6 +46,7 @@ export const sidebarItems: SidebarItem[] = [
     label: "Customers",
     href: "/customers",
     icon: Users,
+    permission: "users",
     children: [
       { label: "Profiles", href: "/customers", icon: Users },
       { label: "Orders", href: "/customers/orders", icon: Receipt },
@@ -59,6 +59,7 @@ export const sidebarItems: SidebarItem[] = [
     label: "Vendors",
     href: "/vendors",
     icon: Store,
+    permission: "vendors",
     children: [
       { label: "All Vendors", href: "/vendors", icon: Store },
       { label: "Pending Approval", href: "/vendors/pending", icon: Clock },
@@ -69,6 +70,7 @@ export const sidebarItems: SidebarItem[] = [
     label: "Foods",
     href: "/foods",
     icon: Utensils,
+    permission: "foods",
     children: [
       { label: "All Foods", href: "/foods", icon: Utensils },
       { label: "Approval", href: "/foods/approval", icon: ThumbsUp },
@@ -80,17 +82,18 @@ export const sidebarItems: SidebarItem[] = [
     ],
   },
   {
-    label: "Roles & Permissions",
-    href: "/roles",
-    icon: ShieldCheck,
+    label: "Users",
+    href: "/users",
+    icon: Users,
+    permission: "users",
   },
   {
     label: "Orders",
     href: "/orders",
     icon: Receipt,
+    permission: "orders",
     children: [
       { label: "All Orders", href: "/orders", icon: Receipt },
-      { label: "Kitchen Display", href: "/orders/kitchen", icon: ChefHat },
       { label: "Analytics", href: "/orders/analytics", icon: BarChart3 },
     ],
   },
@@ -98,6 +101,7 @@ export const sidebarItems: SidebarItem[] = [
     label: "Payments",
     href: "/payments",
     icon: CreditCard,
+    permission: "settings",
     children: [
       { label: "All Payments", href: "/payments", icon: CreditCard },
       { label: "Coupons", href: "/payments/coupons", icon: Ticket },
@@ -111,6 +115,7 @@ export const sidebarItems: SidebarItem[] = [
     label: "Riders",
     href: "/riders",
     icon: Truck,
+    permission: "riders",
     children: [
       { label: "All Riders", href: "/riders", icon: Truck },
       { label: "Earnings", href: "/riders/earnings", icon: Wallet },
@@ -122,6 +127,7 @@ export const sidebarItems: SidebarItem[] = [
     label: "CMS",
     href: "/cms",
     icon: Layout,
+    permission: "settings",
     children: [
       { label: "Dashboard", href: "/cms", icon: LayoutDashboard },
       { label: "Banners", href: "/cms/banners", icon: Image },
@@ -136,6 +142,7 @@ export const sidebarItems: SidebarItem[] = [
     label: "Reports",
     href: "/reports",
     icon: BarChart3,
+    permission: "reports",
     children: [
       { label: "Overview", href: "/reports", icon: LayoutDashboard },
       { label: "Revenue", href: "/reports/revenue", icon: DollarSign },
@@ -149,7 +156,7 @@ export const sidebarItems: SidebarItem[] = [
 ];
 
 export const sectionConfig = [
-  { label: "Management", items: ["Customers", "Vendors", "Foods", "Roles & Permissions"] },
+  { label: "Management", items: ["Users", "Customers", "Vendors", "Foods"] },
   { label: "Operations", items: ["Orders", "Payments", "Riders"] },
   { label: "Content", items: ["CMS"] },
   { label: "Analytics", items: ["Reports"] },

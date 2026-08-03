@@ -9,8 +9,6 @@ type FoodsContextType = {
   setActiveSubCategory: (sub: string) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
-  foodTypeFilter: string;
-  setFoodTypeFilter: (type: string) => void;
   sortBy: string;
   setSortBy: (sort: string) => void;
   currentPage: number;
@@ -22,7 +20,6 @@ const FoodsContext = createContext<FoodsContextType | undefined>(undefined);
 export function FoodsProvider({ children }: { children: React.ReactNode }) {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [foodTypeFilter, setFoodTypeFilter] = useState("ALL");
   const [sortBy, setSortBy] = useState("default");
   const [activeSubCategory, setActiveSubCategory] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,8 +33,6 @@ export function FoodsProvider({ children }: { children: React.ReactNode }) {
         setActiveSubCategory,
         searchQuery,
         setSearchQuery,
-        foodTypeFilter,
-        setFoodTypeFilter,
         sortBy,
         setSortBy,
         currentPage,

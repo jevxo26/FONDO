@@ -26,7 +26,7 @@ export default function ReviewsTab({ allReviews, foodId }: ReviewsTabProps) {
             setSelectedReview(null);
             setOpen(true);
           }}
-          className="w-fit px-5 py-2.5 rounded-xl bg-[#CEA359] hover:bg-[#b08443] text-white font-sans text-xs font-bold uppercase tracking-wider transition-colors shadow-sm"
+          className="w-fit px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-sans text-xs font-bold uppercase tracking-wider transition-colors shadow-sm"
         >
           Write Review
         </Button>

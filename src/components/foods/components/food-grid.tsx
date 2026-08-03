@@ -1,15 +1,44 @@
+"use client";
+
 import type { Food } from "@/types/food";
-import { Award, ChevronDown, Clock, Plus, ShoppingBag, Star } from "lucide-react";
+import { Award, ChevronDown, Clock, Plus, ShoppingBag, Star, Heart } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useAddToCart } from "@/store/api/slices/cart-api";
+import { useFavorites, useRemoveFavorite, useToggleFavorite } from "@/hooks/use-favorites";
 
-const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
+interface FoodGridProps {
+  filteredFoods: Food[];
+  onClearFilters?: () => void;
+  hasActiveFilters?: boolean;
+}
+
+const FoodGrid = ({ filteredFoods, onClearFilters, hasActiveFilters }: FoodGridProps) => {
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
+  const [justAdded, setJustAdded] = useState<Record<string, boolean>>({});
+  const addToCart = useAddToCart();
+  const { data: favorites = [] } = useFavorites();
+  const toggleFavorite = useToggleFavorite();
+  const removeFavorite = useRemoveFavorite();
 
   const handleVariantChange = (foodId: string, variantId: string) => {
     setSelectedVariants((prev) => ({ ...prev, [foodId]: variantId }));
+  };
+
+  const handleAddToCart = (food: Food, variantId: string) => {
+    if (addToCart.isPending || justAdded[food.id]) return;
+    const variant = food.variants.find((v) => v.id === variantId) ?? food.variants[0];
+    const unitPrice = Number(variant.discountPrice ?? variant.price ?? 0);
+    setJustAdded((prev) => ({ ...prev, [food.id]: true }));
+    addToCart.mutate({ foodId: food.id, quantity: 1, unitPrice });
+    setTimeout(() => setJustAdded((prev) => ({ ...prev, [food.id]: false })), 400);
+  };
+
+  const handleToggleFav = (food: Food) => {
+    const isFavorited = favorites.some((f) => f.id === food.id);
+    (isFavorited ? removeFavorite : toggleFavorite).mutate(food);
   };
 
   return (
@@ -20,6 +49,7 @@ const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
             const activeVariantId = selectedVariants[food.id] || food.variants[0].id;
             const currentVariant =
               food.variants.find((v) => v.id === activeVariantId) || food.variants[0];
+            const isFavorited = favorites.some((f) => f.id === food.id);
 
             return (
               <div
@@ -30,13 +60,15 @@ const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
 
                 <div>
                   <div className="relative aspect-4/3 w-full overflow-hidden bg-muted">
-                    <Image
-                      src={food.thumbnail ?? "/placeholder.svg"}
-                      alt={food.name}
-                      width={200}
-                      height={200}
-                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
-                    />
+                    <Link href={`/foods/${food.slug}`}>
+                      <Image
+                        src={food.thumbnail ?? "/placeholder.svg"}
+                        alt={food.name}
+                        width={200}
+                        height={200}
+                        className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
+                      />
+                    </Link>
 
                     {food.labels.map((lbl, i) => (
                       <span
@@ -51,10 +83,24 @@ const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
                       </span>
                     ))}
 
-                    <span className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-background/90 px-2.5 py-1 text-[10px] font-semibold text-foreground shadow-[var(--shadow-card)] backdrop-blur-sm">
-                      <Clock className="size-3 text-primary" />
-                      {food.preparationTime} min
-                    </span>
+                    <div className="absolute top-3 right-3 flex flex-col items-end gap-2">
+                      <button
+                        onClick={() => handleToggleFav(food)}
+                        aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
+                        className="flex size-8 items-center justify-center rounded-full bg-background/90 shadow-[var(--shadow-card)] backdrop-blur-sm transition-all hover:scale-110 active:scale-95"
+                      >
+                        <Heart
+                          className={cn(
+                            "size-3.5 transition-colors",
+                            isFavorited ? "fill-destructive text-destructive" : "text-foreground",
+                          )}
+                        />
+                      </button>
+                      <span className="flex items-center gap-1 rounded-full bg-background/90 px-2.5 py-1 text-[10px] font-semibold text-foreground shadow-[var(--shadow-card)] backdrop-blur-sm">
+                        <Clock className="size-3 text-primary" />
+                        {food.preparationTime} min
+                      </span>
+                    </div>
 
                     {food.averageRating && (
                       <div className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-background/90 px-2.5 py-1 text-[10px] font-semibold text-foreground shadow-[var(--shadow-card)] backdrop-blur-sm">
@@ -67,14 +113,15 @@ const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
                   <div className="p-4 space-y-3">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <h4 className="font-heading text-base font-semibold text-foreground leading-tight">
-                          {food.name}
-                        </h4>
-                        {food.category?.name && (
-                          <span className="text-[10px] font-medium uppercase tracking-wider text-primary">
-                            {food.category.name}
-                          </span>
-                        )}
+                        <Link href={`/foods/${food.slug}`}>
+                          <h4 className="font-heading text-base font-semibold text-foreground leading-tight hover:text-primary transition-colors">
+                            {food.name}
+                          </h4>
+                        </Link>
+                        <span className="text-[10px] font-medium uppercase tracking-wider text-primary">
+                          {food.category?.name}
+                          {food.subCategory?.name ? ` / ${food.subCategory.name}` : ""}
+                        </span>
                       </div>
                     </div>
 
@@ -129,19 +176,20 @@ const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
                         Price
                       </span>
                       <span className="font-heading text-lg font-bold text-foreground">
-                        ৳{currentVariant.price}
+                        ৳{currentVariant.discountPrice ?? currentVariant.price}
                       </span>
                     </div>
-                    <Link
-                      href={`/foods/${food.slug}`}
-                      className="group/btn inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground transition-all duration-300 hover:bg-primary/90 active:scale-[0.97]"
+                    <button
+                      onClick={() => handleAddToCart(food, activeVariantId)}
+                      disabled={justAdded[food.id] || addToCart.isPending}
+                      className="group/btn inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground transition-all duration-300 hover:bg-primary/90 active:scale-[0.97] disabled:opacity-70"
                     >
                       <ShoppingBag className="size-3.5" />
-                      Add to Cart
+                      {justAdded[food.id] ? "Added" : "Add to Cart"}
                       <span className="flex size-5 items-center justify-center rounded-full bg-primary-foreground/20">
                         <Plus className="size-3 stroke-[2.5]" />
                       </span>
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -154,6 +202,14 @@ const FoodGrid = ({ filteredFoods }: { filteredFoods: Food[] }) => {
             <Award className="size-6 text-primary" />
           </div>
           <p className="text-xs text-muted-foreground">No dishes match your search.</p>
+          {hasActiveFilters && onClearFilters && (
+            <button
+              onClick={onClearFilters}
+              className="rounded-full border border-border/60 px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-foreground transition-colors hover:bg-muted"
+            >
+              Clear Filters
+            </button>
+          )}
         </div>
       )}
     </div>

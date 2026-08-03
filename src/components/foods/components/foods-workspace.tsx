@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { useFoods } from "./foods-provider";
 import { useFoodCategories, useGetFoods } from "@/store/api/slices/foods-api";
 import FoodGrid from "./food-grid";
 import Pagination from "./pagination";
-import { Food } from "@/types/food";
-import { FoodCategory } from "@/types/category";
+import type { Food } from "@/types/food";
 import Categories from "./categories";
 import { FoodsFilterBar } from "./foods-filter-bar";
+import { useDebounce } from "@/hooks/use-debounce";
 
-const ITEMS_PER_PAGE = 4;
+const ITEMS_PER_PAGE = 12;
 
 export default function FoodsWorkspace() {
   const {
@@ -26,81 +26,55 @@ export default function FoodsWorkspace() {
   } = useFoods();
 
   const { data: categoriesData } = useFoodCategories();
-  const { data } = useGetFoods();
+  const categories = useMemo(() => categoriesData ?? [], [categoriesData]);
 
-  const categories: FoodCategory[] = categoriesData?.items ?? [];
-  const foods: Food[] = useMemo(() => data?.items ?? [], [data]);
+  const activeCategoryId = useMemo(
+    () => categories.find((c) => c.name === activeCategory)?.id,
+    [categories, activeCategory],
+  );
+  const activeCategoryObj = categories.find((c) => c.id === activeCategoryId);
+  const activeSubCategoryId = useMemo(
+    () => activeCategoryObj?.subCategories.find((s) => s.name === activeSubCategory)?.id,
+    [activeCategoryObj, activeSubCategory],
+  );
 
-  const filteredFoods = useMemo(() => {
-    let result = [...foods];
+  const debouncedSearch = useDebounce(searchQuery, 400);
 
-    // Search
-    if (searchQuery.trim()) {
-      const keyword = searchQuery.toLowerCase();
-
-      result = result.filter((food) => {
-        return (
-          food.name.toLowerCase().includes(keyword) ||
-          (food.shortDescription ?? "").toLowerCase().includes(keyword)
-        );
-      });
+  const sortParams = useMemo(() => {
+    switch (sortBy) {
+      case "price-low":
+        return { sortBy: "price", sortOrder: "asc" as const };
+      case "price-high":
+        return { sortBy: "price", sortOrder: "desc" as const };
+      case "rating":
+        return { sortBy: "rating", sortOrder: "desc" as const };
+      default:
+        return {};
     }
+  }, [sortBy]);
 
-    // Category
-    if (activeCategory !== "All") {
-      result = result.filter((food) => food.category.name === activeCategory);
-    }
+  const { data, isLoading } = useGetFoods({
+    page: currentPage,
+    limit: ITEMS_PER_PAGE,
+    categoryId: activeCategoryId,
+    subCategoryId: activeSubCategoryId,
+    search: debouncedSearch || undefined,
+    ...sortParams,
+  });
 
-    // SubCategory
-    if (activeSubCategory !== "All") {
-      const keyword = activeSubCategory.toLowerCase();
-
-      result = result.filter((food) => {
-        return (
-          food.name.toLowerCase().includes(keyword) ||
-          (food.shortDescription ?? "").toLowerCase().includes(keyword)
-        );
-      });
-    }
-
-    // Sort
-    result.sort((a, b) => {
-      switch (sortBy) {
-        case "price-low":
-          return Number(a.variants[0].price) - Number(b.variants[0].price);
-
-        case "price-high":
-          return Number(b.variants[0].price) - Number(a.variants[0].price);
-
-        case "rating":
-          return (b.averageRating ?? 0) - (a.averageRating ?? 0);
-
-        default:
-          return 0;
-      }
-    });
-
-    return result;
-  }, [foods, activeCategory, activeSubCategory, searchQuery, sortBy]);
-
-  // Reset to page 1 when filters change
-  const filterKey = `${activeCategory}-${activeSubCategory}-${searchQuery}-${sortBy}`;
-  const prevFilterKey = useRef(filterKey);
+  const foods: Food[] = data?.items ?? [];
+  const totalCount = data?.meta?.totalItems ?? data?.items?.length ?? 0;
+  const totalPages = data?.totalPages ?? 1;
 
   useEffect(() => {
-    if (prevFilterKey.current !== filterKey) {
-      setCurrentPage(1);
-      prevFilterKey.current = filterKey;
-    }
-  }, [filterKey, setCurrentPage]);
+    setCurrentPage(1);
+  }, [activeCategory, activeSubCategory, searchQuery, sortBy, setCurrentPage]);
 
-  // Pagination
-  const totalPages = Math.ceil(filteredFoods.length / ITEMS_PER_PAGE);
-
-  const paginatedFoods = filteredFoods.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
+  const handleClearFilters = () => {
+    setActiveCategory("All");
+    setActiveSubCategory("All");
+    setCurrentPage(1);
+  };
 
   return (
     <section className="py-12 bg-muted/30">
@@ -139,13 +113,37 @@ export default function FoodsWorkspace() {
         {/* Right Side Foods Display Hub Grid */}
         <div className="lg:col-span-9 space-y-6">
           <FoodsFilterBar
-            totalCount={filteredFoods.length}
+            totalCount={totalCount}
             sortBy={sortBy}
             onSortChange={setSortBy}
             onPageReset={() => setCurrentPage(1)}
           />
           {/* Main Dynamic Loop */}
-          <FoodGrid filteredFoods={paginatedFoods} />
+          {isLoading && !data ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="animate-pulse overflow-hidden rounded-3xl border border-border/40 bg-card shadow-[var(--shadow-card)]"
+                >
+                  <div className="aspect-4/3 w-full bg-muted" />
+                  <div className="space-y-3 p-4">
+                    <div className="h-4 w-2/3 rounded bg-muted" />
+                    <div className="h-3 w-full rounded bg-muted" />
+                    <div className="h-3 w-1/2 rounded bg-muted" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <FoodGrid
+              filteredFoods={foods}
+              onClearFilters={handleClearFilters}
+              hasActiveFilters={
+                activeCategory !== "All" || activeSubCategory !== "All" || !!searchQuery
+              }
+            />
+          )}
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

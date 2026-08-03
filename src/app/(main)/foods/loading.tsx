@@ -20,7 +20,7 @@ export default function FoodsLoading() {
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[1, 2, 3].map((i) => (
+          {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="rounded-3xl border border-border/40 bg-card overflow-hidden">
               <div className="aspect-4/3 bg-muted/30 animate-pulse" />
               <div className="p-4 space-y-3">

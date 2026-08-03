@@ -20,6 +20,7 @@ export interface Food {
   description?: string;
   thumbnail?: string;
   coverImage?: string;
+  gallery?: FoodGallery[];
 
   foodType: "VEG" | "NON_VEG" | "VEGAN" | "SEAFOOD";
   spiceLevel: "MILD" | "MEDIUM" | "HOT";
@@ -60,6 +61,12 @@ export interface Food {
   diets: Diet[];
 
   discount: Discount | null;
+}
+
+export interface FoodGallery {
+  id: string;
+  image: string;
+  sortOrder: number;
 }
 
 export interface Category {

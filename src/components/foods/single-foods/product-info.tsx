@@ -1,7 +1,8 @@
-import type { Food } from "@/types/food";
+import type { Food, Variant } from "@/types/food";
 import { motion } from "framer-motion";
 import { Heart, Share2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const contentVariants = {
   hidden: { opacity: 0, x: 30 },
@@ -10,6 +11,8 @@ const contentVariants = {
 
 interface Props {
   food: Food;
+  selectedVariant: Variant;
+  onVariantChange: (variant: Variant) => void;
   isFavorited: boolean;
   isFavPending: boolean;
   onToggleFav: () => void;
@@ -17,18 +20,21 @@ interface Props {
 
 export function ProductInfo({
   food,
+  selectedVariant,
+  onVariantChange,
   isFavorited,
   isFavPending,
   onToggleFav,
   children,
 }: Props & { children?: React.ReactNode }) {
-  const discountPercent = food.variants[0]?.discountPrice
-    ? Math.round(
-        ((Number(food.variants[0].price) - Number(food.variants[0].discountPrice)) /
-          Number(food.variants[0].price)) *
-          100,
-      )
+  const basePrice = Number(selectedVariant.price);
+  const discountPrice = selectedVariant.discountPrice
+    ? Number(selectedVariant.discountPrice)
     : null;
+  const discountPercent =
+    discountPrice && discountPrice < basePrice
+      ? Math.round(((basePrice - discountPrice) / basePrice) * 100)
+      : null;
 
   return (
     <motion.div variants={contentVariants} className="lg:col-span-6 flex flex-col justify-center">
@@ -62,7 +68,7 @@ export function ProductInfo({
           <span>({food.totalReview ?? 892} reviews)</span>
         </div>
         <span>&middot;</span>
-        <span>{food.servingSize ?? ""}</span>
+        <span>{selectedVariant.servingSize ?? food.servingSize ?? ""}</span>
         <span>&middot;</span>
         <Button variant="ghost" size="sm" className="h-auto gap-1 p-0 hover:text-foreground">
           <Share2 className="size-3.5" /> Share
@@ -71,19 +77,44 @@ export function ProductInfo({
 
       <div className="mt-6 flex items-baseline gap-3">
         <span className="font-sans text-3xl font-bold text-secondary-foreground">
-          ৳{food.variants[0]?.discountPrice ?? food.variants[0]?.price ?? 0}
+          ৳{discountPrice ?? basePrice}
         </span>
-        {food.variants[0]?.discountPrice && (
-          <span className="font-sans text-lg text-muted-foreground line-through">
-            ৳{food.variants[0].price}
-          </span>
-        )}
         {discountPercent && (
-          <span className="rounded-md bg-destructive/10 px-2 py-0.5 text-xs font-semibold text-destructive">
-            {discountPercent}% off
-          </span>
+          <>
+            <span className="font-sans text-lg text-muted-foreground line-through">
+              ৳{basePrice}
+            </span>
+            <span className="rounded-md bg-destructive/10 px-2 py-0.5 text-xs font-semibold text-destructive">
+              {discountPercent}% off
+            </span>
+          </>
         )}
       </div>
+
+      {food.variants.length > 1 && (
+        <div className="mt-4">
+          <span className="text-xs font-medium text-muted-foreground">Select Serving:</span>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {food.variants.map((v) => (
+              <button
+                key={v.id}
+                onClick={() => onVariantChange(v)}
+                className={cn(
+                  "rounded-full border px-4 py-1.5 text-xs font-semibold transition-all",
+                  v.id === selectedVariant.id
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border/60 bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground",
+                )}
+              >
+                {v.name} ({v.servingSize})
+                <span className="ml-1.5 text-primary">
+                  ৳{v.discountPrice ?? v.price}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <p className="mt-1 text-xs text-muted-foreground">Free delivery on orders of ৳2,000+</p>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -97,7 +128,7 @@ export function ProductInfo({
         </div>
         <div>
           <span className="text-muted-foreground">Serving:</span>
-          <p className="font-medium">{food.servingSize ?? ""}</p>
+          <p className="font-medium">{selectedVariant.servingSize ?? food.servingSize ?? ""}</p>
         </div>
         <div>
           <span className="text-muted-foreground">Calories:</span>

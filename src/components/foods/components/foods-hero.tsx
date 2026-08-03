@@ -2,15 +2,15 @@
 
 import { Search, Star } from "lucide-react";
 import { useFoods } from "./foods-provider";
-import { useFoodCategories, useGetFoods } from "@/store/api/slices/foods-api";
+import { useFoodCategories } from "@/store/api/slices/foods-api";
 
 export default function FoodsHero() {
   const { searchQuery, setSearchQuery } = useFoods();
   const { data: categoriesData } = useFoodCategories();
-  const { data } = useGetFoods();
 
-  const categoryCount = categoriesData?.items?.length ?? 0;
-  const foodCount = data?.items?.length ?? 0;
+  const categories = categoriesData ?? [];
+  const categoryCount = categories.length;
+  const foodCount = categories.reduce((sum, cat) => sum + (cat._count?.foods ?? 0), 0);
 
   return (
     <section className="relative overflow-hidden pt-24 pb-12 border-b border-border/60">

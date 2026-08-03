@@ -16,12 +16,14 @@ import type { CreateFoodPayload } from "@/types/admin-food";
 import {
   useAdminFoodCategories,
   useAdminFoodTags,
+  useAdminVendorOptions,
   useCreateFood,
 } from "@/store/api/slices/admin-food-api";
 
 import { FormHeader } from "@/components/dashboard/admin/foods/form/form-header";
 import { FormSummary } from "@/components/dashboard/admin/foods/form/form-summary";
 import { GeneralInfoSection } from "@/components/dashboard/admin/foods/form/general-info";
+import { VendorAssignment } from "@/components/dashboard/admin/foods/form/vendor-assignment";
 import { ImageSection } from "@/components/dashboard/admin/foods/form/image-section";
 import { PricingSection } from "@/components/dashboard/admin/foods/form/pricing-section";
 import { DiscountSection } from "@/components/dashboard/admin/foods/form/discount-section";
@@ -44,6 +46,7 @@ export default function AddFoodPage() {
   const router = useRouter();
   const { data: categories } = useAdminFoodCategories();
   const { data: tags } = useAdminFoodTags();
+  const { data: vendorOptions, isLoading: vendorsLoading } = useAdminVendorOptions();
   const { mutateAsync: createFood, isPending } = useCreateFood();
   const [tagIds, setTagIds] = useState<string[]>([]);
 
@@ -106,6 +109,7 @@ export default function AddFoodPage() {
       isPopular: data.isPopular,
       isRecommended: data.isRecommended,
       tagIds: data.tagIds,
+      vendorIds: data.vendorIds,
       gallery: data.galleryImages.filter((url) => url.trim().length > 0),
       diets: data.diets.filter((d) => d.dietType.trim().length > 0),
       labels: data.labels.filter((l) => l.label.trim().length > 0),
@@ -187,6 +191,11 @@ export default function AddFoodPage() {
               setValue={setValue}
               control={control}
               categories={categories}
+            />
+            <VendorAssignment
+              control={control}
+              vendors={vendorOptions}
+              loading={vendorsLoading}
             />
             <ImageSection
               register={register}

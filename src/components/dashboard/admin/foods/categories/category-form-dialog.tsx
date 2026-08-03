@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { FormField } from "@/components/common/form-field";
+import { Switch } from "@/components/ui/switch";
 import { inputStyles } from "@/lib/schema/food-schema";
 import type { AdminFoodCategory, CategoryPayload } from "@/types/admin-food";
 import { useCreateCategory, useUpdateCategory } from "@/store/api/slices/admin-food-api";
@@ -34,6 +35,7 @@ export function CategoryFormDialog({ open, onOpenChange, category }: CategoryFor
   const [icon, setIcon] = useState(category?.icon ?? "");
   const [sortOrder, setSortOrder] = useState(String(category?.sortOrder ?? 0));
   const [status, setStatus] = useState<"active" | "inactive">(category?.status ?? "active");
+  const [popular, setPopular] = useState(category?.popular ?? false);
 
   const handleNameChange = (value: string) => {
     setName(value);
@@ -55,6 +57,7 @@ export function CategoryFormDialog({ open, onOpenChange, category }: CategoryFor
       description: description || undefined,
       icon: icon || undefined,
       sortOrder: Number(sortOrder) || 0,
+      popular,
       status,
     };
 
@@ -107,6 +110,10 @@ export function CategoryFormDialog({ open, onOpenChange, category }: CategoryFor
               <option value="inactive">Inactive</option>
             </select>
           </FormField>
+          <label className="flex cursor-pointer items-center justify-between rounded-md border border-border/70 bg-card px-3 py-2.5">
+            <span className="text-sm font-medium">Popular (homepage & search)</span>
+            <Switch checked={popular} onCheckedChange={setPopular} />
+          </label>
         </div>
 
         <DialogFooter>

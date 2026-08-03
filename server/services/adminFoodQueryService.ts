@@ -4,10 +4,9 @@ import { catchServiceAsync } from "../utils/catchServiceAsync";
 import prisma from "../lib/prisma";
 
 const FOOD_STATUS_MAP: Record<string, string> = {
-  active: "ACTIVE",
-  draft: "DRAFT",
-  archived: "ARCHIVED",
-  inactive: "INACTIVE",
+  pending: "PENDING",
+  approved: "APPROVED",
+  rejected: "REJECTED",
 };
 
 function mapStatus(status: string): string {
@@ -34,7 +33,13 @@ export const listAdminFoods = catchServiceAsync(
 
     const where: Prisma.FoodWhereInput = { deletedAt: null };
 
-    if (params.status) where.status = params.status.toLowerCase();
+    if (params.status) {
+      const s = params.status.toUpperCase();
+      if (!["PENDING", "APPROVED", "REJECTED"].includes(s)) {
+        throw new AppError(400, "Invalid food status filter");
+      }
+      where.status = s as Prisma.FoodWhereInput["status"];
+    }
     if (params.categoryId) where.categoryId = params.categoryId;
     if (params.foodType) where.foodType = params.foodType as Prisma.FoodWhereInput["foodType"];
     if (params.spiceLevel) where.spiceLevel = params.spiceLevel;

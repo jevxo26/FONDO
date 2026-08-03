@@ -6,20 +6,18 @@ import { Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { closeSearch, toggleSearch } from "@/store/slices/uiSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import { useFoodCategories } from "@/store/api/slices/foods-api";
+import { Skeleton } from "@/components/ui/skeleton";
 import { navIcon, navIconPill } from "./pill-styles";
 import Link from "next/link";
-
-const POPULAR_SEARCHES = ["Kacchi", "Tehari", "Combos", "Best Sellers"];
-
-const searchHref = (term: string) => {
-  if (term === "Combos") return "/combos";
-  if (term === "Best Sellers") return "/foods?sortBy=popularity";
-  return `/foods?category=${term.toLowerCase()}`;
-};
 
 export function SearchForm() {
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector((state) => state.ui.isSearchOpen);
+  const { data: popularCategories, isLoading } = useFoodCategories({
+    popular: true,
+    limit: 4,
+  });
 
   return (
     <>
@@ -79,19 +77,27 @@ export function SearchForm() {
             </Button>
           </form>
 
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            <span className="text-xs text-muted-foreground">Popular:</span>
-            {POPULAR_SEARCHES.map((term) => (
-              <Link
-                key={term}
-                href={searchHref(term)}
-                onClick={() => dispatch(closeSearch())}
-                className="rounded-full border border-border/70 bg-card px-3 py-1.5 text-xs font-medium text-foreground/80 transition-colors duration-300 hover:border-primary/40 hover:text-primary"
-              >
-                {term}
-              </Link>
-            ))}
-          </div>
+          {(isLoading || (popularCategories && popularCategories.length > 0)) && (
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <span className="text-xs text-muted-foreground">Popular:</span>
+              {isLoading ? (
+                Array.from({ length: 4 }).map((_, i) => (
+                  <Skeleton key={i} className="h-7 w-16 rounded-full" />
+                ))
+              ) : (
+                (popularCategories ?? []).map((category) => (
+                  <Link
+                    key={category.id}
+                    href={`/foods?category=${category.slug}`}
+                    onClick={() => dispatch(closeSearch())}
+                    className="rounded-full border border-border/70 bg-card px-3 py-1.5 text-xs font-medium text-foreground/80 transition-colors duration-300 hover:border-primary/40 hover:text-primary"
+                  >
+                    {category.name}
+                  </Link>
+                ))
+              )}
+            </div>
+          )}
         </div>
       )}
     </>

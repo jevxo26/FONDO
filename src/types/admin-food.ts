@@ -9,6 +9,11 @@ export interface AdminFoodListResponse {
   totalPages: number;
 }
 
+export interface AdminVendorOption {
+  id: string;
+  businessName: string;
+}
+
 export interface AdminFoodListItem {
   id: string;
   foodCode: string;
@@ -226,6 +231,7 @@ export interface AdminFoodCategory {
   image: string | null;
   sortOrder: number;
   status: "active" | "inactive";
+  popular: boolean;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -358,6 +364,7 @@ export interface CreateFoodPayload {
   isPopular?: boolean;
   isRecommended?: boolean;
   status?: string;
+  vendorIds?: string[];
   tagIds?: string[];
   gallery?: string[];
   images?: string[];
@@ -395,6 +402,7 @@ export interface UpdateFoodPayload {
   isPopular?: boolean;
   isRecommended?: boolean;
   status?: string;
+  vendorIds?: string[];
   diets?: DietPayload[];
 }
 
@@ -405,6 +413,7 @@ export interface CategoryPayload {
   icon?: string;
   image?: string;
   sortOrder?: number;
+  popular?: boolean;
   status?: string;
 }
 

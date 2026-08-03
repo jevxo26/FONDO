@@ -11,7 +11,7 @@ export function Footer() {
           <div className="flex flex-col items-start gap-10 lg:flex-row lg:gap-10">
             {/* Left: Logo + Description + Newsletter */}
             <div className="flex w-full max-w-[441px] flex-col gap-6">
-              <Logo href={undefined} />
+              <Logo noLink />
 
               <p className="text-base leading-[130%] text-background/65">
                 A heritage kitchen in the heart of Dhaka, plating slow-cooked Mughlai cuisine with

@@ -59,6 +59,12 @@ enum FoodType {
   SEAFOOD
 }
 
+enum FoodStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum MealType {
   BREAKFAST
   LUNCH
@@ -241,6 +247,7 @@ model User {
   referral            Referral?
   vendorId            String?              @unique
   vendor              Vendor?              @relation(fields: [vendorId], references: [id])
+  approvedFoods       Food[]               @relation("FoodApprover")
 
   @@index([role])
   @@index([status])
@@ -959,6 +966,7 @@ model Category {
   image       String?
   sortOrder   Int       @default(0)
   status      String    @default("active")
+  popular     Boolean   @default(false)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
@@ -1025,13 +1033,17 @@ model Food {
   isFeatured       Boolean   @default(false)
   isPopular        Boolean   @default(false)
   isRecommended    Boolean   @default(false)
-  status           String    @default("draft")
+  status           FoodStatus @default(PENDING)
+  approvedBy       String?
+  approvedAt       DateTime?
+  rejectionReason  String?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   deletedAt        DateTime?
 
   category              Category               @relation(fields: [categoryId], references: [id])
   subCategory           SubCategory?           @relation(fields: [subCategoryId], references: [id])
+  approver              User?                  @relation("FoodApprover", fields: [approvedBy], references: [id])
   gallery               FoodGallery[]
   variants              FoodVariant[]
   addons                FoodAddon[]

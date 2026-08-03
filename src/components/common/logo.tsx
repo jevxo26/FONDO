@@ -13,6 +13,7 @@ interface LogoProps {
   imageBoxClassName?: string;
   hideTextOnCollapse?: boolean;
   textOnly?: boolean;
+  noLink?: boolean;
 }
 
 export function Logo({
@@ -26,6 +27,7 @@ export function Logo({
   imageBoxClassName,
   hideTextOnCollapse = false,
   textOnly = false,
+  noLink = false,
 }: LogoProps) {
   const inner = (
     <>
@@ -78,7 +80,7 @@ export function Logo({
     </>
   );
 
-  if (href) {
+  if (href && !noLink) {
     return (
       <Link href={href} onClick={onClick} className={cn("flex items-center gap-2", className)}>
         {inner}

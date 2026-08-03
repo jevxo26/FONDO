@@ -24,6 +24,7 @@ export const createFoodSchema = yup.object({
   isPopular: yup.boolean().optional(),
   isRecommended: yup.boolean().optional(),
   status: yup.string().optional(),
+  vendorIds: yup.array().of(yup.string()).optional(),
   tagIds: yup.array().of(yup.string()).optional(),
   gallery: yup.array().of(yup.string().url()).optional(),
   images: yup.array().of(yup.string().url()).optional(),
@@ -129,6 +130,7 @@ export const updateFoodSchema = yup.object({
   isPopular: yup.boolean().optional(),
   isRecommended: yup.boolean().optional(),
   status: yup.string().optional(),
+  vendorIds: yup.array().of(yup.string()).optional(),
   diets: yup.array().of(yup.object({ dietType: yup.string().required() })).optional(),
 });
 
@@ -139,6 +141,7 @@ export const createCategorySchema = yup.object({
   icon: yup.string().optional(),
   image: yup.string().url().optional(),
   sortOrder: yup.number().integer().optional(),
+  popular: yup.boolean().optional(),
   status: yup.string().optional(),
 });
 
@@ -149,6 +152,7 @@ export const updateCategorySchema = yup.object({
   icon: yup.string().optional(),
   image: yup.string().url().optional(),
   sortOrder: yup.number().integer().optional(),
+  popular: yup.boolean().optional(),
   status: yup.string().optional(),
 });
 

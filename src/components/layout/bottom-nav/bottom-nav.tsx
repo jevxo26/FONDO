@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { House, Menu, Package, ShoppingBag, Truck } from "lucide-react";
-import { motion } from "framer-motion";
+import { House, Menu, Package, ShoppingBag, Truck, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useSyncExternalStore } from "react";
 import { cn } from "@/lib/utils";
-import { openMobileMenu } from "@/store/slices/uiSlice";
-import { useAppDispatch } from "@/store/store";
+import { toggleMobileMenu } from "@/store/slices/uiSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useCart } from "@/store/api/slices/cart-api";
 
 const items = [
@@ -25,6 +25,7 @@ export function BottomNav() {
   const dispatch = useAppDispatch();
   const { data: cart } = useCart();
   const mounted = useHydrated();
+  const isMenuOpen = useAppSelector((state) => state.ui.isMobileMenuOpen);
 
   const cartCount = cart?.items?.reduce((sum, i) => sum + i.quantity, 0) ?? 0;
 
@@ -72,7 +73,7 @@ export function BottomNav() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 500, damping: 15 }}
-                    className="absolute top-1 left-1/2 ml-3 flex size-[18px] items-center justify-center rounded-full bg-gold-gradient text-[11px] font-bold text-primary-foreground leading-none ring-2 ring-background"
+                    className="absolute -top-0.5 left-1/2 ml-3 flex h-[20px] min-w-[20px] items-center justify-center rounded-full bg-gold-gradient px-[5px] text-[11px] font-bold text-primary-foreground leading-none ring-2 ring-background"
                   >
                     {cartCount > 9 ? "9+" : cartCount}
                   </motion.span>
@@ -92,13 +93,40 @@ export function BottomNav() {
 
         <button
           type="button"
-          onClick={() => dispatch(openMobileMenu())}
-          className="flex flex-1 flex-col items-center gap-0.5 py-1.5 text-muted-foreground"
+          onClick={() => dispatch(toggleMobileMenu())}
+          className="flex flex-1 flex-col items-center gap-0.5 py-1.5"
         >
-          <span className="flex size-9 items-center justify-center rounded-full transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-foreground">
-            <Menu className="size-5" />
+          <span
+            className={cn(
+              "flex size-9 items-center justify-center rounded-full transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
+              isMenuOpen
+                ? "bg-primary/15 text-primary"
+                : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            <span className="relative size-5">
+              <AnimatePresence initial={false}>
+                <motion.span
+                  key={isMenuOpen ? "close" : "menu"}
+                  initial={{ rotate: -90, scale: 0.5, opacity: 0 }}
+                  animate={{ rotate: 0, scale: 1, opacity: 1 }}
+                  exit={{ rotate: 90, scale: 0.5, opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                  className="absolute inset-0 flex items-center justify-center"
+                >
+                  {isMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+                </motion.span>
+              </AnimatePresence>
+            </span>
           </span>
-          <span className="text-[10px] font-semibold">Menu</span>
+          <span
+            className={cn(
+              "text-[10px] font-semibold transition-colors duration-300",
+              isMenuOpen ? "text-primary" : "text-muted-foreground",
+            )}
+          >
+            Menu
+          </span>
         </button>
       </div>
     </nav>

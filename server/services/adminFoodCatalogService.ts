@@ -22,6 +22,7 @@ function toCategoryCreate(
     icon: data.icon,
     image: data.image,
     sortOrder: data.sortOrder,
+    popular: data.popular,
   };
 }
 
@@ -35,6 +36,7 @@ function toCategoryUpdate(
     icon: data.icon,
     image: data.image,
     sortOrder: data.sortOrder,
+    popular: data.popular,
   };
 }
 

@@ -67,7 +67,7 @@ export function DashboardSidebar({
               render={<Link href="/" onClick={() => isMobile && setOpenMobile(false)} />}
             >
               <Logo
-                href={undefined}
+                noLink
                 size={40}
                 textSize="text-xl"
                 subtitle={panelLabel}

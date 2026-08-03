@@ -79,6 +79,18 @@ export const categoryColumns: ColumnDef<AdminFoodCategory>[] = [
     },
   },
   {
+    accessorKey: "popular",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Popular" />,
+    cell: ({ row }) =>
+      row.original.popular ? (
+        <span className="inline-block rounded-full bg-gold-gradient px-2.5 py-0.5 text-xs font-semibold text-primary-foreground">
+          Popular
+        </span>
+      ) : (
+        <span className="text-xs text-muted-foreground">—</span>
+      ),
+  },
+  {
     accessorKey: "createdAt",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
     cell: ({ row }) => (

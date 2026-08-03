@@ -31,14 +31,12 @@ const slugify = (value: string) =>
     .replace(/(^-|-$)+/g, "");
 
 // Simple mock categories - just for testing
-const MOCK_CATEGORIES = {
-  items: [
-    { id: "1", name: "Appetizer", subCategories: [] },
-    { id: "2", name: "Main Course", subCategories: [] },
-    { id: "3", name: "Dessert", subCategories: [] },
-    { id: "4", name: "Beverage", subCategories: [] },
-  ],
-};
+const MOCK_CATEGORIES = [
+  { id: "1", name: "Appetizer", subCategories: [] },
+  { id: "2", name: "Main Course", subCategories: [] },
+  { id: "3", name: "Dessert", subCategories: [] },
+  { id: "4", name: "Beverage", subCategories: [] },
+];
 
 export default function AddFoodPage() {
   const router = useRouter();
@@ -48,7 +46,7 @@ export default function AddFoodPage() {
   const { data: categoriesData } = useGetFoodCategoriesQuery(undefined);
 
   // Use mock categories if API fails
-  const categories = categoriesData?.items?.length ? categoriesData : MOCK_CATEGORIES;
+  const categories = categoriesData?.length ? categoriesData : MOCK_CATEGORIES;
 
   const {
     register,
@@ -139,7 +137,7 @@ export default function AddFoodPage() {
   };
 
   const selectedVendor = vendors?.find((v: Vendor) => v.id === vendorIdWatched);
-  const selectedCategory = categories?.items?.find((c) => c.id === categoryIdWatched);
+  const selectedCategory = categories?.find((c) => c.id === categoryIdWatched);
 
   return (
     <section className="py-6 lg:py-8 bg-background">

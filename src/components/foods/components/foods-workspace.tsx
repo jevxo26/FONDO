@@ -1,16 +1,28 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
-import { useFoods } from "./foods-provider";
+import { useMemo } from "react";
+import { useFoods, type PriceFilter } from "./foods-provider";
 import { useFoodCategories, useGetFoods } from "@/store/api/slices/foods-api";
 import FoodGrid from "./food-grid";
 import Pagination from "./pagination";
 import type { Food } from "@/types/food";
 import Categories from "./categories";
+import { FoodFilters } from "./food-filters";
 import { FoodsFilterBar } from "./foods-filter-bar";
-import { useDebounce } from "@/hooks/use-debounce";
 
 const ITEMS_PER_PAGE = 12;
+
+const minVariantPrice = (food: Food) =>
+  food.variants.length ? Math.min(...food.variants.map((v) => Number(v.price))) : Infinity;
+
+const inPriceRange = (food: Food, range: PriceFilter) => {
+  if (range === "All") return true;
+  const price = minVariantPrice(food);
+  if (price === Infinity) return false;
+  if (range === "under-300") return price < 300;
+  if (range === "300-600") return price >= 300 && price < 600;
+  return price >= 600;
+};
 
 export default function FoodsWorkspace() {
   const {
@@ -23,65 +35,80 @@ export default function FoodsWorkspace() {
     setSortBy,
     currentPage,
     setCurrentPage,
+    foodType,
+    spiceLevel,
+    dietType,
+    priceRange,
+    resetFilters,
   } = useFoods();
 
   const { data: categoriesData } = useFoodCategories();
   const categories = useMemo(() => categoriesData ?? [], [categoriesData]);
 
-  const activeCategoryId = useMemo(
-    () => categories.find((c) => c.name === activeCategory)?.id,
-    [categories, activeCategory],
-  );
-  const activeCategoryObj = categories.find((c) => c.id === activeCategoryId);
-  const activeSubCategoryId = useMemo(
-    () => activeCategoryObj?.subCategories.find((s) => s.name === activeSubCategory)?.id,
-    [activeCategoryObj, activeSubCategory],
-  );
+  // Fetch all active foods once, then filter/sort/paginate client-side.
+  const { data, isLoading } = useGetFoods();
 
-  const debouncedSearch = useDebounce(searchQuery, 400);
+  const filteredFoods = useMemo(() => {
+    const term = searchQuery.trim().toLowerCase();
 
-  const sortParams = useMemo(() => {
+    const result = (data?.items ?? []).filter((food: Food) => {
+      if (activeCategory !== "All" && food.category?.name !== activeCategory) return false;
+      if (activeSubCategory !== "All" && food.subCategory?.name !== activeSubCategory) return false;
+      if (foodType !== "All" && food.foodType !== foodType) return false;
+      if (spiceLevel !== "All" && food.spiceLevel !== spiceLevel) return false;
+      if (dietType !== "All" && !food.diets.some((d) => d.dietType === dietType)) return false;
+      if (!inPriceRange(food, priceRange)) return false;
+      if (term) {
+        const hay = `${food.name} ${food.shortDescription ?? ""}`.toLowerCase();
+        if (!hay.includes(term)) return false;
+      }
+      return true;
+    });
+
     switch (sortBy) {
       case "price-low":
-        return { sortBy: "price", sortOrder: "asc" as const };
+        return [...result].sort((a, b) => minVariantPrice(a) - minVariantPrice(b));
       case "price-high":
-        return { sortBy: "price", sortOrder: "desc" as const };
+        return [...result].sort((a, b) => minVariantPrice(b) - minVariantPrice(a));
       case "rating":
-        return { sortBy: "rating", sortOrder: "desc" as const };
+        return [...result].sort((a, b) => (b.averageRating ?? 0) - (a.averageRating ?? 0));
       default:
-        return {};
+        return result;
     }
-  }, [sortBy]);
+  }, [
+    data,
+    activeCategory,
+    activeSubCategory,
+    searchQuery,
+    sortBy,
+    foodType,
+    spiceLevel,
+    dietType,
+    priceRange,
+  ]);
 
-  const { data, isLoading } = useGetFoods({
-    page: currentPage,
-    limit: ITEMS_PER_PAGE,
-    categoryId: activeCategoryId,
-    subCategoryId: activeSubCategoryId,
-    search: debouncedSearch || undefined,
-    ...sortParams,
-  });
+  const totalPages = Math.max(1, Math.ceil(filteredFoods.length / ITEMS_PER_PAGE));
+  const safePage = Math.min(currentPage, totalPages);
+  const pageItems = filteredFoods.slice((safePage - 1) * ITEMS_PER_PAGE, safePage * ITEMS_PER_PAGE);
 
-  const foods: Food[] = data?.items ?? [];
-  const totalCount = data?.meta?.totalItems ?? data?.items?.length ?? 0;
-  const totalPages = data?.totalPages ?? 1;
+  const handleClearFilters = resetFilters;
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeCategory, activeSubCategory, searchQuery, sortBy, setCurrentPage]);
-
-  const handleClearFilters = () => {
-    setActiveCategory("All");
-    setActiveSubCategory("All");
-    setCurrentPage(1);
-  };
+  const hasActiveFilters =
+    activeCategory !== "All" ||
+    activeSubCategory !== "All" ||
+    !!searchQuery ||
+    foodType !== "All" ||
+    spiceLevel !== "All" ||
+    dietType !== "All" ||
+    priceRange !== "All";
 
   return (
     <section className="py-12 bg-muted/30">
       <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Side Hierarchy Filter Layout */}
         <div className="lg:col-span-3 space-y-6">
-          <div className="bg-card border-border rounded-2xl p-5 shadow-sm space-y-4">
+          <div className="relative overflow-hidden rounded-3xl border border-border/40 bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-5 shadow-[var(--shadow-card)]">
+            <div className="pointer-events-none absolute right-3 top-3 size-[7px] rotate-45 border border-primary/30" />
             <h3 className="font-heading text-base font-normal text-foreground">Categories</h3>
             <div className="flex flex-col gap-1">
               <button
@@ -112,21 +139,22 @@ export default function FoodsWorkspace() {
 
         {/* Right Side Foods Display Hub Grid */}
         <div className="lg:col-span-9 space-y-6">
+          <FoodFilters foods={data?.items ?? []} />
           <FoodsFilterBar
-            totalCount={totalCount}
+            totalCount={filteredFoods.length}
             sortBy={sortBy}
             onSortChange={setSortBy}
             onPageReset={() => setCurrentPage(1)}
           />
           {/* Main Dynamic Loop */}
           {isLoading && !data ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div
                   key={i}
-                  className="animate-pulse overflow-hidden rounded-3xl border border-border/40 bg-card shadow-[var(--shadow-card)]"
+                  className="animate-pulse overflow-hidden rounded-4xl border border-border/40 bg-card p-4 shadow-[var(--shadow-card)]"
                 >
-                  <div className="aspect-4/3 w-full bg-muted" />
+                  <div className="aspect-4/3 w-full rounded-2xl bg-muted" />
                   <div className="space-y-3 p-4">
                     <div className="h-4 w-2/3 rounded bg-muted" />
                     <div className="h-3 w-full rounded bg-muted" />
@@ -137,15 +165,13 @@ export default function FoodsWorkspace() {
             </div>
           ) : (
             <FoodGrid
-              filteredFoods={foods}
+              filteredFoods={pageItems}
               onClearFilters={handleClearFilters}
-              hasActiveFilters={
-                activeCategory !== "All" || activeSubCategory !== "All" || !!searchQuery
-              }
+              hasActiveFilters={hasActiveFilters}
             />
           )}
           <Pagination
-            currentPage={currentPage}
+            currentPage={safePage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
           />

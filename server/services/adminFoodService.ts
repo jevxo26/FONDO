@@ -5,36 +5,47 @@ import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import prisma from "../lib/prisma";
 
-export const createFood = catchServiceAsync(async (data: InferType<typeof createFoodSchema>) => {
-  const existing = await prisma.food.findUnique({ where: { slug: data.slug } });
-  if (existing) throw new AppError(400, "A food with this slug already exists");
+export const createFood = catchServiceAsync(
+  async (data: InferType<typeof createFoodSchema>, adminUserId?: string) => {
+    const existing = await prisma.food.findUnique({ where: { slug: data.slug } });
+    if (existing) throw new AppError(400, "A food with this slug already exists");
 
-  const foodCode = `FD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+    const vendorIds = (data.vendorIds ?? []).filter((x): x is string => Boolean(x));
+    if (vendorIds.length) {
+      const vendorCount = await prisma.vendor.count({
+        where: { id: { in: vendorIds }, deletedAt: null },
+      });
+      if (vendorCount !== vendorIds.length) throw new AppError(400, "One or more vendors not found");
+    }
 
-  const createData: Prisma.FoodUncheckedCreateInput = {
-    categoryId: data.categoryId!,
-    subCategoryId: data.subCategoryId,
-    foodCode,
-    name: data.name!,
-    slug: data.slug!,
-    shortDescription: data.shortDescription,
-    description: data.description,
-    thumbnail: data.thumbnail,
-    coverImage: data.coverImage,
-    preparationTime: data.preparationTime,
-    calories: data.calories,
-    protein: data.protein,
-    fat: data.fat,
-    carbohydrate: data.carbohydrate,
-    servingSize: data.servingSize,
-    foodType: data.foodType as FoodType,
-    spiceLevel: data.spiceLevel,
-    isFeatured: data.isFeatured ?? false,
-    isPopular: data.isPopular ?? false,
-    isRecommended: data.isRecommended ?? false,
-    status: data.status ?? "draft",
-    visibility: { create: data.visibility ?? {} },
-  };
+    const foodCode = `FD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+
+    const createData: Prisma.FoodUncheckedCreateInput = {
+      categoryId: data.categoryId!,
+      subCategoryId: data.subCategoryId,
+      foodCode,
+      name: data.name!,
+      slug: data.slug!,
+      shortDescription: data.shortDescription,
+      description: data.description,
+      thumbnail: data.thumbnail,
+      coverImage: data.coverImage,
+      preparationTime: data.preparationTime,
+      calories: data.calories,
+      protein: data.protein,
+      fat: data.fat,
+      carbohydrate: data.carbohydrate,
+      servingSize: data.servingSize,
+      foodType: data.foodType as FoodType,
+      spiceLevel: data.spiceLevel,
+      isFeatured: data.isFeatured ?? false,
+      isPopular: data.isPopular ?? false,
+      isRecommended: data.isRecommended ?? false,
+      status: "APPROVED",
+      approvedBy: adminUserId,
+      approvedAt: new Date(),
+      visibility: { create: data.visibility ?? {} },
+    };
 
   if (data.variants?.length) {
     createData.variants = {
@@ -163,11 +174,38 @@ export const createFood = catchServiceAsync(async (data: InferType<typeof create
     };
   }
 
+  if (vendorIds.length) {
+    createData.vendorFoods = {
+      create: vendorIds.map((vendorId) => ({
+        vendorId,
+        status: "active",
+        statusHistories: {
+          create: {
+            oldStatus: null,
+            newStatus: "APPROVED",
+            changedBy: adminUserId,
+            reason: "Food created directly by admin",
+          },
+        },
+      })),
+    };
+    createData.vendorFoodAssignments = {
+      create: vendorIds.map((vendorId, i) => ({
+        vendorId,
+        priority: i,
+        isDefault: i === 0,
+      })),
+    };
+  }
+
   return prisma.food.create({
     data: createData,
     include: {
       category: { select: { id: true, name: true, slug: true } },
       visibility: true,
+      vendorFoods: {
+        include: { vendor: { select: { id: true, businessName: true } } },
+      },
     },
   });
 });

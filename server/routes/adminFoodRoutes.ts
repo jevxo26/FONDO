@@ -28,6 +28,7 @@ import {
   updateVisibilitySchema,
   createFoodImageSchema,
 } from "../validations/adminFood.validation";
+import { rejectFoodSchema } from "../validations/vendorFood.validation";
 
 const router = Router();
 
@@ -43,6 +44,10 @@ router.get("/tags", AdminFoodController.listTags);
 router.post("/foods", validate(createFoodSchema), AdminFoodController.createFood);
 router.put("/foods/:id", validate(updateFoodSchema), AdminFoodController.updateFood);
 router.delete("/foods/:id", AdminFoodController.deleteFood);
+
+// Food Approval
+router.patch("/foods/:id/approve", AdminFoodController.approveFood);
+router.patch("/foods/:id/reject", validate(rejectFoodSchema), AdminFoodController.rejectFood);
 
 // Category
 router.post("/categories", validate(createCategorySchema), AdminFoodController.createCategory);

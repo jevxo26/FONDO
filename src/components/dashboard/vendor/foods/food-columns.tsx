@@ -19,8 +19,20 @@ const getStockBadge = (status: VendorFood["stockStatus"]) => {
   return variants[status];
 };
 
-const getStatusBadge = (status: VendorFood["status"]) => {
-  const variants = {
+const getStatusBadge = (status: VendorFood["status"], approvalStatus: VendorFood["approvalStatus"]) => {
+  if (approvalStatus === "PENDING") {
+    return {
+      label: "Pending Approval",
+      className: "bg-amber-100 text-amber-700 ring-amber-700/20 dark:bg-amber-900/30 dark:text-amber-400",
+    };
+  }
+  if (approvalStatus === "REJECTED") {
+    return {
+      label: "Rejected",
+      className: "bg-destructive/10 text-destructive ring-destructive/20",
+    };
+  }
+  const variants: Record<VendorFood["status"], { label: string; className: string }> = {
     ACTIVE: { label: "Active", className: "bg-success/10 text-success ring-success/20" },
     INACTIVE: {
       label: "Inactive",
@@ -155,7 +167,7 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Active" />,
     cell: ({ row }) => {
       const status = row.getValue("status") as VendorFood["status"];
-      const badge = getStatusBadge(status);
+      const badge = getStatusBadge(status, row.original.approvalStatus);
       return (
         <Badge variant="outline" className={cn("ring-1", badge.className)}>
           {badge.label}

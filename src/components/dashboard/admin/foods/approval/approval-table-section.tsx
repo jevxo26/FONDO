@@ -1,77 +1,119 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { DataTable } from "@/components/common/table";
-import type { FacetedFilter, RowAction } from "@/components/common/table";
+import type { RowAction } from "@/components/common/table";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { approvalColumns } from "./approval-columns";
-import { approvalItems, type ApprovalItem } from "@/data/food-approvals";
-import { adminFoods } from "@/data/foods";
-import { Eye, ListChecks, Tag, CheckCircle, XCircle, FileEdit } from "lucide-react";
-
-const statusFilter: FacetedFilter = {
-  columnId: "status",
-  title: "Status",
-  icon: <ListChecks className="size-4" />,
-  options: [
-    { label: "Pending", value: "PENDING" },
-    { label: "Approved", value: "APPROVED" },
-    { label: "Rejected", value: "REJECTED" },
-    { label: "Changes Req.", value: "CHANGES_REQUESTED" },
-  ],
-};
-
-const categoryFilter: FacetedFilter = {
-  columnId: "category",
-  title: "Category",
-  icon: <Tag className="size-4" />,
-  options: [
-    { label: "Bengali", value: "Bengali" },
-    { label: "Chinese", value: "Chinese" },
-    { label: "Italian", value: "Italian" },
-    { label: "Indian", value: "Indian" },
-    { label: "Desserts", value: "Desserts" },
-  ],
-};
+import type { AdminFoodListItem } from "@/types/admin-food";
+import {
+  useApproveFood,
+  useGetAdminFoodsQuery,
+  useRejectFood,
+} from "@/store/api/slices/admin-food-api";
+import { Eye, CheckCircle, XCircle } from "lucide-react";
 
 export function ApprovalTableSection() {
   const router = useRouter();
+  const { data, isLoading } = useGetAdminFoodsQuery({ status: "PENDING", limit: 100 });
+  const { mutate: approveFood, isPending: approving } = useApproveFood();
+  const { mutate: rejectFood, isPending: rejecting } = useRejectFood();
 
-  const rowActions: RowAction<ApprovalItem>[] = [
+  const [rejectTarget, setRejectTarget] = useState<AdminFoodListItem | null>(null);
+  const [rejectReason, setRejectReason] = useState("");
+
+  const handleApprove = (food: AdminFoodListItem) => {
+    if (approving || rejecting) return;
+    approveFood(food.id, {
+      onSuccess: () => toast.success(`${food.name} approved`),
+      onError: (error) =>
+        toast.error((error as { message?: string })?.message || "Failed to approve"),
+    });
+  };
+
+  const handleReject = () => {
+    if (!rejectTarget) return;
+    rejectFood(
+      { id: rejectTarget.id, reason: rejectReason },
+      {
+        onSuccess: () => {
+          toast.success(`${rejectTarget.name} rejected`);
+          setRejectTarget(null);
+          setRejectReason("");
+        },
+        onError: (error) =>
+          toast.error((error as { message?: string })?.message || "Failed to reject"),
+      },
+    );
+  };
+
+  const rowActions: RowAction<AdminFoodListItem>[] = [
     {
       label: "View Details",
       icon: <Eye className="size-4" />,
-      onClick: (item) => {
-        const food = adminFoods.find((f) => f.name === item.foodName);
-        if (food) {
-          router.push(`/dashboard/foods/${food.id}`);
-        } else {
-          console.log("View Details (approval)", item.id);
-        }
-      },
+      onClick: (item) => router.push(`/dashboard/admin/foods/${item.id}`),
     },
     {
       label: "Approve",
       icon: <CheckCircle className="size-4" />,
-      onClick: (item) => console.log("Approve", item.id),
+      onClick: handleApprove,
     },
     {
       label: "Reject",
       icon: <XCircle className="size-4" />,
-      onClick: (item) => console.log("Reject", item.id),
-    },
-    {
-      label: "Request Changes",
-      icon: <FileEdit className="size-4" />,
-      onClick: (item) => console.log("Request Changes", item.id),
+      onClick: setRejectTarget,
     },
   ];
 
   return (
-    <DataTable
-      data={approvalItems}
-      columns={approvalColumns}
-      rowActions={rowActions}
-      filters={[statusFilter, categoryFilter]}
-    />
+    <>
+      <DataTable
+        data={data?.items ?? []}
+        columns={approvalColumns}
+        rowActions={rowActions}
+        isLoading={isLoading}
+      />
+
+      <Dialog open={!!rejectTarget} onOpenChange={(open) => !open && setRejectTarget(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reject {rejectTarget?.name}</DialogTitle>
+            <DialogDescription>
+              Provide a reason. The vendor will see this on their dashboard.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <Label htmlFor="reject-reason">Rejection reason</Label>
+            <Textarea
+              id="reject-reason"
+              rows={4}
+              placeholder="e.g. Missing required nutrition info, wrong category..."
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRejectTarget(null)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" disabled={!rejectReason.trim() || rejecting} onClick={handleReject}>
+              {rejecting ? "Rejecting..." : "Reject Food"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

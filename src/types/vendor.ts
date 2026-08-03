@@ -45,6 +45,7 @@ export interface VendorFood {
   maxStock: number;
   stockStatus: "IN_STOCK" | "LOW_STOCK" | "OUT_OF_STOCK";
   status: "ACTIVE" | "INACTIVE";
+  approvalStatus?: "PENDING" | "APPROVED" | "REJECTED";
   preparationTime: number;
   isFeatured: boolean;
   isPopular: boolean;

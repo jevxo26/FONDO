@@ -12,6 +12,7 @@ import AppError from "./utils/AppError";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import vendorRoutes from "./routes/vendorRoutes";
+import vendorFoodRoutes from "./routes/vendorFoodRoutes";
 import foodRoutes from "./routes/foodRoutes";
 import packageRoutes from "./routes/packageRoutes";
 import adminFoodRoutes from "./routes/adminFoodRoutes";
@@ -129,6 +130,7 @@ app
 
     // API routes
     server.use("/api/users", userRoutes);
+    server.use("/api/vendor/foods", vendorFoodRoutes);
     server.use("/api/vendor", vendorRoutes);
     server.use("/api/auth", authRoutes);
     server.use("/api/foods", foodRoutes);

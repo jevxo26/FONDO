@@ -22,7 +22,7 @@ export function PageFooter() {
       <div className="relative z-10 px-6 py-8 md:px-10 md:py-10">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <div>
-            <Logo href={undefined} textOnly textSize="text-lg" />
+            <Logo noLink textOnly textSize="text-lg" />
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               Smart subscription food delivery &mdash; connecting Dhaka&rsquo;s finest kitchens to
               your doorstep with precision and care.

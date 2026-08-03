@@ -36,7 +36,7 @@ export default async function Home() {
         tags: ["foods"],
         auth: false,
       }),
-      apiFetch<CategoryItem[]>("/api/foods/categories/list", {
+      apiFetch<CategoryItem[]>("/api/foods/categories/list?popular=true&limit=6", {
         revalidate: 300,
         tags: ["categories"],
         auth: false,

@@ -22,6 +22,7 @@ import type {
   UpdateFoodPayload,
   VariantPayload,
   VisibilityPayload,
+  AdminVendorOption,
 } from "@/types/admin-food";
 
 interface FoodQueryParams {
@@ -69,6 +70,11 @@ export const adminFoodApi = api.injectEndpoints({
       providesTags: ["Food"],
     }),
 
+    getAdminVendorOptions: builder.query<AdminVendorOption[], void>({
+      query: () => ({ url: "/vendor/all", params: { status: "APPROVED" } }),
+      providesTags: ["Food"],
+    }),
+
     // ─── Food ───────────────────────────────────────────────
     createFood: builder.mutation<AdminFoodDetail, CreateFoodPayload>({
       query: (body) => ({ url: "/admin/foods", method: "POST", body }),
@@ -82,6 +88,20 @@ export const adminFoodApi = api.injectEndpoints({
 
     deleteFood: builder.mutation<void, string>({
       query: (id) => ({ url: `/admin/foods/${id}`, method: "DELETE" }),
+      invalidatesTags: ["Food"],
+    }),
+
+    approveFood: builder.mutation<void, string>({
+      query: (id) => ({ url: `/admin/foods/${id}/approve`, method: "PATCH" }),
+      invalidatesTags: ["Food"],
+    }),
+
+    rejectFood: builder.mutation<void, { id: string; reason: string }>({
+      query: ({ id, reason }) => ({
+        url: `/admin/foods/${id}/reject`,
+        method: "PATCH",
+        body: { reason },
+      }),
       invalidatesTags: ["Food"],
     }),
 
@@ -370,6 +390,7 @@ export const {
   useGetAdminFoodQuery,
   useGetAdminFoodCategoriesQuery,
   useGetAdminFoodTagsQuery,
+  useGetAdminVendorOptionsQuery,
   useCreateFoodMutation,
   useUpdateFoodMutation,
   useDeleteFoodMutation,
@@ -408,6 +429,8 @@ export const {
   useUpdateVisibilityMutation,
   useCreateFoodImageMutation,
   useDeleteFoodImageMutation,
+  useApproveFoodMutation,
+  useRejectFoodMutation,
 } = adminFoodApi;
 
 // ─── Query wrappers ─────────────────────────────────────────
@@ -432,6 +455,11 @@ export function useAdminFoodTags() {
   return { data, isLoading, error };
 }
 
+export function useAdminVendorOptions() {
+  const { data, isLoading, error } = useGetAdminVendorOptionsQuery();
+  return { data, isLoading, error };
+}
+
 // ─── Mutation wrappers ──────────────────────────────────────
 
 export function useCreateFood() {
@@ -446,6 +474,16 @@ export function useUpdateFood() {
 
 export function useDeleteFood() {
   const [trigger, { isLoading }] = useDeleteFoodMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useApproveFood() {
+  const [trigger, { isLoading }] = useApproveFoodMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useRejectFood() {
+  const [trigger, { isLoading }] = useRejectFoodMutation();
   return { ...createMutationWrapper(trigger), isPending: isLoading };
 }
 

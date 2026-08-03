@@ -22,6 +22,7 @@ export interface FoodCategory {
   image: string | null;
   sortOrder: number;
   status: "active" | "inactive";
+  popular: boolean;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;

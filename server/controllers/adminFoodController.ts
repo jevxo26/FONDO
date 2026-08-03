@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { AuthRequest } from "../types/auth.types";
 import { catchAsync } from "../utils/catchAsync";
 import { sendResponse } from "../utils/sendResponse";
 import * as adminFoodService from "../services/adminFoodService";
@@ -6,6 +7,7 @@ import * as adminFoodCatalogService from "../services/adminFoodCatalogService";
 import * as adminFoodAddonService from "../services/adminFoodAddonService";
 import * as adminFoodMetaService from "../services/adminFoodMetaService";
 import * as adminFoodQueryService from "../services/adminFoodQueryService";
+import { VendorFoodService } from "../services/vendorFoodService";
 
 // ─── Queries ────────────────────────────────────────────────
 
@@ -32,9 +34,21 @@ const listTags = catchAsync(async (_req: Request, res: Response) => {
 
 // ─── Food ──────────────────────────────────────────────────
 
-const createFood = catchAsync(async (req: Request, res: Response) => {
-  const food = await adminFoodService.createFood(req.body);
+const createFood = catchAsync(async (req: AuthRequest, res: Response) => {
+  const food = await adminFoodService.createFood(req.body, req.user!.userId);
   sendResponse(res, { statusCode: 201, message: "Food created", data: food });
+});
+
+const approveFood = catchAsync(async (req: AuthRequest, res: Response) => {
+  const id = req.params.id as string;
+  await VendorFoodService.approveFood(id, req.user!.userId);
+  sendResponse(res, { statusCode: 200, message: "Food approved" });
+});
+
+const rejectFood = catchAsync(async (req: AuthRequest, res: Response) => {
+  const id = req.params.id as string;
+  await VendorFoodService.rejectFood(id, req.user!.userId, req.body.reason);
+  sendResponse(res, { statusCode: 200, message: "Food rejected" });
 });
 
 const updateFood = catchAsync(async (req: Request, res: Response) => {
@@ -306,6 +320,8 @@ export const AdminFoodController = {
   createFood,
   updateFood,
   deleteFood,
+  approveFood,
+  rejectFood,
   createCategory,
   updateCategory,
   deleteCategory,

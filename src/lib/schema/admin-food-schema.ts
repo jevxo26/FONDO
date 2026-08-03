@@ -87,6 +87,7 @@ export interface AdminFoodFormValues {
   isAvailable: boolean;
   availabilityDays: string[];
   tagIds: string[];
+  vendorIds: string[];
   galleryImages: string[];
   variants: VariantForm[];
   addons: AddonForm[];
@@ -197,6 +198,7 @@ export const adminFoodSchema = yup.object().shape({
   isAvailable: yup.boolean(),
   availabilityDays: yup.array().of(yup.string()),
   tagIds: yup.array().of(yup.string()),
+  vendorIds: yup.array().of(yup.string()),
   galleryImages: yup.array().of(yup.string()),
   variants: yup.array().of(variantSchema),
   addons: yup.array().of(addonSchema),
@@ -234,6 +236,7 @@ export const adminFoodInitialValues: AdminFoodFormValues = {
   isAvailable: true,
   availabilityDays: [],
   tagIds: [],
+  vendorIds: [],
   galleryImages: [],
   variants: [],
   addons: [],

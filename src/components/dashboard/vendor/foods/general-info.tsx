@@ -20,7 +20,7 @@ interface GeneralInfoSectionProps {
   setValue: UseFormSetValue<FoodFormValues>;
   control: Control<FoodFormValues>;
   vendors?: Vendor[];
-  categories?: { items: Category[] };
+  categories?: Category[];
   vendorIdFromUrl?: string;
 }
 
@@ -39,7 +39,7 @@ export function GeneralInfoSection({
   });
 
   const subCategories = useMemo(() => {
-    const selectedCategory = categories?.items?.find((cat) => cat.id === categoryIdWatched);
+    const selectedCategory = categories?.find((cat) => cat.id === categoryIdWatched);
     return selectedCategory?.subCategories || [];
   }, [categoryIdWatched, categories]);
 
@@ -95,7 +95,7 @@ export function GeneralInfoSection({
         <FormField label="Category" error={errors.categoryId} required>
           <select {...register("categoryId")} onChange={handleCategoryChange} className={inputStyles}>
             <option value="">Select Category...</option>
-            {categories?.items?.map((cat) => (
+            {categories?.map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
               </option>

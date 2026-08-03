@@ -76,7 +76,7 @@ const listFoods = catchServiceAsync(
     const limit = params.limit;
     const skip = limit ? (page - 1) * limit : undefined;
 
-    const where: Prisma.FoodWhereInput = { status: "active", deletedAt: null };
+    const where: Prisma.FoodWhereInput = { status: "APPROVED", deletedAt: null };
 
     if (params.categoryId) where.categoryId = params.categoryId;
     if (params.subCategoryId) where.subCategoryId = params.subCategoryId;
@@ -173,6 +173,7 @@ const listVendorFoods = catchServiceAsync(async (params: { vendorId: string }) =
               foodCode: true,
               thumbnail: true,
               status: true,
+              rejectionReason: true,
               category: { select: { id: true, name: true, slug: true } },
               subCategory: { select: { id: true, name: true, slug: true } },
             },
@@ -209,6 +210,8 @@ const listVendorFoods = catchServiceAsync(async (params: { vendorId: string }) =
         maxStock: stockRecord?.maximumStock ?? 0,
         stockStatus: stockRecord?.stockStatus ?? "OUT_OF_STOCK",
         status: vf.status === "active" ? "ACTIVE" : "INACTIVE",
+        approvalStatus: vf.food.status,
+        rejectionReason: vf.food.rejectionReason ?? "",
         preparationTime: vf.preparationTime?.averagePreparationTime ?? 0,
         isFeatured: false,
         isPopular: false,
@@ -225,7 +228,7 @@ const listVendorFoods = catchServiceAsync(async (params: { vendorId: string }) =
 
 const getFoodBySlug = catchServiceAsync(async (slug: string) => {
   const food = await prisma.food.findUnique({
-    where: { slug, status: "active", deletedAt: null },
+    where: { slug, status: "APPROVED", deletedAt: null },
     include: {
       category: { select: { id: true, name: true, slug: true } },
       subCategory: { select: { id: true, name: true, slug: true } },
@@ -256,7 +259,7 @@ const getFoodBySlug = catchServiceAsync(async (slug: string) => {
 
 const getFoodById = catchServiceAsync(async (id: string) => {
   const food = await prisma.food.findUnique({
-    where: { id, status: "active", deletedAt: null },
+    where: { id, status: "APPROVED", deletedAt: null },
     include: {
       category: { select: { id: true, name: true, slug: true } },
       variants: { where: { status: "active" } },
@@ -285,7 +288,7 @@ const listCategories = catchServiceAsync(async (params?: { limit?: number; popul
         where: { status: "active", deletedAt: null },
         orderBy: { sortOrder: "asc" },
       },
-      _count: { select: { foods: { where: { status: "active", deletedAt: null } } } },
+      _count: { select: { foods: { where: { status: "APPROVED", deletedAt: null } } } },
     },
   });
 });
@@ -298,7 +301,7 @@ const getCategoryById = catchServiceAsync(async (id: string) => {
         where: { status: "active", deletedAt: null },
         orderBy: { sortOrder: "asc" },
       },
-      _count: { select: { foods: { where: { status: "active", deletedAt: null } } } },
+      _count: { select: { foods: { where: { status: "APPROVED", deletedAt: null } } } },
     },
   });
 

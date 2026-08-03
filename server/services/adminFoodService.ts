@@ -162,12 +162,6 @@ export const createFood = catchServiceAsync(
     };
   }
 
-  if (data.gallery?.length) {
-    createData.gallery = {
-      create: data.gallery.map((image, i) => ({ image: image!, sortOrder: i })),
-    };
-  }
-
   if (data.images?.length) {
     createData.images = {
       create: data.images.map((image, i) => ({ image: image!, sortOrder: i })),

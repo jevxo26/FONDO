@@ -74,34 +74,10 @@ export interface PaymentAdjustment {
   createdAt: string;
 }
 
-export interface PaymentInvoice {
-  id: string;
-  paymentId: string;
-  invoiceNumber: string;
-  invoiceDate: string;
-  subtotal: number | null;
-  vat: number | null;
-  deliveryCharge: number | null;
-  grandTotal: number;
-  pdfUrl: string | null;
-}
-
-export interface PaymentHistory {
-  id: string;
-  paymentId: string;
-  oldStatus: string | null;
-  newStatus: string;
-  remarks: string | null;
-  changedBy: string | null;
-  createdAt: string;
-}
-
 export interface PaymentDetail extends Payment {
   transactions: PaymentTransaction[];
   refunds: PaymentRefund[];
   adjustments: PaymentAdjustment[];
-  invoice: PaymentInvoice | null;
-  histories: PaymentHistory[];
 }
 
 export interface RefundPayload {

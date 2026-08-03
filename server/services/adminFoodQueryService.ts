@@ -133,7 +133,6 @@ export const getAdminFoodById = catchServiceAsync(async (id: string) => {
     include: {
       category: { select: { id: true, name: true, slug: true } },
       subCategory: { select: { id: true, name: true, slug: true } },
-      gallery: { orderBy: { sortOrder: "asc" } },
       images: { orderBy: { sortOrder: "asc" } },
       variants: { where: { status: { not: "deleted" } }, orderBy: { createdAt: "asc" } },
       addons: {

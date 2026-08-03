@@ -203,7 +203,7 @@ export default function EditFoodPage() {
             <AllergensEditor foodId={id} items={detail.allergens} />
             <LabelsEditor foodId={id} items={detail.labels} />
             <TagsEditor foodId={id} items={detail.tags} />
-            <GalleryEditor foodId={id} items={detail.gallery} />
+            <GalleryEditor foodId={id} items={detail.images} />
           </div>
         </div>
       </div>

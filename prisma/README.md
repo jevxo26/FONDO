@@ -6,7 +6,7 @@ Full schema in `schema.prisma` (~3,500 lines). Organized by module with section 
 
 | Enum | Values |
 |------|--------|
-| Role | SUPER_ADMIN, ADMIN, VENDOR, VENDOR_STAFF, KITCHEN_STAFF, RIDER, CUSTOMER, SUPPORT_AGENT |
+| Role | SUPER_ADMIN, ADMIN, VENDOR, RIDER, CUSTOMER |
 | Gender | MALE, FEMALE, OTHER |
 | UserStatus | ACTIVE, INACTIVE, SUSPENDED |
 | VendorStatus | PENDING, APPROVED, SUSPENDED, REJECTED |
@@ -54,14 +54,12 @@ Full schema in `schema.prisma` (~3,500 lines). Organized by module with section 
 
 | Model | Line | Key Relations |
 |-------|------|-------------|
-| Vendor | 466 | → VendorProfile, VendorBranch[], VendorKitchen[], VendorStaff[], VendorDocument[], VendorBankAccount[], VendorOperatingHour[], VendorServiceArea[], VendorWallet, VendorRating, VendorSettings, VendorFood[], VendorFoodAssignment[], Rider[], Delivery[], Route[], Order[] |
+| Vendor | 466 | → User, VendorProfile, VendorBranch[], VendorKitchen[], VendorDocument[], VendorBankAccount[], VendorOperatingHour[], VendorServiceArea[], VendorWallet, VendorRating, VendorSettings, VendorFood[], VendorFoodAssignment[], Package[], Rider[], Delivery[], Route[], Order[] |
 | VendorProfile | 525 | → Vendor |
-| VendorBranch | 546 | → Vendor, VendorKitchen[], VendorStaff[] |
+| VendorBranch | 546 | → Vendor, VendorKitchen[] |
 | VendorKitchen | 575 | → Vendor, VendorBranch |
-| VendorStaff | 593 | → Vendor, VendorBranch |
 | VendorDocument | 614 | → Vendor |
 | VendorBankAccount | 633 | → Vendor |
-| VendorPaymentInfo | 652 | → Vendor |
 | VendorOperatingHour | 668 | → Vendor |
 | VendorHoliday | 683 | → Vendor |
 | VendorServiceArea | 697 | → Vendor |
@@ -78,7 +76,6 @@ Full schema in `schema.prisma` (~3,500 lines). Organized by module with section 
 | VendorNotification | 886 | → Vendor |
 | VendorSettings | 900 | → Vendor |
 | VendorActivityLog | 919 | → Vendor |
-| VendorEarning | 934 | → Vendor |
 
 ## Module 4: Food Catalog (line 950–1359)
 
@@ -86,8 +83,7 @@ Full schema in `schema.prisma` (~3,500 lines). Organized by module with section 
 |-------|------|-------------|
 | Category | 954 | → SubCategory[], Food[] |
 | SubCategory | 973 | → Category, Food[] |
-| Food | 993 | → Category, SubCategory, FoodVariant[], FoodAddon[], FoodIngredient[], FoodNutrition, FoodAllergen[], FoodSchedule[], FoodPrice[], FoodDiscount[], FoodTagMapping[], FoodReview[], FoodRating, FoodFavorite[], FoodDiet[], VendorFoodAssignment[], VendorFood[] |
-| FoodGallery | 1049 | → Food |
+| Food | 993 | → Category, SubCategory, FoodVariant[], FoodAddon[], FoodIngredient[], FoodNutrition, FoodAllergen[], FoodSchedule[], FoodPrice[], FoodDiscount[], FoodTagMapping[], FoodReview[], FoodRating, FoodFavorite[], FoodDiet[], FoodImage[], VendorFoodAssignment[], VendorFood[] |
 | FoodVariant | 1062 | → Food |
 | FoodAddon | 1080 | → Food, FoodAddonItem[] |
 | FoodAddonItem | 1096 | → FoodAddon |
@@ -113,29 +109,15 @@ Full schema in `schema.prisma` (~3,500 lines). Organized by module with section 
 
 | Model | Line | Key Relations |
 |-------|------|-------------|
-| VendorFood | 1364 | → Vendor, Food, VendorFoodPrice[], VendorFoodStock, VendorFoodRecipe[], VendorFoodCost, VendorFoodQuality, VendorFoodAssignment[] |
-| VendorFoodPrice | 1400 | → VendorFood |
-| VendorFoodStock | 1418 | → VendorFood |
-| VendorFoodAvailability | 1435 | → VendorFood |
-| VendorFoodPreparationTime | 1450 | → VendorFood |
-| VendorFoodRecipe | 1465 | → VendorFood, VendorFoodRecipeItem[] |
-| VendorFoodRecipeItem | 1481 | → VendorFoodRecipe |
-| VendorFoodCost | 1496 | → VendorFood |
-| VendorFoodPackaging | 1513 | → VendorFood |
-| VendorFoodImage | 1528 | → VendorFood |
-| VendorFoodQuality | 1542 | → VendorFood |
+| VendorFood | 1364 | → Vendor, Food, VendorFoodStatusHistory[], VendorFoodAssignment[] |
 | VendorFoodStatusHistory | 1557 | → VendorFood |
 | VendorFoodAssignment | 1571 | → Food, Vendor |
-| VendorFoodZone | 1590 | → VendorFood |
-| VendorFoodSchedule | 1604 | → VendorFood |
-| VendorFoodInventory | 1619 | → VendorFood |
-| VendorFoodPerformance | 1633 | → VendorFood |
 
 ## Module 6: Meal Plan & Package (line 1650–2022)
 
 | Model | Line | Key Relations |
 |-------|------|-------------|
-| Package | 1654 | → PackageDay[], PackagePrice[], PackageRule, PackageBenefit[], PackageNutrition, PackageSchedule[], PackageReview[], PackageRating, PackageCustomization, PackageAvailability, CustomMealPlan[], PackageCategory |
+| Package | 1654 | → Vendor, PackageDay[], PackagePrice[], PackageRule, PackageBenefit[], PackageNutrition, PackageSchedule[], PackageReview[], PackageRating, PackageCustomization, PackageAvailability, CustomMealPlan[], PackageCategory |
 | PackageCategory | 1694 | → Package[] |
 | PackageDay | 1709 | → Package, PackageMeal[] |
 | PackageMeal | 1725 | → PackageDay, PackageMealFood[] |
@@ -178,22 +160,19 @@ Full schema in `schema.prisma` (~3,500 lines). Organized by module with section 
 | OrderRefund | 2270 | → Order |
 | OrderFeedback | 2286 | → Order |
 
-## Module 8: Payment, Wallet & Settlement (line 2300–2515)
+## Module 8: Payment, Wallet & Settlement
 
-| Model | Line | Key Relations |
-|-------|------|-------------|
-| Payment | 2304 | → User, Order, PaymentTransaction[], PaymentAttempt[], PaymentLog[], PaymentRefund[], PaymentAdjustment[], PaymentInvoice, PaymentHistory[] |
-| PaymentMethod | 2334 | — |
-| PaymentGateway | 2349 | — |
-| PaymentTransaction | 2366 | → Payment |
-| PaymentLog | 2387 | → Payment |
-| PaymentAttempt | 2400 | → Payment |
-| PaymentRefund | 2415 | → Payment |
-| PaymentAdjustment | 2434 | → Payment |
-| PaymentInvoice | 2449 | → Payment |
-| PaymentHistory | 2468 | → Payment |
-| CustomerWallet | 2482 | → User, CustomerWalletTransaction[] |
-| CustomerWalletTransaction | 2499 | → CustomerWallet |
+| Model | Key Relations |
+|-------|-------------|
+| Payment | → User, Order, PaymentTransaction[], PaymentAttempt[], PaymentRefund[], PaymentAdjustment[] |
+| PaymentMethod | — |
+| PaymentGateway | — |
+| PaymentTransaction | → Payment |
+| PaymentAttempt | → Payment |
+| PaymentRefund | → Payment |
+| PaymentAdjustment | → Payment |
+| CustomerWallet | → User, CustomerWalletTransaction[] |
+| CustomerWalletTransaction | → CustomerWallet |
 
 ## Module 9: Rider, Delivery & Tracking (line 2516–3009)
 

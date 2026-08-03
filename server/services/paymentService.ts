@@ -364,7 +364,6 @@ export const getPaymentDetail = catchServiceAsync(async (paymentId: string) => {
       transactions: { orderBy: { createdAt: "desc" } },
       refunds: true,
       adjustments: true,
-      invoice: true,
     },
   });
   if (!payment) throw new AppError(404, "Payment not found");

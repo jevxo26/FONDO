@@ -88,13 +88,6 @@ export const createFood = catchServiceAsync(
             create: tags.map((t) => ({ tagId: t.id })),
           }
         : undefined,
-      gallery: data.galleryImages?.length
-        ? {
-            create: data.galleryImages
-              .filter((g) => g.url?.trim())
-              .map((g, i) => ({ image: g.url!, sortOrder: i })),
-          }
-        : undefined,
       images: data.galleryImages?.length
         ? {
             create: data.galleryImages
@@ -172,11 +165,9 @@ const VENDOR_FOOD_LIST_INCLUDE = {
       preparationTime: true,
       category: { select: { id: true, name: true } },
       subCategory: { select: { id: true, name: true } },
+      prices: { where: { status: "active" }, orderBy: { createdAt: "desc" }, take: 1 },
     },
   },
-  prices: { where: { status: "active" }, orderBy: { createdAt: "desc" }, take: 1 },
-  stock: true,
-  preparationTime: true,
 } satisfies Prisma.VendorFoodInclude;
 
 type VendorFoodListItem = Prisma.VendorFoodGetPayload<{
@@ -195,10 +186,10 @@ const mapVendorFood = (vf: VendorFoodListItem) => ({
   category: vf.food.category,
   subCategory: vf.food.subCategory,
   description: vf.food.description,
-  price: vf.prices[0]?.sellingPrice ?? null,
-  salePrice: vf.prices[0]?.discountPrice ?? null,
-  stock: vf.stock?.availableQuantity ?? null,
-  preparationTime: vf.preparationTime?.averagePreparationTime ?? vf.food.preparationTime,
+  price: vf.food.prices[0]?.salePrice ?? vf.food.prices[0]?.basePrice ?? null,
+  salePrice: vf.food.prices[0]?.salePrice ?? null,
+  stock: null,
+  preparationTime: vf.food.preparationTime,
   status: vf.food.status,
   averageRating: vf.food.averageRating,
   totalReview: vf.food.totalReview,
@@ -248,11 +239,9 @@ export const getFood = catchServiceAsync(async (vendorId: string, id: string) =>
           availability: true,
           schedules: true,
           visibility: true,
+          prices: { where: { status: "active" }, orderBy: { createdAt: "desc" }, take: 1 },
         },
       },
-      prices: { where: { status: "active" }, orderBy: { createdAt: "desc" }, take: 1 },
-      stock: true,
-      preparationTime: true,
     },
   });
 
@@ -273,10 +262,10 @@ export const getFood = catchServiceAsync(async (vendorId: string, id: string) =>
     shortDescription: food.shortDescription,
     category: food.category,
     subCategory: food.subCategory,
-    price: vf.prices[0]?.sellingPrice ?? null,
-    salePrice: vf.prices[0]?.discountPrice ?? null,
-    stock: vf.stock?.availableQuantity ?? null,
-    preparationTime: vf.preparationTime?.averagePreparationTime ?? food.preparationTime,
+    price: food.prices[0]?.salePrice ?? food.prices[0]?.basePrice ?? null,
+    salePrice: food.prices[0]?.salePrice ?? null,
+    stock: null,
+    preparationTime: food.preparationTime,
     status: food.status,
     averageRating: food.averageRating,
     totalReview: food.totalReview,

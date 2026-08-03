@@ -80,17 +80,6 @@ const createVendor = catchServiceAsync(
         data: { vendorId: newVendor.id },
       });
 
-      await tx.vendorStaff.create({
-        data: {
-          vendorId: newVendor.id,
-          userId: newUser.id,
-          fullName: `${firstName} ${lastName}`,
-          phone,
-          email,
-          designation: "Owner / Administrator",
-        },
-      });
-
       return {
         user: { id: newUser.id, email: newUser.email, role: newUser.role },
         vendor: newVendor,

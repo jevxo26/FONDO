@@ -174,14 +174,12 @@ const listVendorFoods = catchServiceAsync(async (params: { vendorId: string }) =
               thumbnail: true,
               status: true,
               rejectionReason: true,
+              preparationTime: true,
               category: { select: { id: true, name: true, slug: true } },
               subCategory: { select: { id: true, name: true, slug: true } },
+              prices: { where: { status: "active" }, orderBy: { createdAt: "desc" }, take: 1 },
             },
           },
-          prices: { where: { status: "active" }, orderBy: { createdAt: "desc" }, take: 1 },
-          stock: true,
-          preparationTime: true,
-          performance: true,
         },
       }),
       prisma.vendorKitchen.findMany({ where: { vendorId: params.vendorId }, select: { id: true, kitchenName: true } }),
@@ -192,8 +190,7 @@ const listVendorFoods = catchServiceAsync(async (params: { vendorId: string }) =
     const branchName = new Map(branches.map((b) => [b.id, b.branchName]));
 
     return items.map((vf) => {
-      const priceRecord = vf.prices[0];
-      const stockRecord = vf.stock;
+      const priceRecord = vf.food.prices[0];
       return {
         id: vf.id,
         foodId: vf.foodId,
@@ -203,24 +200,24 @@ const listVendorFoods = catchServiceAsync(async (params: { vendorId: string }) =
         sku: vf.vendorSku ?? vf.food.foodCode ?? "",
         kitchen: vf.kitchenId ? (kitchenName.get(vf.kitchenId) ?? "") : "",
         branch: vf.branchId ? (branchName.get(vf.branchId) ?? "") : "",
-        price: priceRecord ? Number(priceRecord.sellingPrice) : 0,
-        costPrice: priceRecord ? Number(priceRecord.costPrice) : 0,
-        stock: stockRecord?.availableQuantity ?? 0,
-        minStock: stockRecord?.minimumStock ?? 0,
-        maxStock: stockRecord?.maximumStock ?? 0,
-        stockStatus: stockRecord?.stockStatus ?? "OUT_OF_STOCK",
+        price: priceRecord ? Number(priceRecord.salePrice ?? priceRecord.basePrice) : 0,
+        costPrice: 0,
+        stock: 0,
+        minStock: 0,
+        maxStock: 0,
+        stockStatus: vf.isAvailable ? "IN_STOCK" : "OUT_OF_STOCK",
         status: vf.status === "active" ? "ACTIVE" : "INACTIVE",
         approvalStatus: vf.food.status,
         rejectionReason: vf.food.rejectionReason ?? "",
-        preparationTime: vf.preparationTime?.averagePreparationTime ?? 0,
+        preparationTime: vf.food.preparationTime ?? 0,
         isFeatured: false,
         isPopular: false,
         image: vf.food.thumbnail ?? "",
         vendorFoodCode: vf.vendorFoodCode ?? "",
         priority: vf.priority,
         isPrimary: vf.isPrimary,
-        totalOrders: vf.performance?.totalOrders ?? 0,
-        rating: vf.performance?.customerRating ?? 0,
+        totalOrders: 0,
+        rating: 0,
       };
     });
   },
@@ -232,7 +229,6 @@ const getFoodBySlug = catchServiceAsync(async (slug: string) => {
     include: {
       category: { select: { id: true, name: true, slug: true } },
       subCategory: { select: { id: true, name: true, slug: true } },
-      gallery: { orderBy: { sortOrder: "asc" } },
       variants: { where: { status: "active" } },
       addons: { where: { status: "active" }, include: { items: { where: { status: "active" } } } },
       ingredients: true,

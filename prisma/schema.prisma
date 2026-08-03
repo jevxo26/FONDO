@@ -440,10 +440,8 @@ model Vendor {
   profile               VendorProfile?
   branches              VendorBranch[]
   kitchens              VendorKitchen[]
-  staff                 VendorStaff[]
   documents             VendorDocument[]
   bankAccounts          VendorBankAccount[]
-  paymentInfos          VendorPaymentInfo[]
   operatingHours        VendorOperatingHour[]
   holidays              VendorHoliday[]
   serviceAreas          VendorServiceArea[]
@@ -457,7 +455,6 @@ model Vendor {
   notifications         VendorNotification[]
   settings              VendorSettings?
   activityLogs          VendorActivityLog[]
-  earnings              VendorEarning[]
   vendorFoods           VendorFood[]
   vendorFoodAssignments VendorFoodAssignment[]
   riders                Rider[]
@@ -467,6 +464,7 @@ model Vendor {
   suppliers             Supplier[]
   purchases             Purchase[]
   orders                Order[]
+  packages              Package[]
   platformRevenues      PlatformRevenue[]
 
   @@index([status])
@@ -520,7 +518,6 @@ model VendorBranch {
 
   vendor   Vendor          @relation(fields: [vendorId], references: [id])
   kitchens VendorKitchen[]
-  staff    VendorStaff[]
 
   @@map("vendor_branches")
 }
@@ -541,27 +538,6 @@ model VendorKitchen {
   branch VendorBranch? @relation(fields: [branchId], references: [id])
 
   @@map("vendor_kitchens")
-}
-
-model VendorStaff {
-  id          String    @id @default(uuid())
-  vendorId    String
-  branchId    String?
-  userId      String?
-  fullName    String
-  phone       String
-  email       String?
-  designation String
-  joiningDate DateTime?
-  salary      Decimal?  @db.Decimal(10, 2)
-  status      String    @default("active")
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  vendor Vendor        @relation(fields: [vendorId], references: [id])
-  branch VendorBranch? @relation(fields: [branchId], references: [id])
-
-  @@map("vendor_staff")
 }
 
 model VendorDocument {
@@ -600,22 +576,6 @@ model VendorBankAccount {
   vendor Vendor @relation(fields: [vendorId], references: [id])
 
   @@map("vendor_bank_accounts")
-}
-
-model VendorPaymentInfo {
-  id            String   @id @default(uuid())
-  vendorId      String
-  paymentMethod String
-  accountName   String?
-  accountNumber String?
-  walletNumber  String?
-  status        String   @default("active")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_payment_infos")
 }
 
 model VendorOperatingHour {
@@ -888,22 +848,6 @@ model VendorActivityLog {
   @@map("vendor_activity_logs")
 }
 
-model VendorEarning {
-  id               String   @id @default(uuid())
-  vendorId         String
-  orderId          String
-  grossAmount      Decimal? @db.Decimal(10, 2)
-  commission       Decimal? @db.Decimal(10, 2)
-  netAmount        Decimal? @db.Decimal(10, 2)
-  settlementStatus String   @default("pending")
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_earnings")
-}
-
 // ============================================================
 // MODULE 4: FOOD CATALOG
 // ============================================================
@@ -995,7 +939,6 @@ model Food {
   category              Category               @relation(fields: [categoryId], references: [id])
   subCategory           SubCategory?           @relation(fields: [subCategoryId], references: [id])
   approver              User?                  @relation("FoodApprover", fields: [approvedBy], references: [id])
-  gallery               FoodGallery[]
   variants              FoodVariant[]
   addons                FoodAddon[]
   ingredients           FoodIngredient[]
@@ -1026,19 +969,6 @@ model Food {
   @@index([isPopular])
   @@index([status, deletedAt, categoryId])
   @@map("foods")
-}
-
-model FoodGallery {
-  id        String   @id @default(uuid())
-  foodId    String
-  image     String
-  sortOrder Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  food Food @relation(fields: [foodId], references: [id])
-
-  @@map("food_galleries")
 }
 
 model FoodVariant {
@@ -1345,182 +1275,12 @@ model VendorFood {
 
   vendor          Vendor                     @relation(fields: [vendorId], references: [id])
   food            Food                       @relation(fields: [foodId], references: [id])
-  prices          VendorFoodPrice[]
-  stock           VendorFoodStock?
-  availabilities  VendorFoodAvailability[]
-  preparationTime VendorFoodPreparationTime?
-  recipes         VendorFoodRecipe[]
-  cost            VendorFoodCost?
-  packaging       VendorFoodPackaging?
-  images          VendorFoodImage[]
-  quality         VendorFoodQuality?
   statusHistories VendorFoodStatusHistory[]
-  zones           VendorFoodZone[]
-  schedules       VendorFoodSchedule[]
-  inventories     VendorFoodInventory[]
-  performance     VendorFoodPerformance?
 
   @@index([vendorId])
   @@index([foodId])
   @@index([status])
   @@map("vendor_foods")
-}
-
-model VendorFoodPrice {
-  id            String    @id @default(uuid())
-  vendorFoodId  String
-  costPrice     Decimal   @db.Decimal(10, 2)
-  sellingPrice  Decimal   @db.Decimal(10, 2)
-  discountPrice Decimal?  @db.Decimal(10, 2)
-  currency      String    @default("BDT")
-  effectiveFrom DateTime?
-  effectiveTo   DateTime?
-  status        String    @default("active")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  vendorFood VendorFood @relation(fields: [vendorFoodId], references: [id])
-
-  @@map("vendor_food_prices")
-}
-
-model VendorFoodStock {
-  id                String      @id @default(uuid())
-  vendorFoodId      String      @unique
-  availableQuantity Int         @default(0)
-  reservedQuantity  Int         @default(0)
-  minimumStock      Int         @default(0)
-  maximumStock      Int?
-  stockStatus       StockStatus @default(IN_STOCK)
-  lastUpdatedAt     DateTime?
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
-
-  vendorFood VendorFood @relation(fields: [vendorFoodId], references: [id])
-
-  @@map("vendor_food_stocks")
-}
-
-model VendorFoodAvailability {
-  id           String   @id @default(uuid())
-  vendorFoodId String
-  dayOfWeek    String
-  startTime    String
-  endTime      String
-  isAvailable  Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  vendorFood VendorFood @relation(fields: [vendorFoodId], references: [id])
-
-  @@map("vendor_food_availabilities")
-}
-
-model VendorFoodPreparationTime {
-  id                     String   @id @default(uuid())
-  vendorFoodId           String   @unique
-  averagePreparationTime Int?
-  minimumPreparationTime Int?
-  maximumPreparationTime Int?
-  packingTime            Int?
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
-
-  vendorFood VendorFood @relation(fields: [vendorFoodId], references: [id])
-
-  @@map("vendor_food_preparation_times")
-}
-
-model VendorFoodRecipe {
-  id            String   @id @default(uuid())
-  vendorFoodId  String
-  recipeName    String
-  recipeVersion String?
-  description   String?
-  yieldQuantity Int?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  vendorFood VendorFood             @relation(fields: [vendorFoodId], references: [id])
-  items      VendorFoodRecipeItem[]
-
-  @@map("vendor_food_recipes")
-}
-
-model VendorFoodRecipeItem {
-  id             String   @id @default(uuid())
-  recipeId       String
-  ingredientName String
-  quantity       Float?
-  unit           String?
-  isOptional     Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  recipe VendorFoodRecipe @relation(fields: [recipeId], references: [id])
-
-  @@map("vendor_food_recipe_items")
-}
-
-model VendorFoodCost {
-  id             String   @id @default(uuid())
-  vendorFoodId   String   @unique
-  ingredientCost Decimal? @db.Decimal(10, 2)
-  packagingCost  Decimal? @db.Decimal(10, 2)
-  labourCost     Decimal? @db.Decimal(10, 2)
-  overheadCost   Decimal? @db.Decimal(10, 2)
-  totalCost      Decimal? @db.Decimal(10, 2)
-  profitMargin   Decimal? @db.Decimal(5, 2)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  vendorFood VendorFood @relation(fields: [vendorFoodId], references: [id])
-
-  @@map("vendor_food_costs")
-}
-
-model VendorFoodPackaging {
-  id            String   @id @default(uuid())
-  vendorFoodId  String   @unique
-  packageType   String?
-  packageSize   String?
-  packageCost   Decimal? @db.Decimal(10, 2)
-  isEcoFriendly Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  vendorFood VendorFood @relation(fields: [vendorFoodId], references: [id])
-
-  @@map("vendor_food_packagings")
-}
-
-model VendorFoodImage {
-  id           String   @id @default(uuid())
-  vendorFoodId String
-  image        String
-  imageType    String?
-  sortOrder    Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  vendorFood VendorFood @relation(fields: [vendorFoodId], references: [id])
-
-  @@map("vendor_food_images")
-}
-
-model VendorFoodQuality {
-  id                 String    @id @default(uuid())
-  vendorFoodId       String    @unique
-  qualityScore       Float?
-  lastInspectionDate DateTime?
-  inspectionStatus   String?
-  remarks            String?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-
-  vendorFood VendorFood @relation(fields: [vendorFoodId], references: [id])
-
-  @@map("vendor_food_qualities")
 }
 
 model VendorFoodStatusHistory {
@@ -1559,66 +1319,6 @@ model VendorFoodAssignment {
   @@map("vendor_food_assignments")
 }
 
-model VendorFoodZone {
-  id                    String   @id @default(uuid())
-  vendorFoodId          String
-  zoneId                String
-  deliveryRadius        Float?
-  estimatedDeliveryTime Int?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-
-  vendorFood VendorFood @relation(fields: [vendorFoodId], references: [id])
-
-  @@map("vendor_food_zones")
-}
-
-model VendorFoodSchedule {
-  id                String   @id @default(uuid())
-  vendorFoodId      String
-  mealType          MealType
-  dayOfWeek         String?
-  productionLimit   Int?
-  availableQuantity Int?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  vendorFood VendorFood @relation(fields: [vendorFoodId], references: [id])
-
-  @@map("vendor_food_schedules")
-}
-
-model VendorFoodInventory {
-  id               String   @id @default(uuid())
-  vendorFoodId     String
-  inventoryId      String?
-  requiredQuantity Float?
-  unit             String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  vendorFood VendorFood @relation(fields: [vendorFoodId], references: [id])
-
-  @@map("vendor_food_inventories")
-}
-
-model VendorFoodPerformance {
-  id                     String    @id @default(uuid())
-  vendorFoodId           String    @unique
-  totalOrders            Int       @default(0)
-  completedOrders        Int       @default(0)
-  cancelledOrders        Int       @default(0)
-  averagePreparationTime Float?
-  averageDeliveryTime    Float?
-  customerRating         Float?
-  lastCalculatedAt       DateTime?
-  createdAt              DateTime  @default(now())
-
-  vendorFood VendorFood @relation(fields: [vendorFoodId], references: [id])
-
-  @@map("vendor_food_performances")
-}
-
 // ============================================================
 // MODULE 6: MEAL PLAN & PACKAGE
 // ============================================================
@@ -1645,6 +1345,8 @@ model Package {
 
   packageCategoryId String?
   packageCategory   PackageCategory? @relation(fields: [packageCategoryId], references: [id])
+  vendorId          String?
+  vendor            Vendor?          @relation(fields: [vendorId], references: [id])
 
   days            PackageDay[]
   prices          PackagePrice[]
@@ -1661,6 +1363,7 @@ model Package {
   customMealPlans CustomMealPlan[]
 
   @@index([status])
+  @@index([vendorId])
   @@map("packages")
 }
 
@@ -2358,11 +2061,8 @@ model Payment {
   order        Order                @relation(fields: [orderId], references: [id])
   transactions PaymentTransaction[]
   attempts     PaymentAttempt[]
-  logs         PaymentLog[]
   refunds      PaymentRefund[]
   adjustments  PaymentAdjustment[]
-  invoice      PaymentInvoice?
-  histories    PaymentHistory[]
 
   @@index([customerId])
   @@index([status])
@@ -2428,19 +2128,6 @@ model PaymentTransaction {
   @@map("payment_transactions")
 }
 
-model PaymentLog {
-  id           String   @id @default(uuid())
-  paymentId    String
-  requestBody  Json?
-  responseBody Json?
-  status       String?
-  createdAt    DateTime @default(now())
-
-  payment Payment @relation(fields: [paymentId], references: [id])
-
-  @@map("payment_logs")
-}
-
 model PaymentAttempt {
   id            String   @id @default(uuid())
   paymentId     String
@@ -2490,39 +2177,6 @@ model PaymentAdjustment {
   payment Payment @relation(fields: [paymentId], references: [id])
 
   @@map("payment_adjustments")
-}
-
-model PaymentInvoice {
-  id             String   @id @default(uuid())
-  paymentId      String   @unique
-  invoiceNumber  String   @unique
-  invoiceUrl     String?
-  invoiceDate    DateTime @default(now())
-  subtotal       Decimal? @db.Decimal(10, 2)
-  discount       Decimal? @db.Decimal(10, 2)
-  vat            Decimal? @db.Decimal(10, 2)
-  deliveryCharge Decimal? @db.Decimal(10, 2)
-  grandTotal     Decimal  @db.Decimal(10, 2)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  payment Payment @relation(fields: [paymentId], references: [id])
-
-  @@map("payment_invoices")
-}
-
-model PaymentHistory {
-  id        String   @id @default(uuid())
-  paymentId String
-  oldStatus String?
-  newStatus String
-  remarks   String?
-  changedBy String?
-  createdAt DateTime @default(now())
-
-  payment Payment @relation(fields: [paymentId], references: [id])
-
-  @@map("payment_histories")
 }
 
 model CustomerWallet {

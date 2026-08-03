@@ -47,7 +47,7 @@ export function ProductHero({ food }: { food: Food }) {
   const subtotal = unitPrice * quantity + addonsTotal;
 
   const images = Array.from(
-    new Set([food.coverImage, ...(food.gallery?.map((g) => g.image) ?? [])].filter(Boolean)),
+    new Set([food.coverImage, ...(food.images?.map((g) => g.image) ?? [])].filter(Boolean)),
   ) as string[];
 
   const whatsappMessage = encodeURIComponent(

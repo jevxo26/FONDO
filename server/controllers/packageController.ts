@@ -143,6 +143,9 @@ const createReview = async (req: AuthRequest, res: Response): Promise<Response> 
 const updateReview = async (req: AuthRequest, res: Response): Promise<Response> => {
   try {
     const customerId = req.user?.userId;
+    if (!customerId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
     const reviewId = req.params.reviewId as string;
     const { rating, review } = req.body;
 
@@ -164,6 +167,9 @@ const updateReview = async (req: AuthRequest, res: Response): Promise<Response> 
 const deleteReview = async (req: AuthRequest, res: Response): Promise<Response> => {
   try {
     const customerId = req.user?.userId;
+    if (!customerId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
     const reviewId = req.params.reviewId as string;
 
     const result = await PackageService.deletePackageReview(customerId, reviewId);

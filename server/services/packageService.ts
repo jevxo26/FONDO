@@ -401,7 +401,7 @@ const createPackageReview = async (
     });
 
     // Recalculate average rating for the package
-    await recalculatePackageRating(tx, packageId);
+    await recalculatePackageRating(packageId);
 
     return newReview;
   });
@@ -432,7 +432,7 @@ const updatePackageReview = async (
       },
     });
 
-    await recalculatePackageRating(tx, existingReview.packageId);
+    await recalculatePackageRating(existingReview.packageId);
 
     return updatedReview;
   });
@@ -451,7 +451,7 @@ const deletePackageReview = async (customerId: string, reviewId: string) => {
       where: { id: reviewId },
     });
 
-    await recalculatePackageRating(tx, existingReview.packageId);
+    await recalculatePackageRating(existingReview.packageId);
 
     return deletedReview;
   });

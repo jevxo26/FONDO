@@ -2,7 +2,7 @@ import { Router } from "express";
 import { UserController } from "../controllers/userController";
 import { hasPermission, verifyToken } from "../middlewares/authMiddleware";
 import { validate } from "../middlewares/validate";
-import { updateProfileSchema } from "../validations/user.validation";
+import { createUserSchema, updateProfileSchema } from "../validations/user.validation";
 import addressRoutes from "./addressRoutes";
 import deviceRoutes from "./deviceRoutes";
 import notificationRoutes from "./notificationRoutes";
@@ -22,7 +22,7 @@ router.use("/me/login-history", loginHistoryRoutes);
 
 // Admin routes
 router.get("/", verifyToken, hasPermission("users"), UserController.getAllUsers);
-router.post("/", verifyToken, hasPermission("users"), UserController.createUser);
+router.post("/", verifyToken, hasPermission("users"), validate(createUserSchema), UserController.createUser);
 router.get("/:id", verifyToken, hasPermission("users"), UserController.getUserById);
 router.patch("/:id", verifyToken, hasPermission("users"), UserController.updateUser);
 router.delete("/:id", verifyToken, hasPermission("users"), UserController.deleteUser);

@@ -105,14 +105,6 @@ export function PaymentDetailDialog({
                 <Row key={a.id} label={`${a.adjustmentType} · ${a.reason}`} value={`৳${Number(a.amount).toLocaleString()}`} />
               ))}
             </div>
-
-            {detail.invoice && (
-              <div className="space-y-1.5">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Invoice</h4>
-                <Row label="Number" value={detail.invoice.invoiceNumber} />
-                <Row label="Grand Total" value={`৳${Number(detail.invoice.grandTotal).toLocaleString()}`} />
-              </div>
-            )}
           </div>
         )}
       </DialogContent>

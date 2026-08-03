@@ -16,6 +16,36 @@ router.post(
 );
 router.get("/categories", PackageController.getCategories);
 
+// --- Admin Management Routes ---
+router.get(
+  "/admin",
+  verifyToken,
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pPackages,
+  PackageController.listPackagesAdmin,
+);
+router.post(
+  "/admin/create",
+  verifyToken,
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pPackages,
+  PackageController.createAdminPackage,
+);
+router.patch(
+  "/admin/:id/approve",
+  verifyToken,
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pPackages,
+  PackageController.approvePackage,
+);
+router.patch(
+  "/admin/:id/reject",
+  verifyToken,
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pPackages,
+  PackageController.rejectPackage,
+);
+
 // --- Public Routes ---
 router.get("/", PackageController.getPackages);
 router.get("/:id", PackageController.getPackageDetails);
@@ -26,6 +56,12 @@ router.post(
   verifyToken,
   pPackages,
   PackageController.createPackage,
+);
+router.get(
+  "/vendor/packages",
+  verifyToken,
+  pPackages,
+  PackageController.listVendorPackages,
 );
 router.get(
   "/vendor/open-requests",

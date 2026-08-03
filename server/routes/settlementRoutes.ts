@@ -13,28 +13,14 @@ const router = Router();
 const pReports = hasPermission("reports");
 const pSettings = hasPermission("settings");
 
-// Vendor wallet & settlements (Admin views)
-router.get(
-  "/vendors/:vendorId/wallet",
-  verifyToken,
-  authorize("SUPER_ADMIN", "ADMIN"),
-  pReports,
-  SettlementController.getVendorWallet,
-);
+// Vendor wallet & settlements (Admin views OR vendor self-view)
+router.get("/vendors/:vendorId/wallet", verifyToken, SettlementController.getVendorWallet);
 router.get(
   "/vendors/:vendorId/wallet/transactions",
   verifyToken,
-  authorize("SUPER_ADMIN", "ADMIN"),
-  pReports,
   SettlementController.listVendorWalletTransactions,
 );
-router.get(
-  "/vendors/:vendorId/settlements",
-  verifyToken,
-  authorize("SUPER_ADMIN", "ADMIN"),
-  pReports,
-  SettlementController.listVendorSettlements,
-);
+router.get("/vendors/:vendorId/settlements", verifyToken, SettlementController.listVendorSettlements);
 
 // Settlement detail
 router.get(

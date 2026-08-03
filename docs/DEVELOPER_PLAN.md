@@ -3,7 +3,7 @@
 > Follow steps in order. Each step depends on previous.
 > `[ ]` = pending | `[x]` = done | `[!]` = blocked
 >
-> **Package ownership:** Admin creates/manages packages (PRD §12). Vendor only manages foods.
+> **Package ownership:** Admin builds packages by picking a vendor + its approved foods → **APPROVED/published immediately**. Vendor can also submit packages → **PENDING → admin approve → published**. See `docs/FONDO – Complete Workflow.md` §4/§8/§12.
 
 ---
 
@@ -491,21 +491,13 @@ src/components/dashboard/vendor/
 
 ---
 
-### Step 23 — WebSocket (Socket.io)
+### Step 23 — WebSocket (Socket.io) — **SKIPPED (decision: no realtime)**
 
-**Depends on:** Step 22
+**Decision (Aug 03, 2026):** No socket.io anywhere. Notifications use RTK Query polling + manual refresh (see Step 27). Live delivery tracking uses polling / manual refresh instead of websockets.
 
-**Files to create:**
-- `server/socket/index.ts` — Socket.io server setup
-  - `connection` → authenticate via JWT, join room per delivery
-  - Events:
-    - `rider:location-update` → rider sends lat/lng → broadcast to customer room
-    - `delivery:status-change` → push status update
-    - `chat:send` → real-time messaging
-    - `chat:typing` → typing indicator
+**Depends on:** N/A (skipped)
 
-**Modify:**
-- `server/index.ts` — Attach Socket.io to HTTP server
+**Files to create:** None (this step is skipped — do not create socket files)
 
 ---
 
@@ -528,62 +520,50 @@ src/components/dashboard/vendor/
 
 ### Step 25 — Customer Live Tracking
 
-**Depends on:** Step 23
+**Depends on:** Step 22 (no websockets — polling + manual refresh)
 
 **Files to create:**
 - `src/components/(main)/tracking/live-tracking-map.tsx` — Map with rider marker
 - `src/components/(main)/tracking/delivery-timeline.tsx` — Status timeline
-- `src/hooks/use-tracking.ts` — WebSocket hook for live location
+- `src/hooks/use-tracking.ts` — Polling hook for rider location + status updates
 
 **Files to modify:**
 - `src/app/(main)/track-order/page.tsx` — Wire to real data + live map
 
 ---
 
-## PHASE 7: CHAT, SUPPORT & NOTIFICATIONS
+## PHASE 7: SUPPORT & NOTIFICATIONS
 
 ---
 
-### Step 26 — Build Real-time Chat
+### Step 26 — Build Support (Email + WhatsApp)
 
-**Depends on:** Step 23 (Socket.io)
+**Depends on:** None — no ticket/chat tables (removed from schema)
+
+Support is a single contact page — **email + WhatsApp only**. No `Conversation`/`Message`/`SupportTicket` models.
 
 **Files to create:**
-- `server/services/conversationService.ts`
-  - `createConversation(participants, type)`
-  - `sendMessage(conversationId, senderId, message, type)`
-  - `getConversationHistory(conversationId, page)`
-  - `markAsRead(conversationId, userId)`
-- `server/controllers/conversationController.ts`
-- `server/routes/conversationRoutes.ts`
+- `server/services/supportService.ts`
+  - `sendSupportEmail({ subject, issue, message, email })` → nodemailer to `SUPPORT_EMAIL`
+- `server/controllers/supportController.ts`
+- `server/routes/supportRoutes.ts` — `POST /api/support/contact`, `GET /api/support/config`
+- `server/config/env.ts` — add `SUPPORT_EMAIL`, `SUPPORT_WHATSAPP`
 
 **Frontend:**
-- `src/components/chat/chat-widget.tsx` — Floating chat bubble (customer → support)
-- `src/components/chat/chat-dashboard.tsx` — Full chat UI (admin/support agent)
-- `src/hooks/use-chat.ts` — Socket.io chat hook
+- `src/app/(main)/support/page.tsx` — contact form (subject, reason/issue, message; guest email field) + WhatsApp button (`wa.me/<number>`)
+- `src/components/support/` — form + contact-info components
+- `src/store/api/slices/support-api.ts`
 
 ---
 
-### Step 27 — Build Support Tickets
+### Step 27 — Build Notification System
 
-**Depends on:** None
+**Depends on:** None — **easy-way, no socket.io**
 
-**Files to create:**
-- `server/services/supportTicketService.ts`
-  - CRUD tickets, add reply, assign agent, change status
-- `server/controllers/supportTicketController.ts`
-- `server/routes/supportTicketRoutes.ts`
-
-**Frontend:**
-- `src/app/dashboard/admin/support/page.tsx` — Ticket queue DataTable
-- `src/app/dashboard/admin/support/[id]/page.tsx` — Ticket detail + reply thread
-- `src/components/dashboard/admin/support/` — Components
-
----
-
-### Step 28 — Build Notification System
-
-**Depends on:** None (can use polling, or Step 23 for real-time)
+**Delivery strategy:** RTK Query, not realtime:
+- Poll **unread-count only**, every 30s, **only while the dashboard tab is focused** (`setupListeners` + `skipPollingIfUnfocused` + `refetchOnFocus`). Hidden tabs make zero requests — Neon free-tier friendly.
+- Full list fetched **on demand**: panel opens, unread count changes, or the dashboard header **refresh button**.
+- Manual refresh button (`RefreshCw` in `src/components/dashboard/layout/header/header.tsx`) dispatches `api.util.invalidateTags(TAG_TYPES)` → refetches all active queries.
 
 **Files to create:**
 - `server/services/notificationService.ts`
@@ -593,9 +573,13 @@ src/components/dashboard/vendor/
   - `markAllAsRead(userId)`
   - `getUnreadCount(userId)`
 - `server/controllers/notificationController.ts`
-- `server/routes/notificationRoutes.ts`
+- `server/routes/notificationRoutes.ts` — `GET /notifications`, `PATCH /notifications/:id/read`, `POST /notifications/read-all`, `GET /notifications/unread-count`
+- Prisma: composite index `[userId, isRead]` on `Notification` for cheap unread-count
 
 **Frontend:**
+- `src/store/api/slices/notifications-api.ts` — RTK Query slice (`unread-count` polled 30s via `pollingInterval` + `skipPollingIfUnfocused`, list fetched on demand)
+- `src/store/store.ts` — add `setupListeners(store.dispatch, { skipPollingIfUnfocused: true })` + `refetchOnFocus`
+- `src/components/dashboard/layout/header/header.tsx` — add `RefreshCw` button dispatching `invalidateTags`
 - `src/components/notification/notification-dropdown.tsx` — Bell icon with badge, dropdown list
 - `src/components/notification/notification-item.tsx`
 - `src/hooks/use-notifications.ts`
@@ -606,7 +590,7 @@ src/components/dashboard/vendor/
 
 ---
 
-### Step 29 — Build CMS
+### Step 28 — Build CMS
 
 **Depends on:** None
 
@@ -624,7 +608,7 @@ src/components/dashboard/vendor/
 
 ---
 
-### Step 30 — Build Admin Analytics
+### Step 29 — Build Admin Analytics
 
 **Depends on:** None
 
@@ -649,9 +633,9 @@ src/components/dashboard/vendor/
 
 ---
 
-### Step 31 — Build Reports
+### Step 30 — Build Reports
 
-**Depends on:** Step 30 (reuses analytics data)
+**Depends on:** Step 29 (reuses analytics data)
 
 **Files to create:**
 - `server/services/reportService.ts`
@@ -675,7 +659,7 @@ src/components/dashboard/vendor/
 
 ---
 
-### Step 32 — Build Inventory & Supplier
+### Step 31 — Build Inventory & Supplier
 
 **Depends on:** None
 
@@ -707,21 +691,7 @@ src/components/dashboard/vendor/
 
 ---
 
-### Step 33 — Referral System
-
-**Depends on:** None
-
-**Files to create:**
-- `server/services/referralService.ts`
-  - `generateReferralCode(userId)` — create unique code
-  - `applyReferral(code, newUserId)` — on registration
-  - `getReferralRewards(userId)`
-- Update `server/services/authService.ts` — Accept referralCode during registration
-- `src/components/(main)/referral/referral-section.tsx` — Share code, track rewards
-
----
-
-### Step 34 — Loyalty & Rewards
+### Step 32 — Loyalty & Rewards
 
 **Depends on:** None
 
@@ -734,7 +704,7 @@ src/components/dashboard/vendor/
 
 ---
 
-### Step 35 — Performance Optimization
+### Step 33 — Performance Optimization
 
 **Depends on:** All above
 
@@ -782,9 +752,9 @@ Phase 3 (Steps 14-17): Admin CRUD forms (can parallel with Phase 2)
 Phase 4 (Steps 18-19): Vendor dashboard
 Phase 5 (Steps 20-21): Kitchen dashboard
 Phase 6 (Steps 22-25): Rider + delivery + tracking
-Phase 7 (Steps 26-28): Chat + support + notifications
-Phase 8 (Steps 29-32): CMS + analytics + reports + inventory
-Phase 9 (Steps 33-36): Marketing + polish + test
+Phase 7 (Steps 26-27): Support + notifications
+Phase 8 (Steps 28-31): CMS + analytics + reports + inventory
+Phase 9 (Steps 32-33): Loyalty + polish + test
 ```
 
 ---
@@ -799,7 +769,7 @@ Phase 9 (Steps 33-36): Marketing + polish + test
 | 4 — Vendor Dashboard | 18-19 | 7 | 50+ | 57+ |
 | 5 — Kitchen | 20-21 | 2 | 6 | 8 |
 | 6 — Rider & Delivery | 22-25 | 6 | 15 | 21 |
-| 7 — Chat & Support | 26-28 | 4 | 8 | 12 |
-| 8 — CMS & Reports | 29-32 | 5 | 15 | 20 |
-| 9 — Marketing & Polish | 33-36 | 3 | 3 | 6 |
-| **Total** | **36** | **38** | **~127** | **~165** |
+| 7 — Support & Notifications | 26-27 | 6 | 9 | 15 |
+| 8 — CMS & Reports | 28-31 | 5 | 15 | 20 |
+| 9 — Marketing & Polish | 32-33 | 2 | 2 | 4 |
+| **Total** | **33** | **39** | **~127** | **~166** |

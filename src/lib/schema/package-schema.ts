@@ -105,6 +105,8 @@ export const packageSchema = yup.object({
     .oneOf(["active", "inactive"])
     .required(),
 
+  vendorId: yup.string(),
+
   isCustomizable: yup.boolean().default(true),
 
   packageCategoryId: yup.string().required(),
@@ -151,6 +153,8 @@ export const initialValues: PackageFormValues = {
   currency: "BDT",
 
   status: "active",
+
+  vendorId: "",
 
   isCustomizable: true,
 

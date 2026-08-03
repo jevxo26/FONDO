@@ -169,7 +169,7 @@ export const {
   useClearCartMutation,
 } = cartApi;
 
-export const useCart = () => useGetCartQuery();
+export const useCart = (skip = false) => useGetCartQuery(undefined, { skip });
 
 export function useAddToCart() {
   const [trigger, { isLoading }] = useAddToCartMutation();

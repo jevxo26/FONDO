@@ -1,10 +1,22 @@
 import { Request, Response } from "express";
 import { PackageService } from "../services/packageService";
 import type { AuthRequest } from "../types/auth.types";
+import prisma from "../lib/prisma";
 
 function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : "Something went wrong";
 }
+
+const resolveVendorId = async (req: AuthRequest): Promise<string> => {
+  const userId = req.user!.userId;
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { vendorId: true },
+  });
+  const vendorId = user?.vendorId ?? null;
+  if (!vendorId) throw new Error("No vendor account linked to this user");
+  return vendorId;
+};
 
 const getPackages = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -27,15 +39,68 @@ const getPackageDetails = async (req: Request, res: Response): Promise<Response>
 };
 
 const createPackage = async (req: AuthRequest, res: Response): Promise<Response> => {
-  console.log(req.body)
   try {
-    const vendorId = "81e8d8c3-5d23-474b-8763-098ab6a45652";
+    const vendorId = await resolveVendorId(req);
     const result = await PackageService.createVendorPackage(vendorId, req.body);
     return res
       .status(201)
-      .json({ success: true, message: "Package created successfully", data: result });
+      .json({ success: true, message: "Package submitted for approval", data: result });
+  } catch (error: unknown) {
+    return res.status(400).json({ success: false, message: getErrorMessage(error) });
+  }
+};
+
+const createAdminPackage = async (req: AuthRequest, res: Response): Promise<Response> => {
+  try {
+    const result = await PackageService.createAdminPackage(req.user!.userId, req.body);
+    return res
+      .status(201)
+      .json({ success: true, message: "Package created and published", data: result });
+  } catch (error: unknown) {
+    return res.status(400).json({ success: false, message: getErrorMessage(error) });
+  }
+};
+
+const listPackagesAdmin = async (req: AuthRequest, res: Response): Promise<Response> => {
+  try {
+    const result = await PackageService.listPackagesAdmin(req.query as never);
+    return res.status(200).json({ success: true, data: result });
   } catch (error: unknown) {
     return res.status(500).json({ success: false, message: getErrorMessage(error) });
+  }
+};
+
+const listVendorPackages = async (req: AuthRequest, res: Response): Promise<Response> => {
+  try {
+    const vendorId = await resolveVendorId(req);
+    const result = await PackageService.listVendorPackages(vendorId);
+    return res.status(200).json({ success: true, data: result });
+  } catch (error: unknown) {
+    return res.status(500).json({ success: false, message: getErrorMessage(error) });
+  }
+};
+
+const approvePackage = async (req: AuthRequest, res: Response): Promise<Response> => {
+  try {
+    const result = await PackageService.approvePackage(req.params.id as string, req.user!.userId);
+    return res
+      .status(200)
+      .json({ success: true, message: "Package approved and published", data: result });
+  } catch (error: unknown) {
+    return res.status(400).json({ success: false, message: getErrorMessage(error) });
+  }
+};
+
+const rejectPackage = async (req: AuthRequest, res: Response): Promise<Response> => {
+  try {
+    const reason = req.body?.reason;
+    if (!reason) return res.status(400).json({ success: false, message: "Rejection reason is required" });
+    const result = await PackageService.rejectPackage(req.params.id as string, req.user!.userId, reason);
+    return res
+      .status(200)
+      .json({ success: true, message: "Package rejected", data: result });
+  } catch (error: unknown) {
+    return res.status(400).json({ success: false, message: getErrorMessage(error) });
   }
 };
 
@@ -227,6 +292,11 @@ export const PackageController = {
   getPackages,
   getPackageDetails,
   createPackage,
+  createAdminPackage,
+  listPackagesAdmin,
+  listVendorPackages,
+  approvePackage,
+  rejectPackage,
   createCustomRequest,
   getVendorOpenRequests,
   acceptCustomRequest,

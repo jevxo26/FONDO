@@ -67,6 +67,14 @@ export const foodsApi = api.injectEndpoints({
       providesTags: ["Food"],
     }),
 
+    getVendorFoodsByVendor: builder.query<VendorFood[], { vendorId: string } | void>({
+      query: (params) => ({
+        url: "/foods/vendor/foods",
+        params: params?.vendorId ? { vendorId: params.vendorId } : undefined,
+      }),
+      providesTags: ["Food"],
+    }),
+
     getFoodBySlug: builder.query<Food, string>({
       query: (slug) => `/foods/slug/${slug}`,
       providesTags: (result, error, slug) => [{ type: "Food" as const, id: slug }],
@@ -89,7 +97,7 @@ export const foodsApi = api.injectEndpoints({
   overrideExisting: true,
 });
 
-export const { useGetFoodsQuery, useGetFoodBySlugQuery, useGetFoodCategoriesQuery, useGetVendorFoodsQuery } = foodsApi;
+export const { useGetFoodsQuery, useGetFoodBySlugQuery, useGetFoodCategoriesQuery, useGetVendorFoodsQuery, useGetVendorFoodsByVendorQuery } = foodsApi;
 
 export const useGetFoods = (params?: {
   page?: number;

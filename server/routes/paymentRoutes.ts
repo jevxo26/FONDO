@@ -7,7 +7,6 @@ import {
   retryPaymentSchema,
   refundPaymentSchema,
   adjustPaymentSchema,
-  listPaymentsSchema,
 } from "../validations/payment.validation";
 
 const router = Router();
@@ -56,7 +55,7 @@ router.post(
 );
 
 // Auth (customer sees own, admin sees all)
-router.get("/payments", verifyToken, validate(listPaymentsSchema, "query"), PaymentController.list);
+router.get("/payments", verifyToken, PaymentController.list);
 router.get("/payments/:id", verifyToken, PaymentController.getById);
 
 export default router;

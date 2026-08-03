@@ -4,6 +4,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   Building2,
   ClipboardList,
+  Gift,
   Settings,
   Users,
   Utensils,
@@ -21,6 +22,7 @@ export interface SidebarItem {
 
 export const sidebarItems: SidebarItem[] = [
   { label: "Foods", href: "/foods", icon: Utensils },
+  { label: "Packages", href: "/packages", icon: Gift },
   { label: "Orders", href: "/orders", icon: ClipboardList },
   { label: "Kitchens", href: "/kitchens", icon: Building2 },
   { label: "Staff", href: "/staff", icon: Users },
@@ -32,7 +34,7 @@ export const sidebarItems: SidebarItem[] = [
 ];
 
 export const sectionConfig = [
-  { label: "Business", items: ["Foods", "Orders"] },
+  { label: "Business", items: ["Foods", "Packages", "Orders"] },
   { label: "Operations", items: ["Kitchens", "Staff", "Branches", "Service Areas"] }, // ← Added Service Areas
   { label: "Finance", items: ["Earnings", "Bank Accounts"] },
   { label: "Settings", items: ["Settings"] },

@@ -66,8 +66,10 @@ export interface Package {
   isCustomizable?: boolean;
   rating?: number | null;
   calories?: number | null;
+  status?: string;
   packageCategoryId?: string;
   packageCategory?: PackageCategory | null;
+  vendor?: { id: string; businessName: string } | null;
   reviews?: PackageReview[] | null;
   rule?: PackageRule | null;
   days?: PackageDay[];

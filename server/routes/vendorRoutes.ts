@@ -20,7 +20,7 @@ router.get(
 // --- Core Vendor Lifecycle (Admin) ---
 router.post("/add", verifyToken, pCreate, VendorController.createVendor);
 router.get("/all", verifyToken, pView, VendorController.getAllVendors);
-router.get("/:vendorCode", VendorController.getVendorByVendorCode);
+router.get("/:vendorCode", verifyToken, VendorController.getVendorByVendorCode);
 router.patch("/:vendorCode", verifyToken, pUpdate, VendorController.updateVendor);
 router.delete("/:vendorCode", verifyToken, pDelete, VendorController.softDeleteVendor);
 
@@ -37,8 +37,8 @@ router.post("/:vendorCode/documents", verifyToken, pUpdate, VendorController.upl
 router.patch("/documents/:docId/verify", verifyToken, pUpdate, VendorController.verifyDocument);
 
 // --- Financial Management (Wallets & Settlements) ---
-router.get("/:vendorCode/wallet", verifyToken, pView, VendorController.getWalletBalance);
-router.get("/:vendorCode/settlements", verifyToken, pView, VendorController.getSettlementHistory);
+router.get("/:vendorCode/wallet", verifyToken, VendorController.getWalletBalance);
+router.get("/:vendorCode/settlements", verifyToken, VendorController.getSettlementHistory);
 router.post(
   "/:vendorCode/settlements/trigger",
   verifyToken,

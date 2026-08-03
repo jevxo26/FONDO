@@ -7,9 +7,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # FONDO — Subscription Food Delivery Platform
 
-**Business model:** Centralized marketplace — customers never see the vendor, admin switches vendors transparently. See `docs/FONDO – Complete System Workflow.md` for the full PRD (~6,300 lines covering all modules, data models, and business flows).
+**Business model:** Centralized marketplace — customers never see the vendor, admin switches vendors transparently. See `docs/FONDO – Complete Workflow.md` for the business flow + build status.
 
-**8 roles:** Super Admin, Admin, Vendor, Vendor Staff, Kitchen Staff, Rider, Customer, Support Agent
+**5 roles:** Super Admin, Admin, Vendor, Rider, Customer
 
 **Stack:** Next.js 16 (App Router), React 19, TypeScript 5, Express 5 (custom server), Prisma (PostgreSQL via Neon), Redux Toolkit (RTK Query), Tailwind CSS v4, shadcn/ui (style: `base-nova`)
 

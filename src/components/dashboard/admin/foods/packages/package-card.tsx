@@ -82,6 +82,19 @@ export function PackageCard({ pkg }: PackageCardProps) {
               {pkg.packageType}
             </span>
 
+            <span
+              className={cn(
+                "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1",
+                pkg.status === "PENDING" && "bg-amber-500/10 text-amber-600 ring-amber-500/20",
+                pkg.status === "APPROVED" && "bg-emerald-500/10 text-emerald-600 ring-emerald-500/20",
+                pkg.status === "REJECTED" && "bg-red-500/10 text-red-600 ring-red-500/20",
+                !["PENDING", "APPROVED", "REJECTED"].includes(pkg.status) &&
+                  "bg-muted text-muted-foreground ring-border",
+              )}
+            >
+              {pkg.status}
+            </span>
+
             {pkg.isCustomizable && (
               <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/10 px-2 py-0.5 text-[10px] font-semibold text-orange-600 ring-1 ring-orange-500/20">
                 <Sliders className="size-2.5" />

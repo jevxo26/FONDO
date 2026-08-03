@@ -24,7 +24,6 @@ const initialFeatureFlags = [
   { key: "blog_enabled", label: "Blog", enabled: true },
   { key: "subscription_enabled", label: "Subscription", enabled: false },
   { key: "coupon_enabled", label: "Coupon", enabled: true },
-  { key: "referral_enabled", label: "Referral", enabled: false },
   { key: "maintenance_mode", label: "Maintenance Mode", enabled: false },
 ];
 

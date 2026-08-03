@@ -6,10 +6,8 @@ import { GeneralInfoSection } from "@/components/dashboard/admin/packages/genera
 import { HeaderBar } from "@/components/dashboard/admin/packages/header-bar";
 import { PriceSummarySidebar } from "@/components/dashboard/admin/packages/price-summary";
 import { initialValues, PackageFormValues, packageSchema } from "@/lib/schema/package-schema";
-import { useGetFoods } from "@/store/api/slices/foods-api";
-import { useGetVendorFoodsByVendorQuery } from "@/store/api/slices/foods-api";
-import { useAdminVendorOptions } from "@/store/api/slices/admin-food-api";
-import { useCreateAdminPackage, useGetPackageCategoriesQuery } from "@/store/api/slices/packages-api";
+import { useGetVendorFoods } from "@/store/api/slices/foods-api";
+import { useCreatePackage, useGetPackageCategoriesQuery } from "@/store/api/slices/packages-api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { PackageCategory } from "@prisma/client";
 import { useEffect, useState } from "react";
@@ -40,10 +38,9 @@ const getPackageCode = (value: string) => {
   return `${base}-${getUniqueSuffix()}`;
 };
 
-export default function AddPackageForm() {
+export default function VendorAddPackageForm() {
   const { data: categories } = useGetPackageCategoriesQuery(undefined);
-  const { data: foods } = useGetFoods({ page: 1, limit: 500 });
-  const { data: vendors } = useAdminVendorOptions();
+  const { data: vendorFoods } = useGetVendorFoods();
   const [showPreview, setShowPreview] = useState(true);
 
   const {
@@ -53,7 +50,7 @@ export default function AddPackageForm() {
     reset,
     setValue,
     formState: { errors, isSubmitting },
-    watch
+    watch,
   } = useForm<PackageFormValues>({
     resolver: yupResolver(packageSchema) as Resolver<PackageFormValues>,
     defaultValues: initialValues,
@@ -68,17 +65,10 @@ export default function AddPackageForm() {
   const nameWatched = useWatch({ control, name: "name" });
   const descriptionWatched = useWatch({ control, name: "description" });
   const categoryIdWatched = useWatch({ control, name: "packageCategoryId" });
-  const vendorIdWatched = useWatch({ control, name: "vendorId" });
   const thumbnailWatched = useWatch({ control, name: "thumbnail" });
   const durationWatched = useWatch({ control, name: "durationDays" });
   const customTypeNameWatched = useWatch({ control, name: "customTypeName" });
   const isCustomizableWatched = useWatch({ control, name: "isCustomizable" });
-
-  // Foods scoped to the selected vendor's approved menu
-  const { data: vendorFoods } = useGetVendorFoodsByVendorQuery(
-    { vendorId: vendorIdWatched ?? "" },
-    { skip: !vendorIdWatched },
-  );
 
   const selectedCategoryName =
     categories?.find((c: PackageCategory) => c.id === categoryIdWatched)?.name || "Meal Package";
@@ -88,8 +78,12 @@ export default function AddPackageForm() {
     0,
   );
 
-  const vendorFoodIds = new Set((vendorFoods ?? []).map((vf) => vf.foodId));
-  const filteredFoods = (foods?.items ?? []).filter((f) => vendorFoodIds.has(f.id));
+  // Vendor foods are scoped to own approved menu via the backend
+  const filteredFoods = (vendorFoods ?? []).map((vf) => ({
+    id: vf.foodId,
+    name: vf.name,
+    variants: [{ price: vf.price }],
+  })) as unknown as import("@/types/food").Food[];
 
   const selectedFoodPriceItems = daysWatched.flatMap(
     (day) =>
@@ -126,7 +120,7 @@ export default function AddPackageForm() {
     setValue("discountPrice", computedDiscountPrice, { shouldValidate: true });
   }, [computedPrice, computedDiscountPrice, setValue]);
 
-  const { createAdminPackage } = useCreateAdminPackage();
+  const { createPackage } = useCreatePackage();
 
   const allFoodItems = filteredFoods;
 
@@ -134,16 +128,17 @@ export default function AddPackageForm() {
     try {
       const packageCode = getPackageCode(data.packageCode || data.name);
       const slug = `${slugify(data.slug || data.name)}-${getUniqueSuffix()}`;
+      const { vendorId: _vendorId, ...rest } = data;
 
-      await createAdminPackage({
-        ...data,
+      await createPackage({
+        ...rest,
         packageCode,
         slug,
         price: computedPrice,
         discountPrice: computedDiscountPrice,
         totalMeals: totalMealsCount,
       }).unwrap();
-      alert("Package created and published.");
+      alert("Package submitted for approval.");
       reset(initialValues);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Unable to submit package.";
@@ -155,7 +150,6 @@ export default function AddPackageForm() {
   return (
     <section className="py-6 lg:py-8 bg-background">
       <div className="wrapper max-w-6xl mx-auto space-y-8 px-4">
-        {/* Top Header Bar */}
         <HeaderBar
           onReset={() => reset(initialValues)}
           showPreview={showPreview}
@@ -163,7 +157,6 @@ export default function AddPackageForm() {
           isSubmitting={isSubmitting}
         />
 
-        {/* Form Body Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <form
             id="package-form"
@@ -177,7 +170,6 @@ export default function AddPackageForm() {
               setValue={setValue}
               categories={categories}
               watch={watch}
-              vendors={vendors}
             />
 
             <DaysScheduleSection
@@ -189,7 +181,6 @@ export default function AddPackageForm() {
             />
           </form>
 
-          {/* Pricing Sidebar */}
           <div className="space-y-6">
             <PriceSummarySidebar
               register={register}
@@ -206,7 +197,6 @@ export default function AddPackageForm() {
           </div>
         </div>
 
-        {/* Live Preview Card */}
         {showPreview && (
           <CardPreview
             thumbnailWatched={thumbnailWatched}

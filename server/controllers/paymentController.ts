@@ -67,7 +67,10 @@ export const PaymentController = {
 
   list: catchAsync(async (req: AuthRequest, res: Response) => {
     const customerId = req.user!.role === "CUSTOMER" ? req.user!.userId : undefined;
-    const result = await paymentService.listPayments(customerId);
+    const page = req.query.page ? parseInt(req.query.page as string) : undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+    const status = req.query.status as string | undefined;
+    const result = await paymentService.listPayments(customerId, { page, limit, status });
     sendResponse(res, { statusCode: 200, data: result });
   }),
 

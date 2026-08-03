@@ -173,7 +173,6 @@ export const createOrderFromCart = catchServiceAsync(
       orderId: order.id,
       orderNumber: order.orderNumber,
       totalAmount: Number(order.totalAmount),
-      paymentUrl: `/api/payments/${order.id}/process`,
     };
   },
 );
@@ -269,7 +268,6 @@ export const createOrderFromItems = catchServiceAsync(
       orderId: order.id,
       orderNumber: order.orderNumber,
       totalAmount: Number(order.totalAmount),
-      paymentUrl: `/api/payments/${order.id}/process`,
     };
   },
 );

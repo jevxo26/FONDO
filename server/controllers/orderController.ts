@@ -66,14 +66,19 @@ export const OrderController = {
     sendResponse(res, { statusCode: 200, message: "Rider assigned" });
   }),
 
-  listAll: catchAsync(async (_req: AuthRequest, res: Response) => {
-    const result = await orderService.listAllOrders();
+  listAll: catchAsync(async (req: AuthRequest, res: Response) => {
+    const page = req.query.page ? parseInt(req.query.page as string) : undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+    const status = req.query.status as string | undefined;
+    const result = await orderService.listAllOrders({ page, limit, status });
     sendResponse(res, { statusCode: 200, data: result });
   }),
 
   listVendor: catchAsync(async (req: AuthRequest, res: Response) => {
     const vendorId = req.params.vendorId as string;
-    const result = await orderService.listVendorOrders(vendorId);
+    const page = req.query.page ? parseInt(req.query.page as string) : undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+    const result = await orderService.listVendorOrders(vendorId, { page, limit });
     sendResponse(res, { statusCode: 200, data: result });
   }),
 

@@ -78,7 +78,7 @@ export default function LoginPage() {
             key={u.role}
             type="button"
             disabled={loading}
-            onClick={() => quickLogin(u.email, "password123")}
+            onClick={() => quickLogin(u.email, "Password@123")}
             className="px-3 py-1.5 rounded text-xs font-medium text-foreground transition-colors bg-card hover:bg-muted disabled:opacity-50"
           >
             {u.label}

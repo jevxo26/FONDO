@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { toggleMobileMenu } from "@/store/slices/uiSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useCart } from "@/store/api/slices/cart-api";
+import { useAuth } from "@/hooks/use-auth";
 
 const items = [
   { href: "/", label: "Home", icon: House },
@@ -23,7 +24,8 @@ const useHydrated = () => useSyncExternalStore(emptySubscribe, () => true, () =>
 export function BottomNav() {
   const pathname = usePathname();
   const dispatch = useAppDispatch();
-  const { data: cart } = useCart();
+  const { isAuthenticated } = useAuth();
+  const { data: cart } = useCart(!isAuthenticated);
   const mounted = useHydrated();
   const isMenuOpen = useAppSelector((state) => state.ui.isMobileMenuOpen);
 

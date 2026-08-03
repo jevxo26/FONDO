@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import prisma from "../lib/prisma";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
@@ -83,25 +84,68 @@ export const softDeleteOrder = catchServiceAsync(async (orderId: string) => {
   });
 });
 
-export const listAllOrders = catchServiceAsync(async () => {
-  return prisma.order.findMany({
-    where: { deletedAt: null },
-    orderBy: { placedAt: "desc" },
-    include: {
-      customer: { select: { id: true, firstName: true, lastName: true, phone: true } },
-      items: { include: { food: true } },
-      payment: true,
-    },
-  });
-});
+export const listAllOrders = catchServiceAsync(
+  async (params: { page?: number; limit?: number; status?: string }) => {
+    const page = params.page || 1;
+    const limit = params.limit;
+    const skip = limit ? (page - 1) * limit : undefined;
 
-export const listVendorOrders = catchServiceAsync(async (vendorId: string) => {
-  return prisma.order.findMany({
-    where: { vendorId, deletedAt: null },
-    orderBy: { placedAt: "desc" },
-    include: {
-      customer: { select: { id: true, firstName: true, lastName: true } },
-      items: { include: { food: true } },
-    },
-  });
-});
+    const where: Prisma.OrderWhereInput = { deletedAt: null };
+    if (params.status) where.orderStatus = params.status as Prisma.OrderWhereInput["orderStatus"];
+
+    const [items, total] = await Promise.all([
+      prisma.order.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { placedAt: "desc" },
+        include: {
+          customer: { select: { id: true, firstName: true, lastName: true, phone: true } },
+          items: { include: { food: true } },
+          payment: true,
+        },
+      }),
+      prisma.order.count({ where }),
+    ]);
+
+    return {
+      items,
+      total,
+      page: limit ? page : 1,
+      limit: limit ?? total,
+      totalPages: limit ? Math.ceil(total / limit) : 1,
+    };
+  },
+);
+
+export const listVendorOrders = catchServiceAsync(
+  async (vendorId: string, params?: { page?: number; limit?: number }) => {
+    const page = params?.page || 1;
+    const limit = params?.limit;
+    const skip = limit ? (page - 1) * limit : undefined;
+
+    const where: Prisma.OrderWhereInput = { vendorId, deletedAt: null };
+
+    const [items, total] = await Promise.all([
+      prisma.order.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { placedAt: "desc" },
+        include: {
+          customer: { select: { id: true, firstName: true, lastName: true } },
+          items: { include: { food: true } },
+        },
+      }),
+      prisma.order.count({ where }),
+    ]);
+
+    return {
+      items,
+      total,
+      page: limit ? page : 1,
+      limit: limit ?? total,
+      totalPages: limit ? Math.ceil(total / limit) : 1,
+    };
+  },
+);

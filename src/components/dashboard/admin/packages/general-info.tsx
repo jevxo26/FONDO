@@ -1,5 +1,5 @@
 import React from "react";
-import { Layers } from "lucide-react";
+import { Layers, Store } from "lucide-react";
 import type { FieldErrors, UseFormWatch } from "react-hook-form";
 import { UseFormRegister, UseFormSetValue, } from "react-hook-form";
 import { inputStyles, PackageFormValues } from "@/lib/schema/package-schema";
@@ -7,6 +7,7 @@ import { FormField } from "@/components/common/form-field";
 import { PackageCategory } from "@prisma/client";
 import ImageUploadField from "@/components/common/image-upload";
 import { useUploadImageMutation } from "@/store/api/slices/image-upload-api";
+import type { AdminVendorOption } from "@/types/admin-food";
 
 export function GeneralInfoSection({
   register,
@@ -14,7 +15,8 @@ export function GeneralInfoSection({
   packageTypeWatched,
   setValue,
   categories,
-  watch
+  watch,
+  vendors
 }: {
   register: UseFormRegister<PackageFormValues>;
   errors: FieldErrors<PackageFormValues>;
@@ -22,6 +24,7 @@ export function GeneralInfoSection({
   setValue: UseFormSetValue<PackageFormValues>;
   categories?: PackageCategory[]
   watch: UseFormWatch<PackageFormValues>
+  vendors?: AdminVendorOption[]
 }
 ) {
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,6 +84,23 @@ export function GeneralInfoSection({
             ))}
           </select>
         </FormField>
+
+        {vendors && (
+          <FormField label="Vendor" error={errors.vendorId} required className="md:col-span-2">
+            <div className="flex items-center gap-2">
+              <Store className="w-4 h-4 text-muted-foreground shrink-0" />
+              <select {...register("vendorId")} className={inputStyles}>
+                <option value="">Select Vendor...</option>
+                {vendors.map((v) => (
+                  <option key={v.id} value={v.id}>{v.businessName}</option>
+                ))}
+              </select>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1.5">
+              Foods in the schedule below are limited to this vendor{"'"}s approved menu.
+            </p>
+          </FormField>
+        )}
 
         <FormField label="Description" error={errors.description} required className="md:col-span-2">
           <textarea rows={2} {...register("description")} placeholder="Brief details about package..." className={inputStyles} />

@@ -1,240 +1,221 @@
 # FONDO — Complete Workflow
 
-> **Working reference.** This doc replaces `docs/FONDO – Complete System Workflow.md` (the PRD, kept for historical requirements). Read this first; it reflects the *actual* MVP build, the post-merge schema, and what is deferred to future mini-plans.
+> **Business & Workflow reference** — the working plan our project is built by. Replaces the old full PRD (`FONDO – Complete System Workflow.md`, deleted — we no longer build by it). No data models here; see `prisma/schema.prisma` for those.
 
-- **Business model:** Centralized marketplace — customer never sees the vendor. Admin transparently swaps the vendor fulfilling a package. No zones in MVP; the order vendor resolves from the package.
-- **Stack:** Next.js 16 (App Router) + Express 5 custom server + Prisma/Neon + Redux Toolkit (RTK Query) + Tailwind v4 + shadcn/ui.
-- **Status legend:** 🟢 built & wired · 🟡 built with known gap · ⚪ planned (schema only, no routes) · 🔴 broken (needs fix).
-
----
-
-## 1. Roles
-
-Only **5 active roles** (DB enum trimmed). Kitchen/Vendor-Staff/Support are collapsed into these.
-
-| Role         | What they do                                                                  | Auth gate                          |
-| ------------ | ----------------------------------------------------------------------------- | ---------------------------------- |
-| `SUPER_ADMIN`| Platform owner, everything `ADMIN` does + settlement/revenue control           | `verifyToken` + `authorize`        |
-| `ADMIN`      | Approve vendor foods/packages, manage catalog, orders, users, coupons         | `verifyToken` + `authorize`        |
-| `VENDOR`     | Self-service: manage own foods (via vendor/food), accept orders, kitchen ops   | `verifyToken` + `hasPermission("foods")` |
-| `RIDER`      | Accept delivery, update delivery status, upload delivery proof                 | ⚪ planned (no routes yet)          |
-| `CUSTOMER`   | Browse, subscribe, order, pay, track, review                                   | `verifyToken` + `authorize("CUSTOMER")` |
-
-> `VENDOR_STAFF` model removed. Vendor identity = `User.vendorId → Vendor`. Server resolves the vendor with `vendor.findFirst({ where: { user: { id: userId } } })`.
-
-### Permission modules (`hasPermission`)
-
-`users`, `foods`, `packages`, `orders`, `vendors`, `settings`, `coupons`, `reports`. Super-admin always passes. Admin user → module toggles live in `UserPermission`. Without a toggle, a module endpoint returns `403`.
+- **Business model:** Centralized marketplace — customers never see the vendor. Admin transparently switches the vendor fulfilling a package/order.
+- **Status legend:** 🟢 built & wired · 🟡 built, gap known · 🔴 broken (fix pending) · ⚪ planned
+- **Stack:** Next.js 16 (App Router) + Express 5 custom server + Prisma/Neon + Redux Toolkit (RTK Query) + Tailwind v4 + shadcn/ui
 
 ---
 
-## 2. Core business loop
+## 1. Project Vision
+
+A subscription meal-delivery platform: customers pick a weekly/monthly meal package, get a plan, and receive cooked food daily — without ever seeing the restaurant. The platform curates vendors, packages, and delivery, so the customer experience stays consistent even as the vendor behind any package changes.
+
+We are building it **lean, in phases** — each phase is fully functional before the next starts (see `docs/DEVELOPER_PLAN.md`). Current state: the complete buy→fulfill→settle loop is built; subscriptions, riders, tracking, support, CMS-backend, and analytics are the roadmap.
+
+---
+
+## 2. Business Model
+
+- **Centralized marketplace.** The platform is the single face to the customer. Vendors supply food under the FONDO brand.
+- **Hidden vendor.** A package/order resolves to exactly one vendor internally; the customer is never exposed to the vendor or to swaps.
+- **Recurring revenue.** Customers subscribe to meal packages (order-based today; true recurring billing planned). Platform takes **commission** on orders; vendors are paid via **settlements**.
+- **Money flows:** order → SSLCommerz (sandbox) payment → confirmed order → delivery → settlement → vendor payout. Refunds/adjustments move through the customer wallet.
+
+---
+
+## 3. System Actors
+
+| Role | What they do |
+|------|--------------|
+| `SUPER_ADMIN` | Platform owner — everything `ADMIN` does + settlement/revenue control |
+| `ADMIN` | Approve vendor foods/packages, manage catalog, orders, users, customers, coupons |
+| `VENDOR` | Self-service — submit foods/packages for approval, receive orders, kitchen ops, own profile/branches |
+| `RIDER` | ⚪ planned — accept deliveries, update status, live location |
+| `CUSTOMER` | Browse, pick a package, customize, pay, order, review, track |
+
+> Access model is **fixed roles + permission modules** (per-admin toggles: `users`, `foods`, `packages`, `orders`, `vendors`, `settings`, `coupons`, `reports`). Super Admin bypasses checks. No custom role management.
+
+---
+
+## 4. Complete Business Workflow
 
 ```
-              admin approves food/package
-                        │
-  Vendor ──creates──► Food / Package (PENDING) ──► APPROVED ──► published
-                        ▲                                   │
-  Admin creates ────────┘            (admin-created ⇒ auto-APPROVED)
-                        │
-  Customer: browse → cart → checkout → SSLCommerz sandbox payment ──► Order (PENDING → CONFIRMED)
-                        │
-              package carries vendorId → order.vendorId resolved at creation
-                        │
-  Vendor kitchen: update meal status (PREPARING → READY) on vendor Orders page
-                        │
-  Admin assigns rider (planned) → Delivery (planned)
-                        │
-  Customer tracks order (planned) → payment settles → wallet credit (refund/withdraw)
+Vendor ──submits──► Package (PENDING) ──admin approves► APPROVED ──► published
+Admin ──selects vendor + its foods──► Package (APPROVED) ──► published directly
+Customer: browse → package detail → customize meals → cart → checkout
+          → SSLCommerz sandbox payment → Order (PENDING → CONFIRMED)
+Order status: CONFIRMED → PREPARING → READY_FOR_PICKUP → PICKED_UP → ON_THE_WAY → DELIVERED
+Payment settles → vendor wallet credit → admin triggers settlement → vendor payout
+Refunds/adjustments → customer wallet
 ```
 
-**One-vendor-per-package.** In MVP a package belongs to exactly one vendor (`Package.vendorId`). Daily orders take that vendor. Admin can later re-assign orders to a different vendor (order-level `vendorId` exists).
+- **One vendor per package** in MVP (`Package.vendorId`); order inherits it, admin can re-assign at order level.
+- **Two creation paths:** Admin picks a vendor, adds foods **from that vendor's approved menu** (`?vendorId=` on the vendor-foods endpoint), and the package is **APPROVED/published immediately**. Vendor-built packages start **PENDING** and only publish once an admin approves them.
+- **Admin-created catalog items auto-APPROVED**; vendor-submitted start PENDING.
+- **Status is order-driven** — no scheduler yet (daily generation planned).
 
 ---
 
-## 3. Auth & account (`/api/auth`, `/api/users`)
+## 5. Customer Journey
 
-- Register (customer), login, OTP send/verify, refresh, logout, me.
-- Forgot/reset password via OTP flow.
-- Change password (authed).
-- Profile update, delete-me.
-- Sub-resources: addresses, devices, notification-settings, login-history.
-- Admin: user CRUD + `POST /api/users` (⚠️ body **not** validated — fix in security pass).
-
-**JWT:** access token in header, refresh token in HttpOnly cookie. 401 auto-triggers `/auth/refresh`; concurrent failed requests are queued on the client.
-
----
-
-## 4. Food catalog (`/api/foods`, `/api/admin/foods`, `/api/vendor/foods`)
-
-- Public: list (only `FoodStatus.APPROVED`), slug detail, categories, tags, reviews, favorites.
-- Admin: full food CRUD + variants, addons, addon items, nutrition, ingredients, allergens, prices, images, discounts, tags, labels, availability, schedules, visibility, approval (`approve`/`reject`).
-- Vendor: create/list/get own vendor-food links, update food status. Vendor-created food is `PENDING` until admin approves.
-- Food approval fields: `approvedBy`, `approvedAt`, `rejectionReason` (`FoodStatus` enum).
-
-### FoodStatus lifecycle
-
-```
-Vendor creates ──► PENDING ──admin──► APPROVED (published to catalog)
-                     │                    │
-                     └────admin reject────┘  (rejectionReason set)
-Admin creates ─────────────────────────► APPROVED (auto)
-```
+| Step | Status |
+|------|--------|
+| Register / login (OTP) | 🟢 |
+| Browse foods, categories, packages | 🟢 |
+| Package detail + customize meals | 🟢 |
+| Cart + checkout (coupon, address, totals) | 🟢 |
+| SSLCommerz payment + callbacks | 🟢 |
+| Order list/detail + invoice PDF | 🟢 |
+| Review food/package/order | 🟢 |
+| Live tracking map | ⚪ |
+| Active subscription management | ⚪ |
 
 ---
 
-## 5. Packages (`/api/package`)
+## 6. Subscription Lifecycle
 
-- Public: list, detail. Categories list.
-- Vendor: create package, view open requests, accept custom request.
-- Customer: custom meal-plan request, pay for custom order.
-- Reviews: create/update/delete (customer), pending-moderation list + status toggle (admin).
-
-**Known gap:** `createVendorPackage` trusts a client-sent `status` (a vendor can self-publish). Fix in security pass → status is server-assigned (`draft`/`pending`), admin approves.
-
-**Schema note:** `Package` gains `vendorId → Vendor` (one vendor per package). Package children (`PackageDay`, `PackageMeal`, `PackageMealFood`, prices, rules, benefits, nutrition, schedule, images, tags, reviews, rating, customization, availability, `CustomMealPlan`) stay.
+⚪ **Planned.** Subscribe to a package or custom meal plan for N days → system generates daily meals.
+`PENDING → ACTIVE → PAUSED/FROZEN → RESUMED → EXPIRED/CANCELLED`; actions: pause/resume/freeze, skip meal (with replacement), renew, upgrade/downgrade. Until it ships, recurring meals are handled as normal orders.
 
 ---
 
-## 6. Cart & checkout (`/api/cart`)
+## 7. Daily Meal Generation
 
-- Cart init, get, clear; items add/update/remove; addons add/remove.
-- Meal-based cart (package flow): add/remove meals, add/remove food in a meal.
-- Checkout: summary, apply/remove coupon, select address, **place-order**.
-- Place order → payment initiation (SSLCommerz sandbox).
-
-**Known gap:** `paymentUrl` produced by order-creation is broken/misbuilt; retry relies on the canonical initiate call. Flagged in orderCreationService.
+⚪ **Planned.** For each active subscription, generate one day per date with breakfast/lunch/dinner meals → vendor kitchen queue → delivery → feedback. MVP equivalent: the customer builds the week in the **cart** and places one order.
 
 ---
 
-## 7. Payment (`/api/payments`)
+## 8. Vendor Workflow
 
-**Gateway:** SSLCommerz **sandbox only** (no live merchant flow).
-
-- Public/gateway callbacks: `/payments/success|fail|cancel|ipn` (GET+POST).
-- Customer: `initiate`, `retry`.
-- Admin: `refund`, `adjust` (internal ledger → wallet credit, admin approved).
-- Query: `list` (customer sees own, admin sees all), `getById`.
-- `PaymentMethod` seeded at boot (bkash, nagad, cod(default), card, rocket).
-
-### Payment status lifecycle
-
-```
-PENDING → PROCESSING → COMPLETED
-              │           │
-              ├── FAILED ──┘ (retry allowed)
-              └── CANCELLED
-COMPLETED ──refund──► REFUNDED / PARTIALLY_REFUNDED (internal wallet, admin approval)
-```
+| Area | Status |
+|------|--------|
+| Onboarding (profile, branches, kitchens, documents, hours) | 🟢 |
+| Submit foods → PENDING → admin approval | 🟢 |
+| Submit packages → PENDING → admin approval | 🟢 |
+| Receive/fulfill orders, kitchen status updates | 🟢 |
+| Vendor wallet + settlements (admin triggers period) | 🟢 |
+| Menu control (availability, visibility, schedules, pricing) | 🟢 |
 
 ---
 
-## 8. Orders (`/api/orders`)
+## 9. Kitchen Workflow
 
-- Customer: list, getById, update, cancel, submit feedback, invoice, invoice download (PDF).
-- Admin: **all order endpoints are 🔴 broken** — admin routes lack `verifyToken` (see §Security), so `authorize` always 401s. Routes exist: delete, update status, assign vendor, assign rider, list-all, list-vendor, refund, list-refunds, update meal status.
-- Meal-level status lives on the vendor Orders page (`/order-meals/:id/status`) — kitchen dashboard was deleted.
-
-### Order status lifecycle
-
-```
-PENDING → PAYMENT_PENDING → CONFIRMED → PREPARING → READY_FOR_PICKUP → PICKED_UP
-    │                                                                    │
-    └── CANCELLED ◄──────────────────────────────────────────────────────┘
-→ ON_THE_WAY → DELIVERED → COMPLETED   (refund ⇒ REFUNDED)
-```
-
-`DeliveryStatus` (parallel tracking): PENDING → ASSIGNED → ACCEPTED → PICKED_UP → ON_THE_WAY → ARRIVED → DELIVERED / FAILED / CANCELLED.
+🟡 **Partial** — kitchen ops live in the vendor role (vendor staff update order/meal status `PREPARING → READY_FOR_PICKUP`).
+⚪ Dedicated kitchen dashboard (today's queue, per-meal checklist) planned.
 
 ---
 
-## 9. Delivery & riders ⚪ planned
+## 10. Rider Workflow
 
-- Models exist (`Rider*`, `Delivery*`, `Tracking*`, `Route*`) — kept in schema, marked **Future**.
-- **No rider routes yet.** Assigning a rider (`/orders/:id/assign-rider`), delivery status updates, live tracking, proofs, and ETA are part of the rider mini-plan.
-- MVP delivery UX = customer sees order + meal status; admin manually manages assignment (when routes are built).
+⚪ **Planned.** Admin/vendor create riders + verify documents/vehicles → rider goes online → assigned deliveries → status updates + proof → earnings to rider wallet → withdrawals.
 
 ---
 
-## 10. Wallet & settlements
+## 11. Customer Tracking
 
-- Customer: `GET /wallet`, transactions, top-up (SSLCommerz callback), withdraw (admin-approved).
-- Admin: list withdrawals, approve, reject.
-- Vendor: wallet balance, settlement history (admin-managed); **self-service wallet is 🟡** — vendor calls currently hit a 403 because they lack the `vendors` permission module.
-- Admin settlements: create/process settlement, platform revenue report.
-- Refunds land in customer wallet (internal), not gateway pushback (sandbox has no real refund API in use).
+🟡 Today: order status + invoice only (text states). ⚪ Planned: live map, rider position, ETA, event feed.
 
 ---
 
-## 11. Coupons (`/api/admin/coupons`)
+## 12. Admin Management
 
-- Admin CRUD only. Applied at checkout via `/cart/checkout/apply-coupon`.
-
----
-
-## 12. Support & notifications
-
-- **Chat/support → email + WhatsApp.** No DB tables. Contact page form → nodemailer (`SUPPORT_EMAIL`); WhatsApp button → `SUPPORT_WHATSAPP` `wa.me` link.
-- **Notifications:** refresh-button only (RTK Query tag invalidation on dashboard header). Manual refresh beats polling on Neon free tier (9-connection pool). No socket/bell/push in MVP.
-- Notification *settings* (per-user toggles) live at `/api/users/me/notification-settings`.
-
----
-
-## 13. Schema (post-merge) summary
-
-183 → **~160 models.** Merge/drop executed this pass:
-
-| Dropped model          | Why / replacement                                                       |
-| ---------------------- | ----------------------------------------------------------------------- |
-| `FoodGallery`          | Identical to `FoodImage` (used). Drop.                                  |
-| `VendorStaff`          | Replaced by `User.vendorId → Vendor` 1:1.                               |
-| `VendorPaymentInfo`    | Unused; `VendorBankAccount` covers payouts.                             |
-| `VendorEarning`        | Unused; `VendorSettlementItem` / `VendorWalletTransaction` cover it.    |
-| `PaymentLog`           | Unused; `PaymentTransaction` is the single payment ledger.              |
-| `PaymentHistory`       | Unused; same ledger.                                                    |
-| `PaymentInvoice`       | Unused; `OrderInvoice` (used) is the invoice.                           |
-| 14× `VendorFood*` children | Unused (Price, Stock, Availability, PreparationTime, Recipe, RecipeItem, Cost, Packaging, Image, Quality, Zone, Schedule, Inventory, Performance). |
-| Kept                | `VendorFoodStatusHistory`, `VendorFoodAssignment` (both used), all Rider/Delivery/Tracking/CMS/Inventory/Referral/Zone models (**Future**). |
-
-**Added:** `Package.vendorId → Vendor` (one vendor per package).
+| Area | Status |
+|------|--------|
+| Vendors (create/edit/branches/kitchens/documents/verify) | 🟢 |
+| Customers (list/detail, orders, subscriptions, wallet, payments) | 🟢 |
+| Food catalog (full CRUD + sub-resources + approval) | 🟢 |
+| Packages (create w/ vendor select → publish, approve/reject vendor submissions, categories, reviews moderation) | 🟢 |
+| Orders (list all, status, assign vendor/rider, refund) | 🟢 |
+| Payments (refund/adjust, sandbox) + list | 🟡 |
+| Coupons CRUD | 🟢 |
+| Riders | ⚪ (UI shell exists) |
+| Reports & platform revenue | 🟢 basic / ⚪ analytics |
 
 ---
 
-## 14. Security & known gaps (priority order)
+## 13. Hidden Vendor Architecture
 
-| # | Gap | Fix |
-|---|-----|-----|
-| S1 | 🔴 Admin order routes missing `verifyToken` (401 always) | Add `verifyToken` to admin order routes |
-| S2 | 🟡 Vendor routes public (`GET /api/vendor/:vendorCode`, sub-resources) | Gate with auth per route |
-| S3 | 🟡 `createVendorPackage` trusts client `status` | Server-assign status; admin approval |
-| S4 | 🟡 `POST /api/users` unvalidated | Add create-user validation |
-| S5 | 🟡 Vendor self-wallet 403 (permission module) | Vendor-facing wallet uses own permission/self scope |
-| S6 | 🟡 JWT fallback secrets in env | Fail hard if env missing |
-| S7 | 🟡 Upload has no fileFilter/type limit | Add multer fileFilter |
-| S8 | 🟡 Payment price/amount trust | Server recompute totals; never trust client |
-| S9 | 🟡 IDOR gaps (cross-customer resource access) | Scope queries to `req.user.id` |
-| S10 | 🟡 Broken `paymentUrl` from orderCreationService | Rebuild URL; use canonical initiate |
-| S11 | 🟡 No pagination on `listAllOrders` / `listPayments` | Add limit/offset |
+- MVP: package → `Package.vendorId`; order stores `order.vendorId` at creation. All vendor ops scoped by `User.vendorId` (no VendorStaff).
+- Swapping: admin re-assigns an order to another vendor (`assign-vendor`, fixed S1). No vendor info appears in the customer flow.
 
 ---
 
-## 15. Environment (`server/config/env.ts`)
+## 14. Notifications
 
-`DATABASE_URL`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `PORT`, `NODE_ENV`, `CORS_ORIGIN`, `SSLCOMMERZ_STORE_ID`, `SSLCOMMERZ_STORE_PASSWD`, `SSLCOMMERZ_IS_LIVE`, `SUPPORT_EMAIL`, `SUPPORT_WHATSAPP`, `MAIL_*` (nodemailer), `UPLOAD_*`.
+Easy-way inbox — **no socket.io, no realtime push**. RTK Query drives delivery with minimal DB load:
+- **Unread-count polled every 30s, only while the dashboard tab is focused** (`skipPollingIfUnfocused` + `refetchOnFocus`). Hidden tabs make zero requests.
+- **Full list fetched on demand**: panel opens, unread count changes, or the **refresh button** in the dashboard header (dispatches `invalidateTags` → refetches all active queries).
+- New notifications arrive within one focused poll (~30s) or instantly via the refresh button — fast enough for order/approval status updates without websocket infrastructure.
 
----
-
-## 16. Future mini-plans (deferred, schema-ready)
-
-1. Rider & delivery (routes + rider app flow)
-2. Chat/support tickets
-3. CMS (banner, slider, blog, static pages)
-4. Analytics & reports
-5. Inventory & supply chain
-6. Referral & loyalty
-7. Zones / service-area routing
-8. Live notifications (polling → socket)
+- 🟢 Settings: per-user preferences + device push tokens + notification-settings endpoints.
+- ⚪ In-app inbox (polled via RTK Query), unread badge, broadcast, announcements, FAQ.
+- Out of scope: socket.io, push servers, realtime delivery — polling + manual refresh only.
 
 ---
 
-*Next: full endpoint contracts in `docs/API.md`; route lookup table in `docs/API_REFERENCE.md`.*
+## 15. Marketing
+
+- 🟢 Coupons (discount codes) at checkout.
+- ⚪ Banners/sliders (UI shell exists), blog/SEO.
+
+---
+
+## 16. Analytics & Reports
+
+- 🟢 Platform revenue + vendor settlements + per-customer lookups; activity logged.
+- ⚪ Dashboard KPIs, sales/customer/vendor/rider/package analytics, scheduled reports.
+
+---
+
+## 17. Support
+
+Support is **email + WhatsApp only** — no ticket/chat tables (schema removed).
+
+- 🟢 Email contact via `/support` form (`subject`, reason/issue, `message`) → emailed to the support inbox.
+- 🟢 WhatsApp button (`wa.me/<number>` link) on the same page.
+- ⚪ Not built yet: the `/support` page + `POST /api/support/contact` endpoint (planned).
+
+---
+
+## 18. Tech Stack
+
+Frontend: Next.js 16 + React 19 + TS 5 + Tailwind v4 + shadcn/ui
+State: Redux Toolkit + RTK Query
+Server: Express 5 (custom, alongside Next on :3000)
+DB: PostgreSQL (Neon) + Prisma
+Payments: SSLCommerz sandbox
+Realtime: none — notifications via RTK Query polling (no socket.io)
+
+---
+
+## 19. Build Status Map
+
+| Module | Status |
+|--------|--------|
+| Auth & account | 🟢 |
+| Food catalog + approval | 🟢 |
+| Packages & meal plans | 🟢 |
+| Cart & checkout | 🟢 |
+| Payments (SSLCommerz) | 🟢 |
+| Customer wallet | 🟢 |
+| Orders (customer) | 🟢 / admin 🟢 |
+| Vendors | 🟢 |
+| Users & Customers admin | 🟢 |
+| Coupons | 🟢 |
+| Settlements & revenue | 🟢 |
+| RBAC (permission modules) | 🟢 |
+| Upload / health | 🟡 / 🟢 |
+| CMS (banners/sliders/blogs/pages) | 🟡 UI shell, backend ⚪ |
+| Riders / Deliveries / Tracking | ⚪ |
+| Subscriptions | ⚪ |
+| Notifications inbox | ⚪ (RTK Query polling, no socket.io) |
+| Support (email/WhatsApp) | ⚪ |
+| Referral | ❌ dropped |
+| Analytics & reports | ⚪ |
+| System settings | ⚪ |
+
+---
+
+> **API contracts:** `docs/API.md` (request/response specs) + `docs/API_REFERENCE.md` (route matrix). **Build steps:** `docs/DEVELOPER_PLAN.md`. **Last updated:** 2026-08-03

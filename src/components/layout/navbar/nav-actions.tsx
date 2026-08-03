@@ -46,7 +46,7 @@ export function NavActions() {
 
   const { user, isAuthenticated, logout } = useAuth();
   const permissions = useAppSelector((s) => s.auth.permissions);
-  const { data: cart } = useCart();
+  const { data: cart } = useCart(!isAuthenticated);
   const { data: favorites } = useFavorites();
 
   const cartCount = cart?.items?.reduce((sum, i) => sum + i.quantity, 0) ?? 0;

@@ -39,9 +39,10 @@ router.get(
 
 // Admin-only (platform-wide data + actions)
 const pOrders = hasPermission("orders");
-router.delete("/orders/:id", authorize("SUPER_ADMIN", "ADMIN"), pOrders, OrderController.softDelete);
+router.delete("/orders/:id", verifyToken, authorize("SUPER_ADMIN", "ADMIN"), pOrders, OrderController.softDelete);
 router.patch(
   "/orders/:id/status",
+  verifyToken,
   authorize("SUPER_ADMIN", "ADMIN"),
   pOrders,
   validate(updateStatusSchema),
@@ -49,6 +50,7 @@ router.patch(
 );
 router.patch(
   "/orders/:id/assign-vendor",
+  verifyToken,
   authorize("SUPER_ADMIN", "ADMIN"),
   pOrders,
   validate(assignVendorSchema),
@@ -56,6 +58,7 @@ router.patch(
 );
 router.patch(
   "/orders/:id/assign-rider",
+  verifyToken,
   authorize("SUPER_ADMIN", "ADMIN"),
   pOrders,
   validate(assignRiderSchema),
@@ -63,18 +66,21 @@ router.patch(
 );
 router.get(
   "/admin/orders",
+  verifyToken,
   authorize("SUPER_ADMIN", "ADMIN"),
   pOrders,
   OrderController.listAll,
 );
 router.get(
   "/vendors/:vendorId/orders",
+  verifyToken,
   authorize("SUPER_ADMIN", "ADMIN"),
   pOrders,
   OrderController.listVendor,
 );
 router.post(
   "/orders/:orderId/refund",
+  verifyToken,
   authorize("SUPER_ADMIN", "ADMIN"),
   pOrders,
   validate(processRefundSchema),
@@ -82,12 +88,14 @@ router.post(
 );
 router.get(
   "/orders/:orderId/refunds",
+  verifyToken,
   authorize("SUPER_ADMIN", "ADMIN"),
   pOrders,
   OrderController.listRefunds,
 );
 router.patch(
   "/order-meals/:id/status",
+  verifyToken,
   authorize("SUPER_ADMIN", "ADMIN"),
   pOrders,
   validate(updateMealStatusSchema),

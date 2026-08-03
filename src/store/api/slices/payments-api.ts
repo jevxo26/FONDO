@@ -10,13 +10,21 @@ export interface PaymentMethod {
   isDefault: boolean;
 }
 
+export interface PaymentListResponse {
+  items: Payment[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export const paymentsApi = api.injectEndpoints({
   endpoints: (builder) => ({
     initiatePayment: builder.mutation<InitiatePaymentResponse, InitiatePaymentPayload>({
       query: (body) => ({ url: "/payments/initiate", method: "POST", body }),
     }),
 
-    getPayments: builder.query<Payment[], void>({
+    getPayments: builder.query<PaymentListResponse, void>({
       query: () => "/payments",
       providesTags: ["Payment"],
     }),

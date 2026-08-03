@@ -27,8 +27,8 @@ interface AdminFoodListParams {
 
 export const listAdminFoods = catchServiceAsync(
   async (params: AdminFoodListParams) => {
-    const page = params.page || 1;
-    const limit = params.limit;
+    const page = Number(params.page) || 1;
+    const limit = params.limit ? Number(params.limit) : undefined;
     const skip = limit ? (page - 1) * limit : undefined;
 
     const where: Prisma.FoodWhereInput = { deletedAt: null };

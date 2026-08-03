@@ -1,9 +1,10 @@
 # FONDO — API Reference (Route Table)
 
-Complete route inventory. Frontend devs: use this to find the exact endpoint + auth for any screen. Full contracts in `docs/API.md`.
+Complete route inventory — **built and planned**. Frontend devs: use this to find the exact endpoint + auth for any screen. Full request/response contracts in `docs/API.md`.
 
 **Legend:** 🔐 = Bearer token · perm = permission module · 🟢 built · 🟡 gap · 🔴 broken · ⚪ planned
 **Envelope:** all responses `{ success, message, data }`.
+**Planned rows** (⚪) are designed from `prisma/schema.prisma` — subject to change at build.
 
 ---
 
@@ -31,7 +32,7 @@ Complete route inventory. Frontend devs: use this to find the exact endpoint + a
 | 11 | PATCH | `/api/users/me` | 🔐 | 🟢 | Update profile |
 | 12 | DELETE | `/api/users/me` | 🔐 | 🟢 | Delete self |
 | 13 | GET | `/api/users` | 🔐 perm users | 🟢 | Admin list users |
-| 14 | POST | `/api/users` | 🔐 perm users | 🟡 | Admin create user (unvalidated, S4) |
+| 14 | POST | `/api/users` | 🔐 perm users | 🟢 | Admin create user |
 | 15 | GET | `/api/users/:id` | 🔐 perm users | 🟢 | Admin get user |
 | 16 | PATCH | `/api/users/:id` | 🔐 perm users | 🟢 | Admin update user |
 | 17 | DELETE | `/api/users/:id` | 🔐 perm users | 🟢 | Admin delete user |
@@ -161,16 +162,21 @@ Complete route inventory. Frontend devs: use this to find the exact endpoint + a
 | 93 | GET | `/api/package/:id` | — | 🟢 | Package detail |
 | 94 | GET | `/api/package/categories` | — | 🟢 | Package categories |
 | 95 | POST | `/api/package/categories` | 🔐 ADMIN | 🟢 | Create category |
-| 96 | POST | `/api/package/vendor/create` | 🔐 perm packages | 🟡 | Create (S3 status trust) |
-| 97 | GET | `/api/package/vendor/open-requests` | 🔐 perm packages | 🟢 | Vendor request queue |
-| 98 | PATCH | `/api/package/vendor/accept-request/:id` | 🔐 perm packages | 🟢 | Accept custom request |
-| 99 | POST | `/api/package/custom-request` | 🔐 | 🟢 | Customer custom request |
-| 100 | POST | `/api/package/custom-request/:id/pay` | 🔐 | 🟢 | Pay custom order |
-| 101 | POST | `/api/package/:packageId/reviews` | 🔐 | 🟢 | Create review |
-| 102 | PATCH | `/api/package/reviews/:reviewId` | 🔐 | 🟢 | Update review |
-| 103 | DELETE | `/api/package/reviews/:reviewId` | 🔐 | 🟢 | Delete review |
-| 104 | GET | `/api/package/reviews/pending` | 🔐 ADMIN | 🟢 | Moderation queue |
-| 105 | PATCH | `/api/package/reviews/:reviewId/status` | 🔐 ADMIN | 🟢 | Approve/hide |
+| 96 | POST | `/api/package/vendor/create` | 🔐 perm packages | 🟢 | Create → PENDING (S3 fixed) |
+| 97 | GET | `/api/package/admin` | 🔐 ADMIN perm packages | 🟢 | List all + status filter |
+| 98 | POST | `/api/package/admin/create` | 🔐 ADMIN perm packages | 🟢 | Build w/ vendorId → APPROVED |
+| 99 | PATCH | `/api/package/admin/:id/approve` | 🔐 ADMIN perm packages | 🟢 | Approve/publish |
+| 100 | PATCH | `/api/package/admin/:id/reject` | 🔐 ADMIN perm packages | 🟢 | Reject w/ reason |
+| 101 | GET | `/api/package/vendor/packages` | 🔐 perm packages | 🟢 | Vendor own packages |
+| 102 | GET | `/api/package/vendor/open-requests` | 🔐 perm packages | 🟢 | Vendor request queue |
+| 103 | PATCH | `/api/package/vendor/accept-request/:id` | 🔐 perm packages | 🟢 | Accept custom request |
+| 104 | POST | `/api/package/custom-request` | 🔐 | 🟢 | Customer custom request |
+| 105 | POST | `/api/package/custom-request/:id/pay` | 🔐 | 🟢 | Pay custom order |
+| 106 | POST | `/api/package/:packageId/reviews` | 🔐 | 🟢 | Create review |
+| 107 | PATCH | `/api/package/reviews/:reviewId` | 🔐 | 🟢 | Update review |
+| 108 | DELETE | `/api/package/reviews/:reviewId` | 🔐 | 🟢 | Delete review |
+| 109 | GET | `/api/package/reviews/pending` | 🔐 ADMIN | 🟢 | Moderation queue |
+| 110 | PATCH | `/api/package/reviews/:reviewId/status` | 🔐 ADMIN | 🟢 | Approve/hide |
 
 ---
 
@@ -178,23 +184,23 @@ Complete route inventory. Frontend devs: use this to find the exact endpoint + a
 
 | # | Method | Path | Auth | Status | Description |
 |---|--------|------|------|--------|-------------|
-| 106 | GET | `/api/cart` | 🔐 | 🟢 | Get cart |
-| 107 | POST | `/api/cart` | 🔐 | 🟢 | Init `{ packageId?, customMealPlanId? }` |
-| 108 | DELETE | `/api/cart` | 🔐 | 🟢 | Clear cart |
-| 109 | POST | `/api/cart/items` | 🔐 | 🟢 | Add item |
-| 110 | PATCH | `/api/cart/items/:id` | 🔐 | 🟢 | Update qty |
-| 111 | DELETE | `/api/cart/items/:id` | 🔐 | 🟢 | Remove item |
-| 112 | POST | `/api/cart/items/:itemId/addons` | 🔐 | 🟢 | Add addon |
-| 113 | DELETE | `/api/cart/addons/:id` | 🔐 | 🟢 | Remove addon |
-| 114 | POST | `/api/cart/meals` | 🔐 | 🟢 | Add meal (package flow) |
-| 115 | DELETE | `/api/cart/meals/:id` | 🔐 | 🟢 | Remove meal |
-| 116 | POST | `/api/cart/meals/:mealId/foods` | 🔐 | 🟢 | Add food to meal |
-| 117 | DELETE | `/api/cart/meals/:mealId/foods/:foodId` | 🔐 | 🟢 | Remove food from meal |
-| 118 | POST | `/api/cart/checkout` | 🔐 | 🟢 | Checkout summary |
-| 119 | POST | `/api/cart/checkout/apply-coupon` | 🔐 | 🟢 | Apply coupon |
-| 120 | DELETE | `/api/cart/checkout/remove-coupon` | 🔐 | 🟢 | Remove coupon |
-| 121 | POST | `/api/cart/checkout/select-address` | 🔐 | 🟢 | Select delivery address |
-| 122 | POST | `/api/cart/checkout/place-order` | 🔐 | 🟡 | Place order (S10) |
+| 111 | GET | `/api/cart` | 🔐 | 🟢 | Get cart |
+| 112 | POST | `/api/cart` | 🔐 | 🟢 | Init `{ packageId?, customMealPlanId? }` |
+| 113 | DELETE | `/api/cart` | 🔐 | 🟢 | Clear cart |
+| 114 | POST | `/api/cart/items` | 🔐 | 🟢 | Add item |
+| 115 | PATCH | `/api/cart/items/:id` | 🔐 | 🟢 | Update qty |
+| 116 | DELETE | `/api/cart/items/:id` | 🔐 | 🟢 | Remove item |
+| 117 | POST | `/api/cart/items/:itemId/addons` | 🔐 | 🟢 | Add addon |
+| 118 | DELETE | `/api/cart/addons/:id` | 🔐 | 🟢 | Remove addon |
+| 119 | POST | `/api/cart/meals` | 🔐 | 🟢 | Add meal (package flow) |
+| 120 | DELETE | `/api/cart/meals/:id` | 🔐 | 🟢 | Remove meal |
+| 121 | POST | `/api/cart/meals/:mealId/foods` | 🔐 | 🟢 | Add food to meal |
+| 122 | DELETE | `/api/cart/meals/:mealId/foods/:foodId` | 🔐 | 🟢 | Remove food from meal |
+| 123 | POST | `/api/cart/checkout` | 🔐 | 🟢 | Checkout summary |
+| 124 | POST | `/api/cart/checkout/apply-coupon` | 🔐 | 🟢 | Apply coupon |
+| 125 | DELETE | `/api/cart/checkout/remove-coupon` | 🔐 | 🟢 | Remove coupon |
+| 126 | POST | `/api/cart/checkout/select-address` | 🔐 | 🟢 | Select delivery address |
+| 127 | POST | `/api/cart/checkout/place-order` | 🔐 | 🟢 | Place order |
 
 ---
 
@@ -202,17 +208,17 @@ Complete route inventory. Frontend devs: use this to find the exact endpoint + a
 
 | # | Method | Path | Auth | Status | Description |
 |---|--------|------|------|--------|-------------|
-| 123 | GET | `/api/payment-methods` | — | 🟢 | Payment methods |
-| 124 | GET+POST | `/api/payments/success` | — | 🟢 | Gateway success |
-| 125 | GET+POST | `/api/payments/fail` | — | 🟢 | Gateway fail |
-| 126 | GET+POST | `/api/payments/cancel` | — | 🟢 | Gateway cancel |
-| 127 | POST | `/api/payments/ipn` | — | 🟢 | Gateway IPN |
-| 128 | POST | `/api/payments/initiate` | 🔐 | 🟢 | Initiate SSLCommerz |
-| 129 | POST | `/api/payments/:id/retry` | 🔐 CUSTOMER | 🟢 | Retry payment |
-| 130 | POST | `/api/payments/:id/refund` | 🔐 ADMIN perm settings | 🟡 | Wallet refund |
-| 131 | POST | `/api/payments/:id/adjust` | 🔐 ADMIN perm settings | 🟡 | Adjust payment |
-| 132 | GET | `/api/payments` | 🔐 | 🟡 | List (S11) |
-| 133 | GET | `/api/payments/:id` | 🔐 | 🟢 | Detail |
+| 128 | GET | `/api/payment-methods` | — | 🟢 | Payment methods |
+| 129 | GET+POST | `/api/payments/success` | — | 🟢 | Gateway success |
+| 130 | GET+POST | `/api/payments/fail` | — | 🟢 | Gateway fail |
+| 131 | GET+POST | `/api/payments/cancel` | — | 🟢 | Gateway cancel |
+| 132 | POST | `/api/payments/ipn` | — | 🟢 | Gateway IPN |
+| 133 | POST | `/api/payments/initiate` | 🔐 | 🟢 | Initiate SSLCommerz |
+| 134 | POST | `/api/payments/:id/retry` | 🔐 CUSTOMER | 🟢 | Retry payment |
+| 135 | POST | `/api/payments/:id/refund` | 🔐 ADMIN perm settings | 🟡 | Wallet refund |
+| 136 | POST | `/api/payments/:id/adjust` | 🔐 ADMIN perm settings | 🟡 | Adjust payment |
+| 137 | GET | `/api/payments` | 🔐 | 🟢 | List (paginated) |
+| 138 | GET | `/api/payments/:id` | 🔐 | 🟢 | Detail |
 
 ---
 
@@ -220,22 +226,22 @@ Complete route inventory. Frontend devs: use this to find the exact endpoint + a
 
 | # | Method | Path | Auth | Status | Description |
 |---|--------|------|------|--------|-------------|
-| 134 | GET | `/api/orders` | 🔐 | 🟢 | My orders |
-| 135 | GET | `/api/orders/:id` | 🔐 | 🟢 | Order detail |
-| 136 | PATCH | `/api/orders/:id` | 🔐 | 🟢 | Update notes/schedule |
-| 137 | POST | `/api/orders/:id/cancel` | 🔐 | 🟢 | Cancel |
-| 138 | POST | `/api/orders/:orderId/feedback` | 🔐 | 🟢 | Submit feedback |
-| 139 | GET | `/api/orders/:orderId/invoice` | 🔐 | 🟢 | Invoice |
-| 140 | GET | `/api/orders/:orderId/invoice/download` | 🔐 | 🟢 | Invoice PDF |
-| 141 | DELETE | `/api/orders/:id` | 🔐 ADMIN perm orders | 🔴 | Soft delete (S1) |
-| 142 | PATCH | `/api/orders/:id/status` | 🔐 ADMIN perm orders | 🔴 | Update status (S1) |
-| 143 | PATCH | `/api/orders/:id/assign-vendor` | 🔐 ADMIN perm orders | 🔴 | Assign vendor (S1) |
-| 144 | PATCH | `/api/orders/:id/assign-rider` | 🔐 ADMIN perm orders | 🔴 | Assign rider (S1) |
-| 145 | GET | `/api/admin/orders` | 🔐 ADMIN perm orders | 🔴 | List all (S1) |
-| 146 | GET | `/api/vendors/:vendorId/orders` | 🔐 ADMIN perm orders | 🔴 | Vendor orders (S1) |
-| 147 | POST | `/api/orders/:orderId/refund` | 🔐 ADMIN perm orders | 🔴 | Refund (S1) |
-| 148 | GET | `/api/orders/:orderId/refunds` | 🔐 ADMIN perm orders | 🔴 | Refunds (S1) |
-| 149 | PATCH | `/api/order-meals/:id/status` | 🔐 ADMIN perm orders | 🔴 | Meal status (S1) |
+| 139 | GET | `/api/orders` | 🔐 | 🟢 | My orders |
+| 140 | GET | `/api/orders/:id` | 🔐 | 🟢 | Order detail |
+| 141 | PATCH | `/api/orders/:id` | 🔐 | 🟢 | Update notes/schedule |
+| 142 | POST | `/api/orders/:id/cancel` | 🔐 | 🟢 | Cancel |
+| 143 | POST | `/api/orders/:orderId/feedback` | 🔐 | 🟢 | Submit feedback |
+| 144 | GET | `/api/orders/:orderId/invoice` | 🔐 | 🟢 | Invoice |
+| 145 | GET | `/api/orders/:orderId/invoice/download` | 🔐 | 🟢 | Invoice PDF |
+| 146 | DELETE | `/api/orders/:id` | 🔐 ADMIN perm orders | 🟢 | Soft delete |
+| 147 | PATCH | `/api/orders/:id/status` | 🔐 ADMIN perm orders | 🟢 | Update status |
+| 148 | PATCH | `/api/orders/:id/assign-vendor` | 🔐 ADMIN perm orders | 🟢 | Assign vendor |
+| 149 | PATCH | `/api/orders/:id/assign-rider` | 🔐 ADMIN perm orders | 🟢 | Assign rider |
+| 150 | GET | `/api/admin/orders` | 🔐 ADMIN perm orders | 🟢 | List all (paginated) |
+| 151 | GET | `/api/vendors/:vendorId/orders` | 🔐 ADMIN perm orders | 🟢 | Vendor orders (paginated) |
+| 152 | POST | `/api/orders/:orderId/refund` | 🔐 ADMIN perm orders | 🟢 | Refund |
+| 153 | GET | `/api/orders/:orderId/refunds` | 🔐 ADMIN perm orders | 🟢 | Refunds |
+| 154 | PATCH | `/api/order-meals/:id/status` | 🔐 ADMIN perm orders | 🟢 | Meal status |
 
 ---
 
@@ -243,14 +249,14 @@ Complete route inventory. Frontend devs: use this to find the exact endpoint + a
 
 | # | Method | Path | Auth | Status | Description |
 |---|--------|------|------|--------|-------------|
-| 150 | GET | `/api/wallet` | 🔐 CUSTOMER | 🟢 | Balance |
-| 151 | GET | `/api/wallet/transactions` | 🔐 CUSTOMER | 🟢 | Transactions |
-| 152 | POST | `/api/wallet/topup` | 🔐 CUSTOMER | 🟢 | Top-up |
-| 153 | GET | `/api/wallet/topup/success` | — | 🟢 | Top-up callback |
-| 154 | POST | `/api/wallet/withdraw` | 🔐 CUSTOMER | 🟢 | Request withdraw |
-| 155 | GET | `/api/wallet/withdrawals` | 🔐 ADMIN perm settings | 🟢 | Admin list |
-| 156 | PATCH | `/api/wallet/withdraw/:id/approve` | 🔐 ADMIN perm settings | 🟢 | Approve |
-| 157 | PATCH | `/api/wallet/withdraw/:id/reject` | 🔐 ADMIN perm settings | 🟢 | Reject |
+| 155 | GET | `/api/wallet` | 🔐 CUSTOMER | 🟢 | Balance |
+| 156 | GET | `/api/wallet/transactions` | 🔐 CUSTOMER | 🟢 | Transactions |
+| 157 | POST | `/api/wallet/topup` | 🔐 CUSTOMER | 🟢 | Top-up |
+| 158 | GET | `/api/wallet/topup/success` | — | 🟢 | Top-up callback |
+| 159 | POST | `/api/wallet/withdraw` | 🔐 CUSTOMER | 🟢 | Request withdraw |
+| 160 | GET | `/api/wallet/withdrawals` | 🔐 ADMIN perm settings | 🟢 | Admin list |
+| 161 | PATCH | `/api/wallet/withdraw/:id/approve` | 🔐 ADMIN perm settings | 🟢 | Approve |
+| 162 | PATCH | `/api/wallet/withdraw/:id/reject` | 🔐 ADMIN perm settings | 🟢 | Reject |
 
 ---
 
@@ -258,23 +264,23 @@ Complete route inventory. Frontend devs: use this to find the exact endpoint + a
 
 | # | Method | Path | Auth | Status | Description |
 |---|--------|------|------|--------|-------------|
-| 158 | GET | `/api/vendor/my-profile` | 🔐 VENDOR | 🟡 | Self profile (S5) |
-| 159 | POST | `/api/vendor/add` | 🔐 perm vendors | 🟢 | Create vendor |
-| 160 | GET | `/api/vendor/all` | 🔐 perm vendors | 🟢 | All vendors |
-| 161 | GET | `/api/vendor/:vendorCode` | — | 🟡 | Public (S2) |
-| 162 | PATCH | `/api/vendor/:vendorCode` | 🔐 perm vendors | 🟢 | Update |
-| 163 | DELETE | `/api/vendor/:vendorCode` | 🔐 perm vendors | 🟢 | Soft delete |
-| 164 | PUT | `/api/vendor/:vendorCode/profile` | 🔐 perm vendors | 🟢 | Upsert profile |
-| 165 | POST | `/api/vendor/:vendorCode/branches` | 🔐 perm vendors | 🟢 | Add branch |
-| 166 | GET | `/api/vendor/:vendorCode/branches` | 🔐 perm vendors | 🟢 | List branches |
-| 167 | POST | `/api/vendor/branches/:branchId/kitchens` | 🔐 perm vendors | 🟢 | Add kitchen |
-| 168 | POST | `/api/vendor/:vendorCode/documents` | 🔐 perm vendors | 🟢 | Upload document |
-| 169 | PATCH | `/api/vendor/documents/:docId/verify` | 🔐 perm vendors | 🟢 | Verify document |
-| 170 | GET | `/api/vendor/:vendorCode/wallet` | 🔐 perm vendors | 🟡 | Vendor wallet (S5) |
-| 171 | GET | `/api/vendor/:vendorCode/settlements` | 🔐 perm vendors | 🟡 | Vendor settlements (S5) |
-| 172 | POST | `/api/vendor/:vendorCode/settlements/trigger` | 🔐 perm settings | 🟢 | Generate period |
-| 173 | PATCH | `/api/vendor/:vendorCode/settings` | 🔐 perm vendors | 🟢 | Update settings |
-| 174 | PUT | `/api/vendor/:vendorCode/operating-hours` | 🔐 perm vendors | 🟢 | Operating hours |
+| 163 | GET | `/api/vendor/my-profile` | 🔐 VENDOR | 🟢 | Self profile |
+| 164 | POST | `/api/vendor/add` | 🔐 perm vendors | 🟢 | Create vendor |
+| 165 | GET | `/api/vendor/all` | 🔐 perm vendors | 🟢 | All vendors |
+| 166 | GET | `/api/vendor/:vendorCode` | 🔐 perm vendors | 🟢 | Vendor detail (S2 fixed) |
+| 167 | PATCH | `/api/vendor/:vendorCode` | 🔐 perm vendors | 🟢 | Update |
+| 168 | DELETE | `/api/vendor/:vendorCode` | 🔐 perm vendors | 🟢 | Soft delete |
+| 169 | PUT | `/api/vendor/:vendorCode/profile` | 🔐 perm vendors | 🟢 | Upsert profile |
+| 170 | POST | `/api/vendor/:vendorCode/branches` | 🔐 perm vendors | 🟢 | Add branch |
+| 171 | GET | `/api/vendor/:vendorCode/branches` | 🔐 perm vendors | 🟢 | List branches |
+| 172 | POST | `/api/vendor/branches/:branchId/kitchens` | 🔐 perm vendors | 🟢 | Add kitchen |
+| 173 | POST | `/api/vendor/:vendorCode/documents` | 🔐 perm vendors | 🟢 | Upload document |
+| 174 | PATCH | `/api/vendor/documents/:docId/verify` | 🔐 perm vendors | 🟢 | Verify document |
+| 175 | GET | `/api/vendor/:vendorCode/wallet` | 🔐 | 🟢 | Vendor wallet (self or admin) |
+| 176 | GET | `/api/vendor/:vendorCode/settlements` | 🔐 | 🟢 | Vendor settlements (self or admin) |
+| 177 | POST | `/api/vendor/:vendorCode/settlements/trigger` | 🔐 perm settings | 🟢 | Generate period |
+| 178 | PATCH | `/api/vendor/:vendorCode/settings` | 🔐 perm vendors | 🟢 | Update settings |
+| 179 | PUT | `/api/vendor/:vendorCode/operating-hours` | 🔐 perm vendors | 🟢 | Operating hours |
 
 ---
 
@@ -282,11 +288,11 @@ Complete route inventory. Frontend devs: use this to find the exact endpoint + a
 
 | # | Method | Path | Auth | Status | Description |
 |---|--------|------|------|--------|-------------|
-| 175 | GET | `/api/admin/coupons` | 🔐 ADMIN perm coupons | 🟢 | List |
-| 176 | GET | `/api/admin/coupons/:id` | 🔐 ADMIN perm coupons | 🟢 | Detail |
-| 177 | POST | `/api/admin/coupons` | 🔐 ADMIN perm coupons | 🟢 | Create |
-| 178 | PATCH | `/api/admin/coupons/:id` | 🔐 ADMIN perm coupons | 🟢 | Update |
-| 179 | DELETE | `/api/admin/coupons/:id` | 🔐 ADMIN perm coupons | 🟢 | Delete |
+| 180 | GET | `/api/admin/coupons` | 🔐 ADMIN perm coupons | 🟢 | List |
+| 181 | GET | `/api/admin/coupons/:id` | 🔐 ADMIN perm coupons | 🟢 | Detail |
+| 182 | POST | `/api/admin/coupons` | 🔐 ADMIN perm coupons | 🟢 | Create |
+| 183 | PATCH | `/api/admin/coupons/:id` | 🔐 ADMIN perm coupons | 🟢 | Update |
+| 184 | DELETE | `/api/admin/coupons/:id` | 🔐 ADMIN perm coupons | 🟢 | Delete |
 
 ---
 
@@ -294,14 +300,14 @@ Complete route inventory. Frontend devs: use this to find the exact endpoint + a
 
 | # | Method | Path | Auth | Status | Description |
 |---|--------|------|------|--------|-------------|
-| 180 | GET | `/api/vendors/:vendorId/wallet` | 🔐 ADMIN perm reports | 🟢 | Vendor wallet |
-| 181 | GET | `/api/vendors/:vendorId/wallet/transactions` | 🔐 ADMIN perm reports | 🟢 | Wallet txns |
-| 182 | GET | `/api/vendors/:vendorId/settlements` | 🔐 ADMIN perm reports | 🟢 | Settlements |
-| 183 | GET | `/api/settlements/:id` | 🔐 ADMIN perm reports | 🟢 | Settlement detail |
-| 184 | GET | `/api/admin/settlements` | 🔐 ADMIN perm settings | 🟢 | All settlements |
-| 185 | POST | `/api/admin/settlements` | 🔐 ADMIN perm settings | 🟢 | Create |
-| 186 | POST | `/api/settlements/:id/process` | 🔐 ADMIN perm settings | 🟢 | Process |
-| 187 | GET | `/api/platform/revenue` | 🔐 ADMIN perm settings | 🟢 | Platform revenue |
+| 185 | GET | `/api/vendors/:vendorId/wallet` | 🔐 reports or vendor self | 🟢 | Vendor wallet |
+| 186 | GET | `/api/vendors/:vendorId/wallet/transactions` | 🔐 reports or vendor self | 🟢 | Wallet txns |
+| 187 | GET | `/api/vendors/:vendorId/settlements` | 🔐 reports or vendor self | 🟢 | Settlements |
+| 188 | GET | `/api/settlements/:id` | 🔐 ADMIN perm reports | 🟢 | Settlement detail |
+| 189 | GET | `/api/admin/settlements` | 🔐 ADMIN perm settings | 🟢 | All settlements |
+| 190 | POST | `/api/admin/settlements` | 🔐 ADMIN perm settings | 🟢 | Create |
+| 191 | POST | `/api/settlements/:id/process` | 🔐 ADMIN perm settings | 🟢 | Process |
+| 192 | GET | `/api/platform/revenue` | 🔐 ADMIN perm settings | 🟢 | Platform revenue |
 
 ---
 
@@ -309,12 +315,12 @@ Complete route inventory. Frontend devs: use this to find the exact endpoint + a
 
 | # | Method | Path | Auth | Status | Description |
 |---|--------|------|------|--------|-------------|
-| 188 | GET | `/api/admin/customers` | 🔐 ADMIN perm users | 🟢 | List |
-| 189 | GET | `/api/admin/customers/:id` | 🔐 ADMIN perm users | 🟢 | Detail |
-| 190 | GET | `/api/admin/customers/:id/orders` | 🔐 ADMIN perm users | 🟢 | Orders |
-| 191 | GET | `/api/admin/customers/:id/subscriptions` | 🔐 ADMIN perm users | 🟢 | Subscriptions |
-| 192 | GET | `/api/admin/customers/:id/wallet` | 🔐 ADMIN perm users | 🟢 | Wallet |
-| 193 | GET | `/api/admin/customers/:id/payments` | 🔐 ADMIN perm users | 🟢 | Payments |
+| 193 | GET | `/api/admin/customers` | 🔐 ADMIN perm users | 🟢 | List |
+| 194 | GET | `/api/admin/customers/:id` | 🔐 ADMIN perm users | 🟢 | Detail |
+| 195 | GET | `/api/admin/customers/:id/orders` | 🔐 ADMIN perm users | 🟢 | Orders |
+| 196 | GET | `/api/admin/customers/:id/subscriptions` | 🔐 ADMIN perm users | 🟢 | Subscriptions |
+| 197 | GET | `/api/admin/customers/:id/wallet` | 🔐 ADMIN perm users | 🟢 | Wallet |
+| 198 | GET | `/api/admin/customers/:id/payments` | 🔐 ADMIN perm users | 🟢 | Payments |
 
 ---
 
@@ -322,20 +328,222 @@ Complete route inventory. Frontend devs: use this to find the exact endpoint + a
 
 | # | Method | Path | Auth | Status | Description |
 |---|--------|------|------|--------|-------------|
-| 194 | POST | `/api/upload/image` | 🔐 | 🟡 | Upload image (S7) |
-| 195 | GET | `/api/health` | — | 🟢 | Health check |
+| 199 | POST | `/api/upload/image` | 🔐 | 🟢 | Upload image (jpg/png/webp ≤5MB) |
+| 200 | GET | `/api/health` | — | 🟢 | Health check |
 
 ---
 
-## P. Planned — ⚪ no routes (schema only)
+## P. Subscriptions — ⚪ planned, base `/api`
 
-| Module | Suggested base |
-|--------|----------------|
-| Subscriptions | `/api/subscriptions` |
-| Riders & deliveries | `/api/riders`, `/api/deliveries`, `/api/tracking` |
-| Support / chat (email+WhatsApp) | contact page + `mailto:`/`wa.me` |
-| CMS | `/api/admin/cms` |
-| Reports / analytics | `/api/admin/reports` |
-| Inventory & supply | `/api/admin/inventory` |
-| Referral & loyalty | `/api/referral` |
-| Zones / service areas | `/api/admin/zones` |
+| # | Method | Path | Auth | Description |
+|---|--------|------|------|-------------|
+| 201 | POST | `/api/subscriptions` | 🔐 CUSTOMER | Subscribe to package |
+| 202 | GET | `/api/subscriptions` | 🔐 CUSTOMER | My subscriptions |
+| 203 | GET | `/api/subscriptions/:id` | 🔐 CUSTOMER | Detail + days/meals |
+| 204 | DELETE | `/api/subscriptions/:id` | 🔐 CUSTOMER | Cancel |
+| 205 | POST | `/api/subscriptions/:id/pause` | 🔐 CUSTOMER | Pause |
+| 206 | POST | `/api/subscriptions/:id/resume` | 🔐 CUSTOMER | Resume |
+| 207 | POST | `/api/subscriptions/:id/freeze` | 🔐 CUSTOMER | Freeze |
+| 208 | POST | `/api/subscriptions/:id/skip-meal` | 🔐 CUSTOMER | Skip meal |
+| 209 | POST | `/api/subscriptions/:id/renew` | 🔐 CUSTOMER | Renew |
+| 210 | POST | `/api/subscriptions/:id/upgrade` | 🔐 CUSTOMER | Upgrade package |
+| 211 | POST | `/api/subscriptions/:id/downgrade` | 🔐 CUSTOMER | Downgrade package |
+| 212 | GET | `/api/subscriptions/:id/history` | 🔐 CUSTOMER | Action log |
+| 213 | GET | `/api/subscriptions/:id/status-history` | 🔐 CUSTOMER | Status transitions |
+| 214 | GET | `/api/subscriptions/:id/invoices` | 🔐 CUSTOMER | Invoices |
+| 215 | POST | `/api/subscription-meals/:mealId/feedback` | 🔐 CUSTOMER | Meal feedback |
+| 216 | POST | `/api/subscription-meals/:mealId/issue` | 🔐 CUSTOMER | Report issue |
+| 217 | POST | `/api/subscription-meals/:mealId/replace` | 🔐 CUSTOMER | Replace meal |
+| 218 | GET | `/api/admin/subscriptions` | 🔐 ADMIN perm subscriptions | All subscriptions |
+| 219 | PATCH | `/api/subscription-days/:id/status` | 🔐 ADMIN | Override day status |
+| 220 | PATCH | `/api/subscription-meals/:id/status` | 🔐 ADMIN | Override meal status |
+| 221 | GET | `/api/admin/meal-issues` | 🔐 ADMIN | All issues |
+| 222 | PATCH | `/api/meal-issues/:id/resolve` | 🔐 ADMIN | Resolve issue |
+
+---
+
+## Q. Riders — 🟡 UI shell (mock), backend ⚪ planned, base `/api`
+
+| # | Method | Path | Auth | Description |
+|---|--------|------|------|-------------|
+| 223 | GET | `/api/riders` | 🔐 ADMIN, VENDOR | List riders |
+| 224 | POST | `/api/riders` | 🔐 ADMIN, VENDOR | Create rider |
+| 225 | GET | `/api/riders/:id` | 🔐 ADMIN, VENDOR | Detail |
+| 226 | PATCH | `/api/riders/:id` | 🔐 ADMIN, VENDOR | Update |
+| 227 | DELETE | `/api/riders/:id` | 🔐 ADMIN | Soft delete |
+| 228 | PATCH | `/api/riders/:id/online` | 🔐 RIDER | Toggle online |
+| 229 | PATCH | `/api/riders/:id/status` | 🔐 ADMIN | Change status |
+| 230 | GET | `/api/riders/:riderId/documents` | 🔐 | List documents |
+| 231 | POST | `/api/riders/:riderId/documents` | 🔐 | Upload document |
+| 232 | PATCH | `/api/rider-documents/:id/verify` | 🔐 ADMIN | Verify document |
+| 233 | GET | `/api/riders/:riderId/vehicle` | 🔐 | Get vehicle |
+| 234 | POST | `/api/riders/:riderId/vehicle` | 🔐 | Add vehicle |
+| 235 | PATCH | `/api/rider-vehicle/:id` | 🔐 | Update vehicle |
+| 236 | GET | `/api/riders/:riderId/performance` | 🔐 ADMIN | Performance metrics |
+| 237 | GET | `/api/riders/:riderId/ratings` | 🔐 ADMIN | Ratings |
+| 238 | GET | `/api/riders/:riderId/wallet` | 🔐 RIDER, ADMIN | Rider wallet |
+| 239 | GET | `/api/riders/:riderId/wallet/transactions` | 🔐 RIDER, ADMIN | Wallet txns |
+| 240 | POST | `/api/rider-wallet/withdraw` | 🔐 RIDER | Withdraw request |
+| 241 | GET | `/api/riders/:riderId/availability` | 🔐 RIDER | Availability |
+| 242 | POST | `/api/riders/:riderId/availability` | 🔐 RIDER | Set availability |
+| 243 | POST | `/api/riders/:riderId/shifts` | 🔐 ADMIN, VENDOR | Add shift |
+| 244 | POST | `/api/riders/:riderId/attendance` | 🔐 RIDER, ADMIN | Log attendance |
+
+---
+
+## R. Deliveries & Live Tracking — ⚪ planned, base `/api`
+
+| # | Method | Path | Auth | Description |
+|---|--------|------|------|-------------|
+| 245 | POST | `/api/orders/:orderId/delivery` | 🔐 ADMIN | Create delivery |
+| 246 | PATCH | `/api/deliveries/:id/assign-rider` | 🔐 ADMIN, VENDOR | Assign rider |
+| 247 | PATCH | `/api/deliveries/:id/status` | 🔐 RIDER, ADMIN | Update status |
+| 248 | POST | `/api/deliveries/:id/proof` | 🔐 RIDER | Upload delivery proof |
+| 249 | POST | `/api/deliveries/:id/attempt` | 🔐 RIDER | Log failed attempt |
+| 250 | GET | `/api/deliveries` | 🔐 ADMIN, VENDOR, RIDER | List deliveries |
+| 251 | GET | `/api/deliveries/:id` | 🔐 | Delivery detail |
+| 252 | POST | `/api/routes/optimize` | 🔐 ADMIN | Optimize route |
+| 253 | GET | `/api/routes/:id` | 🔐 | Route + stops |
+| 254 | PATCH | `/api/routes/:id/assign-rider` | 🔐 ADMIN | Assign route rider |
+| 255 | POST | `/api/tracking/session` | 🔐 RIDER | Start tracking session |
+| 256 | PATCH | `/api/tracking/session/:id/end` | 🔐 RIDER | End session |
+| 257 | POST | `/api/tracking/location` | 🔐 RIDER | Update rider location |
+| 258 | GET | `/api/deliveries/:deliveryId/tracking` | 🔐 CUSTOMER, ADMIN | Customer tracking |
+| 259 | GET | `/api/tracking/eta/:deliveryId` | 🔐 CUSTOMER | ETA only |
+
+---
+
+## S. Notifications — ⚪ planned, base `/api`
+
+**Delivery:** easy-way, **no socket.io**. RTK Query — poll `unread-count` (row 263) every 30s **only while the dashboard tab is focused** (`skipPollingIfUnfocused` + `refetchOnFocus`); fetch full list (row 260) on panel open / count change / **dashboard header refresh button** (`RefreshCw` → `invalidateTags(TAG_TYPES)`).
+
+| # | Method | Path | Auth | Description |
+|---|--------|------|------|-------------|
+| 260 | GET | `/api/notifications` | 🔐 ALL | My notifications |
+| 261 | PATCH | `/api/notifications/:id/read` | 🔐 | Mark read |
+| 262 | POST | `/api/notifications/read-all` | 🔐 | Mark all read |
+| 263 | GET | `/api/notifications/unread-count` | 🔐 | Unread count |
+| 264 | POST | `/api/admin/broadcast` | 🔐 ADMIN | Broadcast push/email/sms |
+| 265 | GET | `/api/admin/announcements` | 🔐 ADMIN | List announcements |
+| 266 | POST | `/api/admin/announcements` | 🔐 ADMIN | Create announcement |
+| 267 | PATCH | `/api/admin/announcements/:id` | 🔐 ADMIN | Update announcement |
+| 268 | GET | `/api/faq/categories` | — | FAQ categories |
+| 269 | GET | `/api/faq/categories/:categoryId/faqs` | — | FAQs |
+| 270 | POST | `/api/admin/faq/categories` | 🔐 ADMIN | Create FAQ category |
+| 271 | POST | `/api/admin/faq` | 🔐 ADMIN | Create FAQ |
+| 272 | PATCH | `/api/admin/faq/:id` | 🔐 ADMIN | Update FAQ |
+| 273 | DELETE | `/api/admin/faq/:id` | 🔐 ADMIN | Delete FAQ |
+
+---
+
+## T. Support & Contact — ⚪ planned, base `/api`
+
+| # | Method | Path | Auth | Description |
+|---|--------|------|------|-------------|
+| 274 | POST | `/api/support/contact` | — | Send { subject, issue, message, email? } to support inbox |
+| 275 | GET | `/api/support/config` | — | { email, whatsapp } for the contact page |
+
+
+---
+
+## U. CMS — 🟡 UI shell (mock), backend ⚪ planned, base `/api`
+
+| # | Method | Path | Auth | Description |
+|---|--------|------|------|-------------|
+| 276 | GET | `/api/cms/banners` | — | Active banners |
+| 277 | POST | `/api/cms/banners` | 🔐 ADMIN perm cms | Create banner |
+| 278 | PATCH | `/api/cms/banners/:id` | 🔐 ADMIN | Update banner |
+| 279 | DELETE | `/api/cms/banners/:id` | 🔐 ADMIN | Delete banner |
+| 280 | GET | `/api/cms/sliders` | — | Active sliders |
+| 281 | POST | `/api/cms/sliders` | 🔐 ADMIN | Create slider |
+| 282 | PATCH | `/api/cms/sliders/:id` | 🔐 ADMIN | Update slider |
+| 283 | DELETE | `/api/cms/sliders/:id` | 🔐 ADMIN | Delete slider |
+| 284 | GET | `/api/cms/blogs` | — | Published blogs |
+| 285 | GET | `/api/cms/blogs/:slug` | — | Blog detail |
+| 286 | POST | `/api/cms/blogs` | 🔐 ADMIN | Create blog |
+| 287 | PATCH | `/api/cms/blogs/:id` | 🔐 ADMIN | Update blog |
+| 288 | DELETE | `/api/cms/blogs/:id` | 🔐 ADMIN | Delete blog |
+| 289 | GET | `/api/cms/pages/:slug` | — | Static page |
+
+---
+
+## V. Reports & Analytics — 🟡 UI shell (mock), backend ⚪ planned, base `/api`
+
+| # | Method | Path | Auth | Description |
+|---|--------|------|------|-------------|
+| 290 | GET | `/api/analytics/dashboard` | 🔐 ADMIN perm reports | Overview KPIs |
+| 291 | GET | `/api/analytics/sales` | 🔐 ADMIN perm reports | Sales analytics |
+| 292 | GET | `/api/analytics/revenue` | 🔐 ADMIN perm reports | Revenue breakdown |
+| 293 | GET | `/api/analytics/customer/:customerId` | 🔐 ADMIN | Per-customer |
+| 294 | GET | `/api/analytics/vendor/:vendorId` | 🔐 ADMIN | Per-vendor |
+| 295 | GET | `/api/analytics/rider/:riderId` | 🔐 ADMIN | Per-rider |
+| 296 | GET | `/api/analytics/package/:packageId` | 🔐 ADMIN | Per-package |
+| 297 | GET | `/api/analytics/kpis` | 🔐 ADMIN | KPIs |
+| 298 | POST | `/api/reports/generate` | 🔐 ADMIN perm reports | Generate report |
+| 299 | GET | `/api/reports` | 🔐 ADMIN | List reports |
+| 300 | GET | `/api/reports/:id` | 🔐 ADMIN | Report + download |
+| 301 | POST | `/api/reports/schedules` | 🔐 ADMIN | Schedule report |
+| 302 | GET | `/api/reports/templates` | 🔐 ADMIN | Templates |
+| 303 | POST | `/api/reports/templates` | 🔐 ADMIN | Create template |
+| 304 | GET | `/api/admin/activity-logs` | 🔐 ADMIN perm reports | Activity log |
+
+---
+
+## W. System Settings — ⚪ planned, base `/api/admin`
+
+| # | Method | Path | Auth | Description |
+|---|--------|------|------|-------------|
+| 305 | GET | `/api/admin/settings` | 🔐 SUPER_ADMIN | All settings |
+| 306 | PATCH | `/api/admin/settings/:key` | 🔐 SUPER_ADMIN | Update setting |
+| 307 | GET | `/api/admin/settings/general` | 🔐 | General settings |
+| 308 | PATCH | `/api/admin/settings/general` | 🔐 SUPER_ADMIN | Update general |
+| 309 | PATCH | `/api/admin/settings/payment` | 🔐 SUPER_ADMIN | Payment settings |
+| 310 | PATCH | `/api/admin/settings/delivery` | 🔐 SUPER_ADMIN | Delivery settings |
+| 311 | PATCH | `/api/admin/settings/packages` | 🔐 SUPER_ADMIN | Package rules |
+| 312 | PATCH | `/api/admin/settings/commission` | 🔐 SUPER_ADMIN | Commission rules |
+| 313 | PATCH | `/api/admin/settings/notifications` | 🔐 SUPER_ADMIN | Notification toggles |
+| 314 | GET | `/api/admin/feature-flags` | 🔐 ADMIN | Feature flags |
+| 315 | PATCH | `/api/admin/feature-flags/:name` | 🔐 SUPER_ADMIN | Toggle flag |
+| 316 | GET | `/api/admin/maintenance` | 🔐 | Maintenance status |
+| 317 | POST | `/api/admin/maintenance` | 🔐 SUPER_ADMIN | Toggle maintenance |
+
+---
+
+## X. Inventory & Supply Chain — ⚪ planned, base `/api/vendor`
+
+| # | Method | Path | Auth | Description |
+|---|--------|------|------|-------------|
+| 318 | GET | `/api/vendor/inventory` | 🔐 VENDOR | List inventory |
+| 319 | POST | `/api/vendor/inventory` | 🔐 VENDOR | Add item |
+| 320 | PATCH | `/api/vendor/inventory/:id` | 🔐 VENDOR | Update item |
+| 321 | DELETE | `/api/vendor/inventory/:id` | 🔐 VENDOR | Delete item |
+| 322 | GET | `/api/vendor/inventory/:id/transactions` | 🔐 VENDOR | Item transactions |
+| 323 | GET | `/api/vendor/suppliers` | 🔐 VENDOR | List suppliers |
+| 324 | POST | `/api/vendor/suppliers` | 🔐 VENDOR | Create supplier |
+| 325 | PATCH | `/api/vendor/suppliers/:id` | 🔐 VENDOR | Update supplier |
+| 326 | DELETE | `/api/vendor/suppliers/:id` | 🔐 VENDOR | Delete supplier |
+| 327 | GET | `/api/vendor/purchases` | 🔐 VENDOR | List purchases |
+| 328 | POST | `/api/vendor/purchases` | 🔐 VENDOR | Create purchase |
+| 329 | GET | `/api/vendor/purchases/:id` | 🔐 VENDOR | Purchase detail |
+| 330 | PATCH | `/api/vendor/purchases/:id/status` | 🔐 VENDOR | Receive/cancel |
+| 331 | GET | `/api/vendor/waste` | 🔐 VENDOR | List waste logs |
+| 332 | POST | `/api/vendor/waste` | 🔐 VENDOR | Log waste |
+| 333 | PATCH | `/api/vendor/waste/:id/approve` | 🔐 VENDOR | Approve waste |
+
+---
+
+## Y. Zones & Service Areas — ⚪ planned
+
+| # | Method | Path | Auth | Description |
+|---|--------|------|------|-------------|
+| 334 | GET | `/api/vendor/zones` | 🔐 VENDOR | My zones |
+| 335 | POST | `/api/vendor/zones` | 🔐 VENDOR | Create zone |
+| 336 | PATCH | `/api/vendor/zones/:id` | 🔐 VENDOR | Update zone |
+| 337 | DELETE | `/api/vendor/zones/:id` | 🔐 VENDOR | Delete zone |
+| 338 | GET | `/api/admin/zones` | 🔐 ADMIN | All vendor zones |
+
+---
+
+> **Totals:** 200 built/partial/broken rows · 138 planned rows · 338 total.
+> **Version:** 4.0.0 — complete route matrix (built + planned). **Last updated:** 2026-08-03.
+> Full contracts: `docs/API.md`. Field reference: `prisma/schema.prisma`.

@@ -69,7 +69,7 @@ export default function AllOrdersPage() {
 
   const { data } = useGetAllAdminOrdersQuery();
 
-  const allOrders = useMemo(() => ((data ?? []) as ApiOrder[]).map(adaptOrder), [data]);
+  const allOrders = useMemo(() => ((data?.items ?? []) as ApiOrder[]).map(adaptOrder), [data]);
 
   const filtered = useMemo(() => {
     if (!activeFilter) return allOrders;

@@ -7,6 +7,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import next from "next";
 import rateLimit from "express-rate-limit";
+import multer from "multer";
 import { env } from "./config/env";
 import AppError from "./utils/AppError";
 import authRoutes from "./routes/authRoutes";
@@ -155,6 +156,15 @@ app
     server.use((err: Error, _req: Request, res: Response, _next: express.NextFunction) => {
       if (err instanceof AppError) {
         res.status(err.statusCode).json({
+          success: false,
+          message: err.message,
+          data: null,
+        });
+        return;
+      }
+
+      if (err instanceof multer.MulterError || err.name === "MulterError") {
+        res.status(400).json({
           success: false,
           message: err.message,
           data: null,

@@ -1,4 +1,4 @@
-import { MealType, Prisma } from "@prisma/client";
+import { MealType, PackageStatus, Prisma } from "@prisma/client";
 import prisma from "../lib/prisma";
 
 interface PackageQuery {
@@ -84,7 +84,8 @@ const getAllPackages = async (query: PackageQuery) => {
   const { categoryId, packageType, search } = query;
   return await prisma.package.findMany({
     where: {
-      status: "active",
+      status: PackageStatus.APPROVED,
+      deletedAt: null,
       packageCategoryId: categoryId || undefined,
       packageType: packageType || undefined,
       name: search ? { contains: search, mode: "insensitive" } : undefined,
@@ -142,7 +143,29 @@ const getPackageById = async (id: string) => {
   });
 };
 
+const collectFoodIds = (data: VendorPackageInput): string[] => {
+  const ids = new Set<string>();
+  data.days.forEach((day) =>
+    day.meals.forEach((meal) => meal.foods.forEach((food) => ids.add(food.foodId))),
+  );
+  return [...ids];
+};
+
+const assertFoodsBelongToVendor = async (vendorId: string, foodIds: string[]) => {
+  const owned = await prisma.vendorFood.findMany({
+    where: { vendorId, deletedAt: null, foodId: { in: foodIds }, food: { status: "APPROVED" } },
+    select: { foodId: true },
+  });
+  const ownedSet = new Set(owned.map((vf) => vf.foodId));
+  const missing = foodIds.filter((id) => !ownedSet.has(id));
+  if (missing.length) {
+    throw new Error(`Food(s) are not on this vendor's approved menu: ${missing.join(", ")}`);
+  }
+};
+
 const createVendorPackage = async (vendorId: string, data: VendorPackageInput) => {
+  await assertFoodsBelongToVendor(vendorId, collectFoodIds(data));
+
   return await prisma.package.create({
     data: {
       packageCode: data.packageCode,
@@ -158,12 +181,16 @@ const createVendorPackage = async (vendorId: string, data: VendorPackageInput) =
       discountPrice: data.discountPrice,
       currency: data.currency,
       isCustomizable: data.isCustomizable,
-      status: data.status,
+      status: PackageStatus.PENDING,
 
       packageCategory: {
         connect: {
           id: data.packageCategoryId,
         },
+      },
+
+      vendor: {
+        connect: { id: vendorId },
       },
 
       days: {
@@ -187,6 +214,140 @@ const createVendorPackage = async (vendorId: string, data: VendorPackageInput) =
           },
         })),
       },
+    },
+  });
+};
+
+const createAdminPackage = async (adminUserId: string, data: VendorPackageInput & { vendorId: string }) => {
+  await assertFoodsBelongToVendor(data.vendorId, collectFoodIds(data));
+
+  const createData: Prisma.PackageUncheckedCreateInput = {
+    packageCode: data.packageCode,
+    name: data.name,
+    slug: data.slug,
+    description: data.description,
+    thumbnail: data.thumbnail,
+    coverImage: data.coverImage,
+    packageType: data.packageType,
+    durationDays: data.durationDays,
+    totalMeals: data.totalMeals,
+    price: data.price,
+    discountPrice: data.discountPrice,
+    currency: data.currency,
+    isCustomizable: data.isCustomizable,
+    status: PackageStatus.APPROVED,
+    approvedBy: adminUserId,
+    approvedAt: new Date(),
+    packageCategoryId: data.packageCategoryId,
+    vendorId: data.vendorId,
+    days: {
+      create: data.days.map((day: DayInput) => ({
+        dayNumber: day.dayNumber,
+        title: day.title,
+        description: day.description,
+
+        meals: {
+          create: day.meals.map((meal: MealInput) => ({
+            mealType: meal.mealType,
+            mealTime: meal.mealTime,
+
+            foods: {
+              create: meal.foods.map((food: FoodInput) => ({
+                foodId: food.foodId,
+                quantity: food.quantity,
+              })),
+            },
+          })),
+        },
+      })),
+    },
+  };
+
+  return await prisma.package.create({ data: createData });
+};
+
+interface AdminPackageQuery {
+  status?: PackageStatus;
+  vendorId?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+}
+
+const listPackagesAdmin = async (query: AdminPackageQuery) => {  const { status, vendorId, search } = query;
+  const page = Math.max(1, query.page ?? 1);
+  const limit = Math.min(100, Math.max(1, query.limit ?? 20));
+
+  const where: Prisma.PackageWhereInput = {
+    deletedAt: null,
+    status: status || undefined,
+    vendorId: vendorId || undefined,
+    name: search ? { contains: search, mode: "insensitive" } : undefined,
+  };
+
+  const [items, total] = await Promise.all([
+    prisma.package.findMany({
+      where,
+      include: {
+        packageCategory: true,
+        vendor: { select: { id: true, businessName: true } },
+        approver: { select: { id: true, firstName: true, lastName: true } },
+        prices: true,
+        rating: true,
+        _count: { select: { days: true, reviews: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+    prisma.package.count({ where }),
+  ]);
+
+  return { items, pagination: { page, limit, total, pages: Math.ceil(total / limit) } };
+};
+
+const listVendorPackages = async (vendorId: string) => {
+  return await prisma.package.findMany({
+    where: { vendorId, deletedAt: null },
+    include: {
+      packageCategory: true,
+      approver: { select: { id: true, firstName: true, lastName: true } },
+      prices: true,
+      rating: true,
+      _count: { select: { days: true, reviews: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+};
+
+const approvePackage = async (packageId: string, adminUserId: string) => {
+  const pkg = await prisma.package.findUnique({ where: { id: packageId } });
+  if (!pkg) throw new Error("Package not found");
+  if (pkg.status === PackageStatus.APPROVED) throw new Error("Package is already approved");
+
+  return await prisma.package.update({
+    where: { id: packageId },
+    data: {
+      status: PackageStatus.APPROVED,
+      approvedBy: adminUserId,
+      approvedAt: new Date(),
+      rejectionReason: null,
+    },
+  });
+};
+
+const rejectPackage = async (packageId: string, adminUserId: string, reason: string) => {
+  const pkg = await prisma.package.findUnique({ where: { id: packageId } });
+  if (!pkg) throw new Error("Package not found");
+  if (pkg.status === PackageStatus.APPROVED) throw new Error("Approved packages cannot be rejected");
+
+  return await prisma.package.update({
+    where: { id: packageId },
+    data: {
+      status: PackageStatus.REJECTED,
+      approvedBy: adminUserId,
+      approvedAt: new Date(),
+      rejectionReason: reason,
     },
   });
 };
@@ -502,6 +663,11 @@ export const PackageService = {
   getAllPackages,
   getPackageById,
   createVendorPackage,
+  createAdminPackage,
+  listPackagesAdmin,
+  listVendorPackages,
+  approvePackage,
+  rejectPackage,
   createCustomMealRequest,
   getPendingCustomRequests,
   vendorAcceptCustomRequest,

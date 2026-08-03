@@ -62,6 +62,12 @@ enum FoodStatus {
   REJECTED
 }
 
+enum PackageStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum MealType {
   BREAKFAST
   LUNCH
@@ -120,21 +126,6 @@ enum SubscriptionStatus {
   CANCELLED
 }
 
-enum TicketPriority {
-  LOW
-  MEDIUM
-  HIGH
-  URGENT
-}
-
-enum TicketStatus {
-  OPEN
-  IN_PROGRESS
-  WAITING
-  RESOLVED
-  CLOSED
-}
-
 enum ProofType {
   PHOTO
   SIGNATURE
@@ -145,26 +136,6 @@ enum StockStatus {
   IN_STOCK
   LOW_STOCK
   OUT_OF_STOCK
-}
-
-enum ConversationType {
-  DIRECT
-  GROUP
-  SUPPORT
-  ORDER
-  DELIVERY
-}
-
-enum MessageType {
-  TEXT
-  IMAGE
-  VIDEO
-  AUDIO
-  DOCUMENT
-  LOCATION
-  ORDER
-  PAYMENT
-  SYSTEM
 }
 
 // ============================================================
@@ -237,14 +208,12 @@ model User {
   customMealPlans     CustomMealPlan[]
   mealPreferences     MealPreference[]
   dietaryRestrictions DietaryRestriction[]
-  supportTickets      SupportTicket[]
-  supportReplies      SupportReply[]
   notifications       Notification[]
   activityLogs        ActivityLog[]
-  referral            Referral?
   vendorId            String?              @unique
   vendor              Vendor?              @relation(fields: [vendorId], references: [id])
   approvedFoods       Food[]               @relation("FoodApprover")
+  approvedPackages    Package[]            @relation("PackageApprover")
 
   @@index([role])
   @@index([status])
@@ -452,7 +421,6 @@ model Vendor {
   wallet                VendorWallet?
   rating                VendorRating?
   reviews               VendorReview[]
-  notifications         VendorNotification[]
   settings              VendorSettings?
   activityLogs          VendorActivityLog[]
   vendorFoods           VendorFood[]
@@ -798,20 +766,6 @@ model VendorReview {
   vendor Vendor @relation(fields: [vendorId], references: [id])
 
   @@map("vendor_reviews")
-}
-
-model VendorNotification {
-  id        String   @id @default(uuid())
-  vendorId  String
-  title     String
-  message   String
-  type      String?
-  isRead    Boolean  @default(false)
-  createdAt DateTime @default(now())
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_notifications")
 }
 
 model VendorSettings {
@@ -1338,7 +1292,10 @@ model Package {
   discountPrice  Decimal?  @db.Decimal(10, 2)
   currency       String    @default("BDT")
   isCustomizable Boolean   @default(false)
-  status         String    @default("draft")
+  status         PackageStatus @default(PENDING)
+  approvedBy     String?
+  approvedAt     DateTime?
+  rejectionReason String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?
@@ -1347,6 +1304,7 @@ model Package {
   packageCategory   PackageCategory? @relation(fields: [packageCategoryId], references: [id])
   vendorId          String?
   vendor            Vendor?          @relation(fields: [vendorId], references: [id])
+  approver          User?            @relation("PackageApprover", fields: [approvedBy], references: [id])
 
   days            PackageDay[]
   prices          PackagePrice[]
@@ -1364,6 +1322,7 @@ model Package {
 
   @@index([status])
   @@index([vendorId])
+  @@index([status, deletedAt])
   @@map("packages")
 }
 
@@ -2306,7 +2265,6 @@ model Rider {
   performance      RiderPerformance?
   ratings          RiderRating[]
   wallet           RiderWallet?
-  notifications    RiderNotification[]
   deliveries       Delivery[]
   trackingSessions TrackingSession[]
 
@@ -2497,20 +2455,6 @@ model RiderWalletTransaction {
 
   @@index([walletId])
   @@map("rider_wallet_transactions")
-}
-
-model RiderNotification {
-  id        String   @id @default(uuid())
-  riderId   String
-  title     String
-  message   String
-  type      String?
-  isRead    Boolean  @default(false)
-  createdAt DateTime @default(now())
-
-  rider Rider @relation(fields: [riderId], references: [id])
-
-  @@map("rider_notifications")
 }
 
 model Delivery {
@@ -2768,176 +2712,8 @@ model RouteHistory {
 }
 
 // ============================================================
-// MODULE 10: CHAT, NOTIFICATION & SUPPORT
+// MODULE 10: NOTIFICATIONS
 // ============================================================
-
-model Conversation {
-  id               String           @id @default(uuid())
-  conversationCode String?
-  conversationType ConversationType
-  title            String?
-  createdBy        String?
-  status           String           @default("active")
-  lastMessageId    String?
-  lastMessageAt    DateTime?
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  deletedAt        DateTime?
-
-  participants ConversationParticipant[]
-  messages     Message[]
-
-  @@map("conversations")
-}
-
-model ConversationParticipant {
-  id                String    @id @default(uuid())
-  conversationId    String
-  userId            String
-  userType          String
-  role              String?
-  joinedAt          DateTime  @default(now())
-  leftAt            DateTime?
-  isMuted           Boolean   @default(false)
-  isBlocked         Boolean   @default(false)
-  lastSeenMessageId String?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-
-  conversation Conversation @relation(fields: [conversationId], references: [id])
-
-  @@map("conversation_participants")
-}
-
-model Message {
-  id               String      @id @default(uuid())
-  conversationId   String
-  senderId         String
-  senderType       String?
-  messageType      MessageType
-  message          String?
-  replyMessageId   String?
-  forwardMessageId String?
-  status           String      @default("sent")
-  sentAt           DateTime    @default(now())
-  editedAt         DateTime?
-  deletedAt        DateTime?
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-
-  conversation Conversation        @relation(fields: [conversationId], references: [id])
-  attachments  MessageAttachment[]
-  reactions    MessageReaction[]
-  reads        MessageRead[]
-  deletes      MessageDelete[]
-
-  @@map("messages")
-}
-
-model MessageAttachment {
-  id        String   @id @default(uuid())
-  messageId String
-  fileName  String
-  fileType  String?
-  fileUrl   String
-  fileSize  Int?
-  thumbnail String?
-  duration  Int?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  message Message @relation(fields: [messageId], references: [id])
-
-  @@map("message_attachments")
-}
-
-model MessageReaction {
-  id        String   @id @default(uuid())
-  messageId String
-  userId    String
-  reaction  String
-  createdAt DateTime @default(now())
-
-  message Message @relation(fields: [messageId], references: [id])
-
-  @@map("message_reactions")
-}
-
-model MessageRead {
-  id        String   @id @default(uuid())
-  messageId String
-  userId    String
-  readAt    DateTime @default(now())
-
-  message Message @relation(fields: [messageId], references: [id])
-
-  @@map("message_reads")
-}
-
-model MessageDelete {
-  id         String   @id @default(uuid())
-  messageId  String
-  deletedBy  String
-  deleteType String
-  deletedAt  DateTime @default(now())
-
-  message Message @relation(fields: [messageId], references: [id])
-
-  @@map("message_deletes")
-}
-
-model SupportTicket {
-  id           String         @id @default(uuid())
-  ticketNumber String         @unique
-  customerId   String
-  orderId      String?
-  categoryId   String?
-  subject      String
-  description  String
-  priority     TicketPriority @default(MEDIUM)
-  status       TicketStatus   @default(OPEN)
-  assignedTo   String?
-  closedAt     DateTime?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-
-  customer User             @relation(fields: [customerId], references: [id])
-  category SupportCategory? @relation(fields: [categoryId], references: [id])
-  replies  SupportReply[]
-
-  @@index([customerId])
-  @@index([status])
-  @@map("support_tickets")
-}
-
-model SupportCategory {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  status      String   @default("active")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  tickets SupportTicket[]
-
-  @@map("support_categories")
-}
-
-model SupportReply {
-  id         String   @id @default(uuid())
-  ticketId   String
-  userId     String
-  message    String
-  attachment String?
-  isInternal Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  ticket SupportTicket @relation(fields: [ticketId], references: [id])
-  user   User          @relation(fields: [userId], references: [id])
-
-  @@map("support_replies")
-}
 
 model Notification {
   id            String    @id @default(uuid())
@@ -3156,21 +2932,6 @@ model CouponUsage {
   @@index([orderId])
   @@index([couponId, customerId])
   @@map("coupon_usages")
-}
-
-model Referral {
-  id             String   @id @default(uuid())
-  referrerId     String   @unique
-  referredUserId String   @unique
-  referralCode   String   @unique
-  rewardAmount   Decimal? @db.Decimal(10, 2)
-  status         String   @default("pending")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  referrer User @relation(fields: [referrerId], references: [id])
-
-  @@map("referrals")
 }
 
 // ============================================================

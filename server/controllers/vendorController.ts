@@ -7,6 +7,29 @@ import { VendorStatus, VerificationStatus } from "@prisma/client";
 import prisma from "../lib/prisma";
 import AppError from "../utils/AppError";
 
+// Allow the vendor themselves (VENDOR) or admins with the vendors permission to read a vendor
+const assertCanViewVendor = async (req: AuthRequest, vendorCode: string) => {
+  const permissions = req.user!.permissions ?? [];
+
+  if (req.user!.role === "SUPER_ADMIN" || permissions.includes("vendors")) {
+    return;
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: req.user!.userId },
+    select: { vendorId: true, role: true },
+  });
+  if (user?.role === "VENDOR" && user.vendorId) {
+    const vendor = await prisma.vendor.findUnique({
+      where: { id: user.vendorId },
+      select: { vendorCode: true },
+    });
+    if (vendor?.vendorCode === vendorCode) return;
+  }
+
+  throw new AppError(403, "Access denied to this vendor's data");
+};
+
 // Core System Controls
 const createVendor = catchAsync(async (req: Request, res: Response) => {
   const result = await VendorService.createVendor(req.body);
@@ -107,14 +130,16 @@ const verifyDocument = catchAsync(async (req: Request, res: Response) => {
 });
 
 // Financial Ledger Controls
-const getWalletBalance = catchAsync(async (req: Request, res: Response) => {
+const getWalletBalance = catchAsync(async (req: AuthRequest, res: Response) => {
   const vendorCode = req.params.vendorCode as string; // Explicitly cast to string
+  await assertCanViewVendor(req, vendorCode);
   const result = await VendorService.getWallet(vendorCode);
   sendResponse(res, { statusCode: 200, message: "Ledger status retrieved", data: result });
 });
 
-const getSettlementHistory = catchAsync(async (req: Request, res: Response) => {
+const getSettlementHistory = catchAsync(async (req: AuthRequest, res: Response) => {
   const vendorCode = req.params.vendorCode as string; // Explicitly cast to string
+  await assertCanViewVendor(req, vendorCode);
   const result = await VendorService.getSettlements(vendorCode);
   sendResponse(res, { statusCode: 200, message: "Historical payouts listed", data: result });
 });

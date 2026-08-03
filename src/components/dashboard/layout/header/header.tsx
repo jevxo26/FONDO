@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Bell, HelpCircle, LogOut, Settings, User } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -21,6 +22,17 @@ export function DashboardHeader() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
+  const [today, setToday] = useState("");
+
+  useEffect(() => {
+    setToday(
+      new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }),
+    );
+  }, []);
 
   const userName = user ? `${user.firstName} ${user.lastName}` : "User";
   const initials = user ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}` : "U";
@@ -41,13 +53,7 @@ export function DashboardHeader() {
           <HeaderBreadcrumbs pathname={pathname} />
           <div className="hidden items-center gap-2 text-sm text-muted-foreground/60 md:flex">
             <div className="h-4 w-px bg-border/50" />
-            <span className="ml-2">
-              {new Date().toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </span>
+            <span className="ml-2">{today}</span>
           </div>
         </div>
 

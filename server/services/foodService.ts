@@ -158,7 +158,11 @@ const listFoods = catchServiceAsync(
 );
 
 const listVendorFoods = catchServiceAsync(async (params: { vendorId: string }) => {
-    const where: Prisma.VendorFoodWhereInput = { vendorId: params.vendorId, deletedAt: null };
+    const where: Prisma.VendorFoodWhereInput = {
+      vendorId: params.vendorId,
+      deletedAt: null,
+      food: { status: "APPROVED" },
+    };
 
     const [items, kitchens, branches] = await Promise.all([
       prisma.vendorFood.findMany({

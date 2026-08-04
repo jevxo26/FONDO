@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Layers, Store } from "lucide-react";
-import type { FieldErrors, UseFormWatch } from "react-hook-form";
-import { UseFormRegister, UseFormSetValue, } from "react-hook-form";
+import type { FieldErrors, UseFormWatch, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { inputStyles, PackageFormValues } from "@/lib/schema/package-schema";
 import { FormField } from "@/components/common/form-field";
 import { PackageCategory } from "@prisma/client";
@@ -16,35 +15,47 @@ export function GeneralInfoSection({
   setValue,
   categories,
   watch,
-  vendors
+  vendors,
 }: {
   register: UseFormRegister<PackageFormValues>;
   errors: FieldErrors<PackageFormValues>;
   packageTypeWatched: string;
   setValue: UseFormSetValue<PackageFormValues>;
-  categories?: PackageCategory[]
-  watch: UseFormWatch<PackageFormValues>
-  vendors?: AdminVendorOption[]
-}
-) {
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    const generatedSlug = val.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
-    setValue("slug", generatedSlug, { shouldValidate: true });
-  };
+  categories?: PackageCategory[];
+  watch: UseFormWatch<PackageFormValues>;
+  vendors?: AdminVendorOption[];
+}) {
+  const nameValue = watch("name");
+
+  // ✅ Auto-generate slug safely whenever "name" changes
+  useEffect(() => {
+    if (typeof nameValue === "string") {
+      const generatedSlug = nameValue
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)+/g, "");
+      setValue("slug", generatedSlug, { shouldValidate: true });
+    }
+  }, [nameValue, setValue]);
+
   const [uploadImageApi, { isLoading }] = useUploadImageMutation();
+
   const uploadImage = async (
     file: File,
     field: "thumbnail" | "coverImage"
   ) => {
     try {
-
       const res = await uploadImageApi(file).unwrap();
-      setValue(field, res.url, {
-        shouldValidate: true,
-      });
+      console.log("Upload response:", res);
+
+      // ✅ Extract only the string URL
+      if (res?.data?.url) {
+        setValue(field, res.data.url, {
+          shouldValidate: true,
+        });
+      }
     } catch (err) {
-      console.error(err);
+      console.error("Upload error:", err);
     }
   };
 
@@ -56,13 +67,10 @@ export function GeneralInfoSection({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Package Name Input */}
         <FormField label="Package Name" error={errors.name} required className="md:col-span-2">
           <input
             {...register("name")}
-            onChange={(e) => {
-              register("name").onChange(e);
-              handleNameChange(e);
-            }}
             placeholder="e.g. 7-Day Premium Weight Gain Plan"
             className={inputStyles}
           />
@@ -80,7 +88,9 @@ export function GeneralInfoSection({
           <select {...register("packageCategoryId")} className={inputStyles}>
             <option value="">Select Category...</option>
             {categories?.map((cat) => (
-              <option key={cat.id} value={cat.id}>{cat.name}</option>
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
             ))}
           </select>
         </FormField>
@@ -92,12 +102,14 @@ export function GeneralInfoSection({
               <select {...register("vendorId")} className={inputStyles}>
                 <option value="">Select Vendor...</option>
                 {vendors.map((v) => (
-                  <option key={v.id} value={v.id}>{v.businessName}</option>
+                  <option key={v.id} value={v.id}>
+                    {v.businessName}
+                  </option>
                 ))}
               </select>
             </div>
             <p className="text-xs text-muted-foreground mt-1.5">
-              Foods in the schedule below are limited to this vendor{"'"}s approved menu.
+              Foods in the schedule below are limited to this vendor's approved menu.
             </p>
           </FormField>
         )}
@@ -106,31 +118,20 @@ export function GeneralInfoSection({
           <textarea rows={2} {...register("description")} placeholder="Brief details about package..." className={inputStyles} />
         </FormField>
 
-        <FormField
-          label="Thumbnail"
-          error={errors.thumbnail}
-          required
-        >
-
+        <FormField label="Thumbnail" error={errors.thumbnail} required>
           <ImageUploadField
             image={watch("thumbnail")}
             loading={isLoading}
             onUpload={(file) => uploadImage(file, "thumbnail")}
           />
-
         </FormField>
-        <FormField
-          label="Cover"
-          error={errors.coverImage}
-          required
-        >
 
+        <FormField label="Cover" error={errors.coverImage} required>
           <ImageUploadField
             image={watch("coverImage")}
             loading={isLoading}
             onUpload={(file) => uploadImage(file, "coverImage")}
           />
-
         </FormField>
 
         <FormField label="Package Type" error={errors.packageType} required className={packageTypeWatched === "CUSTOM" ? "" : "md:col-span-2"}>

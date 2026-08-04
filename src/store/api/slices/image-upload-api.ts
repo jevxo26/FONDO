@@ -3,8 +3,11 @@ import { createMutationWrapper } from "../mutation-wrapper";
 
 
 export interface UploadImageResponse {
+    success: boolean;
     message: string;
-    url: string;
+    data: {
+        url: string;
+    };
 }
 
 export const uploadApi = api.injectEndpoints({

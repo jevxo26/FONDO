@@ -1,21 +1,65 @@
 "use client";
 
+import React, { useMemo } from "react";
 import { ArrowUpDown, SlidersHorizontal } from "lucide-react";
-import { useMemo } from "react";
 
 import PackageGrid from "./package-grid";
 import { usePackages } from "./packages-context";
 
-import { useGetPackageCategoriesQuery, useGetPackagesQuery } from "@/store/api/slices/packages-api";
+import {
+  useGetPackageCategoriesQuery,
+  useGetPackagesQuery,
+} from "@/store/api/slices/packages-api";
 
 import FoodsLoading from "@/app/(main)/foods/loading";
-import { Category } from "@/types/food";
+import type { Package, PackageCategory } from "@/types/package";
+
+const getPackageStats = (pkg: Package) => {
+  let totalCalories = 0;
+  let totalProtein = 0;
+  let isVeg = true;
+  let foodCount = 0;
+
+  if (pkg.days && pkg.days.length > 0) {
+    pkg.days.forEach((day) => {
+      day.meals?.forEach((meal) => {
+        meal.foods?.forEach((item) => {
+          const food = item.food;
+          const qty = item.quantity || 1;
+          if (food) {
+            foodCount++;
+            totalCalories += (food.calories || 0) * qty;
+            totalProtein += (food.protein || 0) * qty;
+            
+            if (food.foodType !== "VEG") {
+              isVeg = false;
+            }
+          }
+        });
+      });
+    });
+  } else {
+    isVeg = false;
+  }
+
+  const dayCount = pkg.days?.length || pkg.durationDays || 1;
+  const avgDailyCalories = Math.round(totalCalories / dayCount);
+  const avgDailyProtein = Math.round(totalProtein / dayCount);
+
+  return {
+    avgDailyCalories,
+    avgDailyProtein,
+    isVeg: foodCount > 0 ? isVeg : false,
+    isHighProtein: avgDailyProtein >= 45,
+  };
+};
 
 export default function PackagesWorkspace() {
   const { data: categories = [], isLoading: categoryLoading } =
     useGetPackageCategoriesQuery(undefined);
 
-  const { data: packages = [], isLoading: packageLoading } = useGetPackagesQuery(undefined);
+  const { data: packages = [], isLoading: packageLoading } =
+    useGetPackagesQuery(undefined);
 
   const {
     searchQuery,
@@ -37,52 +81,69 @@ export default function PackagesWorkspace() {
     setSortBy,
   } = usePackages();
 
+  // --- Filtering & Sorting Logic ---
   const processedPackages = useMemo(() => {
-    if (!packages) return [];
+    if (!packages || !Array.isArray(packages)) return [];
 
-    return [...packages]
-      .filter((pkg) => {
-        const price = Number(pkg.discountPrice ?? pkg.price);
+    return packages
+      .filter((pkg: Package) => {
+        const finalPrice = Number(pkg.discountPrice ?? pkg.price ?? 0);
+        const stats = getPackageStats(pkg);
 
-        if (searchQuery && !pkg.name.toLowerCase().includes(searchQuery.toLowerCase())) {
+        // ১. সার্চ ফিল্টার
+        if (
+          searchQuery &&
+          !pkg.name.toLowerCase().includes(searchQuery.toLowerCase())
+        ) {
           return false;
         }
 
-        if (selectedCategory !== "All" && pkg.packageCategoryId !== selectedCategory) {
+        // ২. ক্যাটাগরি ফিল্টার
+        if (
+          selectedCategory !== "All" &&
+          pkg.packageCategoryId !== selectedCategory &&
+          pkg.packageCategory?.id !== selectedCategory
+        ) {
           return false;
         }
 
+        // ৩. ডিউরেশন ফিল্টার
         if (selectedDuration && pkg.durationDays !== selectedDuration) {
           return false;
         }
 
-        if (price > maxPrice) {
+        // ৪. বাজেট/দাম ফিল্টার
+        if (finalPrice > maxPrice) {
           return false;
         }
 
+        // ৫. কাস্টমাইজেবল ফিল্টার
         if (isCustomizable && !pkg.isCustomizable) {
           return false;
         }
 
-        // যখন backend calories দিবে তখন ব্যবহার করবে
-        if (maxCalories && pkg.calories && pkg.calories > maxCalories) {
+        // ৬. দৈনিক ক্যালরি ফিল্টার (Nested Data)
+        if (maxCalories && stats.avgDailyCalories > maxCalories) {
           return false;
         }
 
-        // backend এ foodType আসলে ব্যবহার করবে
-        if (isVegetarian) {
-          return true;
+        // ৭. ভেজিটেরিয়ান ফিল্টার (Nested Food Inspection)
+        if (isVegetarian && !stats.isVeg) {
+          return false;
         }
 
-        if (isHighProtein) {
-          return true;
+        // ৮. হাই প্রোটিন ফিল্টার
+        if (isHighProtein && !stats.isHighProtein) {
+          return false;
         }
 
         return true;
       })
-      .sort((a, b) => {
-        const aPrice = Number(a.discountPrice ?? a.price);
-        const bPrice = Number(b.discountPrice ?? b.price);
+      .sort((a: Package, b: Package) => {
+        const aPrice = Number(a.discountPrice ?? a.price ?? 0);
+        const bPrice = Number(b.discountPrice ?? b.price ?? 0);
+        const aRating = Number(a.rating?.averageRating ?? a.rating?.averageRating ?? 0);
+        const bRating = Number(b.rating?.averageRating ?? b.rating?.averageRating ?? 0);
 
         switch (sortBy) {
           case "price-asc":
@@ -92,8 +153,9 @@ export default function PackagesWorkspace() {
             return bPrice - aPrice;
 
           case "rating":
-            return (b.rating ?? 0) - (a.rating ?? 0);
+            return bRating - aRating;
 
+          case "popular":
           default:
             return 0;
         }
@@ -117,27 +179,27 @@ export default function PackagesWorkspace() {
 
   return (
     <section className="wrapper py-12">
-      {/* Categories */}
+      {/* Categories Bar */}
       <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 border-b border-border/60">
         <button
           onClick={() => setSelectedCategory("All")}
-          className={`h-9 px-4 rounded-xl text-xs font-semibold whitespace-nowrap border ${
+          className={`h-9 px-4 rounded-xl text-xs font-semibold whitespace-nowrap border transition-colors ${
             selectedCategory === "All"
               ? "bg-primary text-primary-foreground border-primary"
-              : "bg-card border-border"
+              : "bg-card border-border hover:bg-muted"
           }`}
         >
           All
         </button>
 
-        {categories.map((cat: Category) => (
+        {categories.map((cat: PackageCategory) => (
           <button
             key={cat.id}
             onClick={() => setSelectedCategory(cat.id)}
-            className={`h-9 px-4 rounded-xl text-xs font-semibold whitespace-nowrap border ${
+            className={`h-9 px-4 rounded-xl text-xs font-semibold whitespace-nowrap border transition-colors ${
               selectedCategory === cat.id
                 ? "bg-primary text-primary-foreground border-primary"
-                : "bg-card border-border"
+                : "bg-card border-border hover:bg-muted"
             }`}
           >
             {cat.name}
@@ -146,42 +208,49 @@ export default function PackagesWorkspace() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+        {/* Sidebar Filters */}
         <aside className="lg:sticky lg:top-6 bg-card border rounded-2xl p-5 shadow-sm flex flex-col gap-6">
-          <div className="flex items-center gap-2 font-semibold border-b pb-3">
+          <div className="flex items-center gap-2 font-semibold border-b pb-3 text-foreground">
             <SlidersHorizontal className="size-4 text-primary" />
             Filters
           </div>
 
-          {/* Price */}
-          <div>
-            <label className="text-xs">Max Budget (৳{maxPrice})</label>
-
+          {/* Max Price Slider */}
+          <div className="space-y-2">
+            <div className="flex justify-between items-center text-xs font-medium">
+              <span>Max Budget</span>
+              <span className="text-primary font-bold">৳{maxPrice.toLocaleString()}</span>
+            </div>
             <input
               type="range"
-              min={2000}
-              max={12000}
+              min={1000}
+              max={15000}
               step={500}
               value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
-              className="w-full"
+              className="w-full accent-primary cursor-pointer"
             />
-            <div className="flex justify-between text-[9px] text-muted-foreground font-semibold">
+            <div className="flex justify-between text-[10px] text-muted-foreground font-semibold">
               <span>৳1,000</span>
               <span>৳15,000</span>
             </div>
           </div>
 
-          {/* Duration */}
-          <div>
-            <label className="text-xs">Duration</label>
-
-            <div className="grid grid-cols-3 gap-2 mt-2">
+          {/* Duration Selector */}
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-foreground">Duration</label>
+            <div className="grid grid-cols-3 gap-2">
               {[7, 15, 30].map((day) => (
                 <button
                   key={day}
-                  onClick={() => setSelectedDuration(selectedDuration === day ? null : day)}
-                  className={`rounded-lg py-2 ${
-                    selectedDuration === day ? "bg-primary text-white" : "bg-muted"
+                  type="button"
+                  onClick={() =>
+                    setSelectedDuration(selectedDuration === day ? null : day)
+                  }
+                  className={`rounded-lg py-2 text-xs font-semibold transition-colors ${
+                    selectedDuration === day
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-muted/80"
                   }`}
                 >
                   {day} Days
@@ -190,10 +259,12 @@ export default function PackagesWorkspace() {
             </div>
           </div>
 
-          {/* Calories */}
-          <div>
-            <label className="text-xs">Calories ({maxCalories})</label>
-
+          {/* Daily Calories Slider */}
+          <div className="space-y-2">
+            <div className="flex justify-between items-center text-xs font-medium">
+              <span>Max Daily Calories</span>
+              <span className="text-primary font-bold">{maxCalories} kcal</span>
+            </div>
             <input
               type="range"
               min={600}
@@ -201,48 +272,63 @@ export default function PackagesWorkspace() {
               step={100}
               value={maxCalories}
               onChange={(e) => setMaxCalories(Number(e.target.value))}
-              className="w-full"
+              className="w-full accent-primary cursor-pointer"
             />
+            <div className="flex justify-between text-[10px] text-muted-foreground font-semibold">
+              <span>600 kcal</span>
+              <span>3000 kcal</span>
+            </div>
           </div>
 
-          {/* Options */}
-          <label>
-            <input
-              type="checkbox"
-              checked={isVegetarian}
-              onChange={(e) => setIsVegetarian(e.target.checked)}
-            />
-            Vegetarian
-          </label>
+          {/* Checkboxes */}
+          <div className="space-y-3 pt-2 border-t border-border">
+            <label className="flex items-center gap-2 text-xs cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={isVegetarian}
+                onChange={(e) => setIsVegetarian(e.target.checked)}
+                className="rounded text-primary focus:ring-primary h-4 w-4"
+              />
+              <span>Vegetarian Packages</span>
+            </label>
 
-          <label>
-            <input
-              type="checkbox"
-              checked={isHighProtein}
-              onChange={(e) => setIsHighProtein(e.target.checked)}
-            />
-            High Protein
-          </label>
+            <label className="flex items-center gap-2 text-xs cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={isHighProtein}
+                onChange={(e) => setIsHighProtein(e.target.checked)}
+                className="rounded text-primary focus:ring-primary h-4 w-4"
+              />
+              <span>High Protein (45g+/day)</span>
+            </label>
 
-          <label>
-            <input
-              type="checkbox"
-              checked={isCustomizable}
-              onChange={(e) => setIsCustomizable(e.target.checked)}
-            />
-            Customizable
-          </label>
+            <label className="flex items-center gap-2 text-xs cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={isCustomizable}
+                onChange={(e) => setIsCustomizable(e.target.checked)}
+                className="rounded text-primary focus:ring-primary h-4 w-4"
+              />
+              <span>Customizable Only</span>
+            </label>
+          </div>
         </aside>
 
+        {/* Content Area */}
         <div className="lg:col-span-3 flex flex-col gap-6">
-          <div className="flex justify-between items-center bg-card border rounded-xl p-3">
-            <span>Showing {processedPackages.length} plans</span>
+          <div className="flex justify-between items-center bg-card border rounded-xl p-3 shadow-sm">
+            <span className="text-xs font-medium text-muted-foreground">
+              Showing <strong className="text-foreground">{processedPackages.length}</strong> plans
+            </span>
 
-            <div className="flex items-center gap-2">
-              <ArrowUpDown size={16} />
-
-              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                <option value="popular">Popular</option>
+            <div className="flex items-center gap-2 text-xs">
+              <ArrowUpDown className="size-4 text-muted-foreground" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="bg-transparent font-medium border-none focus:ring-0 text-foreground cursor-pointer"
+              >
+                <option value="popular">Most Popular</option>
                 <option value="price-asc">Lowest Price</option>
                 <option value="price-desc">Highest Price</option>
                 <option value="rating">Best Rating</option>

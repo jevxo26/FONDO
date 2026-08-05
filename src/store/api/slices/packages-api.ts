@@ -2,6 +2,32 @@ import { api } from "../base-api";
 import { createMutationWrapper } from "../mutation-wrapper";
 import type { Package } from "@/types/package";
 
+export interface AdminPackageListItem {
+    id: string;
+    packageCode: string;
+    name: string;
+    slug: string;
+    description?: string | null;
+    thumbnail: string;
+    packageType: string;
+    durationDays: number;
+    totalMeals: number;
+    price: number;
+    discountPrice?: number | null;
+    status: "PENDING" | "APPROVED" | "REJECTED";
+    rejectionReason?: string | null;
+    createdAt: string;
+    packageCategory?: { id: string; name: string } | null;
+    vendor?: { id: string; businessName: string } | null;
+    approver?: { id: string; firstName: string; lastName: string } | null;
+    _count?: { days: number; reviews: number };
+}
+
+export interface AdminPackageListResult {
+    items: AdminPackageListItem[];
+    pagination: { page: number; limit: number; total: number; pages: number };
+}
+
 export interface PackageReviewItem {
     id: string;
     packageId: string;
@@ -61,6 +87,19 @@ export const packagesApi = api.injectEndpoints({
             invalidatesTags: ["Package"],
         }),
 
+        listAdminPackages: builder.query<AdminPackageListResult, { status?: string; vendorId?: string; search?: string; page?: number; limit?: number }>({
+            query: (params) => ({
+                url: "/package/admin",
+                params,
+            }),
+            providesTags: ["Package"],
+        }),
+
+        listVendorPackages: builder.query<AdminPackageListItem[], void>({
+            query: () => "/package/vendor/packages",
+            providesTags: ["Package"],
+        }),
+
         approvePackage: builder.mutation({
             query: (id) => ({
                 url: `/package/admin/${id}/approve`,
@@ -107,16 +146,22 @@ export const packagesApi = api.injectEndpoints({
         }),
 
         // Public/Approved reviews endpoint
-        getPackageReviews: builder.query<PackageReviewItem[], { packageId?: string; status?: string } | void>({
+        getPackageReviews: builder.query<
+            PackageReviewItem[],
+            { packageId?: string; status?: string } | void
+        >({
             query: (params) => ({
-                url: "/package/reviews/pending", // or /package/reviews if public
+                url: "/package/reviews/pending",
                 params: params || {},
             }),
             providesTags: ["Package"],
         }),
 
         // Get current user's reviews for package
-        getUserPackageReviews: builder.query<PackageReviewItem[], { packageId: string }>({
+        getUserPackageReviews: builder.query<
+            PackageReviewItem[],
+            { packageId: string }
+        >({
             query: ({ packageId }) => ({
                 url: `/package/${packageId}/my-reviews`,
             }),
@@ -136,7 +181,7 @@ export const packagesApi = api.injectEndpoints({
             invalidatesTags: ["Package"],
         }),
 
-        // Update existing review
+        // Update review
         updatePackageReview: builder.mutation<
             PackageReviewItem,
             { id: string; rating: number; review: string }
@@ -150,13 +195,17 @@ export const packagesApi = api.injectEndpoints({
         }),
 
         // Delete review
-        deletePackageReview: builder.mutation<{ success: boolean }, string>({
+        deletePackageReview: builder.mutation<
+            { success: boolean },
+            string
+        >({
             query: (id) => ({
                 url: `/package/reviews/${id}`,
                 method: "DELETE",
             }),
             invalidatesTags: ["Package"],
         }),
+
 
     }),
 });
@@ -168,12 +217,15 @@ export const {
     useGetPackageCategoriesQuery,
     useCreatePackageMutation,
     useCreateAdminPackageMutation,
+    useListAdminPackagesQuery,
+    useListVendorPackagesQuery,
     useApprovePackageMutation,
     useRejectPackageMutation,
     useUpdatePackageMutation,
     useDeletePackageMutation,
     useCreateCustomMealRequestMutation,
 
+    // Reviews
     useGetPackageReviewsQuery,
     useGetUserPackageReviewsQuery,
     useCreatePackageReviewMutation,
@@ -243,13 +295,23 @@ export function usePackageReviews(packageId?: string) {
     const { data, isLoading, refetch } = useGetPackageReviewsQuery(
         packageId ? { packageId } : undefined
     );
-    return { reviews: data || [], isLoading, refetch };
+
+    return {
+        reviews: data || [],
+        isLoading,
+        refetch,
+    };
 }
 
 export function useReviewMutations() {
-    const [createReview, { isLoading: isCreating }] = useCreatePackageReviewMutation();
-    const [updateReview, { isLoading: isUpdating }] = useUpdatePackageReviewMutation();
-    const [deleteReview, { isLoading: isDeleting }] = useDeletePackageReviewMutation();
+    const [createReview, { isLoading: isCreating }] =
+        useCreatePackageReviewMutation();
+
+    const [updateReview, { isLoading: isUpdating }] =
+        useUpdatePackageReviewMutation();
+
+    const [deleteReview, { isLoading: isDeleting }] =
+        useDeletePackageReviewMutation();
 
     return {
         createReview,

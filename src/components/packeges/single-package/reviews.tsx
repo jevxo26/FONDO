@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { Star, Edit2, Trash2, Send, Clock } from "lucide-react";
+// Import useSelector / auth state hook according to your Redux store pattern
 
 import {
   useGetPackageReviewsQuery,
@@ -15,14 +16,13 @@ import { PackageRating } from "@/types/package";
 
 interface PackageReviewsProps {
   packageId: string;
-  rating?: PackageRating;
+  rating:PackageRating
 }
 
 export default function PackageReviews({ packageId, rating }: PackageReviewsProps) {
-  // Extract user directly from Auth hook
-  const currentUser = useAuth();
-  const currentUserId = currentUser?.user?.id;
-
+  // Extract user directly from Redux Auth Slice
+  const currentUser = useAuth()
+  const currentUserId = currentUser.user?.id
   // RTK Queries & Mutations
   const { data: allReviews = [], isLoading } = useGetPackageReviewsQuery({ packageId });
   const [createReview, { isLoading: isCreating }] = useCreatePackageReviewMutation();
@@ -50,26 +50,43 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
     });
   }, [allReviews, packageId, currentUserId]);
 
-  // Compute breakdown bars using the passed `rating` prop
-  const ratingBars = useMemo(() => {
-    const total = rating?.totalReview || 0;
+  // Aggregate stats (calculated ONLY from publicly approved reviews)
+  const publicApprovedReviews = useMemo(() => {
+    return visibleReviews.filter(
+      (r) => r.status === "approved" || r.status === "APPROVED"
+    );
+  }, [visibleReviews]);
 
-    const starsMap = [
-      { stars: 5, count: rating?.fiveStar || 0 },
-      { stars: 4, count: rating?.fourStar || 0 },
-      { stars: 3, count: rating?.threeStar || 0 },
-      { stars: 2, count: rating?.twoStar || 0 },
-      { stars: 1, count: rating?.oneStar || 0 },
-    ];
-
-    return starsMap.map((item) => {
-      const pctVal = total > 0 ? Math.round((item.count / total) * 100) : 0;
+  const { avgRating, ratingBars, publicCount } = useMemo(() => {
+    const total = publicApprovedReviews.length;
+    if (total === 0) {
       return {
-        ...item,
-        pct: `${pctVal}%`,
+        avgRating: "0.0",
+        publicCount: 0,
+        ratingBars: [5, 4, 3, 2, 1].map((s) => ({ stars: s, count: 0, pct: "0%" })),
+      };
+    }
+
+    const sum = publicApprovedReviews.reduce((acc, curr) => acc + (curr.rating || 0), 0);
+    const avg = (sum / total).toFixed(1);
+
+    const counts: Record<number, number> = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    publicApprovedReviews.forEach((r) => {
+      const star = Math.min(5, Math.max(1, Math.round(r.rating)));
+      counts[star] = (counts[star] || 0) + 1;
+    });
+
+    const bars = [5, 4, 3, 2, 1].map((star) => {
+      const cnt = counts[star] || 0;
+      return {
+        stars: star,
+        count: cnt,
+        pct: `${Math.round((cnt / total) * 100)}%`,
       };
     });
-  }, [rating]);
+
+    return { avgRating: avg, publicCount: total, ratingBars: bars };
+  }, [publicApprovedReviews]);
 
   // Check if current logged-in user already wrote a review
   const userExistingReview = useMemo(() => {
@@ -141,9 +158,6 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
     }
   };
 
-  const avgRatingDisplay = (rating?.averageRating ?? 0).toFixed(1);
-  const totalReviewsDisplay = rating?.totalReview ?? 0;
-
   return (
     <section className="bg-card border border-border/20 rounded-3xl p-6 lg:p-8 shadow-sm space-y-6">
       <div className="flex justify-between items-start">
@@ -167,18 +181,18 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
         )}
       </div>
 
-      {/* Public Rating Header */}
+      {/* Public Rating Header - Displays "Based on 0 reviews" when no approved reviews exist */}
       <div className="bg-background rounded-xl p-4 grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
         <div className="text-center sm:text-left">
           <div className="text-3xl font-heading font-bold text-foreground">
-            {isLoading ? "..." : avgRatingDisplay}
+            {isLoading ? "..." : rating.averageRating}
           </div>
           <div className="flex text-primary justify-center sm:justify-start my-1">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
                 className={`size-3 ${
-                  i < Math.round(Number(avgRatingDisplay))
+                  i < Math.round(Number(avgRating))
                     ? "fill-current text-primary"
                     : "text-muted-foreground/30"
                 }`}
@@ -186,7 +200,7 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
             ))}
           </div>
           <span className="text-[10px] text-muted-foreground/60">
-            Based on {totalReviewsDisplay} {totalReviewsDisplay === 1 ? "review" : "reviews"}
+            Based on {publicCount} {publicCount === 1 ? "review" : "reviews"}
           </span>
         </div>
 

@@ -5,30 +5,27 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Copy,
-  Check,
-  Tag,
-  Clock,
-  Users,
-  Gift,
-  Truck,
-  Zap,
-  Percent,
-  ArrowRight,
-  Sparkles,
-  Flame,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Copy, Check, Tag, Clock, Users, Gift, Percent, ArrowRight, Sparkles } from "lucide-react";
 import { mockCoupons, type Coupon } from "@/data/mock-coupons";
 import { toast } from "sonner";
+import { SectionHeader } from "@/components/common/section-header";
+import { SectionReveal } from "@/components/common/section-reveal";
 
 interface CouponSectionProps {
   limit?: number;
   variant?: "featured" | "all";
+  title?: string;
+  description?: string;
+  showViewAll?: boolean;
 }
 
-export function CouponSection({ limit = 6, variant = "featured" }: CouponSectionProps) {
+export function CouponSection({
+  limit = 4,
+  variant = "featured",
+  title = "Exclusive Offers",
+  description = "Save big with exclusive deals and discounts",
+  showViewAll = true,
+}: CouponSectionProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const featuredCoupons = mockCoupons
@@ -46,42 +43,31 @@ export function CouponSection({ limit = 6, variant = "featured" }: CouponSection
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const getBadgeVariant = (type: string) => {
-    switch (type) {
-      case "NEW":
-        return "default";
-      case "HOT":
-        return "destructive";
-      case "LIMITED":
-        return "warning";
-      default:
-        return "secondary";
-    }
-  };
-
   return (
-    <section className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="font-fraunces text-2xl font-semibold">
-            {variant === "featured" ? "Featured Offers" : "All Coupons"}
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Save big with exclusive deals and discounts
-          </p>
-        </div>
-        {variant === "featured" && (
-          <Button variant="ghost" className="gap-2 text-sm">
-            View All Offers
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        )}
-      </div>
+    <section className="relative py-8 lg:py-12">
+      <div className="wrapper">
+        <SectionReveal distance={20}>
+          <div className="flex items-center justify-between">
+            <SectionHeader title={title} description={description} align="left" />
+            {showViewAll && (
+              <Button variant="ghost" className="gap-2 text-sm shrink-0">
+                View All Offers
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {coupons.map((coupon) => (
-          <CouponCard key={coupon.id} coupon={coupon} onCopy={handleCopyCode} copiedId={copiedId} />
-        ))}
+          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {coupons.map((coupon) => (
+              <CouponCard
+                key={coupon.id}
+                coupon={coupon}
+                onCopy={handleCopyCode}
+                copiedId={copiedId}
+              />
+            ))}
+          </div>
+        </SectionReveal>
       </div>
     </section>
   );

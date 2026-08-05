@@ -19,12 +19,12 @@ const STATUS_TABS = [
 
 export default function FoodPackagesPage() {
   const [status, setStatus] = useState<string>("");
-  const { data: result, isLoading } = useListAdminPackagesQuery({ status: status || undefined, limit: 100 });
+const params = {limit: 100, ...(status ? { status } : {}),};
 
+const { data: result, isLoading } = useListAdminPackagesQuery(params);
   if (isLoading) return <FoodsLoading />;
 
   const allPackages = result?.items ?? [];
-
   return (
     <div>
       <PageHeader

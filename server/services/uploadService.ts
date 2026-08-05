@@ -1,6 +1,7 @@
 import { Request } from "express";
 
 const uploadImage = (req: Request) => {
+    console.log("req.file", req.file);
     if (!req.file) {
         throw new Error("Image is required");
     }

@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Layers, Store } from "lucide-react";
 import type { FieldErrors, UseFormWatch, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { inputStyles, PackageFormValues } from "@/lib/schema/package-schema";
 import { FormField } from "@/components/common/form-field";
 import { PackageCategory } from "@prisma/client";
 import ImageUploadField from "@/components/common/image-upload";
-import { useUploadImageMutation } from "@/store/api/slices/image-upload-api";
 import type { AdminVendorOption } from "@/types/admin-food";
+import { useUploadImage } from "@/store/api/slices/image-upload-api";
 
 export function GeneralInfoSection({
   register,
@@ -26,8 +26,14 @@ export function GeneralInfoSection({
   vendors?: AdminVendorOption[];
 }) {
   const nameValue = watch("name");
+  
+  // ইন্ডিভিজুয়াল লোডিং হ্যান্ডেল করার জন্য স্টেট
+  const [uploadingField, setUploadingField] = useState<"thumbnail" | "coverImage" | null>(null);
 
-  // ✅ Auto-generate slug safely whenever "name" changes
+  // Custom Wrapper Hook
+  const { mutateAsync: uploadImageApi } = useUploadImage();
+
+  // Auto-generate slug whenever "name" changes
   useEffect(() => {
     if (typeof nameValue === "string") {
       const generatedSlug = nameValue
@@ -38,27 +44,25 @@ export function GeneralInfoSection({
     }
   }, [nameValue, setValue]);
 
-  const [uploadImageApi, { isLoading }] = useUploadImageMutation();
-
-  const uploadImage = async (
+  // Image Upload Handler
+  const handleImageUpload = async (
     file: File,
     field: "thumbnail" | "coverImage"
   ) => {
     try {
-      const res = await uploadImageApi(file).unwrap();
-      console.log("Upload response:", res);
-
-      // ✅ Extract only the string URL
+      setUploadingField(field);
+      const res = await uploadImageApi(file);
+      console.log(`Uploaded ${field}:`, res);
       if (res?.data?.url) {
-        setValue(field, res.data.url, {
-          shouldValidate: true,
-        });
+        setValue(field, res.data.url, { shouldValidate: true });
       }
     } catch (err) {
-      console.error("Upload error:", err);
+      console.error(`Failed to upload ${field}:`, err);
+      alert("Image upload failed. Please try again.");
+    } finally {
+      setUploadingField(null);
     }
   };
-
   return (
     <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-5">
       <div className="border-b border-border pb-3 flex items-center gap-2">
@@ -109,7 +113,7 @@ export function GeneralInfoSection({
               </select>
             </div>
             <p className="text-xs text-muted-foreground mt-1.5">
-              Foods in the schedule below are limited to this vendor's approved menu.
+              Foods in the schedule below are limited to this vendor&apos;s approved menu.
             </p>
           </FormField>
         )}
@@ -118,22 +122,27 @@ export function GeneralInfoSection({
           <textarea rows={2} {...register("description")} placeholder="Brief details about package..." className={inputStyles} />
         </FormField>
 
-        <FormField label="Thumbnail" error={errors.thumbnail} required>
+        {/* Thumbnail Upload */}
+        <FormField label="Thumbnail Image" error={errors.thumbnail} required>
           <ImageUploadField
+            variant="circle"
             image={watch("thumbnail")}
-            loading={isLoading}
-            onUpload={(file) => uploadImage(file, "thumbnail")}
+            loading={uploadingField === "thumbnail"}
+            onUpload={(file) => handleImageUpload(file, "thumbnail")}
+            onRemove={() => setValue("thumbnail", "", { shouldValidate: true })}
           />
         </FormField>
 
-        <FormField label="Cover" error={errors.coverImage} required>
+        {/* Cover Image Upload */}
+        <FormField label="Cover Banner Image" error={errors.coverImage} required>
           <ImageUploadField
+            variant="rectangle"
             image={watch("coverImage")}
-            loading={isLoading}
-            onUpload={(file) => uploadImage(file, "coverImage")}
+            loading={uploadingField === "coverImage"}
+            onUpload={(file) => handleImageUpload(file, "coverImage")}
+            onRemove={() => setValue("coverImage", "", { shouldValidate: true })}
           />
         </FormField>
-
         <FormField label="Package Type" error={errors.packageType} required className={packageTypeWatched === "CUSTOM" ? "" : "md:col-span-2"}>
           <select
             {...register("packageType")}

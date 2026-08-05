@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useState, useMemo, ReactNode } from "react";
 
-// API থেকে আসা ক্যাটাগরির টাইপ
 export interface PackageCategory {
   id: string;
   name: string;
@@ -12,7 +11,6 @@ export interface PackageCategory {
   status: string;
 }
 
-// API থেকে আসা খাবারের টাইপ
 export interface ApiFood {
   id: string;
   name: string;
@@ -21,7 +19,6 @@ export interface ApiFood {
   foodType: "VEG" | "NON_VEG" | "SEAFOOD" | string;
 }
 
-// API থেকে আসা প্যাকেজের টাইপ (রিয়েল ডাটা স্ট্রাকচার)
 export interface ApiPackage {
   id: string;
   packageCode?: string;

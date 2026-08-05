@@ -1,13 +1,10 @@
 "use client";
-
 import React from "react";
 import { Check, Clock, Settings, Star, Utensils } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
 import { usePackages } from "./packages-context";
 import { Package } from "@/types/package";
-
 interface PackageCardProps {
   pkg: Package;
 }
@@ -23,12 +20,13 @@ export default function PackageCard({
   const finalPrice = Number(pkg.discountPrice ?? pkg.price ?? 0);
   const originalPrice = Number(pkg.price ?? 0);
    const displayRating = pkg.rating?.averageRating.toFixed(1);
-    
+   const totalReviews = pkg.rating?.totalReview ?? 0;
+   console.log("pkg", pkg);
    return (
     <article className="group bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all flex flex-col justify-between">
       <div>
         {/* Thumbnail Badge Area */}
-        <div className="relative overflow-hidden aspect-[4/3] bg-muted">
+        <div className="relative overflow-hidden aspect-4/3 bg-muted">
           <Image
             src={pkg.thumbnail || "/placeholder.jpg"}
             alt={pkg.name}
@@ -59,6 +57,7 @@ export default function PackageCard({
             <div className="flex items-center gap-1 text-xs font-semibold text-foreground shrink-0 bg-amber-500/10 px-1.5 py-0.5 rounded-md">
               <Star size={13} className="fill-amber-400 text-amber-400" />
               <span>{displayRating}</span>
+              <span className="text-muted-foreground">({totalReviews})</span>
             </div>
           </div>
 

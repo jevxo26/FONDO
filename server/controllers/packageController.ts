@@ -176,6 +176,7 @@ const getCategories = async (req: Request, res: Response): Promise<Response> => 
 // --- Review Handlers ---
 
 const createReview = async (req: AuthRequest, res: Response): Promise<Response> => {
+  console.log(req.body)
   try {
     const customerId = req.user?.userId;
 

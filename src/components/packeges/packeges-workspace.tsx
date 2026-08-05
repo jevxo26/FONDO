@@ -89,16 +89,12 @@ export default function PackagesWorkspace() {
       .filter((pkg: Package) => {
         const finalPrice = Number(pkg.discountPrice ?? pkg.price ?? 0);
         const stats = getPackageStats(pkg);
-
-        // ১. সার্চ ফিল্টার
         if (
           searchQuery &&
           !pkg.name.toLowerCase().includes(searchQuery.toLowerCase())
         ) {
           return false;
         }
-
-        // ২. ক্যাটাগরি ফিল্টার
         if (
           selectedCategory !== "All" &&
           pkg.packageCategoryId !== selectedCategory &&
@@ -106,37 +102,24 @@ export default function PackagesWorkspace() {
         ) {
           return false;
         }
-
-        // ৩. ডিউরেশন ফিল্টার
         if (selectedDuration && pkg.durationDays !== selectedDuration) {
           return false;
         }
-
-        // ৪. বাজেট/দাম ফিল্টার
         if (finalPrice > maxPrice) {
           return false;
         }
-
-        // ৫. কাস্টমাইজেবল ফিল্টার
         if (isCustomizable && !pkg.isCustomizable) {
           return false;
         }
-
-        // ৬. দৈনিক ক্যালরি ফিল্টার (Nested Data)
         if (maxCalories && stats.avgDailyCalories > maxCalories) {
           return false;
         }
-
-        // ৭. ভেজিটেরিয়ান ফিল্টার (Nested Food Inspection)
         if (isVegetarian && !stats.isVeg) {
           return false;
         }
-
-        // ৮. হাই প্রোটিন ফিল্টার
         if (isHighProtein && !stats.isHighProtein) {
           return false;
         }
-
         return true;
       })
       .sort((a: Package, b: Package) => {

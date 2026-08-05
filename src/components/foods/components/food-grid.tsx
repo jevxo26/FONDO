@@ -1,8 +1,8 @@
 "use client";
 
+import FoodCard from "@/components/common/food-card/food-card";
 import type { Food } from "@/types/food";
 import { Award } from "lucide-react";
-import FoodCard from "@/components/common/cards/food-card/food-card";
 
 interface FoodGridProps {
   filteredFoods: Food[];

@@ -1,4 +1,4 @@
-import FoodCard from "@/components/common/cards/food-card/food-card";
+import FoodCard from "@/components/common/food-card/food-card";
 import { SectionHeader } from "@/components/common/section-header";
 import { SectionReveal, SectionRevealItem } from "@/components/common/section-reveal";
 import { Button } from "@/components/ui/button";

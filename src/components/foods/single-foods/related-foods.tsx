@@ -1,6 +1,6 @@
-import type { Food } from "@/types/food";
-import FoodCard from "@/components/common/cards/food-card/food-card";
+import FoodCard from "@/components/common/food-card/food-card";
 import { SectionReveal, SectionRevealItem } from "@/components/common/section-reveal";
+import type { Food } from "@/types/food";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 

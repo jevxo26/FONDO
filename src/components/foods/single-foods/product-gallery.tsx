@@ -2,9 +2,16 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useState } from "react";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 
 const imageVariants = {
   hidden: { opacity: 0, filter: "blur(8px)", scale: 0.95 },
@@ -17,61 +24,64 @@ const imageVariants = {
 };
 
 export function ProductGallery({ images, name }: { images: string[]; name: string }) {
+  const [api, setApi] = useState<CarouselApi>();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [lightbox, setLightbox] = useState(false);
   const safeImages = images.length > 0 ? images : ["/placeholder.svg"];
-  const activeImage = safeImages[activeIndex];
 
-  const go = (delta: number) => {
-    setActiveIndex((prev) => (prev + delta + safeImages.length) % safeImages.length);
-  };
+  useEffect(() => {
+    if (!api) return;
+    const onSelect = () => setActiveIndex(api.selectedScrollSnap());
+    api.on("select", onSelect);
+    return () => {
+      api.off("select", onSelect);
+    };
+  }, [api]);
 
   return (
     <motion.div variants={imageVariants} className="lg:col-span-6">
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[32px] bg-muted shadow-[var(--shadow-card)] border border-border/40">
-        <button
-          onClick={() => safeImages.length > 1 && setLightbox(true)}
-          className="block h-full w-full"
-          aria-label="Open image viewer"
-        >
-          <Image
-            src={activeImage}
-            alt={name}
-            fill
-            priority
-            unoptimized
-            className="object-cover"
-          />
-        </button>
-
+      <Carousel
+        setApi={setApi}
+        opts={{ loop: safeImages.length > 1, align: "start" }}
+        className="w-full"
+      >
+        <CarouselContent className="ml-0">
+          {safeImages.map((img, i) => (
+            <CarouselItem key={i} className="pl-0">
+              <div className="relative aspect-4/3 w-full overflow-hidden rounded-[32px] bg-muted shadow-[var(--shadow-card)] border border-border/40">
+                <Image
+                  src={img}
+                  alt={`${name} ${i + 1}`}
+                  fill
+                  priority={i === 0}
+                  unoptimized
+                  className="object-cover"
+                />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
         {safeImages.length > 1 && (
           <>
-            <button
-              onClick={() => go(-1)}
-              className="absolute left-3 top-1/2 -translate-y-1/2 flex size-9 items-center justify-center rounded-full bg-background/80 text-foreground shadow-[var(--shadow-card)] backdrop-blur-sm transition-all hover:bg-background active:scale-95"
-              aria-label="Previous image"
-            >
-              <ChevronLeft className="size-4" />
-            </button>
-            <button
-              onClick={() => go(1)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 flex size-9 items-center justify-center rounded-full bg-background/80 text-foreground shadow-[var(--shadow-card)] backdrop-blur-sm transition-all hover:bg-background active:scale-95"
-              aria-label="Next image"
-            >
-              <ChevronRight className="size-4" />
-            </button>
+            <CarouselPrevious
+              size="icon-lg"
+              className="left-3! bg-background/80 text-foreground shadow-[var(--shadow-card)] backdrop-blur-sm hover:bg-background active:scale-95"
+            />
+            <CarouselNext
+              size="icon-lg"
+              className="right-3! bg-background/80 text-foreground shadow-[var(--shadow-card)] backdrop-blur-sm hover:bg-background active:scale-95"
+            />
           </>
         )}
-      </div>
+      </Carousel>
 
       {safeImages.length > 1 && (
-        <div className="mt-4 flex gap-3">
+        <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
           {safeImages.map((img, i) => (
             <button
               key={i}
-              onClick={() => setActiveIndex(i)}
+              onClick={() => api?.scrollTo(i)}
               className={cn(
-                "relative aspect-4/3 w-24 overflow-hidden rounded-2xl border bg-muted transition-all",
+                "relative aspect-4/3 w-20 shrink-0 overflow-hidden rounded-2xl border bg-muted transition-all sm:w-24",
                 i === activeIndex
                   ? "border-primary ring-2 ring-primary/30"
                   : "border-border/40 opacity-70 hover:opacity-100",
@@ -81,49 +91,6 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
               <Image src={img} alt={`${name} ${i + 1}`} fill unoptimized className="object-cover" />
             </button>
           ))}
-        </div>
-      )}
-
-      {lightbox && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
-          onClick={() => setLightbox(false)}
-        >
-          <button
-            className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
-            aria-label="Close viewer"
-          >
-            <X className="size-5" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              go(-1);
-            }}
-            className="absolute left-4 flex size-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
-            aria-label="Previous image"
-          >
-            <ChevronLeft className="size-5" />
-          </button>
-          <Image
-            src={activeImage}
-            alt={name}
-            width={1200}
-            height={900}
-            unoptimized
-            className="max-h-[85vh] w-auto rounded-2xl object-contain"
-            onClick={(e) => e.stopPropagation()}
-          />
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              go(1);
-            }}
-            className="absolute right-4 flex size-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
-            aria-label="Next image"
-          >
-            <ChevronRight className="size-5" />
-          </button>
         </div>
       )}
     </motion.div>

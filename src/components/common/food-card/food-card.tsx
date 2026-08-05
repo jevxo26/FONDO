@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useFavorites, useRemoveFavorite, useToggleFavorite } from "@/hooks/use-favorites";
-import { ArrowUpRight, ChevronDown, Clock, Heart, ShoppingBag, Star } from "lucide-react";
+import { ArrowUpRight, Clock, Heart, Plus, ShoppingBag, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -16,7 +16,7 @@ const FOOD_TYPE_LABEL: Record<string, string> = {
   SEAFOOD: "Seafood",
 };
 
-export default function FoodCard({ food }: { food: Food }) {
+export default function FoodCard({ food, preview = false }: { food: Food; preview?: boolean }) {
   const [variantId, setVariantId] = useState(food.variants[0]?.id ?? "");
   const variant = food.variants.find((v) => v.id === variantId) ?? food.variants[0];
   const basePrice = variant ? Number(variant.price) : 0;
@@ -30,8 +30,15 @@ export default function FoodCard({ food }: { food: Food }) {
 
   const highlightPill = food.isPopular ? "Popular" : food.isFeatured ? "Featured" : null;
 
+  const titleClassName =
+    "font-sans text-lg font-semibold leading-snug text-secondary-foreground line-clamp-1 transition-colors hover:text-primary";
+
   return (
-    <div className="group relative flex h-full flex-col overflow-hidden rounded-4xl border border-border/40 bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-4 shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]">
+    <div
+      className={`group relative flex h-full flex-col overflow-hidden rounded-4xl border border-border/40 bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-4 shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] ${
+        preview ? "" : "active:scale-[0.98]"
+      }`}
+    >
       <div className="pointer-events-none absolute right-3 top-3 z-10 size-[7px] rotate-45 border border-primary/30" />
 
       <div className="relative aspect-4/3 w-full overflow-hidden rounded-2xl bg-muted">
@@ -66,33 +73,37 @@ export default function FoodCard({ food }: { food: Food }) {
           )}
         </div>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => (isFavorited ? removeFavorite : toggleFavorite).mutate(food)}
-          aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
-          className="absolute right-3 top-3 size-9 rounded-full bg-background/90 backdrop-blur-sm shadow-sm hover:text-destructive"
-        >
-          <Heart className={`size-4 ${isFavorited ? "fill-destructive text-destructive" : ""}`} />
-        </Button>
+        {!preview && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => (isFavorited ? removeFavorite : toggleFavorite).mutate(food)}
+            aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
+            className="absolute right-3 top-3 size-9 rounded-full bg-background/90 backdrop-blur-sm shadow-sm hover:text-destructive"
+          >
+            <Heart className={`size-4 ${isFavorited ? "fill-destructive text-destructive" : ""}`} />
+          </Button>
+        )}
 
-        <div className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center px-4 transition-all duration-300 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 group-active:opacity-100 group-active:scale-100">
-          <div className="pointer-events-auto inline-flex items-center gap-2 rounded-xl bg-foreground/90 px-4 py-2.5 text-background shadow-[var(--shadow-elevated)] border border-background/10 backdrop-blur-md">
-            <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-primary">
-              <ShoppingBag className="size-4 text-foreground" />
+        {!preview && (
+          <div className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center px-4 transition-all duration-300 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 group-active:opacity-100 group-active:scale-100">
+            <div className="pointer-events-auto inline-flex items-center gap-2 rounded-xl bg-foreground/90 px-4 py-2.5 text-background shadow-[var(--shadow-elevated)] border border-background/10 backdrop-blur-md">
+              <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-primary">
+                <ShoppingBag className="size-4 text-foreground" />
+              </div>
+              <span className="font-sans text-xs font-medium">
+                {food.servingSize ?? ""} - ৳{unitPrice}
+              </span>
+              <Link
+                href={`/foods/${food.slug}`}
+                aria-label={`View ${food.name}`}
+                className="ml-1 flex size-8 items-center justify-center rounded-full bg-background/20 transition-colors hover:bg-background/40"
+              >
+                <ArrowUpRight className="size-5 text-background" />
+              </Link>
             </div>
-            <span className="font-sans text-xs font-medium">
-              {food.servingSize ?? ""} - ৳{unitPrice}
-            </span>
-            <Link
-              href={`/foods/${food.slug}`}
-              aria-label={`View ${food.name}`}
-              className="ml-1 flex size-8 items-center justify-center rounded-full bg-background/20 transition-colors hover:bg-background/40"
-            >
-              <ArrowUpRight className="size-5 text-background" />
-            </Link>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col px-1 pb-1 pt-5">
@@ -110,12 +121,13 @@ export default function FoodCard({ food }: { food: Food }) {
         </div>
 
         <div className="mt-1.5 flex items-start justify-between gap-2">
-          <Link
-            href={`/foods/${food.slug}`}
-            className="font-sans text-lg font-semibold leading-snug text-secondary-foreground line-clamp-1 transition-colors hover:text-primary"
-          >
-            {food.name}
-          </Link>
+          {preview ? (
+            <h3 className={titleClassName}>{food.name}</h3>
+          ) : (
+            <Link href={`/foods/${food.slug}`} className={titleClassName}>
+              {food.name}
+            </Link>
+          )}
           <div className="whitespace-nowrap text-right">
             <span className="font-sans text-lg font-bold text-secondary-foreground">৳{unitPrice}</span>
             {hasDiscount && (
@@ -143,26 +155,46 @@ export default function FoodCard({ food }: { food: Food }) {
         </p>
 
         {food.variants.length > 1 && (
-          <div className="relative mt-4">
-            <select
-              value={variant?.id}
-              onChange={(e) => setVariantId(e.target.value)}
-              aria-label={`Select variant for ${food.name}`}
-              className="w-full appearance-none rounded-xl border border-border/60 bg-background px-3 py-2.5 text-[10px] font-bold uppercase tracking-wider text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all duration-300 cursor-pointer"
-            >
-              {food.variants.map((v) => (
-                <option key={v.id} value={v.id}>
-                  {v.name} ({v.servingSize}) - ৳{v.discountPrice ?? v.price}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-3 -translate-y-1/2 text-muted-foreground/60" />
+          <div className="mt-4 flex flex-wrap gap-1.5">
+            {food.variants.map((v) => {
+              const active = v.id === variant?.id;
+              return (
+                <button
+                  key={v.id}
+                  type="button"
+                  onClick={() => setVariantId(v.id)}
+                  aria-pressed={active}
+                  aria-label={`Select ${v.name} variant`}
+                  className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider transition-all duration-300 ${
+                    active
+                      ? "border-primary/60 bg-primary/10 text-primary"
+                      : "border-border/60 text-muted-foreground hover:border-primary/30 hover:text-primary"
+                  }`}
+                >
+                  {v.name}
+                  {v.servingSize ? ` (${v.servingSize})` : ""} · ৳
+                  {v.discountPrice ?? v.price}
+                </button>
+              );
+            })}
           </div>
         )}
 
         <div className="mt-4 h-px w-full bg-gradient-to-r from-primary/40 via-primary/30 to-transparent" />
 
-        <AddToCartButton foodId={food.id} price={unitPrice} />
+        {preview ? (
+          <div className="mt-5 flex w-full items-center justify-between rounded-full border border-primary/30 bg-primary/10 py-3.5 pl-5 pr-3">
+            <span className="flex items-center gap-2 font-sans text-sm font-semibold tracking-wide text-foreground">
+              <ShoppingBag className="size-4" />
+              Add to cart
+            </span>
+            <span className="flex size-7 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              <Plus className="size-4 stroke-[2.5]" />
+            </span>
+          </div>
+        ) : (
+          <AddToCartButton foodId={food.id} price={unitPrice} />
+        )}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { useFavorites } from "@/hooks/use-favorites";
-import FoodCard from "@/components/common/cards/food-card/food-card";
+import FoodCard from "@/components/common/food-card/food-card";
 import { Loader2 } from "lucide-react";
 
 export default function FavoritesList() {

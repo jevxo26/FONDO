@@ -1,6 +1,6 @@
 import type { Food, Variant } from "@/types/food";
 import { motion } from "framer-motion";
-import { Heart, Share2, Star } from "lucide-react";
+import { Heart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -36,11 +36,19 @@ export function ProductInfo({
       ? Math.round(((basePrice - discountPrice) / basePrice) * 100)
       : null;
 
+  const rating = food.averageRating ?? 0;
+  const isInStock = food.status ? ["ACTIVE", "APPROVED"].includes(food.status.toUpperCase()) : true;
+
   return (
     <motion.div variants={contentVariants} className="lg:col-span-6 flex flex-col justify-center">
       <div className="flex items-center justify-between">
-        <span className="inline-flex items-center rounded-full bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success">
-          &middot; In stock
+        <span
+          className={cn(
+            "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+            isInStock ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive",
+          )}
+        >
+          {isInStock ? "In stock" : "Currently unavailable"}
         </span>
         <Button
           variant="ghost"
@@ -60,19 +68,19 @@ export function ProductInfo({
       <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
         <div className="flex items-center gap-1">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Star key={i} className="size-3.5 fill-primary text-primary" />
+            <Star
+              key={i}
+              className={cn(
+                "size-3.5",
+                i < Math.round(rating) ? "fill-primary text-primary" : "text-foreground/15",
+              )}
+            />
           ))}
-          <span className="ml-1 font-semibold text-foreground">
-            {food.averageRating ?? "4.9"}
-          </span>
-          <span>({food.totalReview ?? 892} reviews)</span>
+          <span className="ml-1 font-semibold text-foreground">{rating.toFixed(1)}</span>
+          <span>({food.totalReview ?? 0} reviews)</span>
         </div>
         <span>&middot;</span>
         <span>{selectedVariant.servingSize ?? food.servingSize ?? ""}</span>
-        <span>&middot;</span>
-        <Button variant="ghost" size="sm" className="h-auto gap-1 p-0 hover:text-foreground">
-          <Share2 className="size-3.5" /> Share
-        </Button>
       </div>
 
       <div className="mt-6 flex items-baseline gap-3">
@@ -116,7 +124,6 @@ export function ProductInfo({
         </div>
       )}
 
-      <p className="mt-1 text-xs text-muted-foreground">Free delivery on orders of ৳2,000+</p>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
         {food.shortDescription ?? ""}
       </p>

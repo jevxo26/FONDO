@@ -1,6 +1,6 @@
 "use client";
 
-import FoodCard from "@/components/common/cards/food-card/food-card";
+import FoodCard from "@/components/common/food-card/food-card";
 import { SectionReveal } from "@/components/common/section-reveal";
 import { useFavorites } from "@/hooks/use-favorites";
 import { Heart, Loader2 } from "lucide-react";

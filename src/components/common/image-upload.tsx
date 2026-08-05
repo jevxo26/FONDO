@@ -1,16 +1,28 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
-import { Camera, Loader2, Trash2 } from "lucide-react";
+import { Camera, Loader2, Trash2, UploadCloud } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+type Variant = "circle" | "rectangle" | "gallery";
 
 interface Props {
   image?: string | null;
   loading?: boolean;
   onUpload: (file: File) => void;
   onRemove?: () => void;
-  variant?: "circle" | "rectangle"; // Thumbnail এর জন্য circle, Cover এর জন্য rectangle
+  variant?: Variant;
+  error?: boolean;
+  errorText?: string;
+  className?: string;
 }
+
+const variantClasses: Record<Variant, string> = {
+  circle: "w-32 h-32 rounded-full",
+  rectangle: "w-full h-44 rounded-2xl",
+  gallery: "w-full aspect-square rounded-2xl",
+};
 
 export default function ImageUploadField({
   image,
@@ -18,15 +30,16 @@ export default function ImageUploadField({
   onUpload,
   onRemove,
   variant = "circle",
+  error = false,
+  errorText,
+  className,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [dragging, setDragging] = useState(false);
 
   const hasValidImage = typeof image === "string" && image.trim().length > 0;
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const validateAndUpload = (file: File) => {
     if (!file.type.startsWith("image/")) {
       alert("Please select a valid image file (JPG, PNG, WebP).");
       return;
@@ -38,16 +51,27 @@ export default function ImageUploadField({
     }
 
     onUpload(file);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    validateAndUpload(file);
     e.target.value = "";
   };
 
-  const containerStyle =
-    variant === "circle"
-      ? "w-32 h-32 rounded-full"
-      : "w-full h-44 rounded-2xl";
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+    validateAndUpload(file);
+  };
+
+  const isCircle = variant === "circle";
 
   return (
-    <div className="relative inline-block w-full">
+    <div className={cn("relative inline-block w-full", className)}>
       <input
         ref={inputRef}
         hidden
@@ -58,12 +82,20 @@ export default function ImageUploadField({
 
       <div
         onClick={() => !loading && inputRef.current?.click()}
-        className={`
-          ${containerStyle}
-          relative border-2 border-dashed border-border bg-muted/40 
-          hover:border-primary hover:bg-muted/80 transition-all cursor-pointer 
-          flex flex-col items-center justify-center overflow-hidden group
-        `}
+        onDragOver={(e) => {
+          e.preventDefault();
+          if (!loading) setDragging(true);
+        }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={handleDrop}
+        className={cn(
+          `${variantClasses[variant]} group relative border-2 border-dashed bg-muted/40 transition-all cursor-pointer flex flex-col items-center justify-center overflow-hidden`,
+          dragging
+            ? "border-primary bg-primary/10 scale-[0.99]"
+            : error
+              ? "border-destructive/60 hover:border-primary"
+              : "border-border hover:border-primary hover:bg-muted/80",
+        )}
       >
         {loading ? (
           <div className="flex flex-col items-center gap-1 text-primary">
@@ -77,25 +109,28 @@ export default function ImageUploadField({
               alt="Uploaded preview"
               fill
               sizes="(max-width: 768px) 100vw, 300px"
-              className="object-cover"
+              className={cn("object-cover", !isCircle && "transition-transform duration-500 group-hover:scale-105")}
               unoptimized
             />
-            {/* Hover Overlay */}
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <Camera className="w-6 h-6 text-white" />
             </div>
           </>
         ) : (
           <div className="flex flex-col items-center gap-1.5 text-muted-foreground p-4 text-center">
-            <Camera className="w-6 h-6" />
+            <UploadCloud className={cn("text-primary/70", isCircle ? "w-5 h-5" : "w-6 h-6")} />
             <span className="text-xs font-medium">
-              Click to upload {variant === "rectangle" ? "Cover" : "Thumbnail"}
+              {variant === "gallery"
+                ? "Upload image"
+                : `Click to upload ${variant === "rectangle" ? "cover" : "thumbnail"}`}
             </span>
+            {variant !== "circle" && (
+              <span className="text-[10px] text-muted-foreground/70">or drag &amp; drop</span>
+            )}
           </div>
         )}
       </div>
 
-      {/* Remove Image Button */}
       {hasValidImage && !loading && onRemove && (
         <button
           type="button"
@@ -105,6 +140,10 @@ export default function ImageUploadField({
         >
           <Trash2 className="w-3.5 h-3.5" />
         </button>
+      )}
+
+      {error && errorText && !hasValidImage && (
+        <p className="mt-1.5 text-xs font-medium text-destructive">{errorText}</p>
       )}
     </div>
   );

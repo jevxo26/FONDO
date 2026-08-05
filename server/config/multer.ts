@@ -1,18 +1,8 @@
 import multer from "multer";
 import path from "path";
-import { randomUUID } from "crypto";
 import AppError from "../utils/AppError";
 
-const storage = multer.diskStorage({
-    destination: (_, __, cb) => {
-        cb(null, path.join(process.cwd(), "public", "uploads"));
-    },
-
-    filename: (_, file, cb) => {
-        const ext = path.extname(file.originalname);
-        cb(null, `${randomUUID()}${ext}`);
-    },
-});
+const storage = multer.memoryStorage();
 
 const fileFilter: multer.Options["fileFilter"] = (_req, file, cb) => {
     const allowed = [".jpg", ".jpeg", ".png", ".gif", ".webp"];

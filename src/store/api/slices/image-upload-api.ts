@@ -1,24 +1,22 @@
-import { uploadToImgBB } from "@/lib/img-upload";
 import { useState } from "react";
+import { uploadImage } from "@/lib/img-upload";
 
 export function useUploadImage() {
-    const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-    const mutateAsync = async (file: File) => {
-        setIsLoading(true);
-        try {
-            const res = await uploadToImgBB(file);
-            return res; // { success: true, message: "...", data: { url: "https://i.ibb.co/..." } }
-        } catch (error) {
-            console.error("ImgBB Upload Error:", error);
-            throw error;
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const mutateAsync = async (file: File) => {
+    setIsLoading(true);
+    try {
+      return await uploadImage(file);
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    return {
-        mutateAsync,
-        isLoading,
-    };
+  return {
+    mutateAsync,
+    isLoading,
+  };
 }

@@ -1,31 +1,20 @@
-// lib/upload-imgbb.ts
+import { api } from "./api-client";
 
-export async function uploadToImgBB(file: File) {
-    const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
+export interface ImageUploadResult {
+  success: boolean;
+  message: string;
+  data: { url: string };
+}
 
-    if (!apiKey) {
-        throw new Error("ImgBB API key is missing in environment variables");
-    }
+export async function uploadImage(file: File): Promise<ImageUploadResult> {
+  const formData = new FormData();
+  formData.append("image", file);
 
-    const formData = new FormData();
-    formData.append("image", file);
+  const data = await api.post<{ url: string }>("/upload/image", formData);
 
-    const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
-        method: "POST",
-        body: formData,
-    });
-
-    const resData = await response.json();
-
-    if (!response.ok || !resData.success) {
-        throw new Error(resData?.error?.message || "Failed to upload image to ImgBB");
-    }
-
-    return {
-        success: true,
-        message: "Image uploaded successfully",
-        data: {
-            url: resData.data.display_url || resData.data.url as string,
-        },
-    };
+  return {
+    success: true,
+    message: "Image uploaded successfully",
+    data: { url: data.url },
+  };
 }

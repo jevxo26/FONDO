@@ -3,7 +3,7 @@ import { UploadService } from "../services/uploadService";
 
 const uploadImage = async (req: Request, res: Response) => {
     try {
-        const url = UploadService.uploadImage(req);
+        const url = await UploadService.uploadImage(req);
         res.status(200).json({
             success: true,
             message: "Image uploaded successfully",

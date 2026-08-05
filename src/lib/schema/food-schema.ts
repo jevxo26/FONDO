@@ -1,7 +1,6 @@
 import * as yup from "yup";
 
-export const inputStyles =
-    "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
+export { inputStyles } from "@/lib/form-styles";
 
 export interface FoodFormValues {
     vendorId: string;

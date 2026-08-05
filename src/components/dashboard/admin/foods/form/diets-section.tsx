@@ -1,10 +1,11 @@
 "use client";
 
-import { inputStyles } from "@/lib/schema/food-schema";
 import type { AdminFoodFormValues } from "@/lib/schema/admin-food-schema";
 import { Apple, Plus, Trash2 } from "lucide-react";
 import { useFieldArray, type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 
 interface DietsSectionProps {
   register: UseFormRegister<AdminFoodFormValues>;
@@ -35,10 +36,9 @@ export function DietsSection({ register, errors, control }: DietsSectionProps) {
       <div className="mt-4 space-y-2">
         {fields.map((field, index) => (
           <div key={field.id} className="flex items-center gap-2">
-            <input
+            <Input
               {...register(`diets.${index}.dietType`)}
               placeholder="e.g. Keto, Halal, Vegan"
-              className={inputStyles}
             />
             <Button
               type="button"

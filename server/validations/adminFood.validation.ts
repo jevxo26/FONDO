@@ -14,6 +14,10 @@ export const createFoodSchema = yup.object({
   protein: yup.number().optional(),
   fat: yup.number().optional(),
   carbohydrate: yup.number().optional(),
+  fiber: yup.number().optional(),
+  sugar: yup.number().optional(),
+  sodium: yup.number().optional(),
+  cholesterol: yup.number().optional(),
   servingSize: yup.string().optional(),
   foodType: yup
     .mixed()
@@ -123,6 +127,10 @@ export const updateFoodSchema = yup.object({
   protein: yup.number().optional().nullable(),
   fat: yup.number().optional().nullable(),
   carbohydrate: yup.number().optional().nullable(),
+  fiber: yup.number().optional().nullable(),
+  sugar: yup.number().optional().nullable(),
+  sodium: yup.number().optional().nullable(),
+  cholesterol: yup.number().optional().nullable(),
   servingSize: yup.string().optional(),
   foodType: yup.mixed().oneOf(["VEG", "NON_VEG", "VEGAN", "SEAFOOD"]).optional(),
   spiceLevel: yup.string().optional(),

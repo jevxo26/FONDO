@@ -357,6 +357,10 @@ export interface CreateFoodPayload {
   protein?: number | null;
   fat?: number | null;
   carbohydrate?: number | null;
+  fiber?: number | null;
+  sugar?: number | null;
+  sodium?: number | null;
+  cholesterol?: number | null;
   servingSize?: string;
   foodType: FoodType;
   spiceLevel?: string;
@@ -395,6 +399,10 @@ export interface UpdateFoodPayload {
   protein?: number | null;
   fat?: number | null;
   carbohydrate?: number | null;
+  fiber?: number | null;
+  sugar?: number | null;
+  sodium?: number | null;
+  cholesterol?: number | null;
   servingSize?: string;
   foodType?: FoodType;
   spiceLevel?: string;

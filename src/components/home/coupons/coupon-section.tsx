@@ -30,7 +30,7 @@ export function CouponSection({
 
   const featuredCoupons = mockCoupons
     .filter((c) => c.status === "ACTIVE" && c.isFeatured)
-    .slice(0, limit);
+    // .slice(0, limit);
 
   const allCoupons = mockCoupons.filter((c) => c.status === "ACTIVE").slice(0, limit);
 
@@ -49,12 +49,12 @@ export function CouponSection({
         <SectionReveal distance={20}>
           <div className="flex items-center justify-between">
             <SectionHeader title={title} description={description} align="left" />
-            {showViewAll && (
+            {/* {showViewAll && (
               <Button variant="ghost" className="gap-2 text-sm shrink-0">
                 View All Offers
                 <ArrowRight className="h-4 w-4" />
               </Button>
-            )}
+            )} */}
           </div>
 
           <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">

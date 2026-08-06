@@ -33,7 +33,7 @@ export default function WishlistPage() {
             <Loader2 className="size-6 animate-spin text-muted-foreground" />
           </div>
         ) : favorites.length > 0 ? (
-          <SectionReveal className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <SectionReveal className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {favorites.map((food) => (
               <FoodCard key={food.id} food={food} />
             ))}

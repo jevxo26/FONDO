@@ -10,26 +10,45 @@ import { useFoodCategories } from "@/store/api/slices/foods-api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { navIcon, navIconPill } from "./pill-styles";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function SearchForm() {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const isOpen = useAppSelector((state) => state.ui.isSearchOpen);
+  const [query, setQuery] = useState("");
   const { data: popularCategories, isLoading } = useFoodCategories({
     popular: true,
     limit: 4,
   });
 
+  const submitSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(closeSearch());
+    const q = query.trim();
+    router.push(q ? `/foods?search=${encodeURIComponent(q)}` : "/foods");
+  };
+
+  const searchInputClass =
+    "h-full flex-1 rounded-full border-0 bg-transparent px-2 text-base shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0";
+
   return (
     <>
       {/* Inline search bar — xl+ only */}
       <div className="hidden xl:flex">
-        <form className="flex h-11 w-[260px] items-center gap-1 rounded-full border border-border/70 bg-secondary/50 py-1 pl-4 pr-1 shadow-[var(--shadow-card)] transition-all duration-300 focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/10 focus-within:shadow-[var(--shadow-elevated)] xl:w-[300px] 2xl:w-[320px]">
+        <form
+          onSubmit={submitSearch}
+          className="flex h-11 w-[260px] items-center gap-1 rounded-full border border-border/70 bg-secondary/50 py-1 pl-4 pr-1 shadow-[var(--shadow-card)] transition-all duration-300 focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/10 focus-within:shadow-[var(--shadow-elevated)] xl:w-[300px] 2xl:w-[320px]"
+        >
           <Search className="size-4 shrink-0 text-primary/70" />
           <Input
             type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
             placeholder="Search for products..."
             size="sm"
-            className="h-full flex-1 rounded-full border-0 bg-transparent px-2 text-base shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            className={searchInputClass}
           />
           <Button
             type="submit"
@@ -59,13 +78,18 @@ export function SearchForm() {
 
       {isOpen && (
         <div className="absolute inset-x-0 top-full border-b border-primary/10 bg-background/95 px-4 py-4 backdrop-blur-xl shadow-[0_24px_50px_-20px_rgba(30,26,22,0.25)] xl:hidden animate-in fade-in slide-in-from-top-2 duration-200">
-          <form className="flex h-11 w-full items-center gap-1 rounded-full border border-border/70 bg-secondary/50 py-1 pl-4 pr-1 shadow-[var(--shadow-card)] transition-all duration-300 focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/10">
+          <form
+            onSubmit={submitSearch}
+            className="flex h-11 w-full items-center gap-1 rounded-full border border-border/70 bg-secondary/50 py-1 pl-4 pr-1 shadow-[var(--shadow-card)] transition-all duration-300 focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/10"
+          >
             <Search className="size-4 shrink-0 text-primary/70" />
             <Input
               type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Search for products..."
               size="sm"
-              className="h-full flex-1 rounded-full border-0 bg-transparent px-2 text-base shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+              className={searchInputClass}
             />
             <Button
               type="submit"

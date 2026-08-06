@@ -1,8 +1,14 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Pagination as PaginationNav,
+  PaginationContent,
+  PaginationItem,
+} from "@/components/ui/pagination";
 
 interface PaginationProps {
   currentPage: number;
@@ -30,53 +36,62 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center justify-center gap-2 py-8">
-      <button
-        disabled={currentPage === 1}
-        onClick={() => onPageChange(currentPage - 1)}
-        className={cn(
-          "flex size-10 items-center justify-center rounded-full border border-border/60 bg-card text-muted-foreground transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-muted hover:border-primary/30 active:scale-[0.92]",
-          currentPage === 1 && "opacity-40 cursor-not-allowed",
-        )}
-        aria-label="Previous page"
-      >
-        <ChevronLeft className="size-4" />
-      </button>
-
-      {pages.map((page) =>
-        typeof page === "number" ? (
-          <button
-            key={page}
-            onClick={() => onPageChange(page)}
-            aria-label={`Page ${page}`}
-            aria-current={page === currentPage ? "page" : undefined}
-            className={cn(
-              "flex size-10 items-center justify-center rounded-full text-xs font-semibold transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.92]",
-              page === currentPage
-                ? "bg-primary text-primary-foreground shadow-[0_0_12px_rgba(206,163,89,0.3)]"
-                : "border border-border/60 bg-card text-muted-foreground hover:bg-muted hover:border-primary/30",
-            )}
+    <PaginationNav className="py-8" aria-label="Dish pages">
+      <PaginationContent>
+        <PaginationItem>
+          <Button
+            variant="outline"
+            size="icon"
+            disabled={currentPage === 1}
+            onClick={() => onPageChange(currentPage - 1)}
+            aria-label="Previous page"
+            className="rounded-full border-border/60 bg-card text-muted-foreground hover:border-primary/30 hover:bg-muted"
           >
-            {page}
-          </button>
-        ) : (
-          <span key={page} className="flex size-10 items-center justify-center text-xs text-muted-foreground/50">
-            &hellip;
-          </span>
-        ),
-      )}
+            <ChevronLeft className="size-4" />
+          </Button>
+        </PaginationItem>
 
-      <button
-        disabled={currentPage === totalPages}
-        onClick={() => onPageChange(currentPage + 1)}
-        className={cn(
-          "flex size-10 items-center justify-center rounded-full border border-border/60 bg-card text-muted-foreground transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-muted hover:border-primary/30 active:scale-[0.92]",
-          currentPage === totalPages && "opacity-40 cursor-not-allowed",
+        {pages.map((page) =>
+          typeof page === "number" ? (
+            <PaginationItem key={page}>
+              <Button
+                variant={page === currentPage ? "default" : "outline"}
+                size="icon"
+                onClick={() => onPageChange(page)}
+                aria-label={`Page ${page}`}
+                aria-current={page === currentPage ? "page" : undefined}
+                className={cn(
+                  "size-10 rounded-full text-xs font-semibold",
+                  page === currentPage
+                    ? "shadow-[var(--shadow-badge)]"
+                    : "border-border/60 bg-card text-muted-foreground hover:border-primary/30 hover:bg-muted",
+                )}
+              >
+                {page}
+              </Button>
+            </PaginationItem>
+          ) : (
+            <PaginationItem key={page}>
+              <span className="flex size-10 items-center justify-center text-xs text-muted-foreground/50">
+                &hellip;
+              </span>
+            </PaginationItem>
+          ),
         )}
-        aria-label="Next page"
-      >
-        <ChevronRight className="size-4" />
-      </button>
-    </div>
+
+        <PaginationItem>
+          <Button
+            variant="outline"
+            size="icon"
+            disabled={currentPage === totalPages}
+            onClick={() => onPageChange(currentPage + 1)}
+            aria-label="Next page"
+            className="rounded-full border-border/60 bg-card text-muted-foreground hover:border-primary/30 hover:bg-muted"
+          >
+            <ChevronRight className="size-4" />
+          </Button>
+        </PaginationItem>
+      </PaginationContent>
+    </PaginationNav>
   );
 }

@@ -5,7 +5,7 @@ import { useFavorites, useRemoveFavorite, useToggleFavorite } from "@/hooks/use-
 import { ArrowUpRight, Clock, Heart, Plus, ShoppingBag, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { memo, useState } from "react";
 import type { Food } from "@/types/food";
 import AddToCartButton from "./add-to-cart-button";
 
@@ -16,7 +16,15 @@ const FOOD_TYPE_LABEL: Record<string, string> = {
   SEAFOOD: "Seafood",
 };
 
-export default function FoodCard({ food, preview = false }: { food: Food; preview?: boolean }) {
+export default memo(function FoodCard({
+  food,
+  preview = false,
+  lazy = false,
+}: {
+  food: Food;
+  preview?: boolean;
+  lazy?: boolean;
+}) {
   const [variantId, setVariantId] = useState(food.variants[0]?.id ?? "");
   const variant = food.variants.find((v) => v.id === variantId) ?? food.variants[0];
   const basePrice = variant ? Number(variant.price) : 0;
@@ -35,7 +43,7 @@ export default function FoodCard({ food, preview = false }: { food: Food; previe
 
   return (
     <div
-      className={`group relative flex h-full flex-col overflow-hidden rounded-4xl border border-border/40 bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-4 shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] ${
+      className={`group relative flex flex-col overflow-hidden rounded-4xl border border-border/40 bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-4 shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] ${
         preview ? "" : "active:scale-[0.98]"
       }`}
     >
@@ -48,7 +56,8 @@ export default function FoodCard({ food, preview = false }: { food: Food; previe
             alt={food.name}
             sizes="(max-width: 768px) 100vw, 33vw"
             className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105"
-            loading="eager"
+            loading={lazy ? "lazy" : "eager"}
+            decoding="async"
             fill
             unoptimized
           />
@@ -198,4 +207,4 @@ export default function FoodCard({ food, preview = false }: { food: Food; previe
       </div>
     </div>
   );
-}
+});

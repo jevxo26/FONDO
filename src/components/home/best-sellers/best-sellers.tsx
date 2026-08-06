@@ -37,7 +37,7 @@ export function BestSellers({ foods }: BestSellersProps) {
           variant="perspectiveReveal"
           stagger
           staggerDelay={0.08}
-          className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-8 grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3"
         >
           {foods.map((food) => (
             <SectionRevealItem key={food.id}>

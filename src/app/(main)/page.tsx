@@ -14,6 +14,7 @@ import {
 import { apiFetch } from "@/lib/api";
 import { CATEGORY_CARDS } from "@/data/homepage";
 import type { Food } from "@/types/food";
+import { CouponSection } from "@/components/home/coupons/coupon-section";
 
 interface CategoryItem {
   id: string;
@@ -66,6 +67,7 @@ export default async function Home() {
       <SignatureDish />
       <Combos />
       <BlogReviews />
+      <CouponSection/>
       <Testimonials />
       <KitchenDining />
       <ChefStory />

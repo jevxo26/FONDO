@@ -11,7 +11,6 @@ interface Props {
 export default function WeeklyMenuPreview({ days = [], customDays = [] }: Props) {
   const [activeDay, setActiveDay] = useState<number>(days?.[0]?.dayNumber ?? 1);
 
-  // মূল প্যাকেজের খাবার এবং কাস্টম সিলেক্ট করা খাবারগুলো একত্রিত (Merge) করা
   const mergedDays = useMemo(() => {
     if (!days?.length && !customDays?.length) return [];
 

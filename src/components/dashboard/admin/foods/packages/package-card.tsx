@@ -1,15 +1,14 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Eye, Edit, Flame, Calendar, Utensils, Sliders, Hash, Trash2 } from "lucide-react";
-import Link from "next/link";
 
-// API Data Interface definition
 export interface FoodPackage {
   id: string;
   name: string;
   description: string;
-  packageType: string; 
+  packageType: string;
   durationDays: number;
   totalMeals: number;
   price: string;
@@ -24,6 +23,7 @@ export interface FoodPackage {
 
 interface PackageCardProps {
   pkg: FoodPackage;
+  onDelete?: (pkg: FoodPackage) => void;
 }
 
 const typeColors: Record<string, string> = {
@@ -33,12 +33,11 @@ const typeColors: Record<string, string> = {
   DEFAULT: "bg-primary/10 text-primary ring-primary/20",
 };
 
-export function PackageCard({ pkg }: PackageCardProps) {
-  // Price calculations safely converted from string to number
+export function PackageCard({ pkg, onDelete }: PackageCardProps) {
   const originalPrice = Number(pkg.price) || 0;
   const sellingPrice = pkg.discountPrice ? Number(pkg.discountPrice) : originalPrice;
-  const hasDiscount = pkg.discountPrice && originalPrice > sellingPrice;
-  
+  const hasDiscount = Boolean(pkg.discountPrice) && originalPrice > sellingPrice;
+
   const discountPercent = hasDiscount
     ? Math.round(((originalPrice - sellingPrice) / originalPrice) * 100)
     : 0;
@@ -89,7 +88,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
                 pkg.status === "APPROVED" && "bg-emerald-500/10 text-emerald-600 ring-emerald-500/20",
                 pkg.status === "REJECTED" && "bg-red-500/10 text-red-600 ring-red-500/20",
                 !["PENDING", "APPROVED", "REJECTED"].includes(pkg.status) &&
-                  "bg-muted text-muted-foreground ring-border",
+                  "bg-muted text-muted-foreground ring-border"
               )}
             >
               {pkg.status}
@@ -108,9 +107,9 @@ export function PackageCard({ pkg }: PackageCardProps) {
             {pkg.description}
           </p>
 
-          {/* Key Metrics Grid (Updated to real data) */}
+          {/* Key Metrics Grid */}
           <div className="mt-4 grid grid-cols-2 gap-3">
-            <div className="rounded-xl bg-primary/[0.03] p-3 flex items-center gap-2.5">
+            <div className="rounded-xl bg-primary/3 p-3 flex items-center gap-2.5">
               <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <Calendar className="size-4" />
               </div>
@@ -124,7 +123,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
               </div>
             </div>
 
-            <div className="rounded-xl bg-primary/[0.03] p-3 flex items-center gap-2.5">
+            <div className="rounded-xl bg-primary/3 p-3 flex items-center gap-2.5">
               <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <Utensils className="size-4" />
               </div>
@@ -169,25 +168,29 @@ export function PackageCard({ pkg }: PackageCardProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="h-9 flex rounded-xl text-xs font-semibold hover:bg-primary/8"
+              className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8"
             >
-             <Link className="flex justify-between" href={`/packages/${pkg.id}`}>
-              <Eye className="mr-1.5 size-[15px]" />
-              View
-             </Link>
+              <Link href={`/packages/${pkg.id}`}>
+                <Eye className="mr-1.5 size-[15px]" />
+                View
+              </Link>
             </Button>
-            <Button
-              variant="ghost"
+
+            <Button              variant="ghost"
               size="sm"
               className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8"
             >
-              <Edit className="mr-1.5 size-[15px]" />
-              Edit
+              <Link href={`/admin/packages/edit/${pkg.id}`}>
+                <Edit className="mr-1.5 size-[15px]" />
+                Edit
+              </Link>
             </Button>
+
             <Button
               variant="ghost"
               size="sm"
-              className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8"
+              onClick={() => onDelete?.(pkg.id)}
+              className="h-9 flex-1 rounded-xl text-xs font-semibold text-destructive hover:bg-destructive/10 hover:text-destructive"
             >
               <Trash2 className="mr-1.5 size-3.75" />
               Delete

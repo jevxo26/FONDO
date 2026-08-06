@@ -68,12 +68,16 @@ export function CardPreview({
             </div>
 
             <div className="p-4 space-y-3">
-              <span className="text-[11px] font-semibold text-primary uppercase">{selectedCategoryName}</span>
+              <span className="text-[11px] font-semibold text-primary uppercase">{selectedCategoryName || "General"}</span>
               <h3 className="text-base font-bold text-foreground line-clamp-1">{nameWatched || "Package Name"}</h3>
               <p className="text-xs text-muted-foreground line-clamp-2">{descriptionWatched || "No description provided."}</p>
               <div className="flex items-center gap-4 text-xs text-muted-foreground pt-1">
-                <span className="flex items-center gap-1 font-medium"><Clock className="w-3.5 h-3.5 text-primary" /> {durationWatched || 0} Days</span>
-                <span className="flex items-center gap-1 font-medium"><Utensils className="w-3.5 h-3.5 text-primary" /> {totalMealsCount} Meals</span>
+                <span className="flex items-center gap-1 font-medium">
+                  <Clock className="w-3.5 h-3.5 text-primary" /> {durationWatched || 0} Days
+                </span>
+                <span className="flex items-center gap-1 font-medium">
+                  <Utensils className="w-3.5 h-3.5 text-primary" /> {totalMealsCount} Meals
+                </span>
               </div>
             </div>
           </div>
@@ -83,7 +87,9 @@ export function CardPreview({
               <span className="text-xs text-muted-foreground line-through block">৳{price}</span>
               <span className="text-lg font-bold text-primary">৳{discountPrice}</span>
             </div>
-            <button type="button" className="px-4 py-2 text-xs font-semibold bg-primary text-primary-foreground rounded-lg">Subscribe</button>
+            <button type="button" className="px-4 py-2 text-xs font-semibold bg-primary text-primary-foreground rounded-lg">
+              Subscribe
+            </button>
           </div>
         </div>
 
@@ -97,7 +103,9 @@ export function CardPreview({
               <div key={idx} className="bg-muted/30 p-3 rounded-xl border border-border/60 space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-xs font-bold text-foreground">{day?.title || `Day ${idx + 1}`}</span>
-                  <span className="text-[10px] text-muted-foreground bg-background px-2 py-0.5 rounded border border-border">{day?.meals?.length || 0} Meals</span>
+                  <span className="text-[10px] text-muted-foreground bg-background px-2 py-0.5 rounded border border-border">
+                    {day?.meals?.length || 0} Meals
+                  </span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
                   {day?.meals?.map((meal, mIdx) => (

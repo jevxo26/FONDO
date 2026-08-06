@@ -185,7 +185,7 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
       <div className="bg-background rounded-xl p-4 grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
         <div className="text-center sm:text-left">
           <div className="text-3xl font-heading font-bold text-foreground">
-            {isLoading ? "..." : rating.averageRating}
+            {isLoading ? "..." : rating?.averageRating}
           </div>
           <div className="flex text-primary justify-center sm:justify-start my-1">
             {[...Array(5)].map((_, i) => (

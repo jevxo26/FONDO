@@ -7,9 +7,2703 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ============================================================
-// ENUMS
-// ============================================================
+model User {
+  id                          String               @id @default(uuid())
+  firstName                   String
+  lastName                    String
+  phone                       String               @unique
+  email                       String               @unique
+  password                    String?
+  avatar                      String?
+  gender                      Gender?
+  dateOfBirth                 DateTime?
+  role                        Role                 @default(CUSTOMER)
+  status                      UserStatus           @default(ACTIVE)
+  isPhoneVerified             Boolean              @default(false)
+  isEmailVerified             Boolean              @default(false)
+  lastLoginAt                 DateTime?
+  createdAt                   DateTime             @default(now())
+  updatedAt                   DateTime             @updatedAt
+  deletedAt                   DateTime?
+  vendorId                    String?              @unique
+  accountLocked               Boolean              @default(false)
+  accountLockedUntil          DateTime?
+  bio                         String?
+  chatNotification            Boolean              @default(true)
+  company                     String?
+  emailNotification           Boolean              @default(true)
+  failedLoginCount            Int                  @default(0)
+  lastFailedLoginAt           DateTime?
+  marketingNotification       Boolean              @default(false)
+  occupation                  String?
+  orderNotification           Boolean              @default(true)
+  passwordChangedAt           DateTime?
+  paymentNotification         Boolean              @default(true)
+  preferredLanguage           String?
+  profession                  String?
+  profileCompletionPercentage Float?
+  promotionNotification       Boolean              @default(false)
+  pushNotification            Boolean              @default(true)
+  securityAnswer              String?
+  securityQuestion            String?
+  smsNotification             Boolean              @default(false)
+  systemNotification          Boolean              @default(true)
+  timezone                    String?
+  twoFactorEnabled            Boolean              @default(false)
+  activityLogs                ActivityLog[]
+  carts                       Cart?
+  customMealPlans             CustomMealPlan?
+  wallet                      CustomerWallet?
+  dietaryRestrictions         DietaryRestriction[]
+  favorites                   FoodFavorite[]
+  foodReviews                 FoodReview[]
+  approvedFoods               Food[]               @relation("FoodApprover")
+  mealPreferences             MealPreference[]
+  notifications               Notification[]
+  orders                      Order[]
+  approvedPackages            Package[]            @relation("PackageApprover")
+  payments                    Payment[]
+  subscriptions               Subscription[]
+  addresses                   UserAddress[]
+  devices                     UserDevice[]
+  loginHistory                UserLoginHistory[]
+  otps                        UserOTP[]
+  userPermissions             UserPermission[]
+  sessions                    UserSession[]
+  tokens                      UserToken[]
+  vendor                      Vendor?              @relation(fields: [vendorId], references: [id])
+
+  @@index([role])
+  @@index([status])
+  @@index([role, deletedAt])
+  @@map("users")
+}
+
+model UserAddress {
+  id                  String    @id @default(uuid())
+  userId              String
+  label               String?
+  receiverName        String
+  receiverPhone       String
+  country             String?
+  division            String
+  district            String
+  upazila             String?
+  area                String
+  road                String?
+  house               String?
+  floor               String?
+  apartment           String?
+  landmark            String?
+  postalCode          String?
+  latitude            Float?
+  longitude           Float?
+  deliveryInstruction String?
+  isDefault           Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime?
+  user                User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("user_addresses")
+}
+
+model UserDevice {
+  id              String    @id @default(uuid())
+  userId          String
+  deviceId        String
+  deviceName      String?
+  deviceType      String
+  operatingSystem String?
+  osVersion       String?
+  appVersion      String?
+  browser         String?
+  pushToken       String
+  ipAddress       String?
+  lastActiveAt    DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  user            User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("user_devices")
+}
+
+model UserSession {
+  id           String    @id @default(uuid())
+  userId       String
+  deviceId     String?
+  accessToken  String
+  refreshToken String
+  ipAddress    String?
+  loginAt      DateTime?
+  expiresAt    DateTime
+  logoutAt     DateTime?
+  status       String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  user         User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([accessToken])
+  @@index([refreshToken, status])
+  @@index([status])
+  @@map("user_sessions")
+}
+
+model UserOTP {
+  id           String    @id @default(uuid())
+  userId       String?
+  phone        String?
+  email        String?
+  otp          String
+  purpose      String
+  expiresAt    DateTime
+  verifiedAt   DateTime?
+  attemptCount Int       @default(0)
+  status       String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  user         User?     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([phone])
+  @@index([otp])
+  @@index([status])
+  @@map("user_otps")
+}
+
+model UserToken {
+  id        String    @id @default(uuid())
+  userId    String
+  token     String
+  type      String
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([type])
+  @@index([token])
+  @@map("user_tokens")
+}
+
+model UserLoginHistory {
+  id          String    @id @default(uuid())
+  userId      String
+  deviceId    String?
+  ipAddress   String?
+  browser     String?
+  platform    String?
+  country     String?
+  city        String?
+  loginMethod String?
+  loginStatus String?
+  loggedInAt  DateTime?
+  loggedOutAt DateTime?
+  createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("user_login_histories")
+}
+
+model UserPermission {
+  id        String   @id @default(uuid())
+  userId    String
+  module    String
+  type      String   @default("GRANT")
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, module, type])
+  @@map("user_permissions")
+}
+
+model Vendor {
+  id                    String                 @id @default(uuid())
+  vendorCode            String                 @unique
+  businessName          String
+  ownerName             String
+  phone                 String                 @unique
+  email                 String                 @unique
+  tradeLicenseNumber    String                 @unique
+  tinNumber             String                 @unique
+  binNumber             String                 @unique
+  logo                  String?
+  coverImage            String?
+  description           String?
+  status                VendorStatus           @default(PENDING)
+  verificationStatus    VerificationStatus     @default(UNVERIFIED)
+  isActive              Boolean                @default(true)
+  isOnline              Boolean                @default(false)
+  commissionType        CommissionType         @default(PERCENTAGE)
+  commissionValue       Decimal                @default(0.00) @db.Decimal(10, 2)
+  openingTime           String?
+  closingTime           String?
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  deletedAt             DateTime?
+  deliveries            Delivery[]
+  inventories           Inventory[]
+  orders                Order[]
+  packages              Package[]
+  platformRevenues      PlatformRevenue[]
+  purchases             Purchase[]
+  riders                Rider[]
+  routes                Route[]
+  suppliers             Supplier[]
+  user                  User?
+  activityLogs          VendorActivityLog[]
+  bankAccounts          VendorBankAccount[]
+  branches              VendorBranch[]
+  commissions           VendorCommission[]
+  documents             VendorDocument[]
+  vendorFoodAssignments VendorFoodAssignment[]
+  vendorFoods           VendorFood[]
+  holidays              VendorHoliday[]
+  kitchens              VendorKitchen[]
+  operatingHours        VendorOperatingHour[]
+  profile               VendorProfile?
+  rating                VendorRating?
+  reviews               VendorReview[]
+  serviceAreas          VendorServiceArea[]
+  settings              VendorSettings?
+  settlements           VendorSettlement[]
+  subscriptions         VendorSubscription[]
+  wallet                VendorWallet?
+  zones                 VendorZone[]
+
+  @@index([status])
+  @@index([verificationStatus])
+  @@index([isActive])
+  @@map("vendors")
+}
+
+model VendorProfile {
+  id               String   @id @default(uuid())
+  vendorId         String   @unique
+  businessType     String?
+  businessCategory String?
+  foundedYear      Int?
+  employeeCount    Int?
+  website          String?
+  facebook         String?
+  instagram        String?
+  youtube          String?
+  description      String?
+  mission          String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  vendor           Vendor   @relation(fields: [vendorId], references: [id])
+
+  @@map("vendor_profiles")
+}
+
+model VendorBranch {
+  id           String          @id @default(uuid())
+  vendorId     String
+  branchName   String
+  branchCode   String          @unique
+  phone        String?
+  email        String?
+  country      String?
+  division     String?
+  district     String?
+  upazila      String?
+  area         String?
+  road         String?
+  house        String?
+  postalCode   String?
+  latitude     Float?
+  longitude    Float?
+  isMainBranch Boolean         @default(false)
+  status       String          @default("active")
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  vendor       Vendor          @relation(fields: [vendorId], references: [id])
+  kitchens     VendorKitchen[]
+
+  @@map("vendor_branches")
+}
+
+model VendorKitchen {
+  id              String        @id @default(uuid())
+  vendorId        String
+  branchId        String?
+  kitchenName     String
+  kitchenCode     String        @unique
+  capacity        Int?
+  preparationTime Int?
+  status          String        @default("active")
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  branch          VendorBranch? @relation(fields: [branchId], references: [id])
+  vendor          Vendor        @relation(fields: [vendorId], references: [id])
+
+  @@map("vendor_kitchens")
+}
+
+model VendorDocument {
+  id                 String    @id @default(uuid())
+  vendorId           String
+  documentType       String
+  documentNumber     String?
+  documentFile       String
+  issueDate          DateTime?
+  expiryDate         DateTime?
+  verificationStatus String    @default("pending")
+  verifiedBy         String?
+  verifiedAt         DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  vendor             Vendor    @relation(fields: [vendorId], references: [id])
+
+  @@map("vendor_documents")
+}
+
+model VendorBankAccount {
+  id                  String   @id @default(uuid())
+  vendorId            String
+  bankName            String
+  branchName          String?
+  accountName         String
+  accountNumber       String
+  routingNumber       String?
+  mobileBankingType   String?
+  mobileBankingNumber String?
+  isPrimary           Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  vendor              Vendor   @relation(fields: [vendorId], references: [id])
+
+  @@map("vendor_bank_accounts")
+}
+
+model VendorOperatingHour {
+  id          String   @id @default(uuid())
+  vendorId    String
+  day         String
+  openingTime String
+  closingTime String
+  isClosed    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  vendor      Vendor   @relation(fields: [vendorId], references: [id])
+
+  @@map("vendor_operating_hours")
+}
+
+model VendorHoliday {
+  id          String   @id @default(uuid())
+  vendorId    String
+  holidayName String
+  holidayDate DateTime
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  vendor      Vendor   @relation(fields: [vendorId], references: [id])
+
+  @@map("vendor_holidays")
+}
+
+model VendorServiceArea {
+  id                    String   @id @default(uuid())
+  vendorId              String
+  division              String
+  district              String
+  upazila               String?
+  area                  String
+  deliveryCharge        Decimal? @db.Decimal(10, 2)
+  minimumOrderAmount    Decimal? @db.Decimal(10, 2)
+  estimatedDeliveryTime Int?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  vendor                Vendor   @relation(fields: [vendorId], references: [id])
+
+  @@map("vendor_service_areas")
+}
+
+model VendorZone {
+  id          String   @id @default(uuid())
+  vendorId    String
+  zoneName    String
+  zoneCode    String?  @unique
+  description String?
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  vendor      Vendor   @relation(fields: [vendorId], references: [id])
+
+  @@map("vendor_zones")
+}
+
+model VendorSubscription {
+  id            String   @id @default(uuid())
+  vendorId      String
+  planId        String?
+  startDate     DateTime
+  endDate       DateTime
+  amount        Decimal  @db.Decimal(10, 2)
+  paymentStatus String   @default("pending")
+  status        String   @default("active")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  vendor        Vendor   @relation(fields: [vendorId], references: [id])
+
+  @@map("vendor_subscriptions")
+}
+
+model VendorCommission {
+  id                   String    @id @default(uuid())
+  vendorId             String
+  commissionType       String?
+  commissionPercentage Decimal?  @db.Decimal(5, 2)
+  flatAmount           Decimal?  @db.Decimal(10, 2)
+  effectiveFrom        DateTime
+  effectiveTo          DateTime?
+  status               String    @default("active")
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  vendor               Vendor    @relation(fields: [vendorId], references: [id])
+
+  @@map("vendor_commissions")
+}
+
+model VendorSettlement {
+  id                    String                        @id @default(uuid())
+  vendorId              String
+  settlementNumber      String                        @unique
+  settlementPeriodStart DateTime?
+  settlementPeriodEnd   DateTime?
+  totalOrders           Int?
+  grossAmount           Decimal?                      @db.Decimal(10, 2)
+  totalCommission       Decimal?                      @db.Decimal(10, 2)
+  vatAmount             Decimal?                      @db.Decimal(10, 2)
+  adjustmentAmount      Decimal?                      @db.Decimal(10, 2)
+  totalPayable          Decimal?                      @db.Decimal(10, 2)
+  netAmount             Decimal?                      @db.Decimal(10, 2)
+  settlementDate        DateTime?
+  paymentStatus         String                        @default("pending")
+  transactionId         String?
+  paymentDate           DateTime?
+  createdAt             DateTime                      @default(now())
+  updatedAt             DateTime                      @updatedAt
+  items                 VendorSettlementItem[]
+  transactions          VendorSettlementTransaction[]
+  vendor                Vendor                        @relation(fields: [vendorId], references: [id])
+
+  @@index([vendorId])
+  @@index([paymentStatus])
+  @@map("vendor_settlements")
+}
+
+model VendorSettlementItem {
+  id            String           @id @default(uuid())
+  settlementId  String
+  orderId       String
+  orderAmount   Decimal          @db.Decimal(10, 2)
+  commission    Decimal?         @db.Decimal(10, 2)
+  adjustment    Decimal?         @db.Decimal(10, 2)
+  payableAmount Decimal          @db.Decimal(10, 2)
+  createdAt     DateTime         @default(now())
+  settlement    VendorSettlement @relation(fields: [settlementId], references: [id])
+
+  @@index([settlementId])
+  @@map("vendor_settlement_items")
+}
+
+model VendorSettlementTransaction {
+  id            String           @id @default(uuid())
+  settlementId  String
+  transactionId String?
+  bankAccountId String?
+  amount        Decimal          @db.Decimal(10, 2)
+  paymentMethod String?
+  status        String?
+  processedAt   DateTime?
+  createdAt     DateTime         @default(now())
+  settlement    VendorSettlement @relation(fields: [settlementId], references: [id])
+
+  @@map("vendor_settlement_transactions")
+}
+
+model VendorWallet {
+  id           String                    @id @default(uuid())
+  vendorId     String                    @unique
+  balance      Decimal                   @default(0) @db.Decimal(10, 2)
+  holdBalance  Decimal                   @default(0) @db.Decimal(10, 2)
+  currency     String                    @default("BDT")
+  status       String                    @default("active")
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+  transactions VendorWalletTransaction[]
+  vendor       Vendor                    @relation(fields: [vendorId], references: [id])
+
+  @@map("vendor_wallets")
+}
+
+model VendorWalletTransaction {
+  id              String       @id @default(uuid())
+  walletId        String
+  transactionType String
+  amount          Decimal      @db.Decimal(10, 2)
+  balanceBefore   Decimal?     @db.Decimal(10, 2)
+  balanceAfter    Decimal?     @db.Decimal(10, 2)
+  referenceId     String?
+  remarks         String?
+  createdAt       DateTime     @default(now())
+  wallet          VendorWallet @relation(fields: [walletId], references: [id])
+
+  @@index([walletId])
+  @@map("vendor_wallet_transactions")
+}
+
+model VendorRating {
+  id            String   @id @default(uuid())
+  vendorId      String   @unique
+  averageRating Float?   @default(0)
+  totalRating   Int?     @default(0)
+  fiveStar      Int?     @default(0)
+  fourStar      Int?     @default(0)
+  threeStar     Int?     @default(0)
+  twoStar       Int?     @default(0)
+  oneStar       Int?     @default(0)
+  updatedAt     DateTime @updatedAt
+  vendor        Vendor   @relation(fields: [vendorId], references: [id])
+
+  @@map("vendor_ratings")
+}
+
+model VendorReview {
+  id         String   @id @default(uuid())
+  vendorId   String
+  customerId String
+  rating     Int
+  review     String?
+  status     String   @default("pending")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  vendor     Vendor   @relation(fields: [vendorId], references: [id])
+
+  @@map("vendor_reviews")
+}
+
+model VendorSettings {
+  id                  String   @id @default(uuid())
+  vendorId            String   @unique
+  autoAcceptOrder     Boolean  @default(false)
+  autoAssignRider     Boolean  @default(false)
+  allowCustomMeal     Boolean  @default(true)
+  allowPackage        Boolean  @default(true)
+  notificationEnabled Boolean  @default(true)
+  smsEnabled          Boolean  @default(false)
+  emailEnabled        Boolean  @default(false)
+  status              String   @default("active")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  vendor              Vendor   @relation(fields: [vendorId], references: [id])
+
+  @@map("vendor_settings")
+}
+
+model VendorActivityLog {
+  id        String   @id @default(uuid())
+  vendorId  String
+  staffId   String?
+  activity  String
+  module    String?
+  ipAddress String?
+  device    String?
+  createdAt DateTime @default(now())
+  vendor    Vendor   @relation(fields: [vendorId], references: [id])
+
+  @@map("vendor_activity_logs")
+}
+
+model Category {
+  id            String        @id @default(uuid())
+  name          String
+  slug          String        @unique
+  description   String?
+  icon          String?
+  image         String?
+  sortOrder     Int           @default(0)
+  status        String        @default("active")
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deletedAt     DateTime?
+  popular       Boolean       @default(false)
+  foods         Food[]
+  subCategories SubCategory[]
+
+  @@index([status])
+  @@map("categories")
+}
+
+model SubCategory {
+  id          String    @id @default(uuid())
+  categoryId  String
+  name        String
+  slug        String    @unique
+  description String?
+  icon        String?
+  image       String?
+  sortOrder   Int       @default(0)
+  status      String    @default("active")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  foods       Food[]
+  category    Category  @relation(fields: [categoryId], references: [id])
+
+  @@index([categoryId])
+  @@index([status])
+  @@map("sub_categories")
+}
+
+model Food {
+  id                    String                 @id @default(uuid())
+  categoryId            String
+  subCategoryId         String?
+  foodCode              String                 @unique
+  name                  String
+  slug                  String                 @unique
+  shortDescription      String?
+  description           String?
+  thumbnail             String?
+  coverImage            String?
+  preparationTime       Int?
+  calories              Float?
+  protein               Float?
+  fat                   Float?
+  carbohydrate          Float?
+  servingSize           String?
+  foodType              FoodType
+  spiceLevel            String?
+  isFeatured            Boolean                @default(false)
+  isPopular             Boolean                @default(false)
+  isRecommended         Boolean                @default(false)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  deletedAt             DateTime?
+  approvedAt            DateTime?
+  approvedBy            String?
+  averageRating         Float?                 @default(0)
+  cholesterol           Float?
+  fiber                 Float?
+  fiveStar              Int?                   @default(0)
+  fourStar              Int?                   @default(0)
+  oneStar               Int?                   @default(0)
+  rejectionReason       String?
+  sodium                Float?
+  sugar                 Float?
+  threeStar             Int?                   @default(0)
+  totalReview           Int?                   @default(0)
+  twoStar               Int?                   @default(0)
+  status                FoodStatus             @default(PENDING)
+  cartItems             CartItem[]
+  cartMealFoods         CartMealFood[]
+  addons                FoodAddon[]
+  allergens             FoodAllergen[]
+  availability          FoodAvailability?
+  diets                 FoodDiet[]
+  discounts             FoodDiscount[]
+  favorites             FoodFavorite[]
+  images                FoodImage[]
+  ingredients           FoodIngredient[]
+  labels                FoodLabel[]
+  preparation           FoodPreparation?
+  prices                FoodPrice[]
+  reviews               FoodReview[]
+  schedules             FoodSchedule[]
+  tagMappings           FoodTagMapping[]
+  variants              FoodVariant[]
+  visibility            FoodVisibility?
+  approver              User?                  @relation("FoodApprover", fields: [approvedBy], references: [id])
+  category              Category               @relation(fields: [categoryId], references: [id])
+  subCategory           SubCategory?           @relation(fields: [subCategoryId], references: [id])
+  orderItems            OrderItem[]
+  packageMealFoods      PackageMealFood[]
+  vendorFoodAssignments VendorFoodAssignment[]
+  vendorFoods           VendorFood[]
+
+  @@index([categoryId])
+  @@index([subCategoryId])
+  @@index([status])
+  @@index([isFeatured])
+  @@index([isPopular])
+  @@index([status, deletedAt, categoryId])
+  @@map("foods")
+}
+
+model FoodVariant {
+  id            String   @id @default(uuid())
+  foodId        String
+  name          String
+  description   String?
+  price         Decimal  @db.Decimal(10, 2)
+  discountPrice Decimal? @db.Decimal(10, 2)
+  weight        String?
+  servingSize   String?
+  status        String   @default("active")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  food          Food     @relation(fields: [foodId], references: [id])
+
+  @@index([foodId])
+  @@index([status])
+  @@map("food_variants")
+}
+
+model FoodAddon {
+  id           String          @id @default(uuid())
+  foodId       String
+  name         String
+  isRequired   Boolean         @default(false)
+  maxSelection Int?
+  status       String          @default("active")
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  items        FoodAddonItem[]
+  food         Food            @relation(fields: [foodId], references: [id])
+
+  @@index([foodId])
+  @@index([status])
+  @@map("food_addons")
+}
+
+model FoodAddonItem {
+  id        String    @id @default(uuid())
+  addonId   String
+  name      String
+  price     Decimal   @db.Decimal(10, 2)
+  image     String?
+  status    String    @default("active")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  addon     FoodAddon @relation(fields: [addonId], references: [id])
+
+  @@index([addonId])
+  @@index([status])
+  @@map("food_addon_items")
+}
+
+model FoodIngredient {
+  id             String   @id @default(uuid())
+  foodId         String
+  ingredientName String
+  quantity       String?
+  unit           String?
+  isOptional     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  food           Food     @relation(fields: [foodId], references: [id])
+
+  @@index([foodId])
+  @@map("food_ingredients")
+}
+
+model FoodAllergen {
+  id          String   @id @default(uuid())
+  foodId      String
+  allergen    String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  food        Food     @relation(fields: [foodId], references: [id])
+
+  @@index([foodId])
+  @@map("food_allergens")
+}
+
+model FoodPreparation {
+  id                 String   @id @default(uuid())
+  foodId             String   @unique
+  preparationTime    Int?
+  cookTime           Int?
+  packingTime        Int?
+  estimatedReadyTime Int?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  food               Food     @relation(fields: [foodId], references: [id])
+
+  @@map("food_preparations")
+}
+
+model FoodAvailability {
+  id            String   @id @default(uuid())
+  foodId        String   @unique
+  availableFrom String?
+  availableTo   String?
+  isAvailable   Boolean  @default(true)
+  availableDays Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  food          Food     @relation(fields: [foodId], references: [id])
+
+  @@map("food_availabilities")
+}
+
+model FoodSchedule {
+  id        String   @id @default(uuid())
+  foodId    String
+  mealType  MealType
+  startTime String
+  endTime   String
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  food      Food     @relation(fields: [foodId], references: [id])
+
+  @@index([foodId])
+  @@index([mealType])
+  @@map("food_schedules")
+}
+
+model FoodPrice {
+  id            String    @id @default(uuid())
+  foodId        String
+  basePrice     Decimal   @db.Decimal(10, 2)
+  salePrice     Decimal?  @db.Decimal(10, 2)
+  currency      String    @default("BDT")
+  effectiveFrom DateTime?
+  effectiveTo   DateTime?
+  status        String    @default("active")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  food          Food      @relation(fields: [foodId], references: [id])
+
+  @@index([foodId])
+  @@map("food_prices")
+}
+
+model FoodDiscount {
+  id            String       @id @default(uuid())
+  foodId        String
+  discountType  DiscountType
+  discountValue Decimal      @db.Decimal(10, 2)
+  startDate     DateTime?
+  endDate       DateTime?
+  status        String       @default("active")
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  food          Food         @relation(fields: [foodId], references: [id])
+
+  @@index([foodId])
+  @@index([status])
+  @@map("food_discounts")
+}
+
+model FoodTag {
+  id          String           @id @default(uuid())
+  name        String
+  slug        String           @unique
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  tagMappings FoodTagMapping[]
+
+  @@map("food_tags")
+}
+
+model FoodTagMapping {
+  id        String   @id @default(uuid())
+  foodId    String
+  tagId     String
+  createdAt DateTime @default(now())
+  food      Food     @relation(fields: [foodId], references: [id])
+  tag       FoodTag  @relation(fields: [tagId], references: [id])
+
+  @@index([foodId])
+  @@index([tagId])
+  @@map("food_tag_mappings")
+}
+
+model FoodLabel {
+  id        String   @id @default(uuid())
+  foodId    String
+  label     String
+  color     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  food      Food     @relation(fields: [foodId], references: [id])
+
+  @@map("food_labels")
+}
+
+model FoodReview {
+  id         String   @id @default(uuid())
+  foodId     String
+  customerId String
+  orderId    String?
+  rating     Int
+  review     String?
+  status     String   @default("pending")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  customer   User     @relation(fields: [customerId], references: [id])
+  food       Food     @relation(fields: [foodId], references: [id])
+
+  @@index([foodId])
+  @@index([customerId])
+  @@index([foodId, status])
+  @@map("food_reviews")
+}
+
+model FoodFavorite {
+  id        String   @id @default(uuid())
+  userId    String
+  foodId    String
+  createdAt DateTime @default(now())
+  food      Food     @relation(fields: [foodId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([foodId])
+  @@index([userId])
+  @@index([userId, foodId])
+  @@map("food_favorites")
+}
+
+model FoodVisibility {
+  id            String   @id @default(uuid())
+  foodId        String   @unique
+  isVisible     Boolean  @default(true)
+  isFeatured    Boolean  @default(false)
+  isRecommended Boolean  @default(false)
+  displayOrder  Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  food          Food     @relation(fields: [foodId], references: [id])
+
+  @@map("food_visibilities")
+}
+
+model FoodDiet {
+  id        String   @id @default(uuid())
+  foodId    String
+  dietType  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  food      Food     @relation(fields: [foodId], references: [id])
+
+  @@map("food_diets")
+}
+
+model FoodImage {
+  id        String   @id @default(uuid())
+  foodId    String
+  image     String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  food      Food     @relation(fields: [foodId], references: [id])
+
+  @@map("food_images")
+}
+
+model VendorFood {
+  id              String                    @id @default(uuid())
+  vendorId        String
+  foodId          String
+  vendorFoodCode  String?
+  vendorSku       String?
+  kitchenId       String?
+  branchId        String?
+  priority        Int                       @default(0)
+  status          String                    @default("active")
+  isAvailable     Boolean                   @default(true)
+  isPrimary       Boolean                   @default(false)
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
+  deletedAt       DateTime?
+  statusHistories VendorFoodStatusHistory[]
+  food            Food                      @relation(fields: [foodId], references: [id])
+  vendor          Vendor                    @relation(fields: [vendorId], references: [id])
+
+  @@index([vendorId])
+  @@index([foodId])
+  @@index([status])
+  @@map("vendor_foods")
+}
+
+model VendorFoodStatusHistory {
+  id           String     @id @default(uuid())
+  vendorFoodId String
+  oldStatus    String?
+  newStatus    String
+  changedBy    String?
+  reason       String?
+  createdAt    DateTime   @default(now())
+  vendorFood   VendorFood @relation(fields: [vendorFoodId], references: [id])
+
+  @@map("vendor_food_status_histories")
+}
+
+model VendorFoodAssignment {
+  id                   String    @id @default(uuid())
+  foodId               String
+  vendorId             String
+  priority             Int       @default(0)
+  allocationPercentage Float?
+  isDefault            Boolean   @default(false)
+  effectiveFrom        DateTime?
+  effectiveTo          DateTime?
+  status               String    @default("active")
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  food                 Food      @relation(fields: [foodId], references: [id])
+  vendor               Vendor    @relation(fields: [vendorId], references: [id])
+
+  @@index([vendorId])
+  @@index([foodId])
+  @@index([status])
+  @@map("vendor_food_assignments")
+}
+
+model Package {
+  id                String                @id @default(uuid())
+  packageCode       String                @unique
+  name              String
+  slug              String                @unique
+  description       String
+  thumbnail         String
+  coverImage        String
+  packageType       String
+  durationDays      Int
+  totalMeals        Int
+  price             Decimal               @db.Decimal(10, 2)
+  discountPrice     Decimal?              @db.Decimal(10, 2)
+  currency          String                @default("BDT")
+  isCustomizable    Boolean               @default(false)
+  status            PackageStatus         @default(PENDING)
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  deletedAt         DateTime?
+  packageCategoryId String?
+  vendorId          String?
+  approvedBy        String?
+  approvedAt        DateTime?
+  rejectionReason   String?
+  customMealPlans   CustomMealPlan[]
+  availability      PackageAvailability?
+  benefits          PackageBenefit[]
+  customization     PackageCustomization?
+  days              PackageDay[]
+  images            PackageImage[]
+  nutrition         PackageNutrition?
+  prices            PackagePrice[]
+  rating            PackageRating?
+  reviews           PackageReview[]
+  rule              PackageRule?
+  schedule          PackageSchedule?
+  tags              PackageTag[]
+  approver          User?                 @relation("PackageApprover", fields: [approvedBy], references: [id])
+  packageCategory   PackageCategory?      @relation(fields: [packageCategoryId], references: [id])
+  vendor            Vendor?               @relation(fields: [vendorId], references: [id])
+
+  @@index([status])
+  @@index([vendorId])
+  @@index([status, deletedAt])
+  @@map("packages")
+}
+
+model PackageCategory {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  status      String    @default("active")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  image       String
+  packages    Package[]
+
+  @@map("package_categories")
+}
+
+model PackageDay {
+  id          String        @id @default(uuid())
+  packageId   String
+  dayNumber   Int
+  title       String?
+  description String?
+  status      String        @default("active")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  package     Package       @relation(fields: [packageId], references: [id])
+  meals       PackageMeal[]
+
+  @@map("package_days")
+}
+
+model PackageMeal {
+  id           String            @id @default(uuid())
+  packageDayId String
+  mealType     MealType
+  mealTime     String
+  calories     Float?
+  status       String            @default("active")
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  foods        PackageMealFood[]
+  packageDay   PackageDay        @relation(fields: [packageDayId], references: [id])
+
+  @@map("package_meals")
+}
+
+model PackageMealFood {
+  id            String      @id @default(uuid())
+  packageMealId String
+  foodId        String
+  quantity      Int         @default(1)
+  isOptional    Boolean     @default(false)
+  sortOrder     Int         @default(0)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  food          Food        @relation(fields: [foodId], references: [id])
+  packageMeal   PackageMeal @relation(fields: [packageMealId], references: [id])
+
+  @@map("package_meal_foods")
+}
+
+model PackagePrice {
+  id             String    @id @default(uuid())
+  packageId      String
+  basePrice      Decimal   @db.Decimal(10, 2)
+  discountPrice  Decimal?  @db.Decimal(10, 2)
+  vat            Decimal?  @db.Decimal(10, 2)
+  deliveryCharge Decimal?  @db.Decimal(10, 2)
+  totalPrice     Decimal?  @db.Decimal(10, 2)
+  effectiveFrom  DateTime?
+  effectiveTo    DateTime?
+  status         String    @default("active")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  package        Package   @relation(fields: [packageId], references: [id])
+
+  @@map("package_prices")
+}
+
+model PackageRule {
+  id                     String   @id @default(uuid())
+  packageId              String   @unique
+  minimumOrderDays       Int?
+  maximumOrderDays       Int?
+  minimumMealsPerDay     Int      @default(0)
+  maximumMealsPerDay     Int?
+  advancePaymentRequired Boolean  @default(true)
+  allowPause             Boolean  @default(true)
+  allowResume            Boolean  @default(true)
+  allowSkipMeal          Boolean  @default(true)
+  allowCancellation      Boolean  @default(true)
+  status                 String   @default("active")
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  package                Package  @relation(fields: [packageId], references: [id])
+
+  @@map("package_rules")
+}
+
+model PackageBenefit {
+  id          String   @id @default(uuid())
+  packageId   String
+  title       String
+  description String?
+  icon        String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  package     Package  @relation(fields: [packageId], references: [id])
+
+  @@map("package_benefits")
+}
+
+model PackageNutrition {
+  id                String   @id @default(uuid())
+  packageId         String   @unique
+  dailyCalories     Float?
+  dailyProtein      Float?
+  dailyCarbohydrate Float?
+  dailyFat          Float?
+  dailyFiber        Float?
+  dailySugar        Float?
+  dailySodium       Float?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  package           Package  @relation(fields: [packageId], references: [id])
+
+  @@map("package_nutritions")
+}
+
+model PackageSchedule {
+  id                String   @id @default(uuid())
+  packageId         String   @unique
+  deliveryDays      Json?
+  deliveryTimeStart String?
+  deliveryTimeEnd   String?
+  mealCutoffTime    String?
+  status            String   @default("active")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  package           Package  @relation(fields: [packageId], references: [id])
+
+  @@map("package_schedules")
+}
+
+model PackageImage {
+  id        String   @id @default(uuid())
+  packageId String
+  image     String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  package   Package  @relation(fields: [packageId], references: [id])
+
+  @@map("package_images")
+}
+
+model PackageTag {
+  id        String   @id @default(uuid())
+  packageId String
+  tag       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  package   Package  @relation(fields: [packageId], references: [id])
+
+  @@map("package_tags")
+}
+
+model PackageReview {
+  id         String   @id @default(uuid())
+  packageId  String
+  customerId String
+  orderId    String?
+  rating     Int
+  review     String?
+  status     String   @default("pending")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  package    Package  @relation(fields: [packageId], references: [id])
+
+  @@map("package_reviews")
+}
+
+model PackageRating {
+  id            String   @id @default(uuid())
+  packageId     String   @unique
+  averageRating Float?   @default(0)
+  totalReview   Int?     @default(0)
+  fiveStar      Int?     @default(0)
+  fourStar      Int?     @default(0)
+  threeStar     Int?     @default(0)
+  twoStar       Int?     @default(0)
+  oneStar       Int?     @default(0)
+  updatedAt     DateTime @updatedAt
+  package       Package  @relation(fields: [packageId], references: [id])
+
+  @@map("package_ratings")
+}
+
+model PackageCustomization {
+  id                String   @id @default(uuid())
+  packageId         String   @unique
+  allowFoodReplace  Boolean  @default(true)
+  allowMealSkip     Boolean  @default(true)
+  allowExtraMeal    Boolean  @default(false)
+  allowExtraProtein Boolean  @default(false)
+  allowExtraRice    Boolean  @default(false)
+  allowDrink        Boolean  @default(false)
+  allowAddon        Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  package           Package  @relation(fields: [packageId], references: [id])
+
+  @@map("package_customizations")
+}
+
+model PackageAvailability {
+  id            String    @id @default(uuid())
+  packageId     String    @unique
+  availableFrom DateTime?
+  availableTo   DateTime?
+  availableDays Json?
+  status        String    @default("active")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  package       Package   @relation(fields: [packageId], references: [id])
+
+  @@map("package_availabilities")
+}
+
+model CustomMealPlan {
+  id                   String          @id @default(uuid())
+  customerId           String          @unique
+  packageId            String?
+  name                 String
+  totalDays            Int
+  status               String          @default("active")
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  acceptedByVendorId   String?
+  paymentStatus        String          @default("pending")
+  totalPrice           Decimal         @default(0) @db.Decimal(10, 2)
+  vendorApprovalStatus String          @default("pending")
+  days                 CustomMealDay[]
+  customer             User            @relation(fields: [customerId], references: [id])
+  package              Package?        @relation(fields: [packageId], references: [id])
+
+  @@map("custom_meal_plans")
+}
+
+model CustomMealDay {
+  id               String         @id @default(uuid())
+  customMealPlanId String
+  dayNumber        Int
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  customMealPlan   CustomMealPlan @relation(fields: [customMealPlanId], references: [id])
+  meals            CustomMeal[]
+
+  @@map("custom_meal_days")
+}
+
+model CustomMeal {
+  id              String           @id @default(uuid())
+  customMealDayId String
+  mealType        MealType
+  mealTime        String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  foods           CustomMealFood[]
+  customMealDay   CustomMealDay    @relation(fields: [customMealDayId], references: [id])
+
+  @@map("custom_meals")
+}
+
+model CustomMealFood {
+  id           String     @id @default(uuid())
+  customMealId String
+  foodId       String
+  quantity     Int        @default(1)
+  isExtra      Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  customMeal   CustomMeal @relation(fields: [customMealId], references: [id])
+
+  @@map("custom_meal_foods")
+}
+
+model MealPreference {
+  id                String   @id @default(uuid())
+  customerId        String
+  mealType          String?
+  preferredCuisine  String?
+  spiceLevel        String?
+  preferredCalories Float?
+  preferredProtein  Float?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  customer          User     @relation(fields: [customerId], references: [id])
+
+  @@map("meal_preferences")
+}
+
+model DietaryRestriction {
+  id              String   @id @default(uuid())
+  customerId      String
+  restrictionType String
+  description     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  customer        User     @relation(fields: [customerId], references: [id])
+
+  @@map("dietary_restrictions")
+}
+
+model Cart {
+  id               String        @id @default(uuid())
+  customerId       String        @unique
+  packageId        String?
+  customMealPlanId String?
+  couponId         String?
+  subtotal         Decimal       @default(0) @db.Decimal(10, 2)
+  discount         Decimal       @default(0) @db.Decimal(10, 2)
+  deliveryCharge   Decimal       @default(0) @db.Decimal(10, 2)
+  vat              Decimal       @default(0) @db.Decimal(10, 2)
+  expiresAt        DateTime?
+  status           String        @default("active")
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  grandTotal       Decimal       @default(0) @db.Decimal(10, 2)
+  itemCount        Int           @default(0)
+  mealCount        Int           @default(0)
+  histories        CartHistory[]
+  items            CartItem[]
+  meals            CartMeal[]
+  customer         User          @relation(fields: [customerId], references: [id])
+
+  @@index([customerId, status])
+  @@index([status])
+  @@map("carts")
+}
+
+model CartItem {
+  id            String      @id @default(uuid())
+  cartId        String
+  foodId        String
+  packageMealId String?
+  quantity      Int
+  unitPrice     Decimal     @db.Decimal(10, 2)
+  totalPrice    Decimal     @db.Decimal(10, 2)
+  isCustomized  Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  addons        CartAddon[]
+  cart          Cart        @relation(fields: [cartId], references: [id])
+  food          Food        @relation(fields: [foodId], references: [id])
+
+  @@index([cartId])
+  @@index([foodId])
+  @@index([cartId, foodId])
+  @@map("cart_items")
+}
+
+model CartAddon {
+  id          String   @id @default(uuid())
+  cartItemId  String
+  addonItemId String
+  quantity    Int      @default(1)
+  price       Decimal  @db.Decimal(10, 2)
+  createdAt   DateTime @default(now())
+  cartItem    CartItem @relation(fields: [cartItemId], references: [id])
+
+  @@index([cartItemId])
+  @@map("cart_addons")
+}
+
+model CartMeal {
+  id        String         @id @default(uuid())
+  cartId    String
+  dayNumber Int
+  mealType  String
+  mealTime  String?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  foods     CartMealFood[]
+  cart      Cart           @relation(fields: [cartId], references: [id])
+
+  @@index([cartId])
+  @@map("cart_meals")
+}
+
+model CartMealFood {
+  id            String   @id @default(uuid())
+  cartMealId    String
+  foodId        String
+  quantity      Int      @default(1)
+  isReplacement Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  cartMeal      CartMeal @relation(fields: [cartMealId], references: [id])
+  food          Food     @relation(fields: [foodId], references: [id])
+
+  @@index([cartMealId])
+  @@index([foodId])
+  @@map("cart_meal_foods")
+}
+
+model CartHistory {
+  id          String   @id @default(uuid())
+  cartId      String
+  action      String
+  performedBy String
+  remarks     String?
+  createdAt   DateTime @default(now())
+  cart        Cart     @relation(fields: [cartId], references: [id])
+
+  @@map("cart_histories")
+}
+
+model Order {
+  id               String               @id @default(uuid())
+  orderNumber      String               @unique
+  customerId       String
+  vendorId         String?
+  packageId        String?
+  customMealPlanId String?
+  addressId        String?
+  paymentId        String?
+  couponId         String?
+  subtotal         Decimal              @default(0) @db.Decimal(10, 2)
+  discount         Decimal              @default(0) @db.Decimal(10, 2)
+  deliveryCharge   Decimal              @default(0) @db.Decimal(10, 2)
+  vat              Decimal              @default(0) @db.Decimal(10, 2)
+  totalAmount      Decimal              @default(0) @db.Decimal(10, 2)
+  paymentStatus    PaymentStatus        @default(PENDING)
+  orderStatus      OrderStatus          @default(PENDING)
+  deliveryStatus   DeliveryStatus       @default(PENDING)
+  orderSource      String?
+  notes            String?
+  placedAt         DateTime             @default(now())
+  confirmedAt      DateTime?
+  completedAt      DateTime?
+  cancelledAt      DateTime?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  deletedAt        DateTime?
+  delivery         Delivery?
+  cancellation     OrderCancellation?
+  feedback         OrderFeedback?
+  invoice          OrderInvoice?
+  items            OrderItem[]
+  meals            OrderMeal[]
+  refunds          OrderRefund[]
+  schedules        OrderSchedule[]
+  statusHistories  OrderStatusHistory[]
+  timeline         OrderTimeline[]
+  customer         User                 @relation(fields: [customerId], references: [id])
+  vendor           Vendor?              @relation(fields: [vendorId], references: [id])
+  payment          Payment?
+  platformRevenues PlatformRevenue[]
+  subscriptions    Subscription[]
+
+  @@index([customerId])
+  @@index([vendorId])
+  @@index([orderStatus])
+  @@index([paymentStatus])
+  @@index([deliveryStatus])
+  @@index([placedAt])
+  @@index([deletedAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id           String   @id @default(uuid())
+  orderId      String
+  foodId       String
+  vendorFoodId String?
+  quantity     Int
+  unitPrice    Decimal  @db.Decimal(10, 2)
+  discount     Decimal  @default(0) @db.Decimal(10, 2)
+  totalPrice   Decimal  @db.Decimal(10, 2)
+  status       String   @default("pending")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  food         Food     @relation(fields: [foodId], references: [id])
+  order        Order    @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+  @@index([foodId])
+  @@map("order_items")
+}
+
+model OrderMeal {
+  id           String          @id @default(uuid())
+  orderId      String
+  dayNumber    Int
+  deliveryDate DateTime?
+  mealType     String
+  mealTime     String?
+  status       String          @default("pending")
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  foods        OrderMealFood[]
+  order        Order           @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+  @@map("order_meals")
+}
+
+model OrderMealFood {
+  id           String    @id @default(uuid())
+  orderMealId  String
+  foodId       String
+  vendorFoodId String?
+  quantity     Int       @default(1)
+  status       String    @default("pending")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  orderMeal    OrderMeal @relation(fields: [orderMealId], references: [id])
+
+  @@index([orderMealId])
+  @@index([foodId])
+  @@map("order_meal_foods")
+}
+
+model OrderSchedule {
+  id                    String   @id @default(uuid())
+  orderId               String
+  deliveryDate          DateTime
+  deliverySlot          String?
+  estimatedDeliveryTime String?
+  status                String   @default("pending")
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  order                 Order    @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+  @@map("order_schedules")
+}
+
+model OrderStatusHistory {
+  id             String   @id @default(uuid())
+  orderId        String
+  previousStatus String?
+  currentStatus  String
+  changedBy      String?
+  remarks        String?
+  createdAt      DateTime @default(now())
+  order          Order    @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+  @@map("order_status_histories")
+}
+
+model OrderTimeline {
+  id          String   @id @default(uuid())
+  orderId     String
+  title       String
+  description String?
+  status      String?
+  createdAt   DateTime @default(now())
+  order       Order    @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+  @@map("order_timelines")
+}
+
+model OrderInvoice {
+  id             String   @id @default(uuid())
+  orderId        String   @unique
+  invoiceNumber  String   @unique
+  invoiceDate    DateTime @default(now())
+  subtotal       Decimal? @db.Decimal(10, 2)
+  discount       Decimal? @db.Decimal(10, 2)
+  vat            Decimal? @db.Decimal(10, 2)
+  deliveryCharge Decimal? @db.Decimal(10, 2)
+  grandTotal     Decimal  @db.Decimal(10, 2)
+  pdfUrl         String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  order          Order    @relation(fields: [orderId], references: [id])
+
+  @@map("order_invoices")
+}
+
+model OrderCancellation {
+  id           String   @id @default(uuid())
+  orderId      String   @unique
+  cancelledBy  String
+  reason       String
+  refundAmount Decimal? @db.Decimal(10, 2)
+  refundStatus String   @default("pending")
+  cancelledAt  DateTime @default(now())
+  createdAt    DateTime @default(now())
+  order        Order    @relation(fields: [orderId], references: [id])
+
+  @@map("order_cancellations")
+}
+
+model OrderRefund {
+  id           String    @id @default(uuid())
+  orderId      String
+  paymentId    String?
+  refundAmount Decimal   @db.Decimal(10, 2)
+  refundMethod String?
+  refundStatus String    @default("pending")
+  processedBy  String?
+  processedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  order        Order     @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+  @@index([paymentId])
+  @@map("order_refunds")
+}
+
+model OrderFeedback {
+  id         String   @id @default(uuid())
+  orderId    String   @unique
+  customerId String
+  rating     Int
+  review     String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  order      Order    @relation(fields: [orderId], references: [id])
+
+  @@map("order_feedbacks")
+}
+
+model Payment {
+  id              String               @id @default(uuid())
+  paymentNumber   String               @unique
+  orderId         String               @unique
+  customerId      String
+  paymentMethodId String?
+  gatewayId       String?
+  transactionId   String?
+  amount          Decimal              @db.Decimal(10, 2)
+  currency        String               @default("BDT")
+  status          PaymentStatus        @default(PENDING)
+  paymentDate     DateTime?
+  gatewayResponse Json?
+  failureReason   String?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  adjustments     PaymentAdjustment[]
+  attempts        PaymentAttempt[]
+  refunds         PaymentRefund[]
+  transactions    PaymentTransaction[]
+  customer        User                 @relation(fields: [customerId], references: [id])
+  order           Order                @relation(fields: [orderId], references: [id])
+
+  @@index([customerId])
+  @@index([status])
+  @@index([paymentMethodId])
+  @@index([transactionId])
+  @@map("payments")
+}
+
+model PaymentGateway {
+  id          String   @id @default(uuid())
+  code        String   @unique @default("sslcommerz")
+  name        String
+  merchantId  String?
+  storeId     String?
+  apiKey      String?
+  secretKey   String?
+  sandboxMode Boolean  @default(true)
+  callbackUrl String?
+  refundUrl   String?
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([code])
+  @@index([status])
+  @@map("payment_gateways")
+}
+
+model PaymentMethod {
+  id        String   @id @default(uuid())
+  name      String
+  code      String
+  provider  String?
+  type      String?
+  logo      String?
+  isDefault Boolean  @default(false)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("payment_methods")
+}
+
+model PaymentTransaction {
+  id                    String    @id @default(uuid())
+  paymentId             String
+  gatewayTransactionId  String?
+  merchantTransactionId String?
+  transactionType       String?
+  amount                Decimal   @db.Decimal(10, 2)
+  currency              String    @default("BDT")
+  status                String?
+  responseCode          String?
+  responseMessage       String?
+  gatewayResponse       Json?
+  processedAt           DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  payment               Payment   @relation(fields: [paymentId], references: [id])
+
+  @@index([paymentId])
+  @@map("payment_transactions")
+}
+
+model PaymentAttempt {
+  id            String   @id @default(uuid())
+  paymentId     String
+  attemptNumber Int
+  paymentMethod String?
+  status        String?
+  failureReason String?
+  attemptAt     DateTime @default(now())
+  createdAt     DateTime @default(now())
+  payment       Payment  @relation(fields: [paymentId], references: [id])
+
+  @@index([paymentId])
+  @@map("payment_attempts")
+}
+
+model PaymentRefund {
+  id              String    @id @default(uuid())
+  paymentId       String
+  orderId         String?
+  refundAmount    Decimal   @db.Decimal(10, 2)
+  refundMethod    String?
+  gatewayRefundId String?
+  reason          String
+  status          String    @default("pending")
+  processedBy     String?
+  processedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  payment         Payment   @relation(fields: [paymentId], references: [id])
+
+  @@index([paymentId])
+  @@map("payment_refunds")
+}
+
+model PaymentAdjustment {
+  id             String   @id @default(uuid())
+  paymentId      String
+  adjustmentType String
+  amount         Decimal  @db.Decimal(10, 2)
+  reason         String
+  approvedBy     String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  payment        Payment  @relation(fields: [paymentId], references: [id])
+
+  @@map("payment_adjustments")
+}
+
+model CustomerWallet {
+  id           String                      @id @default(uuid())
+  customerId   String                      @unique
+  walletNumber String                      @unique
+  balance      Decimal                     @default(0) @db.Decimal(10, 2)
+  holdBalance  Decimal                     @default(0) @db.Decimal(10, 2)
+  currency     String                      @default("BDT")
+  status       String                      @default("active")
+  createdAt    DateTime                    @default(now())
+  updatedAt    DateTime                    @updatedAt
+  transactions CustomerWalletTransaction[]
+  customer     User                        @relation(fields: [customerId], references: [id])
+  topups       WalletTopup[]
+  withdraws    WalletWithdraw[]
+
+  @@map("customer_wallets")
+}
+
+model CustomerWalletTransaction {
+  id              String         @id @default(uuid())
+  walletId        String
+  transactionType String
+  amount          Decimal        @db.Decimal(10, 2)
+  balanceBefore   Decimal?       @db.Decimal(10, 2)
+  balanceAfter    Decimal?       @db.Decimal(10, 2)
+  referenceType   String?
+  referenceId     String?
+  remarks         String?
+  createdAt       DateTime       @default(now())
+  wallet          CustomerWallet @relation(fields: [walletId], references: [id])
+
+  @@index([walletId])
+  @@index([transactionType])
+  @@map("customer_wallet_transactions")
+}
+
+model WalletTopup {
+  id        String         @id @default(uuid())
+  walletId  String
+  paymentId String?
+  amount    Decimal        @db.Decimal(10, 2)
+  status    String         @default("pending")
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  wallet    CustomerWallet @relation(fields: [walletId], references: [id])
+
+  @@map("wallet_topups")
+}
+
+model WalletWithdraw {
+  id             String         @id @default(uuid())
+  walletId       String
+  amount         Decimal        @db.Decimal(10, 2)
+  withdrawMethod String
+  accountNumber  String
+  status         String         @default("pending")
+  approvedBy     String?
+  processedAt    DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  wallet         CustomerWallet @relation(fields: [walletId], references: [id])
+
+  @@map("wallet_withdraws")
+}
+
+model PlatformRevenue {
+  id               String   @id @default(uuid())
+  orderId          String
+  vendorId         String?
+  commissionAmount Decimal  @default(0) @db.Decimal(10, 2)
+  deliveryCharge   Decimal  @default(0) @db.Decimal(10, 2)
+  serviceCharge    Decimal  @default(0) @db.Decimal(10, 2)
+  vat              Decimal  @default(0) @db.Decimal(10, 2)
+  netRevenue       Decimal  @default(0) @db.Decimal(10, 2)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  order            Order    @relation(fields: [orderId], references: [id])
+  vendor           Vendor?  @relation(fields: [vendorId], references: [id])
+
+  @@map("platform_revenues")
+}
+
+model Rider {
+  id                String              @id @default(uuid())
+  vendorId          String?
+  branchId          String?
+  userId            String?
+  riderCode         String              @unique
+  fullName          String
+  phone             String
+  email             String?
+  profileImage      String?
+  dateOfBirth       DateTime?
+  gender            String?
+  nidNumber         String?
+  licenseNumber     String?
+  licenseExpiryDate DateTime?
+  joiningDate       DateTime?
+  employmentType    String?
+  status            String              @default("active")
+  isOnline          Boolean             @default(false)
+  isAvailable       Boolean             @default(true)
+  lastActiveAt      DateTime?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  deletedAt         DateTime?
+  deliveries        Delivery[]
+  attendances       RiderAttendance[]
+  availabilities    RiderAvailability[]
+  documents         RiderDocument[]
+  locations         RiderLocation[]
+  performance       RiderPerformance?
+  profile           RiderProfile?
+  ratings           RiderRating[]
+  shifts            RiderShift[]
+  vehicle           RiderVehicle?
+  wallet            RiderWallet?
+  vendor            Vendor?             @relation(fields: [vendorId], references: [id])
+  trackingSessions  TrackingSession[]
+
+  @@index([vendorId])
+  @@index([status])
+  @@index([isOnline])
+  @@map("riders")
+}
+
+model RiderProfile {
+  id                    String   @id @default(uuid())
+  riderId               String   @unique
+  emergencyContactName  String?
+  emergencyContactPhone String?
+  bloodGroup            String?
+  address               String?
+  city                  String?
+  postalCode            String?
+  profileCompletion     Float?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  rider                 Rider    @relation(fields: [riderId], references: [id])
+
+  @@map("rider_profiles")
+}
+
+model RiderDocument {
+  id                 String    @id @default(uuid())
+  riderId            String
+  documentType       String
+  documentNumber     String?
+  documentUrl        String
+  verificationStatus String    @default("pending")
+  verifiedBy         String?
+  verifiedAt         DateTime?
+  expiryDate         DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  rider              Rider     @relation(fields: [riderId], references: [id])
+
+  @@map("rider_documents")
+}
+
+model RiderVehicle {
+  id                  String    @id @default(uuid())
+  riderId             String    @unique
+  vehicleType         String
+  brand               String?
+  model               String?
+  registrationNumber  String
+  color               String?
+  insuranceNumber     String?
+  insuranceExpiryDate DateTime?
+  status              String    @default("active")
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  rider               Rider     @relation(fields: [riderId], references: [id])
+
+  @@map("rider_vehicles")
+}
+
+model RiderAvailability {
+  id          String   @id @default(uuid())
+  riderId     String
+  dayOfWeek   String
+  startTime   String
+  endTime     String
+  isAvailable Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  rider       Rider    @relation(fields: [riderId], references: [id])
+
+  @@map("rider_availabilities")
+}
+
+model RiderShift {
+  id        String   @id @default(uuid())
+  riderId   String
+  shiftName String
+  startTime String
+  endTime   String
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  rider     Rider    @relation(fields: [riderId], references: [id])
+
+  @@map("rider_shifts")
+}
+
+model RiderAttendance {
+  id               String    @id @default(uuid())
+  riderId          String
+  checkIn          DateTime
+  checkOut         DateTime?
+  workingHours     Float?
+  attendanceStatus String    @default("present")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  rider            Rider     @relation(fields: [riderId], references: [id])
+
+  @@map("rider_attendances")
+}
+
+model RiderLocation {
+  id           String    @id @default(uuid())
+  riderId      String
+  latitude     Float
+  longitude    Float
+  heading      Float?
+  speed        Float?
+  accuracy     Float?
+  batteryLevel Float?
+  locationTime DateTime?
+  createdAt    DateTime  @default(now())
+  rider        Rider     @relation(fields: [riderId], references: [id])
+
+  @@map("rider_locations")
+}
+
+model RiderPerformance {
+  id                  String   @id @default(uuid())
+  riderId             String   @unique
+  totalDeliveries     Int      @default(0)
+  completedDeliveries Int      @default(0)
+  cancelledDeliveries Int      @default(0)
+  averageDeliveryTime Float?
+  averageRating       Float?   @default(0)
+  acceptanceRate      Float?
+  completionRate      Float?
+  updatedAt           DateTime @updatedAt
+  rider               Rider    @relation(fields: [riderId], references: [id])
+
+  @@map("rider_performances")
+}
+
+model RiderRating {
+  id         String   @id @default(uuid())
+  riderId    String
+  customerId String
+  orderId    String?
+  rating     Int
+  review     String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  rider      Rider    @relation(fields: [riderId], references: [id])
+
+  @@map("rider_ratings")
+}
+
+model RiderWallet {
+  id           String                   @id @default(uuid())
+  riderId      String                   @unique
+  balance      Decimal                  @default(0) @db.Decimal(10, 2)
+  holdBalance  Decimal                  @default(0) @db.Decimal(10, 2)
+  currency     String                   @default("BDT")
+  status       String                   @default("active")
+  createdAt    DateTime                 @default(now())
+  updatedAt    DateTime                 @updatedAt
+  transactions RiderWalletTransaction[]
+  rider        Rider                    @relation(fields: [riderId], references: [id])
+
+  @@map("rider_wallets")
+}
+
+model RiderWalletTransaction {
+  id              String      @id @default(uuid())
+  walletId        String
+  transactionType String
+  amount          Decimal     @db.Decimal(10, 2)
+  balanceBefore   Decimal?    @db.Decimal(10, 2)
+  balanceAfter    Decimal?    @db.Decimal(10, 2)
+  referenceType   String?
+  referenceId     String?
+  remarks         String?
+  createdAt       DateTime    @default(now())
+  wallet          RiderWallet @relation(fields: [walletId], references: [id])
+
+  @@index([walletId])
+  @@map("rider_wallet_transactions")
+}
+
+model Delivery {
+  id                    String                  @id @default(uuid())
+  orderId               String                  @unique
+  vendorId              String?
+  riderId               String?
+  deliveryCode          String                  @unique
+  deliveryType          String                  @default("standard")
+  deliveryStatus        DeliveryStatus          @default(PENDING)
+  priority              Int                     @default(0)
+  estimatedPickupTime   DateTime?
+  estimatedDeliveryTime DateTime?
+  actualPickupTime      DateTime?
+  actualDeliveryTime    DateTime?
+  deliveryCharge        Decimal?                @db.Decimal(10, 2)
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  order                 Order                   @relation(fields: [orderId], references: [id])
+  rider                 Rider?                  @relation(fields: [riderId], references: [id])
+  vendor                Vendor?                 @relation(fields: [vendorId], references: [id])
+  attempts              DeliveryAttempt[]
+  items                 DeliveryItem[]
+  proof                 DeliveryProof?
+  schedules             DeliverySchedule[]
+  statusHistories       DeliveryStatusHistory[]
+  trackingSessions      TrackingSession[]
+
+  @@index([riderId])
+  @@index([vendorId])
+  @@index([deliveryStatus])
+  @@map("deliveries")
+}
+
+model DeliveryItem {
+  id          String   @id @default(uuid())
+  deliveryId  String
+  orderMealId String?
+  foodId      String?
+  quantity    Int      @default(1)
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  delivery    Delivery @relation(fields: [deliveryId], references: [id])
+
+  @@map("delivery_items")
+}
+
+model DeliverySchedule {
+  id           String   @id @default(uuid())
+  deliveryId   String
+  deliveryDate DateTime
+  deliverySlot String?
+  startTime    String?
+  endTime      String?
+  status       String   @default("pending")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  delivery     Delivery @relation(fields: [deliveryId], references: [id])
+
+  @@map("delivery_schedules")
+}
+
+model DeliveryStatusHistory {
+  id             String   @id @default(uuid())
+  deliveryId     String
+  previousStatus String?
+  currentStatus  String
+  remarks        String?
+  updatedBy      String?
+  createdAt      DateTime @default(now())
+  delivery       Delivery @relation(fields: [deliveryId], references: [id])
+
+  @@map("delivery_status_histories")
+}
+
+model DeliveryProof {
+  id         String    @id @default(uuid())
+  deliveryId String    @unique
+  proofType  ProofType
+  image      String?
+  signature  String?
+  otp        String?
+  verifiedAt DateTime?
+  createdAt  DateTime  @default(now())
+  delivery   Delivery  @relation(fields: [deliveryId], references: [id])
+
+  @@map("delivery_proofs")
+}
+
+model DeliveryAttempt {
+  id            String   @id @default(uuid())
+  deliveryId    String
+  attemptNumber Int
+  reason        String?
+  status        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  delivery      Delivery @relation(fields: [deliveryId], references: [id])
+
+  @@map("delivery_attempts")
+}
+
+model TrackingSession {
+  id           String             @id @default(uuid())
+  deliveryId   String
+  riderId      String?
+  trackingCode String             @unique
+  startedAt    DateTime           @default(now())
+  endedAt      DateTime?
+  status       String             @default("active")
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  eta          TrackingETA?
+  events       TrackingEvent[]
+  locations    TrackingLocation[]
+  delivery     Delivery           @relation(fields: [deliveryId], references: [id])
+  rider        Rider?             @relation(fields: [riderId], references: [id])
+
+  @@map("tracking_sessions")
+}
+
+model TrackingLocation {
+  id                String          @id @default(uuid())
+  trackingSessionId String
+  latitude          Float
+  longitude         Float
+  speed             Float?
+  heading           Float?
+  accuracy          Float?
+  recordedAt        DateTime        @default(now())
+  trackingSession   TrackingSession @relation(fields: [trackingSessionId], references: [id])
+
+  @@map("tracking_locations")
+}
+
+model TrackingEvent {
+  id                String          @id @default(uuid())
+  trackingSessionId String
+  event             String
+  description       String?
+  latitude          Float?
+  longitude         Float?
+  createdAt         DateTime        @default(now())
+  trackingSession   TrackingSession @relation(fields: [trackingSessionId], references: [id])
+
+  @@map("tracking_events")
+}
+
+model TrackingETA {
+  id                   String          @id @default(uuid())
+  trackingSessionId    String          @unique
+  estimatedArrivalTime DateTime?
+  remainingDistance    Float?
+  remainingDuration    Int?
+  trafficStatus        String?
+  updatedAt            DateTime        @updatedAt
+  trackingSession      TrackingSession @relation(fields: [trackingSessionId], references: [id])
+
+  @@map("tracking_etas")
+}
+
+model Route {
+  id                String             @id @default(uuid())
+  routeCode         String             @unique
+  vendorId          String?
+  riderId           String?
+  routeName         String?
+  totalDistance     Float?
+  estimatedDuration Int?
+  status            String             @default("active")
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  histories         RouteHistory[]
+  optimization      RouteOptimization?
+  stops             RouteStop[]
+  trackings         RouteTracking?
+  vendor            Vendor?            @relation(fields: [vendorId], references: [id])
+
+  @@map("routes")
+}
+
+model RouteStop {
+  id            String    @id @default(uuid())
+  routeId       String
+  deliveryId    String?
+  customerId    String?
+  addressId     String?
+  stopNumber    Int
+  arrivalTime   DateTime?
+  departureTime DateTime?
+  status        String    @default("pending")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  route         Route     @relation(fields: [routeId], references: [id])
+
+  @@map("route_stops")
+}
+
+model RouteOptimization {
+  id                String   @id @default(uuid())
+  routeId           String   @unique
+  algorithm         String?
+  optimizationScore Float?
+  totalDistance     Float?
+  totalTime         Int?
+  fuelSaving        Float?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  route             Route    @relation(fields: [routeId], references: [id])
+
+  @@map("route_optimizations")
+}
+
+model RouteTracking {
+  id                String   @id @default(uuid())
+  routeId           String   @unique
+  currentLatitude   Float?
+  currentLongitude  Float?
+  currentStop       Int?
+  remainingDistance Float?
+  remainingTime     Int?
+  updatedAt         DateTime @updatedAt
+  route             Route    @relation(fields: [routeId], references: [id])
+
+  @@map("route_trackings")
+}
+
+model RouteHistory {
+  id        String   @id @default(uuid())
+  routeId   String
+  oldRoute  String?
+  newRoute  String?
+  changedBy String?
+  reason    String?
+  createdAt DateTime @default(now())
+  route     Route    @relation(fields: [routeId], references: [id])
+
+  @@map("route_histories")
+}
+
+model Notification {
+  id            String    @id @default(uuid())
+  userId        String
+  title         String
+  message       String
+  type          String?
+  referenceType String?
+  referenceId   String?
+  isRead        Boolean   @default(false)
+  readAt        DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  user          User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+model Banner {
+  id           String    @id @default(uuid())
+  title        String
+  subtitle     String?
+  image        String
+  redirectType String?
+  redirectId   String?
+  displayOrder Int       @default(0)
+  startDate    DateTime?
+  endDate      DateTime?
+  status       String    @default("active")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([status])
+  @@map("banners")
+}
+
+model Slider {
+  id           String   @id @default(uuid())
+  title        String
+  description  String?
+  image        String
+  buttonText   String?
+  buttonUrl    String?
+  displayOrder Int      @default(0)
+  status       String   @default("active")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("sliders")
+}
+
+model Blog {
+  id          String        @id @default(uuid())
+  title       String
+  slug        String        @unique
+  thumbnail   String?
+  content     String
+  authorId    String?
+  categoryId  String?
+  status      String        @default("draft")
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  category    BlogCategory? @relation(fields: [categoryId], references: [id])
+
+  @@index([status])
+  @@index([categoryId])
+  @@map("blogs")
+}
+
+model BlogCategory {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String?
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  blogs       Blog[]
+
+  @@map("blog_categories")
+}
+
+model StaticPage {
+  id              String   @id @default(uuid())
+  title           String
+  slug            String   @unique
+  content         String
+  metaTitle       String?
+  metaDescription String?
+  status          String   @default("published")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("static_pages")
+}
+
+model SystemSetting {
+  id           String   @id @default(uuid())
+  settingKey   String   @unique
+  settingValue String
+  description  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("system_settings")
+}
+
+model FeatureFlag {
+  id          String   @id @default(uuid())
+  featureName String
+  isEnabled   Boolean  @default(false)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("feature_flags")
+}
+
+model ActivityLog {
+  id          String   @id @default(uuid())
+  userId      String?
+  module      String
+  action      String
+  description String?
+  ipAddress   String?
+  device      String?
+  browser     String?
+  createdAt   DateTime @default(now())
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([action])
+  @@map("activity_logs")
+}
+
+model Subscription {
+  id                 String             @id @default(uuid())
+  subscriptionNumber String             @unique
+  customerId         String
+  packageId          String?
+  customMealPlanId   String?
+  orderId            String?
+  startDate          DateTime
+  endDate            DateTime
+  duration           Int
+  status             SubscriptionStatus @default(PENDING)
+  autoRenew          Boolean            @default(false)
+  totalAmount        Decimal            @default(0) @db.Decimal(10, 2)
+  paidAmount         Decimal            @default(0) @db.Decimal(10, 2)
+  remainingAmount    Decimal            @default(0) @db.Decimal(10, 2)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  customer           User               @relation(fields: [customerId], references: [id])
+  order              Order?             @relation(fields: [orderId], references: [id])
+
+  @@index([customerId])
+  @@index([status])
+  @@map("subscriptions")
+}
+
+model Coupon {
+  id                 String        @id @default(uuid())
+  couponCode         String        @unique
+  title              String?
+  description        String?
+  discountType       DiscountType
+  discountValue      Decimal       @db.Decimal(10, 2)
+  minimumOrderAmount Decimal?      @db.Decimal(10, 2)
+  maximumDiscount    Decimal?      @db.Decimal(10, 2)
+  usageLimit         Int?
+  perUserLimit       Int           @default(1)
+  startDate          DateTime?
+  endDate            DateTime?
+  status             String        @default("active")
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  usages             CouponUsage[]
+
+  @@index([status])
+  @@map("coupons")
+}
+
+model CouponUsage {
+  id             String   @id @default(uuid())
+  couponId       String
+  customerId     String
+  orderId        String?
+  discountAmount Decimal? @db.Decimal(10, 2)
+  usedAt         DateTime @default(now())
+  coupon         Coupon   @relation(fields: [couponId], references: [id])
+
+  @@index([couponId])
+  @@index([customerId])
+  @@index([orderId])
+  @@index([couponId, customerId])
+  @@map("coupon_usages")
+}
+
+model Inventory {
+  id             String                 @id @default(uuid())
+  vendorId       String
+  ingredientName String
+  category       String?
+  unit           String
+  minimumStock   Float                  @default(0)
+  currentStock   Float                  @default(0)
+  maximumStock   Float?
+  status         String                 @default("active")
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  vendor         Vendor                 @relation(fields: [vendorId], references: [id])
+  transactions   InventoryTransaction[]
+  wasteLogs      WasteLog[]
+
+  @@map("inventories")
+}
+
+model InventoryTransaction {
+  id                String    @id @default(uuid())
+  inventoryId       String
+  transactionType   String
+  quantity          Float
+  remainingQuantity Float?
+  referenceType     String?
+  referenceId       String?
+  remarks           String?
+  createdAt         DateTime  @default(now())
+  inventory         Inventory @relation(fields: [inventoryId], references: [id])
+
+  @@map("inventory_transactions")
+}
+
+model Supplier {
+  id            String     @id @default(uuid())
+  vendorId      String
+  companyName   String
+  contactPerson String?
+  phone         String
+  email         String?
+  address       String?
+  status        String     @default("active")
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  purchases     Purchase[]
+  vendor        Vendor     @relation(fields: [vendorId], references: [id])
+
+  @@map("suppliers")
+}
+
+model Purchase {
+  id             String         @id @default(uuid())
+  supplierId     String
+  vendorId       String
+  purchaseNumber String         @unique
+  purchaseDate   DateTime       @default(now())
+  subtotal       Decimal?       @db.Decimal(10, 2)
+  vat            Decimal?       @db.Decimal(10, 2)
+  discount       Decimal?       @db.Decimal(10, 2)
+  grandTotal     Decimal?       @db.Decimal(10, 2)
+  status         String         @default("pending")
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  items          PurchaseItem[]
+  supplier       Supplier       @relation(fields: [supplierId], references: [id])
+  vendor         Vendor         @relation(fields: [vendorId], references: [id])
+
+  @@map("purchases")
+}
+
+model PurchaseItem {
+  id          String   @id @default(uuid())
+  purchaseId  String
+  inventoryId String
+  quantity    Float
+  unitPrice   Decimal  @db.Decimal(10, 2)
+  totalPrice  Decimal? @db.Decimal(10, 2)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  purchase    Purchase @relation(fields: [purchaseId], references: [id])
+
+  @@map("purchase_items")
+}
+
+model WasteLog {
+  id          String    @id @default(uuid())
+  inventoryId String
+  quantity    Float
+  reason      String
+  approvedBy  String?
+  createdAt   DateTime  @default(now())
+  inventory   Inventory @relation(fields: [inventoryId], references: [id])
+
+  @@map("waste_logs")
+}
 
 enum Role {
   SUPER_ADMIN
@@ -99,9 +2793,9 @@ enum PaymentStatus {
   PROCESSING
   COMPLETED
   FAILED
-  CANCELLED
   REFUNDED
   PARTIALLY_REFUNDED
+  CANCELLED
 }
 
 enum DeliveryStatus {
@@ -136,2907 +2830,4 @@ enum StockStatus {
   IN_STOCK
   LOW_STOCK
   OUT_OF_STOCK
-}
-
-// ============================================================
-// MODULE 1: AUTHENTICATION
-// ============================================================
-
-model User {
-  id              String     @id @default(uuid())
-  firstName       String
-  lastName        String
-  phone           String     @unique
-  email           String     @unique
-  password        String?
-  avatar          String?
-  gender          Gender?
-  dateOfBirth     DateTime?
-  role            Role       @default(CUSTOMER)
-  status          UserStatus @default(ACTIVE)
-  isPhoneVerified Boolean    @default(false)
-  isEmailVerified Boolean    @default(false)
-  lastLoginAt     DateTime?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  deletedAt       DateTime?
-
-  // From UserProfile merge
-  profession                  String?
-  occupation                  String?
-  company                     String?
-  bio                         String?
-  preferredLanguage           String?
-  timezone                    String?
-  profileCompletionPercentage Float?
-
-  // From UserSecurity merge
-  passwordChangedAt  DateTime?
-  failedLoginCount   Int       @default(0)
-  lastFailedLoginAt  DateTime?
-  twoFactorEnabled   Boolean   @default(false)
-  accountLocked      Boolean   @default(false)
-  accountLockedUntil DateTime?
-  securityQuestion   String?
-  securityAnswer     String?
-
-  // From UserNotificationSetting merge
-  pushNotification      Boolean @default(true)
-  emailNotification     Boolean @default(true)
-  smsNotification       Boolean @default(false)
-  orderNotification     Boolean @default(true)
-  paymentNotification   Boolean @default(true)
-  promotionNotification Boolean @default(false)
-  chatNotification      Boolean @default(true)
-  marketingNotification Boolean @default(false)
-  systemNotification    Boolean @default(true)
-
-  addresses           UserAddress[]
-  devices             UserDevice[]
-  sessions            UserSession[]
-  otps                UserOTP[]
-  tokens              UserToken[]
-  loginHistory        UserLoginHistory[]
-  userPermissions     UserPermission[]
-  favorites           FoodFavorite[]
-  foodReviews         FoodReview[]
-  carts               Cart[]
-  orders              Order[]
-  payments            Payment[]
-  wallet              CustomerWallet?
-  subscriptions       Subscription[]
-  customMealPlans     CustomMealPlan[]
-  mealPreferences     MealPreference[]
-  dietaryRestrictions DietaryRestriction[]
-  notifications       Notification[]
-  activityLogs        ActivityLog[]
-  vendorId            String?              @unique
-  vendor              Vendor?              @relation(fields: [vendorId], references: [id])
-  approvedFoods       Food[]               @relation("FoodApprover")
-  approvedPackages    Package[]            @relation("PackageApprover")
-
-  @@index([role])
-  @@index([status])
-  @@index([role, deletedAt])
-  @@map("users")
-}
-
-model UserAddress {
-  id                  String    @id @default(uuid())
-  userId              String
-  label               String?
-  receiverName        String
-  receiverPhone       String
-  country             String?
-  division            String
-  district            String
-  upazila             String?
-  area                String
-  road                String?
-  house               String?
-  floor               String?
-  apartment           String?
-  landmark            String?
-  postalCode          String?
-  latitude            Float?
-  longitude           Float?
-  deliveryInstruction String?
-  isDefault           Boolean   @default(false)
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-  deletedAt           DateTime?
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@index([userId])
-  @@map("user_addresses")
-}
-
-model UserDevice {
-  id              String    @id @default(uuid())
-  userId          String
-  deviceId        String
-  deviceName      String?
-  deviceType      String
-  operatingSystem String?
-  osVersion       String?
-  appVersion      String?
-  browser         String?
-  pushToken       String
-  ipAddress       String?
-  lastActiveAt    DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@index([userId])
-  @@map("user_devices")
-}
-
-model UserSession {
-  id           String    @id @default(uuid())
-  userId       String
-  deviceId     String?
-  accessToken  String
-  refreshToken String
-  ipAddress    String?
-  loginAt      DateTime?
-  expiresAt    DateTime
-  logoutAt     DateTime?
-  status       String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@index([userId])
-  @@index([accessToken])
-  @@index([refreshToken, status])
-  @@index([status])
-  @@map("user_sessions")
-}
-
-model UserOTP {
-  id           String    @id @default(uuid())
-  userId       String?
-  phone        String?
-  email        String?
-  otp          String
-  purpose      String
-  expiresAt    DateTime
-  verifiedAt   DateTime?
-  attemptCount Int       @default(0)
-  status       String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  user User? @relation(fields: [userId], references: [id])
-
-  @@index([userId])
-  @@index([phone])
-  @@index([otp])
-  @@index([status])
-  @@map("user_otps")
-}
-
-model UserToken {
-  id        String    @id @default(uuid())
-  userId    String
-  token     String
-  type      String
-  expiresAt DateTime
-  revokedAt DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@index([userId])
-  @@index([type])
-  @@index([token])
-  @@map("user_tokens")
-}
-
-model UserLoginHistory {
-  id          String    @id @default(uuid())
-  userId      String
-  deviceId    String?
-  ipAddress   String?
-  browser     String?
-  platform    String?
-  country     String?
-  city        String?
-  loginMethod String?
-  loginStatus String?
-  loggedInAt  DateTime?
-  loggedOutAt DateTime?
-  createdAt   DateTime  @default(now())
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@index([userId])
-  @@map("user_login_histories")
-}
-
-// ============================================================
-// MODULE 2: ROLE & PERMISSION
-// ============================================================
-
-model UserPermission {
-  id        String   @id @default(uuid())
-  userId    String
-  module    String
-  type      String   @default("GRANT")
-  createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@unique([userId, module, type])
-  @@map("user_permissions")
-}
-
-// ============================================================
-// MODULE 3: VENDOR
-// ============================================================
-
-model Vendor {
-  id                 String             @id @default(uuid())
-  vendorCode         String             @unique
-  businessName       String
-  ownerName          String
-  phone              String             @unique
-  email              String             @unique
-  tradeLicenseNumber String             @unique
-  tinNumber          String             @unique
-  binNumber          String             @unique
-  logo               String?
-  coverImage         String?
-  description        String?
-  status             VendorStatus       @default(PENDING)
-  verificationStatus VerificationStatus @default(UNVERIFIED)
-  isActive           Boolean            @default(true)
-  isOnline           Boolean            @default(false)
-  commissionType     CommissionType     @default(PERCENTAGE)
-  commissionValue    Decimal            @default(0.00) @db.Decimal(10, 2)
-  openingTime        String?
-  closingTime        String?
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
-  deletedAt          DateTime?
-
-  user                  User?
-  profile               VendorProfile?
-  branches              VendorBranch[]
-  kitchens              VendorKitchen[]
-  documents             VendorDocument[]
-  bankAccounts          VendorBankAccount[]
-  operatingHours        VendorOperatingHour[]
-  holidays              VendorHoliday[]
-  serviceAreas          VendorServiceArea[]
-  zones                 VendorZone[]
-  subscriptions         VendorSubscription[]
-  commissions           VendorCommission[]
-  settlements           VendorSettlement[]
-  wallet                VendorWallet?
-  rating                VendorRating?
-  reviews               VendorReview[]
-  settings              VendorSettings?
-  activityLogs          VendorActivityLog[]
-  vendorFoods           VendorFood[]
-  vendorFoodAssignments VendorFoodAssignment[]
-  riders                Rider[]
-  deliveries            Delivery[]
-  routes                Route[]
-  inventories           Inventory[]
-  suppliers             Supplier[]
-  purchases             Purchase[]
-  orders                Order[]
-  packages              Package[]
-  platformRevenues      PlatformRevenue[]
-
-  @@index([status])
-  @@index([verificationStatus])
-  @@index([isActive])
-  @@map("vendors")
-}
-
-model VendorProfile {
-  id               String   @id @default(uuid())
-  vendorId         String   @unique
-  businessType     String?
-  businessCategory String?
-  foundedYear      Int?
-  employeeCount    Int?
-  website          String?
-  facebook         String?
-  instagram        String?
-  youtube          String?
-  description      String?
-  mission          String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_profiles")
-}
-
-model VendorBranch {
-  id           String   @id @default(uuid())
-  vendorId     String
-  branchName   String
-  branchCode   String   @unique
-  phone        String?
-  email        String?
-  country      String?
-  division     String?
-  district     String?
-  upazila      String?
-  area         String?
-  road         String?
-  house        String?
-  postalCode   String?
-  latitude     Float?
-  longitude    Float?
-  isMainBranch Boolean  @default(false)
-  status       String   @default("active")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  vendor   Vendor          @relation(fields: [vendorId], references: [id])
-  kitchens VendorKitchen[]
-
-  @@map("vendor_branches")
-}
-
-model VendorKitchen {
-  id              String   @id @default(uuid())
-  vendorId        String
-  branchId        String?
-  kitchenName     String
-  kitchenCode     String   @unique
-  capacity        Int?
-  preparationTime Int?
-  status          String   @default("active")
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  vendor Vendor        @relation(fields: [vendorId], references: [id])
-  branch VendorBranch? @relation(fields: [branchId], references: [id])
-
-  @@map("vendor_kitchens")
-}
-
-model VendorDocument {
-  id                 String    @id @default(uuid())
-  vendorId           String
-  documentType       String
-  documentNumber     String?
-  documentFile       String
-  issueDate          DateTime?
-  expiryDate         DateTime?
-  verificationStatus String    @default("pending")
-  verifiedBy         String?
-  verifiedAt         DateTime?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_documents")
-}
-
-model VendorBankAccount {
-  id                  String   @id @default(uuid())
-  vendorId            String
-  bankName            String
-  branchName          String?
-  accountName         String
-  accountNumber       String
-  routingNumber       String?
-  mobileBankingType   String?
-  mobileBankingNumber String?
-  isPrimary           Boolean  @default(false)
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_bank_accounts")
-}
-
-model VendorOperatingHour {
-  id          String   @id @default(uuid())
-  vendorId    String
-  day         String
-  openingTime String
-  closingTime String
-  isClosed    Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_operating_hours")
-}
-
-model VendorHoliday {
-  id          String   @id @default(uuid())
-  vendorId    String
-  holidayName String
-  holidayDate DateTime
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_holidays")
-}
-
-model VendorServiceArea {
-  id                    String   @id @default(uuid())
-  vendorId              String
-  division              String
-  district              String
-  upazila               String?
-  area                  String
-  deliveryCharge        Decimal? @db.Decimal(10, 2)
-  minimumOrderAmount    Decimal? @db.Decimal(10, 2)
-  estimatedDeliveryTime Int?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_service_areas")
-}
-
-model VendorZone {
-  id          String   @id @default(uuid())
-  vendorId    String
-  zoneName    String
-  zoneCode    String?  @unique
-  description String?
-  status      String   @default("active")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_zones")
-}
-
-model VendorSubscription {
-  id            String   @id @default(uuid())
-  vendorId      String
-  planId        String?
-  startDate     DateTime
-  endDate       DateTime
-  amount        Decimal  @db.Decimal(10, 2)
-  paymentStatus String   @default("pending")
-  status        String   @default("active")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_subscriptions")
-}
-
-model VendorCommission {
-  id                   String    @id @default(uuid())
-  vendorId             String
-  commissionType       String?
-  commissionPercentage Decimal?  @db.Decimal(5, 2)
-  flatAmount           Decimal?  @db.Decimal(10, 2)
-  effectiveFrom        DateTime
-  effectiveTo          DateTime?
-  status               String    @default("active")
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_commissions")
-}
-
-model VendorSettlement {
-  id                    String    @id @default(uuid())
-  vendorId              String
-  settlementNumber      String    @unique
-  settlementPeriodStart DateTime?
-  settlementPeriodEnd   DateTime?
-  totalOrders           Int?
-  grossAmount           Decimal?  @db.Decimal(10, 2)
-  totalCommission       Decimal?  @db.Decimal(10, 2)
-  vatAmount             Decimal?  @db.Decimal(10, 2)
-  adjustmentAmount      Decimal?  @db.Decimal(10, 2)
-  totalPayable          Decimal?  @db.Decimal(10, 2)
-  netAmount             Decimal?  @db.Decimal(10, 2)
-  settlementDate        DateTime?
-  paymentStatus         String    @default("pending")
-  transactionId         String?
-  paymentDate           DateTime?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-
-  vendor       Vendor                        @relation(fields: [vendorId], references: [id])
-  items        VendorSettlementItem[]
-  transactions VendorSettlementTransaction[]
-
-  @@index([vendorId])
-  @@index([paymentStatus])
-  @@map("vendor_settlements")
-}
-
-model VendorSettlementItem {
-  id            String   @id @default(uuid())
-  settlementId  String
-  orderId       String
-  orderAmount   Decimal  @db.Decimal(10, 2)
-  commission    Decimal? @db.Decimal(10, 2)
-  adjustment    Decimal? @db.Decimal(10, 2)
-  payableAmount Decimal  @db.Decimal(10, 2)
-  createdAt     DateTime @default(now())
-
-  settlement VendorSettlement @relation(fields: [settlementId], references: [id])
-
-  @@index([settlementId])
-  @@map("vendor_settlement_items")
-}
-
-model VendorSettlementTransaction {
-  id            String    @id @default(uuid())
-  settlementId  String
-  transactionId String?
-  bankAccountId String?
-  amount        Decimal   @db.Decimal(10, 2)
-  paymentMethod String?
-  status        String?
-  processedAt   DateTime?
-  createdAt     DateTime  @default(now())
-
-  settlement VendorSettlement @relation(fields: [settlementId], references: [id])
-
-  @@map("vendor_settlement_transactions")
-}
-
-model VendorWallet {
-  id          String   @id @default(uuid())
-  vendorId    String   @unique
-  balance     Decimal  @default(0) @db.Decimal(10, 2)
-  holdBalance Decimal  @default(0) @db.Decimal(10, 2)
-  currency    String   @default("BDT")
-  status      String   @default("active")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  vendor       Vendor                    @relation(fields: [vendorId], references: [id])
-  transactions VendorWalletTransaction[]
-
-  @@map("vendor_wallets")
-}
-
-model VendorWalletTransaction {
-  id              String   @id @default(uuid())
-  walletId        String
-  transactionType String
-  amount          Decimal  @db.Decimal(10, 2)
-  balanceBefore   Decimal? @db.Decimal(10, 2)
-  balanceAfter    Decimal? @db.Decimal(10, 2)
-  referenceId     String?
-  remarks         String?
-  createdAt       DateTime @default(now())
-
-  wallet VendorWallet @relation(fields: [walletId], references: [id])
-
-  @@index([walletId])
-  @@map("vendor_wallet_transactions")
-}
-
-model VendorRating {
-  id            String   @id @default(uuid())
-  vendorId      String   @unique
-  averageRating Float?   @default(0)
-  totalRating   Int?     @default(0)
-  fiveStar      Int?     @default(0)
-  fourStar      Int?     @default(0)
-  threeStar     Int?     @default(0)
-  twoStar       Int?     @default(0)
-  oneStar       Int?     @default(0)
-  updatedAt     DateTime @updatedAt
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_ratings")
-}
-
-model VendorReview {
-  id         String   @id @default(uuid())
-  vendorId   String
-  customerId String
-  rating     Int
-  review     String?
-  status     String   @default("pending")
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_reviews")
-}
-
-model VendorSettings {
-  id                  String   @id @default(uuid())
-  vendorId            String   @unique
-  autoAcceptOrder     Boolean  @default(false)
-  autoAssignRider     Boolean  @default(false)
-  allowCustomMeal     Boolean  @default(true)
-  allowPackage        Boolean  @default(true)
-  notificationEnabled Boolean  @default(true)
-  smsEnabled          Boolean  @default(false)
-  emailEnabled        Boolean  @default(false)
-  status              String   @default("active")
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_settings")
-}
-
-model VendorActivityLog {
-  id        String   @id @default(uuid())
-  vendorId  String
-  staffId   String?
-  activity  String
-  module    String?
-  ipAddress String?
-  device    String?
-  createdAt DateTime @default(now())
-
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@map("vendor_activity_logs")
-}
-
-// ============================================================
-// MODULE 4: FOOD CATALOG
-// ============================================================
-
-model Category {
-  id          String    @id @default(uuid())
-  name        String
-  slug        String    @unique
-  description String?
-  icon        String?
-  image       String?
-  sortOrder   Int       @default(0)
-  status      String    @default("active")
-  popular     Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
-
-  subCategories SubCategory[]
-  foods         Food[]
-
-  @@index([status])
-  @@map("categories")
-}
-
-model SubCategory {
-  id          String    @id @default(uuid())
-  categoryId  String
-  name        String
-  slug        String    @unique
-  description String?
-  icon        String?
-  image       String?
-  sortOrder   Int       @default(0)
-  status      String    @default("active")
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
-
-  category Category @relation(fields: [categoryId], references: [id])
-  foods    Food[]
-
-  @@index([categoryId])
-  @@index([status])
-  @@map("sub_categories")
-}
-
-model Food {
-  id               String    @id @default(uuid())
-  categoryId       String
-  subCategoryId    String?
-  foodCode         String    @unique
-  name             String
-  slug             String    @unique
-  shortDescription String?
-  description      String?
-  thumbnail        String?
-  coverImage       String?
-  preparationTime  Int?
-  calories         Float?
-  protein          Float?
-  fat              Float?
-  carbohydrate     Float?
-  fiber            Float?
-  sugar            Float?
-  sodium           Float?
-  cholesterol      Float?
-  servingSize      String?
-  averageRating    Float?    @default(0)
-  totalReview      Int?      @default(0)
-  fiveStar         Int?      @default(0)
-  fourStar         Int?      @default(0)
-  threeStar        Int?      @default(0)
-  twoStar          Int?      @default(0)
-  oneStar          Int?      @default(0)
-  foodType         FoodType
-  spiceLevel       String?
-  isFeatured       Boolean   @default(false)
-  isPopular        Boolean   @default(false)
-  isRecommended    Boolean   @default(false)
-  status           FoodStatus @default(PENDING)
-  approvedBy       String?
-  approvedAt       DateTime?
-  rejectionReason  String?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  deletedAt        DateTime?
-
-  category              Category               @relation(fields: [categoryId], references: [id])
-  subCategory           SubCategory?           @relation(fields: [subCategoryId], references: [id])
-  approver              User?                  @relation("FoodApprover", fields: [approvedBy], references: [id])
-  variants              FoodVariant[]
-  addons                FoodAddon[]
-  ingredients           FoodIngredient[]
-  allergens             FoodAllergen[]
-  preparation           FoodPreparation?
-  availability          FoodAvailability?
-  schedules             FoodSchedule[]
-  prices                FoodPrice[]
-  discounts             FoodDiscount[]
-  tagMappings           FoodTagMapping[]
-  labels                FoodLabel[]
-  reviews               FoodReview[]
-  favorites             FoodFavorite[]
-  visibility            FoodVisibility?
-  diets                 FoodDiet[]
-  images                FoodImage[]
-  vendorFoodAssignments VendorFoodAssignment[]
-  vendorFoods           VendorFood[]
-  cartItems             CartItem[]
-  cartMealFoods         CartMealFood[]
-  packageMealFoods      PackageMealFood[]
-  orderItems            OrderItem[]
-
-  @@index([categoryId])
-  @@index([subCategoryId])
-  @@index([status])
-  @@index([isFeatured])
-  @@index([isPopular])
-  @@index([status, deletedAt, categoryId])
-  @@map("foods")
-}
-
-model FoodVariant {
-  id            String   @id @default(uuid())
-  foodId        String
-  name          String
-  description   String?
-  price         Decimal  @db.Decimal(10, 2)
-  discountPrice Decimal? @db.Decimal(10, 2)
-  weight        String?
-  servingSize   String?
-  status        String   @default("active")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  food Food @relation(fields: [foodId], references: [id])
-
-  @@index([foodId])
-  @@index([status])
-  @@map("food_variants")
-}
-
-model FoodAddon {
-  id           String   @id @default(uuid())
-  foodId       String
-  name         String
-  isRequired   Boolean  @default(false)
-  maxSelection Int?
-  status       String   @default("active")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  food  Food            @relation(fields: [foodId], references: [id])
-  items FoodAddonItem[]
-
-  @@index([foodId])
-  @@index([status])
-  @@map("food_addons")
-}
-
-model FoodAddonItem {
-  id        String   @id @default(uuid())
-  addonId   String
-  name      String
-  price     Decimal  @db.Decimal(10, 2)
-  image     String?
-  status    String   @default("active")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  addon FoodAddon @relation(fields: [addonId], references: [id])
-
-  @@index([addonId])
-  @@index([status])
-  @@map("food_addon_items")
-}
-
-model FoodIngredient {
-  id             String   @id @default(uuid())
-  foodId         String
-  ingredientName String
-  quantity       String?
-  unit           String?
-  isOptional     Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  food Food @relation(fields: [foodId], references: [id])
-
-  @@index([foodId])
-  @@map("food_ingredients")
-}
-
-model FoodAllergen {
-  id          String   @id @default(uuid())
-  foodId      String
-  allergen    String
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  food Food @relation(fields: [foodId], references: [id])
-
-  @@index([foodId])
-  @@map("food_allergens")
-}
-
-model FoodPreparation {
-  id                 String   @id @default(uuid())
-  foodId             String   @unique
-  preparationTime    Int?
-  cookTime           Int?
-  packingTime        Int?
-  estimatedReadyTime Int?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-
-  food Food @relation(fields: [foodId], references: [id])
-
-  @@map("food_preparations")
-}
-
-model FoodAvailability {
-  id            String   @id @default(uuid())
-  foodId        String   @unique
-  availableFrom String?
-  availableTo   String?
-  isAvailable   Boolean  @default(true)
-  availableDays Json?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  food Food @relation(fields: [foodId], references: [id])
-
-  @@map("food_availabilities")
-}
-
-model FoodSchedule {
-  id        String   @id @default(uuid())
-  foodId    String
-  mealType  MealType
-  startTime String
-  endTime   String
-  status    String   @default("active")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  food Food @relation(fields: [foodId], references: [id])
-
-  @@index([foodId])
-  @@index([mealType])
-  @@map("food_schedules")
-}
-
-model FoodPrice {
-  id            String    @id @default(uuid())
-  foodId        String
-  basePrice     Decimal   @db.Decimal(10, 2)
-  salePrice     Decimal?  @db.Decimal(10, 2)
-  currency      String    @default("BDT")
-  effectiveFrom DateTime?
-  effectiveTo   DateTime?
-  status        String    @default("active")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  food Food @relation(fields: [foodId], references: [id])
-
-  @@index([foodId])
-  @@map("food_prices")
-}
-
-model FoodDiscount {
-  id            String       @id @default(uuid())
-  foodId        String
-  discountType  DiscountType
-  discountValue Decimal      @db.Decimal(10, 2)
-  startDate     DateTime?
-  endDate       DateTime?
-  status        String       @default("active")
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-
-  food Food @relation(fields: [foodId], references: [id])
-
-  @@index([foodId])
-  @@index([status])
-  @@map("food_discounts")
-}
-
-model FoodTag {
-  id        String   @id @default(uuid())
-  name      String
-  slug      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  tagMappings FoodTagMapping[]
-
-  @@map("food_tags")
-}
-
-model FoodTagMapping {
-  id        String   @id @default(uuid())
-  foodId    String
-  tagId     String
-  createdAt DateTime @default(now())
-
-  food Food    @relation(fields: [foodId], references: [id])
-  tag  FoodTag @relation(fields: [tagId], references: [id])
-
-  @@index([foodId])
-  @@index([tagId])
-  @@map("food_tag_mappings")
-}
-
-model FoodLabel {
-  id        String   @id @default(uuid())
-  foodId    String
-  label     String
-  color     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  food Food @relation(fields: [foodId], references: [id])
-
-  @@map("food_labels")
-}
-
-model FoodReview {
-  id         String   @id @default(uuid())
-  foodId     String
-  customerId String
-  orderId    String?
-  rating     Int
-  review     String?
-  status     String   @default("pending")
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  food     Food @relation(fields: [foodId], references: [id])
-  customer User @relation(fields: [customerId], references: [id])
-
-  @@index([foodId])
-  @@index([customerId])
-  @@index([foodId, status])
-  @@map("food_reviews")
-}
-
-model FoodFavorite {
-  id        String   @id @default(uuid())
-  userId    String
-  foodId    String
-  createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id])
-  food Food @relation(fields: [foodId], references: [id])
-
-  @@index([foodId])
-  @@index([userId])
-  @@index([userId, foodId])
-  @@map("food_favorites")
-}
-
-model FoodVisibility {
-  id            String   @id @default(uuid())
-  foodId        String   @unique
-  isVisible     Boolean  @default(true)
-  isFeatured    Boolean  @default(false)
-  isRecommended Boolean  @default(false)
-  displayOrder  Int      @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  food Food @relation(fields: [foodId], references: [id])
-
-  @@map("food_visibilities")
-}
-
-model FoodDiet {
-  id        String   @id @default(uuid())
-  foodId    String
-  dietType  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  food Food @relation(fields: [foodId], references: [id])
-
-  @@map("food_diets")
-}
-
-model FoodImage {
-  id        String   @id @default(uuid())
-  foodId    String
-  image     String
-  sortOrder Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  food Food @relation(fields: [foodId], references: [id])
-
-  @@map("food_images")
-}
-
-// ============================================================
-// MODULE 5: HIDDEN VENDOR MAPPING
-// ============================================================
-
-model VendorFood {
-  id             String    @id @default(uuid())
-  vendorId       String
-  foodId         String
-  vendorFoodCode String?
-  vendorSku      String?
-  kitchenId      String?
-  branchId       String?
-  priority       Int       @default(0)
-  status         String    @default("active")
-  isAvailable    Boolean   @default(true)
-  isPrimary      Boolean   @default(false)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  deletedAt      DateTime?
-
-  vendor          Vendor                     @relation(fields: [vendorId], references: [id])
-  food            Food                       @relation(fields: [foodId], references: [id])
-  statusHistories VendorFoodStatusHistory[]
-
-  @@index([vendorId])
-  @@index([foodId])
-  @@index([status])
-  @@map("vendor_foods")
-}
-
-model VendorFoodStatusHistory {
-  id           String   @id @default(uuid())
-  vendorFoodId String
-  oldStatus    String?
-  newStatus    String
-  changedBy    String?
-  reason       String?
-  createdAt    DateTime @default(now())
-
-  vendorFood VendorFood @relation(fields: [vendorFoodId], references: [id])
-
-  @@map("vendor_food_status_histories")
-}
-
-model VendorFoodAssignment {
-  id                   String    @id @default(uuid())
-  foodId               String
-  vendorId             String
-  priority             Int       @default(0)
-  allocationPercentage Float?
-  isDefault            Boolean   @default(false)
-  effectiveFrom        DateTime?
-  effectiveTo          DateTime?
-  status               String    @default("active")
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
-
-  food   Food   @relation(fields: [foodId], references: [id])
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-
-  @@index([vendorId])
-  @@index([foodId])
-  @@index([status])
-  @@map("vendor_food_assignments")
-}
-
-// ============================================================
-// MODULE 6: MEAL PLAN & PACKAGE
-// ============================================================
-
-model Package {
-  id             String    @id @default(uuid())
-  packageCode    String    @unique
-  name           String
-  slug           String    @unique
-  description    String
-  thumbnail      String
-  coverImage     String
-  packageType    String
-  durationDays   Int
-  totalMeals     Int
-  price          Decimal   @db.Decimal(10, 2)
-  discountPrice  Decimal?  @db.Decimal(10, 2)
-  currency       String    @default("BDT")
-  isCustomizable Boolean   @default(false)
-  status         PackageStatus @default(PENDING)
-  approvedBy     String?
-  approvedAt     DateTime?
-  rejectionReason String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  deletedAt      DateTime?
-
-  packageCategoryId String?
-  packageCategory   PackageCategory? @relation(fields: [packageCategoryId], references: [id])
-  vendorId          String?
-  vendor            Vendor?          @relation(fields: [vendorId], references: [id])
-  approver          User?            @relation("PackageApprover", fields: [approvedBy], references: [id])
-
-  days            PackageDay[]
-  prices          PackagePrice[]
-  rule            PackageRule?
-  benefits        PackageBenefit[]
-  nutrition       PackageNutrition?
-  schedule        PackageSchedule?
-  images          PackageImage[]
-  tags            PackageTag[]
-  reviews         PackageReview[]
-  rating          PackageRating?
-  customization   PackageCustomization?
-  availability    PackageAvailability?
-  customMealPlans CustomMealPlan[]
-
-  @@index([status])
-  @@index([vendorId])
-  @@index([status, deletedAt])
-  @@map("packages")
-}
-
-model PackageCategory {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  slug        String   @unique
-  description String?
-  image       String
-  status      String   @default("active")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  packages Package[]
-
-  @@map("package_categories")
-}
-
-model PackageDay {
-  id          String   @id @default(uuid())
-  packageId   String
-  dayNumber   Int
-  title       String?
-  description String?
-  status      String   @default("active")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  package Package       @relation(fields: [packageId], references: [id])
-  meals   PackageMeal[]
-
-  @@map("package_days")
-}
-
-model PackageMeal {
-  id           String   @id @default(uuid())
-  packageDayId String
-  mealType     MealType
-  mealTime     String
-  calories     Float?
-  status       String   @default("active")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  packageDay PackageDay        @relation(fields: [packageDayId], references: [id])
-  foods      PackageMealFood[]
-
-  @@map("package_meals")
-}
-
-model PackageMealFood {
-  id            String   @id @default(uuid())
-  packageMealId String
-  foodId        String
-  quantity      Int      @default(1)
-  isOptional    Boolean  @default(false)
-  sortOrder     Int      @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  packageMeal PackageMeal @relation(fields: [packageMealId], references: [id])
-  food        Food        @relation(fields: [foodId], references: [id])
-
-  @@map("package_meal_foods")
-}
-
-model PackagePrice {
-  id             String    @id @default(uuid())
-  packageId      String
-  basePrice      Decimal   @db.Decimal(10, 2)
-  discountPrice  Decimal?  @db.Decimal(10, 2)
-  vat            Decimal?  @db.Decimal(10, 2)
-  deliveryCharge Decimal?  @db.Decimal(10, 2)
-  totalPrice     Decimal?  @db.Decimal(10, 2)
-  effectiveFrom  DateTime?
-  effectiveTo    DateTime?
-  status         String    @default("active")
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-
-  package Package @relation(fields: [packageId], references: [id])
-
-  @@map("package_prices")
-}
-
-model PackageRule {
-  id                     String   @id @default(uuid())
-  packageId              String   @unique
-  minimumOrderDays       Int?
-  maximumOrderDays       Int?
-  minimumMealsPerDay     Int      @default(0)
-  maximumMealsPerDay     Int?
-  advancePaymentRequired Boolean  @default(true)
-  allowPause             Boolean  @default(true)
-  allowResume            Boolean  @default(true)
-  allowSkipMeal          Boolean  @default(true)
-  allowCancellation      Boolean  @default(true)
-  status                 String   @default("active")
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
-
-  package Package @relation(fields: [packageId], references: [id])
-
-  @@map("package_rules")
-}
-
-model PackageBenefit {
-  id          String   @id @default(uuid())
-  packageId   String
-  title       String
-  description String?
-  icon        String?
-  sortOrder   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  package Package @relation(fields: [packageId], references: [id])
-
-  @@map("package_benefits")
-}
-
-model PackageNutrition {
-  id                String   @id @default(uuid())
-  packageId         String   @unique
-  dailyCalories     Float?
-  dailyProtein      Float?
-  dailyCarbohydrate Float?
-  dailyFat          Float?
-  dailyFiber        Float?
-  dailySugar        Float?
-  dailySodium       Float?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  package Package @relation(fields: [packageId], references: [id])
-
-  @@map("package_nutritions")
-}
-
-model PackageSchedule {
-  id                String   @id @default(uuid())
-  packageId         String   @unique
-  deliveryDays      Json?
-  deliveryTimeStart String?
-  deliveryTimeEnd   String?
-  mealCutoffTime    String?
-  status            String   @default("active")
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  package Package @relation(fields: [packageId], references: [id])
-
-  @@map("package_schedules")
-}
-
-model PackageImage {
-  id        String   @id @default(uuid())
-  packageId String
-  image     String
-  sortOrder Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  package Package @relation(fields: [packageId], references: [id])
-
-  @@map("package_images")
-}
-
-model PackageTag {
-  id        String   @id @default(uuid())
-  packageId String
-  tag       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  package Package @relation(fields: [packageId], references: [id])
-
-  @@map("package_tags")
-}
-
-model PackageReview {
-  id         String   @id @default(uuid())
-  packageId  String
-  customerId String
-  orderId    String?
-  rating     Int
-  review     String?
-  status     String   @default("pending")
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  package Package @relation(fields: [packageId], references: [id])
-
-  @@map("package_reviews")
-}
-
-model PackageRating {
-  id            String   @id @default(uuid())
-  packageId     String   @unique
-  averageRating Float?   @default(0)
-  totalReview   Int?     @default(0)
-  fiveStar      Int?     @default(0)
-  fourStar      Int?     @default(0)
-  threeStar     Int?     @default(0)
-  twoStar       Int?     @default(0)
-  oneStar       Int?     @default(0)
-  updatedAt     DateTime @updatedAt
-
-  package Package @relation(fields: [packageId], references: [id])
-
-  @@map("package_ratings")
-}
-
-model PackageCustomization {
-  id                String   @id @default(uuid())
-  packageId         String   @unique
-  allowFoodReplace  Boolean  @default(true)
-  allowMealSkip     Boolean  @default(true)
-  allowExtraMeal    Boolean  @default(false)
-  allowExtraProtein Boolean  @default(false)
-  allowExtraRice    Boolean  @default(false)
-  allowDrink        Boolean  @default(false)
-  allowAddon        Boolean  @default(false)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  package Package @relation(fields: [packageId], references: [id])
-
-  @@map("package_customizations")
-}
-
-model PackageAvailability {
-  id            String    @id @default(uuid())
-  packageId     String    @unique
-  availableFrom DateTime?
-  availableTo   DateTime?
-  availableDays Json?
-  status        String    @default("active")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  package Package @relation(fields: [packageId], references: [id])
-
-  @@map("package_availabilities")
-}
-
-model CustomMealPlan {
-  id                   String   @id @default(uuid())
-  customerId           String   @unique
-  packageId            String?
-  acceptedByVendorId   String?
-  name                 String
-  totalDays            Int
-  totalPrice           Decimal  @default(0) @db.Decimal(10, 2)
-  vendorApprovalStatus String   @default("pending") // pending, accepted, rejected
-  paymentStatus        String   @default("pending") // pending, paid
-  status               String   @default("active") // active, completed, cancelled
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
-
-  customer User            @relation(fields: [customerId], references: [id])
-  package  Package?        @relation(fields: [packageId], references: [id])
-  days     CustomMealDay[]
-
-  @@map("custom_meal_plans")
-}
-
-model CustomMealDay {
-  id               String   @id @default(uuid())
-  customMealPlanId String
-  dayNumber        Int
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  customMealPlan CustomMealPlan @relation(fields: [customMealPlanId], references: [id])
-  meals          CustomMeal[]
-
-  @@map("custom_meal_days")
-}
-
-model CustomMeal {
-  id              String   @id @default(uuid())
-  customMealDayId String
-  mealType        MealType
-  mealTime        String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  customMealDay CustomMealDay    @relation(fields: [customMealDayId], references: [id])
-  foods         CustomMealFood[]
-
-  @@map("custom_meals")
-}
-
-model CustomMealFood {
-  id           String   @id @default(uuid())
-  customMealId String
-  foodId       String
-  quantity     Int      @default(1)
-  isExtra      Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  customMeal CustomMeal @relation(fields: [customMealId], references: [id])
-
-  @@map("custom_meal_foods")
-}
-
-model MealPreference {
-  id                String   @id @default(uuid())
-  customerId        String
-  mealType          String?
-  preferredCuisine  String?
-  spiceLevel        String?
-  preferredCalories Float?
-  preferredProtein  Float?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  customer User @relation(fields: [customerId], references: [id])
-
-  @@map("meal_preferences")
-}
-
-model DietaryRestriction {
-  id              String   @id @default(uuid())
-  customerId      String
-  restrictionType String
-  description     String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  customer User @relation(fields: [customerId], references: [id])
-
-  @@map("dietary_restrictions")
-}
-
-// ============================================================
-// MODULE 7: CART & ORDER
-// ============================================================
-
-model Cart {
-  id               String    @id @default(uuid())
-  customerId       String    @unique
-  packageId        String?
-  customMealPlanId String?
-  couponId         String?
-  subtotal         Decimal   @default(0) @db.Decimal(10, 2)
-  discount         Decimal   @default(0) @db.Decimal(10, 2)
-  deliveryCharge   Decimal   @default(0) @db.Decimal(10, 2)
-  vat              Decimal   @default(0) @db.Decimal(10, 2)
-  itemCount        Int       @default(0)
-  mealCount        Int       @default(0)
-  grandTotal       Decimal   @default(0) @db.Decimal(10, 2)
-  expiresAt        DateTime?
-  status           String    @default("active")
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-
-  customer  User          @relation(fields: [customerId], references: [id])
-  items     CartItem[]
-  meals     CartMeal[]
-  histories CartHistory[]
-
-  @@index([customerId, status])
-  @@index([status])
-  @@map("carts")
-}
-
-model CartItem {
-  id            String   @id @default(uuid())
-  cartId        String
-  foodId        String
-  packageMealId String?
-  quantity      Int
-  unitPrice     Decimal  @db.Decimal(10, 2)
-  totalPrice    Decimal  @db.Decimal(10, 2)
-  isCustomized  Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  cart   Cart        @relation(fields: [cartId], references: [id])
-  food   Food        @relation(fields: [foodId], references: [id])
-  addons CartAddon[]
-
-  @@index([cartId])
-  @@index([foodId])
-  @@index([cartId, foodId])
-  @@map("cart_items")
-}
-
-model CartAddon {
-  id          String   @id @default(uuid())
-  cartItemId  String
-  addonItemId String
-  quantity    Int      @default(1)
-  price       Decimal  @db.Decimal(10, 2)
-  createdAt   DateTime @default(now())
-
-  cartItem CartItem @relation(fields: [cartItemId], references: [id])
-
-  @@index([cartItemId])
-  @@map("cart_addons")
-}
-
-model CartMeal {
-  id        String   @id @default(uuid())
-  cartId    String
-  dayNumber Int
-  mealType  String
-  mealTime  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  cart  Cart           @relation(fields: [cartId], references: [id])
-  foods CartMealFood[]
-
-  @@index([cartId])
-  @@map("cart_meals")
-}
-
-model CartMealFood {
-  id            String   @id @default(uuid())
-  cartMealId    String
-  foodId        String
-  quantity      Int      @default(1)
-  isReplacement Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  cartMeal CartMeal @relation(fields: [cartMealId], references: [id])
-  food     Food     @relation(fields: [foodId], references: [id])
-
-  @@index([cartMealId])
-  @@index([foodId])
-  @@map("cart_meal_foods")
-}
-
-model CartHistory {
-  id          String   @id @default(uuid())
-  cartId      String
-  action      String
-  performedBy String
-  remarks     String?
-  createdAt   DateTime @default(now())
-
-  cart Cart @relation(fields: [cartId], references: [id])
-
-  @@map("cart_histories")
-}
-
-model Order {
-  id               String         @id @default(uuid())
-  orderNumber      String         @unique
-  customerId       String
-  vendorId         String?
-  packageId        String?
-  customMealPlanId String?
-  addressId        String?
-  paymentId        String?
-  couponId         String?
-  subtotal         Decimal        @default(0) @db.Decimal(10, 2)
-  discount         Decimal        @default(0) @db.Decimal(10, 2)
-  deliveryCharge   Decimal        @default(0) @db.Decimal(10, 2)
-  vat              Decimal        @default(0) @db.Decimal(10, 2)
-  totalAmount      Decimal        @default(0) @db.Decimal(10, 2)
-  paymentStatus    PaymentStatus  @default(PENDING)
-  orderStatus      OrderStatus    @default(PENDING)
-  deliveryStatus   DeliveryStatus @default(PENDING)
-  orderSource      String?
-  notes            String?
-  placedAt         DateTime       @default(now())
-  confirmedAt      DateTime?
-  completedAt      DateTime?
-  cancelledAt      DateTime?
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  deletedAt        DateTime?
-
-  customer         User                 @relation(fields: [customerId], references: [id])
-  vendor           Vendor?              @relation(fields: [vendorId], references: [id])
-  items            OrderItem[]
-  meals            OrderMeal[]
-  schedules        OrderSchedule[]
-  statusHistories  OrderStatusHistory[]
-  timeline         OrderTimeline[]
-  invoice          OrderInvoice?
-  cancellation     OrderCancellation?
-  refunds          OrderRefund[]
-  feedback         OrderFeedback?
-  payment          Payment?
-  delivery         Delivery?
-  subscriptions    Subscription[]
-  platformRevenues PlatformRevenue[]
-
-  @@index([customerId])
-  @@index([vendorId])
-  @@index([orderStatus])
-  @@index([paymentStatus])
-  @@index([deliveryStatus])
-  @@index([placedAt])
-  @@index([deletedAt])
-  @@map("orders")
-}
-
-model OrderItem {
-  id           String   @id @default(uuid())
-  orderId      String
-  foodId       String
-  vendorFoodId String?
-  quantity     Int
-  unitPrice    Decimal  @db.Decimal(10, 2)
-  discount     Decimal  @default(0) @db.Decimal(10, 2)
-  totalPrice   Decimal  @db.Decimal(10, 2)
-  status       String   @default("pending")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  order Order @relation(fields: [orderId], references: [id])
-  food  Food  @relation(fields: [foodId], references: [id])
-
-  @@index([orderId])
-  @@index([foodId])
-  @@map("order_items")
-}
-
-model OrderMeal {
-  id           String    @id @default(uuid())
-  orderId      String
-  dayNumber    Int
-  deliveryDate DateTime?
-  mealType     String
-  mealTime     String?
-  status       String    @default("pending")
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  order Order           @relation(fields: [orderId], references: [id])
-  foods OrderMealFood[]
-
-  @@index([orderId])
-  @@map("order_meals")
-}
-
-model OrderMealFood {
-  id           String   @id @default(uuid())
-  orderMealId  String
-  foodId       String
-  vendorFoodId String?
-  quantity     Int      @default(1)
-  status       String   @default("pending")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  orderMeal OrderMeal @relation(fields: [orderMealId], references: [id])
-
-  @@index([orderMealId])
-  @@index([foodId])
-  @@map("order_meal_foods")
-}
-
-model OrderSchedule {
-  id                    String   @id @default(uuid())
-  orderId               String
-  deliveryDate          DateTime
-  deliverySlot          String?
-  estimatedDeliveryTime String?
-  status                String   @default("pending")
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-
-  order Order @relation(fields: [orderId], references: [id])
-
-  @@index([orderId])
-  @@map("order_schedules")
-}
-
-model OrderStatusHistory {
-  id             String   @id @default(uuid())
-  orderId        String
-  previousStatus String?
-  currentStatus  String
-  changedBy      String?
-  remarks        String?
-  createdAt      DateTime @default(now())
-
-  order Order @relation(fields: [orderId], references: [id])
-
-  @@index([orderId])
-  @@map("order_status_histories")
-}
-
-model OrderTimeline {
-  id          String   @id @default(uuid())
-  orderId     String
-  title       String
-  description String?
-  status      String?
-  createdAt   DateTime @default(now())
-
-  order Order @relation(fields: [orderId], references: [id])
-
-  @@index([orderId])
-  @@map("order_timelines")
-}
-
-model OrderInvoice {
-  id             String   @id @default(uuid())
-  orderId        String   @unique
-  invoiceNumber  String   @unique
-  invoiceDate    DateTime @default(now())
-  subtotal       Decimal? @db.Decimal(10, 2)
-  discount       Decimal? @db.Decimal(10, 2)
-  vat            Decimal? @db.Decimal(10, 2)
-  deliveryCharge Decimal? @db.Decimal(10, 2)
-  grandTotal     Decimal  @db.Decimal(10, 2)
-  pdfUrl         String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  order Order @relation(fields: [orderId], references: [id])
-
-  @@map("order_invoices")
-}
-
-model OrderCancellation {
-  id           String   @id @default(uuid())
-  orderId      String   @unique
-  cancelledBy  String
-  reason       String
-  refundAmount Decimal? @db.Decimal(10, 2)
-  refundStatus String   @default("pending")
-  cancelledAt  DateTime @default(now())
-  createdAt    DateTime @default(now())
-
-  order Order @relation(fields: [orderId], references: [id])
-
-  @@map("order_cancellations")
-}
-
-model OrderRefund {
-  id           String    @id @default(uuid())
-  orderId      String
-  paymentId    String?
-  refundAmount Decimal   @db.Decimal(10, 2)
-  refundMethod String?
-  refundStatus String    @default("pending")
-  processedBy  String?
-  processedAt  DateTime?
-  createdAt    DateTime  @default(now())
-
-  order Order @relation(fields: [orderId], references: [id])
-
-  @@index([orderId])
-  @@index([paymentId])
-  @@map("order_refunds")
-}
-
-model OrderFeedback {
-  id         String   @id @default(uuid())
-  orderId    String   @unique
-  customerId String
-  rating     Int
-  review     String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  order Order @relation(fields: [orderId], references: [id])
-
-  @@map("order_feedbacks")
-}
-
-// ============================================================
-// MODULE 8: PAYMENT, WALLET & SETTLEMENT
-// ============================================================
-
-model Payment {
-  id              String        @id @default(uuid())
-  paymentNumber   String        @unique
-  orderId         String        @unique
-  customerId      String
-  paymentMethodId String?
-  gatewayId       String?
-  transactionId   String?
-  amount          Decimal       @db.Decimal(10, 2)
-  currency        String        @default("BDT")
-  status          PaymentStatus @default(PENDING)
-  paymentDate     DateTime?
-  gatewayResponse Json?
-  failureReason   String?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-
-  customer     User                 @relation(fields: [customerId], references: [id])
-  order        Order                @relation(fields: [orderId], references: [id])
-  transactions PaymentTransaction[]
-  attempts     PaymentAttempt[]
-  refunds      PaymentRefund[]
-  adjustments  PaymentAdjustment[]
-
-  @@index([customerId])
-  @@index([status])
-  @@index([paymentMethodId])
-  @@index([transactionId])
-  @@map("payments")
-}
-
-model PaymentGateway {
-  id          String   @id @default(uuid())
-  code        String   @unique @default("sslcommerz")
-  name        String
-  merchantId  String?
-  storeId     String?
-  apiKey      String?
-  secretKey   String?
-  sandboxMode Boolean  @default(true)
-  callbackUrl String?
-  refundUrl   String?
-  status      String   @default("active")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([code])
-  @@index([status])
-  @@map("payment_gateways")
-}
-
-model PaymentMethod {
-  id        String   @id @default(uuid())
-  name      String
-  code      String
-  provider  String?
-  type      String?
-  logo      String?
-  isDefault Boolean  @default(false)
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("payment_methods")
-}
-
-model PaymentTransaction {
-  id                    String    @id @default(uuid())
-  paymentId             String
-  gatewayTransactionId  String?
-  merchantTransactionId String?
-  transactionType       String?
-  amount                Decimal   @db.Decimal(10, 2)
-  currency              String    @default("BDT")
-  status                String?
-  responseCode          String?
-  responseMessage       String?
-  gatewayResponse       Json?
-  processedAt           DateTime?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-
-  payment Payment @relation(fields: [paymentId], references: [id])
-
-  @@index([paymentId])
-  @@map("payment_transactions")
-}
-
-model PaymentAttempt {
-  id            String   @id @default(uuid())
-  paymentId     String
-  attemptNumber Int
-  paymentMethod String?
-  status        String?
-  failureReason String?
-  attemptAt     DateTime @default(now())
-  createdAt     DateTime @default(now())
-
-  payment Payment @relation(fields: [paymentId], references: [id])
-
-  @@index([paymentId])
-  @@map("payment_attempts")
-}
-
-model PaymentRefund {
-  id              String    @id @default(uuid())
-  paymentId       String
-  orderId         String?
-  refundAmount    Decimal   @db.Decimal(10, 2)
-  refundMethod    String?
-  gatewayRefundId String?
-  reason          String
-  status          String    @default("pending")
-  processedBy     String?
-  processedAt     DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  payment Payment @relation(fields: [paymentId], references: [id])
-
-  @@index([paymentId])
-  @@map("payment_refunds")
-}
-
-model PaymentAdjustment {
-  id             String   @id @default(uuid())
-  paymentId      String
-  adjustmentType String
-  amount         Decimal  @db.Decimal(10, 2)
-  reason         String
-  approvedBy     String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  payment Payment @relation(fields: [paymentId], references: [id])
-
-  @@map("payment_adjustments")
-}
-
-model CustomerWallet {
-  id           String   @id @default(uuid())
-  customerId   String   @unique
-  walletNumber String   @unique
-  balance      Decimal  @default(0) @db.Decimal(10, 2)
-  holdBalance  Decimal  @default(0) @db.Decimal(10, 2)
-  currency     String   @default("BDT")
-  status       String   @default("active")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  customer     User                        @relation(fields: [customerId], references: [id])
-  transactions CustomerWalletTransaction[]
-  topups       WalletTopup[]
-  withdraws    WalletWithdraw[]
-
-  @@map("customer_wallets")
-}
-
-model CustomerWalletTransaction {
-  id              String   @id @default(uuid())
-  walletId        String
-  transactionType String
-  amount          Decimal  @db.Decimal(10, 2)
-  balanceBefore   Decimal? @db.Decimal(10, 2)
-  balanceAfter    Decimal? @db.Decimal(10, 2)
-  referenceType   String?
-  referenceId     String?
-  remarks         String?
-  createdAt       DateTime @default(now())
-
-  wallet CustomerWallet @relation(fields: [walletId], references: [id])
-
-  @@index([walletId])
-  @@index([transactionType])
-  @@map("customer_wallet_transactions")
-}
-
-model WalletTopup {
-  id        String   @id @default(uuid())
-  walletId  String
-  paymentId String?
-  amount    Decimal  @db.Decimal(10, 2)
-  status    String   @default("pending")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  wallet CustomerWallet @relation(fields: [walletId], references: [id])
-
-  @@map("wallet_topups")
-}
-
-model WalletWithdraw {
-  id             String    @id @default(uuid())
-  walletId       String
-  amount         Decimal   @db.Decimal(10, 2)
-  withdrawMethod String
-  accountNumber  String
-  status         String    @default("pending")
-  approvedBy     String?
-  processedAt    DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-
-  wallet CustomerWallet @relation(fields: [walletId], references: [id])
-
-  @@map("wallet_withdraws")
-}
-
-model PlatformRevenue {
-  id               String   @id @default(uuid())
-  orderId          String
-  vendorId         String?
-  commissionAmount Decimal  @default(0) @db.Decimal(10, 2)
-  deliveryCharge   Decimal  @default(0) @db.Decimal(10, 2)
-  serviceCharge    Decimal  @default(0) @db.Decimal(10, 2)
-  vat              Decimal  @default(0) @db.Decimal(10, 2)
-  netRevenue       Decimal  @default(0) @db.Decimal(10, 2)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  order  Order   @relation(fields: [orderId], references: [id])
-  vendor Vendor? @relation(fields: [vendorId], references: [id])
-
-  @@map("platform_revenues")
-}
-
-// ============================================================
-// MODULE 9: RIDER, DELIVERY & LIVE TRACKING
-// ============================================================
-
-model Rider {
-  id                String    @id @default(uuid())
-  vendorId          String?
-  branchId          String?
-  userId            String?
-  vendor            Vendor?   @relation(fields: [vendorId], references: [id])
-  riderCode         String    @unique
-  fullName          String
-  phone             String
-  email             String?
-  profileImage      String?
-  dateOfBirth       DateTime?
-  gender            String?
-  nidNumber         String?
-  licenseNumber     String?
-  licenseExpiryDate DateTime?
-  joiningDate       DateTime?
-  employmentType    String?
-  status            String    @default("active")
-  isOnline          Boolean   @default(false)
-  isAvailable       Boolean   @default(true)
-  lastActiveAt      DateTime?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  deletedAt         DateTime?
-
-  profile          RiderProfile?
-  documents        RiderDocument[]
-  vehicle          RiderVehicle?
-  availabilities   RiderAvailability[]
-  shifts           RiderShift[]
-  attendances      RiderAttendance[]
-  locations        RiderLocation[]
-  performance      RiderPerformance?
-  ratings          RiderRating[]
-  wallet           RiderWallet?
-  deliveries       Delivery[]
-  trackingSessions TrackingSession[]
-
-  @@index([vendorId])
-  @@index([status])
-  @@index([isOnline])
-  @@map("riders")
-}
-
-model RiderProfile {
-  id                    String   @id @default(uuid())
-  riderId               String   @unique
-  emergencyContactName  String?
-  emergencyContactPhone String?
-  bloodGroup            String?
-  address               String?
-  city                  String?
-  postalCode            String?
-  profileCompletion     Float?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-
-  rider Rider @relation(fields: [riderId], references: [id])
-
-  @@map("rider_profiles")
-}
-
-model RiderDocument {
-  id                 String    @id @default(uuid())
-  riderId            String
-  documentType       String
-  documentNumber     String?
-  documentUrl        String
-  verificationStatus String    @default("pending")
-  verifiedBy         String?
-  verifiedAt         DateTime?
-  expiryDate         DateTime?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-
-  rider Rider @relation(fields: [riderId], references: [id])
-
-  @@map("rider_documents")
-}
-
-model RiderVehicle {
-  id                  String    @id @default(uuid())
-  riderId             String    @unique
-  vehicleType         String
-  brand               String?
-  model               String?
-  registrationNumber  String
-  color               String?
-  insuranceNumber     String?
-  insuranceExpiryDate DateTime?
-  status              String    @default("active")
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-
-  rider Rider @relation(fields: [riderId], references: [id])
-
-  @@map("rider_vehicles")
-}
-
-model RiderAvailability {
-  id          String   @id @default(uuid())
-  riderId     String
-  dayOfWeek   String
-  startTime   String
-  endTime     String
-  isAvailable Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  rider Rider @relation(fields: [riderId], references: [id])
-
-  @@map("rider_availabilities")
-}
-
-model RiderShift {
-  id        String   @id @default(uuid())
-  riderId   String
-  shiftName String
-  startTime String
-  endTime   String
-  status    String   @default("active")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  rider Rider @relation(fields: [riderId], references: [id])
-
-  @@map("rider_shifts")
-}
-
-model RiderAttendance {
-  id               String    @id @default(uuid())
-  riderId          String
-  checkIn          DateTime
-  checkOut         DateTime?
-  workingHours     Float?
-  attendanceStatus String    @default("present")
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-
-  rider Rider @relation(fields: [riderId], references: [id])
-
-  @@map("rider_attendances")
-}
-
-model RiderLocation {
-  id           String    @id @default(uuid())
-  riderId      String
-  latitude     Float
-  longitude    Float
-  heading      Float?
-  speed        Float?
-  accuracy     Float?
-  batteryLevel Float?
-  locationTime DateTime?
-  createdAt    DateTime  @default(now())
-
-  rider Rider @relation(fields: [riderId], references: [id])
-
-  @@map("rider_locations")
-}
-
-model RiderPerformance {
-  id                  String   @id @default(uuid())
-  riderId             String   @unique
-  totalDeliveries     Int      @default(0)
-  completedDeliveries Int      @default(0)
-  cancelledDeliveries Int      @default(0)
-  averageDeliveryTime Float?
-  averageRating       Float?   @default(0)
-  acceptanceRate      Float?
-  completionRate      Float?
-  updatedAt           DateTime @updatedAt
-
-  rider Rider @relation(fields: [riderId], references: [id])
-
-  @@map("rider_performances")
-}
-
-model RiderRating {
-  id         String   @id @default(uuid())
-  riderId    String
-  customerId String
-  orderId    String?
-  rating     Int
-  review     String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  rider Rider @relation(fields: [riderId], references: [id])
-
-  @@map("rider_ratings")
-}
-
-model RiderWallet {
-  id          String   @id @default(uuid())
-  riderId     String   @unique
-  balance     Decimal  @default(0) @db.Decimal(10, 2)
-  holdBalance Decimal  @default(0) @db.Decimal(10, 2)
-  currency    String   @default("BDT")
-  status      String   @default("active")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  rider        Rider                    @relation(fields: [riderId], references: [id])
-  transactions RiderWalletTransaction[]
-
-  @@map("rider_wallets")
-}
-
-model RiderWalletTransaction {
-  id              String   @id @default(uuid())
-  walletId        String
-  transactionType String
-  amount          Decimal  @db.Decimal(10, 2)
-  balanceBefore   Decimal? @db.Decimal(10, 2)
-  balanceAfter    Decimal? @db.Decimal(10, 2)
-  referenceType   String?
-  referenceId     String?
-  remarks         String?
-  createdAt       DateTime @default(now())
-
-  wallet RiderWallet @relation(fields: [walletId], references: [id])
-
-  @@index([walletId])
-  @@map("rider_wallet_transactions")
-}
-
-model Delivery {
-  id                    String         @id @default(uuid())
-  orderId               String         @unique
-  vendorId              String?
-  riderId               String?
-  deliveryCode          String         @unique
-  deliveryType          String         @default("standard")
-  deliveryStatus        DeliveryStatus @default(PENDING)
-  priority              Int            @default(0)
-  estimatedPickupTime   DateTime?
-  estimatedDeliveryTime DateTime?
-  actualPickupTime      DateTime?
-  actualDeliveryTime    DateTime?
-  deliveryCharge        Decimal?       @db.Decimal(10, 2)
-  createdAt             DateTime       @default(now())
-  updatedAt             DateTime       @updatedAt
-
-  order            Order                   @relation(fields: [orderId], references: [id])
-  rider            Rider?                  @relation(fields: [riderId], references: [id])
-  vendor           Vendor?                 @relation(fields: [vendorId], references: [id])
-  items            DeliveryItem[]
-  schedules        DeliverySchedule[]
-  statusHistories  DeliveryStatusHistory[]
-  proof            DeliveryProof?
-  attempts         DeliveryAttempt[]
-  trackingSessions TrackingSession[]
-
-  @@index([riderId])
-  @@index([vendorId])
-  @@index([deliveryStatus])
-  @@map("deliveries")
-}
-
-model DeliveryItem {
-  id          String   @id @default(uuid())
-  deliveryId  String
-  orderMealId String?
-  foodId      String?
-  quantity    Int      @default(1)
-  status      String   @default("pending")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  delivery Delivery @relation(fields: [deliveryId], references: [id])
-
-  @@map("delivery_items")
-}
-
-model DeliverySchedule {
-  id           String   @id @default(uuid())
-  deliveryId   String
-  deliveryDate DateTime
-  deliverySlot String?
-  startTime    String?
-  endTime      String?
-  status       String   @default("pending")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  delivery Delivery @relation(fields: [deliveryId], references: [id])
-
-  @@map("delivery_schedules")
-}
-
-model DeliveryStatusHistory {
-  id             String   @id @default(uuid())
-  deliveryId     String
-  previousStatus String?
-  currentStatus  String
-  remarks        String?
-  updatedBy      String?
-  createdAt      DateTime @default(now())
-
-  delivery Delivery @relation(fields: [deliveryId], references: [id])
-
-  @@map("delivery_status_histories")
-}
-
-model DeliveryProof {
-  id         String    @id @default(uuid())
-  deliveryId String    @unique
-  proofType  ProofType
-  image      String?
-  signature  String?
-  otp        String?
-  verifiedAt DateTime?
-  createdAt  DateTime  @default(now())
-
-  delivery Delivery @relation(fields: [deliveryId], references: [id])
-
-  @@map("delivery_proofs")
-}
-
-model DeliveryAttempt {
-  id            String   @id @default(uuid())
-  deliveryId    String
-  attemptNumber Int
-  reason        String?
-  status        String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  delivery Delivery @relation(fields: [deliveryId], references: [id])
-
-  @@map("delivery_attempts")
-}
-
-model TrackingSession {
-  id           String    @id @default(uuid())
-  deliveryId   String
-  riderId      String?
-  trackingCode String    @unique
-  startedAt    DateTime  @default(now())
-  endedAt      DateTime?
-  status       String    @default("active")
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  delivery  Delivery           @relation(fields: [deliveryId], references: [id])
-  rider     Rider?             @relation(fields: [riderId], references: [id])
-  locations TrackingLocation[]
-  events    TrackingEvent[]
-  eta       TrackingETA?
-
-  @@map("tracking_sessions")
-}
-
-model TrackingLocation {
-  id                String   @id @default(uuid())
-  trackingSessionId String
-  latitude          Float
-  longitude         Float
-  speed             Float?
-  heading           Float?
-  accuracy          Float?
-  recordedAt        DateTime @default(now())
-
-  trackingSession TrackingSession @relation(fields: [trackingSessionId], references: [id])
-
-  @@map("tracking_locations")
-}
-
-model TrackingEvent {
-  id                String   @id @default(uuid())
-  trackingSessionId String
-  event             String
-  description       String?
-  latitude          Float?
-  longitude         Float?
-  createdAt         DateTime @default(now())
-
-  trackingSession TrackingSession @relation(fields: [trackingSessionId], references: [id])
-
-  @@map("tracking_events")
-}
-
-model TrackingETA {
-  id                   String    @id @default(uuid())
-  trackingSessionId    String    @unique
-  estimatedArrivalTime DateTime?
-  remainingDistance    Float?
-  remainingDuration    Int?
-  trafficStatus        String?
-  updatedAt            DateTime  @updatedAt
-
-  trackingSession TrackingSession @relation(fields: [trackingSessionId], references: [id])
-
-  @@map("tracking_etas")
-}
-
-model Route {
-  id                String   @id @default(uuid())
-  routeCode         String   @unique
-  vendorId          String?
-  riderId           String?
-  routeName         String?
-  totalDistance     Float?
-  estimatedDuration Int?
-  status            String   @default("active")
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  vendor       Vendor?            @relation(fields: [vendorId], references: [id])
-  stops        RouteStop[]
-  optimization RouteOptimization?
-  trackings    RouteTracking[]
-  histories    RouteHistory[]
-
-  @@map("routes")
-}
-
-model RouteStop {
-  id            String    @id @default(uuid())
-  routeId       String
-  deliveryId    String?
-  customerId    String?
-  addressId     String?
-  stopNumber    Int
-  arrivalTime   DateTime?
-  departureTime DateTime?
-  status        String    @default("pending")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  route Route @relation(fields: [routeId], references: [id])
-
-  @@map("route_stops")
-}
-
-model RouteOptimization {
-  id                String   @id @default(uuid())
-  routeId           String   @unique
-  algorithm         String?
-  optimizationScore Float?
-  totalDistance     Float?
-  totalTime         Int?
-  fuelSaving        Float?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  route Route @relation(fields: [routeId], references: [id])
-
-  @@map("route_optimizations")
-}
-
-model RouteTracking {
-  id                String   @id @default(uuid())
-  routeId           String   @unique
-  currentLatitude   Float?
-  currentLongitude  Float?
-  currentStop       Int?
-  remainingDistance Float?
-  remainingTime     Int?
-  updatedAt         DateTime @updatedAt
-
-  route Route @relation(fields: [routeId], references: [id])
-
-  @@map("route_trackings")
-}
-
-model RouteHistory {
-  id        String   @id @default(uuid())
-  routeId   String
-  oldRoute  String?
-  newRoute  String?
-  changedBy String?
-  reason    String?
-  createdAt DateTime @default(now())
-
-  route Route @relation(fields: [routeId], references: [id])
-
-  @@map("route_histories")
-}
-
-// ============================================================
-// MODULE 10: NOTIFICATIONS
-// ============================================================
-
-model Notification {
-  id            String    @id @default(uuid())
-  userId        String
-  title         String
-  message       String
-  type          String?
-  referenceType String?
-  referenceId   String?
-  isRead        Boolean   @default(false)
-  readAt        DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@index([userId])
-  @@index([isRead])
-  @@map("notifications")
-}
-
-// ============================================================
-// MODULE 11: CMS, ANALYTICS, SYSTEM SETTINGS
-// ============================================================
-
-model Banner {
-  id           String    @id @default(uuid())
-  title        String
-  subtitle     String?
-  image        String
-  redirectType String?
-  redirectId   String?
-  displayOrder Int       @default(0)
-  startDate    DateTime?
-  endDate      DateTime?
-  status       String    @default("active")
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  @@index([status])
-  @@map("banners")
-}
-
-model Slider {
-  id           String   @id @default(uuid())
-  title        String
-  description  String?
-  image        String
-  buttonText   String?
-  buttonUrl    String?
-  displayOrder Int      @default(0)
-  status       String   @default("active")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  @@map("sliders")
-}
-
-model Blog {
-  id          String    @id @default(uuid())
-  title       String
-  slug        String    @unique
-  thumbnail   String?
-  content     String
-  authorId    String?
-  categoryId  String?
-  status      String    @default("draft")
-  publishedAt DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  category BlogCategory? @relation(fields: [categoryId], references: [id])
-
-  @@index([status])
-  @@index([categoryId])
-  @@map("blogs")
-}
-
-model BlogCategory {
-  id          String   @id @default(uuid())
-  name        String
-  slug        String   @unique
-  description String?
-  status      String   @default("active")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  blogs Blog[]
-
-  @@map("blog_categories")
-}
-
-model StaticPage {
-  id              String   @id @default(uuid())
-  title           String
-  slug            String   @unique
-  content         String
-  metaTitle       String?
-  metaDescription String?
-  status          String   @default("published")
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  @@map("static_pages")
-}
-
-model SystemSetting {
-  id           String   @id @default(uuid())
-  settingKey   String   @unique
-  settingValue String
-  description  String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  @@map("system_settings")
-}
-
-model FeatureFlag {
-  id          String   @id @default(uuid())
-  featureName String
-  isEnabled   Boolean  @default(false)
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("feature_flags")
-}
-
-model ActivityLog {
-  id          String   @id @default(uuid())
-  userId      String?
-  module      String
-  action      String
-  description String?
-  ipAddress   String?
-  device      String?
-  browser     String?
-  createdAt   DateTime @default(now())
-
-  user User? @relation(fields: [userId], references: [id])
-
-  @@index([userId])
-  @@index([action])
-  @@map("activity_logs")
-}
-
-// ============================================================
-// MODULE 12: SUBSCRIPTION
-// ============================================================
-
-model Subscription {
-  id                 String             @id @default(uuid())
-  subscriptionNumber String             @unique
-  customerId         String
-  packageId          String?
-  customMealPlanId   String?
-  orderId            String?
-  startDate          DateTime
-  endDate            DateTime
-  duration           Int
-  status             SubscriptionStatus @default(PENDING)
-  autoRenew          Boolean            @default(false)
-  totalAmount        Decimal            @default(0) @db.Decimal(10, 2)
-  paidAmount         Decimal            @default(0) @db.Decimal(10, 2)
-  remainingAmount    Decimal            @default(0) @db.Decimal(10, 2)
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
-
-  customer User   @relation(fields: [customerId], references: [id])
-  order    Order? @relation(fields: [orderId], references: [id])
-
-  @@index([customerId])
-  @@index([status])
-  @@map("subscriptions")
-}
-
-// ============================================================
-// MODULE 13: COUPON, REFERRAL, LOYALTY
-// ============================================================
-
-model Coupon {
-  id                 String       @id @default(uuid())
-  couponCode         String       @unique
-  title              String?
-  description        String?
-  discountType       DiscountType
-  discountValue      Decimal      @db.Decimal(10, 2)
-  minimumOrderAmount Decimal?     @db.Decimal(10, 2)
-  maximumDiscount    Decimal?     @db.Decimal(10, 2)
-  usageLimit         Int?
-  perUserLimit       Int          @default(1)
-  startDate          DateTime?
-  endDate            DateTime?
-  status             String       @default("active")
-  createdAt          DateTime     @default(now())
-  updatedAt          DateTime     @updatedAt
-
-  usages CouponUsage[]
-
-  @@index([status])
-  @@map("coupons")
-}
-
-model CouponUsage {
-  id             String   @id @default(uuid())
-  couponId       String
-  customerId     String
-  orderId        String?
-  discountAmount Decimal? @db.Decimal(10, 2)
-  usedAt         DateTime @default(now())
-
-  coupon Coupon @relation(fields: [couponId], references: [id])
-
-  @@index([couponId])
-  @@index([customerId])
-  @@index([orderId])
-  @@index([couponId, customerId])
-  @@map("coupon_usages")
-}
-
-// ============================================================
-// MODULE 14: INVENTORY
-// ============================================================
-
-model Inventory {
-  id             String   @id @default(uuid())
-  vendorId       String
-  ingredientName String
-  category       String?
-  unit           String
-  minimumStock   Float    @default(0)
-  currentStock   Float    @default(0)
-  maximumStock   Float?
-  status         String   @default("active")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  vendor       Vendor                 @relation(fields: [vendorId], references: [id])
-  transactions InventoryTransaction[]
-  wasteLogs    WasteLog[]
-
-  @@map("inventories")
-}
-
-model InventoryTransaction {
-  id                String   @id @default(uuid())
-  inventoryId       String
-  transactionType   String
-  quantity          Float
-  remainingQuantity Float?
-  referenceType     String?
-  referenceId       String?
-  remarks           String?
-  createdAt         DateTime @default(now())
-
-  inventory Inventory @relation(fields: [inventoryId], references: [id])
-
-  @@map("inventory_transactions")
-}
-
-model Supplier {
-  id            String   @id @default(uuid())
-  vendorId      String
-  companyName   String
-  contactPerson String?
-  phone         String
-  email         String?
-  address       String?
-  status        String   @default("active")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  vendor    Vendor     @relation(fields: [vendorId], references: [id])
-  purchases Purchase[]
-
-  @@map("suppliers")
-}
-
-model Purchase {
-  id             String   @id @default(uuid())
-  supplierId     String
-  vendorId       String
-  purchaseNumber String   @unique
-  purchaseDate   DateTime @default(now())
-  subtotal       Decimal? @db.Decimal(10, 2)
-  vat            Decimal? @db.Decimal(10, 2)
-  discount       Decimal? @db.Decimal(10, 2)
-  grandTotal     Decimal? @db.Decimal(10, 2)
-  status         String   @default("pending")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  supplier Supplier       @relation(fields: [supplierId], references: [id])
-  vendor   Vendor         @relation(fields: [vendorId], references: [id])
-  items    PurchaseItem[]
-
-  @@map("purchases")
-}
-
-model PurchaseItem {
-  id          String   @id @default(uuid())
-  purchaseId  String
-  inventoryId String
-  quantity    Float
-  unitPrice   Decimal  @db.Decimal(10, 2)
-  totalPrice  Decimal? @db.Decimal(10, 2)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  purchase Purchase @relation(fields: [purchaseId], references: [id])
-
-  @@map("purchase_items")
-}
-
-model WasteLog {
-  id          String   @id @default(uuid())
-  inventoryId String
-  quantity    Float
-  reason      String
-  approvedBy  String?
-  createdAt   DateTime @default(now())
-
-  inventory Inventory @relation(fields: [inventoryId], references: [id])
-
-  @@map("waste_logs")
 }

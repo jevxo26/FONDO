@@ -46,6 +46,21 @@ router.patch(
   PackageController.rejectPackage,
 );
 
+router.patch(
+  "/admin/:id",
+  verifyToken,
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pPackages,
+  PackageController.updateAdminPackage,
+);
+router.delete(
+  "/admin/:id",
+  verifyToken,
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pPackages,
+  PackageController.deleteAdminPackage,
+);
+
 // --- Public Routes ---
 router.get("/", PackageController.getPackages);
 router.get("/:id", PackageController.getPackageDetails);
@@ -74,6 +89,19 @@ router.patch(
   verifyToken,
   pPackages,
   PackageController.acceptCustomRequest,
+);
+
+router.patch(
+  "/vendor/:id",
+  verifyToken,
+  pPackages,
+  PackageController.updateVendorPackage,
+);
+router.delete(
+  "/vendor/:id",
+  verifyToken,
+  pPackages,
+  PackageController.deleteVendorPackage,
 );
 
 // --- Customer Routes ---

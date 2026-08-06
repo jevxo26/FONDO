@@ -3,9 +3,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Eye, Edit, Flame, Calendar, Utensils, Sliders, Hash, Trash2 } from "lucide-react";
+import { AdminPackageListItem } from "@/store/api/slices/packages-api";
 
 export interface FoodPackage {
-  id: string;
+  id?: string;
+  _id?: string;
   name: string;
   description: string;
   packageType: string;
@@ -22,7 +24,7 @@ export interface FoodPackage {
 }
 
 interface PackageCardProps {
-  pkg: FoodPackage;
+  pkg: FoodPackage | AdminPackageListItem;
   onDelete?: (pkg: FoodPackage) => void;
 }
 
@@ -34,6 +36,7 @@ const typeColors: Record<string, string> = {
 };
 
 export function PackageCard({ pkg, onDelete }: PackageCardProps) {
+  const targetId = pkg.id || "";
   const originalPrice = Number(pkg.price) || 0;
   const sellingPrice = pkg.discountPrice ? Number(pkg.discountPrice) : originalPrice;
   const hasDiscount = Boolean(pkg.discountPrice) && originalPrice > sellingPrice;
@@ -88,7 +91,7 @@ export function PackageCard({ pkg, onDelete }: PackageCardProps) {
                 pkg.status === "APPROVED" && "bg-emerald-500/10 text-emerald-600 ring-emerald-500/20",
                 pkg.status === "REJECTED" && "bg-red-500/10 text-red-600 ring-red-500/20",
                 !["PENDING", "APPROVED", "REJECTED"].includes(pkg.status) &&
-                  "bg-muted text-muted-foreground ring-border"
+                "bg-muted text-muted-foreground ring-border"
               )}
             >
               {pkg.status}
@@ -161,7 +164,7 @@ export function PackageCard({ pkg, onDelete }: PackageCardProps) {
             <span>Code: {pkg.packageCode}</span>
           </div>
 
-          <div className="mt-4 h-px w-full bg-gradient-to-r from-primary/30 via-primary/20 to-transparent" />
+          <div className="mt-4 h-px w-full bg-linear-to-r from-primary/30 via-primary/20 to-transparent" />
 
           {/* Action Buttons */}
           <div className="mt-4 flex items-center gap-2">
@@ -170,18 +173,19 @@ export function PackageCard({ pkg, onDelete }: PackageCardProps) {
               size="sm"
               className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8"
             >
-              <Link href={`/packages/${pkg.id}`}>
-                <Eye className="mr-1.5 size-[15px]" />
+              <Link href={`/packages/${targetId}`}>
+                <Eye className="mr-1.5 size-3.75" />
                 View
               </Link>
             </Button>
 
-            <Button              variant="ghost"
+            <Button
+              variant="ghost"
               size="sm"
               className="h-9 flex-1 rounded-xl text-xs font-semibold hover:bg-primary/8"
             >
-              <Link href={`/admin/packages/edit/${pkg.id}`}>
-                <Edit className="mr-1.5 size-[15px]" />
+              <Link href={`/dashboard/admin/foods/packages/edit/${targetId}`}>
+                <Edit className="mr-1.5 size-3.75" />
                 Edit
               </Link>
             </Button>
@@ -189,8 +193,8 @@ export function PackageCard({ pkg, onDelete }: PackageCardProps) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => onDelete?.(pkg.id)}
-              className="h-9 flex-1 rounded-xl text-xs font-semibold text-destructive hover:bg-destructive/10 hover:text-destructive"
+              onClick={() => onDelete?.(pkg)}
+              className="h-9 flex-1 rounded-xl text-xs font-semibold text-destructive hover:bg-destructive/10 hover:text-destructive cursor-pointer"
             >
               <Trash2 className="mr-1.5 size-3.75" />
               Delete

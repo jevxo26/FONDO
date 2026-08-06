@@ -6,7 +6,7 @@ import { PackageCard, type FoodPackage } from "@/components/dashboard/admin/food
 import { Button } from "@/components/ui/button";
 import { Package, Plus, Download, ClipboardCheck } from "lucide-react";
 import Link from "next/link";
-import { useListAdminPackagesQuery, useDeletePackageMutation } from "@/store/api/slices/packages-api";
+import { useListAdminPackagesQuery, useDeletePackageMutation, AdminPackageListItem } from "@/store/api/slices/packages-api";
 import FoodsLoading from "@/app/(main)/foods/loading";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -27,6 +27,17 @@ export default function FoodPackagesPage() {
   const [deletePackage] = useDeletePackageMutation();
 
   const handleDeletePackage = (pkg: FoodPackage) => {
+    const packageId = pkg.id || pkg._id;
+
+    if (!packageId) {
+      Swal.fire({
+        title: "Error",
+        text: "Package ID is missing. Cannot perform deletion.",
+        icon: "error",
+      });
+      return;
+    }
+
     Swal.fire({
       title: "Are you sure?",
       text: `You are about to delete "${pkg.name}". This action cannot be undone!`,
@@ -40,7 +51,7 @@ export default function FoodPackagesPage() {
       showLoaderOnConfirm: true,
       preConfirm: async () => {
         try {
-          await deletePackage(pkg.id).unwrap();
+          await deletePackage(packageId).unwrap();
         } catch (error: any) {
           Swal.showValidationMessage(
             error?.data?.message || "Failed to delete package. Please try again."
@@ -114,7 +125,7 @@ export default function FoodPackagesPage() {
         {allPackages.map((pkg) => (
           <PackageCard
             key={pkg.id}
-            pkg={pkg as unknown as FoodPackage}
+            pkg={pkg as AdminPackageListItem}
             onDelete={handleDeletePackage}
           />
         ))}

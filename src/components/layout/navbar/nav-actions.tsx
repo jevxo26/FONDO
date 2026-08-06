@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -169,7 +168,7 @@ export function NavActions() {
                 { icon: ShoppingBag, label: "My Orders", desc: "Track your orders", href: "/orders", show: true },
                 { icon: Heart, label: "Wishlist", desc: "Saved items", href: "/wishlist", show: true },
                 { icon: User, label: "Profile", desc: "Manage your account", href: "/profile", show: true },
-                { icon: Settings, label: "Settings", desc: "Preferences", href: "/profile?tab=settings", show: true },
+                { icon: Settings, label: "Settings", desc: "Preferences", href: "/settings", show: true },
               ].map((item) => {
                 if (!item.show) return null;
                 const Icon = item.icon;

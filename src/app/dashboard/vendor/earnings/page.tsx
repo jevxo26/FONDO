@@ -167,7 +167,11 @@ export default function VendorEarningsPage() {
         </div>
       </div>
 
-      <EarningsTableSection />
+      <EarningsTableSection
+        settlements={settlementList}
+        transactions={txList}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

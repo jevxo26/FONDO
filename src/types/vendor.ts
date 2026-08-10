@@ -1,4 +1,5 @@
 // src/types/vendor.ts
+
 export interface Vendor {
   id: string;
   name: string;
@@ -137,51 +138,6 @@ export interface VendorStaff {
   roles: string[];
   avatar: string;
   createdAt: string;
-  updatedAt: string;
-}
-
-export interface VendorSettlement {
-  id: string;
-  settlementNumber: string;
-  periodStart: string;
-  periodEnd: string;
-  totalOrders: number;
-  grossAmount: number;
-  commissionAmount: number;
-  vatAmount: number;
-  adjustmentAmount: number;
-  netAmount: number;
-  paymentStatus: "PAID" | "PROCESSING" | "PENDING";
-  paymentDate: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface VendorWalletTransaction {
-  id: string;
-  walletId: string;
-  transactionType: "CREDIT" | "DEBIT" | "ADJUSTMENT";
-  amount: number;
-  balanceBefore: number;
-  balanceAfter: number;
-  referenceType: string;
-  referenceId: string;
-  remarks: string;
-  createdAt: string;
-}
-
-export interface VendorSettings {
-  id: string;
-  vendorId: string;
-  autoAcceptOrder: boolean;
-  autoAssignRider: boolean;
-  allowCustomMeal: boolean;
-  allowPackage: boolean;
-  notificationEnabled: boolean;
-  smsEnabled: boolean;
-  emailEnabled: boolean;
-  marketingEnabled: boolean;
-  status: "ACTIVE" | "INACTIVE";
   updatedAt: string;
 }
 

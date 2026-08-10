@@ -1,7 +1,5 @@
-// src/app/dashboard/vendor/kitchens/add/page.tsx
 "use client";
 
-import { branches } from "@/data/vendor-kitchens";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -13,11 +11,30 @@ import { KitchenHeaderBar } from "@/components/dashboard/vendor/kitchens/kitchen
 import { KitchenFormSection } from "@/components/dashboard/vendor/kitchens/kitchen-form-section";
 import { KitchenSummarySidebar } from "@/components/dashboard/vendor/kitchens/kitchen-summary-sidebar";
 import { KitchenCardPreview } from "@/components/dashboard/vendor/kitchens/kitchen-card-preview";
+import { useMyVendor } from "@/store/api/slices/vendor-orders-api";
+import { useGetVendorBranchesQuery } from "@/store/api/slices/vendor-api";
+import { useCreateVendorKitchenMutation } from "@/store/api/slices/vendor-api";
 
 export default function AddKitchenPage() {
   const router = useRouter();
   const [showPreview, setShowPreview] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { data: vendor } = useMyVendor();
+  const vendorCode = vendor?.vendorCode;
+
+  const { data: branches, isLoading: branchesLoading } = useGetVendorBranchesQuery(
+    vendorCode || "",
+    {
+      skip: !vendorCode,
+    },
+  );
+
+  const [createKitchen, { isLoading: isSubmitting }] = useCreateVendorKitchenMutation();
+
+  const branchOptions = (branches ?? []).map((b) => ({
+    value: b.id,
+    label: b.branchName,
+  }));
 
   const {
     register,
@@ -31,7 +48,6 @@ export default function AddKitchenPage() {
     defaultValues: initialValues,
   });
 
-  // Watches
   const nameWatched = useWatch({ control, name: "name" });
   const branchWatched = useWatch({ control, name: "branch" });
   const statusWatched = useWatch({ control, name: "status" });
@@ -46,30 +62,61 @@ export default function AddKitchenPage() {
       ? Math.round((currentLoadWatched / capacityWatched) * 100)
       : 0;
 
+  const selectedBranch = branchOptions.find((b) => b.value === branchWatched);
+
   const onSubmit = async (data: KitchenFormValues) => {
     try {
-      setIsSubmitting(true);
       const toastId = toast.loading("Creating kitchen...");
 
-      // TODO: Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      console.log("Kitchen data:", data);
+      await createKitchen({
+        branchId: data.branch,
+        data: {
+          name: data.name,
+          status: data.status,
+        },
+      }).unwrap();
 
       toast.success("Kitchen created successfully!", { id: toastId });
-
       reset(initialValues);
       router.push("/dashboard/vendor/kitchens");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to create kitchen.";
       toast.error(message);
       console.error(error);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
-  const selectedBranch = branches.find((b) => b.value === branchWatched);
+  if (branchesLoading) {
+    return (
+      <div className="py-6 lg:py-8 bg-background">
+        <div className="wrapper max-w-6xl mx-auto px-4">
+          <div className="mt-12 flex justify-center">
+            <div className="text-sm text-muted-foreground">Loading branches...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (branchOptions.length === 0) {
+    return (
+      <div className="py-6 lg:py-8 bg-background">
+        <div className="wrapper max-w-6xl mx-auto px-4">
+          <div className="mt-12 text-center">
+            <p className="text-sm text-muted-foreground">
+              No branches found. Please create a branch first.
+            </p>
+            <button
+              onClick={() => router.push("/dashboard/vendor/branches")}
+              className="mt-4 text-sm text-primary hover:underline"
+            >
+              Go to Branches
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section className="py-6 lg:py-8 bg-background">
@@ -92,7 +139,7 @@ export default function AddKitchenPage() {
               errors={errors}
               setValue={setValue}
               control={control}
-              branches={branches}
+              branches={branchOptions}
             />
           </form>
 

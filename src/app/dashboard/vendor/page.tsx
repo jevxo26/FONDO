@@ -6,28 +6,31 @@ import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { OrderPieChart } from "@/components/dashboard/vendor/overview/order-pie-chart";
 
-import { useGetFoodsQuery } from "@/store/api/slices/foods-api";
-import { useGetOrdersQuery } from "@/store/api/slices/orders-api";
-import {
-  ClipboardList,
-  DollarSign,
-  Loader2,
-  Store,
-  Utensils,
-  Package,
-} from "lucide-react";
+import { useGetVendorFoodsQuery } from "@/store/api/slices/foods-api";
+import { useGetVendorOrdersQuery, useMyVendor } from "@/store/api/slices/vendor-orders-api";
+import { useGetVendorWalletQuery } from "@/store/api/slices/vendor-settlement-api";
+import { ClipboardList, DollarSign, Loader2, Store, Utensils, Package } from "lucide-react";
 
 export default function VendorOverviewPage() {
-  const { data: apiOrders, isLoading: ordersLoading } = useGetOrdersQuery();
-  const { data: apiFoods, isLoading: foodsLoading } = useGetFoodsQuery({});
+  const { data: vendor, isLoading: vendorLoading } = useMyVendor();
+  const vendorId = vendor?.id;
 
-  const totalFoods = apiFoods?.items ? apiFoods.items.length : 47;
-  const totalOrders = apiOrders ? apiOrders.length : 23;
-  const pendingOrders = apiOrders
-    ? apiOrders.filter((o) => o.orderStatus === "PENDING" || o.orderStatus === "PREPARING").length
-    : 5;
+  const { data: vendorFoods, isLoading: foodsLoading } = useGetVendorFoodsQuery();
+  const { data: vendorOrders, isLoading: ordersLoading } = useGetVendorOrdersQuery(vendorId || "", {
+    skip: !vendorId,
+  });
+  const { data: wallet, isLoading: walletLoading } = useGetVendorWalletQuery(vendorId || "", {
+    skip: !vendorId,
+  });
 
-  const isLoading = ordersLoading || foodsLoading;
+  const isLoading = vendorLoading || foodsLoading || ordersLoading || walletLoading;
+
+  const totalFoods = vendorFoods?.length || 0;
+  const totalOrders = vendorOrders?.length || 0;
+  const pendingOrders =
+    vendorOrders?.filter((o) => o.orderStatus === "PENDING" || o.orderStatus === "PREPARING")
+      .length || 0;
+  const todayEarnings = wallet?.balance || 0;
 
   return (
     <div className="space-y-8">
@@ -43,7 +46,6 @@ export default function VendorOverviewPage() {
         </div>
       ) : (
         <>
-          {/* Stats Grid */}
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               label="Total Foods"
@@ -67,21 +69,19 @@ export default function VendorOverviewPage() {
             />
             <StatCard
               label="Today's Earnings"
-              value="৳12,450"
+              value={`৳${todayEarnings.toLocaleString()}`}
               variant="default"
               icon={DollarSign}
               accent="right"
             />
           </div>
 
-          {/* Charts Row */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <RevenueChart/>
-            <OrderPieChart/>
+            <RevenueChart />
+            <OrderPieChart />
           </div>
 
-          {/* Recent Activity */}
-          <RecentActivity/>
+          <RecentActivity />
         </>
       )}
     </div>

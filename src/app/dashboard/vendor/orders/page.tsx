@@ -1,27 +1,63 @@
 "use client";
 
 import { useMemo } from "react";
-import { ClipboardList, Clock, CheckCircle2, Package } from "lucide-react";
+import { ClipboardList, Clock, CheckCircle2, Package, Loader2 } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { VendorOrderTableSection } from "@/components/dashboard/vendor/orders/order-table-section";
-import { useVendorOrdersPage } from "@/hooks/use-vendor-orders";
+import { useMyVendor, useGetVendorOrdersQuery } from "@/store/api/slices/vendor-orders-api";
+import { useUpdateOrderStatusMutation } from "@/store/api/slices/orders-api";
 
 export default function VendorOrdersPage() {
-  const { orders, isLoading, handleUpdateStatus, updateStatusPending } = useVendorOrdersPage();
+  const { data: vendor, isLoading: vendorLoading } = useMyVendor();
+  const vendorId = vendor?.id;
+
+  const { data: orders, isLoading: ordersLoading } = useGetVendorOrdersQuery(vendorId || "", {
+    skip: !vendorId,
+  });
+
+  const [updateStatus, { isLoading: updatePending }] = useUpdateOrderStatusMutation();
+
+  const isLoading = vendorLoading || ordersLoading;
 
   const stats = useMemo(() => {
-    const total = orders.length;
-    const pending = orders.filter((o) => o.orderStatus === "PENDING").length;
-    const inProgress = orders.filter((o) =>
-      ["CONFIRMED", "PREPARING", "READY_FOR_PICKUP", "PICKED_UP", "ON_THE_WAY"].includes(o.orderStatus),
+    const items = orders ?? [];
+    const total = items.length;
+    const pending = items.filter((o) => o.orderStatus === "PENDING").length;
+    const inProgress = items.filter((o) =>
+      ["CONFIRMED", "PREPARING", "READY_FOR_PICKUP", "PICKED_UP", "ON_THE_WAY"].includes(
+        o.orderStatus,
+      ),
     ).length;
-    const completed = orders.filter(
+    const completed = items.filter(
       (o) => o.orderStatus === "COMPLETED" || o.orderStatus === "DELIVERED",
     ).length;
-    const cancelled = orders.filter((o) => o.orderStatus === "CANCELLED").length;
+    const cancelled = items.filter((o) => o.orderStatus === "CANCELLED").length;
     return { total, pending, inProgress, completed, cancelled };
   }, [orders]);
+
+  const handleUpdateStatus = async (orderId: string, status: string) => {
+    try {
+      await updateStatus({ orderId, status }).unwrap();
+    } catch (error) {
+      console.error("Failed to update status:", error);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-8">
+        <PageHeader
+          title="Orders"
+          description="View and manage incoming customer orders."
+          icon={ClipboardList}
+        />
+        <div className="mt-12 flex justify-center">
+          <Loader2 className="size-8 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -33,8 +69,19 @@ export default function VendorOrdersPage() {
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Total Orders" value={stats.total} icon={Package} accent="right" />
-        <StatCard label="Pending" value={stats.pending} variant="warning" icon={Clock} accent="right" />
-        <StatCard label="In Progress" value={stats.inProgress} icon={ClipboardList} accent="right" />
+        <StatCard
+          label="Pending"
+          value={stats.pending}
+          variant="warning"
+          icon={Clock}
+          accent="right"
+        />
+        <StatCard
+          label="In Progress"
+          value={stats.inProgress}
+          icon={ClipboardList}
+          accent="right"
+        />
         <StatCard
           label="Completed"
           value={stats.completed}
@@ -52,10 +99,10 @@ export default function VendorOrdersPage() {
           </p>
         </div>
         <VendorOrderTableSection
-          orders={orders}
+          orders={orders ?? []}
           isLoading={isLoading}
           onUpdateStatus={handleUpdateStatus}
-          updateStatusPending={updateStatusPending}
+          updateStatusPending={updatePending}
         />
       </div>
     </div>

@@ -96,7 +96,7 @@ export default function DashboardPage() {
           </span>
         </div>
       </div>
-      <div className="mt-2 h-px w-24 bg-gradient-to-r from-primary/40 to-transparent" />
+      <div className="mt-2 h-px w-24 bg-linear-to-r from-primary/40 to-transparent" />
 
       {isLoading ? (
         <div className="mt-12 flex justify-center">

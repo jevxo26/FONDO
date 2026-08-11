@@ -4,7 +4,8 @@ import { BottomWidgets } from "@/components/dashboard/admin/vendors/all-vendors/
 import { RegisterVendorModal } from "@/components/dashboard/admin/vendors/all-vendors/register-vendor-modal";
 import { VendorsTable } from "@/components/dashboard/admin/vendors/all-vendors/vendors-table";
 import { vendors } from "@/data/vendors";
-import { CheckCircle, Clock, Store, Wallet } from "lucide-react";
+import { CheckCircle, Clock, Plus, Store, Wallet } from "lucide-react";
+import Link from "next/link";
 
 export default function VendorsPage() {
   const active = vendors.filter((v) => v.status === "ACTIVE").length;
@@ -16,7 +17,16 @@ export default function VendorsPage() {
         title="Vendor Management"
         description="Register, manage, and monitor vendor operations across the platform."
         icon={Store}
-        actions={<RegisterVendorModal />}
+        actions={
+          <Link
+            href="/dashboard/admin/vendors/add"
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          >
+            <Plus className="size-4" />
+            Add Vendor
+          </Link>
+        }
+
       />
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-4">
         <StatCard label="Total Vendors" value={vendors.length} icon={Store} accent="right" />

@@ -45,7 +45,7 @@ export function DashboardHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-primary/15 bg-secondary/90 px-4 py-3 shadow-[var(--shadow-card)] backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] lg:px-6">
+    <header className="top-0 z-10 border-b border-primary/15 bg-secondary/90 px-4 py-3 shadow-[var(--shadow-card)] backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] lg:px-6">
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-gradient-to-r from-primary/40 via-primary/20 to-transparent" />
       <div className="relative flex items-center justify-between">
         <div className="flex items-center gap-4">

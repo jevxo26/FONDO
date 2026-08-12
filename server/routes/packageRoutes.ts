@@ -64,7 +64,8 @@ router.delete(
 // --- Public Routes ---
 router.get("/", PackageController.getPackages);
 router.get("/:id", PackageController.getPackageDetails);
-
+// Added Public Review Route
+router.get("/:packageId/reviews", PackageController.getPackageReviews);
 // --- Vendor Management Routes ---
 router.post(
   "/vendor/create",

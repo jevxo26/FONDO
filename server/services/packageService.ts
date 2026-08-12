@@ -808,7 +808,76 @@ const deleteVendorPackage = async (packageId: string, vendorId: string) => {
     data: { deletedAt: new Date() },
   });
 };
+const getPackageReviews = async (
+  packageId: string,
+  options: { page: number; limit: number }
+) => {
+  const { page = 1, limit = 10 } = options;
+  const skip = (page - 1) * limit;
 
+  // Check if package exists
+  const packageExists = await prisma.package.findUnique({
+    where: { id: packageId },
+    select: { id: true },
+  });
+
+  if (!packageExists) {
+    throw new Error("Package not found");
+  }
+  const [total, reviews, ratingStats] = await Promise.all([
+    prisma.packageReview.count({
+      where: {
+        packageId,
+        status: "approved",
+      },
+    }),
+    prisma.packageReview.findMany({
+      where: {
+        packageId,
+        status: "approved",
+      },
+      skip,
+      take: limit,
+      orderBy: {
+        createdAt: "desc",
+      },
+      select: {
+        id: true,
+        rating: true,
+        review: true,
+        createdAt: true,
+        customer: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+    }),
+    prisma.packageReview.aggregate({
+      where: {
+        packageId,
+        status: "approved",
+      },
+      _avg: {
+        rating: true,
+      },
+    }),
+  ]);
+
+  return {
+    reviews,
+    meta: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      averageRating: ratingStats._avg.rating ? Number(ratingStats._avg.rating.toFixed(1)) : 0,
+    },
+  };
+};
 const deleteAdminPackage = async (packageId: string) => {
   const existing = await prisma.package.findFirst({
     where: { id: packageId, deletedAt: null },
@@ -839,6 +908,7 @@ export const PackageService = {
   confirmCustomOrderPayment,
   createPackageCategory,
   getAllCategories,
+  getPackageReviews, // Exported here
   createPackageReview,
   updatePackageReview,
   deletePackageReview,

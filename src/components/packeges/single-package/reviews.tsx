@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo } from "react";
 import { Star, Edit2, Trash2, Send, Clock } from "lucide-react";
-// Import useSelector / auth state hook according to your Redux store pattern
 
 import {
   useGetPackageReviewsQuery,
@@ -10,24 +9,30 @@ import {
   useUpdatePackageReviewMutation,
   useDeletePackageReviewMutation,
   PackageReviewItem,
+  useGetPackagePublicReviewsQuery,
 } from "@/store/api/slices/packages-api";
 import { useAuth } from "@/hooks/use-auth";
 import { PackageRating } from "@/types/package";
 
 interface PackageReviewsProps {
   packageId: string;
-  rating:PackageRating
+  rating?: PackageRating;
 }
 
 export default function PackageReviews({ packageId, rating }: PackageReviewsProps) {
-  // Extract user directly from Redux Auth Slice
-  const currentUser = useAuth()
-  const currentUserId = currentUser.user?.id
+  // Extract user directly from Auth Hook
+  const currentUser = useAuth();
+  const currentUserId = currentUser.user?.id;
+
   // RTK Queries & Mutations
-  const { data: allReviews = [], isLoading } = useGetPackageReviewsQuery({ packageId });
+  const { data, isLoading } = useGetPackagePublicReviewsQuery({ packageId });
   const [createReview, { isLoading: isCreating }] = useCreatePackageReviewMutation();
   const [updateReview, { isLoading: isUpdating }] = useUpdatePackageReviewMutation();
   const [deleteReview, { isLoading: isDeleting }] = useDeletePackageReviewMutation();
+
+  // Extract public reviews list & metadata safely from API wrapper
+  const allReviews = useMemo(() => data?.reviews || [], [data]);
+  const meta = data?.meta;
 
   // Local Form State
   const [isEditing, setIsEditing] = useState(false);
@@ -35,30 +40,10 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
   const [ratingInput, setRatingInput] = useState<number>(5);
   const [reviewInput, setReviewInput] = useState<string>("");
 
-  // Filter visible reviews (Approved ones + user's own pending review)
-  const visibleReviews = useMemo(() => {
-    return allReviews.filter((rev) => {
-      if (rev.packageId !== packageId) return false;
-
-      // Public approved reviews
-      if (rev.status === "approved" || rev.status === "APPROVED") return true;
-
-      // User's own pending review
-      if (currentUserId && rev.customerId === currentUserId) return true;
-
-      return false;
-    });
-  }, [allReviews, packageId, currentUserId]);
-
-  // Aggregate stats (calculated ONLY from publicly approved reviews)
-  const publicApprovedReviews = useMemo(() => {
-    return visibleReviews.filter(
-      (r) => r.status === "approved" || r.status === "APPROVED"
-    );
-  }, [visibleReviews]);
-
+  // Aggregate stats (Uses backend metadata with local recalculation fallback)
   const { avgRating, ratingBars, publicCount } = useMemo(() => {
-    const total = publicApprovedReviews.length;
+    const total = meta?.total ?? allReviews.length;
+
     if (total === 0) {
       return {
         avgRating: "0.0",
@@ -67,11 +52,12 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
       };
     }
 
-    const sum = publicApprovedReviews.reduce((acc, curr) => acc + (curr.rating || 0), 0);
-    const avg = (sum / total).toFixed(1);
+    const calculatedAvg = meta?.averageRating
+      ? meta.averageRating.toFixed(1)
+      : (allReviews.reduce((acc, curr) => acc + (curr.rating || 0), 0) / total).toFixed(1);
 
     const counts: Record<number, number> = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-    publicApprovedReviews.forEach((r) => {
+    allReviews.forEach((r) => {
       const star = Math.min(5, Math.max(1, Math.round(r.rating)));
       counts[star] = (counts[star] || 0) + 1;
     });
@@ -85,22 +71,22 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
       };
     });
 
-    return { avgRating: avg, publicCount: total, ratingBars: bars };
-  }, [publicApprovedReviews]);
+    return { avgRating: calculatedAvg, publicCount: total, ratingBars: bars };
+  }, [allReviews, meta]);
 
   // Check if current logged-in user already wrote a review
   const userExistingReview = useMemo(() => {
     if (!currentUserId) return null;
     return allReviews.find(
-      (rev) => rev.customerId === currentUserId && rev.packageId === packageId
+      (rev) => rev.customer?.id === currentUserId
     );
-  }, [allReviews, currentUserId, packageId]);
+  }, [allReviews, currentUserId]);
 
   // Handlers
   const handleStartEdit = (rev: PackageReviewItem) => {
     setEditingReviewId(rev.id);
     setRatingInput(rev.rating);
-    setReviewInput(rev.review);
+    setReviewInput(rev.review || "");
     setIsEditing(true);
   };
 
@@ -119,6 +105,7 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
       if (editingReviewId) {
         await updateReview({
           id: editingReviewId,
+          packageId,
           rating: ratingInput,
           review: reviewInput,
         }).unwrap();
@@ -138,7 +125,7 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
   const handleDeleteReview = async (reviewId: string) => {
     if (!confirm("Are you sure you want to delete your review?")) return;
     try {
-      await deleteReview(reviewId).unwrap();
+      await deleteReview({ id: reviewId, packageId }).unwrap();
       handleCancelForm();
     } catch (err) {
       console.error("Failed to delete review:", err);
@@ -181,21 +168,20 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
         )}
       </div>
 
-      {/* Public Rating Header - Displays "Based on 0 reviews" when no approved reviews exist */}
+      {/* Rating Summary Header */}
       <div className="bg-background rounded-xl p-4 grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
         <div className="text-center sm:text-left">
           <div className="text-3xl font-heading font-bold text-foreground">
-            {isLoading ? "..." : rating?.averageRating}
+            {isLoading ? "..." : (rating?.averageRating?.toFixed(1) || avgRating)}
           </div>
           <div className="flex text-primary justify-center sm:justify-start my-1">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`size-3 ${
-                  i < Math.round(Number(avgRating))
-                    ? "fill-current text-primary"
-                    : "text-muted-foreground/30"
-                }`}
+                className={`size-3 ${i < Math.round(Number(avgRating))
+                  ? "fill-current text-primary"
+                  : "text-muted-foreground/30"
+                  }`}
               />
             ))}
           </div>
@@ -223,7 +209,7 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
         </div>
       </div>
 
-      {/* Interactive Review Form */}
+      {/* Review Form */}
       {isEditing && (
         <form
           onSubmit={handleSubmitReview}
@@ -243,11 +229,10 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
                 className="p-1 hover:scale-110 transition-transform"
               >
                 <Star
-                  className={`size-4 ${
-                    star <= ratingInput
-                      ? "fill-amber-400 text-amber-400"
-                      : "text-muted-foreground/30"
-                  }`}
+                  className={`size-4 ${star <= ratingInput
+                    ? "fill-amber-400 text-amber-400"
+                    : "text-muted-foreground/30"
+                    }`}
                 />
               </button>
             ))}
@@ -281,21 +266,23 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
         </form>
       )}
 
-      {/* Review Feed */}
+      {/* Review List Feed */}
       {isLoading ? (
         <p className="text-xs text-muted-foreground py-4 text-center">Loading reviews...</p>
-      ) : visibleReviews.length === 0 ? (
+      ) : allReviews.length === 0 ? (
         <p className="text-xs text-muted-foreground py-4 text-center">
           No reviews recorded yet for this package.
         </p>
       ) : (
         <div className="space-y-4">
-          {visibleReviews.map((rev: PackageReviewItem) => {
-            const isOwner = currentUserId && rev.customerId === currentUserId;
-            const isPending = rev.status === "pending" || rev.status === "PENDING";
+          {allReviews.map((rev: PackageReviewItem) => {
+            const isOwner = currentUserId && rev.customer?.id === currentUserId;
+
+            // Constructs customer name based on available backend user fields
+            const customerFullName = `${rev.customer?.firstName || ""} ${rev.customer?.lastName || ""}`.trim();
             const displayName = isOwner
               ? "You"
-              : rev.customer?.firstName || rev.customer?.name || "Customer";
+              : customerFullName || "Customer";
 
             return (
               <div
@@ -314,14 +301,6 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
                         <Star key={i} className="size-2.5 fill-current" />
                       ))}
                     </div>
-
-                    {/* Pending Pill (Visible ONLY to creator) */}
-                    {isPending && (
-                      <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 text-[9px] font-medium border border-amber-500/20">
-                        <Clock className="size-2.5" />
-                        Pending Approval
-                      </span>
-                    )}
                   </div>
 
                   <div className="flex items-center gap-3">
@@ -329,7 +308,7 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
                       {formatDate(rev.createdAt)}
                     </span>
 
-                    {/* Edit/Delete controls for owner */}
+                    {/* Controls for Review Owner */}
                     {isOwner && !isEditing && (
                       <div className="flex items-center gap-1">
                         <button

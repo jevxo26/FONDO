@@ -52,6 +52,18 @@ export interface PackageReviewItem {
     };
 }
 
+// Added interface for the Public Review API Response format
+export interface PublicPackageReviewsResponse {
+    reviews: PackageReviewItem[];
+    meta: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+        averageRating: number;
+    };
+}
+
 export const packagesApi = api.injectEndpoints({
     endpoints: (builder) => ({
 
@@ -157,6 +169,20 @@ export const packagesApi = api.injectEndpoints({
             providesTags: ["Package"],
         }),
 
+        // ✅ FIXED: Public Reviews API Endpoint (Fetches approved reviews for a specific package)
+        getPackagePublicReviews: builder.query<
+            PublicPackageReviewsResponse,
+            { packageId: string; page?: number; limit?: number }
+        >({
+            query: ({ packageId, page = 1, limit = 10 }) => ({
+                url: `/package/${packageId}/reviews`,
+                params: { page, limit },
+            }),
+            providesTags: (result, error, { packageId }) => [
+                { type: "Package", id: `REVIEWS_${packageId}` },
+            ],
+        }),
+
         // Get current user's reviews for package
         getUserPackageReviews: builder.query<
             PackageReviewItem[],
@@ -227,6 +253,7 @@ export const {
 
     // Reviews
     useGetPackageReviewsQuery,
+    useGetPackagePublicReviewsQuery,
     useGetUserPackageReviewsQuery,
     useCreatePackageReviewMutation,
     useUpdatePackageReviewMutation,
@@ -288,6 +315,21 @@ export function useCreateCustomMealRequest() {
     return {
         createCustomMealRequest,
         isPending: isLoading,
+    };
+}
+
+export function usePackagePublicReviews(packageId: string, page = 1, limit = 10) {
+    const { data, isLoading, isFetching, refetch } = useGetPackagePublicReviewsQuery(
+        { packageId, page, limit },
+        { skip: !packageId }
+    );
+
+    return {
+        reviews: data?.reviews || [],
+        meta: data?.meta || { total: 0, page: 1, limit: 10, totalPages: 0, averageRating: 0 },
+        isLoading,
+        isFetching,
+        refetch,
     };
 }
 

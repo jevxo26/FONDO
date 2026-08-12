@@ -289,6 +289,24 @@ const getPendingReviews = async (_req: Request, res: Response): Promise<Response
   }
 };
 
+const getPackageReviews = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const packageId = req.params.packageId as string;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    const result = await PackageService.getPackageReviews(packageId, { page, limit });
+
+    return res.status(200).json({
+      success: true,
+      message: "Public reviews retrieved successfully",
+      data: result,
+    });
+  } catch (error: unknown) {
+    return res.status(500).json({ success: false, message: getErrorMessage(error) });
+  }
+};
+
 const updateVendorPackage = async (req: AuthRequest, res: Response): Promise<Response> => {
   try {
     const vendorId = await resolveVendorId(req);
@@ -362,6 +380,7 @@ export const PackageController = {
   payForCustomOrder,
   createCategory,
   getCategories,
+  getPackageReviews,
   createReview,
   updateReview,
   deleteReview,

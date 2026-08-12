@@ -1,4 +1,3 @@
-// src/components/dashboard/vendor/overview/recent-activity.tsx
 "use client";
 
 import React from "react";
@@ -24,66 +23,8 @@ interface Activity {
 interface RecentActivityProps {
   activities?: Activity[];
   className?: string;
+  isLoading?: boolean;
 }
-
-const defaultActivities: Activity[] = [
-  {
-    id: 1,
-    type: "order",
-    text: "New order #2048 from Zaman Heritage",
-    time: "2 min ago",
-    icon: Package,
-  },
-  {
-    id: 2,
-    type: "payment",
-    text: "Payment of ৳12,400 settled to Kacchi Bhai",
-    time: "15 min ago",
-    icon: CreditCard,
-  },
-  {
-    id: 3,
-    type: "user",
-    text: "New vendor registration: Spice Garden",
-    time: "32 min ago",
-    icon: UserPlus,
-  },
-  {
-    id: 4,
-    type: "alert",
-    text: "Order #2045 delivery delayed by 15 min",
-    time: "1 hr ago",
-    icon: AlertCircle,
-  },
-  {
-    id: 5,
-    type: "order",
-    text: "Order #2047 marked as completed",
-    time: "1 hr ago",
-    icon: ShoppingBag,
-  },
-  {
-    id: 6,
-    type: "payment",
-    text: "Refund of ৳520 processed for order #2039",
-    time: "2 hr ago",
-    icon: CreditCard,
-  },
-  {
-    id: 7,
-    type: "user",
-    text: "Rider Karim joined the fleet",
-    time: "3 hr ago",
-    icon: Truck,
-  },
-  {
-    id: 8,
-    type: "food",
-    text: "Chicken Biryani added to menu by Kacchi Bhai",
-    time: "4 hr ago",
-    icon: Package,
-  },
-];
 
 const iconConfig: Record<string, { bg: string; color: string }> = {
   order: { bg: "bg-primary/10", color: "text-primary" },
@@ -94,7 +35,40 @@ const iconConfig: Record<string, { bg: string; color: string }> = {
   food: { bg: "bg-orange-500/10", color: "text-orange-500" },
 };
 
-export function RecentActivity({ activities = defaultActivities, className }: RecentActivityProps) {
+export function RecentActivity({ activities, className, isLoading }: RecentActivityProps) {
+  if (isLoading) {
+    return (
+      <div
+        className={cn(
+          "group relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] shadow-[var(--shadow-card)] p-6",
+          className,
+        )}
+      >
+        <div className="flex h-[200px] items-center justify-center">
+          <div className="text-sm text-muted-foreground">Loading activity...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!activities || activities.length === 0) {
+    return (
+      <div
+        className={cn(
+          "group relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] shadow-[var(--shadow-card)] p-6",
+          className,
+        )}
+      >
+        <div className="flex h-[200px] flex-col items-center justify-center gap-2">
+          <p className="text-sm text-muted-foreground">No recent activity</p>
+          <p className="text-xs text-muted-foreground/60">
+            Activity will appear here once orders are placed
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn(

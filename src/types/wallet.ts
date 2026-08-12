@@ -1,9 +1,5 @@
 // src/types/wallet.ts
 
-// ============================================================
-// Customer Wallet types
-// ============================================================
-
 export interface CustomerWallet {
   id: string;
   walletNumber: string;
@@ -56,10 +52,7 @@ export interface WalletWithdraw {
   createdAt: string;
 }
 
-// ============================================================
 // Vendor Wallet & Settlement types
-// ============================================================
-
 export interface VendorWallet {
   id: string;
   vendorId: string;
@@ -78,6 +71,7 @@ export interface VendorWalletTransaction {
   amount: number;
   balanceBefore: number | null;
   balanceAfter: number | null;
+  referenceType: string | null;
   referenceId: string | null;
   remarks: string | null;
   createdAt: string;
@@ -137,10 +131,6 @@ export interface ProcessSettlementPayload {
   paymentMethod?: string;
   processedAt?: string;
 }
-
-// ============================================================
-// Platform Revenue types
-// ============================================================
 
 export interface PlatformRevenue {
   totalRevenue: number;

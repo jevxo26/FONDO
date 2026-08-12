@@ -1,4 +1,3 @@
-// src/components/dashboard/vendor/kitchens/kitchen-table-section.tsx
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
@@ -7,10 +6,15 @@ import { DataTable } from "@/components/common/table";
 import { kitchenColumns } from "./kitchen-columns";
 import { Button } from "@/components/ui/button";
 import { Plus, Pencil, Power, Trash2 } from "lucide-react";
-import { vendorKitchens, kitchenStatuses, branches } from "@/data/vendor-kitchens";
+import { kitchenStatuses, branches } from "@/data/vendor-kitchens";
 import type { VendorKitchen } from "@/types/vendor";
 import type { RowAction, FacetedFilter, InitialSort } from "@/components/common/table/types";
 import { toast } from "sonner";
+
+interface VendorKitchenTableSectionProps {
+  data: VendorKitchen[];
+  isLoading?: boolean;
+}
 
 interface Filters {
   status: string;
@@ -22,10 +26,17 @@ const INITIAL_FILTERS: Filters = {
   branch: "ALL",
 };
 
-export function VendorKitchenTableSection() {
+export function VendorKitchenTableSection({ data, isLoading }: VendorKitchenTableSectionProps) {
   const router = useRouter();
-  const [kitchens, setKitchens] = useState<VendorKitchen[]>(vendorKitchens);
+  const [kitchens, setKitchens] = useState<VendorKitchen[]>(data);
   const [filters] = useState<Filters>(INITIAL_FILTERS);
+
+  // Update internal state when prop data changes
+  useMemo(() => {
+    setTimeout(() => { 
+      setKitchens(data);
+    }, 0);
+  }, [data]);
 
   const filteredData = useMemo(() => {
     return kitchens.filter((item) => {
@@ -121,6 +132,14 @@ export function VendorKitchenTableSection() {
     id: "name",
     desc: false,
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex h-[200px] items-center justify-center">
+        <div className="text-sm text-muted-foreground">Loading kitchens...</div>
+      </div>
+    );
+  }
 
   return (
     <DataTable

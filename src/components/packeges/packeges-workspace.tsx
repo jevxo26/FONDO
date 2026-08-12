@@ -194,7 +194,7 @@ export default function PackagesWorkspace() {
         {/* Sidebar Filters */}
         <aside className="lg:sticky lg:top-6 bg-card border rounded-2xl p-5 shadow-sm flex flex-col gap-6">
           <div className="flex items-center gap-2 font-semibold border-b pb-3 text-foreground">
-            <SlidersHorizontal className="size-4 text-primary" />
+            <SlidersHorizontal className="size-4 text-foreground" />
             Filters
           </div>
 
@@ -246,7 +246,7 @@ export default function PackagesWorkspace() {
           <div className="space-y-2">
             <div className="flex justify-between items-center text-xs font-medium">
               <span>Max Daily Calories</span>
-              <span className="text-primary font-bold">{maxCalories} kcal</span>
+              <span className="text-foreground font-bold">{maxCalories} kcal</span>
             </div>
             <input
               type="range"

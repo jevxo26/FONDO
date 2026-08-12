@@ -176,7 +176,7 @@ export default function PackageCustomization({
           className="w-full flex items-center justify-between group outline-none"
         >
           <div className="flex items-center gap-3">
-            <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center text-foreground">
               <SlidersHorizontal className="size-4" />
             </div>
             <div className="text-left">

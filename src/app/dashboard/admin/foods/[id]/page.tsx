@@ -31,7 +31,7 @@ function InfoBadge({
 }) {
   return (
     <div className="flex items-center gap-3 rounded-2xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-4 shadow-[var(--shadow-card)]">
-      <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
+      <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-foreground ring-1 ring-primary/20">
         {icon}
       </div>
       <div className="min-w-0">

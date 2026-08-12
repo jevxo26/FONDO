@@ -18,7 +18,7 @@ export function PersonalInfo({ register, errors }: Props) {
             01
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
-            <User className="size-5 text-primary" /> Personal Information
+            <User className="size-5 text-foreground" /> Personal Information
           </h3>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -76,7 +76,7 @@ export function PersonalInfo({ register, errors }: Props) {
             02
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
-            <PhoneCall className="size-5 text-primary" /> Emergency Contact
+            <PhoneCall className="size-5 text-foreground" /> Emergency Contact
           </h3>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

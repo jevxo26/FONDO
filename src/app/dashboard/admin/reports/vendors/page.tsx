@@ -62,7 +62,7 @@ export default function ReportsVendorsPage() {
           </div>
         </DarkCard>
         <GlassCard
-          icon={<Award className="size-5 text-primary" />}
+          icon={<Award className="size-5 text-foreground" />}
           title="Avg Rating"
           value={avgRating.toString()}
           subtitle="Across all vendors"

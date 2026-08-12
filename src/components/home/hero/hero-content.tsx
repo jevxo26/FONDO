@@ -34,7 +34,7 @@ export function HeroContent() {
     >
       <motion.div variants={fadeUp} className="inline-flex w-fit items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3 py-1.5">
         <div className="size-1.5 rotate-45 bg-primary" />
-        <span className="text-xs font-medium text-primary">
+        <span className="text-xs font-medium text-muted-foreground">
           Open now &middot; Delivering across Dhaka
         </span>
       </motion.div>
@@ -45,7 +45,7 @@ export function HeroContent() {
       >
         Honest food from
         <br />
-        <span className="text-gold-gradient">local gardens.</span>
+        <span className="text-primary">local gardens.</span>
       </motion.h1>
 
       <motion.p
@@ -60,7 +60,7 @@ export function HeroContent() {
         <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Search dishes, categories..."
-          className="h-12 w-full rounded-full border-border bg-card pl-10 pr-4 text-sm shadow-[var(--shadow-card)] transition-shadow duration-300 focus-visible:shadow-[0_0_0_2px_rgba(206,163,89,0.3),var(--shadow-elevated)]"
+          className="h-12 w-full rounded-full border-border bg-card pl-10 pr-4 text-sm shadow-[var(--shadow-card)] transition-shadow duration-300 focus-visible:shadow-[0_0_0_2px_rgba(168,90,56,0.3),var(--shadow-elevated)]"
         />
       </motion.div>
 

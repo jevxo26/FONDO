@@ -28,7 +28,7 @@ function PaymentSuccessContent() {
             <Check className="size-8 text-primary stroke-[2.5]" />
           </div>
 
-          <h1 className="font-heading text-3xl text-primary font-normal tracking-tight mb-3">
+          <h1 className="font-heading text-3xl text-foreground font-normal tracking-tight mb-3">
             Payment Successful!
           </h1>
           <p className="font-sans text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed mb-6">

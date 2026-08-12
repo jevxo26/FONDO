@@ -17,7 +17,7 @@ const FoodGrid = ({ filteredFoods, onClearFilters, hasActiveFilters }: FoodGridP
     return (
       <Empty className="min-h-[320px] rounded-4xl border border-border/60 bg-card py-16 shadow-[var(--shadow-card)]">
         <EmptyHeader>
-          <EmptyMedia variant="icon" className="size-14 rounded-2xl bg-primary/10 [&_svg]:size-7 [&_svg]:text-primary">
+          <EmptyMedia variant="icon" className="size-14 rounded-2xl bg-secondary [&_svg]:size-7 [&_svg]:text-muted-foreground">
             <SearchX />
           </EmptyMedia>
           <EmptyTitle className="font-heading text-lg font-semibold">No dishes found</EmptyTitle>

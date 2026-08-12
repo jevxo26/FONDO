@@ -6,7 +6,7 @@ export function SubscriptionContextCards() {
   return (
     <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
       <GlassCard
-        icon={<TrendingUp className="size-5 text-primary" />}
+        icon={<TrendingUp className="size-5 text-foreground" />}
         iconBg="bg-primary/10"
         title="Subscription Revenue"
         value="৳428.5K"

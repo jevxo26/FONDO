@@ -32,13 +32,13 @@ export default function FoodsHero() {
           <div className="space-y-5">
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/20 bg-primary/8 px-3 py-1.5">
               <div className="size-1.5 rotate-45 bg-primary" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-primary">
+              <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
                 Discover Our Menu
               </span>
             </div>
 
             <h1 className="font-heading text-3xl leading-[1.1] tracking-[-0.02em] text-balance text-foreground md:text-[40px]">
-              Explore Our <span className="text-gold-gradient">Authentic Menu</span>
+              Explore Our <span className="text-primary">Authentic Menu</span>
             </h1>
 
             <p className="mx-auto max-w-xl font-sans text-sm leading-relaxed text-muted-foreground text-pretty">

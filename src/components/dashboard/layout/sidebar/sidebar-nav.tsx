@@ -110,7 +110,7 @@ export function SidebarNav({
                       className={cn(
                         "rounded-lg px-3 py-2.5 h-auto gap-3 text-muted-foreground transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/8",
                         isActive &&
-                          "border-l-[3px] border-primary bg-gradient-to-r from-primary/10 to-primary/5 shadow-[inset_0_1px_1px_rgba(206,163,89,0.15),0_0_16px_rgba(206,163,89,0.12)] font-semibold text-primary",
+                          "border-l-[3px] border-primary bg-gradient-to-r from-primary/10 to-primary/5 shadow-[inset_0_1px_1px_rgba(168,90,56,0.15),0_0_16px_rgba(168,90,56,0.12)] font-semibold text-primary",
                       )}
                     >
                       <Icon

@@ -49,7 +49,7 @@ export function RefundSummaryCards() {
         </div>
       </DarkCard>
       <GlassCard
-        icon={<Activity className="size-5 text-primary" />}
+        icon={<Activity className="size-5 text-foreground" />}
         iconBg="bg-primary/10"
         title="Request Breakdown"
         value={`${pending} Pending`}

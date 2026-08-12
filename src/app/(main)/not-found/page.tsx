@@ -40,7 +40,7 @@ export default function OrderNotFound() {
             />
             <button
               type="submit"
-              className="h-11 px-6 rounded-r-xl bg-primary text-card font-sans text-xs font-semibold hover:bg-[#bfa052] transition-colors whitespace-nowrap"
+              className="h-11 px-6 rounded-r-xl bg-primary text-card font-sans text-xs font-semibold hover:bg-primary/85 transition-colors whitespace-nowrap"
             >
               Track
             </button>
@@ -66,7 +66,7 @@ export default function OrderNotFound() {
           {/* Redirect CTA Navigation Action Button */}
           <Link
             href="/foods"
-            className="inline-flex h-11 items-center justify-center rounded-xl bg-primary px-6 font-sans text-xs font-semibold text-card transition-colors hover:bg-[#bfa052] shadow-sm"
+            className="inline-flex h-11 items-center justify-center rounded-xl bg-primary px-6 font-sans text-xs font-semibold text-card transition-colors hover:bg-primary/85 shadow-sm"
           >
             Back to Shopping
           </Link>

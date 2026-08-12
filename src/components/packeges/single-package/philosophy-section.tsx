@@ -37,7 +37,7 @@ export default function PhilosophySection({
         </p>
 
         {(pkg?.rule?.title || pkg?.packageCode) && (
-          <blockquote className="border-l-2 border-primary pl-3 text-xs italic text-primary/80 font-heading">
+          <blockquote className="border-l-2 border-primary/30 pl-3 text-xs italic text-primary/80 font-heading">
             &ldquo;{pkg?.rule?.title ?? pkg?.packageCode ?? "Healthy food, healthy life."}&rdquo;
           </blockquote>
         )}
@@ -45,7 +45,7 @@ export default function PhilosophySection({
 
       <div className="flex flex-col gap-3">
         <div className="bg-background border border-border/30 p-3.5 rounded-xl flex items-center gap-3">
-          <div className="p-2 bg-primary/10 rounded-lg text-primary shrink-0">
+          <div className="p-2 bg-primary/10 rounded-lg text-foreground shrink-0">
             <Utensils className="size-4" />
           </div>
 
@@ -61,7 +61,7 @@ export default function PhilosophySection({
         </div>
 
         <div className="bg-background border border-border/30 p-3.5 rounded-xl flex items-center gap-3">
-          <div className="p-2 bg-primary/10 rounded-lg text-primary shrink-0">
+          <div className="p-2 bg-primary/10 rounded-lg text-foreground shrink-0">
             <Zap className="size-4" />
           </div>
 

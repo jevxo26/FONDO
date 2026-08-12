@@ -111,7 +111,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
           {/* Key Metrics Grid (Updated to real data) */}
           <div className="mt-4 grid grid-cols-2 gap-3">
             <div className="rounded-xl bg-primary/[0.03] p-3 flex items-center gap-2.5">
-              <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-foreground">
                 <Calendar className="size-4" />
               </div>
               <div>
@@ -125,7 +125,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
             </div>
 
             <div className="rounded-xl bg-primary/[0.03] p-3 flex items-center gap-2.5">
-              <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-foreground">
                 <Utensils className="size-4" />
               </div>
               <div>
@@ -158,7 +158,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
 
           {/* Package Code */}
           <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Hash className="size-3.5 text-primary/60" />
+            <Hash className="size-3.5 text-muted-foreground" />
             <span>Code: {pkg.packageCode}</span>
           </div>
 

@@ -40,7 +40,7 @@ export function CardPreview({
     <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-6">
       <div className="border-b border-border pb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-primary" />
+          <Sparkles className="w-5 h-5 text-foreground" />
           <h2 className="text-base font-bold text-foreground">Live Package Card Preview</h2>
         </div>
         <span className="text-xs bg-primary/10 text-primary px-2.5 py-1 rounded-full font-medium">Customer View</span>
@@ -68,12 +68,12 @@ export function CardPreview({
             </div>
 
             <div className="p-4 space-y-3">
-              <span className="text-[11px] font-semibold text-primary uppercase">{selectedCategoryName}</span>
+              <span className="text-[11px] font-semibold text-muted-foreground uppercase">{selectedCategoryName}</span>
               <h3 className="text-base font-bold text-foreground line-clamp-1">{nameWatched || "Package Name"}</h3>
               <p className="text-xs text-muted-foreground line-clamp-2">{descriptionWatched || "No description provided."}</p>
               <div className="flex items-center gap-4 text-xs text-muted-foreground pt-1">
-                <span className="flex items-center gap-1 font-medium"><Clock className="w-3.5 h-3.5 text-primary" /> {durationWatched || 0} Days</span>
-                <span className="flex items-center gap-1 font-medium"><Utensils className="w-3.5 h-3.5 text-primary" /> {totalMealsCount} Meals</span>
+                <span className="flex items-center gap-1 font-medium"><Clock className="w-3.5 h-3.5 text-muted-foreground" /> {durationWatched || 0} Days</span>
+                <span className="flex items-center gap-1 font-medium"><Utensils className="w-3.5 h-3.5 text-muted-foreground" /> {totalMealsCount} Meals</span>
               </div>
             </div>
           </div>
@@ -89,7 +89,7 @@ export function CardPreview({
 
         <div className="md:col-span-2 bg-background border border-border rounded-2xl p-5 space-y-4">
           <h3 className="text-sm font-bold text-foreground flex items-center gap-2 border-b border-border pb-2">
-            <Utensils className="w-4 h-4 text-primary" /> Included Meals Preview
+            <Utensils className="w-4 h-4 text-foreground" /> Included Meals Preview
           </h3>
 
           <div className="space-y-3 max-h-80 overflow-y-auto pr-2">
@@ -102,7 +102,7 @@ export function CardPreview({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
                   {day?.meals?.map((meal, mIdx) => (
                     <div key={mIdx} className="bg-card p-2.5 rounded-lg border border-border/80 text-xs">
-                      <div className="flex justify-between items-center text-primary font-semibold mb-1 text-[11px]">
+                      <div className="flex justify-between items-center text-muted-foreground font-semibold mb-1 text-[11px]">
                         <span>{meal?.mealType}</span>
                         <span className="text-muted-foreground text-[10px]">{meal?.mealTime}</span>
                       </div>

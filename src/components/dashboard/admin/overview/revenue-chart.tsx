@@ -25,7 +25,7 @@ export function RevenueChart() {
             <h3 className="font-heading text-lg font-semibold text-foreground">Revenue</h3>
             <p className="mt-0.5 text-sm text-muted-foreground">Last 7 days</p>
           </div>
-          <span className="font-heading text-2xl font-bold text-primary">৳136.4K</span>
+          <span className="font-heading text-2xl font-bold text-foreground">৳136.4K</span>
         </div>
         <div className="mt-6 h-[220px]">
           <ResponsiveContainer width="100%" height="100%">

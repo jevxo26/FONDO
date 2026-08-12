@@ -55,7 +55,7 @@ export function SubscriptionReportSummaryCards() {
         </div>
       </GlassCard>
       <GlassCard
-        icon={<DollarSign className="size-5 text-primary" />}
+        icon={<DollarSign className="size-5 text-foreground" />}
         iconBg="bg-primary/10"
         title="Plan Distribution"
         value={topPlan[0]}

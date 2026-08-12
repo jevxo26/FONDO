@@ -111,7 +111,7 @@ export function HeroImage({ foods }: HeroImageProps) {
               onClick={() => api?.scrollTo(index)}
               className={`size-2 rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                 index === current
-                  ? "w-6 bg-primary shadow-[0_0_8px_rgba(206,163,89,0.4)]"
+                  ? "w-6 bg-primary shadow-[0_0_8px_rgba(168,90,56,0.4)]"
                   : "bg-primary/30 hover:bg-primary/50"
               }`}
             />

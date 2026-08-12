@@ -43,7 +43,7 @@ export function AddressFormDialog({ trigger }: Props) {
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 font-heading text-lg font-semibold">
-            <MapPin className="size-4 text-primary" /> Add Delivery Address
+            <MapPin className="size-4 text-foreground" /> Add Delivery Address
           </DialogTitle>
           <DialogDescription>
             Save this address so checkout is faster next time.

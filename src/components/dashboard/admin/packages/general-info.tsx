@@ -66,7 +66,7 @@ export function GeneralInfoSection({
   return (
     <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-5">
       <div className="border-b border-border pb-3 flex items-center gap-2">
-        <Layers className="w-5 h-5 text-primary" />
+        <Layers className="w-5 h-5 text-foreground" />
         <h2 className="text-base font-bold text-foreground">Package General Info</h2>
       </div>
 

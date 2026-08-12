@@ -33,7 +33,7 @@ export function PriceSummarySidebar({
   return (
     <div className="sticky top-6 bg-card p-6 rounded-2xl border border-border shadow-sm space-y-6">
       <div className="border-b border-border pb-3 flex items-center gap-2">
-        <DollarSign className="w-5 h-5 text-primary" />
+        <DollarSign className="w-5 h-5 text-foreground" />
         <h2 className="text-base font-bold text-foreground">Price & Summary</h2>
       </div>
 

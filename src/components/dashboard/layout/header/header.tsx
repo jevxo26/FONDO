@@ -67,7 +67,7 @@ export function DashboardHeader() {
               className="relative rounded-xl bg-primary/[0.04] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/12 hover:text-primary active:scale-[0.95]"
             >
               <Bell className="size-5" />
-              <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-primary ring-2 ring-background shadow-[0_0_8px_rgba(206,163,89,0.4)]" />
+              <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-primary ring-2 ring-background shadow-[0_0_8px_rgba(168,90,56,0.4)]" />
             </Button>
             <Button
               variant="ghost"
@@ -94,7 +94,7 @@ export function DashboardHeader() {
                     {roleLabel}
                   </p>
                 </div>
-                <Avatar className="size-9 ring-2 ring-primary/30 ring-offset-2 ring-offset-card shadow-[0_0_12px_rgba(206,163,89,0.15)]">
+                <Avatar className="size-9 ring-2 ring-primary/30 ring-offset-2 ring-offset-card shadow-[0_0_12px_rgba(168,90,56,0.15)]">
                   <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
                     {initials}
                   </AvatarFallback>

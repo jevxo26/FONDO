@@ -5,7 +5,7 @@ export default function DeliveryRituals() {
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="bg-card border border-border/20 rounded-2xl p-5 flex items-start gap-4 shadow-sm">
-        <div className="p-2.5 bg-primary/5 rounded-xl text-primary shrink-0">
+        <div className="p-2.5 bg-primary/5 rounded-xl text-foreground shrink-0">
           <Truck className="size-5" />
         </div>
         <div className="space-y-1">
@@ -19,7 +19,7 @@ export default function DeliveryRituals() {
         </div>
       </div>
       <div className="bg-card border border-border/20 rounded-2xl p-5 flex items-start gap-4 shadow-sm">
-        <div className="p-2.5 bg-primary/5 rounded-xl text-primary shrink-0">
+        <div className="p-2.5 bg-primary/5 rounded-xl text-foreground shrink-0">
           <Sparkles className="size-5" />
         </div>
         <div className="space-y-1">

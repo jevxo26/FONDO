@@ -10,7 +10,7 @@ export function RiderFaqSection() {
     <section className="py-(--space-section) bg-background border-b border-border">
       <div className="wrapper px-(--space-container) space-y-12 max-w-4xl">
         <div className="text-center space-y-3">
-          <span className="text-xs font-bold uppercase tracking-wider text-primary">
+          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
             Rider Assistance
           </span>
           <h2 className="font-heading text-3xl sm:text-5xl tracking-tight text-foreground">
@@ -31,7 +31,7 @@ export function RiderFaqSection() {
                 >
                   <span>{faq.q}</span>
                   <ChevronDown
-                    className={`size-5 text-primary transition-transform ${isOpen ? "rotate-180" : ""}`}
+                    className={`size-5 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`}
                   />
                 </button>
                 {isOpen && (

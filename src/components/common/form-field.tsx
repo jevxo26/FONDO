@@ -69,7 +69,7 @@ export function FormField({
     <Field data-invalid={!!error} className={className}>
       <FieldLabel htmlFor={htmlFor}>
         {label}
-        {required && <span className="ml-0.5 text-primary">*</span>}
+        {required && <span className="ml-0.5 text-muted-foreground">*</span>}
       </FieldLabel>
       {children}
       {hint && !error && <p className="text-xs text-muted-foreground">{hint}</p>}

@@ -17,7 +17,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { useAppSelector } from "@/store/store";
 import { useCart } from "@/store/api/slices/cart-api";
 import { useFavorites } from "@/hooks/use-favorites";
-import { navIcon, navIconPill } from "./pill-styles";
 import {
   ChevronDown,
   Heart,
@@ -70,16 +69,16 @@ export function NavActions() {
     <div className="flex items-center gap-2">
       <Link
         href="/wishlist"
-        className={cn(navIconPill, "text-gold-strong")}
+        className={cn("nav-icon-pill", "text-foreground")}
       >
-        <Heart className={cn(navIcon)} />
+        <Heart className="nav-icon" />
         {favoritesCount > 0 && (
           <motion.span
             key={`fav-badge-${favoritesCount}`}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 500, damping: 15 }}
-            className="absolute -top-2 -right-1 flex h-[20px] min-w-[20px] items-center justify-center rounded-full bg-gold-gradient px-[5px] text-[11px] font-bold text-primary-foreground leading-none ring-2 ring-background"
+            className="absolute -top-2 -right-1 flex h-[20px] min-w-[20px] items-center justify-center rounded-full bg-primary px-[5px] text-[11px] font-bold text-primary-foreground leading-none ring-2 ring-background"
           >
             {favoritesCount > 9 ? "9+" : favoritesCount}
           </motion.span>
@@ -87,7 +86,7 @@ export function NavActions() {
       </Link>
       <Link
         href="/cart"
-        className={cn(navIconPill, "text-gold-strong")}
+        className={cn("nav-icon-pill", "text-foreground")}
       >
         <motion.span
           key={`cart-icon-${cartCount}`}
@@ -95,7 +94,7 @@ export function NavActions() {
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           className="flex items-center justify-center"
         >
-          <ShoppingCart className={cn(navIcon)} />
+          <ShoppingCart className="nav-icon" />
         </motion.span>
         {cartCount > 0 && (
           <motion.span
@@ -103,7 +102,7 @@ export function NavActions() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 500, damping: 15 }}
-            className="absolute -top-2 -right-1 flex h-[20px] min-w-[20px] items-center justify-center rounded-full bg-gold-gradient px-[5px] text-[11px] font-bold text-primary-foreground leading-none ring-2 ring-background"
+            className="absolute -top-2 -right-1 flex h-[20px] min-w-[20px] items-center justify-center rounded-full bg-primary px-[5px] text-[11px] font-bold text-primary-foreground leading-none ring-2 ring-background"
           >
             {cartCount > 9 ? "9+" : cartCount}
           </motion.span>
@@ -114,7 +113,7 @@ export function NavActions() {
         <DropdownMenu>
           <DropdownMenuTrigger className="hidden lg:block outline-none">
             <div className="flex cursor-pointer items-center gap-3 rounded-xl bg-foreground px-3 py-1.5 pr-2 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-foreground/90 active:scale-[0.98]">
-              <Avatar className="size-7 ring-2 ring-primary/40 ring-offset-1 ring-offset-foreground shadow-[0_0_12px_rgba(206,163,89,0.2)]">
+              <Avatar className="size-7 ring-2 ring-primary/40 ring-offset-1 ring-offset-foreground shadow-[0_0_12px_rgba(168,90,56,0.2)]">
                 <AvatarFallback className="bg-primary/10 text-[10px] font-bold text-primary">
                   {user.avatar ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -136,16 +135,16 @@ export function NavActions() {
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-60 p-1.5">
-            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-primary/[0.03] to-primary/[0.01] p-3 mb-1">
-              <Avatar className="size-9 ring-2 ring-primary/30 ring-offset-1 ring-offset-card shadow-[0_0_16px_rgba(206,163,89,0.15)]">
-                <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
+            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-foreground/[0.03] to-foreground/[0.01] p-3 mb-1">
+              <Avatar className="size-9 ring-2 ring-primary/30 ring-offset-1 ring-offset-card shadow-[0_0_16px_rgba(168,90,56,0.15)]">
+                <AvatarFallback className="bg-secondary text-xs font-bold text-foreground">
                   {initials}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 leading-tight">
                 <span className="truncate text-sm font-semibold text-foreground">{fullName}</span>
                 <span className="truncate text-[10px] text-muted-foreground">{user.email}</span>
-                <span className="mt-0.5 truncate text-[9px] font-bold uppercase tracking-wider text-primary">
+                <span className="mt-0.5 truncate text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
                   {roleLabel}
                 </span>
               </div>
@@ -178,8 +177,8 @@ export function NavActions() {
                     className="flex items-center gap-3 py-2.5 cursor-pointer"
                     onClick={() => item.href && router.push(item.href)}
                   >
-                    <div className="flex size-8 items-center justify-center rounded-lg bg-primary/8">
-                      <Icon className="size-4 text-primary" />
+                    <div className="flex size-8 items-center justify-center rounded-lg bg-secondary">
+                      <Icon className="size-4 text-foreground" />
                     </div>
                     <div>
                       <p className="text-sm font-medium">{item.label}</p>
@@ -190,7 +189,7 @@ export function NavActions() {
               })}
             </DropdownMenuGroup>
 
-            <DropdownMenuSeparator className="bg-gradient-to-r from-primary/20 via-primary/10 to-transparent" />
+            <DropdownMenuSeparator className="bg-gradient-to-r from-foreground/20 via-foreground/10 to-transparent" />
 
             <DropdownMenuItem
               className="flex items-center gap-3 py-2.5 text-destructive cursor-pointer"

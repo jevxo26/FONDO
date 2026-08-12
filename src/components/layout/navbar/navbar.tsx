@@ -21,7 +21,7 @@ export function Navbar() {
 
   const linkClasses = cn(
     navigationMenuTriggerStyle(),
-    "text-[16px] font-semibold text-foreground/75 relative after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-gold-gradient after:transition-transform after:duration-300",
+    "text-[16px] font-semibold text-foreground/75 relative after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-primary after:transition-transform after:duration-300",
     "transition-colors duration-300 hover:text-primary hover:after:scale-x-100 data-[active]:text-primary data-[active]:after:scale-x-100",
   );
 
@@ -30,8 +30,8 @@ export function Navbar() {
       className={cn(
         "sticky top-0 z-50 border-b border-primary/10 bg-background/85 backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
         scrolled
-          ? "shadow-[0_16px_48px_-18px_rgba(206,163,89,0.25)]"
-          : "shadow-[0_12px_40px_-16px_rgba(206,163,89,0.18)]",
+          ? "shadow-[0_16px_48px_-18px_rgba(168,90,56,0.25)]"
+          : "shadow-[0_12px_40px_-16px_rgba(168,90,56,0.18)]",
       )}
     >
       <div className="wrapper">

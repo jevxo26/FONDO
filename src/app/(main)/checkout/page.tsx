@@ -12,7 +12,7 @@ export default function CheckoutPage() {
       <div className="wrapper relative z-10">
         <div className="flex items-center gap-3 mb-8">
           <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/15">
-            <ShoppingCart className="size-5 text-primary" />
+            <ShoppingCart className="size-5 text-foreground" />
           </div>
           <div>
             <h1 className="font-heading text-3xl font-normal text-foreground">Checkout</h1>

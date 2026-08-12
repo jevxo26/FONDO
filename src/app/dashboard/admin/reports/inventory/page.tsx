@@ -67,7 +67,7 @@ export default function ReportsInventoryPage() {
           <div className="mt-2 text-sm text-white/70">{lowStock} more at low stock levels</div>
         </DarkCard>
         <GlassCard
-          icon={<RefreshCw className="size-5 text-primary" />}
+          icon={<RefreshCw className="size-5 text-foreground" />}
           title="Low Stock"
           value={lowStock.toString()}
           subtitle="Items below minimum threshold"

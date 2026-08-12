@@ -26,7 +26,7 @@ export function BestSellers({ foods }: BestSellersProps) {
                 nativeButton={false}
                 render={<Link href="/foods" />}
               >
-                <Sparkles className="size-3.5 text-primary" />
+                <Sparkles className="size-3.5 text-muted-foreground" />
                 View Full Menu
                 <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
               </Button>
@@ -54,7 +54,7 @@ export function BestSellers({ foods }: BestSellersProps) {
             nativeButton={false}
             render={<Link href="/foods" />}
           >
-            <Sparkles className="size-3.5 text-primary" />
+            <Sparkles className="size-3.5 text-muted-foreground" />
             View Full Menu
             <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
           </Button>

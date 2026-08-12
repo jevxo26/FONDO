@@ -23,7 +23,7 @@ export function WalletWithdrawForm({ onWithdraw, isPending }: WalletWithdrawForm
   return (
     <div className="rounded-3xl border border-border/40 bg-card p-6 shadow-[var(--shadow-card)]">
       <h3 className="flex items-center gap-2 font-heading text-lg font-bold text-foreground">
-        <ArrowUpRight className="size-4 text-primary" /> Withdraw
+        <ArrowUpRight className="size-4 text-foreground" /> Withdraw
       </h3>
       <p className="mt-1 text-sm text-muted-foreground">Withdraw funds to your bank or mobile banking.</p>
       <div className="mt-4 space-y-3">

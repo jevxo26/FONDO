@@ -35,7 +35,7 @@ const image = pkg?.coverImage || pkg?.thumbnail;
 
         <div className="absolute bottom-0 left-0 p-6 lg:p-10 w-full space-y-3 text-white">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="bg-primary text-primary-foreground px-3.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-[0.15em]">
+            <span className="bg-primary/10 text-primary px-3.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-[0.15em]">
               {pkg?.packageCategory?.name ?? "Meal Package"}
             </span>
 

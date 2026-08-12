@@ -10,7 +10,7 @@ export default function FeaturedStories() {
         {/* Header Row with Navigation Controls */}
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-primary font-sans text-xs font-bold uppercase tracking-widest block">
+            <span className="text-muted-foreground font-sans text-xs font-bold uppercase tracking-widest block">
               Subscribers
             </span>
             <h2 className="font-heading text-2xl md:text-4xl font-normal text-foreground">

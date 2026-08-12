@@ -9,7 +9,7 @@ export default function OurMission() {
     <section className="py-[var(--space-section)] bg-foreground text-background border-t border-border/10">
       <div className="wrapper max-w-4xl mx-auto text-center space-y-8 flex flex-col items-center">
         {/* Decorative Icon using your global gold primary color */}
-        <div className="text-primary bg-primary/10 p-3.5 rounded-full border border-primary/20">
+        <div className="text-foreground bg-primary/10 p-3.5 rounded-full border border-primary/20">
           <Compass className="size-6" />
         </div>
 
@@ -29,7 +29,7 @@ export default function OurMission() {
 
         {/* Micro Tracking Badge */}
         <div className="pt-4">
-          <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-primary">
+          <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground">
             Authenticity • Integrity • Sustainability
           </span>
         </div>

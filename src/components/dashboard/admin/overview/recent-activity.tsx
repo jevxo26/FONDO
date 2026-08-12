@@ -49,9 +49,9 @@ const activities = [
 ];
 
 const iconConfig: Record<string, { bg: string; color: string }> = {
-  order: { bg: "bg-primary/10", color: "text-primary" },
+  order: { bg: "bg-primary/10", color: "text-foreground" },
   payment: { bg: "bg-success/10", color: "text-success" },
-  user: { bg: "bg-primary/10", color: "text-primary" },
+  user: { bg: "bg-primary/10", color: "text-foreground" },
   alert: { bg: "bg-destructive/10", color: "text-destructive" },
 };
 
@@ -80,7 +80,7 @@ export function RecentActivity() {
                 <div className="min-w-0 flex-1">
                   <p className="text-sm text-foreground">{activity.text}</p>
                   <div className="mt-0.5 flex items-center gap-1">
-                    <Clock className="size-3 text-primary/50" />
+                    <Clock className="size-3 text-muted-foreground" />
                     <span className="text-[11px] text-muted-foreground">{activity.time}</span>
                   </div>
                 </div>

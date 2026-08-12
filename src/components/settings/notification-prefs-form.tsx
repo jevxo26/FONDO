@@ -112,7 +112,7 @@ export function NotificationPrefsForm() {
       {PREFS.map(({ key, label, description, icon: Icon }) => (
         <div key={key} className="flex items-center justify-between gap-4 p-4 md:p-5">
           <div className="flex items-start gap-3">
-            <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-foreground">
               <Icon className="size-4" />
             </div>
             <div>

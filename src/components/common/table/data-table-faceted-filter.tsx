@@ -27,7 +27,7 @@ export function DataTableFacetedFilter<TData>({
         {icon ?? <Filter className="size-4" />}
         {title}
         {currentValue && (
-          <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary">
+          <span className="ml-1 rounded-full bg-secondary px-1.5 py-0.5 text-[10px] text-foreground">
             {options.find((o) => o.value === currentValue)?.label ?? currentValue}
           </span>
         )}

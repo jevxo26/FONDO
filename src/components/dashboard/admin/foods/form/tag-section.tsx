@@ -61,7 +61,7 @@ export function TagSection({
                   className={cn(
                     "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
                     selected
-                      ? "border-primary bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(206,163,89,0.25)]"
+                      ? "border-primary bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(168,90,56,0.25)]"
                       : "border-border bg-muted text-muted-foreground hover:border-primary/40",
                   )}
                 >

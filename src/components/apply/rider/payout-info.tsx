@@ -18,7 +18,7 @@ export function PayoutDocInfo({ register, errors }: Props) {
             04
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
-            <Wallet className="size-5 text-primary" /> Payout & Wallet Setup
+            <Wallet className="size-5 text-foreground" /> Payout & Wallet Setup
           </h3>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -70,7 +70,7 @@ export function PayoutDocInfo({ register, errors }: Props) {
             05
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
-            <UploadCloud className="size-5 text-primary" /> ID & License Uploads
+            <UploadCloud className="size-5 text-foreground" /> ID & License Uploads
           </h3>
         </div>
         <div className="border-2 border-dashed border-border rounded-2xl p-6 text-center space-y-2 bg-background/50">

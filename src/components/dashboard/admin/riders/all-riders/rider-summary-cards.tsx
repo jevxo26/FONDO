@@ -61,7 +61,7 @@ export function RiderSummaryCards() {
       </div>
       <div className="col-span-12 lg:col-span-6">
         <GlassCard
-          icon={<MapPin className="size-5 text-primary" />}
+          icon={<MapPin className="size-5 text-foreground" />}
           iconBg="bg-primary/10"
           title="Zone Coverage"
           value={`${zoneCount} Zones`}
@@ -75,7 +75,7 @@ export function RiderSummaryCards() {
                 className="flex items-center justify-between rounded-lg bg-muted px-3 py-2"
               >
                 <span className="flex items-center gap-2 text-xs font-semibold">
-                  <MapPin className="size-3 text-primary" /> {z.name}
+                  <MapPin className="size-3 text-muted-foreground" /> {z.name}
                 </span>
                 <span className="text-xs font-bold">{z.count} riders</span>
               </div>

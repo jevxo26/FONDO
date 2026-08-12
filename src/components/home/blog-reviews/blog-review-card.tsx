@@ -57,7 +57,7 @@ export function BlogReviewCard({
         </div>
         <h3
           className={cn(
-            "font-heading font-semibold leading-snug text-foreground line-clamp-2 group-hover:text-primary transition-colors duration-300",
+            "font-heading font-semibold leading-snug text-foreground line-clamp-2 group-hover:text-primary-foreground transition-colors duration-300",
             featured ? "text-2xl" : "text-base",
           )}
         >

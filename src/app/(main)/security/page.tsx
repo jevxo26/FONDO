@@ -19,7 +19,7 @@ function SectionHeading({
 }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+      <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-foreground">
         <Icon className="size-4" />
       </div>
       <div>

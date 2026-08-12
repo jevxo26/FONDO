@@ -30,7 +30,7 @@ export default function SettingsPage() {
 
         <SectionReveal className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-foreground">
               <UserRound className="size-4" />
             </div>
             <div>
@@ -45,7 +45,7 @@ export default function SettingsPage() {
 
         <SectionReveal className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-foreground">
               <BellRing className="size-4" />
             </div>
             <div>

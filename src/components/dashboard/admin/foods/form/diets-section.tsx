@@ -20,7 +20,7 @@ export function DietsSection({ register, errors, control }: DietsSectionProps) {
     <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
       <div className="flex items-center justify-between border-b border-border pb-3">
         <div className="flex items-center gap-2">
-          <Apple className="size-5 text-primary" />
+          <Apple className="size-5 text-foreground" />
           <h2 className="text-base font-bold text-foreground">Diets</h2>
         </div>
         <Button type="button" variant="outline" size="sm" onClick={() => append({ dietType: "" })}>

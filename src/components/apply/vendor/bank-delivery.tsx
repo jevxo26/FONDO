@@ -20,7 +20,7 @@ export function BankDeliveryTerms({ register, errors, isSubmitting }: Props) {
             07
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
-            <Landmark className="size-5 text-primary" /> Bank & Financial Details
+            <Landmark className="size-5 text-foreground" /> Bank & Financial Details
           </h3>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -84,7 +84,7 @@ export function BankDeliveryTerms({ register, errors, isSubmitting }: Props) {
             08
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
-            <Truck className="size-5 text-primary" /> Options & Terms
+            <Truck className="size-5 text-foreground" /> Options & Terms
           </h3>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -45,7 +45,7 @@ export function FormSectionCard({
               {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
             </div>
             {count !== undefined && count > 0 && (
-              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary ring-1 ring-primary/15">
+              <span className="rounded-full bg-secondary px-2 py-0.5 text-[11px] font-semibold text-foreground ring-1 ring-primary/15">
                 {count}
               </span>
             )}
@@ -53,7 +53,7 @@ export function FormSectionCard({
           {action}
         </header>
 
-        <div className="mt-4 h-px w-full bg-gradient-to-r from-primary/40 via-primary/30 to-transparent" />
+        <div className="mt-4 h-px w-full bg-gradient-to-r from-foreground/40 via-foreground/30 to-transparent" />
 
         <div className="mt-5">{children}</div>
       </div>

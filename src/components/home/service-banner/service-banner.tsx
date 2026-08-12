@@ -18,7 +18,7 @@ export function ServiceBanner() {
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-foreground/90 via-primary-foreground/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-overlay/95 via-overlay/60 to-transparent" />
 
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute -top-20 -right-20 size-[300px] rounded-full bg-primary/10 blur-3xl" />
@@ -34,7 +34,7 @@ export function ServiceBanner() {
                 transition={{ duration: 0.5, delay: 0.1 }}
                 className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/30 bg-primary/15 px-3 py-1.5"
               >
-                <div className="size-1.5 rotate-45 bg-primary" />
+                <div className="size-1.5 rotate-45 bg-primary/30" />
                 <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-background">
                   Tonight&apos;s service is open
                 </span>

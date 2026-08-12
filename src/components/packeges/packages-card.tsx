@@ -35,7 +35,7 @@ export default function PackageCard({
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
 
-          <span className="absolute top-3 left-3 bg-primary text-primary-foreground text-[10px] font-semibold px-2.5 py-1 rounded-lg shadow-sm">
+          <span className="absolute top-3 left-3 bg-primary/10 text-primary text-[10px] font-semibold px-2.5 py-1 rounded-lg shadow-sm">
             {pkg.packageCategory?.name ?? "Meal Plan"}
           </span>
 
@@ -69,17 +69,17 @@ export default function PackageCard({
           {/* Highlights Grid */}
           <div className="grid grid-cols-3 gap-2 text-center bg-muted/50 rounded-xl p-2.5 border border-border/40">
             <div>
-              <Clock className="mx-auto mb-1 size-3.5 text-primary" />
+              <Clock className="mx-auto mb-1 size-3.5 text-muted-foreground" />
               <p className="text-[11px] font-semibold text-foreground">{pkg.durationDays} Days</p>
             </div>
 
             <div>
-              <Utensils className="mx-auto mb-1 size-3.5 text-primary" />
+              <Utensils className="mx-auto mb-1 size-3.5 text-muted-foreground" />
               <p className="text-[11px] font-semibold text-foreground">{pkg.totalMeals} Meals</p>
             </div>
 
             <div>
-              <Settings className="mx-auto mb-1 size-3.5 text-primary" />
+              <Settings className="mx-auto mb-1 size-3.5 text-muted-foreground" />
               <p className="text-[11px] font-semibold text-foreground truncate">{pkg.packageType}</p>
             </div>
           </div>

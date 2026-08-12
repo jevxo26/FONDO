@@ -64,7 +64,7 @@ export function Logo({
       >
         <span
           className={cn(
-            "font-heading font-bold tracking-tight text-gold-gradient-strong",
+            "font-heading font-bold tracking-tight text-primary",
             textSize,
             textClassName,
           )}

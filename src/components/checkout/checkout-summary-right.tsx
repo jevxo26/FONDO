@@ -70,7 +70,7 @@ export function CheckoutSummary({
           <ShieldCheck className="size-3.5 text-success" /> 100% Secure
         </div>
         <div className="flex items-center gap-1">
-          <Truck className="size-3.5 text-primary" /> Safe Delivery
+          <Truck className="size-3.5 text-muted-foreground" /> Safe Delivery
         </div>
       </div>
     </div>

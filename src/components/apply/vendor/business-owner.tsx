@@ -19,7 +19,7 @@ export function BusinessOwnerInfo({ register, errors }: Props) {
             01
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
-            <Building2 className="size-5 text-primary" /> Business Information
+            <Building2 className="size-5 text-foreground" /> Business Information
           </h3>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -94,7 +94,7 @@ export function BusinessOwnerInfo({ register, errors }: Props) {
             02
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
-            <User className="size-5 text-primary" /> Owner Information
+            <User className="size-5 text-foreground" /> Owner Information
           </h3>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

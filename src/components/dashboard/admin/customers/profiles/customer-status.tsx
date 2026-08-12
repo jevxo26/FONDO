@@ -12,7 +12,7 @@ export function StatusMetrics({ activeCount, suspendedCount, totalCustomers }: S
 
   return (
     <GlassCard
-      icon={<Users className="size-5 text-primary" />}
+      icon={<Users className="size-5 text-foreground" />}
       iconBg="bg-primary/10"
       title="Customer Status"
       value={`${activeCount} Active`}

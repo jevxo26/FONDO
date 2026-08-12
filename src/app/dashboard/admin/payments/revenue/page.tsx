@@ -54,7 +54,7 @@ export default function PlatformRevenuePage() {
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)] lg:col-span-2">
           <h2 className="mb-2 flex items-center gap-2 font-heading text-lg font-bold text-foreground">
-            <ShoppingBag className="size-4 text-primary" /> Revenue Breakdown
+            <ShoppingBag className="size-4 text-foreground" /> Revenue Breakdown
           </h2>
           {isLoading ? (
             <p className="text-sm text-muted-foreground">Loading revenue data...</p>
@@ -66,7 +66,7 @@ export default function PlatformRevenuePage() {
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                   <YAxis tick={{ fontSize: 10 }} />
                   <Tooltip />
-                  <Bar dataKey="value" fill="#ce9d59" name="Revenue (৳)" />
+                  <Bar dataKey="value" fill="#A85A38" name="Revenue (৳)" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -83,8 +83,8 @@ export default function PlatformRevenuePage() {
               </div>
             ))}
             <div className="flex items-center justify-between rounded-xl bg-primary/10 px-4 py-3">
-              <span className="text-sm font-bold text-primary">Total</span>
-              <span className="font-heading text-lg font-bold text-primary">৳{Number(data?.totalRevenue ?? 0).toLocaleString()}</span>
+              <span className="text-sm font-bold text-foreground">Total</span>
+              <span className="font-heading text-lg font-bold text-foreground">৳{Number(data?.totalRevenue ?? 0).toLocaleString()}</span>
             </div>
           </div>
         </div>

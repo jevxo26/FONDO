@@ -65,7 +65,7 @@ export function DeviceRegistry() {
           className="flex items-center justify-between gap-4 rounded-2xl border border-border/40 bg-card p-4 shadow-[var(--shadow-card)]"
         >
           <div className="flex items-center gap-3">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-foreground">
               <DeviceIcon device={device} />
             </div>
             <div className="min-w-0">

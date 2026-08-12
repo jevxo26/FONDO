@@ -94,7 +94,7 @@ function DayMealsBuilder({ dayIndex, control, register, errors, foods }: DayMeal
     <div className="space-y-4 pt-2">
       <div className="flex justify-between items-center border-b border-border/60 pb-2">
         <span className="text-xs font-bold text-foreground uppercase tracking-wide flex items-center gap-1.5">
-          <Utensils className="w-3.5 h-3.5 text-primary" /> Meals for Day #{dayIndex + 1}
+          <Utensils className="w-3.5 h-3.5 text-foreground" /> Meals for Day #{dayIndex + 1}
         </span>
         <button
           type="button"
@@ -111,7 +111,7 @@ function DayMealsBuilder({ dayIndex, control, register, errors, foods }: DayMeal
           return (
             <div key={field.id} className="p-4 border border-border/80 rounded-xl bg-muted/20 space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-xs font-bold text-primary">Meal #{mealIndex + 1}</span>
+                <span className="text-xs font-bold text-muted-foreground">Meal #{mealIndex + 1}</span>
                 {fields.length > 1 && (
                   <button type="button" onClick={() => remove(mealIndex)} className="text-muted-foreground hover:text-red-500 transition">
                     <Trash2 className="w-3.5 h-3.5" />
@@ -157,7 +157,7 @@ export function DaysScheduleSection({ control, register, errors, daysWatched, fo
     <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-5">
       <div className="flex items-center justify-between border-b border-border pb-3">
         <div className="flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-primary" />
+          <Calendar className="w-5 h-5 text-foreground" />
           <h2 className="text-base font-bold text-foreground">Days Schedule ({fields.length} Days)</h2>
         </div>
         <button

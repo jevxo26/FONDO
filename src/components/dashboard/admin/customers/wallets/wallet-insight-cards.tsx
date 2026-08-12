@@ -18,7 +18,7 @@ export function WalletInsightCards() {
       </DarkCard>
 
       <GlassCard
-        icon={<ShieldCheck className="size-5 text-primary" />}
+        icon={<ShieldCheck className="size-5 text-foreground" />}
         iconBg="bg-primary/10"
         title="Wallet Distribution by Tier"
         value="3 tiers"
@@ -28,7 +28,7 @@ export function WalletInsightCards() {
           <div>
             <div className="mb-1.5 flex justify-between text-sm">
               <span className="font-bold">Platinum Elite</span>
-              <span className="font-bold text-primary">৳2.1M</span>
+              <span className="font-bold text-foreground">৳2.1M</span>
             </div>
             <div className="h-2.5 w-full rounded-full bg-muted">
               <div className="h-full w-[75%] rounded-full bg-primary" />
@@ -56,7 +56,7 @@ export function WalletInsightCards() {
       </GlassCard>
 
       <GlassCard
-        icon={<Smartphone className="size-5 text-primary" />}
+        icon={<Smartphone className="size-5 text-foreground" />}
         iconBg="bg-primary/10"
         title="Top-Up Channels"
         value="3 methods"
@@ -68,7 +68,7 @@ export function WalletInsightCards() {
             bKash (42%)
           </div>
           <div className="flex items-center gap-2 rounded-full bg-primary/5 px-4 py-2 text-sm ring-1 ring-primary/10 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/10">
-            <CreditCard className="size-4 text-primary" />
+            <CreditCard className="size-4 text-foreground" />
             Credit Card (35%)
           </div>
           <div className="flex items-center gap-2 rounded-full bg-primary/5 px-4 py-2 text-sm ring-1 ring-primary/10 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/10">

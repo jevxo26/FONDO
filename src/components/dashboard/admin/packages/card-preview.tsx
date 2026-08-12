@@ -1,7 +1,6 @@
-import React from "react";
-import { Sparkles, Tag, Clock, Utensils } from "lucide-react";
 import type { PackageFormValues } from "@/lib/schema/package-schema";
 import type { Food } from "@/types/food";
+import { Clock, Sparkles, Tag, Utensils } from "lucide-react";
 
 interface CardPreviewProps {
   thumbnailWatched?: string;
@@ -83,7 +82,9 @@ export function CardPreview({
               <span className="text-xs text-muted-foreground line-through block">৳{price}</span>
               <span className="text-lg font-bold text-primary">৳{discountPrice}</span>
             </div>
-            <button type="button" className="px-4 py-2 text-xs font-semibold bg-primary text-primary-foreground rounded-lg">Subscribe</button>
+            <button type="button" className="px-4 py-2 text-xs font-semibold bg-primary text-primary-foreground rounded-lg">
+              Subscribe
+            </button>
           </div>
         </div>
 
@@ -97,7 +98,9 @@ export function CardPreview({
               <div key={idx} className="bg-muted/30 p-3 rounded-xl border border-border/60 space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-xs font-bold text-foreground">{day?.title || `Day ${idx + 1}`}</span>
-                  <span className="text-[10px] text-muted-foreground bg-background px-2 py-0.5 rounded border border-border">{day?.meals?.length || 0} Meals</span>
+                  <span className="text-[10px] text-muted-foreground bg-background px-2 py-0.5 rounded border border-border">
+                    {day?.meals?.length || 0} Meals
+                  </span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
                   {day?.meals?.map((meal, mIdx) => (

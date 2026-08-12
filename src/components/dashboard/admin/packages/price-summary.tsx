@@ -1,7 +1,6 @@
 import React from "react";
 import { DollarSign } from "lucide-react";
-import type { FieldErrors } from "react-hook-form";
-import { UseFormRegister } from "react-hook-form";
+import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { inputStyles, PackageFormValues } from "@/lib/schema/package-schema";
 import { FormField } from "@/components/common/form-field";
 
@@ -45,7 +44,7 @@ export function PriceSummarySidebar({
         >
           <input
             type="number"
-            {...register("durationDays")}
+            {...register("durationDays", { valueAsNumber: true })}
             form="package-form"
             disabled={packageTypeWatched !== "CUSTOM"}
             className={`${inputStyles} ${packageTypeWatched !== "CUSTOM" ? "bg-muted/50 cursor-not-allowed" : ""}`}
@@ -53,15 +52,34 @@ export function PriceSummarySidebar({
         </FormField>
 
         <FormField label="Standard Price (BDT)" error={errors.price} required>
-          <input type="number" {...register("price")} form="package-form" className={`${inputStyles} bg-muted/50`} readOnly />
+          <input
+            type="number"
+            {...register("price", { valueAsNumber: true })}
+            form="package-form"
+            className={`${inputStyles} bg-muted/50`}
+            readOnly
+          />
         </FormField>
 
         <FormField label="Discount (%)" error={errors.discountPercent} required>
-          <input type="number" {...register("discountPercent")} form="package-form" className={inputStyles} min={0} max={100} />
+          <input
+            type="number"
+            {...register("discountPercent", { valueAsNumber: true })}
+            form="package-form"
+            className={inputStyles}
+            min={0}
+            max={100}
+          />
         </FormField>
 
         <FormField label="Discounted Price (BDT)" error={errors.discountPrice} required>
-          <input type="number" {...register("discountPrice")} form="package-form" className={`${inputStyles} bg-muted/50`} readOnly />
+          <input
+            type="number"
+            {...register("discountPrice", { valueAsNumber: true })}
+            form="package-form"
+            className={`${inputStyles} bg-muted/50`}
+            readOnly
+          />
         </FormField>
       </div>
 

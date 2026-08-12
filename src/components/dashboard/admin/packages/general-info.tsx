@@ -1,12 +1,46 @@
 import React, { useEffect, useState } from "react";
-import { Layers, Store } from "lucide-react";
-import type { FieldErrors, UseFormWatch, UseFormRegister, UseFormSetValue } from "react-hook-form";
+import { Layers, Store, RefreshCw } from "lucide-react";
+import type {
+  FieldErrors,
+  UseFormWatch,
+  UseFormRegister,
+  UseFormSetValue,
+} from "react-hook-form";
 import { inputStyles, PackageFormValues } from "@/lib/schema/package-schema";
 import { FormField } from "@/components/common/form-field";
 import { PackageCategory } from "@prisma/client";
 import ImageUploadField from "@/components/common/image-upload";
 import type { AdminVendorOption } from "@/types/admin-food";
 import { useUploadImage } from "@/store/api/slices/image-upload-api";
+
+interface GeneralInfoSectionProps {
+  register: UseFormRegister<PackageFormValues>;
+  errors: FieldErrors<PackageFormValues>;
+  packageTypeWatched: string;
+  setValue: UseFormSetValue<PackageFormValues>;
+  categories?: PackageCategory[];
+  watch: UseFormWatch<PackageFormValues>;
+  vendors?: AdminVendorOption[];
+  isEditMode?: boolean;
+}
+
+// Helper utility to generate package code dynamically
+const generatePackageCode = (name: string, type: string) => {
+  if (!name) return "";
+  
+  // Extract clean initials or short codes from words (e.g., "Weight Gain" -> "WG")
+  const initials = name
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word[0].toUpperCase())
+    .join("")
+    .slice(0, 4);
+
+  const typeCode = type ? type.substring(0, 3).toUpperCase() : "PKG";
+  const randomSuffix = Math.floor(1000 + Math.random() * 9000); // 4-digit numeric code
+
+  return `PKG-${initials}-${typeCode}-${randomSuffix}`;
+};
 
 export function GeneralInfoSection({
   register,
@@ -16,35 +50,43 @@ export function GeneralInfoSection({
   categories,
   watch,
   vendors,
-}: {
-  register: UseFormRegister<PackageFormValues>;
-  errors: FieldErrors<PackageFormValues>;
-  packageTypeWatched: string;
-  setValue: UseFormSetValue<PackageFormValues>;
-  categories?: PackageCategory[];
-  watch: UseFormWatch<PackageFormValues>;
-  vendors?: AdminVendorOption[];
-}) {
+  isEditMode = false,
+}: GeneralInfoSectionProps) {
   const nameValue = watch("name");
-  
-  // ইন্ডিভিজুয়াল লোডিং হ্যান্ডেল করার জন্য স্টেট
-  const [uploadingField, setUploadingField] = useState<"thumbnail" | "coverImage" | null>(null);
+  const slugValue = watch("slug");
+  const packageCodeValue = watch("packageCode");
 
-  // Custom Wrapper Hook
+  const [uploadingField, setUploadingField] = useState<"thumbnail" | "coverImage" | null>(null);
   const { mutateAsync: uploadImageApi } = useUploadImage();
 
-  // Auto-generate slug whenever "name" changes
+  // 1. Auto-generate Slug when name changes
   useEffect(() => {
-    if (typeof nameValue === "string") {
+    if (typeof nameValue === "string" && (!isEditMode || !slugValue)) {
       const generatedSlug = nameValue
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)+/g, "");
       setValue("slug", generatedSlug, { shouldValidate: true });
     }
-  }, [nameValue, setValue]);
+  }, [nameValue, isEditMode, setValue]);
 
-  // Image Upload Handler
+  // 2. Auto-generate Package Code when Name or Package Type changes
+  useEffect(() => {
+    if (typeof nameValue === "string" && nameValue.trim().length > 0) {
+      // Generate only if packageCode is empty OR in create mode
+      if (!packageCodeValue || !isEditMode) {
+        const newCode = generatePackageCode(nameValue, packageTypeWatched);
+        setValue("packageCode", newCode, { shouldValidate: true });
+      }
+    }
+  }, [nameValue, packageTypeWatched, isEditMode, setValue]);
+
+  const handleRegenerateCode = () => {
+    if (!nameValue) return;
+    const newCode = generatePackageCode(nameValue, packageTypeWatched);
+    setValue("packageCode", newCode, { shouldValidate: true });
+  };
+
   const handleImageUpload = async (
     file: File,
     field: "thumbnail" | "coverImage"
@@ -52,7 +94,6 @@ export function GeneralInfoSection({
     try {
       setUploadingField(field);
       const res = await uploadImageApi(file);
-      console.log(`Uploaded ${field}:`, res);
       if (res?.data?.url) {
         setValue(field, res.data.url, { shouldValidate: true });
       }
@@ -63,6 +104,7 @@ export function GeneralInfoSection({
       setUploadingField(null);
     }
   };
+
   return (
     <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-5">
       <div className="border-b border-border pb-3 flex items-center gap-2">
@@ -80,14 +122,31 @@ export function GeneralInfoSection({
           />
         </FormField>
 
+        {/* Package Code with Auto-Generate Action */}
         <FormField label="Package Code" error={errors.packageCode} required>
-          <input {...register("packageCode")} placeholder="PKG-WG-PRO" className={inputStyles} />
+          <div className="relative flex items-center">
+            <input
+              {...register("packageCode")}
+              placeholder="e.g. PKG-WG-WEEK-4821"
+              className={`${inputStyles} pr-10`}
+            />
+            <button
+              type="button"
+              onClick={handleRegenerateCode}
+              title="Auto-regenerate Package Code"
+              className="absolute right-2.5 p-1 text-muted-foreground hover:text-primary transition rounded-md bg-muted/50 hover:bg-muted"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </button>
+          </div>
         </FormField>
 
+        {/* Slug */}
         <FormField label="Slug" error={errors.slug} required>
           <input {...register("slug")} placeholder="auto-generated-slug" className={inputStyles} />
         </FormField>
 
+        {/* Package Category */}
         <FormField label="Package Category" error={errors.packageCategoryId} required className="md:col-span-2">
           <select {...register("packageCategoryId")} className={inputStyles}>
             <option value="">Select Category...</option>
@@ -143,7 +202,13 @@ export function GeneralInfoSection({
             onRemove={() => setValue("coverImage", "", { shouldValidate: true })}
           />
         </FormField>
-        <FormField label="Package Type" error={errors.packageType} required className={packageTypeWatched === "CUSTOM" ? "" : "md:col-span-2"}>
+
+        <FormField
+          label="Package Type"
+          error={errors.packageType}
+          required
+          className={packageTypeWatched === "CUSTOM" ? "" : "md:col-span-2"}
+        >
           <select
             {...register("packageType")}
             onChange={(e) => {

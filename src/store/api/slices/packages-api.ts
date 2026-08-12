@@ -128,7 +128,7 @@ export const packagesApi = api.injectEndpoints({
 
         deletePackage: builder.mutation({
             query: (id) => ({
-                url: `/package/${id}`,
+                url: `/package/admin/${id}`,
                 method: "DELETE",
             }),
             invalidatesTags: ["Package"],

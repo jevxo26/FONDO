@@ -28,6 +28,7 @@ export function VendorRegistrationForm() {
       ownerName: "",
       ownerPhone: "",
       ownerEmail: "",
+      password: "",
       nid: "",
       dob: "",
       streetAddress: "",

@@ -17,6 +17,10 @@ export const vendorFormSchema = yup.object({
     .matches(/^01[3-9]\d{8}$/, "Valid 11-digit phone required")
     .required("Phone required"),
   ownerEmail: yup.string().email("Enter valid email").required("Email required"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters"),
   nid: yup
     .string()
     .matches(/^\d{10,17}$/, "NID must be 10-17 digits")

@@ -122,6 +122,14 @@ export function BusinessOwnerInfo({ register, errors }: Props) {
               className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </FormField>
+          <FormField label="Password" error={errors.password} required>
+            <input
+              {...register("password")}
+              type="password"
+              placeholder="At least 8 characters"
+              className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </FormField>
           <FormField label="National ID (NID)" error={errors.nid} required>
             <input
               {...register("nid")}
@@ -130,7 +138,7 @@ export function BusinessOwnerInfo({ register, errors }: Props) {
               className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </FormField>
-          <FormField label="Date of Birth" error={errors.dob} required className="sm:col-span-2">
+          <FormField label="Date of Birth" error={errors.dob} required>
             <input
               {...register("dob")}
               type="date"

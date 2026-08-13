@@ -19,16 +19,16 @@ export default function PackageCard({
 
   const finalPrice = Number(pkg.discountPrice ?? pkg.price ?? 0);
   const originalPrice = Number(pkg.price ?? 0);
-   const displayRating = pkg.rating?.averageRating.toFixed(1);
-   const totalReviews = pkg.rating?.totalReview ?? 0;
-   console.log("pkg", pkg);
-   return (
+  const displayRating = pkg.rating?.averageRating.toFixed(1);
+  const totalReviews = pkg.rating?.totalReview ?? 0;
+  console.log("pkg", pkg);
+  return (
     <article className="group bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all flex flex-col justify-between">
       <div>
         {/* Thumbnail Badge Area */}
         <div className="relative overflow-hidden aspect-4/3 bg-muted">
           <Image
-            src={pkg.thumbnail || "/placeholder.jpg"}
+            src={pkg.coverImage || "/upload/"}
             alt={pkg.name}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -103,11 +103,10 @@ export default function PackageCard({
           <button
             type="button"
             onClick={() => toggleComparison(pkg.id)}
-            className={`border rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all flex items-center ${
-              isCompared
-                ? "bg-primary text-primary-foreground border-primary"
-                : "border-border hover:bg-muted text-foreground"
-            }`}
+            className={`border rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all flex items-center ${isCompared
+              ? "bg-primary text-primary-foreground border-primary"
+              : "border-border hover:bg-muted text-foreground"
+              }`}
           >
             {isCompared && <Check size={13} className="mr-1 shrink-0" />}
             Compare

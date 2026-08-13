@@ -72,6 +72,7 @@ model User {
   sessions                    UserSession[]
   tokens                      UserToken[]
   vendor                      Vendor?              @relation(fields: [vendorId], references: [id])
+  packageReviews              PackageReview[]
 
   @@index([role])
   @@index([status])
@@ -1287,6 +1288,7 @@ model PackageReview {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   package    Package  @relation(fields: [packageId], references: [id])
+  customer   User     @relation(fields: [customerId], references: [id])
 
   @@map("package_reviews")
 }

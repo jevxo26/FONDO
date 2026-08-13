@@ -3,6 +3,7 @@ import { UseFormRegister, FieldErrors } from "react-hook-form";
 import { User, PhoneCall } from "lucide-react";
 import { RiderFormData } from "@/lib/schema/rider-schema";
 import { FormField } from "@/components/common/form-field";
+
 interface Props {
   register: UseFormRegister<RiderFormData>;
   errors: FieldErrors<RiderFormData>;
@@ -22,16 +23,19 @@ export function PersonalInfo({ register, errors }: Props) {
           </h3>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <FormField
-            label="Full Legal Name"
-            error={errors.fullName}
-            required
-            className="sm:col-span-2"
-          >
+          <FormField label="First Name" error={errors.firstName} required>
             <input
-              {...register("fullName")}
+              {...register("firstName")}
               type="text"
-              placeholder="As per NID / Passport"
+              placeholder="e.g. Tanvir"
+              className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </FormField>
+          <FormField label="Last Name" error={errors.lastName} required>
+            <input
+              {...register("lastName")}
+              type="text"
+              placeholder="e.g. Rahman"
               className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </FormField>
@@ -48,6 +52,14 @@ export function PersonalInfo({ register, errors }: Props) {
               {...register("email")}
               type="email"
               placeholder="rider@gmail.com"
+              className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </FormField>
+          <FormField label="Password" error={errors.password} required className="sm:col-span-2">
+            <input
+              {...register("password")}
+              type="password"
+              placeholder="Minimum 8 characters"
               className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </FormField>

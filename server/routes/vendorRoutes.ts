@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { VendorController } from "../controllers/vendorController";
 import { verifyToken, authorize, hasPermission } from "../middlewares/authMiddleware";
+import { Role } from "@prisma/client";
 
 const router = Router();
 
@@ -18,7 +19,7 @@ router.get(
 );
 
 // --- Core Vendor Lifecycle (Admin) ---
-router.post("/add", verifyToken, pCreate, VendorController.createVendor);
+router.post("/add", verifyToken, pCreate, authorize(Role.ADMIN, Role.SUPER_ADMIN, Role.VENDOR), VendorController.createVendor);
 router.get("/all", verifyToken, pView, VendorController.getAllVendors);
 router.get("/:vendorCode", verifyToken, VendorController.getVendorByVendorCode);
 router.patch("/:vendorCode", verifyToken, pUpdate, VendorController.updateVendor);

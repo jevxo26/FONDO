@@ -31,10 +31,20 @@ const assertCanViewVendor = async (req: AuthRequest, vendorCode: string) => {
 };
 
 // Core System Controls
-const createVendor = catchAsync(async (req: Request, res: Response) => {
-  const result = await VendorService.createVendor(req.body);
-  sendResponse(res, { statusCode: 201, message: "Vendor created", data: result });
-});
+const createVendor = catchAsync(
+  async (req: AuthRequest, res: Response) => {
+    const result = await VendorService.createVendor(
+      req.body,
+      req.user,
+    );
+
+    sendResponse(res, {
+      statusCode: 201,
+      message: "Vendor created",
+      data: result,
+    });
+  },
+);
 
 const getAllVendors = catchAsync(async (req: Request, res: Response) => {
   const statusString = Array.isArray(req.query.status) ? req.query.status[0] : req.query.status;

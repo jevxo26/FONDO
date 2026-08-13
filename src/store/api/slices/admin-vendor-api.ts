@@ -110,7 +110,7 @@ export const vendorApi = api.injectEndpoints({
     endpoints: (builder) => ({
         // --- QUERIES ---
         getMyVendorProfile: builder.query<Vendor, void>({
-            query: () => "/vendors/my-profile",
+            query: () => "/vendor/my-profile",
             providesTags: ["Vendor"],
         }),
 
@@ -129,34 +129,34 @@ export const vendorApi = api.injectEndpoints({
         }),
 
         getVendorByCode: builder.query<Vendor, string>({
-            query: (vendorCode) => `/vendors/${vendorCode}`,
+            query: (vendorCode) => `/vendor/${vendorCode}`,
             providesTags: (_r, _e, vendorCode) => [{ type: "Vendor" as const, id: vendorCode }],
         }),
 
         getVendorBranches: builder.query<unknown[], string>({
-            query: (vendorCode) => `/vendors/${vendorCode}/branches`,
+            query: (vendorCode) => `/vendor/${vendorCode}/branches`,
             providesTags: (_r, _e, vendorCode) => [{ type: "Vendor" as const, id: `${vendorCode}-branches` }],
         }),
 
         getVendorWallet: builder.query<VendorWallet, string>({
-            query: (vendorCode) => `/vendors/${vendorCode}/wallet`,
+            query: (vendorCode) => `/vendor/${vendorCode}/wallet`,
             providesTags: (_r, _e, vendorCode) => [{ type: "Vendor" as const, id: `${vendorCode}-wallet` }],
         }),
 
         getSettlementHistory: builder.query<SettlementRecord[], string>({
-            query: (vendorCode) => `/vendors/${vendorCode}/settlements`,
+            query: (vendorCode) => `/vendor/${vendorCode}/settlements`,
             providesTags: (_r, _e, vendorCode) => [{ type: "Vendor" as const, id: `${vendorCode}-settlements` }],
         }),
 
         // --- MUTATIONS ---
         createVendor: builder.mutation<Vendor, CreateVendorPayload>({
-            query: (body) => ({ url: "/vendors/add", method: "POST", body }),
+            query: (body) => ({ url: "/vendor/add", method: "POST", body }),
             invalidatesTags: [{ type: "Vendor", id: "LIST" }],
         }),
 
         updateVendor: builder.mutation<Vendor, UpdateVendorPayload>({
             query: ({ vendorCode, ...body }) => ({
-                url: `/vendors/${vendorCode}`,
+                url: `/vendor/${vendorCode}`,
                 method: "PATCH",
                 body,
             }),
@@ -167,7 +167,7 @@ export const vendorApi = api.injectEndpoints({
         }),
 
         deleteVendor: builder.mutation<void, string>({
-            query: (vendorCode) => ({ url: `/vendors/${vendorCode}`, method: "DELETE" }),
+            query: (vendorCode) => ({ url: `/vendor/${vendorCode}`, method: "DELETE" }),
             invalidatesTags: (_r, _e, vendorCode) => [
                 { type: "Vendor" as const, id: vendorCode },
                 { type: "Vendor" as const, id: "LIST" },
@@ -176,7 +176,7 @@ export const vendorApi = api.injectEndpoints({
 
         upsertVendorProfile: builder.mutation<void, UpsertProfilePayload>({
             query: ({ vendorCode, profile }) => ({
-                url: `/vendors/${vendorCode}/profile`,
+                url: `/vendor/${vendorCode}/profile`,
                 method: "PUT",
                 body: profile,
             }),
@@ -185,7 +185,7 @@ export const vendorApi = api.injectEndpoints({
 
         setOperatingHours: builder.mutation<void, SetOperatingHoursPayload>({
             query: ({ vendorCode, ...hours }) => ({
-                url: `/vendors/${vendorCode}/operating-hours`,
+                url: `/vendor/${vendorCode}/operating-hours`,
                 method: "PUT",
                 body: hours,
             }),
@@ -194,7 +194,7 @@ export const vendorApi = api.injectEndpoints({
 
         verifyDocument: builder.mutation<void, VerifyDocumentPayload>({
             query: ({ docId, isVerified }) => ({
-                url: `/vendors/documents/${docId}/verify`,
+                url: `/vendor/documents/${docId}/verify`,
                 method: "PATCH",
                 body: { isVerified },
             }),
@@ -203,7 +203,7 @@ export const vendorApi = api.injectEndpoints({
 
         triggerSettlement: builder.mutation<SettlementRecord, TriggerSettlementPayload>({
             query: ({ vendorCode, ...body }) => ({
-                url: `/vendors/${vendorCode}/settlements/trigger`,
+                url: `/vendor/${vendorCode}/settlements/trigger`,
                 method: "POST",
                 body,
             }),

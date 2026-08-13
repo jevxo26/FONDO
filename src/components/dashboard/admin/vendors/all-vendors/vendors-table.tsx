@@ -4,9 +4,10 @@ import { DataTable, DataTableColumnHeader } from "@/components/common/table";
 import type { FacetedFilter, RowAction } from "@/components/common/table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import { Eye, ShieldBan, ShieldCheck } from "lucide-react";
+import { Eye, FileText, ShieldBan, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useDeleteVendor, Vendor } from "@/store/api/slices/admin-vendor-api";
+
 
 const columns: ColumnDef<Vendor>[] = [
   {
@@ -89,9 +90,15 @@ export function VendorsTable({ vendors }: { vendors: Vendor[] }) {
 
   const rowActions: RowAction<Vendor>[] = [
     {
-      label: "View Details",
+      label: "View Details / Request",
       icon: <Eye className="size-4" />,
-      onClick: (vendor) => router.push(`/dashboard/admin/vendors/${vendor.vendorCode}`),
+      onClick: (vendor) => {
+        if (vendor.status === "PENDING") {
+          router.push(`/dashboard/admin/vendors/requests/${vendor.vendorCode}`);
+        } else {
+          router.push(`/dashboard/admin/vendors/${vendor.vendorCode}`);
+        }
+      },
     },
     {
       label: "Delete Vendor",

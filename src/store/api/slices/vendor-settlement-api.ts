@@ -8,17 +8,17 @@ import type {
 export const vendorSettlementApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getVendorWallet: builder.query<VendorWallet, string>({
-      query: (vendorId) => `/vendors/${vendorId}/wallet`,
+      query: (vendorId) => `/vendor/${vendorId}/wallet`,
       providesTags: ["VendorSettlement"],
     }),
 
     getVendorWalletTransactions: builder.query<VendorWalletTransaction[], string>({
-      query: (vendorId) => `/vendors/${vendorId}/wallet/transactions`,
+      query: (vendorId) => `/vendor/${vendorId}/wallet/transactions`,
       providesTags: ["VendorSettlement"],
     }),
 
     getVendorSettlements: builder.query<VendorSettlement[], string>({
-      query: (vendorId) => `/vendors/${vendorId}/settlements`,
+      query: (vendorId) => `/vendor/${vendorId}/settlements`,
       providesTags: ["VendorSettlement"],
     }),
 

@@ -4,14 +4,25 @@ import { DataTable, DataTableColumnHeader } from "@/components/common/table";
 import type { FacetedFilter, RowAction } from "@/components/common/table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import type { Vendor } from "@/data/vendors";
 import { Eye, ShieldBan, ShieldCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useDeleteVendor, Vendor } from "@/store/api/slices/admin-vendor-api";
 
 const columns: ColumnDef<Vendor>[] = [
   {
-    accessorKey: "name",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Vendor Name" />,
-    cell: ({ row }) => <span className="font-medium text-foreground">{row.original.name}</span>,
+    accessorKey: "vendorCode",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Vendor Code" />,
+    cell: ({ row }) => <span className="font-mono text-xs font-semibold">{row.original.vendorCode}</span>,
+  },
+  {
+    accessorKey: "businessName",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Business Name" />,
+    cell: ({ row }) => (
+      <div className="flex flex-col">
+        <span className="font-medium text-foreground">{row.original.businessName}</span>
+        <span className="text-xs text-muted-foreground">{row.original.ownerName}</span>
+      </div>
+    ),
   },
   {
     accessorKey: "status",
@@ -22,7 +33,11 @@ const columns: ColumnDef<Vendor>[] = [
       return (
         <Badge
           variant={
-            status === "ACTIVE" ? "default" : status === "PENDING" ? "secondary" : "destructive"
+            status === "APPROVED"
+              ? "default"
+              : status === "PENDING"
+                ? "secondary"
+                : "destructive"
           }
         >
           {status}
@@ -31,26 +46,28 @@ const columns: ColumnDef<Vendor>[] = [
     },
   },
   {
-    accessorKey: "kitchen",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Kitchen" />,
+    accessorKey: "phone",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Contact" />,
+    cell: ({ row }) => (
+      <div className="flex flex-col text-xs">
+        <span>{row.original.phone}</span>
+        <span className="text-muted-foreground">{row.original.email}</span>
+      </div>
+    ),
   },
   {
-    accessorKey: "joined",
+    accessorKey: "_count.branches",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Branches" />,
+    cell: ({ row }) => <span>{row.original._count?.branches ?? 0}</span>,
+  },
+  {
+    accessorKey: "createdAt",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Joined Date" />,
-  },
-];
-
-const rowActions: RowAction<Vendor>[] = [
-  {
-    label: "View Details",
-    icon: <Eye className="size-4" />,
-    onClick: (vendor) => console.log("View", vendor.id),
-  },
-  {
-    label: "Suspend Vendor",
-    icon: <ShieldBan className="size-4" />,
-    variant: "destructive",
-    onClick: (vendor) => console.log("Suspend", vendor.id),
+    cell: ({ row }) => (
+      <span className="text-xs text-muted-foreground">
+        {new Date(row.original.createdAt).toLocaleDateString()}
+      </span>
+    ),
   },
 ];
 
@@ -59,14 +76,41 @@ const statusFilter: FacetedFilter = {
   title: "Status",
   icon: <ShieldCheck className="size-4" />,
   options: [
-    { label: "Active", value: "ACTIVE" },
+    { label: "Approved", value: "APPROVED" },
     { label: "Pending", value: "PENDING" },
+    { label: "Rejected", value: "REJECTED" },
     { label: "Suspended", value: "SUSPENDED" },
   ],
 };
 
 export function VendorsTable({ vendors }: { vendors: Vendor[] }) {
+  const router = useRouter();
+  const { mutateAsync: deleteVendor } = useDeleteVendor();
+
+  const rowActions: RowAction<Vendor>[] = [
+    {
+      label: "View Details",
+      icon: <Eye className="size-4" />,
+      onClick: (vendor) => router.push(`/dashboard/admin/vendors/${vendor.vendorCode}`),
+    },
+    {
+      label: "Delete Vendor",
+      icon: <ShieldBan className="size-4" />,
+      variant: "destructive",
+      onClick: async (vendor) => {
+        if (confirm(`Are you sure you want to delete ${vendor.businessName}?`)) {
+          await deleteVendor(vendor.vendorCode);
+        }
+      },
+    },
+  ];
+
   return (
-    <DataTable data={vendors} columns={columns} rowActions={rowActions} filters={[statusFilter]} />
+    <DataTable
+      data={vendors}
+      columns={columns}
+      rowActions={rowActions}
+      filters={[statusFilter]}
+    />
   );
 }

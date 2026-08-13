@@ -1,16 +1,19 @@
+"use client";
+
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { BottomWidgets } from "@/components/dashboard/admin/vendors/all-vendors/bottom-widgets";
-import { RegisterVendorModal } from "@/components/dashboard/admin/vendors/all-vendors/register-vendor-modal";
 import { VendorsTable } from "@/components/dashboard/admin/vendors/all-vendors/vendors-table";
-import { vendors } from "@/data/vendors";
 import { CheckCircle, Clock, Plus, Store, Wallet } from "lucide-react";
 import Link from "next/link";
+import { useListVendorsQuery } from "@/store/api/slices/admin-vendor-api";
 
 export default function VendorsPage() {
-  const active = vendors.filter((v) => v.status === "ACTIVE").length;
+  const { data: vendors = [], isLoading, isError } = useListVendorsQuery();
+
+  const active = vendors.filter((v) => v.status === "APPROVED").length;
   const pending = vendors.filter((v) => v.status === "PENDING").length;
-  const totalBalance = 142850;
+
   return (
     <div>
       <PageHeader
@@ -26,35 +29,52 @@ export default function VendorsPage() {
             Add Vendor
           </Link>
         }
-
       />
+
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-4">
-        <StatCard label="Total Vendors" value={vendors.length} icon={Store} accent="right" />
         <StatCard
-          label="Active"
-          value={active}
+          label="Total Vendors"
+          value={isLoading ? "..." : vendors.length}
+          icon={Store}
+          accent="right"
+        />
+        <StatCard
+          label="Approved Vendors"
+          value={isLoading ? "..." : active}
           variant="success"
           icon={CheckCircle}
           accent="right"
         />
         <StatCard
           label="Pending Approval"
-          value={pending}
+          value={isLoading ? "..." : pending}
           variant="warning"
           icon={Clock}
           accent="right"
         />
         <StatCard
           label="Total Balance"
-          value={`৳${totalBalance.toLocaleString()}`}
+          value="৳0" // Can be integrated once global wallet endpoint is connected
           variant="default"
           icon={Wallet}
           accent="right"
         />
       </div>
+
       <div className="mt-8">
-        <VendorsTable vendors={vendors} />
+        {isLoading ? (
+          <div className="flex h-48 items-center justify-center rounded-lg border text-muted-foreground">
+            Loading vendors...
+          </div>
+        ) : isError ? (
+          <div className="flex h-48 items-center justify-center rounded-lg border border-destructive/20 text-destructive">
+            Failed to load vendors list.
+          </div>
+        ) : (
+          <VendorsTable vendors={vendors} />
+        )}
       </div>
+
       <div className="mt-8">
         <BottomWidgets />
       </div>

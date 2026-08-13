@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Building2, Eye, EyeOff, KeyRound, Loader2, User } from "lucide-react";
+import { ArrowLeft, Building2, Eye, EyeOff, Loader2, User } from "lucide-react";
 import { toast } from "sonner"; // or your preferred toast library
 
 import { Button } from "@/components/ui/button";

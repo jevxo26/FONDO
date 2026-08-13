@@ -1,12 +1,25 @@
 import * as yup from "yup";
 
 export const riderFormSchema = yup.object({
-  fullName: yup.string().required("Full legal name is required").min(3, "At least 3 characters"),
+  firstName: yup
+    .string()
+    .trim()
+    .required("First name is required")
+    .min(2, "At least 2 characters"),
+  lastName: yup
+    .string()
+    .trim()
+    .required("Last name is required")
+    .min(2, "At least 2 characters"),
   phone: yup
     .string()
     .matches(/^01[3-9]\d{8}$/, "Valid 11-digit phone required")
     .required("Phone required"),
   email: yup.string().email("Enter a valid email").required("Email required"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters"),
   nidNumber: yup
     .string()
     .matches(/^\d{10,17}$/, "NID must be 10-17 digits")

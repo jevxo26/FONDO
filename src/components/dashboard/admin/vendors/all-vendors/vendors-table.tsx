@@ -94,7 +94,8 @@ export function VendorsTable({ vendors }: { vendors: Vendor[] }) {
       icon: <Eye className="size-4" />,
       onClick: (vendor) => {
         if (vendor.status === "PENDING") {
-          router.push(`/dashboard/admin/vendors/requests/${vendor.vendorCode}`);
+          // router.push(`/dashboard/admin/vendors/requests/${vendor.vendorCode}`);
+          router.push(`/dashboard/admin/vendors/request`);
         } else {
           router.push(`/dashboard/admin/vendors/${vendor.vendorCode}`);
         }

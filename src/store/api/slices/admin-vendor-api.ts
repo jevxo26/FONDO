@@ -28,8 +28,8 @@ export interface Vendor {
     isOnline: boolean;
     commissionType: CommissionType;
     commissionValue: string;
-    openingTime: string;
-    closingTime: string;
+    openingTime?: string | null;  // <-- UPDATED to accept null
+    closingTime?: string | null;  // <-- UPDATED to accept null
     createdAt: string;
     updatedAt: string;
     deletedAt?: string | null;
@@ -40,8 +40,14 @@ export interface Vendor {
 }
 
 export interface CreateVendorPayload {
+    firstName: string;            // <-- ADDED (Required)
+    lastName: string;             // <-- ADDED (Required)
+    password: string;             // <-- ADDED (Required)
     businessName: string;
-    ownerName: string;
+    ownerName?: string;           // <-- CHANGED from required to optional
+    tradeLicenseNumber?: string;  // <-- ADDED (Optional)
+    tinNumber?: string;           // <-- ADDED (Optional)
+    binNumber?: string;           // <-- ADDED (Optional)
     phone: string;
     email: string;
     openingTime?: string;
@@ -102,6 +108,18 @@ export interface TriggerSettlementPayload {
     periodEnd: string;
 }
 
+export interface VendorUserAccount {
+    id: string;
+    email: string;
+    role: string;
+}
+
+// NEW: Response shape matching backend response payload
+export interface CreateVendorResponse {
+    user: VendorUserAccount;
+    vendor: Vendor;
+}
+
 /* ============================================================
    VENDOR API SLICE INJECTION
    ============================================================ */
@@ -149,7 +167,7 @@ export const vendorApi = api.injectEndpoints({
         }),
 
         // --- MUTATIONS ---
-        createVendor: builder.mutation<Vendor, CreateVendorPayload>({
+        createVendor: builder.mutation<CreateVendorResponse, CreateVendorPayload>({
             query: (body) => ({ url: "/vendor/add", method: "POST", body }),
             invalidatesTags: [{ type: "Vendor", id: "LIST" }],
         }),

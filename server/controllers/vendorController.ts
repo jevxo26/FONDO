@@ -33,6 +33,7 @@ const assertCanViewVendor = async (req: AuthRequest, vendorCode: string) => {
 // Core System Controls
 const createVendor = catchAsync(
   async (req: AuthRequest, res: Response) => {
+    console.log("Creating vendor with data:", req.body);
     const result = await VendorService.createVendor(
       req.body,
       req.user,

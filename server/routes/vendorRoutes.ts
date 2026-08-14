@@ -19,7 +19,7 @@ router.get(
 );
 
 // --- Core Vendor Lifecycle (Admin) ---
-router.post("/add", verifyToken, pCreate, authorize(Role.ADMIN, Role.SUPER_ADMIN, Role.VENDOR), VendorController.createVendor);
+router.post("/add", verifyToken, pCreate, authorize(Role.ADMIN, Role.SUPER_ADMIN), VendorController.createVendor);
 router.get("/all", verifyToken, pView, VendorController.getAllVendors);
 router.get("/:vendorCode", verifyToken, VendorController.getVendorByVendorCode);
 router.patch("/:vendorCode", verifyToken, pUpdate, VendorController.updateVendor);

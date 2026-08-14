@@ -274,7 +274,8 @@ interface AdminPackageQuery {
   limit?: number;
 }
 
-const listPackagesAdmin = async (query: AdminPackageQuery) => {  const { status, vendorId, search } = query;
+const listPackagesAdmin = async (query: AdminPackageQuery) => {
+  const { status, vendorId, search } = query;
   const page = Math.max(1, query.page ?? 1);
   const limit = Math.min(100, Math.max(1, query.limit ?? 20));
 
@@ -659,6 +660,170 @@ const getPendingReviews = async () => {
   return reviews;
 };
 
+const updateVendorPackage = async (
+  packageId: string,
+  vendorId: string,
+  data: Partial<VendorPackageInput>,
+) => {
+  const existing = await prisma.package.findFirst({
+    where: { id: packageId, vendorId, deletedAt: null },
+  });
+
+  if (!existing) {
+    throw new Error("Package not found or unauthorized");
+  }
+
+  if (data.days) {
+    await assertFoodsBelongToVendor(vendorId, collectFoodIds(data as VendorPackageInput));
+  }
+
+  return await prisma.$transaction(async (tx) => {
+    // If updating days/meals/foods, remove existing nested days structure first
+    if (data.days) {
+      await tx.packageDay.deleteMany({ where: { packageId } });
+    }
+
+    return await tx.package.update({
+      where: { id: packageId },
+      data: {
+        packageCode: data.packageCode,
+        name: data.name,
+        slug: data.slug,
+        description: data.description,
+        thumbnail: data.thumbnail,
+        coverImage: data.coverImage,
+        packageType: data.packageType,
+        durationDays: data.durationDays,
+        totalMeals: data.totalMeals,
+        price: data.price,
+        discountPrice: data.discountPrice,
+        currency: data.currency,
+        isCustomizable: data.isCustomizable,
+        status: PackageStatus.PENDING, // Vendor edits reset status to pending approval
+        packageCategoryId: data.packageCategoryId,
+        days: data.days
+          ? {
+            create: data.days.map((day: DayInput) => ({
+              dayNumber: day.dayNumber,
+              title: day.title,
+              description: day.description,
+              meals: {
+                create: day.meals.map((meal: MealInput) => ({
+                  mealType: meal.mealType,
+                  mealTime: meal.mealTime,
+                  foods: {
+                    create: meal.foods.map((food: FoodInput) => ({
+                      foodId: food.foodId,
+                      quantity: food.quantity,
+                    })),
+                  },
+                })),
+              },
+            })),
+          }
+          : undefined,
+      },
+    });
+  });
+};
+
+const updateAdminPackage = async (
+  packageId: string,
+  data: Partial<VendorPackageInput & { vendorId?: string }>,
+) => {
+  const existing = await prisma.package.findFirst({
+    where: { id: packageId, deletedAt: null },
+  });
+
+  if (!existing) {
+    throw new Error("Package not found");
+  }
+
+  const vendorId = data.vendorId || existing.vendorId;
+
+  if (data.days) {
+    await assertFoodsBelongToVendor(vendorId, collectFoodIds(data as VendorPackageInput));
+  }
+
+  return await prisma.$transaction(async (tx) => {
+    if (data.days) {
+      await tx.packageDay.deleteMany({ where: { packageId } });
+    }
+
+    return await tx.package.update({
+      where: { id: packageId },
+      data: {
+        packageCode: data.packageCode,
+        name: data.name,
+        slug: data.slug,
+        description: data.description,
+        thumbnail: data.thumbnail,
+        coverImage: data.coverImage,
+        packageType: data.packageType,
+        durationDays: data.durationDays,
+        totalMeals: data.totalMeals,
+        price: data.price,
+        discountPrice: data.discountPrice,
+        currency: data.currency,
+        isCustomizable: data.isCustomizable,
+        packageCategoryId: data.packageCategoryId,
+        vendorId: data.vendorId,
+        days: data.days
+          ? {
+            create: data.days.map((day: DayInput) => ({
+              dayNumber: day.dayNumber,
+              title: day.title,
+              description: day.description,
+              meals: {
+                create: day.meals.map((meal: MealInput) => ({
+                  mealType: meal.mealType,
+                  mealTime: meal.mealTime,
+                  foods: {
+                    create: meal.foods.map((food: FoodInput) => ({
+                      foodId: food.foodId,
+                      quantity: food.quantity,
+                    })),
+                  },
+                })),
+              },
+            })),
+          }
+          : undefined,
+      },
+    });
+  });
+};
+
+const deleteVendorPackage = async (packageId: string, vendorId: string) => {
+  const existing = await prisma.package.findFirst({
+    where: { id: packageId, vendorId, deletedAt: null },
+  });
+
+  if (!existing) {
+    throw new Error("Package not found or unauthorized");
+  }
+
+  return await prisma.package.update({
+    where: { id: packageId },
+    data: { deletedAt: new Date() },
+  });
+};
+
+const deleteAdminPackage = async (packageId: string) => {
+  const existing = await prisma.package.findFirst({
+    where: { id: packageId, deletedAt: null },
+  });
+
+  if (!existing) {
+    throw new Error("Package not found");
+  }
+
+  return await prisma.package.update({
+    where: { id: packageId },
+    data: { deletedAt: new Date() },
+  });
+};
+
 export const PackageService = {
   getAllPackages,
   getPackageById,
@@ -678,5 +843,9 @@ export const PackageService = {
   updatePackageReview,
   deletePackageReview,
   updateReviewStatus,
-  getPendingReviews
+  getPendingReviews,
+  updateVendorPackage,
+  updateAdminPackage,
+  deleteVendorPackage,
+  deleteAdminPackage,
 };

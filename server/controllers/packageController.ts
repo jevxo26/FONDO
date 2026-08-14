@@ -288,6 +288,64 @@ const getPendingReviews = async (_req: Request, res: Response): Promise<Response
   }
 };
 
+const updateVendorPackage = async (req: AuthRequest, res: Response): Promise<Response> => {
+  try {
+    const vendorId = await resolveVendorId(req);
+    const packageId = req.params.id as string;
+    const result = await PackageService.updateVendorPackage(packageId, vendorId, req.body);
+    return res.status(200).json({
+      success: true,
+      message: "Package updated and resubmitted for approval",
+      data: result,
+    });
+  } catch (error: unknown) {
+    return res.status(400).json({ success: false, message: getErrorMessage(error) });
+  }
+};
+
+const updateAdminPackage = async (req: AuthRequest, res: Response): Promise<Response> => {
+  try {
+    const packageId = req.params.id as string;
+    const result = await PackageService.updateAdminPackage(packageId, req.body);
+    return res.status(200).json({
+      success: true,
+      message: "Package updated successfully",
+      data: result,
+    });
+  } catch (error: unknown) {
+    return res.status(400).json({ success: false, message: getErrorMessage(error) });
+  }
+};
+
+const deleteVendorPackage = async (req: AuthRequest, res: Response): Promise<Response> => {
+  try {
+    const vendorId = await resolveVendorId(req);
+    const packageId = req.params.id as string;
+    const result = await PackageService.deleteVendorPackage(packageId, vendorId);
+    return res.status(200).json({
+      success: true,
+      message: "Package deleted successfully",
+      data: result,
+    });
+  } catch (error: unknown) {
+    return res.status(400).json({ success: false, message: getErrorMessage(error) });
+  }
+};
+
+const deleteAdminPackage = async (req: AuthRequest, res: Response): Promise<Response> => {
+  try {
+    const packageId = req.params.id as string;
+    const result = await PackageService.deleteAdminPackage(packageId);
+    return res.status(200).json({
+      success: true,
+      message: "Package deleted successfully",
+      data: result,
+    });
+  } catch (error: unknown) {
+    return res.status(400).json({ success: false, message: getErrorMessage(error) });
+  }
+};
+
 export const PackageController = {
   getPackages,
   getPackageDetails,
@@ -307,5 +365,9 @@ export const PackageController = {
   updateReview,
   deleteReview,
   updateReviewStatus,
-  getPendingReviews
+  getPendingReviews,
+  updateVendorPackage,
+  updateAdminPackage,
+  deleteVendorPackage,
+  deleteAdminPackage,
 };

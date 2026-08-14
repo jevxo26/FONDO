@@ -66,7 +66,7 @@ const createVendor = catchServiceAsync(
     const uniqueVendorCode = `VEND-${String(Date.now()).slice(-7)}`;
 
     // Admin/Super Admin → APPROVED
-    // Vendor → PENDING
+    // ELSE → PENDING
     const status =
       user?.role === Role.ADMIN || user?.role === Role.SUPER_ADMIN
         ? VendorStatus.APPROVED

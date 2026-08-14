@@ -80,7 +80,7 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 md:gap-4">
           <div className="flex items-center gap-2">
-            <div className="size-2 rounded-full bg-primary" />
+            <div className="size-2 rounded-full bg-primary/30" />
             <h1 className="font-heading text-xl font-bold leading-tight tracking-tight text-foreground md:text-[32px]">
               Overview
             </h1>
@@ -96,7 +96,7 @@ export default function DashboardPage() {
           </span>
         </div>
       </div>
-      <div className="mt-2 h-px w-24 bg-gradient-to-r from-primary/40 to-transparent" />
+      <div className="mt-2 h-px w-24 bg-linear-to-r from-primary/40 to-transparent" />
 
       {isLoading ? (
         <div className="mt-12 flex justify-center">

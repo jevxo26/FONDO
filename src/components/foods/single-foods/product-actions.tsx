@@ -46,7 +46,6 @@ export function ProductActions({
             <Plus className="size-3.5" />
           </Button>
         </div>
-        <span className="text-xs text-muted-foreground">(Available)</span>
       </div>
 
       <div className="mt-4 flex items-center justify-between rounded-xl border border-border/50 bg-muted/30 px-4 py-2.5">

@@ -37,7 +37,7 @@ export const daySchema = yup.object({
     .required(),
 });
 
-const imageFieldSchema = yup
+export const imageFieldSchema = yup
   .string()
   .trim()
   .required("Image is required")
@@ -62,9 +62,7 @@ export const packageSchema = yup.object({
   description: yup.string().required(),
 
   thumbnail: imageFieldSchema,
-
   coverImage: imageFieldSchema,
-
   packageType: yup
     .string()
     .oneOf(["WEEKLY", "MONTHLY", "CUSTOM"])

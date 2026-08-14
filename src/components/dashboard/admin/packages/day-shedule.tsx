@@ -27,7 +27,11 @@ function MealFoodsBuilder({ dayIndex, mealIndex, control, register, errors, food
         <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
           Food Items ({fields.length})
         </label>
-        <button type="button" onClick={() => append({ foodId: "", quantity: 1 })} className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
+        <button
+          type="button"
+          onClick={() => append({ foodId: "", quantity: 1 })}
+          className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+        >
           <Plus className="w-3.5 h-3.5" /> Add Food
         </button>
       </div>
@@ -38,36 +42,42 @@ function MealFoodsBuilder({ dayIndex, mealIndex, control, register, errors, food
           return (
             <div key={field.id} className="flex items-start gap-2 bg-background p-2 rounded-lg border border-border">
               <div className="flex-1 space-y-1">
-                <select {...register(`days.${dayIndex}.meals.${mealIndex}.foods.${foodIndex}.foodId`
-                )}
+                <select
+                  {...register(`days.${dayIndex}.meals.${mealIndex}.foods.${foodIndex}.foodId`)}
+                  className={inputStyles}
                 >
-                  <option value="">
-                    Select Food
-                  </option>
-
-                  {
-                    foods.map(food => (
-                      <option
-                        value={food.id}
-                        key={food.id}
-                      >
-
-                        {food.name}
-
-                      </option>
-                    ))
-                  }
+                  <option value="">Select Food...</option>
+                  {foods.map((food) => (
+                    <option value={food.id} key={food.id}>
+                      {food.name}
+                    </option>
+                  ))}
                 </select>
-                {foodError?.foodId && (<p className="text-red-500">{foodError.foodId.message}</p>)}
+                {foodError?.foodId && (
+                  <p className="text-[11px] text-red-500 mt-1">{foodError.foodId.message}</p>
+                )}
               </div>
 
               <div className="w-24 space-y-1">
-                <input type="number" {...register(`days.${dayIndex}.meals.${mealIndex}.foods.${foodIndex}.quantity`)} placeholder="Qty" className={inputStyles} />
-                {foodError?.quantity && <p className="text-[10px] text-red-500">{foodError.quantity.message}</p>}
+                <input
+                  type="number"
+                  {...register(`days.${dayIndex}.meals.${mealIndex}.foods.${foodIndex}.quantity`, {
+                    valueAsNumber: true,
+                  })}
+                  placeholder="Qty"
+                  className={inputStyles}
+                />
+                {foodError?.quantity && (
+                  <p className="text-[10px] text-red-500">{foodError.quantity.message}</p>
+                )}
               </div>
 
               {fields.length > 1 && (
-                <button type="button" onClick={() => remove(foodIndex)} className="p-2 text-muted-foreground hover:text-red-500 transition mt-0.5">
+                <button
+                  type="button"
+                  onClick={() => remove(foodIndex)}
+                  className="p-2 text-muted-foreground hover:text-red-500 transition mt-0.5"
+                >
                   <Trash2 className="w-4 h-4" />
                 </button>
               )}
@@ -94,11 +104,13 @@ function DayMealsBuilder({ dayIndex, control, register, errors, foods }: DayMeal
     <div className="space-y-4 pt-2">
       <div className="flex justify-between items-center border-b border-border/60 pb-2">
         <span className="text-xs font-bold text-foreground uppercase tracking-wide flex items-center gap-1.5">
-          <Utensils className="w-3.5 h-3.5 text-primary" /> Meals for Day #{dayIndex + 1}
+          <Utensils className="w-3.5 h-3.5 text-foreground" /> Meals for Day #{dayIndex + 1}
         </span>
         <button
           type="button"
-          onClick={() => append({ mealType: "BREAKFAST", mealTime: "08:00 AM", foods: [{ foodId: "", quantity: 1 }] })}
+          onClick={() =>
+            append({ mealType: "BREAKFAST", mealTime: "08:00 AM", foods: [{ foodId: "", quantity: 1 }] })
+          }
           className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-primary bg-primary/10 rounded-md hover:bg-primary/20 transition"
         >
           <Plus className="w-3.5 h-3.5" /> Add Meal
@@ -111,7 +123,7 @@ function DayMealsBuilder({ dayIndex, control, register, errors, foods }: DayMeal
           return (
             <div key={field.id} className="p-4 border border-border/80 rounded-xl bg-muted/20 space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-xs font-bold text-primary">Meal #{mealIndex + 1}</span>
+                <span className="text-xs font-bold text-muted-foreground">Meal #{mealIndex + 1}</span>
                 {fields.length > 1 && (
                   <button type="button" onClick={() => remove(mealIndex)} className="text-muted-foreground hover:text-red-500 transition">
                     <Trash2 className="w-3.5 h-3.5" />
@@ -143,7 +155,13 @@ function DayMealsBuilder({ dayIndex, control, register, errors, foods }: DayMeal
   );
 }
 
-export function DaysScheduleSection({ control, register, errors, daysWatched, foods }: {
+export function DaysScheduleSection({
+  control,
+  register,
+  errors,
+  daysWatched,
+  foods,
+}: {
   control: Control<PackageFormValues>;
   register: UseFormRegister<PackageFormValues>;
   errors: FieldErrors<PackageFormValues>;
@@ -157,14 +175,19 @@ export function DaysScheduleSection({ control, register, errors, daysWatched, fo
     <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-5">
       <div className="flex items-center justify-between border-b border-border pb-3">
         <div className="flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-primary" />
+          <Calendar className="w-5 h-5 text-foreground" />
           <h2 className="text-base font-bold text-foreground">Days Schedule ({fields.length} Days)</h2>
         </div>
         <button
           type="button"
           onClick={() => {
             const newDayNum = fields.length + 1;
-            append({ dayNumber: newDayNum, title: `Day ${newDayNum} Schedule`, description: "", meals: [{ mealType: "BREAKFAST", mealTime: "08:00 AM", foods: [{ foodId: "", quantity: 1 }] }] });
+            append({
+              dayNumber: newDayNum,
+              title: `Day ${newDayNum} Schedule`,
+              description: "",
+              meals: [{ mealType: "BREAKFAST", mealTime: "08:00 AM", foods: [{ foodId: "", quantity: 1 }] }],
+            });
             setExpandedDay(fields.length);
           }}
           className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition"
@@ -178,22 +201,39 @@ export function DaysScheduleSection({ control, register, errors, daysWatched, fo
           const isOpen = expandedDay === dayIndex;
           return (
             <div key={field.id} className="border border-border rounded-xl bg-card overflow-hidden">
-              <div onClick={() => setExpandedDay(isOpen ? null : dayIndex)} className="p-4 bg-muted/40 hover:bg-muted/60 transition cursor-pointer flex items-center justify-between">
+              <div
+                onClick={() => setExpandedDay(isOpen ? null : dayIndex)}
+                className="p-4 bg-muted/40 hover:bg-muted/60 transition cursor-pointer flex items-center justify-between"
+              >
                 <div className="flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">{dayIndex + 1}</span>
+                  <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">
+                    {dayIndex + 1}
+                  </span>
                   <div>
-                    <h3 className="text-sm font-bold text-foreground">{daysWatched[dayIndex]?.title || `Day ${dayIndex + 1}`}</h3>
-                    <p className="text-[11px] text-muted-foreground">{daysWatched[dayIndex]?.meals?.length || 0} meals configured</p>
+                    <h3 className="text-sm font-bold text-foreground">
+                      {daysWatched?.[dayIndex]?.title || `Day ${dayIndex + 1}`}
+                    </h3>
+                    <p className="text-[11px] text-muted-foreground">
+                      {daysWatched?.[dayIndex]?.meals?.length || 0} meals configured
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                   {fields.length > 1 && (
-                    <button type="button" onClick={() => remove(dayIndex)} className="text-muted-foreground hover:text-red-500 transition p-1">
+                    <button
+                      type="button"
+                      onClick={() => remove(dayIndex)}
+                      className="text-muted-foreground hover:text-red-500 transition p-1"
+                    >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   )}
-                  <button type="button" onClick={() => setExpandedDay(isOpen ? null : dayIndex)} className="p-1 text-muted-foreground">
+                  <button
+                    type="button"
+                    onClick={() => setExpandedDay(isOpen ? null : dayIndex)}
+                    className="p-1 text-muted-foreground"
+                  >
                     {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
                 </div>
@@ -203,14 +243,28 @@ export function DaysScheduleSection({ control, register, errors, daysWatched, fo
                 <div className="p-4 space-y-4 border-t border-border">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <FormField label="Day Number" error={errors.days?.[dayIndex]?.dayNumber} required>
-                      <input type="number" {...register(`days.${dayIndex}.dayNumber`)} className={inputStyles} />
+                      <input
+                        type="number"
+                        {...register(`days.${dayIndex}.dayNumber`, { valueAsNumber: true })}
+                        className={inputStyles}
+                      />
                     </FormField>
                     <FormField label="Schedule Title" error={errors.days?.[dayIndex]?.title} required>
-                      <input {...register(`days.${dayIndex}.title`)} placeholder="e.g. Day 1 Schedule" className={inputStyles} />
+                      <input
+                        {...register(`days.${dayIndex}.title`)}
+                        placeholder="e.g. Day 1 Schedule"
+                        className={inputStyles}
+                      />
                     </FormField>
                   </div>
 
-                  <DayMealsBuilder dayIndex={dayIndex} control={control} register={register} errors={errors} foods={foods ?? []} />
+                  <DayMealsBuilder
+                    dayIndex={dayIndex}
+                    control={control}
+                    register={register}
+                    errors={errors}
+                    foods={foods ?? []}
+                  />
                 </div>
               )}
             </div>

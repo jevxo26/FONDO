@@ -1,91 +1,147 @@
-export interface PackageCategory {
+import type { Food } from "./food";
+
+// ==========================================
+// ENUMS & CONSTANTS
+// ==========================================
+
+export type PackageType = "WEEKLY" | "MONTHLY" | "CUSTOM_PACKAGE" | "STANDARD";
+
+export type MealType = "BREAKFAST" | "LUNCH" | "DINNER" | "SNACK";
+
+// ==========================================
+// NUTRITIONAL & FOOD INTERFACES
+// ==========================================
+
+export interface FoodVariant {
   id: string;
   name: string;
-  slug: string;
-}
-
-export interface PackageRule {
-  title?: string;
-  description?: string;
-}
-
-export interface PackageReview {
-  id?: string;
-  rating?: number;
+  price: number | string;
+  weightGram?: number;
 }
 
 export interface PackageFood {
   id?: string;
-  foodId?: string;
-  name?: string;
-  thumbnail?: string;
-  quantity?: number;
-  price?: number | string;
+  foodId: string;
+  quantity: number;
   isExtra?: boolean;
-  calories?: number | null;
-  protein?: number | null;
-  carbohydrate?: number | null;
-  fat?: number | null;
-  fiber?: number | null;
-  sugar?: number | null;
-  sodium?: number | null;
-  cholesterol?: number | null;
-  variants?: Array<{ price?: number | string }>;
-  food?: PackageFood | null;
+  food?: Food;
 }
+
+// ==========================================
+// MEALS & DAYS INTERFACES
+// ==========================================
 
 export interface PackageMeal {
   id?: string;
-  mealType?: string;
+  mealType: MealType;
   mealTime?: string;
-  foods?: PackageFood[];
+  foods: PackageFood[];
 }
 
 export interface PackageDay {
   id?: string;
   dayNumber: number;
-  title?: string;
-  description?: string;
-  meals?: PackageMeal[];
+  meals: PackageMeal[];
 }
 
-export interface Package {
+// ==========================================
+// CATEGORY & RULE INTERFACES
+// ==========================================
+
+export interface PackageCategory {
   id: string;
-  packageCode?: string;
   name: string;
   slug?: string;
   description?: string;
+  isActive?: boolean;
+}
+
+export interface PackageRule {
+  id: string;
+  title: string;
+  description?: string;
+}
+
+export interface PackageRating {
+  id: string;
+  packageId: string;
+  averageRating: number;
+  totalReview: number;
+  fiveStar: number;
+  fourStar: number;
+  threeStar: number;
+  twoStar: number;
+  oneStar: number;
+  updatedAt: string;
+}
+
+export interface PackageReview {
+  id: string;
+  userId: string;
+  userName?: string;
+  userAvatar?: string;
+  rating: number;
+  comment?: string;
+  createdAt: string;
+}
+
+// ==========================================
+// CORE PACKAGE INTERFACE
+// ==========================================
+
+export interface Package {
+  id: string;
+  name: string;
+  slug?: string;
+  packageCode?: string;
+  description?: string;
   thumbnail?: string;
   coverImage?: string;
-  packageType?: string;
-  durationDays: number;
+
+  // Pricing & Metrics
+  price: number | string;
+  discountPrice?: number | string;
   totalMeals: number;
-  price: string | number;
-  discountPrice?: string | number | null;
-  currency?: string;
-  isCustomizable?: boolean;
-  rating?: number | null;
-  calories?: number | null;
-  status?: string;
+  durationDays: number;
+
+  // Config
+  packageType: PackageType;
+  isCustomizable: boolean;
+  isActive: boolean;
+
+  // Nested Relations
+  packageCategory?: PackageCategory;
   packageCategoryId?: string;
-  packageCategory?: PackageCategory | null;
-  vendor?: { id: string; businessName: string } | null;
-  reviews?: PackageReview[] | null;
-  rule?: PackageRule | null;
-  days?: PackageDay[];
+  rule?: PackageRule;
+  packageRuleId?: string;
+
+  // Nested Menu Items
+  days: PackageDay[];
+
+  // Rating & Feedback
+  rating?: PackageRating;
+  reviews?: PackageReview[];
+
+  createdAt?: string;
+  updatedAt?: string;
 }
+
+// ==========================================
+// CUSTOM MEAL CONCIERGE / STATE INTERFACES
+// ==========================================
+// types/package.ts
 
 export interface CustomFood {
   foodId: string;
-  name: string;
+  name?: string;
   thumbnail?: string;
+  price?: number;
   quantity: number;
-  price: number;
-  isExtra: boolean;
+  isExtra?: boolean;
 }
 
 export interface CustomMeal {
-  mealType: string;
+  mealType: "BREAKFAST" | "LUNCH" | "DINNER" | string;
   mealTime?: string;
   foods: CustomFood[];
 }
@@ -93,4 +149,25 @@ export interface CustomMeal {
 export interface CustomDay {
   dayNumber: number;
   meals: CustomMeal[];
+}
+
+/**
+ * Payload sent to the backend endpoint:
+ * POST /api/custom-meal-requests (or Prisma createCustomMealRequest)
+ */
+export interface CreateCustomMealRequestPayload {
+  packageId: string;
+  name: string;
+  totalDays: number;
+  totalPrice: number;
+  days: CustomDay[];
+}
+
+export interface CustomMealRequestResponse {
+  id: string;
+  packageId: string;
+  userId: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  totalPrice: number;
+  createdAt: string;
 }

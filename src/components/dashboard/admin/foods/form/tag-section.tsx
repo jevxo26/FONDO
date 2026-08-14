@@ -1,12 +1,13 @@
 "use client";
 
-import { inputStyles } from "@/lib/schema/food-schema";
 import type { AdminFoodFormValues } from "@/lib/schema/admin-food-schema";
 import type { AdminFoodTag } from "@/types/admin-food";
 import { FormSection } from "@/components/dashboard/common/form-section";
 import { Tags, Plus, Trash2 } from "lucide-react";
 import { useFieldArray, type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 import { cn } from "@/lib/utils";
 
 interface TagSectionProps {
@@ -60,7 +61,7 @@ export function TagSection({
                   className={cn(
                     "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
                     selected
-                      ? "border-primary bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(206,163,89,0.25)]"
+                      ? "border-primary bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(168,90,56,0.25)]"
                       : "border-border bg-muted text-muted-foreground hover:border-primary/40",
                   )}
                 >
@@ -94,15 +95,14 @@ export function TagSection({
           <div className="space-y-2">
             {fields.map((field, index) => (
               <div key={field.id} className="flex items-center gap-2">
-                <input
+                <Input
                   type="color"
                   {...register(`labels.${index}.color`)}
                   className="size-8 shrink-0 cursor-pointer rounded-md border border-border bg-transparent"
                 />
-                <input
+                <Input
                   {...register(`labels.${index}.label`)}
                   placeholder="e.g. Chef's Special"
-                  className={inputStyles}
                 />
                 <Button
                   type="button"
@@ -137,10 +137,9 @@ export function TagSection({
           <div className="space-y-2">
             {dietFields.fields.map((field, index) => (
               <div key={field.id} className="flex items-center gap-2">
-                <input
+                <Input
                   {...register(`diets.${index}.dietType`)}
                   placeholder="e.g. Keto, Halal, Vegan"
-                  className={inputStyles}
                 />
                 <Button
                   type="button"

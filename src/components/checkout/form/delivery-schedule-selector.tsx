@@ -32,7 +32,7 @@ export function DeliveryScheduleSelector({ value, onChange }: Props) {
   return (
     <div className="rounded-2xl bg-card border border-border/40 p-5 shadow-sm flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <CalendarIcon className="size-4 text-primary" />
+        <CalendarIcon className="size-4 text-foreground" />
         <h2 className="font-sans text-sm font-semibold text-foreground">Delivery Schedule</h2>
         <Tooltip>
           <TooltipTrigger>

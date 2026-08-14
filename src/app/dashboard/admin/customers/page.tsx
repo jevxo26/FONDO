@@ -212,7 +212,7 @@ export default function CustomersPage() {
             </Button>
           </DarkCard>
           <GlassCard
-            icon={<Users className="size-5 text-primary" />}
+            icon={<Users className="size-5 text-foreground" />}
             iconBg="bg-primary/10"
             title="Recent Activity"
             value={filtered.length.toString()}

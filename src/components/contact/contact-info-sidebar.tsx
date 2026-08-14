@@ -18,7 +18,7 @@ export function ContactInfoSidebar() {
             className="flex items-center gap-5 p-5 rounded-2xl bg-secondary border border-border/40 shadow-sm transition-colors hover:border-primary/30"
           >
             <div className="size-12 rounded-full border border-primary/30 flex items-center justify-center bg-card shrink-0">
-              <Icon className="size-5 text-primary" />
+              <Icon className="size-5 text-foreground" />
             </div>
             <div className="flex flex-col gap-0.5">
               <span className="font-sans text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">

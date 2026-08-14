@@ -29,7 +29,7 @@ export function CuisineDocInfo({ register, errors, selectedCuisines, setValue }:
             05
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
-            <Utensils className="size-5 text-primary" /> Cuisine Categories
+            <Utensils className="size-5 text-foreground" /> Cuisine Categories
           </h3>
         </div>
         <FormField label="Select Health & Meal Categories" error={errors.cuisines} required>
@@ -58,7 +58,7 @@ export function CuisineDocInfo({ register, errors, selectedCuisines, setValue }:
             06
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
-            <UploadCloud className="size-5 text-primary" /> Business Documents
+            <UploadCloud className="size-5 text-foreground" /> Business Documents
           </h3>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

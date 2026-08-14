@@ -5,14 +5,28 @@ interface DescriptionTabProps {
 }
 
 const DescriptionTab = ({ food }: DescriptionTabProps) => {
+  const description = food.description ?? food.shortDescription ?? "";
+
   return (
     <div>
       <div className="flex flex-col gap-4">
         <h3 className="font-sans text-base font-semibold text-secondary-foreground">{food.name}</h3>
 
-        <p className="font-sans text-sm leading-relaxed text-muted-foreground">
-          {food.shortDescription ?? ""}
-        </p>
+        <p className="font-sans text-sm leading-relaxed text-muted-foreground">{description}</p>
+
+        {food.tags.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-sans text-xs font-medium text-muted-foreground">Tags:</span>
+            {food.tags.map((tag) => (
+              <span
+                key={tag.id ?? tag.name}
+                className="rounded-full border border-border/60 bg-muted/40 px-2.5 py-1 text-[11px] font-medium text-foreground/80"
+              >
+                {tag.name}
+              </span>
+            ))}
+          </div>
+        )}
 
         <h4 className="font-sans text-sm font-semibold text-secondary-foreground mt-2">
           Food Information

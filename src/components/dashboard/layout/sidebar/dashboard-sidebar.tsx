@@ -57,7 +57,7 @@ export function DashboardSidebar({
       className="relative bg-gradient-to-b from-secondary via-sidebar to-primary/[0.06]"
     >
       <div className="pointer-events-none absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-primary/40 via-primary/20 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(206,163,89,0.1)_0%,transparent_70%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(168,90,56,0.1)_0%,transparent_70%)]" />
 
       <SidebarHeader>
         <SidebarMenu className="space-y-4">
@@ -71,7 +71,7 @@ export function DashboardSidebar({
                 size={40}
                 textSize="text-xl"
                 subtitle={panelLabel}
-                imageBoxClassName="size-10 shadow-[0_0_24px_rgba(206,163,89,0.25)] group-data-[collapsible=icon]:size-8"
+                imageBoxClassName="size-10 shadow-[0_0_24px_rgba(168,90,56,0.25)] group-data-[collapsible=icon]:size-8"
                 hideTextOnCollapse
               />
             </SidebarMenuButton>
@@ -86,7 +86,7 @@ export function DashboardSidebar({
                 className={cn(
                   "rounded-lg px-3 py-3 h-auto gap-3 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
                   pathname === basePath &&
-                    "bg-gradient-to-r from-primary/10 to-primary/5 shadow-[inset_0_1px_1px_rgba(206,163,89,0.15),0_0_16px_rgba(206,163,89,0.12)] font-semibold text-primary",
+                    "bg-gradient-to-r from-primary/10 to-primary/5 shadow-[inset_0_1px_1px_rgba(168,90,56,0.15),0_0_16px_rgba(168,90,56,0.12)] font-semibold text-primary",
                 )}
               >
                 <LayoutDashboard

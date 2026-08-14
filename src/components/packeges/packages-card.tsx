@@ -1,109 +1,123 @@
 "use client";
-
+import React from "react";
 import { Check, Clock, Settings, Star, Utensils } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
 import { usePackages } from "./packages-context";
-import type { Package } from "@/types/package";
-
+import { Package } from "@/types/package";
 interface PackageCardProps {
   pkg: Package;
 }
 
-export default function PackageCard({ pkg }: PackageCardProps) {
+
+export default function PackageCard({
+  pkg,
+}: PackageCardProps) {
   const { toggleComparison, comparedIds } = usePackages();
 
   const isCompared = comparedIds.includes(pkg.id);
 
-  const finalPrice = Number(pkg.discountPrice ?? pkg.price);
-  const originalPrice = Number(pkg.price);
-
+  const finalPrice = Number(pkg.discountPrice ?? pkg.price ?? 0);
+  const originalPrice = Number(pkg.price ?? 0);
+  const displayRating = pkg.rating?.averageRating.toFixed(1);
+  const totalReviews = pkg.rating?.totalReview ?? 0;
+  console.log("pkg", pkg);
   return (
-    <article className="group bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all">
-      {/* Image */}
-      <div className="relative overflow-hidden">
-        <Image
-          src={pkg.thumbnail || "/placeholder.jpg"}
-          alt={pkg.name}
-          width={600}
-          height={400}
-          className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500"
-        />
+    <article className="group bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all flex flex-col justify-between">
+      <div>
+        {/* Thumbnail Badge Area */}
+        <div className="relative overflow-hidden aspect-4/3 bg-muted">
+          <Image
+            src={pkg.coverImage || "/upload/"}
+            alt={pkg.name}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+          />
 
-        <span className="absolute top-3 left-3 bg-primary text-primary-foreground text-[10px] px-2 py-1 rounded-lg">
-          {pkg.packageCategory?.name ?? "Package"}
-        </span>
-
-        {pkg.isCustomizable && (
-          <span className="absolute top-3 right-3 bg-green-600 text-white text-[10px] px-2 py-1 rounded-lg">
-            Customizable
+          <span className="absolute top-3 left-3 bg-primary/10 text-primary text-[10px] font-semibold px-2.5 py-1 rounded-lg shadow-sm">
+            {pkg.packageCategory?.name ?? "Meal Plan"}
           </span>
-        )}
+
+          {pkg.isCustomizable && (
+            <span className="absolute top-3 right-3 bg-emerald-600 text-white text-[10px] font-semibold px-2.5 py-1 rounded-lg shadow-sm">
+              Customizable
+            </span>
+          )}
+        </div>
+
+        {/* Card Body */}
+        <div className="p-4 flex flex-col gap-3">
+          {/* Header */}
+          <div className="flex justify-between items-start gap-2">
+            <h3 className="font-semibold text-base text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+              {pkg.name}
+            </h3>
+
+            <div className="flex items-center gap-1 text-xs font-semibold text-foreground shrink-0 bg-amber-500/10 px-1.5 py-0.5 rounded-md">
+              <Star size={13} className="fill-amber-400 text-amber-400" />
+              <span>{displayRating}</span>
+              <span className="text-muted-foreground">({totalReviews})</span>
+            </div>
+          </div>
+
+          {/* Description */}
+          <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+            {pkg.description || "No description provided."}
+          </p>
+
+          {/* Highlights Grid */}
+          <div className="grid grid-cols-3 gap-2 text-center bg-muted/50 rounded-xl p-2.5 border border-border/40">
+            <div>
+              <Clock className="mx-auto mb-1 size-3.5 text-muted-foreground" />
+              <p className="text-[11px] font-semibold text-foreground">{pkg.durationDays} Days</p>
+            </div>
+
+            <div>
+              <Utensils className="mx-auto mb-1 size-3.5 text-muted-foreground" />
+              <p className="text-[11px] font-semibold text-foreground">{pkg.totalMeals} Meals</p>
+            </div>
+
+            <div>
+              <Settings className="mx-auto mb-1 size-3.5 text-muted-foreground" />
+              <p className="text-[11px] font-semibold text-foreground truncate">{pkg.packageType}</p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Body */}
-      <div className="p-4 flex flex-col gap-4">
-        {/* Title */}
-        <div className="flex justify-between gap-2">
-          <h3 className="font-semibold line-clamp-1">{pkg.name}</h3>
-
-          <div className="flex items-center gap-1 text-xs">
-            <Star size={14} className="fill-yellow-400 text-yellow-400" />
-            {pkg.rating ?? 0}
-          </div>
+      {/* Footer Pricing & Actions */}
+      <div className="p-4 pt-0 flex justify-between items-end gap-2 border-t border-border/30 mt-2">
+        <div>
+          {pkg.discountPrice && originalPrice > finalPrice && (
+            <p className="text-[11px] line-through text-muted-foreground font-medium">
+              ৳{originalPrice.toLocaleString()}
+            </p>
+          )}
+          <p className="text-lg font-extrabold text-primary">
+            ৳{finalPrice.toLocaleString()}
+          </p>
         </div>
 
-        {/* Description */}
-        <p className="text-sm text-muted-foreground line-clamp-2">{pkg.description}</p>
-
-        {/* Info */}
-        <div className="grid grid-cols-3 gap-2 text-center bg-muted rounded-xl p-3">
-          <div>
-            <Clock className="mx-auto mb-1 size-4 text-primary" />
-            <p className="text-xs font-medium">{pkg.durationDays} Days</p>
-          </div>
-
-          <div>
-            <Utensils className="mx-auto mb-1 size-4 text-primary" />
-            <p className="text-xs font-medium">{pkg.totalMeals} Meals</p>
-          </div>
-
-          <div>
-            <Settings className="mx-auto mb-1 size-4 text-primary" />
-            <p className="text-xs font-medium">{pkg.packageType}</p>
-          </div>
-        </div>
-
-        {/* Price */}
-        <div className="flex justify-between items-end">
-          <div>
-            {pkg.discountPrice && (
-              <p className="text-xs line-through text-muted-foreground">৳{originalPrice}</p>
-            )}
-
-            <p className="text-lg font-bold text-primary">৳{finalPrice}</p>
-          </div>
-
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => toggleComparison(pkg.id)}
-              className={`border rounded-lg px-3 py-2 text-xs transition ${
-                isCompared ? "bg-primary text-white border-primary" : "border-border"
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => toggleComparison(pkg.id)}
+            className={`border rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all flex items-center ${isCompared
+              ? "bg-primary text-primary-foreground border-primary"
+              : "border-border hover:bg-muted text-foreground"
               }`}
-            >
-              <Check size={14} className={`inline mr-1 ${isCompared ? "block" : "hidden"}`} />
-              Compare
-            </button>
+          >
+            {isCompared && <Check size={13} className="mr-1 shrink-0" />}
+            Compare
+          </button>
 
-            <Link
-              href={`/packages/${pkg.id}`}
-              className="bg-primary text-primary-foreground rounded-lg px-3 py-2 text-xs"
-            >
-              Details
-            </Link>
-          </div>
+          <Link
+            href={`/packages/${pkg.id}`}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg px-3 py-1.5 text-xs transition-colors flex items-center"
+          >
+            Details
+          </Link>
         </div>
       </div>
     </article>

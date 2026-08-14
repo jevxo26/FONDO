@@ -74,7 +74,7 @@ export function CardPreview({
           )}
           <div className="absolute left-2.5 top-2.5 flex flex-wrap gap-1.5">
             {featured && (
-              <Badge className="gap-1 bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(206,163,89,0.35)]">
+              <Badge className="gap-1 bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(168,90,56,0.35)]">
                 <Star className="size-3" />
                 Featured
               </Badge>

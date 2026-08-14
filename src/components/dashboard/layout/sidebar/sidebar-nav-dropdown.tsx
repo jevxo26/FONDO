@@ -29,13 +29,13 @@ const buttonClass =
   "rounded-lg px-3 py-2.5 h-auto gap-3 text-muted-foreground transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/8 cursor-pointer";
 
 const activeButtonClass =
-  "border-l-[3px] border-primary bg-gradient-to-r from-primary/10 to-primary/5 shadow-[inset_0_1px_1px_rgba(206,163,89,0.15),0_0_16px_rgba(206,163,89,0.12)] font-semibold text-primary";
+  "border-l-[3px] border-primary bg-gradient-to-r from-primary/10 to-primary/5 shadow-[inset_0_1px_1px_rgba(168,90,56,0.15),0_0_16px_rgba(168,90,56,0.12)] font-semibold text-primary";
 
 const childLinkClass =
   "w-full rounded-md px-3 py-2 text-[13px] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] flex items-center gap-2.5";
 
 const activeChildClass =
-  "font-semibold text-primary shadow-[inset_0_1px_1px_rgba(206,163,89,0.1),0_0_12px_rgba(206,163,89,0.08)] bg-gradient-to-r from-primary/8 to-primary/3";
+  "font-semibold text-primary shadow-[inset_0_1px_1px_rgba(168,90,56,0.1),0_0_12px_rgba(168,90,56,0.08)] bg-gradient-to-r from-primary/8 to-primary/3";
 
 const inactiveChildClass =
   "text-muted-foreground hover:bg-primary/5 hover:text-foreground";
@@ -73,7 +73,7 @@ function TreeChildren({
             <div
               className={cn(
                 "absolute top-1/2 -translate-y-1/2 size-2 rotate-45 transition-all duration-300",
-                isActive ? "bg-primary shadow-[0_0_8px_rgba(206,163,89,0.4)]" : "bg-primary/40",
+                isActive ? "bg-primary shadow-[0_0_8px_rgba(168,90,56,0.4)]" : "bg-primary/40",
               )}
               style={{ left: lineLeft - 3 }}
             />

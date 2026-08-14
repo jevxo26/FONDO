@@ -62,7 +62,7 @@ export function ChefStory() {
               <div className="flex flex-col gap-3">
                 <div className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/20 bg-primary/8 px-3 py-1.5">
                   <div className="size-1.5 rotate-45 bg-primary" />
-                  <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-primary">
+                  <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
                     {CHEF_STORY.label}
                   </span>
                 </div>

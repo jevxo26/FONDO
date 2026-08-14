@@ -5,7 +5,7 @@ export function VehicleTypesSection() {
     <section className="py-[var(--space-section)] bg-background border-b border-border">
       <div className="wrapper px-[var(--space-container)] space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <span className="text-xs font-bold uppercase tracking-wider text-primary">
+          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
             Flexible Transport
           </span>
           <h2 className="font-heading text-3xl sm:text-5xl tracking-tight text-foreground">
@@ -23,7 +23,7 @@ export function VehicleTypesSection() {
                 <h3 className="font-heading text-xl font-bold text-foreground">{v.type}</h3>
                 <p className="text-xs text-muted-foreground font-light leading-relaxed">{v.desc}</p>
               </div>
-              <span className="inline-block px-3 py-1 bg-secondary text-primary rounded-full text-[10px] font-bold uppercase tracking-wider border border-border w-max">
+              <span className="inline-block px-3 py-1 bg-secondary text-muted-foreground rounded-full text-[10px] font-bold uppercase tracking-wider border border-border w-max">
                 {v.req}
               </span>
             </div>

@@ -11,7 +11,7 @@ interface TransactionListProps {
 export function TransactionList({ transactions }: TransactionListProps) {
   return (
     <GlassCard
-      icon={<Receipt className="size-5 text-primary" />}
+      icon={<Receipt className="size-5 text-foreground" />}
       iconBg="bg-primary/10"
       title="Recent Transactions"
       value={transactions.length.toString()}

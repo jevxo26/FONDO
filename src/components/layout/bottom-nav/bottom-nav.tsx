@@ -75,7 +75,7 @@ export function BottomNav() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 500, damping: 15 }}
-                    className="absolute -top-0.5 left-1/2 ml-3 flex h-[20px] min-w-[20px] items-center justify-center rounded-full bg-gold-gradient px-[5px] text-[11px] font-bold text-primary-foreground leading-none ring-2 ring-background"
+                    className="absolute -top-0.5 left-1/2 ml-3 flex h-[20px] min-w-[20px] items-center justify-center rounded-full bg-primary px-[5px] text-[11px] font-bold text-primary-foreground leading-none ring-2 ring-background"
                   >
                     {cartCount > 9 ? "9+" : cartCount}
                   </motion.span>

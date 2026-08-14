@@ -1,12 +1,25 @@
 "use client";
 
 import { FormField } from "@/components/common/form-field";
-import { inputStyles } from "@/lib/schema/food-schema";
 import type { AdminFoodFormValues } from "@/lib/schema/admin-food-schema";
 import { FormSection } from "@/components/dashboard/common/form-section";
 import { CalendarClock, Plus, Trash2 } from "lucide-react";
-import { useFieldArray, type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
+import {
+  Controller,
+  useFieldArray,
+  type Control,
+  type FieldErrors,
+  type UseFormRegister,
+} from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface ScheduleSectionProps {
   register: UseFormRegister<AdminFoodFormValues>;
@@ -44,24 +57,38 @@ export function ScheduleSection({ register, errors, control }: ScheduleSectionPr
       )}
 
       {fields.map((field, index) => (
-        <div key={field.id} className="grid grid-cols-1 gap-3 rounded-xl border border-border/60 bg-card/60 p-4 md:grid-cols-3">
+        <div
+          key={field.id}
+          className="grid grid-cols-1 gap-3 rounded-xl border border-border/60 bg-card/60 p-4 md:grid-cols-3"
+        >
           <FormField label="Meal Type" error={errors.schedules?.[index]?.mealType}>
-            <select {...register(`schedules.${index}.mealType`)} className={inputStyles}>
-              {mealTypes.map((mt) => (
-                <option key={mt} value={mt}>
-                  {mt.charAt(0) + mt.slice(1).toLowerCase()}
-                </option>
-              ))}
-            </select>
+            <Controller
+              control={control}
+              name={`schedules.${index}.mealType`}
+              render={({ field }) => (
+                <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                  <SelectTrigger className="h-11 w-full">
+                    <SelectValue placeholder="Select meal..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {mealTypes.map((mt) => (
+                      <SelectItem key={mt} value={mt}>
+                        {mt.charAt(0) + mt.slice(1).toLowerCase()}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </FormField>
 
           <FormField label="Start Time" error={errors.schedules?.[index]?.startTime}>
-            <input type="time" {...register(`schedules.${index}.startTime`)} className={inputStyles} />
+            <Input type="time" {...register(`schedules.${index}.startTime`)} />
           </FormField>
 
           <FormField label="End Time" error={errors.schedules?.[index]?.endTime}>
             <div className="flex items-center gap-2">
-              <input type="time" {...register(`schedules.${index}.endTime`)} className={inputStyles} />
+              <Input type="time" {...register(`schedules.${index}.endTime`)} />
               <Button
                 type="button"
                 variant="ghost"

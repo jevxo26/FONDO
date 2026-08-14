@@ -50,7 +50,7 @@ export function TestimonialCard({ testimonial, className }: TestimonialCardProps
         ))}
       </div>
 
-      <p className="relative z-10 flex-1 text-sm leading-relaxed text-foreground/85">
+      <p className="relative z-10 flex-1 text-sm leading-relaxed text-primary/85">
         &ldquo;{testimonial.text}&rdquo;
       </p>
 

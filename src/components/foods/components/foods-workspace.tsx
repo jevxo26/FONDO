@@ -1,14 +1,15 @@
 "use client";
 
-import { useMemo } from "react";
+import { useDeferredValue, useEffect, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import { useFoods, type PriceFilter } from "./foods-provider";
 import { useFoodCategories, useGetFoods } from "@/store/api/slices/foods-api";
 import FoodGrid from "./food-grid";
 import Pagination from "./pagination";
 import type { Food } from "@/types/food";
-import Categories from "./categories";
-import { FoodFilters } from "./food-filters";
-import { FoodsFilterBar } from "./foods-filter-bar";
+import Categories, { CategoryChips } from "./categories";
+import { FoodsToolbar } from "./foods-toolbar";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -24,6 +25,26 @@ const inPriceRange = (food: Food, range: PriceFilter) => {
   return price >= 600;
 };
 
+function FoodGridSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div
+          key={i}
+          className="overflow-hidden rounded-4xl border border-border/40 bg-card p-4 shadow-[var(--shadow-card)]"
+        >
+          <Skeleton className="aspect-4/3 w-full rounded-2xl" />
+          <div className="space-y-3 p-4">
+            <Skeleton className="h-4 w-2/3 rounded-full" />
+            <Skeleton className="h-3 w-full rounded-full" />
+            <Skeleton className="h-3 w-1/2 rounded-full" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function FoodsWorkspace() {
   const {
     activeCategory,
@@ -31,8 +52,8 @@ export default function FoodsWorkspace() {
     activeSubCategory,
     setActiveSubCategory,
     searchQuery,
+    setSearchQuery,
     sortBy,
-    setSortBy,
     currentPage,
     setCurrentPage,
     foodType,
@@ -42,16 +63,47 @@ export default function FoodsWorkspace() {
     resetFilters,
   } = useFoods();
 
+  const searchParams = useSearchParams();
+
   const { data: categoriesData } = useFoodCategories();
   const categories = useMemo(() => categoriesData ?? [], [categoriesData]);
 
+  // Sync search + category from the URL (navbar search / popular category links).
+  useEffect(() => {
+    const q = searchParams.get("search");
+    if (q !== null) {
+      setSearchQuery(q);
+      setCurrentPage(1);
+    }
+    const catSlug = searchParams.get("category");
+    if (catSlug) {
+      const match = categories.find((c) => c.slug === catSlug);
+      if (match) {
+        setActiveCategory(match.name);
+        setActiveSubCategory("All");
+        setCurrentPage(1);
+      }
+    }
+  }, [
+    searchParams,
+    categories,
+    setSearchQuery,
+    setActiveCategory,
+    setActiveSubCategory,
+    setCurrentPage,
+  ]);
+
   // Fetch all active foods once, then filter/sort/paginate client-side.
   const { data, isLoading } = useGetFoods();
+  const allFoods = useMemo(() => data?.items ?? [], [data]);
+
+  // Keep the search input responsive while the (heavier) filter pass runs.
+  const deferredSearch = useDeferredValue(searchQuery);
 
   const filteredFoods = useMemo(() => {
-    const term = searchQuery.trim().toLowerCase();
+    const term = deferredSearch.trim().toLowerCase();
 
-    const result = (data?.items ?? []).filter((food: Food) => {
+    const result = allFoods.filter((food: Food) => {
       if (activeCategory !== "All" && food.category?.name !== activeCategory) return false;
       if (activeSubCategory !== "All" && food.subCategory?.name !== activeSubCategory) return false;
       if (foodType !== "All" && food.foodType !== foodType) return false;
@@ -76,10 +128,10 @@ export default function FoodsWorkspace() {
         return result;
     }
   }, [
-    data,
+    allFoods,
     activeCategory,
     activeSubCategory,
-    searchQuery,
+    deferredSearch,
     sortBy,
     foodType,
     spiceLevel,
@@ -91,90 +143,84 @@ export default function FoodsWorkspace() {
   const safePage = Math.min(currentPage, totalPages);
   const pageItems = filteredFoods.slice((safePage - 1) * ITEMS_PER_PAGE, safePage * ITEMS_PER_PAGE);
 
-  const handleClearFilters = resetFilters;
-
-  const hasActiveFilters =
-    activeCategory !== "All" ||
-    activeSubCategory !== "All" ||
-    !!searchQuery ||
-    foodType !== "All" ||
-    spiceLevel !== "All" ||
-    dietType !== "All" ||
-    priceRange !== "All";
+  const pickCategory = (name: string) => {
+    setActiveCategory(name);
+    setActiveSubCategory("All");
+    setCurrentPage(1);
+  };
 
   return (
-    <section className="py-12 bg-muted/30">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Side Hierarchy Filter Layout */}
-        <div className="lg:col-span-3 space-y-6">
-          <div className="relative overflow-hidden rounded-3xl border border-border/40 bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-5 shadow-[var(--shadow-card)]">
-            <div className="pointer-events-none absolute right-3 top-3 size-[7px] rotate-45 border border-primary/30" />
-            <h3 className="font-heading text-base font-normal text-foreground">Categories</h3>
-            <div className="flex flex-col gap-1">
-              <button
-                onClick={() => setActiveCategory("All")}
-                className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                  activeCategory === "All"
-                    ? "bg-primary/10 text-primary font-bold"
-                    : "text-muted-foreground hover:bg-muted"
-                }`}
-              >
-                All Menu Categories
-              </button>
+    <section className="relative bg-muted/30 py-8 lg:py-12">
+      <div className="wrapper space-y-6 lg:space-y-8">
+        <FoodsToolbar foods={allFoods} totalCount={filteredFoods.length} />
 
-              {categories.map((cat) => (
-                <Categories
-                  key={cat.id}
-                  cat={cat}
-                  activeCategory={activeCategory}
-                  setActiveCategory={setActiveCategory}
-                  setActiveSubCategory={setActiveSubCategory}
-                  setCurrentPage={setCurrentPage}
-                  activeSubCategory={activeSubCategory}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Right Side Foods Display Hub Grid */}
-        <div className="lg:col-span-9 space-y-6">
-          <FoodFilters foods={data?.items ?? []} />
-          <FoodsFilterBar
-            totalCount={filteredFoods.length}
-            sortBy={sortBy}
-            onSortChange={setSortBy}
-            onPageReset={() => setCurrentPage(1)}
-          />
-          {/* Main Dynamic Loop */}
-          {isLoading && !data ? (
-            <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="animate-pulse overflow-hidden rounded-4xl border border-border/40 bg-card p-4 shadow-[var(--shadow-card)]"
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
+          {/* Desktop hierarchy sidebar */}
+          <aside className="hidden lg:col-span-3 lg:block">
+            <div className="relative overflow-hidden rounded-3xl border border-border/40 bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-5 shadow-[var(--shadow-card)]">
+              <div className="pointer-events-none absolute right-3 top-3 size-[7px] rotate-45 border border-primary/30" />
+              <div className="pointer-events-none absolute -bottom-6 -right-6 z-0 size-36 rounded-full bg-primary/8 blur-3xl" />
+              <h3 className="font-heading text-base font-normal text-foreground">Categories</h3>
+              <div className="mt-4 flex flex-col gap-1">
+                <button
+                  onClick={() => pickCategory("All")}
+                  className={`w-full rounded-xl px-3 py-2 text-left text-xs font-medium transition-all duration-300 ${
+                    activeCategory === "All"
+                      ? "border-l-2 border-primary bg-gradient-to-r from-primary/10 to-transparent font-bold text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
                 >
-                  <div className="aspect-4/3 w-full rounded-2xl bg-muted" />
-                  <div className="space-y-3 p-4">
-                    <div className="h-4 w-2/3 rounded bg-muted" />
-                    <div className="h-3 w-full rounded bg-muted" />
-                    <div className="h-3 w-1/2 rounded bg-muted" />
-                  </div>
-                </div>
-              ))}
+                  All Menu Categories
+                </button>
+
+                {categories.map((cat) => (
+                  <Categories
+                    key={cat.id}
+                    cat={cat}
+                    activeCategory={activeCategory}
+                    setActiveCategory={setActiveCategory}
+                    setActiveSubCategory={setActiveSubCategory}
+                    setCurrentPage={setCurrentPage}
+                    activeSubCategory={activeSubCategory}
+                  />
+                ))}
+              </div>
             </div>
-          ) : (
-            <FoodGrid
-              filteredFoods={pageItems}
-              onClearFilters={handleClearFilters}
-              hasActiveFilters={hasActiveFilters}
+          </aside>
+
+          {/* Foods display hub */}
+          <div className="space-y-6 lg:col-span-9 lg:space-y-8">
+            <CategoryChips
+              categories={categories}
+              activeCategory={activeCategory}
+              onSelect={pickCategory}
+              className="lg:hidden"
             />
-          )}
-          <Pagination
-            currentPage={safePage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
+
+            {isLoading && !data ? (
+              <FoodGridSkeleton />
+            ) : (
+              <FoodGrid
+                filteredFoods={pageItems}
+                onClearFilters={resetFilters}
+                hasActiveFilters={
+                  activeCategory !== "All" ||
+                  activeSubCategory !== "All" ||
+                  !!searchQuery ||
+                  foodType !== "All" ||
+                  spiceLevel !== "All" ||
+                  dietType !== "All" ||
+                  priceRange !== "All"
+                }
+              />
+            )}
+
+            <Pagination
+              currentPage={safePage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </div>
         </div>
       </div>
     </section>

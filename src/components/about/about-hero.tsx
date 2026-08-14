@@ -3,22 +3,22 @@ import React from "react";
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-[85vh] flex items-center bg-[#FAF5EB]">
+    <section className="relative min-h-[85vh] flex items-center bg-background">
       <div className="w-full max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center py-12">
         {/* Left text column */}
         <div className="lg:col-span-6 space-y-6">
-          <h1 className="font-heading text-4xl md:text-6xl font-normal leading-tight text-[#16100C]">
+          <h1 className="font-heading text-4xl md:text-6xl font-normal leading-tight text-foreground">
             Healthy Meals Delivered Every Day.
           </h1>
-          <p className="font-sans text-sm md:text-base text-[#16100C]/70 max-w-lg leading-relaxed">
+          <p className="font-sans text-sm md:text-base text-foreground/70 max-w-lg leading-relaxed">
             Beautiful recipes you enjoy. Fresh, organic ingredients prepared by culinary specialists
             and delivered fresh to your doorstep within a dedicated daily window.
           </p>
           <div className="flex flex-wrap gap-4 pt-2">
-            <button className="px-6 py-3 bg-[#CEA359] text-[#FAF5EB] font-sans font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-[#b08443] transition-colors">
+            <button className="px-6 py-3 bg-primary text-background font-sans font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-primary/90 transition-colors">
               Explore Meal Plans
             </button>
-            <button className="px-6 py-3 border border-[#16100C]/20 text-[#16100C] font-sans font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-[#16100C]/5 transition-colors">
+            <button className="px-6 py-3 border border-foreground/20 text-foreground font-sans font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-foreground/5 transition-colors">
               Customize Your Plan
             </button>
           </div>

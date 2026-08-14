@@ -1,7 +1,6 @@
 "use client";
 
 import { FormField } from "@/components/common/form-field";
-import { inputStyles } from "@/lib/schema/food-schema";
 import type { AdminFoodFormValues, AddonForm } from "@/lib/schema/admin-food-schema";
 import { FormSection } from "@/components/dashboard/common/form-section";
 import { ListPlus, Plus, Trash2 } from "lucide-react";
@@ -12,6 +11,7 @@ import {
   type UseFormRegister,
 } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface AddonSectionProps {
   register: UseFormRegister<AdminFoodFormValues>;
@@ -54,20 +54,15 @@ function AddonCard({
 
       <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
         <FormField label="Group Name" error={errors.addons?.[index]?.name} required>
-          <input
-            {...register(`addons.${index}.name`)}
-            placeholder="e.g. Extra Toppings"
-            className={inputStyles}
-          />
+          <Input {...register(`addons.${index}.name`)} placeholder="e.g. Extra Toppings" />
         </FormField>
 
         <FormField label="Max Selection" error={errors.addons?.[index]?.maxSelection}>
-          <input
+          <Input
             type="number"
             min="0"
             {...register(`addons.${index}.maxSelection`)}
             placeholder="Leave empty for unlimited"
-            className={inputStyles}
           />
         </FormField>
 
@@ -75,7 +70,7 @@ function AddonCard({
           <input
             type="checkbox"
             {...register(`addons.${index}.isRequired`)}
-            className="size-4 rounded border-input text-primary accent-primary"
+            className="size-4 rounded border-input accent-primary"
           />
           <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
             Required
@@ -98,30 +93,35 @@ function AddonCard({
             Add Item
           </Button>
         </div>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Set each option&apos;s price here — customers pay the item price they pick.
+        </p>
 
-        {fields.length === 0 && <p className="mt-2 text-xs text-muted-foreground">No items in this group.</p>}
+        {fields.length === 0 && (
+          <p className="mt-2 text-xs text-muted-foreground">No items in this group.</p>
+        )}
 
         <div className="mt-3 space-y-2">
           {fields.map((item, itemIndex) => (
-            <div key={item.id} className="grid grid-cols-1 gap-2 rounded-md border border-border/60 p-2 sm:grid-cols-3">
-              <input
+            <div
+              key={item.id}
+              className="grid grid-cols-1 gap-2 rounded-md border border-border/60 p-2 sm:grid-cols-3"
+            >
+              <Input
                 {...register(`addons.${index}.items.${itemIndex}.name`)}
                 placeholder="Item name"
-                className={inputStyles}
               />
-              <input
+              <Input
                 type="number"
                 step="0.01"
                 min="0"
                 {...register(`addons.${index}.items.${itemIndex}.price`)}
                 placeholder="Price"
-                className={inputStyles}
               />
               <div className="flex items-center gap-2">
-                <input
+                <Input
                   {...register(`addons.${index}.items.${itemIndex}.image`)}
                   placeholder="Image URL (optional)"
-                  className={inputStyles}
                 />
                 <Button
                   type="button"

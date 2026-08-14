@@ -70,7 +70,7 @@ export function Footer() {
                 <ul className="flex flex-col gap-4">
                   {FOOTER_LINKS.contact.items.map((item) => (
                     <li key={item.text} className="flex items-start gap-3">
-                      <item.icon className="size-5 shrink-0 pt-0.5 text-primary" />
+                      <item.icon className="size-5 shrink-0 pt-0.5 text-background/80" />
                       <span className="text-base text-background/80">{item.text}</span>
                     </li>
                   ))}

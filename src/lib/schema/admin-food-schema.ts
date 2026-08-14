@@ -78,6 +78,10 @@ export interface AdminFoodFormValues {
   protein: number | null;
   fat: number | null;
   carbohydrate: number | null;
+  fiber: number | null;
+  sugar: number | null;
+  sodium: number | null;
+  cholesterol: number | null;
   servingSize: string;
   status: string;
   isFeatured: boolean;
@@ -189,6 +193,10 @@ export const adminFoodSchema = yup.object().shape({
   protein: yup.number().typeError("Must be a number").nullable(),
   fat: yup.number().typeError("Must be a number").nullable(),
   carbohydrate: yup.number().typeError("Must be a number").nullable(),
+  fiber: yup.number().typeError("Must be a number").nullable(),
+  sugar: yup.number().typeError("Must be a number").nullable(),
+  sodium: yup.number().typeError("Must be a number").nullable(),
+  cholesterol: yup.number().typeError("Must be a number").nullable(),
   servingSize: yup.string(),
   status: yup.string().required("Status is required"),
   isFeatured: yup.boolean(),
@@ -227,8 +235,12 @@ export const adminFoodInitialValues: AdminFoodFormValues = {
   protein: null,
   fat: null,
   carbohydrate: null,
+  fiber: null,
+  sugar: null,
+  sodium: null,
+  cholesterol: null,
   servingSize: "",
-  status: "DRAFT",
+  status: "APPROVED",
   isFeatured: false,
   isPopular: false,
   isRecommended: false,

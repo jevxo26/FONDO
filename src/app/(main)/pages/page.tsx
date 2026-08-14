@@ -31,7 +31,7 @@ export default function PagesIndexPage() {
                 className="group flex items-center justify-between rounded-2xl border border-border bg-card p-6 transition-all hover:shadow-md hover:border-primary/20"
               >
                 <div className="flex items-center gap-4">
-                  <div className="rounded-full bg-primary/10 p-3 text-primary">
+                  <div className="rounded-full bg-primary/10 p-3 text-foreground">
                     <FileText className="h-5 w-5" />
                   </div>
                   <div>

@@ -29,7 +29,7 @@ export function WalletSummaryCards() {
 
       <div className="col-span-12 lg:col-span-6">
         <GlassCard
-          icon={<PersonStanding className="size-5 text-primary" />}
+          icon={<PersonStanding className="size-5 text-foreground" />}
           iconBg="bg-primary/10"
           title="Daily Top-ups"
           value="৳1,42,500"

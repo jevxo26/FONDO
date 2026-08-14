@@ -6,7 +6,7 @@ import { StatCard } from "@/components/dashboard/common/stat-card";
 import { useOrderAnalytics } from "@/hooks/use-order-analytics";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, CartesianGrid } from "recharts";
 
-const PIE_COLORS = ["#ce9d59", "#7c3aed", "#06b6d4", "#10b981", "#f59e0b", "#ef4444", "#64748b"];
+const PIE_COLORS = ["#A85A38", "#7c3aed", "#06b6d4", "#10b981", "#f59e0b", "#ef4444", "#64748b"];
 
 export default function OrderAnalyticsPage() {
   const { analytics, isLoading } = useOrderAnalytics();
@@ -45,15 +45,15 @@ export default function OrderAnalyticsPage() {
                 <AreaChart data={analytics.dailyVolume}>
                   <defs>
                     <linearGradient id="rev" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#ce9d59" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#ce9d59" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#A85A38" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="#A85A38" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
                   <XAxis dataKey="date" tick={{ fontSize: 10 }} />
                   <YAxis tick={{ fontSize: 10 }} />
                   <Tooltip />
-                  <Area type="monotone" dataKey="revenue" stroke="#ce9d59" fill="url(#rev)" name="Revenue (৳)" />
+                  <Area type="monotone" dataKey="revenue" stroke="#A85A38" fill="url(#rev)" name="Revenue (৳)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>

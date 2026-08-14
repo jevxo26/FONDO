@@ -59,7 +59,7 @@ export function PaymentSummaryCards() {
         </div>
       </DarkCard>
       <GlassCard
-        icon={<TrendingUp className="size-5 text-primary" />}
+        icon={<TrendingUp className="size-5 text-foreground" />}
         iconBg="bg-primary/10"
         title="Pending Settlements"
         value={`৳${pendingSettlements.toLocaleString()}`}

@@ -1,8 +1,10 @@
 "use client";
 
+import FoodCard from "@/components/common/food-card/food-card";
 import type { Food } from "@/types/food";
-import { Award } from "lucide-react";
-import FoodCard from "@/components/common/cards/food-card/food-card";
+import { Button } from "@/components/ui/button";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { SearchX } from "lucide-react";
 
 interface FoodGridProps {
   filteredFoods: Food[];
@@ -13,27 +15,37 @@ interface FoodGridProps {
 const FoodGrid = ({ filteredFoods, onClearFilters, hasActiveFilters }: FoodGridProps) => {
   if (filteredFoods.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-3xl border border-border/60 bg-card py-20 shadow-[var(--shadow-card)]">
-        <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
-          <Award className="size-6 text-primary" />
-        </div>
-        <p className="text-xs text-muted-foreground">No dishes match your filters.</p>
+      <Empty className="min-h-[320px] rounded-4xl border border-border/60 bg-card py-16 shadow-[var(--shadow-card)]">
+        <EmptyHeader>
+          <EmptyMedia variant="icon" className="size-14 rounded-2xl bg-secondary [&_svg]:size-7 [&_svg]:text-muted-foreground">
+            <SearchX />
+          </EmptyMedia>
+          <EmptyTitle className="font-heading text-lg font-semibold">No dishes found</EmptyTitle>
+          <EmptyDescription>
+            Nothing matches your current search or filters. Try a different keyword or broaden your
+            filters.
+          </EmptyDescription>
+        </EmptyHeader>
         {hasActiveFilters && onClearFilters && (
-          <button
-            onClick={onClearFilters}
-            className="rounded-full border border-border/60 px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-foreground transition-colors hover:bg-muted"
-          >
-            Clear Filters
-          </button>
+          <EmptyContent>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClearFilters}
+              className="rounded-full px-5"
+            >
+              Clear all filters
+            </Button>
+          </EmptyContent>
         )}
-      </div>
+      </Empty>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 items-start gap-5 md:grid-cols-2 lg:grid-cols-3">
       {filteredFoods.map((food) => (
-        <FoodCard key={food.id} food={food} />
+        <FoodCard key={food.id} food={food} lazy />
       ))}
     </div>
   );

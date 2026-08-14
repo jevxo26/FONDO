@@ -1,6 +1,6 @@
-import type { Food } from "@/types/food";
-import FoodCard from "@/components/common/cards/food-card/food-card";
+import FoodCard from "@/components/common/food-card/food-card";
 import { SectionReveal, SectionRevealItem } from "@/components/common/section-reveal";
+import type { Food } from "@/types/food";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
@@ -30,7 +30,7 @@ export function RelatedFoods({ foods }: RelatedFoodsProps) {
           variant="perspectiveReveal"
           stagger
           staggerDelay={0.08}
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-4"
         >
           {foods.map((food) => (
             <SectionRevealItem key={food.id}>

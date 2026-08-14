@@ -83,7 +83,7 @@ export const categoryColumns: ColumnDef<AdminFoodCategory>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Popular" />,
     cell: ({ row }) =>
       row.original.popular ? (
-        <span className="inline-block rounded-full bg-gold-gradient px-2.5 py-0.5 text-xs font-semibold text-primary-foreground">
+        <span className="inline-block rounded-full bg-primary px-2.5 py-0.5 text-xs font-semibold text-primary-foreground">
           Popular
         </span>
       ) : (

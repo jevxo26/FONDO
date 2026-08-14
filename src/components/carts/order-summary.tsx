@@ -66,7 +66,7 @@ export function OrderSummary({ subtotal, savings, deliveryCharges }: OrderSummar
           <ShieldCheck className="size-3.5 text-success" /> Secure
         </div>
         <div className="flex items-center gap-1">
-          <Truck className="size-3.5 text-primary" /> Fast Delivery
+          <Truck className="size-3.5 text-muted-foreground" /> Fast Delivery
         </div>
       </div>
     </div>

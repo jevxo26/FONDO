@@ -33,7 +33,7 @@ export function DarkCard({
         )}
       >
         <div className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-transparent via-transparent to-primary/10" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-1.5 rounded-t-3xl bg-primary shadow-[0_2px_8px_rgba(206,163,89,0.25)]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-1.5 rounded-t-3xl bg-primary shadow-[0_2px_8px_rgba(168,90,56,0.25)]" />
         <div className="pointer-events-none absolute right-3 top-3 z-10 size-[7px] rotate-45 border border-primary/40" />
         <div className="pointer-events-none absolute -bottom-8 -right-8 flex size-48 items-center justify-center opacity-20 transition-all duration-500 group-hover:scale-110 group-hover:opacity-30">
           {icon}

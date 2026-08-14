@@ -1,14 +1,14 @@
 import { cn } from "@/lib/utils";
 
-interface Category {
+export interface FoodCategoryOption {
   id: string;
   name: string;
-  subCategories?: Category[];
+  subCategories?: FoodCategoryOption[];
   _count?: { foods?: number };
 }
 
 interface CategoriesProps {
-  cat: Category;
+  cat: FoodCategoryOption;
   activeCategory: string;
   setActiveCategory: (name: string) => void;
   setActiveSubCategory: (name: string) => void;
@@ -95,6 +95,47 @@ export default function Categories({
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+export function CategoryChips({
+  categories,
+  activeCategory,
+  onSelect,
+  className,
+}: {
+  categories: FoodCategoryOption[];
+  activeCategory: string;
+  onSelect: (name: string) => void;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+        className,
+      )}
+    >
+      {["All", ...categories.map((c) => c.name)].map((name) => {
+        const isActive = activeCategory === name;
+        return (
+          <button
+            key={name}
+            type="button"
+            onClick={() => onSelect(name)}
+            aria-pressed={isActive}
+            className={cn(
+              "h-9 shrink-0 rounded-full border px-4 text-xs font-semibold whitespace-nowrap uppercase tracking-wider transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-95",
+              isActive
+                ? "border-primary bg-primary text-primary-foreground shadow-[var(--shadow-badge)]"
+                : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground",
+            )}
+          >
+            {name}
+          </button>
+        );
+      })}
     </div>
   );
 }

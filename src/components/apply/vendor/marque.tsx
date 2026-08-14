@@ -17,7 +17,7 @@ export function VendorMarqueeSection() {
               key={index}
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-background border border-border text-xs font-bold text-foreground opacity-80 hover:opacity-100 transition-opacity whitespace-nowrap shadow-[var(--shadow-card)]"
             >
-              <Utensils className="size-3.5 text-primary" />
+              <Utensils className="size-3.5 text-muted-foreground" />
               {logo}
             </div>
           ))}

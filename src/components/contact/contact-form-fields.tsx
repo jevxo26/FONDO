@@ -87,10 +87,10 @@ export function ContactFormFields({ formData, onChange, onSubmit }: Props) {
         <div className="mt-2">
           <button
             type="submit"
-            className="inline-flex items-center gap-4 h-14 pl-6 pr-2 rounded-full bg-[#16100C] text-white hover:bg-[#2C241E] transition-colors group"
+            className="inline-flex items-center gap-4 h-14 pl-6 pr-2 rounded-full bg-foreground text-white hover:bg-foreground/90 transition-colors group"
           >
             <span className="font-sans text-sm font-semibold tracking-wide">Send Message</span>
-            <div className="size-10 rounded-full bg-primary flex items-center justify-center text-[#16100C] transition-transform group-hover:scale-105">
+            <div className="size-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground transition-transform group-hover:scale-105">
               <Send className="size-4 ml-0.5" />
             </div>
           </button>

@@ -1,12 +1,13 @@
 "use client";
 
 import { FormField } from "@/components/common/form-field";
-import { inputStyles } from "@/lib/schema/food-schema";
 import type { AdminFoodFormValues } from "@/lib/schema/admin-food-schema";
 import { FormSection } from "@/components/dashboard/common/form-section";
 import { BadgeDollarSign, Plus, Trash2 } from "lucide-react";
 import { useFieldArray, type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 
 interface PricingSectionProps {
   register: UseFormRegister<AdminFoodFormValues>;
@@ -37,25 +38,23 @@ export function PricingSection({ register, errors, control }: PricingSectionProp
       {fields.map((field, index) => (
         <div key={field.id} className="grid grid-cols-1 gap-3 rounded-xl border border-border/60 bg-card/60 p-4 md:grid-cols-2">
           <FormField label="Base Price (৳)" error={errors.prices?.[index]?.basePrice} required>
-            <input
+            <Input
               type="number"
               step="0.01"
               min="0"
               {...register(`prices.${index}.basePrice`)}
               placeholder="0.00"
-              className={inputStyles}
             />
           </FormField>
 
           <FormField label="Sale Price (৳)" error={errors.prices?.[index]?.salePrice}>
             <div className="flex items-center gap-2">
-              <input
+              <Input
                 type="number"
                 step="0.01"
                 min="0"
                 {...register(`prices.${index}.salePrice`)}
                 placeholder="0.00"
-                className={inputStyles}
               />
               <Button
                 type="button"

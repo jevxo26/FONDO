@@ -8,33 +8,51 @@ import { closeSearch, toggleSearch } from "@/store/slices/uiSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useFoodCategories } from "@/store/api/slices/foods-api";
 import { Skeleton } from "@/components/ui/skeleton";
-import { navIcon, navIconPill } from "./pill-styles";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function SearchForm() {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const isOpen = useAppSelector((state) => state.ui.isSearchOpen);
+  const [query, setQuery] = useState("");
   const { data: popularCategories, isLoading } = useFoodCategories({
     popular: true,
     limit: 4,
   });
 
+  const submitSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(closeSearch());
+    const q = query.trim();
+    router.push(q ? `/foods?search=${encodeURIComponent(q)}` : "/foods");
+  };
+
+  const searchInputClass =
+    "h-full flex-1 rounded-full border-0 bg-transparent px-2 text-base shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0";
+
   return (
     <>
       {/* Inline search bar — xl+ only */}
       <div className="hidden xl:flex">
-        <form className="flex h-11 w-[260px] items-center gap-1 rounded-full border border-border/70 bg-secondary/50 py-1 pl-4 pr-1 shadow-[var(--shadow-card)] transition-all duration-300 focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/10 focus-within:shadow-[var(--shadow-elevated)] xl:w-[300px] 2xl:w-[320px]">
-          <Search className="size-4 shrink-0 text-primary/70" />
+        <form
+          onSubmit={submitSearch}
+          className="flex h-11 w-[260px] items-center gap-1 rounded-full border border-border/70 bg-secondary/50 py-1 pl-4 pr-1 shadow-[var(--shadow-card)] transition-all duration-300 focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/10 focus-within:shadow-[var(--shadow-elevated)] xl:w-[300px] 2xl:w-[320px]"
+        >
+          <Search className="size-4 shrink-0 text-muted-foreground" />
           <Input
             type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
             placeholder="Search for products..."
             size="sm"
-            className="h-full flex-1 rounded-full border-0 bg-transparent px-2 text-base shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            className={searchInputClass}
           />
           <Button
             type="submit"
             variant="default"
-            className="h-9 gap-1.5 rounded-full px-4 text-sm font-medium text-primary-foreground transition-all duration-300 hover:shadow-[0_0_20px_rgba(206,163,89,0.35)]"
+            className="h-9 gap-1.5 rounded-full px-4 text-sm font-medium text-primary-foreground transition-all duration-300 hover:shadow-[0_0_20px_rgba(168,90,56,0.35)]"
           >
             <Search className="size-4" />
             Search
@@ -46,32 +64,37 @@ export function SearchForm() {
       <button
         onClick={() => dispatch(toggleSearch())}
         className={cn(
-          navIconPill,
+          "nav-icon-pill",
           "xl:hidden",
           isOpen
             ? "bg-none bg-foreground text-background border-primary/40"
-            : "text-gold-strong",
+            : "text-primary",
         )}
         aria-label="Toggle search"
       >
-        {isOpen ? <X className={cn(navIcon)} /> : <Search className={cn(navIcon)} />}
+        {isOpen ? <X className="nav-icon" /> : <Search className="nav-icon" />}
       </button>
 
       {isOpen && (
         <div className="absolute inset-x-0 top-full border-b border-primary/10 bg-background/95 px-4 py-4 backdrop-blur-xl shadow-[0_24px_50px_-20px_rgba(30,26,22,0.25)] xl:hidden animate-in fade-in slide-in-from-top-2 duration-200">
-          <form className="flex h-11 w-full items-center gap-1 rounded-full border border-border/70 bg-secondary/50 py-1 pl-4 pr-1 shadow-[var(--shadow-card)] transition-all duration-300 focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/10">
-            <Search className="size-4 shrink-0 text-primary/70" />
+          <form
+            onSubmit={submitSearch}
+            className="flex h-11 w-full items-center gap-1 rounded-full border border-border/70 bg-secondary/50 py-1 pl-4 pr-1 shadow-[var(--shadow-card)] transition-all duration-300 focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/10"
+          >
+            <Search className="size-4 shrink-0 text-muted-foreground" />
             <Input
               type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Search for products..."
               size="sm"
-              className="h-full flex-1 rounded-full border-0 bg-transparent px-2 text-base shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+              className={searchInputClass}
             />
             <Button
               type="submit"
               variant="default"
               aria-label="Search"
-              className="h-9 rounded-full px-4 text-primary-foreground transition-all duration-300 hover:shadow-[0_0_20px_rgba(206,163,89,0.35)]"
+              className="h-9 rounded-full px-4 text-primary-foreground transition-all duration-300 hover:shadow-[0_0_20px_rgba(168,90,56,0.35)]"
             >
               <Search className="size-4" />
             </Button>

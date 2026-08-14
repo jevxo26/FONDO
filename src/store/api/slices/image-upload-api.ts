@@ -1,40 +1,22 @@
-import { api } from "../base-api";
-import { createMutationWrapper } from "../mutation-wrapper";
-
-
-export interface UploadImageResponse {
-    message: string;
-    url: string;
-}
-
-export const uploadApi = api.injectEndpoints({
-    endpoints: (builder) => ({
-        uploadImage: builder.mutation<UploadImageResponse, File>({
-            query: (file) => {
-                const formData = new FormData();
-                formData.append("image", file);
-
-                return {
-                    url: "/upload/image",
-                    method: "POST",
-                    body: formData,
-                };
-            },
-        }),
-    }),
-
-    overrideExisting: true,
-});
-
-export const {
-    useUploadImageMutation,
-} = uploadApi;
+import { useState } from "react";
+import { uploadImage } from "@/lib/img-upload";
 
 export function useUploadImage() {
-    const [trigger, { isLoading }] = useUploadImageMutation();
+  const [isLoading, setIsLoading] = useState(false);
 
-    return {
-        ...createMutationWrapper(trigger),
-        isLoading,
-    };
+  const mutateAsync = async (file: File) => {
+    setIsLoading(true);
+    try {
+      return await uploadImage(file);
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return {
+    mutateAsync,
+    isLoading,
+  };
 }

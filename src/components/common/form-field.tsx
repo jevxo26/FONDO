@@ -1,6 +1,7 @@
 "use client";
 
 import React, { type ReactNode } from "react";
+import { AlertCircle } from "lucide-react";
 import type { FieldError as FieldErrorType } from "react-hook-form";
 
 function Field({
@@ -23,7 +24,7 @@ function FieldLabel({ children, htmlFor }: { children: ReactNode; htmlFor?: stri
   return (
     <label
       htmlFor={htmlFor}
-      className="block text-xs font-bold uppercase tracking-wider text-muted-foreground"
+      className="block text-sm font-semibold text-foreground [letter-spacing:0.02em]"
     >
       {children}
     </label>
@@ -37,13 +38,19 @@ function FieldError({
 }) {
   const err = errors?.find((e) => e?.message);
   if (!err || !err.message) return null;
-  return <p className="text-xs font-medium text-red-500 mt-1">{err.message}</p>;
+  return (
+    <p className="mt-1 flex items-center gap-1 text-xs font-medium text-destructive">
+      <AlertCircle className="size-3.5 shrink-0" />
+      {err.message}
+    </p>
+  );
 }
 
 interface FormFieldProps {
   label: string;
   htmlFor?: string;
   error?: FieldErrorType | { message?: string };
+  hint?: string;
   children: ReactNode;
   required?: boolean;
   className?: string;
@@ -53,6 +60,7 @@ export function FormField({
   label,
   htmlFor,
   error,
+  hint,
   children,
   required,
   className,
@@ -61,9 +69,10 @@ export function FormField({
     <Field data-invalid={!!error} className={className}>
       <FieldLabel htmlFor={htmlFor}>
         {label}
-        {required && <span className="ml-0.5 text-primary">*</span>}
+        {required && <span className="ml-0.5 text-muted-foreground">*</span>}
       </FieldLabel>
       {children}
+      {hint && !error && <p className="text-xs text-muted-foreground">{hint}</p>}
       <FieldError errors={error ? [error] : undefined} />
     </Field>
   );

@@ -128,7 +128,7 @@ export default function PackageDetailPage({ params }: PackageDetailPageProps) {
           <div className="bg-card rounded-2xl border border-border p-6">
             <h3 className="mb-4 font-heading text-base font-bold text-foreground">Vendor</h3>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Store className="size-4 text-primary" />
+              <Store className="size-4 text-muted-foreground" />
               {pkg.vendor?.businessName ?? "—"}
             </div>
           </div>

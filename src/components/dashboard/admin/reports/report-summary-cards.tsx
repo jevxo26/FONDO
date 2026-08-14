@@ -48,7 +48,7 @@ export function ReportSummaryCards() {
         className="flex-1"
       />
       <GlassCard
-        icon={<Store className="size-5 text-primary" />}
+        icon={<Store className="size-5 text-foreground" />}
         iconBg="bg-primary/10"
         title="Revenue by Channel"
         value="3 channels"

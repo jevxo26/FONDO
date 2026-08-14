@@ -21,7 +21,7 @@ export function WalletTopupForm({ onTopup, isPending }: WalletTopupFormProps) {
   return (
     <div className="rounded-3xl border border-border/40 bg-card p-6 shadow-[var(--shadow-card)]">
       <h3 className="flex items-center gap-2 font-heading text-lg font-bold text-foreground">
-        <Plus className="size-4 text-primary" /> Add Money
+        <Plus className="size-4 text-foreground" /> Add Money
       </h3>
       <p className="mt-1 text-sm text-muted-foreground">Top up your wallet via SSLCommerz.</p>
       <div className="mt-4 flex items-center gap-2">

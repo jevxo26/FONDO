@@ -1,4 +1,4 @@
-import FoodCard from "@/components/common/cards/food-card/food-card";
+import FoodCard from "@/components/common/food-card/food-card";
 import { SectionHeader } from "@/components/common/section-header";
 import { SectionReveal, SectionRevealItem } from "@/components/common/section-reveal";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,7 @@ export function BestSellers({ foods }: BestSellersProps) {
                 nativeButton={false}
                 render={<Link href="/foods" />}
               >
-                <Sparkles className="size-3.5 text-primary" />
+                <Sparkles className="size-3.5 text-muted-foreground" />
                 View Full Menu
                 <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
               </Button>
@@ -37,7 +37,7 @@ export function BestSellers({ foods }: BestSellersProps) {
           variant="perspectiveReveal"
           stagger
           staggerDelay={0.08}
-          className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-8 grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3"
         >
           {foods.map((food) => (
             <SectionRevealItem key={food.id}>
@@ -54,7 +54,7 @@ export function BestSellers({ foods }: BestSellersProps) {
             nativeButton={false}
             render={<Link href="/foods" />}
           >
-            <Sparkles className="size-3.5 text-primary" />
+            <Sparkles className="size-3.5 text-muted-foreground" />
             View Full Menu
             <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
           </Button>

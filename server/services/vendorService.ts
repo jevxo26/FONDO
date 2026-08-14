@@ -1,8 +1,9 @@
-import { Prisma, Role, VerificationStatus } from "@prisma/client";
+import { Prisma, Role, VendorStatus, VerificationStatus } from "@prisma/client";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import prisma from "../lib/prisma";
 import { encryptPassword } from "../utils/bcryptService";
 import AppError from "../utils/AppError";
+import { CustomJwtPayload } from "../types/auth.types";
 
 // Helper method to resolve internal structural ID via public vendor code safely
 const getInternalIdByCode = async (vendorCode: string): Promise<string> => {
@@ -15,18 +16,21 @@ const getInternalIdByCode = async (vendorCode: string): Promise<string> => {
 };
 
 const createVendor = catchServiceAsync(
-  async (payload: {
-    firstName: string;
-    lastName: string;
-    password: string;
-    email: string;
-    phone: string;
-    businessName: string;
-    ownerName?: string;
-    tradeLicenseNumber?: string;
-    tinNumber?: string;
-    binNumber?: string;
-  }) => {
+  async (
+    payload: {
+      firstName: string;
+      lastName: string;
+      password: string;
+      email: string;
+      phone: string;
+      businessName: string;
+      ownerName?: string;
+      tradeLicenseNumber?: string;
+      tinNumber?: string;
+      binNumber?: string;
+    },
+    user?: CustomJwtPayload,
+  ) => {
     const {
       firstName,
       lastName,
@@ -47,17 +51,37 @@ const createVendor = catchServiceAsync(
       { tinNumber },
       { binNumber },
     ].filter((c) => Object.values(c)[0]);
+
     if (checks.length > 0) {
-      const duplicate = await prisma.vendor.findFirst({ where: { OR: checks } });
-      if (duplicate) throw new AppError(400, "Some data is already in use");
+      const duplicate = await prisma.vendor.findFirst({
+        where: { OR: checks },
+      });
+
+      if (duplicate) {
+        throw new AppError(400, "Some data is already in use");
+      }
     }
 
     const hashedPassword = await encryptPassword(password);
     const uniqueVendorCode = `VEND-${String(Date.now()).slice(-7)}`;
 
+    // Admin/Super Admin → APPROVED
+    // ELSE → PENDING
+    const status =
+      user?.role === Role.ADMIN || user?.role === Role.SUPER_ADMIN
+        ? VendorStatus.APPROVED
+        : VendorStatus.PENDING;
+
     return await prisma.$transaction(async (tx) => {
       const newUser = await tx.user.create({
-        data: { firstName, lastName, email, phone, password: hashedPassword, role: Role.VENDOR },
+        data: {
+          firstName,
+          lastName,
+          email,
+          phone,
+          password: hashedPassword,
+          role: Role.VENDOR,
+        },
       });
 
       const vendorData: Record<string, unknown> = {
@@ -65,15 +89,21 @@ const createVendor = catchServiceAsync(
         email,
         phone,
         vendorCode: uniqueVendorCode,
+        status,
         settings: { create: {} },
         wallet: { create: {} },
       };
+
       if (ownerName) vendorData.ownerName = ownerName;
-      if (tradeLicenseNumber) vendorData.tradeLicenseNumber = tradeLicenseNumber;
+      if (tradeLicenseNumber) {
+        vendorData.tradeLicenseNumber = tradeLicenseNumber;
+      }
       if (tinNumber) vendorData.tinNumber = tinNumber;
       if (binNumber) vendorData.binNumber = binNumber;
 
-      const newVendor = await tx.vendor.create({ data: vendorData as Prisma.VendorCreateInput });
+      const newVendor = await tx.vendor.create({
+        data: vendorData as Prisma.VendorCreateInput,
+      });
 
       await tx.user.update({
         where: { id: newUser.id },
@@ -81,7 +111,11 @@ const createVendor = catchServiceAsync(
       });
 
       return {
-        user: { id: newUser.id, email: newUser.email, role: newUser.role },
+        user: {
+          id: newUser.id,
+          email: newUser.email,
+          role: newUser.role,
+        },
         vendor: newVendor,
       };
     });

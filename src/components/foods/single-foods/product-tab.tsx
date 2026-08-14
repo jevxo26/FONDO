@@ -5,7 +5,6 @@ import { Food } from "@/types/food";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DescriptionTab from "./description-tab";
 import ReviewsTab from "./reviews-tab";
-import QaTab from "./qa-tab";
 import { useFoodReviews } from "@/store/api/slices/reviews-api";
 
 export function ProductTabs({ food }: { food: Food }) {
@@ -22,17 +21,13 @@ export function ProductTabs({ food }: { food: Food }) {
     <section className="py-4 sm:py-6 bg-background">
       <div className="wrapper px-3 sm:px-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="w-full grid grid-cols-3 gap-2 sm:gap-4 bg-transparent p-0 h-auto">
+          <TabsList className="w-full grid grid-cols-2 gap-2 sm:gap-4 bg-transparent p-0 h-auto">
             <TabsTrigger value="details" className={tabTriggerClass}>
               Details
             </TabsTrigger>
 
             <TabsTrigger value="reviews" className={tabTriggerClass}>
               Reviews ({allReviews.length})
-            </TabsTrigger>
-
-            <TabsTrigger value="qa" className={tabTriggerClass}>
-              Q&A
             </TabsTrigger>
           </TabsList>
 
@@ -48,13 +43,6 @@ export function ProductTabs({ food }: { food: Food }) {
             className="mt-4 sm:mt-6 rounded-2xl sm:rounded-3xl border border-border/60 bg-card p-4 sm:p-6 shadow-[var(--shadow-card)]"
           >
             <ReviewsTab foodId={food.id} allReviews={allReviews} />
-          </TabsContent>
-
-          <TabsContent
-            value="qa"
-            className="mt-4 sm:mt-6 rounded-2xl sm:rounded-3xl border border-border/60 bg-card p-4 sm:p-6 shadow-[var(--shadow-card)]"
-          >
-            <QaTab />
           </TabsContent>
         </Tabs>
       </div>

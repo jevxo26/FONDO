@@ -8,7 +8,7 @@ export function RiderAppPreviewSection() {
     <section className="py-[var(--space-section)] bg-background border-b border-border">
       <div className="wrapper px-[var(--space-container)] space-y-10">
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <span className="text-xs font-bold uppercase tracking-wider text-primary">
+          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
             Smart Rider App
           </span>
           <h2 className="font-heading text-3xl sm:text-5xl tracking-tight text-foreground">
@@ -23,7 +23,7 @@ export function RiderAppPreviewSection() {
         <div className="bg-card border border-border rounded-3xl p-6 sm:p-10 shadow-[var(--shadow-elevated)] max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
           <div className="space-y-6">
             <div className="p-4 rounded-2xl bg-background border border-border space-y-1">
-              <div className="flex items-center gap-2 text-primary text-xs font-bold">
+              <div className="flex items-center gap-2 text-foreground text-xs font-bold">
                 <Navigation className="size-4" /> Live Heatmaps
               </div>
               <p className="text-xs text-muted-foreground">
@@ -31,7 +31,7 @@ export function RiderAppPreviewSection() {
               </p>
             </div>
             <div className="p-4 rounded-2xl bg-background border border-border space-y-1">
-              <div className="flex items-center gap-2 text-primary text-xs font-bold">
+              <div className="flex items-center gap-2 text-foreground text-xs font-bold">
                 <Flame className="size-4" /> Surge Bonuses
               </div>
               <p className="text-xs text-muted-foreground">
@@ -69,7 +69,7 @@ export function RiderAppPreviewSection() {
 
           <div className="space-y-6">
             <div className="p-4 rounded-2xl bg-background border border-border space-y-1">
-              <div className="flex items-center gap-2 text-primary text-xs font-bold">
+              <div className="flex items-center gap-2 text-foreground text-xs font-bold">
                 <Wallet className="size-4" /> Daily Payouts
               </div>
               <p className="text-xs text-muted-foreground">
@@ -77,7 +77,7 @@ export function RiderAppPreviewSection() {
               </p>
             </div>
             <div className="p-4 rounded-2xl bg-background border border-border space-y-1">
-              <div className="flex items-center gap-2 text-primary text-xs font-bold">
+              <div className="flex items-center gap-2 text-foreground text-xs font-bold">
                 <ShieldCheck className="size-4" /> SOS Support
               </div>
               <p className="text-xs text-muted-foreground">

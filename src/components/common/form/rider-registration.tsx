@@ -18,9 +18,11 @@ export function RiderRegistrationForm() {
   } = useForm<RiderFormData>({
     resolver: yupResolver(riderFormSchema),
     defaultValues: {
-      fullName: "",
-      phone: "",
+      firstName: "",
+      lastName: "",
       email: "",
+      phone: "",
+      password: "",
       nidNumber: "",
       dob: "",
       emergencyName: "",
@@ -51,12 +53,12 @@ export function RiderRegistrationForm() {
   return (
     <section
       id="rider-apply"
-      className="py-[var(--space-section)] bg-background border-b border-border"
+      className="py-(--space-section) bg-background border-b border-border"
     >
-      <div className="wrapper px-[var(--space-container)]">
+      <div className="wrapper px-(--space-container)">
         <div className="max-w-4xl mx-auto space-y-8">
           <div className="text-center space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-primary">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Join the Fleet
             </span>
             <h2 className="font-heading text-3xl sm:text-5xl tracking-tight text-foreground">

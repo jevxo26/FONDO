@@ -1,11 +1,12 @@
 "use client";
 
-import { inputStyles } from "@/lib/schema/food-schema";
 import type { AdminFoodFormValues } from "@/lib/schema/admin-food-schema";
 import { FormSection } from "@/components/dashboard/common/form-section";
 import { AlertTriangle, Plus, Trash2 } from "lucide-react";
 import { useFieldArray, type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 
 interface AllergenSectionProps {
   register: UseFormRegister<AdminFoodFormValues>;
@@ -44,15 +45,13 @@ export function AllergenSection({ register, control }: AllergenSectionProps) {
         {fields.map((field, index) => (
           <div key={field.id} className="flex items-start gap-2 rounded-xl border border-border/60 bg-card/60 p-2">
             <div className="grid min-w-0 flex-1 grid-cols-1 gap-2 sm:grid-cols-2">
-              <input
+              <Input
                 {...register(`allergens.${index}.allergen`)}
                 placeholder="e.g. Gluten"
-                className={inputStyles}
               />
-              <input
+              <Input
                 {...register(`allergens.${index}.description`)}
                 placeholder="Note (optional)"
-                className={inputStyles}
               />
             </div>
             <Button

@@ -8,7 +8,7 @@ export function WhyRideSection() {
     >
       <div className="wrapper px-[var(--space-container)] space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <span className="text-xs font-bold uppercase tracking-wider text-primary">
+          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
             Rider Perks
           </span>
           <h2 className="font-heading text-3xl sm:text-5xl tracking-tight text-foreground">

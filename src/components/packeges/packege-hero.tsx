@@ -8,7 +8,7 @@ export default function PackagesHero() {
   return (
     <header className="relative bg-secondary/50 py-16 lg:py-20 overflow-hidden border-b border-border">
       <div className="wrapper relative z-10 flex flex-col items-center text-center">
-        <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-primary bg-card px-3 py-1 rounded-full border border-border">
+        <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-muted-foreground bg-card px-3 py-1 rounded-full border border-border">
           Nourishment Subscriptions
         </span>
         <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl mt-3 font-normal tracking-tight">

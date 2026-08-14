@@ -32,6 +32,7 @@ export default function PackageCustomization({
   const [isOpen, setIsOpen] = useState(false);
   const [activeDay, setActiveDay] = useState<number>(1);
   const [activeMealType, setActiveMealType] = useState<string>("BREAKFAST");
+
   // RTK Query Mutations & Queries
   const { data: foodsData, isLoading: isFoodsLoading } = useGetFoods({ limit: 50 });
   const [createCustomMealRequest, { isLoading: isSubmitting }] = useCreateCustomMealRequestMutation();
@@ -41,7 +42,7 @@ export default function PackageCustomization({
   const currentMealData = currentDayData?.meals.find((m) => m.mealType === activeMealType);
   const selectedFoodsForMeal = currentMealData?.foods || [];
 
-  // ১. ফুড এড করা
+  // Add food item
   const handleAddFood = (food: CustomFoodOption) => {
     const defaultVariant = food.variants?.[0];
     const price = defaultVariant ? Number(defaultVariant.price) : Number(food.price || 0);
@@ -93,7 +94,7 @@ export default function PackageCustomization({
     });
   };
 
-  // ২. কোয়ান্টিটি কমানো/বাড়ানো
+  // Change food quantity
   const handleQuantityChange = (foodId: string, delta: number) => {
     setCustomDays((prevDays) => {
       const updatedDays = [...prevDays];
@@ -122,42 +123,50 @@ export default function PackageCustomization({
     });
   };
 
-  // ৩. ব্যাকএন্ডে কাস্টম রিকোয়েস্ট সাবমিট করার ফাংশন
-const handleSubmitCustomRequest = async () => {
-  if (!customDays || customDays.length === 0) {
-    alert("Please add at least one day and meal.");
-    return;
-  }
+  // Submit custom meal request according to Prisma schema format
+  const handleSubmitCustomRequest = async () => {
+    // Filter out any empty days/meals without foods
+    const validDays = customDays
+      .map((day) => ({
+        ...day,
+        meals: day.meals.filter((m) => m.foods && m.foods.length > 0),
+      }))
+      .filter((day) => day.meals.length > 0);
 
-  try {
-    const payload = {
-      packageId: singlePackage?.id,
-      name: singlePackage?.name || "Custom Meal Plan",
-      totalDays: customDays.length,
-      totalPrice: totalPrice,
-      days: customDays.map((day: CustomDay, dayIdx: number) => ({
-        dayNumber: day.dayNumber || dayIdx + 1,
-        meals: day.meals.map((meal: CustomMeal) => ({
-          mealType: meal.mealType, // e.g., "BREAKFAST", "LUNCH", "DINNER"
-          mealTime: meal.mealTime || "08:00 AM",
-          foods: meal.foods.map((food: CustomFood) => ({
-            foodId: food.foodId,
-            quantity: Number(food.quantity || 1),
-            isExtra: Boolean(food.isExtra),
+    if (validDays.length === 0) {
+      alert("Please add at least one food item to your custom plan.");
+      return;
+    }
+
+    try {
+      const payload = {
+        packageId: singlePackage.id,
+        name: `${singlePackage.name} (Customized)`,
+        totalDays: validDays.length,
+        totalPrice: totalPrice,
+        days: validDays.map((day: CustomDay, dayIdx: number) => ({
+          dayNumber: day.dayNumber || dayIdx + 1,
+          meals: day.meals.map((meal: CustomMeal) => ({
+            mealType: meal.mealType,
+            mealTime: meal.mealTime || "08:00 AM",
+            foods: meal.foods.map((food: CustomFood) => ({
+              foodId: food.foodId,
+              quantity: Number(food.quantity || 1),
+              isExtra: Boolean(food.isExtra ?? true),
+            })),
           })),
         })),
-      })),
-    };
+      };
 
-    // Redux Toolkit Request / Axios Request
-    await createCustomMealRequest(payload).unwrap();
-    alert("Your custom meal request submitted successfully!");
-
-  } catch (error) {
-    console.error("Submission error:", error);
-    alert(handleApiError(error));
-  }
-};
+      await createCustomMealRequest(payload).unwrap();
+      alert("Your custom meal request has been submitted successfully!");
+      setCustomDays([]);
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Submission error:", error);
+      alert(handleApiError(error));
+    }
+  };
 
   return (
     <section className="bg-muted/60 border border-border/30 rounded-3xl p-1 transition-all">
@@ -167,7 +176,7 @@ const handleSubmitCustomRequest = async () => {
           className="w-full flex items-center justify-between group outline-none"
         >
           <div className="flex items-center gap-3">
-            <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center text-foreground">
               <SlidersHorizontal className="size-4" />
             </div>
             <div className="text-left">
@@ -178,13 +187,15 @@ const handleSubmitCustomRequest = async () => {
             </div>
           </div>
           <ChevronDown
-            className={`size-5 text-muted-foreground transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+            className={`size-5 text-muted-foreground transition-transform duration-300 ${
+              isOpen ? "rotate-180" : ""
+            }`}
           />
         </button>
 
         {isOpen && (
           <div className="pt-4 border-t border-border/30 space-y-6 animate-in fade-in duration-200">
-            {/* Step 1: Days */}
+            {/* Step 1: Select Day */}
             <div>
               <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground mb-2 block">
                 1. Select Day
@@ -210,7 +221,7 @@ const handleSubmitCustomRequest = async () => {
               </div>
             </div>
 
-            {/* Step 2: Meal Types */}
+            {/* Step 2: Select Meal Slot */}
             <div>
               <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground mb-2 block">
                 2. Select Meal Slot
@@ -233,7 +244,7 @@ const handleSubmitCustomRequest = async () => {
               </div>
             </div>
 
-            {/* Step 3: Selected Foods in Active Meal Slot */}
+            {/* Step 3: Foods added to active meal */}
             {selectedFoodsForMeal.length > 0 && (
               <div className="p-4 rounded-2xl bg-muted/40 border border-border/30 space-y-3">
                 <h4 className="text-xs font-bold text-foreground">
@@ -247,11 +258,17 @@ const handleSubmitCustomRequest = async () => {
                     >
                       <div className="flex items-center gap-2">
                         {item.thumbnail && (
-                          <img src={item.thumbnail} alt={item.name} className="size-8 rounded-md object-cover" />
+                          <img
+                            src={item.thumbnail}
+                            alt={item.name}
+                            className="size-8 rounded-md object-cover"
+                          />
                         )}
                         <div>
                           <p className="font-semibold">{item.name}</p>
-                          <p className="text-[10px] text-muted-foreground">৳{item.price * item.quantity}</p>
+                          <p className="text-[10px] text-muted-foreground">
+                            ৳{(item.price || 0) * item.quantity}
+                          </p>
                         </div>
                       </div>
 
@@ -261,9 +278,15 @@ const handleSubmitCustomRequest = async () => {
                           onClick={() => handleQuantityChange(item.foodId, -1)}
                           className="p-1 rounded-lg bg-muted hover:bg-destructive/10 hover:text-destructive transition-all"
                         >
-                          {item.quantity === 1 ? <Trash2 className="size-3.5" /> : <Minus className="size-3.5" />}
+                          {item.quantity === 1 ? (
+                            <Trash2 className="size-3.5" />
+                          ) : (
+                            <Minus className="size-3.5" />
+                          )}
                         </button>
-                        <span className="font-bold text-xs min-w-[16px] text-center">{item.quantity}</span>
+                        <span className="font-bold text-xs min-w-[16px] text-center">
+                          {item.quantity}
+                        </span>
                         <button
                           type="button"
                           onClick={() => handleQuantityChange(item.foodId, 1)}
@@ -278,7 +301,7 @@ const handleSubmitCustomRequest = async () => {
               </div>
             )}
 
-            {/* Step 4: Available Foods Grid */}
+            {/* Step 4: Available Food Menu */}
             <div className="space-y-3">
               <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground block">
                 3. Add Foods from Menu
@@ -296,7 +319,11 @@ const handleSubmitCustomRequest = async () => {
                       >
                         <div className="flex items-center gap-2 overflow-hidden">
                           {food.thumbnail && (
-                            <img src={food.thumbnail} alt={food.name} className="size-10 rounded-lg object-cover flex-shrink-0" />
+                            <img
+                              src={food.thumbnail}
+                              alt={food.name}
+                              className="size-10 rounded-lg object-cover flex-shrink-0"
+                            />
                           )}
                           <div className="truncate">
                             <p className="text-xs font-bold truncate">{food.name}</p>
@@ -318,7 +345,7 @@ const handleSubmitCustomRequest = async () => {
               )}
             </div>
 
-            {/* 🔥 ৪. সাবমিট বাটন ( Create Custom Meal Request ) */}
+            {/* Step 5: Submit Action */}
             <div className="pt-4 border-t border-border/30">
               <button
                 type="button"

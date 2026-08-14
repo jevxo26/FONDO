@@ -1,15 +1,15 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import {
-  Clock,
-  Package,
-  CreditCard,
-  UserPlus,
   AlertCircle,
+  Clock,
+  CreditCard,
+  Package,
   ShoppingBag,
   Truck,
+  UserPlus,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 type ActivityType = "order" | "payment" | "user" | "alert" | "delivery" | "food";
 

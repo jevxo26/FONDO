@@ -3,20 +3,25 @@
 import FoodsHero from "@/components/foods/components/foods-hero";
 import { FoodsProvider } from "@/components/foods/components/foods-provider";
 import FoodsWorkspace from "@/components/foods/components/foods-workspace";
-import { useGetFoods } from "@/store/api/slices/foods-api";
-import FoodsLoading from "./loading";
+import { CouponSection } from "@/components/home/coupons/coupon-section";
+import { Suspense } from "react";
 
 export default function AllFoodsPage() {
-  const { isLoading } = useGetFoods();
-  if (isLoading) return <FoodsLoading></FoodsLoading>;
   return (
-    <FoodsProvider>
-      <main className="min-h-screen bg-background text-foreground">
-        {/* Section 1: Advanced Search Top Panel View */}
+    <Suspense fallback={null}>
+      <FoodsProvider>
+        {/* Hero */}
         <FoodsHero />
         {/* Section 2: Core Matrix Database Feed Hub */}
+        <CouponSection
+          variant="all"
+          limit={6}
+          title="Available Coupons"
+          description="Save on your favorite foods"
+          showViewAll={false}
+        />
         <FoodsWorkspace />
-      </main>
-    </FoodsProvider>
+      </FoodsProvider>
+    </Suspense>
   );
 }

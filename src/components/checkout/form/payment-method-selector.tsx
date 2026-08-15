@@ -64,7 +64,7 @@ export function PaymentMethodSelector({ value, onChange, methods, isLoading }: P
                   }`}
                 >
                   {isSelected && (
-                    <div className="absolute top-1.5 right-1.5 size-4 bg-primary rounded-full flex items-center justify-center shadow-[0_0_8px_rgba(206,163,89,0.3)]">
+                    <div className="absolute top-1.5 right-1.5 size-4 bg-primary rounded-full flex items-center justify-center shadow-[0_0_8px_rgba(168,90,56,0.3)]">
                       <Check className="size-2.5 text-primary-foreground stroke-[3]" />
                     </div>
                   )}

@@ -40,7 +40,10 @@ export const adminCustomersApi = api.injectEndpoints({
       providesTags: (result, error, id) => [{ type: "AdminCustomer" as const, id }],
     }),
 
-    getAllAdminOrders: builder.query<unknown[], void>({
+    getAllAdminOrders: builder.query<
+      { items: unknown[]; total: number; page: number; limit: number; totalPages: number },
+      void
+    >({
       query: () => "/admin/orders",
       providesTags: ["Order"],
     }),

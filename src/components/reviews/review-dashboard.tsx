@@ -54,7 +54,7 @@ export default function ReviewsDashboard() {
               className="bg-card border border-border/60 rounded-2xl p-5 flex flex-col justify-between shadow-[var(--shadow-card)] text-center"
             >
               <div>
-                <span className="text-2xl font-heading font-normal text-primary block">
+                <span className="text-2xl font-heading font-normal text-foreground block">
                   {attr.score}
                 </span>
                 <h4 className="font-sans text-xs font-bold tracking-tight text-foreground mt-2">

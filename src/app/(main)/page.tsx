@@ -14,6 +14,7 @@ import {
 import { apiFetch } from "@/lib/api";
 import { CATEGORY_CARDS } from "@/data/homepage";
 import type { Food } from "@/types/food";
+import { CouponSection } from "@/components/home/coupons/coupon-section";
 
 interface CategoryItem {
   id: string;
@@ -25,8 +26,6 @@ interface FoodsResponse {
   items: Food[];
 }
 
-export const dynamic = "force-dynamic";
-
 export default async function Home() {
   let foods: Food[] = [];
   let categories: Array<{ id: string; label: string; image: string }> = CATEGORY_CARDS;
@@ -36,10 +35,12 @@ export default async function Home() {
       apiFetch<FoodsResponse>("/api/foods?page=1&limit=6&sortBy=popularity", {
         revalidate: 300,
         tags: ["foods"],
+        auth: false,
       }),
-      apiFetch<CategoryItem[]>("/api/foods/categories/list", {
+      apiFetch<CategoryItem[]>("/api/foods/categories/list?popular=true&limit=6", {
         revalidate: 300,
         tags: ["categories"],
+        auth: false,
       }),
     ]);
 
@@ -66,6 +67,7 @@ export default async function Home() {
       <SignatureDish />
       <Combos />
       <BlogReviews />
+      <CouponSection/>
       <Testimonials />
       <KitchenDining />
       <ChefStory />

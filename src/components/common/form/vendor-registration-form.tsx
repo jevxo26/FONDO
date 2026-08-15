@@ -28,6 +28,7 @@ export function VendorRegistrationForm() {
       ownerName: "",
       ownerPhone: "",
       ownerEmail: "",
+      password: "",
       nid: "",
       dob: "",
       streetAddress: "",
@@ -74,7 +75,7 @@ export function VendorRegistrationForm() {
       <div className="wrapper px-[var(--space-container)]">
         <div className="max-w-4xl mx-auto space-y-8">
           <div className="text-center space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-primary">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Partner Onboarding
             </span>
             <h2 className="font-heading text-3xl sm:text-5xl tracking-tight text-foreground">

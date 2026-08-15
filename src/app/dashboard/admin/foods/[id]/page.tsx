@@ -1,53 +1,24 @@
-import { adminFoods } from "@/data/foods";
-import { nutritionItems } from "@/data/nutrition";
-import { getFoodDetail } from "@/data/food-detail";
-import { RatingStars } from "@/components/common/rating-stars";
-import { PriceTag } from "@/components/common/price-tag";
+"use client";
+
+import { useParams } from "next/navigation";
+import Link from "next/link";
 import {
   ArrowLeft,
   Utensils,
-  Flame,
-  Star,
-  Scale,
   Building,
   Clock,
-  Edit,
+  Star,
+  Scale,
   TrendingUp,
   MessageSquare,
   CheckCircle,
   XCircle,
-  ThumbsUp,
-  FileEdit,
-  Eye,
+  Edit,
+  ListChecks,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-import Image from "next/image";
-
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-function FoodNotFound() {
-  return (
-    <div className="flex min-h-[400px] flex-col items-center justify-center gap-4">
-      <div className="flex size-16 items-center justify-center rounded-full bg-destructive/10">
-        <Eye className="size-6 text-destructive" />
-      </div>
-      <h2 className="font-heading text-xl font-bold text-foreground">Food Not Found</h2>
-      <p className="text-sm text-muted-foreground">
-        The food item you&apos;re looking for doesn&apos;t exist.
-      </p>
-      <Link
-        href="/dashboard/admin/foods"
-        className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-      >
-        <ArrowLeft className="size-4" />
-        Back to All Foods
-      </Link>
-    </div>
-  );
-}
+import { useAdminFood } from "@/store/api/slices/admin-food-api";
+import { PriceTag } from "@/components/common/price-tag";
 
 function InfoBadge({
   icon,
@@ -60,111 +31,105 @@ function InfoBadge({
 }) {
   return (
     <div className="flex items-center gap-3 rounded-2xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-4 shadow-[var(--shadow-card)]">
-      <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
+      <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-foreground ring-1 ring-primary/20">
         {icon}
       </div>
-      <div>
+      <div className="min-w-0">
         <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
-        <p className="font-semibold text-foreground">{value}</p>
+        <p className="truncate font-semibold text-foreground">{value}</p>
       </div>
     </div>
   );
 }
 
-function NutritionRow({ label, value, unit }: { label: string; value: number; unit: string }) {
+function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-between border-b border-border/40 pb-2 last:border-0 last:pb-0">
-      <span className="text-sm text-muted-foreground">{label}</span>
-      <span className="font-mono text-sm font-medium text-foreground">
-        {value}
-        {unit}
-      </span>
+    <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
+      <h2 className="font-heading text-lg font-bold text-foreground">{title}</h2>
+      <div className="mt-3">{children}</div>
     </div>
   );
 }
 
-function ReviewCard({
-  review,
-}: {
-  review: { author: string; rating: number; comment: string; date: string };
-}) {
+function Row({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="rounded-2xl border border-border/40 bg-card p-4 shadow-sm">
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-semibold text-foreground">{review.author}</span>
-        <span className="text-xs text-muted-foreground">{review.date}</span>
-      </div>
-      <div className="mt-2">
-        <RatingStars rating={review.rating} size="sm" />
-      </div>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{review.comment}</p>
+    <div className="flex items-center justify-between border-b border-border/40 pb-2 text-sm last:border-0 last:pb-0">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-medium text-foreground">{value}</span>
     </div>
   );
 }
 
-export default async function FoodDetailPage({ params }: PageProps) {
-  const { id } = await params;
-  const food = adminFoods.find((f) => f.id === id);
-  if (!food) return <FoodNotFound />;
-
-  const nutrition = nutritionItems.find((n) => n.foodName === food.name);
-  const detail = getFoodDetail(food.name);
-
-  const statusStyles: Record<string, string> = {
+function StatusBadge({ status }: { status: string }) {
+  const styles: Record<string, string> = {
     ACTIVE: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
     DRAFT: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
     ARCHIVED: "bg-muted text-muted-foreground dark:bg-muted/50",
+    INACTIVE: "bg-muted text-muted-foreground dark:bg-muted/50",
   };
-
   return (
-    <div>
-      <div className="mb-6 flex items-center justify-between">
-        <Link
-          href="/dashboard/admin/foods"
-          className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-        >
+    <span className={cn("inline-block rounded-full px-3 py-1 text-xs font-medium", styles[status] ?? styles.INACTIVE)}>
+      {status}
+    </span>
+  );
+}
+
+export default function FoodDetailPage() {
+  const { id } = useParams<{ id: string }>();
+  const { data: food, isLoading } = useAdminFood(id);
+
+  if (isLoading) {
+    return (
+      <div className="py-16 text-center text-sm text-muted-foreground">Loading food...</div>
+    );
+  }
+
+  if (!food) {
+    return (
+      <div className="flex min-h-[400px] flex-col items-center justify-center gap-4">
+        <div className="flex size-16 items-center justify-center rounded-full bg-destructive/10">
+          <XCircle className="size-6 text-destructive" />
+        </div>
+        <h2 className="font-heading text-xl font-bold text-foreground">Food Not Found</h2>
+        <Link href="/dashboard/admin/foods" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
           <ArrowLeft className="size-4" />
           Back to All Foods
         </Link>
-        <div className="flex flex-wrap items-center gap-2">
-          <button className="inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] px-4 py-2 text-sm font-medium text-primary shadow-[var(--shadow-card)] ring-1 ring-primary/20 transition-all duration-300 hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]">
-            <Edit className="size-4" />
-            Edit
-          </button>
-          <button className="inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-amber-500/10 via-card to-amber-500/[0.04] px-4 py-2 text-sm font-medium text-amber-600 shadow-[var(--shadow-card)] ring-1 ring-amber-500/20 transition-all duration-300 hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]">
-            <ThumbsUp className="size-4" />
-            Approve
-          </button>
-          <button className="inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-destructive/10 via-card to-destructive/[0.04] px-4 py-2 text-sm font-medium text-destructive shadow-[var(--shadow-card)] ring-1 ring-destructive/20 transition-all duration-300 hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]">
-            <XCircle className="size-4" />
-            Reject
-          </button>
-          <button className="inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-blue-500/10 via-card to-blue-500/[0.04] px-4 py-2 text-sm font-medium text-blue-600 shadow-[var(--shadow-card)] ring-1 ring-blue-500/20 transition-all duration-300 hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]">
-            <FileEdit className="size-4" />
-            Request Changes
-          </button>
-          <button className="inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-destructive/10 via-card to-destructive/[0.04] px-4 py-2 text-sm font-medium text-destructive shadow-[var(--shadow-card)] ring-1 ring-destructive/20 transition-all duration-300 hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]">
-            <CheckCircle className="size-4" />
-            Deactivate
-          </button>
-        </div>
+      </div>
+    );
+  }
+
+  const vendorNames = food.vendors.map((v) => v.businessName).join(", ");
+  const isAvailable = food.availability?.isAvailable ?? true;
+  const mainPrice = food.prices[0];
+
+  return (
+    <div>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <Link href="/dashboard/admin/foods" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <ArrowLeft className="size-4" />
+          Back to All Foods
+        </Link>
+        <Link
+          href={`/dashboard/admin/foods/${food.id}/edit`}
+          className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary shadow-[var(--shadow-card)] ring-1 ring-primary/20 transition-all duration-300 hover:shadow-[var(--shadow-elevated)] active:scale-[0.98]"
+        >
+          <Edit className="size-4" />
+          Edit Food
+        </Link>
       </div>
 
       <div className="relative mb-8 overflow-hidden rounded-3xl bg-muted shadow-[var(--shadow-card)]">
-        <div className="aspect-[21/9] w-full md:aspect-[3/1]">
-          <Image src={food.thumbnail} alt={food.name} fill className="object-cover" priority />
-        </div>
+        {food.coverImage ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={food.coverImage} alt={food.name} className="aspect-[21/9] w-full object-cover md:aspect-[3/1]" />
+        ) : (
+          <div className="aspect-[21/9] w-full bg-muted md:aspect-[3/1]" />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-          <div className="flex items-center gap-3">
-            <span
-              className={cn(
-                "inline-block rounded-full px-3 py-1 text-xs font-medium",
-                statusStyles[food.status],
-              )}
-            >
-              {food.status}
-            </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <StatusBadge status={food.status} />
             {food.isFeatured && (
               <span className="inline-flex items-center gap-1 rounded-full bg-primary/20 px-3 py-1 text-xs font-medium text-white">
                 <Star className="size-3" fill="currentColor" />
@@ -173,120 +138,164 @@ export default async function FoodDetailPage({ params }: PageProps) {
             )}
             {food.isPopular && (
               <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/20 px-3 py-1 text-xs font-medium text-amber-300">
-                <Flame className="size-3" />
+                <TrendingUp className="size-3" />
                 Popular
               </span>
             )}
-            {food.isRecommended && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-medium text-emerald-300">
-                <Star className="size-3" />
-                Recommended
+            {isAvailable ? (
+              <span className="inline-flex items-center gap-1 rounded-full bg-green-500/20 px-3 py-1 text-xs font-medium text-green-300">
+                <CheckCircle className="size-3" />
+                Available
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 rounded-full bg-red-500/20 px-3 py-1 text-xs font-medium text-red-300">
+                <XCircle className="size-3" />
+                Unavailable
               </span>
             )}
-            <span className="inline-flex items-center gap-1 rounded-full bg-green-500/20 px-3 py-1 text-xs font-medium text-green-300">
-              <CheckCircle className="size-3" />
-              Available
-            </span>
           </div>
           <h1 className="mt-3 font-heading text-3xl font-bold text-white drop-shadow-lg md:text-4xl lg:text-5xl">
             {food.name}
           </h1>
+          {food.shortDescription && (
+            <p className="mt-2 max-w-2xl text-sm text-white/80">{food.shortDescription}</p>
+          )}
         </div>
       </div>
 
       <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-        <InfoBadge
-          icon={<Utensils className="size-4" />}
-          label="Category"
-          value={food.categoryName}
-        />
-        <InfoBadge icon={<Building className="size-4" />} label="Vendor" value={food.vendor} />
-        <InfoBadge
-          icon={<Scale className="size-4" />}
-          label="Type"
-          value={food.foodType.replace("_", " ")}
-        />
-        <InfoBadge
-          icon={<Clock className="size-4" />}
-          label="Cook Time"
-          value={`${food.preparationTime} min`}
-        />
-        <InfoBadge
-          icon={<TrendingUp className="size-4" />}
-          label="Times Ordered"
-          value={food.timesOrdered.toLocaleString()}
-        />
-        <InfoBadge
-          icon={<MessageSquare className="size-4" />}
-          label="Rating"
-          value={`${detail.avgRating} (${detail.totalReviews})`}
-        />
+        <InfoBadge icon={<Utensils className="size-4" />} label="Category" value={food.category?.name ?? "—"} />
+        <InfoBadge icon={<Building className="size-4" />} label="Vendor" value={vendorNames || "—"} />
+        <InfoBadge icon={<Scale className="size-4" />} label="Type" value={food.foodType.replace("_", " ")} />
+        <InfoBadge icon={<Clock className="size-4" />} label="Cook Time" value={food.preparationTime ? `${food.preparationTime} min` : "—"} />
+        <InfoBadge icon={<MessageSquare className="size-4" />} label="Reviews" value={String(food.totalReview ?? 0)} />
+        <InfoBadge icon={<Star className="size-4" />} label="Rating" value={food.averageRating ? `${Number(food.averageRating).toFixed(1)}/5` : "—"} />
       </div>
 
-      <div className="mb-8">
-        <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
-          <h2 className="font-heading text-lg font-bold text-foreground">Description</h2>
-          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{detail.description}</p>
-        </div>
-      </div>
-
-      {nutrition && (
+      {food.description && (
         <div className="mb-8">
-          <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
-            <div className="flex items-center gap-3">
-              <h2 className="font-heading text-lg font-bold text-foreground">Nutrition</h2>
-              <span className="text-xs text-muted-foreground">{nutrition.servingSize}</span>
-            </div>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <div className="space-y-2">
-                <NutritionRow label="Calories" value={nutrition.calories} unit="" />
-                <NutritionRow label="Protein" value={nutrition.protein} unit="g" />
-                <NutritionRow label="Carbs" value={nutrition.carbs} unit="g" />
-              </div>
-              <div className="space-y-2">
-                <NutritionRow label="Fat" value={nutrition.fat} unit="g" />
-                <NutritionRow label="Fiber" value={nutrition.fiber} unit="g" />
-                <NutritionRow label="Sugar" value={nutrition.sugar} unit="g" />
-              </div>
-            </div>
-          </div>
+          <SectionCard title="Description">
+            <p className="text-sm leading-relaxed text-muted-foreground">{food.description}</p>
+          </SectionCard>
         </div>
       )}
 
-      <div className="mb-8">
-        <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
-          <div className="flex items-center justify-between">
-            <h2 className="font-heading text-lg font-bold text-foreground">Pricing</h2>
-            <span className="text-xs text-muted-foreground">Base price before discounts</span>
-          </div>
-          <div className="mt-4">
-            <PriceTag price={food.basePrice} size="lg" />
-            <p className="mt-1 text-xs text-muted-foreground">
-              Sale prices applied at checkout based on active vendor contract
-            </p>
-          </div>
-        </div>
+      <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {(food.calories || food.protein || food.fat || food.carbohydrate) && (
+          <SectionCard title="Nutrition">
+            <div className="grid gap-3 sm:grid-cols-2">
+              {food.calories && <Row label="Calories" value={`${food.calories} kcal`} />}
+              {food.protein && <Row label="Protein" value={`${food.protein} g`} />}
+              {food.carbohydrate && <Row label="Carbs" value={`${food.carbohydrate} g`} />}
+              {food.fat && <Row label="Fat" value={`${food.fat} g`} />}
+            </div>
+            {food.servingSize && (
+              <p className="mt-2 text-xs text-muted-foreground">Serving size: {food.servingSize}</p>
+            )}
+          </SectionCard>
+        )}
+
+        <SectionCard title="Pricing">
+          {mainPrice ? (
+            <>
+              <PriceTag price={Number(mainPrice.basePrice)} size="lg" />
+              {mainPrice.salePrice && (
+                <p className="mt-1 text-xs text-muted-foreground">Sale price: {mainPrice.salePrice} BDT</p>
+              )}
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground">No base price set yet.</p>
+          )}
+          {food.prices.length > 1 && (
+            <p className="mt-2 text-xs text-muted-foreground">{food.prices.length} price points configured.</p>
+          )}
+        </SectionCard>
       </div>
 
-      <div className="mb-8">
-        <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-6 shadow-[var(--shadow-card)]">
-          <div className="flex items-center justify-between">
-            <h2 className="font-heading text-lg font-bold text-foreground">
-              Reviews
-              <span className="ml-2 text-sm font-normal text-muted-foreground">
-                ({detail.totalReviews})
-              </span>
-            </h2>
-            <div className="flex items-center gap-2">
-              <RatingStars rating={detail.avgRating} size="sm" showValue />
+      <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <SectionCard title="Variants">
+          {food.variants.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No variants.</p>
+          ) : (
+            <div className="space-y-2">
+              {food.variants.map((v) => (
+                <Row key={v.id} label={v.name} value={`${v.discountPrice ?? v.price} BDT`} />
+              ))}
             </div>
-          </div>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {detail.reviews.map((review) => (
-              <ReviewCard key={review.id} review={review} />
+          )}
+        </SectionCard>
+
+        <SectionCard title="Addons">
+          {food.addons.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No addons.</p>
+          ) : (
+            <div className="space-y-2">
+              {food.addons.map((a) => (
+                <Row key={a.id} label={a.name} value={a.items.length ? `${a.items.length} items` : "—"} />
+              ))}
+            </div>
+          )}
+        </SectionCard>
+      </div>
+
+      <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <SectionCard title="Ingredients">
+          {food.ingredients.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No ingredients listed.</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {food.ingredients.map((i) => (
+                <span key={i.id} className="rounded-full border border-border bg-muted px-3 py-1 text-xs text-muted-foreground">
+                  {i.ingredientName}
+                  {i.quantity ? ` (${i.quantity})` : ""}
+                </span>
+              ))}
+            </div>
+          )}
+        </SectionCard>
+
+        <SectionCard title="Diets & Tags">
+          <div className="flex flex-wrap gap-2">
+            {food.diets.map((d) => (
+              <span key={d.id} className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                {d.dietType}
+              </span>
             ))}
+            {food.tags.map((t) => (
+              <span key={t.id} className="rounded-full border border-border bg-muted px-3 py-1 text-xs text-muted-foreground">
+                {t.name}
+              </span>
+            ))}
+            {food.diets.length === 0 && food.tags.length === 0 && (
+              <p className="text-sm text-muted-foreground">No diets or tags.</p>
+            )}
           </div>
-        </div>
+        </SectionCard>
+      </div>
+
+      <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <SectionCard title="Schedules">
+          {food.schedules.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No schedules.</p>
+          ) : (
+            <div className="space-y-2">
+              {food.schedules.map((s) => (
+                <Row key={s.id} label={s.mealType} value={`${s.startTime} – ${s.endTime}`} />
+              ))}
+            </div>
+          )}
+        </SectionCard>
+
+        <SectionCard title="Availability">
+          <Row label="Status" value={isAvailable ? "Available" : "Unavailable"} />
+          {food.availability?.availableDays?.length ? (
+            <Row label="Days" value={food.availability.availableDays.join(", ")} />
+          ) : null}
+          <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+            <ListChecks className="size-4" />
+            {food._count.reviews} reviews · {food._count.favorites} favorites
+          </div>
+        </SectionCard>
       </div>
     </div>
   );

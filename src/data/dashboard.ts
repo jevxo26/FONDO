@@ -1,10 +1,10 @@
 import type { LucideIcon } from "lucide-react";
 import {
   Apple,
+  Banknote,
   BarChart3,
   Bike,
   CalendarDays,
-  ChefHat,
   Clock,
   CreditCard,
   DollarSign,
@@ -25,6 +25,12 @@ import {
   Users,
   Utensils,
   Wallet,
+  Layout,
+  Image,
+  SlidersHorizontal,
+  Newspaper,
+  FileText,
+  Settings,
 } from "lucide-react";
 
 export interface SidebarItem {
@@ -32,6 +38,7 @@ export interface SidebarItem {
   href: string;
   icon: LucideIcon;
   children?: { label: string; href: string; icon: LucideIcon }[];
+  permission?: string;
 }
 
 export const sidebarItems: SidebarItem[] = [
@@ -39,6 +46,7 @@ export const sidebarItems: SidebarItem[] = [
     label: "Customers",
     href: "/customers",
     icon: Users,
+    permission: "users",
     children: [
       { label: "Profiles", href: "/customers", icon: Users },
       { label: "Orders", href: "/customers/orders", icon: Receipt },
@@ -51,17 +59,18 @@ export const sidebarItems: SidebarItem[] = [
     label: "Vendors",
     href: "/vendors",
     icon: Store,
+    permission: "vendors",
     children: [
       { label: "All Vendors", href: "/vendors", icon: Store },
       { label: "Pending Approval", href: "/vendors/pending", icon: Clock },
       { label: "Performance", href: "/vendors/performance", icon: TrendingUp },
-      { label: "Settlement", href: "/vendors/settlement", icon: DollarSign },
     ],
   },
   {
     label: "Foods",
     href: "/foods",
     icon: Utensils,
+    permission: "foods",
     children: [
       { label: "All Foods", href: "/foods", icon: Utensils },
       { label: "Approval", href: "/foods/approval", icon: ThumbsUp },
@@ -73,12 +82,18 @@ export const sidebarItems: SidebarItem[] = [
     ],
   },
   {
+    label: "Users",
+    href: "/users",
+    icon: Users,
+    permission: "users",
+  },
+  {
     label: "Orders",
     href: "/orders",
     icon: Receipt,
+    permission: "orders",
     children: [
       { label: "All Orders", href: "/orders", icon: Receipt },
-      { label: "Kitchen Display", href: "/orders/kitchen", icon: ChefHat },
       { label: "Analytics", href: "/orders/analytics", icon: BarChart3 },
     ],
   },
@@ -86,17 +101,21 @@ export const sidebarItems: SidebarItem[] = [
     label: "Payments",
     href: "/payments",
     icon: CreditCard,
+    permission: "settings",
     children: [
       { label: "All Payments", href: "/payments", icon: CreditCard },
       { label: "Coupons", href: "/payments/coupons", icon: Ticket },
       { label: "Refunds", href: "/payments/refunds", icon: Undo2 },
+      { label: "Withdrawals", href: "/payments/withdrawals", icon: Wallet },
       { label: "Settlements", href: "/payments/settlements", icon: Landmark },
+      { label: "Revenue", href: "/payments/revenue", icon: Banknote },
     ],
   },
   {
     label: "Riders",
     href: "/riders",
     icon: Truck,
+    permission: "riders",
     children: [
       { label: "All Riders", href: "/riders", icon: Truck },
       { label: "Earnings", href: "/riders/earnings", icon: Wallet },
@@ -105,9 +124,25 @@ export const sidebarItems: SidebarItem[] = [
     ],
   },
   {
+    label: "CMS",
+    href: "/cms",
+    icon: Layout,
+    permission: "settings",
+    children: [
+      { label: "Dashboard", href: "/cms", icon: LayoutDashboard },
+      { label: "Banners", href: "/cms/banners", icon: Image },
+      { label: "Sliders", href: "/cms/sliders", icon: SlidersHorizontal },
+      { label: "Blog Categories", href: "/cms/blog-categories", icon: Grid3x3 },
+      { label: "Blogs", href: "/cms/blogs", icon: Newspaper },
+      { label: "Pages", href: "/cms/pages", icon: FileText },
+      { label: "Settings", href: "/cms/settings", icon: Settings },
+    ],
+  },
+  {
     label: "Reports",
     href: "/reports",
     icon: BarChart3,
+    permission: "reports",
     children: [
       { label: "Overview", href: "/reports", icon: LayoutDashboard },
       { label: "Revenue", href: "/reports/revenue", icon: DollarSign },
@@ -121,7 +156,8 @@ export const sidebarItems: SidebarItem[] = [
 ];
 
 export const sectionConfig = [
-  { label: "Management", items: ["Customers", "Vendors", "Foods"] },
+  { label: "Management", items: ["Users", "Customers", "Vendors", "Foods"] },
   { label: "Operations", items: ["Orders", "Payments", "Riders"] },
+  { label: "Content", items: ["CMS"] },
   { label: "Analytics", items: ["Reports"] },
 ] as const;

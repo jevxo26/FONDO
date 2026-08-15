@@ -7,7 +7,7 @@ export function ContextCards() {
   return (
     <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
       <GlassCard
-        icon={<TrendingUp className="size-5 text-primary" />}
+        icon={<TrendingUp className="size-5 text-foreground" />}
         title="Daily Peak Volume"
         value="42"
         subtitle="+12% vs yesterday"

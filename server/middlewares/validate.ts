@@ -9,7 +9,9 @@ export const validate = (schema: Schema, source: "body" | "query" | "params" = "
         abortEarly: false,
         stripUnknown: true,
       });
-      req[source] = validated;
+      if (source !== "query") {
+        req[source] = validated;
+      }
       next();
     } catch (err: unknown) {
       if (err instanceof Error && "errors" in err) {

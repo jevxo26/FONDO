@@ -22,6 +22,17 @@ export const listVendorWalletTransactions = catchServiceAsync(async (vendorId: s
   });
 });
 
+export const listAllSettlements = catchServiceAsync(async () => {
+  return prisma.vendorSettlement.findMany({
+    orderBy: { createdAt: "desc" },
+    include: {
+      vendor: { select: { businessName: true, id: true } },
+      items: true,
+      transactions: true,
+    },
+  });
+});
+
 export const listVendorSettlements = catchServiceAsync(async (vendorId: string) => {
   return prisma.vendorSettlement.findMany({ where: { vendorId }, orderBy: { createdAt: "desc" } });
 });

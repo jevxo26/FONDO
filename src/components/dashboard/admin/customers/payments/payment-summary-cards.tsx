@@ -44,7 +44,7 @@ export function PaymentSummaryCards() {
 
       <div className="col-span-12 md:col-span-5">
         <GlassCard
-          icon={<TrendingUp className="size-5 text-primary" />}
+          icon={<TrendingUp className="size-5 text-foreground" />}
           iconBg="bg-primary/10"
           title="Pending Payouts"
           value="৳28,400.00"

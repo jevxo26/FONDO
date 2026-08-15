@@ -10,7 +10,7 @@ export default function OurHeritage() {
         <div className="lg:col-span-6 space-y-6">
           <div className="space-y-2">
             {/* Tiny uppercase heritage label utilizing global primary saffron/gold color */}
-            <span className="text-primary font-sans text-xs font-bold uppercase tracking-[0.2em] block">
+            <span className="text-muted-foreground font-sans text-xs font-bold uppercase tracking-[0.2em] block">
               Est. 1924
             </span>
             {/* Primary serif section heading utilizing font-heading */}

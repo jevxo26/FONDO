@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyToken, authorize } from "../middlewares/authMiddleware";
+import { authorize, hasPermission, verifyToken } from "../middlewares/authMiddleware";
 import { validate } from "../middlewares/validate";
 import { SettlementController } from "../controllers/settlementController";
 import {
@@ -10,46 +10,48 @@ import {
 
 const router = Router();
 
-// Vendor wallet & settlements (Vendor or Admin)
-router.get(
-  "/vendors/:vendorId/wallet",
-  verifyToken,
-  authorize("VENDOR", "ADMIN", "SUPER_ADMIN"),
-  SettlementController.getVendorWallet,
-);
+const pReports = hasPermission("reports");
+const pSettings = hasPermission("settings");
+
+// Vendor wallet & settlements (Admin views OR vendor self-view)
+router.get("/vendors/:vendorId/wallet", verifyToken, SettlementController.getVendorWallet);
 router.get(
   "/vendors/:vendorId/wallet/transactions",
   verifyToken,
-  authorize("VENDOR", "ADMIN", "SUPER_ADMIN"),
   SettlementController.listVendorWalletTransactions,
 );
-router.get(
-  "/vendors/:vendorId/settlements",
-  verifyToken,
-  authorize("VENDOR", "ADMIN", "SUPER_ADMIN"),
-  SettlementController.listVendorSettlements,
-);
+router.get("/vendors/:vendorId/settlements", verifyToken, SettlementController.listVendorSettlements);
 
 // Settlement detail
 router.get(
   "/settlements/:id",
   verifyToken,
-  authorize("VENDOR", "ADMIN", "SUPER_ADMIN"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pReports,
   SettlementController.getSettlementDetail,
 );
 
 // Admin endpoints
+router.get(
+  "/admin/settlements",
+  verifyToken,
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pSettings,
+  SettlementController.listAllSettlements,
+);
 router.post(
   "/admin/settlements",
   verifyToken,
-  authorize("ADMIN", "SUPER_ADMIN"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pSettings,
   validate(createSettlementSchema),
   SettlementController.createSettlement,
 );
 router.post(
   "/settlements/:id/process",
   verifyToken,
-  authorize("ADMIN", "SUPER_ADMIN"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pSettings,
   validate(processSettlementSchema),
   SettlementController.processSettlement,
 );
@@ -58,7 +60,8 @@ router.post(
 router.get(
   "/platform/revenue",
   verifyToken,
-  authorize("ADMIN", "SUPER_ADMIN"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pSettings,
   validate(platformRevenueQuerySchema, "query"),
   SettlementController.getPlatformRevenue,
 );

@@ -1,21 +1,36 @@
+"use client";
+
 import { SectionHeader } from "@/components/common/section-header";
 import { SectionReveal } from "@/components/common/section-reveal";
 import { BlogReviewCard } from "./blog-review-card";
 import { BLOG_POSTS } from "@/data/homepage";
-import { InfiniteSlider } from "@/components/ui/infinite-slider";
+
+const categories = ["Heritage", "Recipes", "Stories", "Culture"];
 
 export function BlogReviews() {
+  const [featured, ...rest] = BLOG_POSTS;
+
   return (
-    <section className="py-8 lg:py-12">
+    <section className="relative py-8 lg:py-12">
       <div className="wrapper">
         <SectionReveal distance={20}>
           <SectionHeader title="Our Blog & Reviews" align="center" />
 
-          <InfiniteSlider gap={24} speed={50} reverse className="mt-8">
-            {BLOG_POSTS.map((post) => (
-              <BlogReviewCard key={post.id} post={post} />
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <BlogReviewCard
+              post={featured}
+              category={categories[0]}
+              featured
+              className="sm:col-span-2 lg:row-span-2"
+            />
+            {rest.map((post, i) => (
+              <BlogReviewCard
+                key={post.id}
+                post={post}
+                category={categories[(i + 1) % categories.length]}
+              />
             ))}
-          </InfiniteSlider>
+          </div>
         </SectionReveal>
       </div>
     </section>

@@ -1,15 +1,45 @@
-// src/app/dashboard/vendor/branches/page.tsx
+"use client";
+
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { VendorBranchTableSection } from "@/components/dashboard/vendor/branches/branch-table-section";
-import { Building2, CheckCircle, XCircle, MapPin } from "lucide-react";
-import { vendorBranches } from "@/data/vendor-branches";
+import { Building2, CheckCircle, XCircle, MapPin, Loader2 } from "lucide-react";
+import { useMyVendor } from "@/store/api/slices/vendor-orders-api";
+import { useGetVendorBranchesQuery } from "@/store/api/slices/vendor-api";
 
 export default function VendorBranchesPage() {
-  const totalBranches = vendorBranches.length;
-  const activeBranches = vendorBranches.filter((b) => b.status === "ACTIVE").length;
-  const inactiveBranches = vendorBranches.filter((b) => b.status === "INACTIVE").length;
-  const mainBranch = vendorBranches.find((b) => b.isMainBranch);
+  const { data: vendor, isLoading: vendorLoading } = useMyVendor();
+  const vendorCode = vendor?.vendorCode;
+
+  const { data: branches, isLoading: branchesLoading } = useGetVendorBranchesQuery(
+    vendorCode || "",
+    {
+      skip: !vendorCode,
+    },
+  );
+
+  const isLoading = vendorLoading || branchesLoading;
+
+  if (isLoading) {
+    return (
+      <div className="space-y-8">
+        <PageHeader
+          title="Branches"
+          description="Manage your business locations and branches."
+          icon={Building2}
+        />
+        <div className="mt-12 flex justify-center">
+          <Loader2 className="size-8 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
+
+  const items = branches ?? [];
+  const totalBranches = items.length;
+  const activeBranches = items.filter((b) => b.status === "ACTIVE").length;
+  const inactiveBranches = items.filter((b) => b.status === "INACTIVE").length;
+  const mainBranch = items.find((b) => b.isMainBranch);
 
   return (
     <div className="space-y-8">

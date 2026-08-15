@@ -23,7 +23,7 @@ export function ZoneVehicleInfo({ register, errors, selectedVehicle }: Props) {
             03
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
-            <MapPin className="size-5 text-primary" /> Work Zone & Vehicle
+            <MapPin className="size-5 text-foreground" /> Work Zone & Vehicle
           </h3>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

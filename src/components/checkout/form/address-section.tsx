@@ -28,7 +28,7 @@ export function AddressSection({
   return (
     <div className="rounded-2xl bg-card border border-border/40 p-5 shadow-sm flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <MapPin className="size-4 text-primary" />
+        <MapPin className="size-4 text-foreground" />
         <h2 className="font-sans text-sm font-semibold text-foreground">Delivery Details</h2>
       </div>
 

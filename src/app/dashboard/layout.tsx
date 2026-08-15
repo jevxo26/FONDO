@@ -3,7 +3,8 @@
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useRequireAuth, useAuth } from "@/hooks/use-auth";
-import { ROLE_DASHBOARD } from "@/data/navigation";
+import { getDashboardPath } from "@/data/navigation";
+import { useAppSelector } from "@/store/store";
 
 
 export default function DashboardLayout({
@@ -14,11 +15,12 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
   const { user, isAuthenticated } = useAuth();
+  const permissions = useAppSelector((s) => s.auth.permissions);
   useRequireAuth();
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      const correctDashboard = ROLE_DASHBOARD[user.role];
+      const correctDashboard = getDashboardPath(user.role, permissions);
       if (!correctDashboard) {
         router.replace("/");
         return;
@@ -29,7 +31,7 @@ export default function DashboardLayout({
         router.replace(correctDashboard);
       }
     }
-  }, [isAuthenticated, user, pathname, router]);
+  }, [isAuthenticated, user, permissions, pathname, router]);
 
   return <>{children}</>;
 }

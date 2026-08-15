@@ -1,3 +1,5 @@
+"use client";
+
 import { SectionHeader } from "@/components/common/section-header";
 import { SectionReveal } from "@/components/common/section-reveal";
 import { TESTIMONIALS } from "@/data/homepage";
@@ -6,7 +8,10 @@ import { InfiniteSlider } from "@/components/ui/infinite-slider";
 
 export function Testimonials() {
   return (
-    <section className="py-8 lg:py-12">
+    <section className="relative py-8 lg:py-12">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute bottom-0 right-0 size-[300px] rounded-full bg-primary/5 blur-3xl" />
+      </div>
       <div className="wrapper">
         <SectionReveal distance={20}>
           <SectionHeader title="What Dhaka is saying" align="center" />

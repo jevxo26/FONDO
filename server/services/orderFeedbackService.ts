@@ -1,6 +1,7 @@
 import prisma from "../lib/prisma";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
+import { generateInvoicePdf } from "./invoicePdfService";
 
 export const submitFeedback = catchServiceAsync(
   async (orderId: string, customerId: string, rating: number, review?: string) => {
@@ -25,18 +26,29 @@ export const getInvoice = catchServiceAsync(async (orderId: string) => {
   if (!order) throw new AppError(404, "Order not found");
 
   const existing = await prisma.orderInvoice.findUnique({ where: { orderId } });
-  if (existing) return existing;
 
-  const invNum = `INV-${order.orderNumber}`;
+  if (existing && existing.pdfUrl) return existing;
+
+  // Generate PDF if not yet created or pdfUrl missing
+  const { pdfUrl, invoiceNumber } = await generateInvoicePdf(orderId);
+
+  if (existing) {
+    return prisma.orderInvoice.update({
+      where: { id: existing.id },
+      data: { pdfUrl },
+    });
+  }
+
   return prisma.orderInvoice.create({
     data: {
       orderId,
-      invoiceNumber: invNum,
+      invoiceNumber,
       subtotal: order.subtotal,
       discount: order.discount,
       vat: order.vat,
       deliveryCharge: order.deliveryCharge,
       grandTotal: order.totalAmount,
+      pdfUrl,
     },
   });
 });

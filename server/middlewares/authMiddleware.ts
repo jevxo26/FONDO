@@ -38,3 +38,19 @@ export const authorize = (...roles: string[]) => {
     next();
   });
 };
+
+export const hasPermission = (...slugs: string[]) => {
+  return catchAsync(async (req: AuthRequest, _res: Response, next: NextFunction) => {
+    if (!req.user) {
+      throw new AppError(401, "Authentication required.");
+    }
+
+    const permissions = req.user.permissions ?? [];
+    const allowed = permissions.includes("*") || slugs.some((slug) => permissions.includes(slug));
+    if (!allowed) {
+      throw new AppError(403, `Access denied. Required permission: ${slugs.join(" or ")}`);
+    }
+
+    next();
+  });
+};

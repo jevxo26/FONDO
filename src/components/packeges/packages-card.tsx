@@ -1,95 +1,125 @@
 "use client";
-
 import React from "react";
-import { usePackages } from "./packages-context";
-import type { MealPackage } from "./packages-context";
-import { Check, Clock, Flame, Star, Utensils } from "lucide-react";
+import { Check, Clock, Settings, Star, Utensils } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
+import { usePackages } from "./packages-context";
+import { Package } from "@/types/package";
 interface PackageCardProps {
-  pkg: MealPackage;
+  pkg: Package;
 }
 
-const PackageCard = ({ pkg }: PackageCardProps) => {
+
+export default function PackageCard({
+  pkg,
+}: PackageCardProps) {
   const { toggleComparison, comparedIds } = usePackages();
-  const hasDiscount = pkg.discountPrice !== null;
+
   const isCompared = comparedIds.includes(pkg.id);
+
+  const finalPrice = Number(pkg.discountPrice ?? pkg.price ?? 0);
+  const originalPrice = Number(pkg.price ?? 0);
+  const displayRating = pkg.rating?.averageRating.toFixed(1);
+  const totalReviews = pkg.rating?.totalReview ?? 0;
+  console.log("pkg", pkg);
   return (
-    <article
-      key={pkg.id}
-      className="group bg-card border border-border rounded-2xl overflow-hidden shadow-sm flex flex-col transition-all hover:-translate-y-1 hover:shadow-md"
-    >
-      <div className="relative">
-        <Image
-          width={500}
-          height={500}
-          src={pkg.thumbnail}
-          alt={pkg.name}
-          className="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        <span className="absolute top-3 left-3 px-2 py-1 bg-card/90 text-[9px] font-bold uppercase rounded-lg shadow-sm">
-          {pkg.category}
-        </span>
+    <article className="group bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all flex flex-col justify-between">
+      <div>
+        {/* Thumbnail Badge Area */}
+        <div className="relative overflow-hidden aspect-4/3 bg-muted">
+          <Image
+            src={pkg.coverImage || "/upload/"}
+            alt={pkg.name}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+
+          <span className="absolute top-3 left-3 bg-primary/10 text-primary text-[10px] font-semibold px-2.5 py-1 rounded-lg shadow-sm">
+            {pkg.packageCategory?.name ?? "Meal Plan"}
+          </span>
+
+          {pkg.isCustomizable && (
+            <span className="absolute top-3 right-3 bg-emerald-600 text-white text-[10px] font-semibold px-2.5 py-1 rounded-lg shadow-sm">
+              Customizable
+            </span>
+          )}
+        </div>
+
+        {/* Card Body */}
+        <div className="p-4 flex flex-col gap-3">
+          {/* Header */}
+          <div className="flex justify-between items-start gap-2">
+            <h3 className="font-semibold text-base text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+              {pkg.name}
+            </h3>
+
+            <div className="flex items-center gap-1 text-xs font-semibold text-foreground shrink-0 bg-amber-500/10 px-1.5 py-0.5 rounded-md">
+              <Star size={13} className="fill-amber-400 text-amber-400" />
+              <span>{displayRating}</span>
+              <span className="text-muted-foreground">({totalReviews})</span>
+            </div>
+          </div>
+
+          {/* Description */}
+          <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+            {pkg.description || "No description provided."}
+          </p>
+
+          {/* Highlights Grid */}
+          <div className="grid grid-cols-3 gap-2 text-center bg-muted/50 rounded-xl p-2.5 border border-border/40">
+            <div>
+              <Clock className="mx-auto mb-1 size-3.5 text-muted-foreground" />
+              <p className="text-[11px] font-semibold text-foreground">{pkg.durationDays} Days</p>
+            </div>
+
+            <div>
+              <Utensils className="mx-auto mb-1 size-3.5 text-muted-foreground" />
+              <p className="text-[11px] font-semibold text-foreground">{pkg.totalMeals} Meals</p>
+            </div>
+
+            <div>
+              <Settings className="mx-auto mb-1 size-3.5 text-muted-foreground" />
+              <p className="text-[11px] font-semibold text-foreground truncate">{pkg.packageType}</p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="p-4 flex flex-col grow gap-3">
-        <div className="flex items-center justify-between gap-2">
-          <h3 className="font-heading text-base font-medium text-foreground line-clamp-1">
-            {pkg.name}
-          </h3>
-          <div className="flex items-center gap-0.5 text-[10px] bg-secondary px-1.5 py-0.5 rounded border border-border font-bold">
-            <Star className="size-3 text-warning fill-warning" /> {pkg.rating}
-          </div>
+      {/* Footer Pricing & Actions */}
+      <div className="p-4 pt-0 flex justify-between items-end gap-2 border-t border-border/30 mt-2">
+        <div>
+          {pkg.discountPrice && originalPrice > finalPrice && (
+            <p className="text-[11px] line-through text-muted-foreground font-medium">
+              ৳{originalPrice.toLocaleString()}
+            </p>
+          )}
+          <p className="text-lg font-extrabold text-primary">
+            ৳{finalPrice.toLocaleString()}
+          </p>
         </div>
 
-        <p className="text-[11px] text-muted-foreground line-clamp-2 h-8 leading-relaxed">
-          {pkg.description}
-        </p>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => toggleComparison(pkg.id)}
+            className={`border rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all flex items-center ${isCompared
+              ? "bg-primary text-primary-foreground border-primary"
+              : "border-border hover:bg-muted text-foreground"
+              }`}
+          >
+            {isCompared && <Check size={13} className="mr-1 shrink-0" />}
+            Compare
+          </button>
 
-        <div className="grid grid-cols-3 gap-1 bg-secondary p-2 border border-border/40 rounded-xl text-center text-[10px] font-bold">
-          <div>
-            <Clock className="size-3 mx-auto text-primary mb-0.5" />
-            {pkg.duration} Days
-          </div>
-          <div>
-            <Utensils className="size-3 mx-auto text-primary mb-0.5" />
-            {pkg.mealsPerDay}/Day
-          </div>
-          <div>
-            <Flame className="size-3 mx-auto text-primary mb-0.5" />
-            {pkg.calories} kcal
-          </div>
-        </div>
-
-        <div className="flex items-end justify-between pt-2 mt-auto">
-          <div className="flex flex-col">
-            {hasDiscount && (
-              <span className="text-[9px] line-through opacity-50">৳{pkg.price}</span>
-            )}
-            <span className="text-xs font-black text-foreground">
-              ৳{pkg.discountPrice ?? pkg.price}
-            </span>
-          </div>
-          <div className="flex gap-1.5">
-            <button
-              onClick={() => toggleComparison(pkg.id)}
-              className={`p-1.5 border rounded-lg text-[10px] font-bold flex items-center gap-1 transition-colors ${isCompared ? "bg-primary/10 border-primary text-primary" : "border-border hover:bg-muted"}`}
-            >
-              <Check className={`size-3 ${isCompared ? "block" : "hidden"}`} /> Compare
-            </button>
-            {/* <button className="h-7 px-3 bg-primary text-primary-foreground font-bold text-[10px] rounded-lg shadow-sm hover:opacity-90">Details</button> */}
-            <Link
-              href={`/packages/${pkg.id}`}
-              className="p-1.5 border  bg-primary text-primary-foreground font-bold text-[10px] rounded-lg shadow-sm hover:opacity-90"
-            >
-              Details
-            </Link>
-          </div>
+          <Link
+            href={`/packages/${pkg.id}`}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg px-3 py-1.5 text-xs transition-colors flex items-center"
+          >
+            Details
+          </Link>
         </div>
       </div>
     </article>
   );
-};
-
-export default PackageCard;
+}

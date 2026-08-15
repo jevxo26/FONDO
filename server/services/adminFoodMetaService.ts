@@ -100,6 +100,36 @@ export const deleteDiscount = catchServiceAsync(async (id: string) => {
   });
 });
 
+export const deletePrice = catchServiceAsync(async (id: string) => {
+  const price = await prisma.foodPrice.findUnique({ where: { id } });
+  if (!price) throw new AppError(404, "Price not found");
+
+  return prisma.foodPrice.update({
+    where: { id },
+    data: { status: "inactive" } as unknown as Prisma.FoodPriceUpdateInput,
+  });
+});
+
+export const createFoodImage = catchServiceAsync(
+  async (foodId: string, image: string) => {
+    const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
+    if (!food) throw new AppError(404, "Food not found");
+
+    const count = await prisma.foodImage.count({ where: { foodId } });
+
+    return prisma.foodImage.create({
+      data: { foodId, image, sortOrder: count },
+    });
+  },
+);
+
+export const deleteFoodImage = catchServiceAsync(async (id: string) => {
+  const image = await prisma.foodImage.findUnique({ where: { id } });
+  if (!image) throw new AppError(404, "Food image not found");
+
+  return prisma.foodImage.delete({ where: { id } });
+});
+
 export const addFoodTags = catchServiceAsync(async (foodId: string, tagIds: string[]) => {
   const food = await prisma.food.findFirst({ where: { id: foodId, deletedAt: null } });
   if (!food) throw new AppError(404, "Food not found");

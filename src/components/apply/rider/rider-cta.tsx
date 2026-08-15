@@ -9,7 +9,7 @@ export function RiderCtaSection() {
         <div className="wrapper px-[var(--space-container)]">
           <div className="bg-card border border-border rounded-4xl p-8 sm:p-12 shadow-[var(--shadow-elevated)] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 space-y-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-primary">
+              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                 Get the App
               </span>
               <h2 className="font-heading text-3xl sm:text-5xl tracking-tight text-foreground">
@@ -32,7 +32,7 @@ export function RiderCtaSection() {
               <div className="w-60 h-80 bg-secondary border-4 border-border rounded-3xl p-4 flex flex-col justify-between shadow-[var(--shadow-card)]">
                 <div className="text-[10px] text-muted-foreground font-mono">FONDO DISPATCH</div>
                 <div className="space-y-3 my-auto text-center">
-                  <Bike className="size-12 text-primary mx-auto" />
+                  <Bike className="size-12 text-foreground mx-auto" />
                   <div className="text-sm font-bold text-foreground">Ready to Ride?</div>
                   <div className="text-xs text-muted-foreground">3 Orders waiting in your zone</div>
                 </div>

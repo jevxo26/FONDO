@@ -3,47 +3,46 @@
 import { DataTable } from "@/components/common/table";
 import type { RowAction, FacetedFilter } from "@/components/common/table";
 import { settlementColumns } from "./settlement-columns";
-import type { Settlement } from "@/data/payments";
-import { Banknote, CheckCircle, Eye, Send } from "lucide-react";
+import { Send } from "lucide-react";
+import type { VendorSettlement } from "@/types/wallet";
 
-const rowActions: RowAction<Settlement>[] = [
-  {
-    label: "View Details",
-    icon: <Eye className="size-4" />,
-    onClick: (row) => console.log("View Settlement", row.id),
-  },
-  {
-    label: "Process Payment",
-    icon: <Send className="size-4" />,
-    onClick: (row) => console.log("Process Payment", row.id),
-  },
-];
+interface SettlementTableSectionProps {
+  data: VendorSettlement[];
+  isLoading?: boolean;
+  onProcess: (settlement: VendorSettlement) => void;
+}
 
 const statusFilter: FacetedFilter = {
-  columnId: "status",
+  columnId: "paymentStatus",
   title: "Status",
-  icon: <CheckCircle className="size-4" />,
   options: [
-    { label: "Pending", value: "PENDING" },
-    { label: "Processing", value: "PROCESSING" },
-    { label: "Completed", value: "COMPLETED" },
-    { label: "Failed", value: "FAILED" },
+    { label: "Paid", value: "paid" },
+    { label: "Pending", value: "pending" },
+    { label: "Processing", value: "processing" },
+    { label: "Failed", value: "failed" },
   ],
 };
 
-export function SettlementTableSection({ data }: { data: Settlement[] }) {
+export function SettlementTableSection({ data, isLoading, onProcess }: SettlementTableSectionProps) {
+  const rowActions: RowAction<VendorSettlement>[] = [
+    {
+      label: "Process Payment",
+      icon: <Send className="size-4" />,
+      variant: "default" as const,
+      onClick: (row) => onProcess(row),
+    },
+  ];
+
   return (
     <DataTable
       columns={settlementColumns}
       data={data}
-      rowActions={rowActions}
+      isLoading={isLoading}
+      pageSize={10}
       filters={[statusFilter]}
-      toolbarActions={
-        <span className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-primary">
-          <Banknote className="size-3.5" />
-          Total: ৳{data.reduce((s, d) => s + d.netAmount, 0).toLocaleString()}
-        </span>
-      }
+      rowActions={rowActions}
+      emptyMessage="No settlements found."
     />
   );
 }
+

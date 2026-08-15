@@ -4,6 +4,9 @@ import { catchAsync } from "../utils/catchAsync";
 import { sendResponse } from "../utils/sendResponse";
 import * as orderService from "../services/orderService";
 import * as orderFulfillmentService from "../services/orderFulfillmentService";
+import { getInvoicePdfPath } from "../services/invoicePdfService";
+import AppError from "../utils/AppError";
+import path from "path";
 
 export const OrderController = {
   list: catchAsync(async (req: AuthRequest, res: Response) => {
@@ -63,14 +66,19 @@ export const OrderController = {
     sendResponse(res, { statusCode: 200, message: "Rider assigned" });
   }),
 
-  listAll: catchAsync(async (_req: AuthRequest, res: Response) => {
-    const result = await orderService.listAllOrders();
+  listAll: catchAsync(async (req: AuthRequest, res: Response) => {
+    const page = req.query.page ? parseInt(req.query.page as string) : undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+    const status = req.query.status as string | undefined;
+    const result = await orderService.listAllOrders({ page, limit, status });
     sendResponse(res, { statusCode: 200, data: result });
   }),
 
   listVendor: catchAsync(async (req: AuthRequest, res: Response) => {
     const vendorId = req.params.vendorId as string;
-    const result = await orderService.listVendorOrders(vendorId);
+    const page = req.query.page ? parseInt(req.query.page as string) : undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+    const result = await orderService.listVendorOrders(vendorId, { page, limit });
     sendResponse(res, { statusCode: 200, data: result });
   }),
 
@@ -111,5 +119,14 @@ export const OrderController = {
     const { status } = req.body;
     const meal = await orderFulfillmentService.updateMealStatus(mealId, status);
     sendResponse(res, { statusCode: 200, data: meal });
+  }),
+
+  downloadInvoice: catchAsync(async (req: AuthRequest, res: Response) => {
+    const orderId = req.params.orderId as string;
+    const filePath = await getInvoicePdfPath(orderId);
+    const fileName = path.basename(filePath);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+    res.sendFile(filePath);
   }),
 };

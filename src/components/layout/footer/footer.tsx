@@ -1,26 +1,17 @@
 import { FOOTER_LINKS, PAYMENT_METHODS, SOCIAL_ICONS } from "@/data/footer-data";
 import { ArrowRight } from "lucide-react";
-import Image from "next/image";
+import { Logo } from "@/components/common/logo";
 
 export function Footer() {
   return (
-    <footer className="bg-foreground py-10 text-white">
+    <footer className="bg-foreground py-10 pb-[calc(env(safe-area-inset-bottom)+5rem)] text-white lg:pb-10">
       <div className="wrapper">
         <div className="mx-auto flex max-w-[1320px] flex-col gap-6">
           {/* Top row */}
           <div className="flex flex-col items-start gap-10 lg:flex-row lg:gap-10">
             {/* Left: Logo + Description + Newsletter */}
             <div className="flex w-full max-w-[441px] flex-col gap-6">
-              <div className="flex items-center gap-2">
-                <Image
-                  src="/images/logo.png"
-                  alt="FONDO logo"
-                  width={40}
-                  height={40}
-                  className="rounded-lg"
-                />
-                <span className="text-xl font-bold text-background">FONDO</span>
-              </div>
+              <Logo noLink />
 
               <p className="text-base leading-[130%] text-background/65">
                 A heritage kitchen in the heart of Dhaka, plating slow-cooked Mughlai cuisine with
@@ -79,7 +70,7 @@ export function Footer() {
                 <ul className="flex flex-col gap-4">
                   {FOOTER_LINKS.contact.items.map((item) => (
                     <li key={item.text} className="flex items-start gap-3">
-                      <item.icon className="size-5 shrink-0 pt-0.5 text-primary" />
+                      <item.icon className="size-5 shrink-0 pt-0.5 text-background/80" />
                       <span className="text-base text-background/80">{item.text}</span>
                     </li>
                   ))}
@@ -106,11 +97,11 @@ export function Footer() {
           <div className="flex flex-col gap-6 border-t border-background/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-col gap-2">
               <p className="text-sm text-background/60">Secure Payment Methods</p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {PAYMENT_METHODS.map((method) => (
                   <span
                     key={method}
-                    className="rounded border border-background/20 bg-background/10 px-3 py-1.5 text-xs font-medium text-background"
+                    className="rounded border border-background/20 bg-background/10 px-2.5 py-1.5 text-[11px] font-medium text-background whitespace-nowrap"
                   >
                     {method}
                   </span>

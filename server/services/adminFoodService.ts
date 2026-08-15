@@ -1,23 +1,31 @@
 import type { InferType } from "yup";
-import type { FoodType, Prisma } from "@prisma/client";
+import type { DiscountType, FoodType, Prisma } from "@prisma/client";
 import type { createFoodSchema, updateFoodSchema } from "../validations/adminFood.validation";
 import AppError from "../utils/AppError";
 import { catchServiceAsync } from "../utils/catchServiceAsync";
 import prisma from "../lib/prisma";
 
-export const createFood = catchServiceAsync(async (data: InferType<typeof createFoodSchema>) => {
-  const existing = await prisma.food.findUnique({ where: { slug: data.slug } });
-  if (existing) throw new AppError(400, "A food with this slug already exists");
+export const createFood = catchServiceAsync(
+  async (data: InferType<typeof createFoodSchema>, adminUserId?: string) => {
+    const existing = await prisma.food.findUnique({ where: { slug: data.slug } });
+    if (existing) throw new AppError(400, "A food with this slug already exists");
 
-  const foodCode = `FD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+    const vendorIds = (data.vendorIds ?? []).filter((x): x is string => Boolean(x));
+    if (vendorIds.length) {
+      const vendorCount = await prisma.vendor.count({
+        where: { id: { in: vendorIds }, deletedAt: null },
+      });
+      if (vendorCount !== vendorIds.length) throw new AppError(400, "One or more vendors not found");
+    }
 
-  return prisma.food.create({
-    data: {
-      categoryId: data.categoryId,
+    const foodCode = `FD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+
+    const createData: Prisma.FoodUncheckedCreateInput = {
+      categoryId: data.categoryId!,
       subCategoryId: data.subCategoryId,
       foodCode,
-      name: data.name,
-      slug: data.slug,
+      name: data.name!,
+      slug: data.slug!,
       shortDescription: data.shortDescription,
       description: data.description,
       thumbnail: data.thumbnail,
@@ -33,12 +41,165 @@ export const createFood = catchServiceAsync(async (data: InferType<typeof create
       isFeatured: data.isFeatured ?? false,
       isPopular: data.isPopular ?? false,
       isRecommended: data.isRecommended ?? false,
-      status: data.status ?? "draft",
-      visibility: { create: {} },
-    },
+      status: "APPROVED",
+      approvedBy: adminUserId,
+      approvedAt: new Date(),
+      visibility: { create: data.visibility ?? {} },
+    };
+
+  if (data.variants?.length) {
+    createData.variants = {
+      create: data.variants.map((v) => ({
+        name: v.name!,
+        price: v.price!,
+        description: v.description,
+        discountPrice: v.discountPrice,
+        weight: v.weight,
+        servingSize: v.servingSize,
+        status: v.status,
+      })),
+    };
+  }
+
+  if (data.addons?.length) {
+    createData.addons = {
+      create: data.addons.map((a) => ({
+        name: a.name!,
+        isRequired: a.isRequired ?? false,
+        maxSelection: a.maxSelection,
+        status: a.status,
+        ...(a.items?.length
+          ? {
+              items: {
+                create: a.items.map((item) => ({
+                  name: item.name!,
+                  price: item.price!,
+                  image: item.image,
+                  status: item.status,
+                })),
+              },
+            }
+          : {}),
+      })),
+    };
+  }
+
+  if (data.prices?.length) {
+    createData.prices = {
+      create: data.prices.map((p) => ({
+        basePrice: p.basePrice!,
+        salePrice: p.salePrice,
+        currency: p.currency,
+        effectiveFrom: p.effectiveFrom,
+        effectiveTo: p.effectiveTo,
+        status: p.status,
+      })),
+    };
+  }
+
+  if (data.discounts?.length) {
+    createData.discounts = {
+      create: data.discounts.map((d) => ({
+        discountType: d.discountType as DiscountType,
+        discountValue: d.discountValue!,
+        startDate: d.startDate,
+        endDate: d.endDate,
+        status: d.status,
+      })),
+    };
+  }
+
+  if (data.schedules?.length) {
+    createData.schedules = {
+      create: data.schedules.map((s) => ({
+        mealType: s.mealType as "BREAKFAST" | "LUNCH" | "DINNER" | "SNACKS",
+        startTime: s.startTime!,
+        endTime: s.endTime!,
+        status: s.status,
+      })),
+    };
+  }
+
+  if (data.availability) {
+    createData.availability = { create: data.availability as Prisma.FoodAvailabilityCreateInput };
+  }
+
+  if (data.ingredients?.length) {
+    createData.ingredients = {
+      create: data.ingredients.map((i) => ({
+        ingredientName: i.ingredientName!,
+        quantity: i.quantity,
+        unit: i.unit,
+        isOptional: i.isOptional,
+      })),
+    };
+  }
+
+  if (data.allergens?.length) {
+    createData.allergens = {
+      create: data.allergens.map((a) => ({
+        allergen: a.allergen!,
+        description: a.description,
+      })),
+    };
+  }
+
+  if (data.labels?.length) {
+    createData.labels = {
+      create: data.labels.map((l) => ({ label: l.label!, color: l.color })),
+    };
+  }
+
+  if (data.diets?.length) {
+    createData.diets = {
+      create: data.diets.map((d) => ({ dietType: d.dietType! })),
+    };
+  }
+
+  if (data.tagIds?.length) {
+    createData.tagMappings = {
+      create: data.tagIds.map((tagId) => ({ tagId: tagId! })),
+    };
+  }
+
+  if (data.images?.length) {
+    createData.images = {
+      create: data.images.map((image, i) => ({ image: image!, sortOrder: i })),
+    };
+  }
+
+  if (vendorIds.length) {
+    createData.vendorFoods = {
+      create: vendorIds.map((vendorId) => ({
+        vendorId,
+        status: "active",
+        statusHistories: {
+          create: {
+            oldStatus: null,
+            newStatus: "APPROVED",
+            changedBy: adminUserId,
+            reason: "Food created directly by admin",
+          },
+        },
+      })),
+    };
+    createData.vendorFoodAssignments = {
+      create: vendorIds.map((vendorId, i) => ({
+        vendorId,
+        priority: i,
+        isDefault: i === 0,
+      })),
+    };
+  }
+
+  return prisma.food.create({
+    data: createData,
     include: {
       category: { select: { id: true, name: true, slug: true } },
       visibility: true,
+      vendorFoods: {
+        include: { vendor: { select: { id: true, businessName: true } } },
+      },
     },
   });
 });
@@ -55,7 +216,17 @@ export const updateFood = catchServiceAsync(
       if (slugExists) throw new AppError(400, "Another food already uses this slug");
     }
 
-    return prisma.food.update({ where: { id }, data: data as unknown as Prisma.FoodUpdateInput });
+    const { diets, ...rest } = data;
+
+    const updateData: Prisma.FoodUpdateInput = {
+      ...(rest as unknown as Prisma.FoodUpdateInput),
+    };
+
+    if (diets?.length) {
+      updateData.diets = { deleteMany: {}, create: diets.map((d) => ({ dietType: d.dietType })) };
+    }
+
+    return prisma.food.update({ where: { id }, data: updateData });
   },
 );
 

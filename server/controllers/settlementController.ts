@@ -2,23 +2,50 @@ import { Response } from "express";
 import type { AuthRequest } from "../types/auth.types";
 import { catchAsync } from "../utils/catchAsync";
 import { sendResponse } from "../utils/sendResponse";
+import AppError from "../utils/AppError";
+import prisma from "../lib/prisma";
 import * as settlementService from "../services/settlementService";
+
+// Allow the vendor themselves (VENDOR, own vendorId) or admins with reports permission
+const assertCanViewVendor = async (req: AuthRequest, vendorId: string) => {
+  const permissions = req.user!.permissions ?? [];
+
+  if (req.user!.role === "SUPER_ADMIN" || permissions.includes("reports")) {
+    return;
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: req.user!.userId },
+    select: { vendorId: true, role: true },
+  });
+  if (user?.role === "VENDOR" && user.vendorId === vendorId) return;
+
+  throw new AppError(403, "Access denied to this vendor's data");
+};
 
 export const SettlementController = {
   getVendorWallet: catchAsync(async (req: AuthRequest, res: Response) => {
     const vendorId = req.params.vendorId as string;
+    await assertCanViewVendor(req, vendorId);
     const wallet = await settlementService.getVendorWallet(vendorId);
     sendResponse(res, { statusCode: 200, data: wallet });
   }),
 
   listVendorWalletTransactions: catchAsync(async (req: AuthRequest, res: Response) => {
     const vendorId = req.params.vendorId as string;
+    await assertCanViewVendor(req, vendorId);
     const result = await settlementService.listVendorWalletTransactions(vendorId);
+    sendResponse(res, { statusCode: 200, data: result });
+  }),
+
+  listAllSettlements: catchAsync(async (_req: AuthRequest, res: Response) => {
+    const result = await settlementService.listAllSettlements();
     sendResponse(res, { statusCode: 200, data: result });
   }),
 
   listVendorSettlements: catchAsync(async (req: AuthRequest, res: Response) => {
     const vendorId = req.params.vendorId as string;
+    await assertCanViewVendor(req, vendorId);
     const result = await settlementService.listVendorSettlements(vendorId);
     sendResponse(res, { statusCode: 200, data: result });
   }),

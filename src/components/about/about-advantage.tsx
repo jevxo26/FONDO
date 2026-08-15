@@ -46,27 +46,27 @@ export default function FoodoAdvantage() {
   ];
 
   return (
-    <section className="py-20 bg-[#FAF5EB]">
+    <section className="py-20 bg-background">
       <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-12">
         <div className="text-center space-y-2">
-          <h2 className="font-heading text-3xl md:text-4xl font-normal text-[#16100C]">
+          <h2 className="font-heading text-3xl md:text-4xl font-normal text-foreground">
             The Foodo Advantage
           </h2>
-          <div className="w-16 h-0.5 bg-[#CEA359] mx-auto" />
+          <div className="w-16 h-0.5 bg-primary/30 mx-auto" />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {advantages.map((adv, idx) => (
             <div
               key={idx}
-              className="bg-white border border-[#16100C]/10 rounded-2xl p-5 space-y-3 shadow-sm hover:border-[#CEA359]/30 transition-all"
+              className="bg-white border border-foreground/10 rounded-2xl p-5 space-y-3 shadow-sm hover:border-primary/30 transition-all"
             >
-              <div className="text-[#CEA359] size-8 flex items-center shrink-0">
+              <div className="text-foreground size-8 flex items-center shrink-0">
                 {React.cloneElement(adv.icon, { className: "size-5" })}
               </div>
-              <h4 className="font-sans text-xs font-bold text-[#16100C] leading-none">
+              <h4 className="font-sans text-xs font-bold text-foreground leading-none">
                 {adv.title}
               </h4>
-              <p className="font-sans text-[10px] text-[#16100C]/65 leading-relaxed font-light">
+              <p className="font-sans text-[10px] text-foreground/65 leading-relaxed font-light">
                 {adv.desc}
               </p>
             </div>

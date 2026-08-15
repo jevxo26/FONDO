@@ -54,7 +54,7 @@ export default function RidersPerformancePage() {
       </div>
       <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <GlassCard
-          icon={<BarChart3 className="size-5 text-primary" />}
+          icon={<BarChart3 className="size-5 text-foreground" />}
           title="Weekly Volume"
           value={totalDeliveries.toString()}
           subtitle="Across all riders"

@@ -11,42 +11,54 @@
 ### CSS Variable Tokens (use in components)
 | Token | Light | Dark | Usage |
 |-------|-------|------|-------|
-| `--background` | `#FAF5EB` | `#1A1A1A` | Page background |
-| `--foreground` | `#16100C` | `#FAF5EB` | Main text |
-| `--card` | `#FCF9F3` | `#2C2824` | Card background |
-| `--card-foreground` | `#16100C` | `#FAF5EB` | Card text |
-| `--primary` | `#CEA359` | `#CEA359` | Gold — buttons, accents, premium indicators |
-| `--primary-foreground` | `#1B0E08` | `#1B0E08` | Text on primary |
-| `--secondary` | `#F5EDE0` | `#2C2824` | Cream backgrounds |
-| `--secondary-foreground` | `#1B1612` | `#FAF5EB` | Text on secondary |
-| `--muted` | `#F0E8DC` | `#2C2824` | Subtle backgrounds |
-| `--muted-foreground` | `#635C57` | `#9CA3AF` | Muted text |
-| `--accent` | `#F5EDE0` | `#2C2824` | Accent backgrounds |
-| `--accent-foreground` | `#1B1612` | `#FAF5EB` | Text on accent |
-| `--destructive` | `#EF4444` | `#EF4444` | Error states, danger badges |
-| `--success` | `#10B981` | `#10B981` | Success states |
-| `--warning` | `#F59E0B` | `#F59E0B` | Warning states |
-| `--border` | `#E0D5C4` | `#3D3730` | Borders |
-| `--input` | `#E0D5C4` | `#3D3730` | Input borders |
-| `--ring` | `#CEA359` | `#CEA359` | Focus rings |
-| `--sidebar` | `#F9F3E9` | `#1F1C19` | Sidebar background |
-| `--sidebar-foreground` | `#16100C` | `#FAF5EB` | Sidebar text |
-| `--sidebar-primary` | `#CEA359` | `#CEA359` | Sidebar primary |
-| `--sidebar-primary-foreground` | `#1B0E08` | `#1B0E08` | Sidebar primary text |
-| `--sidebar-accent` | `#F0E8DC` | `#2C2824` | Sidebar accent |
-| `--sidebar-accent-foreground` | `#16100C` | `#FAF5EB` | Sidebar accent text |
-| `--sidebar-border` | `#E0D5C4` | `#3D3730` | Sidebar borders |
-| `--sidebar-ring` | `#CEA359` | `#CEA359` | Sidebar focus ring |
+| `--background` | `#FAF6EF` | `#1E1814` | Page background |
+| `--foreground` | `#2B211B` | `#F4EDE0` | Main text |
+| `--card` | `#FFFDF9` | `#2A221A` | Card background |
+| `--card-foreground` | `#2B211B` | `#F4EDE0` | Card text |
+| `--primary` | `#A85A38` | `#CE8665` | Terracotta — button fills, active states, premium indicators |
+| `--primary-foreground` | `#FFF9F2` | `#2B140A` | Text on primary |
+| `--secondary` | `#F1E8DA` | `#332A1F` | Cream/sand backgrounds |
+| `--secondary-foreground` | `#3A2E23` | `#F4EDE0` | Text on secondary |
+| `--muted` | `#F0E7D9` | `#2E251C` | Subtle backgrounds |
+| `--muted-foreground` | `#6E6458` | `#A99C8C` | Muted text |
+| `--accent` | `#F2E3D4` | `#3A2E21` | Warm sand accent backgrounds |
+| `--accent-foreground` | `#3A2E23` | `#F4EDE0` | Text on accent |
+| `--destructive` | `#E0554F` | `#E0604F` | Error states, danger badges |
+| `--success` | `#3E9A72` | `#4CAF84` | Success states |
+| `--warning` | `#D97B26` | `#E09A4F` | Warning states |
+| `--border` | `#E3D7C4` | `#40382C` | Borders |
+| `--input` | `#DFD3C1` | `#40382C` | Input borders |
+| `--ring` | `#A85A38` | `#CE8665` | Focus rings |
+| `--sidebar` | `#FAF5EC` | `#221B14` | Sidebar background |
+| `--sidebar-foreground` | `#2B211B` | `#F4EDE0` | Sidebar text |
+| `--sidebar-primary` | `#A85A38` | `#CE8665` | Sidebar primary |
+| `--sidebar-primary-foreground` | `#FFF9F2` | `#2B140A` | Sidebar primary text |
+| `--sidebar-accent` | `#F1E6D8` | `#332A1F` | Sidebar accent |
+| `--sidebar-accent-foreground` | `#2B211B` | `#F4EDE0` | Sidebar accent text |
+| `--sidebar-border` | `#E3D7C4` | `#40382C` | Sidebar borders |
+| `--sidebar-ring` | `#A85A38` | `#CE8665` | Sidebar focus ring |
+| `--overlay` | `#221A12` | `#1A120B` | Warm dark overlay over photos (service banner, /our hero) |
+| `--overlay-deep` | `#120D09` | `#0B0806` | Deep end of `bg-warm-dark` gradient |
 
 ### Variant System
 StatCard, accent bars, and status indicators use these semantic colors:
 
 | Variant | Token | Visual |
 |---------|-------|--------|
-| `default` | `--primary` | Gold |
+| `default` | `--primary` | Terracotta |
 | `success` | `--success` | Green |
 | `warning` | `--warning` | Amber |
 | `danger` | `--destructive` | Red |
+
+### Brand Color Budget
+Primary is the **terracotta accent** — the warm premium signal. Use it for high-signal actions and accents, never as a background fill for large areas.
+- **USE `--primary`** for: CTA buttons, active/selected states (tabs, pills, pagination, sidebar active), count badges, high-signal emphasis tags, icon accents.
+- **Text on primary** uses `--primary-foreground` (warm cream).
+- **Decorative accents on light backgrounds:** `text-primary` for emphasis headings/icons, `bg-primary/10` (or `bg-primary/5`) for soft tint chips, `border-primary/30` for subtle borders/lines. Keep these restrained — one warm accent per view.
+- **Dark surfaces** (DarkCard, `bg-foreground` sections): `text-primary`/`bg-primary/10` warm accents are correct there.
+- Rating stars: `fill-primary text-primary` (warm terracotta). Focus rings: `ring-primary`.
+- Eyebrow/section labels: `text-muted-foreground` + uppercase tracking.
+- Decorative dividers/lines: `bg-primary/30`, not solid primary.
 
 ### Tier Color System
 For customer/profile tiering (bronze/silver/gold):
@@ -55,7 +67,7 @@ For customer/profile tiering (bronze/silver/gold):
 |------|----------|---------|-------|--------|
 | Bronze | `bg-amber-100/80` | `bg-amber-900/40` | `bg-amber-900/10 text-amber-700` | `bg-amber-600` |
 | Silver | `bg-slate-100/70` | `bg-zinc-800/50` | `bg-muted text-muted-foreground` | `bg-slate-400` |
-| Gold | `from-primary/15` | `from-amber-800/30` | `bg-primary/10 text-primary` | `bg-primary` |
+| Gold | `from-primary/15` | `from-primary/30` | `bg-primary/10 text-primary` | `bg-primary` |
 
 ## 3. Typography
 
@@ -137,8 +149,11 @@ For customer/profile tiering (bronze/silver/gold):
 | `--shadow-card` | `0px 1px 2px rgba(30,26,22,0.04), 0px 8px 24px rgba(30,26,22,0.06)` | Default card elevation |
 | `--shadow-badge` | `0px 4px 8px rgba(30,26,22,0.05), 0px 24px 48px -12px rgba(30,26,22,0.18)` | Floating badges, tooltips |
 | `--shadow-elevated` | `0px 8px 24px -8px rgba(13,21,40,0.12), 0px 4px 8px -4px rgba(13,21,40,0.06)` | Hover states, popovers |
+| `--pill-shadow` | `inset 0 1px 1px primary/20, 0 2px 12px primary/12` | Navbar icon pill rest state |
+| `--pill-shadow-hover` | `inset 0 1px 1px primary/22, 0 0 20px primary/30` | Navbar icon pill hover |
+| `--icon-shadow` | `0 1px 2px primary/40` | Navbar icon drop shadow |
 
-Use `cn()` helper + Tailwind utilities (e.g. `shadow-[var(--shadow-card)]`). Never hardcode `box-shadow` in components.
+Use `cn()` helper + Tailwind utilities (e.g. `shadow-[var(--shadow-card)]`). Never hardcode `box-shadow` in components. Navbar icon pills use the global `.nav-icon-pill` / `.nav-icon` classes in `@layer components` (globals.css) — no per-component shadow strings.
 
 ## 6. Border Radius
 
@@ -159,7 +174,7 @@ Use `cn()` helper + Tailwind utilities (e.g. `shadow-[var(--shadow-card)]`). Nev
 
 These rules apply across all dashboard components, cards, and containers.
 
-### 7.1 Warm Gold Gradient Background
+### 7.1 Warm Terracotta Gradient Background
 Premium containers use a subtle warm gradient instead of flat `bg-card`:
 ```
 bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01]
@@ -188,7 +203,7 @@ transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.9
 ```
 For links/cards that go somewhere, add `hover:shadow-[var(--shadow-elevated)]`.
 
-### 7.5 Gold Dividers
+### 7.5 Terracotta Dividers
 Replace `border-border` solid lines with gradient dividers for premium sections:
 ```
 <div className="h-px w-full bg-gradient-to-r from-primary/40 via-primary/30 to-transparent" />
@@ -205,7 +220,7 @@ Positions: left (default), right, top, bottom. Always match bar color to variant
 For tiered/profile cards, a 4px (`h-1`) colored stripe at the top of the card signals category:
 - Bronze: `bg-amber-600`
 - Silver: `bg-slate-400`
-- Gold: `bg-primary`
+- Terracotta: `bg-primary`
 
 ### 7.8 Stat Value Emphasis
 Stat values always use `font-heading` with `tracking-tight` for a premium editorial feel:
@@ -234,7 +249,7 @@ Variants follow the same `bg-{variant}/10 text-{variant} ring-{variant}/20` patt
 - **Toolbar:** `bg-card` with `border-b border-primary/10`
 - **Header/Footer:** `bg-amber-50/80` (light) / `dark:bg-amber-950/30`
 - **Rows:** `bg-card`, no zebra, `hover:bg-primary/8`
-- **Pagination:** Gold active page with `shadow-[0_2px_8px_rgba(206,163,89,0.25)]`
+- **Pagination:** Terracotta active page with `shadow-[0_2px_8px_rgba(168,90,56,0.25)]`
 
 ### 7.12 No Double Bezel
 Do not wrap premium containers with `bg-border/15 p-[1px]` inner/outer pattern. Use `overflow-hidden rounded-3xl` with a direct gradient background instead.

@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import type { ColumnDef } from "@tanstack/react-table";
-import type { AdminFoodItem } from "@/data/foods";
+import type { AdminFoodListItem } from "@/types/admin-food";
 import { cn } from "@/lib/utils";
 import { Star, ThumbsUp } from "lucide-react";
 import { DataTableColumnHeader } from "@/components/common/table";
@@ -18,7 +18,6 @@ const spiceStyles: Record<string, string> = {
   MILD: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
   MEDIUM: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
   HOT: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-  EXTRA_HOT: "bg-rose-200 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300",
 };
 
 const statusVariants: Record<string, "default" | "secondary" | "destructive"> = {
@@ -27,28 +26,46 @@ const statusVariants: Record<string, "default" | "secondary" | "destructive"> = 
   ARCHIVED: "destructive",
 };
 
-export const foodColumns: ColumnDef<AdminFoodItem>[] = [
+export const foodColumns: ColumnDef<AdminFoodListItem>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Food Name" />,
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
         <div className="size-9 shrink-0 overflow-hidden rounded-lg bg-muted">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={row.original.thumbnail} alt="" className="size-full object-cover" />
+          {row.original.thumbnail ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={row.original.thumbnail} alt="" className="size-full object-cover" />
+          ) : (
+            <div className="flex size-full items-center justify-center text-[10px] text-muted-foreground">
+              FD
+            </div>
+          )}
         </div>
-        <span className="font-medium text-foreground">{row.original.name}</span>
+        <div>
+          <span className="font-medium text-foreground">{row.original.name}</span>
+          <p className="text-[11px] text-muted-foreground">{row.original.foodCode}</p>
+        </div>
       </div>
     ),
   },
   {
-    accessorKey: "categoryName",
+    id: "categoryName",
+    accessorFn: (row) => row.category?.name ?? "",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Category" />,
+    cell: ({ row }) => (
+      <span className="text-sm text-muted-foreground">{row.original.category?.name ?? "—"}</span>
+    ),
   },
   {
-    accessorKey: "vendor",
+    id: "vendor",
+    accessorFn: (row) => row.vendors[0]?.businessName ?? "",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Vendor" />,
-    cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.vendor}</span>,
+    cell: ({ row }) => (
+      <span className="text-sm text-muted-foreground">
+        {row.original.vendors[0]?.businessName ?? "—"}
+      </span>
+    ),
   },
   {
     accessorKey: "foodType",
@@ -72,6 +89,7 @@ export const foodColumns: ColumnDef<AdminFoodItem>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Spice" />,
     cell: ({ row }) => {
       const spice = row.original.spiceLevel;
+      if (!spice) return <span className="text-sm text-muted-foreground">—</span>;
       return (
         <span
           className={cn(
@@ -85,10 +103,13 @@ export const foodColumns: ColumnDef<AdminFoodItem>[] = [
     },
   },
   {
-    accessorKey: "basePrice",
+    id: "basePrice",
+    accessorFn: (row) => row.basePrice ?? 0,
     header: ({ column }) => <DataTableColumnHeader column={column} title="Price" />,
     cell: ({ row }) => (
-      <span className="font-mono text-sm font-medium">৳{row.original.basePrice}</span>
+      <span className="font-mono text-sm font-medium">
+        {row.original.basePrice != null ? `৳${row.original.basePrice.toLocaleString()}` : "—"}
+      </span>
     ),
   },
   {
@@ -138,5 +159,10 @@ export const foodColumns: ColumnDef<AdminFoodItem>[] = [
   {
     accessorKey: "createdAt",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Added" />,
+    cell: ({ row }) => (
+      <span className="text-sm text-muted-foreground">
+        {new Date(row.original.createdAt).toLocaleDateString()}
+      </span>
+    ),
   },
 ];

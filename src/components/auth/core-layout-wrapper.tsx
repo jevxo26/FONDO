@@ -22,7 +22,7 @@ export function CoreLayoutWrapper({ currentStep, children }: CoreLayoutWrapperPr
 
       {/* Left Media Branding Panel */}
       <div className="relative hidden lg:flex flex-col justify-end p-12 bg-foreground overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(206,163,89,0.15)_0%,transparent_70%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,90,56,0.15)_0%,transparent_70%)]" />
         <Image
           src={
             isIdentityFlow

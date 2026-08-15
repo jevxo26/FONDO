@@ -14,6 +14,10 @@ export const createFoodSchema = yup.object({
   protein: yup.number().optional(),
   fat: yup.number().optional(),
   carbohydrate: yup.number().optional(),
+  fiber: yup.number().optional(),
+  sugar: yup.number().optional(),
+  sodium: yup.number().optional(),
+  cholesterol: yup.number().optional(),
   servingSize: yup.string().optional(),
   foodType: yup
     .mixed()
@@ -24,6 +28,89 @@ export const createFoodSchema = yup.object({
   isPopular: yup.boolean().optional(),
   isRecommended: yup.boolean().optional(),
   status: yup.string().optional(),
+  vendorIds: yup.array().of(yup.string()).optional(),
+  tagIds: yup.array().of(yup.string()).optional(),
+  gallery: yup.array().of(yup.string().url()).optional(),
+  images: yup.array().of(yup.string().url()).optional(),
+  diets: yup.array().of(yup.object({ dietType: yup.string().required() })).optional(),
+  labels: yup.array().of(yup.object({ label: yup.string().required(), color: yup.string().optional() })).optional(),
+  ingredients: yup.array().of(
+    yup.object({
+      ingredientName: yup.string().required(),
+      quantity: yup.string().optional(),
+      unit: yup.string().optional(),
+      isOptional: yup.boolean().optional(),
+    }),
+  ).optional(),
+  allergens: yup.array().of(
+    yup.object({ allergen: yup.string().required(), description: yup.string().optional() }),
+  ).optional(),
+  variants: yup.array().of(
+    yup.object({
+      name: yup.string().required(),
+      description: yup.string().optional(),
+      price: yup.number().positive().required(),
+      discountPrice: yup.number().positive().optional().nullable(),
+      weight: yup.string().optional(),
+      servingSize: yup.string().optional(),
+      status: yup.string().optional(),
+    }),
+  ).optional(),
+  addons: yup.array().of(
+    yup.object({
+      name: yup.string().required(),
+      isRequired: yup.boolean().optional(),
+      maxSelection: yup.number().integer().optional().nullable(),
+      status: yup.string().optional(),
+      items: yup.array().of(
+        yup.object({
+          name: yup.string().required(),
+          price: yup.number().positive().required(),
+          image: yup.string().url().optional(),
+          status: yup.string().optional(),
+        }),
+      ).optional(),
+    }),
+  ).optional(),
+  prices: yup.array().of(
+    yup.object({
+      basePrice: yup.number().positive().required(),
+      salePrice: yup.number().positive().optional().nullable(),
+      currency: yup.string().optional(),
+      effectiveFrom: yup.date().optional().nullable(),
+      effectiveTo: yup.date().optional().nullable(),
+      status: yup.string().optional(),
+    }),
+  ).optional(),
+  discounts: yup.array().of(
+    yup.object({
+      discountType: yup.mixed().oneOf(["PERCENTAGE", "FLAT"]).required(),
+      discountValue: yup.number().positive().required(),
+      startDate: yup.date().optional().nullable(),
+      endDate: yup.date().optional().nullable(),
+      status: yup.string().optional(),
+    }),
+  ).optional(),
+  schedules: yup.array().of(
+    yup.object({
+      mealType: yup.mixed().oneOf(["BREAKFAST", "LUNCH", "DINNER", "SNACKS"]).required(),
+      startTime: yup.string().required(),
+      endTime: yup.string().required(),
+      status: yup.string().optional(),
+    }),
+  ).optional(),
+  availability: yup.object({
+    isAvailable: yup.boolean().optional(),
+    availableFrom: yup.string().optional(),
+    availableTo: yup.string().optional(),
+    availableDays: yup.array().of(yup.string()).optional(),
+  }).optional(),
+  visibility: yup.object({
+    isVisible: yup.boolean().optional(),
+    isFeatured: yup.boolean().optional(),
+    isRecommended: yup.boolean().optional(),
+    displayOrder: yup.number().integer().optional(),
+  }).optional(),
 });
 
 export const updateFoodSchema = yup.object({
@@ -40,6 +127,10 @@ export const updateFoodSchema = yup.object({
   protein: yup.number().optional().nullable(),
   fat: yup.number().optional().nullable(),
   carbohydrate: yup.number().optional().nullable(),
+  fiber: yup.number().optional().nullable(),
+  sugar: yup.number().optional().nullable(),
+  sodium: yup.number().optional().nullable(),
+  cholesterol: yup.number().optional().nullable(),
   servingSize: yup.string().optional(),
   foodType: yup.mixed().oneOf(["VEG", "NON_VEG", "VEGAN", "SEAFOOD"]).optional(),
   spiceLevel: yup.string().optional(),
@@ -47,6 +138,8 @@ export const updateFoodSchema = yup.object({
   isPopular: yup.boolean().optional(),
   isRecommended: yup.boolean().optional(),
   status: yup.string().optional(),
+  vendorIds: yup.array().of(yup.string()).optional(),
+  diets: yup.array().of(yup.object({ dietType: yup.string().required() })).optional(),
 });
 
 export const createCategorySchema = yup.object({
@@ -56,6 +149,7 @@ export const createCategorySchema = yup.object({
   icon: yup.string().optional(),
   image: yup.string().url().optional(),
   sortOrder: yup.number().integer().optional(),
+  popular: yup.boolean().optional(),
   status: yup.string().optional(),
 });
 
@@ -66,6 +160,7 @@ export const updateCategorySchema = yup.object({
   icon: yup.string().optional(),
   image: yup.string().url().optional(),
   sortOrder: yup.number().integer().optional(),
+  popular: yup.boolean().optional(),
   status: yup.string().optional(),
 });
 
@@ -190,6 +285,10 @@ export const createTagSchema = yup.object({
 export const createLabelSchema = yup.object({
   label: yup.string().required("Label is required"),
   color: yup.string().optional(),
+});
+
+export const createFoodImageSchema = yup.object({
+  image: yup.string().url().required("Image URL is required"),
 });
 
 export const updateAvailabilitySchema = yup.object({

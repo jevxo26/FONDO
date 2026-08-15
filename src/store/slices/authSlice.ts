@@ -1,17 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getToken, clearToken } from "@/lib/token";
+import { clearToken } from "@/lib/token";
+import { decodeJwt } from "@/lib/jwt";
 import type { User } from "@/types/auth";
 
 interface AuthState {
   user: User | null;
   accessToken: string | null;
   isAuthenticated: boolean;
+  permissions: string[];
 }
 
 const initialState: AuthState = {
   user: null,
-  accessToken: getToken(),
+  accessToken: null,
   isAuthenticated: false,
+  permissions: [],
 };
 
 const authSlice = createSlice({
@@ -19,13 +22,16 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setCredentials(state, action: PayloadAction<{ user: User; token: string }>) {
+      const jwt = decodeJwt(action.payload.token);
       state.user = action.payload.user;
       state.accessToken = action.payload.token;
+      state.permissions = (jwt?.permissions as string[]) ?? [];
       state.isAuthenticated = true;
     },
     clearCredentials(state) {
       state.user = null;
       state.accessToken = null;
+      state.permissions = [];
       state.isAuthenticated = false;
       clearToken();
     },

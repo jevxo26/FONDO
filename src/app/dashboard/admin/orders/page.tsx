@@ -69,7 +69,7 @@ export default function AllOrdersPage() {
 
   const { data } = useGetAllAdminOrdersQuery();
 
-  const allOrders = useMemo(() => ((data ?? []) as ApiOrder[]).map(adaptOrder), [data]);
+  const allOrders = useMemo(() => ((data?.items ?? []) as ApiOrder[]).map(adaptOrder), [data]);
 
   const filtered = useMemo(() => {
     if (!activeFilter) return allOrders;
@@ -116,7 +116,7 @@ export default function AllOrdersPage() {
 
       <div className="mt-8 rounded-3xl bg-gradient-to-br from-primary/10 via-card to-primary/[0.04] p-5 shadow-[var(--shadow-card)]">
         <div className="mb-4 flex items-center gap-2 px-1">
-          <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-foreground">
             <LayoutList className="size-4" />
           </div>
           <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
@@ -144,7 +144,7 @@ export default function AllOrdersPage() {
                 <div
                   className={cn(
                     "flex size-11 shrink-0 items-center justify-center rounded-xl",
-                    isActive ? "bg-white/20" : "bg-primary/10 text-primary",
+                    isActive ? "bg-white/20" : "bg-primary/10 text-foreground",
                   )}
                 >
                   <Icon className={cn("size-5", isActive && "text-white")} />

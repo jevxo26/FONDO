@@ -19,7 +19,7 @@ export function AddressBranchInfo({ register, errors }: Props) {
             03
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
-            <MapPin className="size-5 text-primary" /> Business Address
+            <MapPin className="size-5 text-foreground" /> Business Address
           </h3>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -78,7 +78,7 @@ export function AddressBranchInfo({ register, errors }: Props) {
             04
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
-            <GitBranch className="size-5 text-primary" /> Branch Information
+            <GitBranch className="size-5 text-foreground" /> Branch Information
           </h3>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

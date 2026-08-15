@@ -12,20 +12,23 @@ interface ApiResponse<T> {
 export interface ServerFetchOptions extends RequestInit {
   revalidate?: number;
   tags?: string[];
+  auth?: boolean;
 }
 
 export async function apiFetch<T>(endpoint: string, options?: ServerFetchOptions): Promise<T> {
-  const { revalidate = 60, tags, headers: optionHeaders, ...fetchOptions } = options ?? {};
+  const { revalidate = 60, tags, auth = true, headers: optionHeaders, ...fetchOptions } = options ?? {};
 
   let authHeader: Record<string, string> = {};
-  try {
-    const cookieStore = await cookies();
-    const refreshToken = cookieStore.get("refreshToken");
-    if (refreshToken?.value) {
-      authHeader = { Authorization: `Bearer ${refreshToken.value}` };
+  if (auth) {
+    try {
+      const cookieStore = await cookies();
+      const refreshToken = cookieStore.get("refreshToken");
+      if (refreshToken?.value) {
+        authHeader = { Authorization: `Bearer ${refreshToken.value}` };
+      }
+    } catch {
+      // called from client — no cookies() available
     }
-  } catch {
-    // called from client — no cookies() available
   }
 
   const res = await fetch(`${BASE_URL}${endpoint}`, {

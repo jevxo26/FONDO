@@ -1,17 +1,68 @@
 "use client";
 
-// Location: src/components/packages/packages-workspace.tsx
-import { SlidersHorizontal, ArrowUpDown } from "lucide-react";
-import { usePackages } from "./packages-context";
-import PackageGrid from "./package-grid";
-import { useGetPackageCategoriesQuery } from "@/store/api/slices/packages-api";
+import React, { useMemo } from "react";
+import { ArrowUpDown, SlidersHorizontal } from "lucide-react";
 
-const CATEGORIES = ["All", "Weight Loss", "Weight Gain", "Regular", "Diabetic", "High Protein"];
+import PackageGrid from "./package-grid";
+import { usePackages } from "./packages-context";
+
+import {
+  useGetPackageCategoriesQuery,
+  useGetPackagesQuery,
+} from "@/store/api/slices/packages-api";
+
+import FoodsLoading from "@/app/(main)/foods/loading";
+import type { Package, PackageCategory } from "@/types/package";
+
+const getPackageStats = (pkg: Package) => {
+  let totalCalories = 0;
+  let totalProtein = 0;
+  let isVeg = true;
+  let foodCount = 0;
+
+  if (pkg.days && pkg.days.length > 0) {
+    pkg.days.forEach((day) => {
+      day.meals?.forEach((meal) => {
+        meal.foods?.forEach((item) => {
+          const food = item.food;
+          const qty = item.quantity || 1;
+          if (food) {
+            foodCount++;
+            totalCalories += (food.calories || 0) * qty;
+            totalProtein += (food.protein || 0) * qty;
+            
+            if (food.foodType !== "VEG") {
+              isVeg = false;
+            }
+          }
+        });
+      });
+    });
+  } else {
+    isVeg = false;
+  }
+
+  const dayCount = pkg.days?.length || pkg.durationDays || 1;
+  const avgDailyCalories = Math.round(totalCalories / dayCount);
+  const avgDailyProtein = Math.round(totalProtein / dayCount);
+
+  return {
+    avgDailyCalories,
+    avgDailyProtein,
+    isVeg: foodCount > 0 ? isVeg : false,
+    isHighProtein: avgDailyProtein >= 45,
+  };
+};
 
 export default function PackagesWorkspace() {
-  const packageCategories = useGetPackageCategoriesQuery(5)
-  console.log(packageCategories.data)
+  const { data: categories = [], isLoading: categoryLoading } =
+    useGetPackageCategoriesQuery(undefined);
+
+  const { data: packages = [], isLoading: packageLoading } =
+    useGetPackagesQuery(undefined);
+
   const {
+    searchQuery,
     selectedCategory,
     setSelectedCategory,
     selectedDuration,
@@ -28,139 +79,247 @@ export default function PackagesWorkspace() {
     setIsCustomizable,
     sortBy,
     setSortBy,
-    processedPackages,
   } = usePackages();
+
+  // --- Filtering & Sorting Logic ---
+  const processedPackages = useMemo(() => {
+    if (!packages || !Array.isArray(packages)) return [];
+
+    return packages
+      .filter((pkg: Package) => {
+        const finalPrice = Number(pkg.discountPrice ?? pkg.price ?? 0);
+        const stats = getPackageStats(pkg);
+        if (
+          searchQuery &&
+          !pkg.name.toLowerCase().includes(searchQuery.toLowerCase())
+        ) {
+          return false;
+        }
+        if (
+          selectedCategory !== "All" &&
+          pkg.packageCategoryId !== selectedCategory &&
+          pkg.packageCategory?.id !== selectedCategory
+        ) {
+          return false;
+        }
+        if (selectedDuration && pkg.durationDays !== selectedDuration) {
+          return false;
+        }
+        if (finalPrice > maxPrice) {
+          return false;
+        }
+        if (isCustomizable && !pkg.isCustomizable) {
+          return false;
+        }
+        if (maxCalories && stats.avgDailyCalories > maxCalories) {
+          return false;
+        }
+        if (isVegetarian && !stats.isVeg) {
+          return false;
+        }
+        if (isHighProtein && !stats.isHighProtein) {
+          return false;
+        }
+        return true;
+      })
+      .sort((a: Package, b: Package) => {
+        const aPrice = Number(a.discountPrice ?? a.price ?? 0);
+        const bPrice = Number(b.discountPrice ?? b.price ?? 0);
+        const aRating = Number(a.rating?.averageRating ?? a.rating?.averageRating ?? 0);
+        const bRating = Number(b.rating?.averageRating ?? b.rating?.averageRating ?? 0);
+
+        switch (sortBy) {
+          case "price-asc":
+            return aPrice - bPrice;
+
+          case "price-desc":
+            return bPrice - aPrice;
+
+          case "rating":
+            return bRating - aRating;
+
+          case "popular":
+          default:
+            return 0;
+        }
+      });
+  }, [
+    packages,
+    searchQuery,
+    selectedCategory,
+    selectedDuration,
+    maxPrice,
+    maxCalories,
+    isVegetarian,
+    isHighProtein,
+    isCustomizable,
+    sortBy,
+  ]);
+
+  if (categoryLoading || packageLoading) {
+    return <FoodsLoading />;
+  }
 
   return (
     <section className="wrapper py-12">
-      {/* Category Scrollbar Row */}
+      {/* Categories Bar */}
       <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 border-b border-border/60">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            className={`h-9 px-4 rounded-xl text-xs font-semibold whitespace-nowrap border transition-all ${selectedCategory === cat
+        <button
+          onClick={() => setSelectedCategory("All")}
+          className={`h-9 px-4 rounded-xl text-xs font-semibold whitespace-nowrap border transition-colors ${
+            selectedCategory === "All"
               ? "bg-primary text-primary-foreground border-primary"
               : "bg-card border-border hover:bg-muted"
-              }`}
+          }`}
+        >
+          All
+        </button>
+
+        {categories.map((cat: PackageCategory) => (
+          <button
+            key={cat.id}
+            onClick={() => setSelectedCategory(cat.id)}
+            className={`h-9 px-4 rounded-xl text-xs font-semibold whitespace-nowrap border transition-colors ${
+              selectedCategory === cat.id
+                ? "bg-primary text-primary-foreground border-primary"
+                : "bg-card border-border hover:bg-muted"
+            }`}
           >
-            {cat}
+            {cat.name}
           </button>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-        {/* Sidebar Controls Layout */}
-        <aside className="lg:sticky lg:top-6 bg-card border border-border rounded-2xl p-5 shadow-sm flex flex-col gap-6">
-          <div className="flex items-center gap-2 font-heading text-sm font-semibold border-b border-border pb-3">
-            <SlidersHorizontal className="size-4 text-primary" /> Filters
+        {/* Sidebar Filters */}
+        <aside className="lg:sticky lg:top-6 bg-card border rounded-2xl p-5 shadow-sm flex flex-col gap-6">
+          <div className="flex items-center gap-2 font-semibold border-b pb-3 text-foreground">
+            <SlidersHorizontal className="size-4 text-foreground" />
+            Filters
           </div>
 
-          {/* Price Range */}
-          <div className="flex flex-col gap-2">
-            <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">
-              Max Budget (৳{maxPrice})
-            </label>
+          {/* Max Price Slider */}
+          <div className="space-y-2">
+            <div className="flex justify-between items-center text-xs font-medium">
+              <span>Max Budget</span>
+              <span className="text-primary font-bold">৳{maxPrice.toLocaleString()}</span>
+            </div>
             <input
               type="range"
-              min="2000"
-              max="12000"
-              step="500"
+              min={1000}
+              max={15000}
+              step={500}
               value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
-              className="w-full h-1 bg-muted accent-primary rounded-lg cursor-pointer appearance-none"
+              className="w-full accent-primary cursor-pointer"
             />
+            <div className="flex justify-between text-[10px] text-muted-foreground font-semibold">
+              <span>৳1,000</span>
+              <span>৳15,000</span>
+            </div>
           </div>
 
           {/* Duration Selector */}
-          <div className="flex flex-col gap-2">
-            <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">
-              Duration
-            </label>
-            <div className="grid grid-cols-3 gap-1.5 bg-muted p-1 rounded-xl">
-              {[7, 15, 30].map((d) => (
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-foreground">Duration</label>
+            <div className="grid grid-cols-3 gap-2">
+              {[7, 15, 30].map((day) => (
                 <button
-                  key={d}
+                  key={day}
                   type="button"
-                  onClick={() => setSelectedDuration(selectedDuration === d ? null : d)}
-                  className={`py-1 rounded-lg text-[11px] font-bold ${selectedDuration === d ? "bg-card text-primary" : "text-muted-foreground"}`}
+                  onClick={() =>
+                    setSelectedDuration(selectedDuration === day ? null : day)
+                  }
+                  className={`rounded-lg py-2 text-xs font-semibold transition-colors ${
+                    selectedDuration === day
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-muted/80"
+                  }`}
                 >
-                  {d} Days
+                  {day} Days
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Calorie Range */}
-          <div className="flex flex-col gap-2">
-            <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">
-              Calories Cap ({maxCalories} kcal)
-            </label>
+          {/* Daily Calories Slider */}
+          <div className="space-y-2">
+            <div className="flex justify-between items-center text-xs font-medium">
+              <span>Max Daily Calories</span>
+              <span className="text-foreground font-bold">{maxCalories} kcal</span>
+            </div>
             <input
               type="range"
-              min="600"
-              max="3000"
-              step="100"
+              min={600}
+              max={3000}
+              step={100}
               value={maxCalories}
               onChange={(e) => setMaxCalories(Number(e.target.value))}
-              className="w-full h-1 bg-muted accent-primary rounded-lg cursor-pointer appearance-none"
+              className="w-full accent-primary cursor-pointer"
             />
+            <div className="flex justify-between text-[10px] text-muted-foreground font-semibold">
+              <span>600 kcal</span>
+              <span>3000 kcal</span>
+            </div>
           </div>
 
-          {/* Boolean Checks */}
-          <div className="flex flex-col gap-2 pt-2 border-t border-border/60">
-            {/* Checked items handle dynamic inputs */}
-            <label className="flex items-center gap-2 text-xs cursor-pointer">
+          {/* Checkboxes */}
+          <div className="space-y-3 pt-2 border-t border-border">
+            <label className="flex items-center gap-2 text-xs cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={isVegetarian}
                 onChange={(e) => setIsVegetarian(e.target.checked)}
-                className="rounded border-border text-primary size-4"
-              />{" "}
-              Vegetarian
+                className="rounded text-primary focus:ring-primary h-4 w-4"
+              />
+              <span>Vegetarian Packages</span>
             </label>
-            <label className="flex items-center gap-2 text-xs cursor-pointer">
+
+            <label className="flex items-center gap-2 text-xs cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={isHighProtein}
                 onChange={(e) => setIsHighProtein(e.target.checked)}
-                className="rounded border-border text-primary size-4"
-              />{" "}
-              High Protein
+                className="rounded text-primary focus:ring-primary h-4 w-4"
+              />
+              <span>High Protein (45g+/day)</span>
             </label>
-            <label className="flex items-center gap-2 text-xs cursor-pointer">
+
+            <label className="flex items-center gap-2 text-xs cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={isCustomizable}
                 onChange={(e) => setIsCustomizable(e.target.checked)}
-                className="rounded border-border text-primary size-4"
-              />{" "}
-              Customizable
+                className="rounded text-primary focus:ring-primary h-4 w-4"
+              />
+              <span>Customizable Only</span>
             </label>
           </div>
         </aside>
 
-        {/* Product Cards Workspace */}
+        {/* Content Area */}
         <div className="lg:col-span-3 flex flex-col gap-6">
-          <div className="flex justify-between items-center bg-card border border-border rounded-xl p-3.5 shadow-sm">
-            <span className="text-xs text-muted-foreground">
-              Showing {processedPackages.length} plans
+          <div className="flex justify-between items-center bg-card border rounded-xl p-3 shadow-sm">
+            <span className="text-xs font-medium text-muted-foreground">
+              Showing <strong className="text-foreground">{processedPackages.length}</strong> plans
             </span>
-            <div className="flex items-center gap-2">
-              <ArrowUpDown className="size-3.5 text-muted-foreground" />
+
+            <div className="flex items-center gap-2 text-xs">
+              <ArrowUpDown className="size-4 text-muted-foreground" />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-transparent text-xs font-semibold border-none outline-none cursor-pointer"
+                className="bg-transparent font-medium border-none focus:ring-0 text-foreground cursor-pointer"
               >
-                <option value="popular">Popular</option>
+                <option value="popular">Most Popular</option>
                 <option value="price-asc">Lowest Price</option>
                 <option value="price-desc">Highest Price</option>
                 <option value="rating">Best Rating</option>
               </select>
             </div>
           </div>
-          <PackageGrid />
+
+          <PackageGrid packages={processedPackages} />
         </div>
       </div>
     </section>

@@ -10,7 +10,7 @@ export default function CulinaryPhilosophy() {
       <div className="wrapper space-y-12">
         {/* Centered Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
-          <span className="text-primary font-sans text-xs font-bold uppercase tracking-[0.2em]">
+          <span className="text-muted-foreground font-sans text-xs font-bold uppercase tracking-[0.2em]">
             Our Creed
           </span>
           <h2 className="font-heading text-3xl md:text-5xl font-normal leading-tight">
@@ -27,7 +27,7 @@ export default function CulinaryPhilosophy() {
           {/* Card 1: Slow-Cooking (Standard Theme Card) */}
           <div className="bg-card border border-border/60 rounded-2xl p-8 flex flex-col justify-between space-y-6 shadow-[var(--shadow-card)] transition-transform duration-300 hover:-translate-y-1">
             <div className="space-y-4">
-              <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+              <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-foreground">
                 <Flame className="size-6" />
               </div>
               <h3 className="font-heading text-xl font-normal text-foreground">Slow-Cooking</h3>
@@ -61,7 +61,7 @@ export default function CulinaryPhilosophy() {
           {/* Card 3: Garden Ingredients (Standard Theme Card) */}
           <div className="bg-card border border-border/60 rounded-2xl p-8 flex flex-col justify-between space-y-6 shadow-[var(--shadow-card)] transition-transform duration-300 hover:-translate-y-1">
             <div className="space-y-4">
-              <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+              <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-foreground">
                 <Sprout className="size-6" />
               </div>
               <h3 className="font-heading text-xl font-normal text-foreground">
@@ -95,8 +95,8 @@ export default function CulinaryPhilosophy() {
             {/* Right: Detailed Context */}
             <div className="space-y-2 flex-1 text-center md:text-left">
               <div className="flex items-center justify-center md:justify-start gap-2">
-                <Sparkles className="size-4 text-primary" />
-                <h4 className="font-sans text-xs font-bold uppercase tracking-widest text-primary">
+                <Sparkles className="size-4 text-muted-foreground" />
+                <h4 className="font-sans text-xs font-bold uppercase tracking-widest text-muted-foreground">
                   The Final Touch
                 </h4>
               </div>

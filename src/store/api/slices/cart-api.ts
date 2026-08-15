@@ -13,6 +13,12 @@ interface UpdateCartItemPayload {
   itemId: string;
   quantity: number;
 }
+interface AddAddonPayload {
+  itemId: string;
+  addonItemId: string;
+  quantity: number;
+  price: number;
+}
 
 function createTempItem(payload: AddToCartPayload): CartItem {
   return {
@@ -118,6 +124,15 @@ export const cartApi = api.injectEndpoints({
       },
     }),
 
+    addAddon: builder.mutation<Cart, AddAddonPayload>({
+      query: ({ itemId, addonItemId, quantity, price }) => ({
+        url: `/cart/items/${itemId}/addons`,
+        method: "POST",
+        body: { addonItemId, quantity, price },
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+
     clearCart: builder.mutation<void, void>({
       query: () => ({ url: "/cart", method: "DELETE" }),
       invalidatesTags: ["Cart"],
@@ -150,10 +165,11 @@ export const {
   useAddToCartMutation,
   useRemoveFromCartMutation,
   useUpdateCartItemMutation,
+  useAddAddonMutation,
   useClearCartMutation,
 } = cartApi;
 
-export const useCart = () => useGetCartQuery();
+export const useCart = (skip = false) => useGetCartQuery(undefined, { skip });
 
 export function useAddToCart() {
   const [trigger, { isLoading }] = useAddToCartMutation();
@@ -172,5 +188,10 @@ export function useUpdateCartItem() {
 
 export function useClearCart() {
   const [trigger, { isLoading }] = useClearCartMutation();
+  return { ...createMutationWrapper(trigger), isPending: isLoading };
+}
+
+export function useAddAddon() {
+  const [trigger, { isLoading }] = useAddAddonMutation();
   return { ...createMutationWrapper(trigger), isPending: isLoading };
 }

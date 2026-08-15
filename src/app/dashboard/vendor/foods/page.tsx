@@ -1,16 +1,33 @@
-// src/app/dashboard/vendor/foods/page.tsx
+"use client";
+
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
-
-import { Utensils, PlusCircle, AlertCircle, Package } from "lucide-react";
-import { vendorFoods } from "@/data/vendor-foods";
-import { VendorFoodTableSection } from "@/components/dashboard/vendor/foods/food-table";
+import { VendorFoodTableSection } from "@/components/dashboard/vendor/foods/food-table-section";
+import { useGetVendorFoodsQuery } from "@/store/api/slices/foods-api";
+import { AlertCircle, Package, PlusCircle, Utensils, Loader2 } from "lucide-react";
 
 export default function VendorFoodsPage() {
-  const totalItems = vendorFoods.length;
-  const activeItems = vendorFoods.filter((f) => f.status === "ACTIVE").length;
-  const outOfStock = vendorFoods.filter((f) => f.stockStatus === "OUT_OF_STOCK").length;
-  const lowStock = vendorFoods.filter((f) => f.stockStatus === "LOW_STOCK").length;
+  const { data: foods, isLoading } = useGetVendorFoodsQuery();
+
+  if (isLoading) {
+    return (
+      <div className="space-y-8">
+        <PageHeader
+          title="My Foods"
+          description="Manage your food catalog and menu items."
+          icon={Utensils}
+        />
+        <div className="mt-12 flex justify-center">
+          <Loader2 className="size-8 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
+
+  const items = foods ?? [];
+  const activeItems = items.filter((f) => f.status === "ACTIVE").length;
+  const outOfStock = items.filter((f) => f.stockStatus === "OUT_OF_STOCK").length;
+  const lowStock = items.filter((f) => f.stockStatus === "LOW_STOCK").length;
 
   return (
     <div className="space-y-8">
@@ -23,7 +40,7 @@ export default function VendorFoodsPage() {
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           label="Total Items"
-          value={totalItems.toString()}
+          value={items.length.toString()}
           icon={Utensils}
           accent="right"
         />
@@ -54,7 +71,7 @@ export default function VendorFoodsPage() {
         <div className="flex items-center justify-between">
           <h3 className="font-fraunces text-xl font-semibold tracking-tight">Food Items List</h3>
           <p className="text-xs uppercase tracking-widest text-muted-foreground">
-            {vendorFoods.filter((f) => f.status === "ACTIVE").length} Active
+            {activeItems} Active
           </p>
         </div>
         <VendorFoodTableSection />

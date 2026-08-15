@@ -1,59 +1,207 @@
-import React from "react";
-import { Star } from "lucide-react";
+"use client";
 
-export default function ChroniclesReviews() {
-  const reviews = [
-    {
-      name: "A. Rahman",
-      rating: 5,
-      date: "2 days ago",
-      comment:
-        "The caloric precision coupled with authentic regional flavor balance is remarkable. Lost 3kg sustainably over my 30-day framework.",
-    },
-    {
-      name: "S. Khan",
-      rating: 4,
-      date: "1 week ago",
-      comment:
-        "Exceptional fish dishes. The delivery updates are highly accurate, and the eco-cell retrieval framework works flawlessly.",
-    },
-  ];
+import React, { useState, useMemo } from "react";
+import { Star, Edit2, Trash2, Send, Clock } from "lucide-react";
+
+import {
+  useGetPackageReviewsQuery,
+  useCreatePackageReviewMutation,
+  useUpdatePackageReviewMutation,
+  useDeletePackageReviewMutation,
+  PackageReviewItem,
+  useGetPackagePublicReviewsQuery,
+} from "@/store/api/slices/packages-api";
+import { useAuth } from "@/hooks/use-auth";
+import { PackageRating } from "@/types/package";
+
+interface PackageReviewsProps {
+  packageId: string;
+  rating?: PackageRating;
+}
+
+export default function PackageReviews({ packageId, rating }: PackageReviewsProps) {
+  // Extract user directly from Auth Hook
+  const currentUser = useAuth();
+  const currentUserId = currentUser.user?.id;
+
+  // RTK Queries & Mutations
+  const { data, isLoading } = useGetPackagePublicReviewsQuery({ packageId });
+  const [createReview, { isLoading: isCreating }] = useCreatePackageReviewMutation();
+  const [updateReview, { isLoading: isUpdating }] = useUpdatePackageReviewMutation();
+  const [deleteReview, { isLoading: isDeleting }] = useDeletePackageReviewMutation();
+
+  // Extract public reviews list & metadata safely from API wrapper
+  const allReviews = useMemo(() => data?.reviews || [], [data]);
+  const meta = data?.meta;
+
+  // Local Form State
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
+  const [ratingInput, setRatingInput] = useState<number>(5);
+  const [reviewInput, setReviewInput] = useState<string>("");
+
+  // Aggregate stats (Uses backend metadata with local recalculation fallback)
+  const { avgRating, ratingBars, publicCount } = useMemo(() => {
+    const total = meta?.total ?? allReviews.length;
+
+    if (total === 0) {
+      return {
+        avgRating: "0.0",
+        publicCount: 0,
+        ratingBars: [5, 4, 3, 2, 1].map((s) => ({ stars: s, count: 0, pct: "0%" })),
+      };
+    }
+
+    const calculatedAvg = meta?.averageRating
+      ? meta.averageRating.toFixed(1)
+      : (allReviews.reduce((acc, curr) => acc + (curr.rating || 0), 0) / total).toFixed(1);
+
+    const counts: Record<number, number> = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    allReviews.forEach((r) => {
+      const star = Math.min(5, Math.max(1, Math.round(r.rating)));
+      counts[star] = (counts[star] || 0) + 1;
+    });
+
+    const bars = [5, 4, 3, 2, 1].map((star) => {
+      const cnt = counts[star] || 0;
+      return {
+        stars: star,
+        count: cnt,
+        pct: `${Math.round((cnt / total) * 100)}%`,
+      };
+    });
+
+    return { avgRating: calculatedAvg, publicCount: total, ratingBars: bars };
+  }, [allReviews, meta]);
+
+  // Check if current logged-in user already wrote a review
+  const userExistingReview = useMemo(() => {
+    if (!currentUserId) return null;
+    return allReviews.find(
+      (rev) => rev.customer?.id === currentUserId
+    );
+  }, [allReviews, currentUserId]);
+
+  // Handlers
+  const handleStartEdit = (rev: PackageReviewItem) => {
+    setEditingReviewId(rev.id);
+    setRatingInput(rev.rating);
+    setReviewInput(rev.review || "");
+    setIsEditing(true);
+  };
+
+  const handleCancelForm = () => {
+    setIsEditing(false);
+    setEditingReviewId(null);
+    setRatingInput(5);
+    setReviewInput("");
+  };
+
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reviewInput.trim()) return;
+
+    try {
+      if (editingReviewId) {
+        await updateReview({
+          id: editingReviewId,
+          packageId,
+          rating: ratingInput,
+          review: reviewInput,
+        }).unwrap();
+      } else {
+        await createReview({
+          packageId,
+          rating: ratingInput,
+          review: reviewInput,
+        }).unwrap();
+      }
+      handleCancelForm();
+    } catch (err) {
+      console.error("Failed to submit review:", err);
+    }
+  };
+
+  const handleDeleteReview = async (reviewId: string) => {
+    if (!confirm("Are you sure you want to delete your review?")) return;
+    try {
+      await deleteReview({ id: reviewId, packageId }).unwrap();
+      handleCancelForm();
+    } catch (err) {
+      console.error("Failed to delete review:", err);
+    }
+  };
+
+  const formatDate = (isoString?: string) => {
+    if (!isoString) return "";
+    try {
+      return new Date(isoString).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    } catch {
+      return "";
+    }
+  };
 
   return (
     <section className="bg-card border border-border/20 rounded-3xl p-6 lg:p-8 shadow-sm space-y-6">
-      <div>
-        <h2 className="font-heading text-xl text-foreground">Verified Chronicles</h2>
-        <p className="text-[11px] text-muted-foreground/70">
-          Authentic testaments from our active collective community
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h2 className="font-heading text-xl text-foreground">Verified Chronicles</h2>
+          <p className="text-[11px] text-muted-foreground/70">
+            Authentic testaments from our active collective community
+          </p>
+        </div>
+
+        {/* Dynamic Write Review Button */}
+        {currentUserId && !userExistingReview && !isEditing && (
+          <button
+            type="button"
+            onClick={() => setIsEditing(true)}
+            className="px-3.5 py-2 bg-primary/10 text-primary text-xs font-bold rounded-xl hover:bg-primary hover:text-primary-foreground transition-all flex items-center gap-1.5"
+          >
+            <Edit2 className="size-3.5" />
+            Write Review
+          </button>
+        )}
       </div>
 
-      {/* Aggregate rating visualization bar chart */}
+      {/* Rating Summary Header */}
       <div className="bg-background rounded-xl p-4 grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
         <div className="text-center sm:text-left">
-          <div className="text-3xl font-heading font-bold text-foreground">4.9</div>
+          <div className="text-3xl font-heading font-bold text-foreground">
+            {isLoading ? "..." : (rating?.averageRating?.toFixed(1) || avgRating)}
+          </div>
           <div className="flex text-primary justify-center sm:justify-start my-1">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} className="size-3 fill-current" />
+              <Star
+                key={i}
+                className={`size-3 ${i < Math.round(Number(avgRating))
+                  ? "fill-current text-primary"
+                  : "text-muted-foreground/30"
+                  }`}
+              />
             ))}
           </div>
           <span className="text-[10px] text-muted-foreground/60">
-            Based on 120+ active subscriptions
+            Based on {publicCount} {publicCount === 1 ? "review" : "reviews"}
           </span>
         </div>
+
         <div className="sm:col-span-2 space-y-1.5">
-          {[
-            { stars: 5, pct: "92%" },
-            { stars: 4, pct: "6%" },
-            { stars: 3, pct: "2%" },
-          ].map((row) => (
+          {ratingBars.map((row) => (
             <div
               key={row.stars}
               className="flex items-center gap-2 text-[10px] text-muted-foreground"
             >
               <span className="w-3 text-right">{row.stars}</span>
               <div className="flex-1 h-1.5 bg-border/20 rounded-full overflow-hidden">
-                <div className="h-full bg-primary" style={{ width: row.pct }} />
+                <div
+                  className="h-full bg-primary transition-all duration-500"
+                  style={{ width: row.pct }}
+                />
               </div>
               <span className="w-6 text-right text-muted-foreground/60">{row.pct}</span>
             </div>
@@ -61,28 +209,138 @@ export default function ChroniclesReviews() {
         </div>
       </div>
 
-      {/* Review cards mapping logic */}
-      <div className="space-y-4">
-        {reviews.map((rev, idx) => (
-          <div
-            key={idx}
-            className="border-b border-border/20 pb-4 last:border-none last:pb-0 space-y-2"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="size-6 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
-                  {rev.name[0]}
-                </div>
-                <span className="text-xs font-bold text-foreground">{rev.name}</span>
-              </div>
-              <span className="text-[10px] text-muted-foreground/50">{rev.date}</span>
-            </div>
-            <p className="text-xs text-muted-foreground/90 leading-relaxed font-sans pl-8">
-              {rev.comment}
-            </p>
+      {/* Review Form */}
+      {isEditing && (
+        <form
+          onSubmit={handleSubmitReview}
+          className="p-4 rounded-2xl bg-muted/40 border border-primary/20 space-y-3"
+        >
+          <h4 className="text-xs font-bold text-foreground">
+            {editingReviewId ? "Update Your Review" : "Write a Review"}
+          </h4>
+
+          <div className="flex items-center gap-1">
+            <span className="text-xs text-muted-foreground mr-2">Rating:</span>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                onClick={() => setRatingInput(star)}
+                className="p-1 hover:scale-110 transition-transform"
+              >
+                <Star
+                  className={`size-4 ${star <= ratingInput
+                    ? "fill-amber-400 text-amber-400"
+                    : "text-muted-foreground/30"
+                    }`}
+                />
+              </button>
+            ))}
           </div>
-        ))}
-      </div>
+
+          <textarea
+            rows={3}
+            value={reviewInput}
+            onChange={(e) => setReviewInput(e.target.value)}
+            placeholder="Share your experience..."
+            className="w-full p-3 rounded-xl bg-background border border-border/40 text-xs focus:outline-none focus:border-primary"
+          />
+
+          <div className="flex items-center justify-end gap-2">
+            <button
+              type="button"
+              onClick={handleCancelForm}
+              className="px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted rounded-lg"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isCreating || isUpdating}
+              className="px-4 py-1.5 bg-primary text-primary-foreground font-bold text-xs rounded-xl flex items-center gap-1.5"
+            >
+              <Send className="size-3" />
+              {isCreating || isUpdating ? "Submitting..." : "Submit Review"}
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* Review List Feed */}
+      {isLoading ? (
+        <p className="text-xs text-muted-foreground py-4 text-center">Loading reviews...</p>
+      ) : allReviews.length === 0 ? (
+        <p className="text-xs text-muted-foreground py-4 text-center">
+          No reviews recorded yet for this package.
+        </p>
+      ) : (
+        <div className="space-y-4">
+          {allReviews.map((rev: PackageReviewItem) => {
+            const isOwner = currentUserId && rev.customer?.id === currentUserId;
+
+            // Constructs customer name based on available backend user fields
+            const customerFullName = `${rev.customer?.firstName || ""} ${rev.customer?.lastName || ""}`.trim();
+            const displayName = isOwner
+              ? "You"
+              : customerFullName || "Customer";
+
+            return (
+              <div
+                key={rev.id}
+                className="border-b border-border/20 pb-4 last:border-none last:pb-0 space-y-2"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="size-6 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
+                      {displayName.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="text-xs font-bold text-foreground">{displayName}</span>
+
+                    <div className="flex text-amber-400 ml-1">
+                      {[...Array(rev.rating || 5)].map((_, i) => (
+                        <Star key={i} className="size-2.5 fill-current" />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] text-muted-foreground/50">
+                      {formatDate(rev.createdAt)}
+                    </span>
+
+                    {/* Controls for Review Owner */}
+                    {isOwner && !isEditing && (
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => handleStartEdit(rev)}
+                          className="p-1 hover:text-primary transition-colors text-muted-foreground"
+                          title="Edit Review"
+                        >
+                          <Edit2 className="size-3" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteReview(rev.id)}
+                          disabled={isDeleting}
+                          className="p-1 hover:text-destructive transition-colors text-muted-foreground"
+                          title="Delete Review"
+                        >
+                          <Trash2 className="size-3" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <p className="text-xs text-muted-foreground/90 leading-relaxed font-sans pl-8">
+                  {rev.review}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }

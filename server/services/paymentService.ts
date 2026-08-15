@@ -346,15 +346,38 @@ export const adjustPayment = catchServiceAsync(
   },
 );
 
-export const listPayments = catchServiceAsync(async (customerId?: string) => {
-  const where = customerId ? { customerId } : {};
-  const items = await prisma.payment.findMany({
-    where,
-    orderBy: { createdAt: "desc" },
-    include: { order: { select: { orderNumber: true } } },
-  });
-  return { items, total: items.length, page: 1, limit: items.length, totalPages: 1 };
-});
+export const listPayments = catchServiceAsync(
+  async (
+    customerId?: string,
+    params?: { page?: number; limit?: number; status?: string },
+  ) => {
+    const page = params?.page || 1;
+    const limit = params?.limit;
+    const skip = limit ? (page - 1) * limit : undefined;
+
+    const where: Prisma.PaymentWhereInput = customerId ? { customerId } : {};
+    if (params?.status) where.status = params.status as Prisma.PaymentWhereInput["status"];
+
+    const [items, total] = await Promise.all([
+      prisma.payment.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: "desc" },
+        include: { order: { select: { orderNumber: true } } },
+      }),
+      prisma.payment.count({ where }),
+    ]);
+
+    return {
+      items,
+      total,
+      page: limit ? page : 1,
+      limit: limit ?? total,
+      totalPages: limit ? Math.ceil(total / limit) : 1,
+    };
+  },
+);
 
 export const getPaymentDetail = catchServiceAsync(async (paymentId: string) => {
   const payment = await prisma.payment.findUnique({
@@ -364,7 +387,6 @@ export const getPaymentDetail = catchServiceAsync(async (paymentId: string) => {
       transactions: { orderBy: { createdAt: "desc" } },
       refunds: true,
       adjustments: true,
-      invoice: true,
     },
   });
   if (!payment) throw new AppError(404, "Payment not found");

@@ -16,7 +16,7 @@ export function HeaderBar({
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card p-6 rounded-2xl border border-border shadow-sm">
       <div>
         <h1 className="text-2xl font-bold text-foreground flex items-center gap-2.5">
-          <Package className="w-6 h-6 text-primary" />
+          <Package className="w-6 h-6 text-foreground" />
           Create Meal Package
         </h1>
         <p className="text-xs text-muted-foreground mt-1">

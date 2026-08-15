@@ -9,7 +9,7 @@ export function VendorCtaSection() {
         <div className="wrapper px-[var(--space-container)]">
           <div className="bg-card border border-border rounded-4xl p-8 sm:p-12 shadow-[var(--shadow-elevated)] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 space-y-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-primary">
+              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                 On-The-Go Management
               </span>
               <h2 className="font-heading text-3xl sm:text-5xl tracking-tight text-foreground">
@@ -35,7 +35,7 @@ export function VendorCtaSection() {
                   <span>9:41 AM</span>
                 </div>
                 <div className="space-y-3 my-auto text-center">
-                  <Store className="size-12 text-primary mx-auto" />
+                  <Store className="size-12 text-foreground mx-auto" />
                   <div className="text-sm font-bold text-foreground">New Order #ORD-4019</div>
                   <div className="text-xs text-muted-foreground">2x Keto Salmon Salad Box</div>
                   <button className="w-full py-2 bg-primary text-primary-foreground font-bold text-xs rounded-xl">

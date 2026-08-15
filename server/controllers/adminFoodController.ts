@@ -1,16 +1,54 @@
 import { Request, Response } from "express";
+import { AuthRequest } from "../types/auth.types";
 import { catchAsync } from "../utils/catchAsync";
 import { sendResponse } from "../utils/sendResponse";
 import * as adminFoodService from "../services/adminFoodService";
 import * as adminFoodCatalogService from "../services/adminFoodCatalogService";
 import * as adminFoodAddonService from "../services/adminFoodAddonService";
 import * as adminFoodMetaService from "../services/adminFoodMetaService";
+import * as adminFoodQueryService from "../services/adminFoodQueryService";
+import { VendorFoodService } from "../services/vendorFoodService";
+
+// ─── Queries ────────────────────────────────────────────────
+
+const listFoods = catchAsync(async (req: Request, res: Response) => {
+  const foods = await adminFoodQueryService.listAdminFoods(req.query as never);
+  sendResponse(res, { statusCode: 200, data: foods });
+});
+
+const getFood = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const food = await adminFoodQueryService.getAdminFoodById(id);
+  sendResponse(res, { statusCode: 200, data: food });
+});
+
+const listCategories = catchAsync(async (_req: Request, res: Response) => {
+  const categories = await adminFoodQueryService.listAdminCategories();
+  sendResponse(res, { statusCode: 200, data: categories });
+});
+
+const listTags = catchAsync(async (_req: Request, res: Response) => {
+  const tags = await adminFoodQueryService.listAdminTags();
+  sendResponse(res, { statusCode: 200, data: tags });
+});
 
 // ─── Food ──────────────────────────────────────────────────
 
-const createFood = catchAsync(async (req: Request, res: Response) => {
-  const food = await adminFoodService.createFood(req.body);
+const createFood = catchAsync(async (req: AuthRequest, res: Response) => {
+  const food = await adminFoodService.createFood(req.body, req.user!.userId);
   sendResponse(res, { statusCode: 201, message: "Food created", data: food });
+});
+
+const approveFood = catchAsync(async (req: AuthRequest, res: Response) => {
+  const id = req.params.id as string;
+  await VendorFoodService.approveFood(id, req.user!.userId);
+  sendResponse(res, { statusCode: 200, message: "Food approved" });
+});
+
+const rejectFood = catchAsync(async (req: AuthRequest, res: Response) => {
+  const id = req.params.id as string;
+  await VendorFoodService.rejectFood(id, req.user!.userId, req.body.reason);
+  sendResponse(res, { statusCode: 200, message: "Food rejected" });
 });
 
 const updateFood = catchAsync(async (req: Request, res: Response) => {
@@ -188,6 +226,28 @@ const deleteDiscount = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, { statusCode: 200, message: "Discount removed" });
 });
 
+// ─── Price ──────────────────────────────────────────────────
+
+const deletePrice = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  await adminFoodMetaService.deletePrice(id);
+  sendResponse(res, { statusCode: 200, message: "Price removed" });
+});
+
+// ─── Food Image ─────────────────────────────────────────────
+
+const createFoodImage = catchAsync(async (req: Request, res: Response) => {
+  const foodId = req.params.foodId as string;
+  const image = await adminFoodMetaService.createFoodImage(foodId, req.body.image);
+  sendResponse(res, { statusCode: 201, message: "Food image added", data: image });
+});
+
+const deleteFoodImage = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  await adminFoodMetaService.deleteFoodImage(id);
+  sendResponse(res, { statusCode: 200, message: "Food image removed" });
+});
+
 // ─── Tags ──────────────────────────────────────────────────
 
 const addFoodTags = catchAsync(async (req: Request, res: Response) => {
@@ -253,9 +313,15 @@ const updateVisibility = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const AdminFoodController = {
+  listFoods,
+  getFood,
+  listCategories,
+  listTags,
   createFood,
   updateFood,
   deleteFood,
+  approveFood,
+  rejectFood,
   createCategory,
   updateCategory,
   deleteCategory,
@@ -278,8 +344,11 @@ export const AdminFoodController = {
   createAllergen,
   deleteAllergen,
   createPrice,
+  deletePrice,
   createDiscount,
   deleteDiscount,
+  createFoodImage,
+  deleteFoodImage,
   addFoodTags,
   removeFoodTag,
   createTag,

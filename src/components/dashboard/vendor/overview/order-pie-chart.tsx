@@ -1,29 +1,37 @@
-// src/components/dashboard/vendor/overview/order-pie-chart.tsx
 "use client";
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, type PieLabelRenderProps } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  Legend,
+  type PieLabelRenderProps,
+} from "recharts";
 import { cn } from "@/lib/utils";
 
 interface OrderPieChartProps {
   data?: Array<{ name: string; value: number; color: string }>;
   className?: string;
+  isLoading?: boolean; // ← ADD THIS
 }
 
-const defaultData = [
-  { name: "Completed", value: 45, color: "#10B981" },
-  { name: "Pending", value: 25, color: "#F59E0B" },
-  { name: "Preparing", value: 15, color: "#3B82F6" },
-  { name: "Cancelled", value: 8, color: "#EF4444" },
-  { name: "Delivered", value: 7, color: "#8B5CF6" },
-];
+const defaultData = [{ name: "No Orders", value: 1, color: "#6B7280" }];
 
 const RADIAN = Math.PI / 180;
 
-const renderCustomizedLabel = ({ cx = 0, cy = 0, midAngle = 0, innerRadius = 0, outerRadius = 0, percent = 0 }: PieLabelRenderProps) => {
+const renderCustomizedLabel = ({
+  cx = 0,
+  cy = 0,
+  midAngle = 0,
+  innerRadius = 0,
+  outerRadius = 0,
+  percent = 0,
+}: PieLabelRenderProps) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
 
   return (
     <text
@@ -39,8 +47,41 @@ const renderCustomizedLabel = ({ cx = 0, cy = 0, midAngle = 0, innerRadius = 0, 
   );
 };
 
-export function OrderPieChart({ data = defaultData, className }: OrderPieChartProps) {
-  const totalOrders = data.reduce((sum, item) => sum + item.value, 0);
+export function OrderPieChart({ data, className, isLoading }: OrderPieChartProps) {
+  const chartData = data && data.length > 0 ? data : defaultData;
+  const totalOrders = chartData.reduce((sum, item) => sum + item.value, 0);
+  const hasData = data && data.length > 0 && data[0]?.name !== "No Orders";
+
+  if (isLoading) {
+    return (
+      <div
+        className={cn(
+          "rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] shadow-[var(--shadow-card)] p-6",
+          className,
+        )}
+      >
+        <div className="flex h-[280px] items-center justify-center">
+          <div className="text-sm text-muted-foreground">Loading chart...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!hasData) {
+    return (
+      <div
+        className={cn(
+          "rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] shadow-[var(--shadow-card)] p-6",
+          className,
+        )}
+      >
+        <div className="flex h-[280px] flex-col items-center justify-center gap-2">
+          <p className="text-sm text-muted-foreground">No order data available</p>
+          <p className="text-xs text-muted-foreground/60">Orders will appear here once placed</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -66,7 +107,7 @@ export function OrderPieChart({ data = defaultData, className }: OrderPieChartPr
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={data}
+                data={chartData}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
@@ -76,7 +117,7 @@ export function OrderPieChart({ data = defaultData, className }: OrderPieChartPr
                 paddingAngle={3}
                 dataKey="value"
               >
-                {data.map((entry, index) => (
+                {chartData.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={entry.color}

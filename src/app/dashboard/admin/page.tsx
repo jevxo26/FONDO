@@ -4,11 +4,26 @@ import { RecentActivity } from "@/components/dashboard/admin/overview/recent-act
 import { RevenueChart } from "@/components/dashboard/admin/overview/revenue-chart";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { useGetOrdersQuery } from "@/store/api/slices/orders-api";
+import { usePlatformRevenue } from "@/store/api/slices/admin-payments-api";
 import { BarChart3, Loader2, TrendingUp, Truck, Users, Wallet } from "lucide-react";
 import { useMemo } from "react";
 
+function monthRange() {
+  const now = new Date();
+  const from = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  const to = now.toISOString();
+  return { from, to };
+}
+
+function formatCompact(n: number) {
+  if (n >= 1000000) return `৳${(n / 1000000).toFixed(1)}M`;
+  if (n >= 1000) return `৳${(n / 1000).toFixed(1)}K`;
+  return `৳${n.toLocaleString()}`;
+}
+
 export default function DashboardPage() {
   const { data: apiOrders, isLoading } = useGetOrdersQuery();
+  const { data: revenue } = usePlatformRevenue(monthRange());
 
   const stats = useMemo(() => {
     const totalOrders = apiOrders ? apiOrders.length : 156;
@@ -19,9 +34,9 @@ export default function DashboardPage() {
     return [
       {
         label: "Total Revenue",
-        value: "৳428.5K",
+        value: revenue ? formatCompact(Number(revenue.totalRevenue)) : "৳0",
         trend: "up" as const,
-        trendValue: "+12.5%",
+        trendValue: "This month",
         icon: Wallet,
         variant: "default" as const,
       },
@@ -58,14 +73,14 @@ export default function DashboardPage() {
         variant: "success" as const,
       },
     ];
-  }, [apiOrders]);
+  }, [apiOrders, revenue]);
 
   return (
     <div>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 md:gap-4">
           <div className="flex items-center gap-2">
-            <div className="size-2 rounded-full bg-primary" />
+            <div className="size-2 rounded-full bg-primary/30" />
             <h1 className="font-heading text-xl font-bold leading-tight tracking-tight text-foreground md:text-[32px]">
               Overview
             </h1>
@@ -81,7 +96,7 @@ export default function DashboardPage() {
           </span>
         </div>
       </div>
-      <div className="mt-2 h-px w-24 bg-gradient-to-r from-primary/40 to-transparent" />
+      <div className="mt-2 h-px w-24 bg-linear-to-r from-primary/40 to-transparent" />
 
       {isLoading ? (
         <div className="mt-12 flex justify-center">

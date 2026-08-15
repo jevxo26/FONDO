@@ -1,7 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,22 +12,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ROLE_DASHBOARD } from "@/data/navigation";
+import { getDashboardPath } from "@/data/navigation";
 import { useAuth } from "@/hooks/use-auth";
+import { useAppSelector } from "@/store/store";
 import { useCart } from "@/store/api/slices/cart-api";
 import { useFavorites } from "@/hooks/use-favorites";
-import { toggleMobileMenu } from "@/store/slices/uiSlice";
-import { useAppDispatch } from "@/store/store";
 import {
   ChevronDown,
   Heart,
   LayoutDashboard,
   LogOut,
-  Menu,
   ShoppingBag,
   ShoppingCart,
   Settings,
-  Truck,
   User,
 } from "lucide-react";
 import Link from "next/link";
@@ -37,19 +35,16 @@ const roleLabels: Record<string, string> = {
   SUPER_ADMIN: "Super Admin",
   ADMIN: "Admin",
   VENDOR: "Vendor",
-  VENDOR_STAFF: "Vendor Staff",
-  KITCHEN_STAFF: "Kitchen Staff",
   RIDER: "Rider",
   CUSTOMER: "Customer",
-  SUPPORT_AGENT: "Support Agent",
 };
 
 export function NavActions() {
-  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const { user, isAuthenticated, logout } = useAuth();
-  const { data: cart } = useCart();
+  const permissions = useAppSelector((s) => s.auth.permissions);
+  const { data: cart } = useCart(!isAuthenticated);
   const { data: favorites } = useFavorites();
 
   const cartCount = cart?.items?.reduce((sum, i) => sum + i.quantity, 0) ?? 0;
@@ -65,7 +60,7 @@ export function NavActions() {
     }
   };
 
-  const dashboardHref = user ? ROLE_DASHBOARD[user.role] : null;
+  const dashboardHref = user ? getDashboardPath(user.role, permissions) : null;
   const initials = user ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}` : "U";
   const fullName = user ? `${user.firstName} ${user.lastName}` : "User";
   const roleLabel = user ? roleLabels[user.role] ?? user.role.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) : "";
@@ -74,39 +69,51 @@ export function NavActions() {
     <div className="flex items-center gap-2">
       <Link
         href="/wishlist"
-        className="relative flex size-9 items-center justify-center rounded-full bg-destructive/20 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-destructive/30 active:scale-[0.95]"
+        className={cn("nav-icon-pill", "text-foreground")}
       >
-        <Heart className="size-4 text-foreground" />
+        <Heart className="nav-icon" />
         {favoritesCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground leading-none">
+          <motion.span
+            key={`fav-badge-${favoritesCount}`}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 500, damping: 15 }}
+            className="absolute -top-2 -right-1 flex h-[20px] min-w-[20px] items-center justify-center rounded-full bg-primary px-[5px] text-[11px] font-bold text-primary-foreground leading-none ring-2 ring-background"
+          >
             {favoritesCount > 9 ? "9+" : favoritesCount}
-          </span>
+          </motion.span>
         )}
       </Link>
       <Link
         href="/cart"
-        className="relative flex size-9 items-center justify-center rounded-full bg-secondary transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-secondary active:scale-[0.95]"
+        className={cn("nav-icon-pill", "text-foreground")}
       >
-        <ShoppingCart className="size-4 text-foreground" />
+        <motion.span
+          key={`cart-icon-${cartCount}`}
+          animate={cartCount > 0 ? { scale: [1, 1.35, 0.9, 1] } : { scale: 1 }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          className="flex items-center justify-center"
+        >
+          <ShoppingCart className="nav-icon" />
+        </motion.span>
         {cartCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground leading-none">
+          <motion.span
+            key={`cart-badge-${cartCount}`}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 500, damping: 15 }}
+            className="absolute -top-2 -right-1 flex h-[20px] min-w-[20px] items-center justify-center rounded-full bg-primary px-[5px] text-[11px] font-bold text-primary-foreground leading-none ring-2 ring-background"
+          >
             {cartCount > 9 ? "9+" : cartCount}
-          </span>
+          </motion.span>
         )}
-      </Link>
-      <Link
-        href="/track-order"
-        className="hidden items-center gap-2 rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-secondary transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-foreground/90 active:scale-[0.98] lg:flex"
-      >
-        <Truck className="size-4 text-secondary" />
-        Track Order
       </Link>
 
       {isAuthenticated && user ? (
         <DropdownMenu>
           <DropdownMenuTrigger className="hidden lg:block outline-none">
             <div className="flex cursor-pointer items-center gap-3 rounded-xl bg-foreground px-3 py-1.5 pr-2 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-foreground/90 active:scale-[0.98]">
-              <Avatar className="size-7 ring-2 ring-primary/40 ring-offset-1 ring-offset-foreground shadow-[0_0_12px_rgba(206,163,89,0.2)]">
+              <Avatar className="size-7 ring-2 ring-primary/40 ring-offset-1 ring-offset-foreground shadow-[0_0_12px_rgba(168,90,56,0.2)]">
                 <AvatarFallback className="bg-primary/10 text-[10px] font-bold text-primary">
                   {user.avatar ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -128,16 +135,16 @@ export function NavActions() {
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-60 p-1.5">
-            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-primary/[0.03] to-primary/[0.01] p-3 mb-1">
-              <Avatar className="size-9 ring-2 ring-primary/30 ring-offset-1 ring-offset-card shadow-[0_0_16px_rgba(206,163,89,0.15)]">
-                <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
+            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-foreground/[0.03] to-foreground/[0.01] p-3 mb-1">
+              <Avatar className="size-9 ring-2 ring-primary/30 ring-offset-1 ring-offset-card shadow-[0_0_16px_rgba(168,90,56,0.15)]">
+                <AvatarFallback className="bg-secondary text-xs font-bold text-foreground">
                   {initials}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 leading-tight">
                 <span className="truncate text-sm font-semibold text-foreground">{fullName}</span>
                 <span className="truncate text-[10px] text-muted-foreground">{user.email}</span>
-                <span className="mt-0.5 truncate text-[9px] font-bold uppercase tracking-wider text-primary">
+                <span className="mt-0.5 truncate text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
                   {roleLabel}
                 </span>
               </div>
@@ -160,7 +167,7 @@ export function NavActions() {
                 { icon: ShoppingBag, label: "My Orders", desc: "Track your orders", href: "/orders", show: true },
                 { icon: Heart, label: "Wishlist", desc: "Saved items", href: "/wishlist", show: true },
                 { icon: User, label: "Profile", desc: "Manage your account", href: "/profile", show: true },
-                { icon: Settings, label: "Settings", desc: "Preferences", href: "/profile?tab=settings", show: true },
+                { icon: Settings, label: "Settings", desc: "Preferences", href: "/settings", show: true },
               ].map((item) => {
                 if (!item.show) return null;
                 const Icon = item.icon;
@@ -170,8 +177,8 @@ export function NavActions() {
                     className="flex items-center gap-3 py-2.5 cursor-pointer"
                     onClick={() => item.href && router.push(item.href)}
                   >
-                    <div className="flex size-8 items-center justify-center rounded-lg bg-primary/8">
-                      <Icon className="size-4 text-primary" />
+                    <div className="flex size-8 items-center justify-center rounded-lg bg-secondary">
+                      <Icon className="size-4 text-foreground" />
                     </div>
                     <div>
                       <p className="text-sm font-medium">{item.label}</p>
@@ -182,7 +189,7 @@ export function NavActions() {
               })}
             </DropdownMenuGroup>
 
-            <DropdownMenuSeparator className="bg-gradient-to-r from-primary/20 via-primary/10 to-transparent" />
+            <DropdownMenuSeparator className="bg-gradient-to-r from-foreground/20 via-foreground/10 to-transparent" />
 
             <DropdownMenuItem
               className="flex items-center gap-3 py-2.5 text-destructive cursor-pointer"
@@ -206,16 +213,6 @@ export function NavActions() {
           Sign In
         </Link>
       )}
-
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => dispatch(toggleMobileMenu())}
-        className="rounded-full hover:bg-black/5 lg:hidden active:scale-[0.95] transition-all duration-300"
-        aria-label="Open menu"
-      >
-        <Menu className="size-5" />
-      </Button>
     </div>
   );
 }

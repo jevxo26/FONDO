@@ -1,27 +1,34 @@
 import {
   Bike,
   BookOpen,
+  Combine,
+  FileText,
   HelpCircle,
   Info,
   Mail,
   MessageSquareText,
+  Newspaper,
   Package,
   Store,
   Truck,
-  Utensils,
-  UtensilsCrossed,
+  Utensils
 } from "lucide-react";
 import type { ComponentType } from "react";
 
-export const ROLE_DASHBOARD: Record<string, string> = {
-  ADMIN: "/dashboard/admin",
+export const RBAC_ROLE_DASHBOARD: Record<string, string> = {
   SUPER_ADMIN: "/dashboard/admin",
+  ADMIN: "/dashboard/admin",
   VENDOR: "/dashboard/vendor",
-  VENDOR_STAFF: "/dashboard/vendor",
-  KITCHEN_STAFF: "/dashboard/kitchen",
   RIDER: "/dashboard/rider",
-  SUPPORT_AGENT: "/dashboard/admin",
 };
+
+const DASHBOARD_ROLE_PRIORITY = ["SUPER_ADMIN", "ADMIN", "VENDOR", "RIDER"];
+
+export function getDashboardPath(role: string, permissions: string[]): string | null {
+  if (DASHBOARD_ROLE_PRIORITY.includes(role)) return RBAC_ROLE_DASHBOARD[role];
+  if (permissions.length > 0) return "/dashboard/admin";
+  return null;
+}
 
 interface NavLink {
   href?: string;
@@ -32,7 +39,7 @@ interface NavLink {
 export const childIcons: Record<string, ComponentType<{ className?: string }>> = {
   "/foods": Utensils,
   "/packages": Package,
-  "/meals": UtensilsCrossed,
+  "/combos": Combine,
   "/reviews": MessageSquareText,
   "/our-story": BookOpen,
   "/about": Info,
@@ -41,6 +48,8 @@ export const childIcons: Record<string, ComponentType<{ className?: string }>> =
   "/contact": Mail,
   "/faq": HelpCircle,
   "/traking-page": Truck,
+  "/blog": Newspaper,
+  "/pages": FileText,
 };
 
 export const mainNavLinks: NavLink[] = [
@@ -50,12 +59,12 @@ export const mainNavLinks: NavLink[] = [
     children: [
       { href: "/foods", label: "All Foods" },
       { href: "/packages", label: "Packages" },
-      { href: "/meals", label: "Meals" },
+      { href: "/combos", label: "Combos" },
       { href: "/reviews", label: "Reviews" },
     ],
   },
   { href: "/packages", label: "Packages" },
-  { href: "/meals", label: "Meals" },
+  { href: "/track-order", label: "Track Order" },
   {
     label: "More",
     children: [
@@ -65,6 +74,8 @@ export const mainNavLinks: NavLink[] = [
       { href: "/apply/rider", label: "Apply as Rider" },
       { href: "/contact", label: "Contact" },
       { href: "/faq", label: "FAQ" },
+      { href: "/blog", label: "Blog" },
+      { href: "/pages", label: "Pages" },
     ],
   },
 ];
@@ -73,8 +84,9 @@ export const mobileNavLinks: { href: string; label: string }[] = [
   { href: "/", label: "Home" },
   { href: "/foods", label: "All Foods" },
   { href: "/packages", label: "Packages" },
-  { href: "/meals", label: "Meals" },
+  { href: "/combos", label: "Combos" },
   { href: "/reviews", label: "Reviews" },
+  { href: "/track-order", label: "Track Order" },
   { href: "/our-story", label: "Our Story" },
   { href: "/about", label: "About" },
   { href: "/apply/vendor", label: "Apply as Vendor" },
@@ -83,4 +95,6 @@ export const mobileNavLinks: { href: string; label: string }[] = [
   { href: "/faq", label: "FAQ" },
   { href: "/traking-page", label: "Track Order" },
   { href: "/wishlist", label: "Wishlist" },
+  { href: "/blog", label: "Blog" },
+  { href: "/pages", label: "Pages" },
 ];

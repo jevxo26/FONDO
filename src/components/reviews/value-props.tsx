@@ -27,7 +27,7 @@ export default function ValuePropsGrid() {
               key={idx}
               className="bg-card border border-border/60 rounded-2xl p-5 flex flex-col items-center text-center space-y-3 shadow-[var(--shadow-card)]"
             >
-              <div className="text-primary size-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+              <div className="text-foreground size-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                 {React.cloneElement(pt.icon, { className: "size-5" })}
               </div>
               <div>

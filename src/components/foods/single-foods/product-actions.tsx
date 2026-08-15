@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Loader2, MessageSquare, Minus, Plus, ShoppingCart } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Props {
   quantity: number;
@@ -7,6 +8,8 @@ interface Props {
   onAddToCart: () => void;
   onBuyNow: () => void;
   isAddToCartPending: boolean;
+  subtotal: number;
+  whatsappUrl: string;
 }
 
 export function ProductActions({
@@ -15,6 +18,8 @@ export function ProductActions({
   onAddToCart,
   onBuyNow,
   isAddToCartPending,
+  subtotal,
+  whatsappUrl,
 }: Props) {
   return (
     <div className="mt-6 lg:col-span-6">
@@ -41,10 +46,14 @@ export function ProductActions({
             <Plus className="size-3.5" />
           </Button>
         </div>
-        <span className="text-xs text-muted-foreground">(Available)</span>
       </div>
 
-      <div className="mt-8 grid grid-cols-2 gap-4">
+      <div className="mt-4 flex items-center justify-between rounded-xl border border-border/50 bg-muted/30 px-4 py-2.5">
+        <span className="text-xs font-medium text-muted-foreground">Subtotal</span>
+        <span className="font-sans text-base font-bold text-foreground">৳{subtotal}</span>
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 gap-4">
         <Button
           variant="outline"
           size="xl"
@@ -70,14 +79,18 @@ export function ProductActions({
         </Button>
       </div>
 
-      <Button
-        variant="outline"
-        size="xl"
-        className="mt-4 w-full gap-2 rounded-2xl border-primary/30 bg-primary/20 text-primary-foreground hover:bg-primary/30"
+      <a
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={cn(
+          buttonVariants({ variant: "outline", size: "xl" }),
+          "mt-4 w-full gap-2 rounded-2xl border-primary/30 bg-primary/20 text-primary-foreground hover:bg-primary/30",
+        )}
       >
         <MessageSquare className="size-4 text-primary" />
         Order Directly via WhatsApp
-      </Button>
+      </a>
     </div>
   );
 }

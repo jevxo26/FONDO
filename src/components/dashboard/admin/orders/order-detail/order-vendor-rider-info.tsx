@@ -11,11 +11,11 @@ export default function OrderVendorRiderInfo({ vendor, rider }: OrderVendorRider
       <h2 className="mb-4 font-heading text-lg font-bold text-foreground">Vendor & Rider</h2>
       <div className="space-y-3">
         <div className="flex items-center gap-3">
-          <Building className="size-4 shrink-0 text-primary" />
+          <Building className="size-4 shrink-0 text-muted-foreground" />
           <span className="text-sm text-foreground">{vendor}</span>
         </div>
         <div className="flex items-center gap-3">
-          <User className="size-4 shrink-0 text-primary" />
+          <User className="size-4 shrink-0 text-muted-foreground" />
           <span className="text-sm text-foreground">{rider}</span>
         </div>
       </div>

@@ -11,17 +11,17 @@ export default function StoryHero() {
         aria-label="Traditional heritage spices and slow cooking environment"
       />
 
-      {/* 2. Dark Overlay using primary-foreground hex equivalent (#1B0E08) for deep visual contrast */}
-      <div className="absolute inset-0 bg-primary-foreground/75 backdrop-blur-[1px]" />
+      {/* 2. Warm dark overlay for deep visual contrast (was cream-primary-foreground wash) */}
+      <div className="absolute inset-0 bg-overlay/80 backdrop-blur-[1px]" />
 
       {/* 3. Main Content Container using your custom global .wrapper utility */}
       <div className="wrapper relative z-10 flex flex-col items-center justify-center text-center space-y-6 pt-24 pb-20">
         {/* Decorative Badge with primary gold color and low opacity background */}
-        <span className="text-primary text-[10px] font-bold uppercase tracking-[0.25em] bg-primary/10 border border-primary/25 px-4 py-1.5 rounded-full">
+        <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-[0.25em] bg-primary/10 border border-primary/25 px-4 py-1.5 rounded-full">
           EST. 1924 • Traditional Hearth
         </span>
 
-        {/* Main Headline utilizing font-heading (Serif) and global text-background (#FAF5EB) for high contrast */}
+        {/* Main Headline utilizing font-heading (Serif) and global text-background for high contrast */}
         <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl font-normal leading-[1.15] text-background max-w-5xl tracking-tight">
           A Legacy of Flavor, <br />
           <span className="italic text-primary">Crafted for Today</span>
@@ -35,7 +35,7 @@ export default function StoryHero() {
 
         {/* Call to Actions utilizing global primary and secondary variables */}
         <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full sm:w-auto">
-          {/* Primary Action Button using bg-primary (#CEA359) and dark text-primary-foreground */}
+          {/* Primary Action Button using bg-primary and dark text-primary-foreground */}
           <button className="w-full sm:w-auto px-8 py-3.5 bg-primary text-primary-foreground font-sans font-bold text-xs rounded-xl shadow-lg hover:opacity-90 transition-all uppercase tracking-widest">
             Explore Our Story
           </button>

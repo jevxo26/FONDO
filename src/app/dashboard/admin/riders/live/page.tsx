@@ -56,7 +56,7 @@ export default function RidersLivePage() {
           subtitle="Last hour average"
         />
         <GlassCard
-          icon={<MapPin className="size-5 text-primary" />}
+          icon={<MapPin className="size-5 text-foreground" />}
           title="Busiest Zone"
           value="Gulshan"
           subtitle="12 active orders"

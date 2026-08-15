@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${baiJamjuree.variable} ${inter.variable} h-full antialiased`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${baiJamjuree.variable} ${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <TooltipProvider delay={0}>
           <ReduxProvider>{children}</ReduxProvider>

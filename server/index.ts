@@ -7,11 +7,13 @@ import helmet from "helmet";
 import morgan from "morgan";
 import next from "next";
 import rateLimit from "express-rate-limit";
+import multer from "multer";
 import { env } from "./config/env";
 import AppError from "./utils/AppError";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import vendorRoutes from "./routes/vendorRoutes";
+import vendorFoodRoutes from "./routes/vendorFoodRoutes";
 import foodRoutes from "./routes/foodRoutes";
 import packageRoutes from "./routes/packageRoutes";
 import adminFoodRoutes from "./routes/adminFoodRoutes";
@@ -23,6 +25,7 @@ import paymentRoutes from "./routes/paymentRoutes";
 import walletRoutes from "./routes/walletRoutes";
 import settlementRoutes from "./routes/settlementRoutes";
 import uploadRoutes from "./routes/uploadRoutes";
+import rbacRoutes from "./routes/rbacRoutes";
 import prisma from "./lib/prisma";
 
 const dev = env.NODE_ENV !== "production";
@@ -68,10 +71,7 @@ app
     server.use(express.json());
     server.use(cookieParser());
     server.use(compression());
-    server.use(
-      "/uploads",
-      express.static(path.join(process.cwd(), "public", "uploads"))
-    );
+    server.use("/uploads", express.static(path.join(process.cwd(), "public", "uploads")));
 
     // Database
     try {
@@ -131,11 +131,13 @@ app
 
     // API routes
     server.use("/api/users", userRoutes);
+    server.use("/api/vendor/foods", vendorFoodRoutes);
     server.use("/api/vendor", vendorRoutes);
     server.use("/api/auth", authRoutes);
     server.use("/api/foods", foodRoutes);
     server.use("/api/package", packageRoutes);
     server.use("/api/admin", adminFoodRoutes);
+    server.use("/api/admin", rbacRoutes);
     server.use("/api/cart", cartRoutes);
     server.use("/api/admin/customers", customerRoutes);
     server.use("/api/admin/coupons", couponRoutes);
@@ -154,6 +156,15 @@ app
     server.use((err: Error, _req: Request, res: Response, _next: express.NextFunction) => {
       if (err instanceof AppError) {
         res.status(err.statusCode).json({
+          success: false,
+          message: err.message,
+          data: null,
+        });
+        return;
+      }
+
+      if (err instanceof multer.MulterError || err.name === "MulterError") {
+        res.status(400).json({
           success: false,
           message: err.message,
           data: null,

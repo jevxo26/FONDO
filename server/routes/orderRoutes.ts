@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyToken, authorize } from "../middlewares/authMiddleware";
+import { authorize, hasPermission, verifyToken } from "../middlewares/authMiddleware";
 import { validate } from "../middlewares/validate";
 import { OrderController } from "../controllers/orderController";
 import {
@@ -26,60 +26,78 @@ router.post(
   validate(submitFeedbackSchema),
   OrderController.submitFeedback,
 );
-router.get("/orders/:orderId/invoice", verifyToken, OrderController.getInvoice);
+router.get(
+  "/orders/:orderId/invoice",
+  verifyToken,
+  OrderController.getInvoice,
+);
+router.get(
+  "/orders/:orderId/invoice/download",
+  verifyToken,
+  OrderController.downloadInvoice,
+);
 
-// Admin-only
-router.delete("/orders/:id", verifyToken, authorize("SUPER_ADMIN"), OrderController.softDelete);
+// Admin-only (platform-wide data + actions)
+const pOrders = hasPermission("orders");
+router.delete("/orders/:id", verifyToken, authorize("SUPER_ADMIN", "ADMIN"), pOrders, OrderController.softDelete);
 router.patch(
   "/orders/:id/status",
   verifyToken,
-  authorize("ADMIN", "VENDOR"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pOrders,
   validate(updateStatusSchema),
   OrderController.updateStatus,
 );
 router.patch(
   "/orders/:id/assign-vendor",
   verifyToken,
-  authorize("ADMIN"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pOrders,
   validate(assignVendorSchema),
   OrderController.assignVendor,
 );
 router.patch(
   "/orders/:id/assign-rider",
   verifyToken,
-  authorize("ADMIN", "VENDOR"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pOrders,
   validate(assignRiderSchema),
   OrderController.assignRider,
 );
 router.get(
   "/admin/orders",
   verifyToken,
-  authorize("ADMIN", "SUPER_ADMIN"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pOrders,
   OrderController.listAll,
 );
 router.get(
   "/vendors/:vendorId/orders",
   verifyToken,
-  authorize("VENDOR"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pOrders,
   OrderController.listVendor,
 );
 router.post(
   "/orders/:orderId/refund",
   verifyToken,
-  authorize("ADMIN"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pOrders,
   validate(processRefundSchema),
   OrderController.processRefund,
 );
 router.get(
   "/orders/:orderId/refunds",
   verifyToken,
-  authorize("ADMIN"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pOrders,
   OrderController.listRefunds,
 );
 router.patch(
   "/order-meals/:id/status",
   verifyToken,
-  authorize("ADMIN", "VENDOR"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  pOrders,
   validate(updateMealStatusSchema),
   OrderController.updateMealStatus,
 );

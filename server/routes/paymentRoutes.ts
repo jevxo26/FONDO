@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyToken, authorize } from "../middlewares/authMiddleware";
+import { verifyToken, authorize, hasPermission } from "../middlewares/authMiddleware";
 import { validate } from "../middlewares/validate";
 import { PaymentController } from "../controllers/paymentController";
 import {
@@ -7,7 +7,6 @@ import {
   retryPaymentSchema,
   refundPaymentSchema,
   adjustPaymentSchema,
-  listPaymentsSchema,
 } from "../validations/payment.validation";
 
 const router = Router();
@@ -41,20 +40,22 @@ router.post(
 router.post(
   "/payments/:id/refund",
   verifyToken,
-  authorize("ADMIN", "SUPER_ADMIN"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  hasPermission("settings"),
   validate(refundPaymentSchema),
   PaymentController.refund,
 );
 router.post(
   "/payments/:id/adjust",
   verifyToken,
-  authorize("ADMIN", "SUPER_ADMIN"),
+  authorize("SUPER_ADMIN", "ADMIN"),
+  hasPermission("settings"),
   validate(adjustPaymentSchema),
   PaymentController.adjust,
 );
 
 // Auth (customer sees own, admin sees all)
-router.get("/payments", verifyToken, validate(listPaymentsSchema, "query"), PaymentController.list);
+router.get("/payments", verifyToken, PaymentController.list);
 router.get("/payments/:id", verifyToken, PaymentController.getById);
 
 export default router;

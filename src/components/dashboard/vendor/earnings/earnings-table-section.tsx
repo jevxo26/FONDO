@@ -1,60 +1,33 @@
-// src/components/dashboard/vendor/earnings/earnings-table-section.tsx
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { DataTable } from "@/components/common/table";
 import { settlementColumns } from "./settlement-columns";
 import { walletColumns } from "./wallet-columns";
 import { Button } from "@/components/ui/button";
 import { Download, Calendar } from "lucide-react";
-import {
-  vendorSettlements,
-  vendorWalletTransactions,
-  settlementStatuses,
-  transactionTypes,
-} from "@/data/vendor-earnings";
-import type { VendorSettlement, VendorWalletTransaction } from "@/types/vendor";
+import { settlementStatuses, transactionTypes } from "@/data/vendor-earnings";
+import type { VendorSettlement, VendorWalletTransaction } from "@/types/wallet";
 import type { FacetedFilter, InitialSort } from "@/components/common/table/types";
 
-interface SettlementFilters {
-  paymentStatus: string;
+interface EarningsTableSectionProps {
+  settlements: VendorSettlement[];
+  transactions: VendorWalletTransaction[];
+  isLoading?: boolean;
 }
 
-interface WalletFilters {
-  transactionType: string;
-}
-
-const INITIAL_SETTLEMENT_FILTERS: SettlementFilters = {
-  paymentStatus: "ALL",
-};
-
-const INITIAL_WALLET_FILTERS: WalletFilters = {
-  transactionType: "ALL",
-};
-
-export function EarningsTableSection() {
-  const [settlements] = useState<VendorSettlement[]>(vendorSettlements);
-  const [walletTransactions] = useState<VendorWalletTransaction[]>(vendorWalletTransactions);
-  const [settlementFilters] = useState<SettlementFilters>(INITIAL_SETTLEMENT_FILTERS);
-  const [walletFilters] = useState<WalletFilters>(INITIAL_WALLET_FILTERS);
-
+export function EarningsTableSection({
+  settlements,
+  transactions,
+  isLoading,
+}: EarningsTableSectionProps) {
   const filteredSettlements = useMemo(() => {
-    return settlements.filter((item) => {
-      const matchStatus =
-        settlementFilters.paymentStatus === "ALL" ||
-        item.paymentStatus === settlementFilters.paymentStatus;
-      return matchStatus;
-    });
-  }, [settlements, settlementFilters]);
+    return settlements;
+  }, [settlements]);
 
   const filteredWalletTransactions = useMemo(() => {
-    return walletTransactions.filter((item) => {
-      const matchType =
-        walletFilters.transactionType === "ALL" ||
-        item.transactionType === walletFilters.transactionType;
-      return matchType;
-    });
-  }, [walletTransactions, walletFilters]);
+    return transactions;
+  }, [transactions]);
 
   const settlementFiltersConfig: FacetedFilter[] = useMemo(
     () => [
@@ -96,6 +69,16 @@ export function EarningsTableSection() {
     desc: true,
   };
 
+  if (isLoading) {
+    return (
+      <div className="space-y-8">
+        <div className="flex h-[200px] items-center justify-center">
+          <div className="text-sm text-muted-foreground">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       {/* Settlements Table */}
@@ -126,9 +109,7 @@ export function EarningsTableSection() {
             Wallet Transactions
           </h3>
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-            Balance: ৳
-            {walletTransactions[walletTransactions.length - 1]?.balanceAfter?.toLocaleString() ||
-              "0"}
+            Balance: ৳{transactions[transactions.length - 1]?.balanceAfter?.toLocaleString() || "0"}
           </p>
         </div>
         <DataTable

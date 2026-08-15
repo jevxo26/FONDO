@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown, House, X } from "lucide-react";
+import { ChevronDown, House, Package, Truck, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/common/logo";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { closeMobileMenu } from "@/store/slices/uiSlice";
@@ -12,17 +13,19 @@ import { MobileAuthSection } from "./mobile-auth-section";
 
 const parentIcon: Record<string, typeof House> = {
   Home: House,
+  Packages: Package,
+  "Track Order": Truck,
 };
 
 export function MobileNav() {
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector((state) => state.ui.isMobileMenuOpen);
-  const [expanded, setExpanded] = useState<string | null>("Menu");
+  const [expanded, setExpanded] = useState<string | null>("Foods");
   const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
   if (isOpen !== prevIsOpen) {
     setPrevIsOpen(isOpen);
-    if (isOpen) setExpanded("Menu");
+    if (isOpen) setExpanded("Foods");
   }
 
   const toggleExpand = (label: string) => {
@@ -43,12 +46,7 @@ export function MobileNav() {
         )}
       >
         <div className="flex items-center justify-between border-b border-border px-4 py-4">
-          <Link href="/" className="flex items-center gap-2" onClick={closeAndClear}>
-            <div className="flex size-8 items-center justify-center rounded-lg bg-primary">
-              <House className="size-4 text-white" />
-            </div>
-            <span className="text-lg font-bold text-foreground">FONDO</span>
-          </Link>
+          <Logo size={40} textSize="text-lg" onClick={closeAndClear} />
           <Button
             variant="ghost"
             size="icon"
@@ -116,7 +114,7 @@ export function MobileNav() {
           })}
         </nav>
 
-        <div className="border-t border-border p-4 space-y-2">
+        <div className="border-t border-border p-4 space-y-2 pb-[calc(env(safe-area-inset-bottom)+6rem)]">
           <MobileAuthSection closeAndClear={closeAndClear} />
           <Link
             href="/foods"

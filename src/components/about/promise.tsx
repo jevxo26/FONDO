@@ -36,7 +36,7 @@ export default function FoodoPromise() {
   ];
 
   return (
-    <section className="py-16 bg-[#EBE5DA] text-[#16100C]">
+    <section className="py-16 bg-muted text-foreground">
       <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-10">
         <h2 className="font-heading text-2xl md:text-3xl font-normal text-center">
           The Foodo Promise
@@ -44,12 +44,12 @@ export default function FoodoPromise() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {promises.map((prom, idx) => (
             <div key={idx} className="flex gap-4 items-start">
-              <div className="text-[#CEA359] bg-[#FAF5EB] p-2.5 rounded-xl border border-[#16100C]/5 shrink-0">
+              <div className="text-foreground bg-background p-2.5 rounded-xl border border-foreground/5 shrink-0">
                 {React.cloneElement(prom.icon, { className: "size-5" })}
               </div>
               <div className="space-y-1">
-                <h4 className="font-sans text-xs font-bold text-[#16100C]">{prom.title}</h4>
-                <p className="font-sans text-[11px] text-[#16100C]/70 leading-relaxed font-light">
+                <h4 className="font-sans text-xs font-bold text-foreground">{prom.title}</h4>
+                <p className="font-sans text-[11px] text-foreground/70 leading-relaxed font-light">
                   {prom.desc}
                 </p>
               </div>

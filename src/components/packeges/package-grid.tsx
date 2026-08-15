@@ -1,18 +1,28 @@
 "use client";
 
-import React from "react";
-import { usePackages } from "./packages-context";
 import PackageCard from "./packages-card";
+import type { Package } from "@/types/package";
 
-const PackageGrid = () => {
-  const { processedPackages } = usePackages();
+interface PackageGridProps {
+  packages: Package[];
+}
+
+export default function PackageGrid({ packages }: PackageGridProps) {
+  if (!packages.length) {
+    return (
+      <div className="col-span-full py-16 text-center">
+        <h3 className="text-lg font-semibold">No packages found</h3>
+
+        <p className="mt-2 text-sm text-muted-foreground">Try changing your filters.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-      {processedPackages.map((pkg) => (
+      {packages.map((pkg) => (
         <PackageCard key={pkg.id} pkg={pkg} />
       ))}
     </div>
   );
-};
-
-export default PackageGrid;
+}

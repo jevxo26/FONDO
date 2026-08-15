@@ -8,7 +8,7 @@ export function RiderHeroSection() {
       <div className="wrapper px-[var(--space-container)] relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-7 space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary text-primary border border-border text-xs font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary text-muted-foreground border border-border text-xs font-bold uppercase tracking-wider">
               <Sparkles className="size-3.5" /> Fondo Delivery Partner Fleet
             </div>
             <h1 className="font-heading text-4xl sm:text-6xl lg:text-7xl tracking-tight text-foreground leading-[1.08]">

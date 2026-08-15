@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Bell, HelpCircle, LogOut, Settings, User } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -21,6 +22,17 @@ export function DashboardHeader() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
+  const [today, setToday] = useState("");
+
+  useEffect(() => {
+    setToday(
+      new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }),
+    );
+  }, []);
 
   const userName = user ? `${user.firstName} ${user.lastName}` : "User";
   const initials = user ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}` : "U";
@@ -33,7 +45,7 @@ export function DashboardHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-primary/15 bg-secondary/90 px-4 py-3 shadow-[var(--shadow-card)] backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] lg:px-6">
+    <header className="top-0 z-10 border-b border-primary/15 bg-secondary/90 px-4 py-3 shadow-[var(--shadow-card)] backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] lg:px-6">
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-gradient-to-r from-primary/40 via-primary/20 to-transparent" />
       <div className="relative flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -41,13 +53,7 @@ export function DashboardHeader() {
           <HeaderBreadcrumbs pathname={pathname} />
           <div className="hidden items-center gap-2 text-sm text-muted-foreground/60 md:flex">
             <div className="h-4 w-px bg-border/50" />
-            <span className="ml-2">
-              {new Date().toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </span>
+            <span className="ml-2">{today}</span>
           </div>
         </div>
 
@@ -61,7 +67,7 @@ export function DashboardHeader() {
               className="relative rounded-xl bg-primary/[0.04] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/12 hover:text-primary active:scale-[0.95]"
             >
               <Bell className="size-5" />
-              <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-primary ring-2 ring-background shadow-[0_0_8px_rgba(206,163,89,0.4)]" />
+              <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-primary ring-2 ring-background shadow-[0_0_8px_rgba(168,90,56,0.4)]" />
             </Button>
             <Button
               variant="ghost"
@@ -88,7 +94,7 @@ export function DashboardHeader() {
                     {roleLabel}
                   </p>
                 </div>
-                <Avatar className="size-9 ring-2 ring-primary/30 ring-offset-2 ring-offset-card shadow-[0_0_12px_rgba(206,163,89,0.15)]">
+                <Avatar className="size-9 ring-2 ring-primary/30 ring-offset-2 ring-offset-card shadow-[0_0_12px_rgba(168,90,56,0.15)]">
                   <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
                     {initials}
                   </AvatarFallback>

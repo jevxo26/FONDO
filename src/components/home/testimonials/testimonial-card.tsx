@@ -18,13 +18,12 @@ export function TestimonialCard({ testimonial, className }: TestimonialCardProps
   return (
     <div
       className={cn(
-        "flex w-[80vw] shrink-0 flex-col gap-5 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] hover:scale-[1.02] active:scale-[0.98] sm:w-[380px] snap-start relative",
+        "group relative flex w-[80vw] shrink-0 flex-col gap-5 rounded-3xl border border-border/40 bg-card/80 p-6 shadow-[var(--shadow-card)] backdrop-blur-sm transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] sm:w-[380px] snap-start",
         className,
       )}
     >
-      {/* Decorative quote mark */}
       <svg
-        className="pointer-events-none absolute -top-3 left-4 size-16 text-primary/10"
+        className="pointer-events-none absolute -top-2 left-5 size-14 text-primary/8"
         viewBox="0 0 100 100"
         fill="currentColor"
         aria-hidden
@@ -33,27 +32,30 @@ export function TestimonialCard({ testimonial, className }: TestimonialCardProps
         <path d="M80 50C70 50 60 40 60 30C60 20 70 10 80 10C90 10 100 20 100 30V50C100 70 80 90 60 90L55 80C70 80 80 70 80 50Z" />
       </svg>
 
-      {/* Stars */}
       <div className="relative z-10 flex gap-1">
         {Array.from({ length: 5 }).map((_, i) => (
           <Star
             key={i}
             className={cn(
-              "size-4",
-              i < testimonial.rating ? "fill-primary text-primary" : "fill-muted text-muted",
+              "size-4 transition-all duration-300",
+              i < testimonial.rating
+                ? "fill-primary text-primary"
+                : "fill-muted text-muted",
+              i === 0 && testimonial.rating >= 4 && "animate-glow",
             )}
+            style={{
+              transitionDelay: `${i * 30}ms`,
+            }}
           />
         ))}
       </div>
 
-      {/* Quote */}
-      <p className="relative z-10 flex-1 text-sm leading-relaxed text-foreground">
+      <p className="relative z-10 flex-1 text-sm leading-relaxed text-primary/85">
         &ldquo;{testimonial.text}&rdquo;
       </p>
 
-      {/* Author */}
-      <div className="flex items-center gap-3">
-        <div className="relative size-10 shrink-0 overflow-hidden rounded-full">
+      <div className="relative z-10 flex items-center gap-3">
+        <div className="relative size-10 shrink-0 overflow-hidden rounded-full ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all duration-300">
           <Image
             src={testimonial.avatar}
             alt={testimonial.name}

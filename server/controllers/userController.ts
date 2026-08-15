@@ -3,7 +3,6 @@ import { UserService } from "../services/userService";
 import { catchAsync } from "../utils/catchAsync";
 import { sendResponse } from "../utils/sendResponse";
 import { AuthRequest } from "../types/auth.types";
-import AppError from "../utils/AppError";
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const users = await UserService.getAllUsers();
@@ -25,11 +24,6 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 
 const getUserById = catchAsync(async (req: AuthRequest, res: Response) => {
   const id = req.params.id as string;
-  const userId = req.user?.userId;
-
-  if (id !== userId) {
-    throw new AppError(403, "You are not authorized to access this user information");
-  }
 
   const user = await UserService.getUserById(id);
 
@@ -76,6 +70,16 @@ const deleteMe = catchAsync(async (req: AuthRequest, res: Response) => {
   });
 });
 
+const deleteUser = catchAsync(async (req: AuthRequest, res: Response) => {
+  const id = req.params.id as string;
+  await UserService.deleteUser(id);
+
+  sendResponse(res, {
+    statusCode: 200,
+    message: "User deleted successfully",
+  });
+});
+
 export const UserController = {
   getAllUsers,
   createUser,
@@ -83,4 +87,5 @@ export const UserController = {
   updateUser,
   updateMe,
   deleteMe,
+  deleteUser,
 };

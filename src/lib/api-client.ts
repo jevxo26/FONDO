@@ -4,7 +4,6 @@ import { getToken, setToken, clearToken } from "./token";
 
 const apiClient = axios.create({
   baseURL: "/api",
-  headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });
 
@@ -87,10 +86,13 @@ interface ApiResponse<T> {
 
 async function request<T>(method: string, url: string, data?: unknown): Promise<T> {
   try {
+    const isFormData = typeof FormData !== "undefined" && data instanceof FormData;
+    const headers = isFormData ? {} : { "Content-Type": "application/json" };
     const response = await apiClient.request<ApiResponse<T>>({
       method,
       url,
       data,
+      headers,
     });
     return response.data.data;
   } catch (error: unknown) {

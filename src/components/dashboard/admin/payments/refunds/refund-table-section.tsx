@@ -3,47 +3,45 @@
 import { DataTable } from "@/components/common/table";
 import type { RowAction, FacetedFilter } from "@/components/common/table";
 import { refundColumns } from "./refund-columns";
-import type { RefundRequest } from "@/data/payments";
-import { CheckCircle, Eye, ThumbsUp, XCircle } from "lucide-react";
+import { Undo2 } from "lucide-react";
+import type { Payment } from "@/types/payment";
 
-const rowActions: RowAction<RefundRequest>[] = [
-  {
-    label: "View Details",
-    icon: <Eye className="size-4" />,
-    onClick: (row) => console.log("View Refund", row.id),
-  },
-  {
-    label: "Approve",
-    icon: <ThumbsUp className="size-4" />,
-    onClick: (row) => console.log("Approve Refund", row.id),
-  },
-  {
-    label: "Reject",
-    icon: <XCircle className="size-4" />,
-    variant: "destructive",
-    onClick: (row) => console.log("Reject Refund", row.id),
-  },
-];
+interface RefundTableSectionProps {
+  data: Payment[];
+  isLoading?: boolean;
+  onOpenRefund: (payment: Payment) => void;
+}
 
 const statusFilter: FacetedFilter = {
   columnId: "status",
   title: "Status",
-  icon: <CheckCircle className="size-4" />,
   options: [
+    { label: "Completed", value: "COMPLETED" },
     { label: "Pending", value: "PENDING" },
-    { label: "Approved", value: "APPROVED" },
-    { label: "Processed", value: "PROCESSED" },
-    { label: "Rejected", value: "REJECTED" },
+    { label: "Refunded", value: "REFUNDED" },
+    { label: "Failed", value: "FAILED" },
   ],
 };
 
-export function RefundTableSection({ data }: { data: RefundRequest[] }) {
+export function RefundTableSection({ data, isLoading, onOpenRefund }: RefundTableSectionProps) {
+  const rowActions: RowAction<Payment>[] = [
+    {
+      label: "Issue Refund",
+      icon: <Undo2 className="size-4" />,
+      variant: "destructive" as const,
+      onClick: (row) => onOpenRefund(row),
+    },
+  ];
+
   return (
     <DataTable
       columns={refundColumns}
       data={data}
+      isLoading={isLoading}
+      pageSize={10}
       rowActions={rowActions}
       filters={[statusFilter]}
+      emptyMessage="No payments found."
     />
   );
 }

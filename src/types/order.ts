@@ -115,8 +115,88 @@ export interface PlaceOrderPayload {
   deliverySchedule?: DeliverySchedule;
 }
 
+export interface OrderRefund {
+  id: string;
+  orderId: string;
+  paymentId: string | null;
+  refundAmount: number;
+  refundMethod: string | null;
+  refundStatus: string;
+  processedBy: string | null;
+  processedAt: string | null;
+  createdAt: string;
+}
+
 export interface PlaceOrderResponse {
   orderId: string;
   orderNumber: string;
   totalAmount: number;
+}
+
+// ============================================================
+// Vendor Order types (for vendor dashboard order workflow)
+// ============================================================
+
+export interface VendorOrderItem {
+  id: string;
+  foodId: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+  food: { id: string; name: string; thumbnail: string | null };
+}
+
+export interface VendorOrderDetail {
+  id: string;
+  orderNumber: string;
+  orderStatus: string;
+  paymentStatus: string;
+  deliveryStatus: string;
+  subtotal: number;
+  discount: number;
+  deliveryCharge: number;
+  vat: number;
+  totalAmount: number;
+  notes: string | null;
+  placedAt: string;
+  confirmedAt: string | null;
+  items: VendorOrderItem[];
+  customer: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+  };
+  delivery: OrderDelivery | null;
+  timeline: OrderTimeline[];
+}
+
+export interface UpdateOrderStatusPayload {
+  orderId: string;
+  status: string;
+  remarks?: string;
+}
+
+export interface AssignRiderPayload {
+  orderId: string;
+  riderId: string;
+}
+
+export interface UpdateMealStatusPayload {
+  mealId: string;
+  status: string;
+}
+
+// ============================================================
+// Admin Order Analytics types
+// ============================================================
+
+export interface AdminOrderAnalytics {
+  totalRevenue: number;
+  avgOrderValue: number;
+  completionRate: number;
+  totalOrders: number;
+  statusDistribution: Record<string, number>;
+  dailyVolume: Array<{ date: string; count: number; revenue: number }>;
 }

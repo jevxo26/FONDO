@@ -3,12 +3,15 @@ import { AuthRequest } from "../types/auth.types";
 import { catchAsync } from "../utils/catchAsync";
 import { sendResponse } from "../utils/sendResponse";
 import { FoodService } from "../services/foodService";
+import prisma from "../lib/prisma";
+import AppError from "../utils/AppError";
 
 const list = catchAsync(async (req: Request, res: Response) => {
   const result = await FoodService.listFoods({
     page: parseInt(req.query.page as string) || 1,
-    limit: parseInt(req.query.limit as string) || 20,
+    limit: req.query.limit ? parseInt(req.query.limit as string) : undefined,
     categoryId: req.query.categoryId as string,
+    subCategoryId: req.query.subCategoryId as string,
     foodType: req.query.foodType as string,
     spiceLevel: req.query.spiceLevel as string,
     dietType: req.query.dietType as string,
@@ -36,8 +39,36 @@ const getById = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, { statusCode: 200, data: food });
 });
 
-const listCategories = catchAsync(async (_req: Request, res: Response) => {
-  const categories = await FoodService.listCategories();
+const listVendorFoods = catchAsync(async (req: AuthRequest, res: Response) => {
+  // Admin may query a specific vendor's foods via ?vendorId=
+  const queryVendorId = (req.query.vendorId as string) || null;
+
+  let vendorId = queryVendorId;
+  if (!vendorId) {
+    const userId = req.user!.userId;
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { vendorId: true },
+    });
+    vendorId = user?.vendorId ?? null;
+  }
+
+  if (!vendorId) {
+    throw new AppError(403, "No vendor account linked to this user");
+  }
+
+  const result = await FoodService.listVendorFoods({ vendorId });
+
+  sendResponse(res, { statusCode: 200, data: result });
+});
+
+const listCategories = catchAsync(async (req: Request, res: Response) => {
+  const popular =
+    req.query.popular === "true" ? true : req.query.popular === "false" ? false : undefined;
+  const categories = await FoodService.listCategories({
+    limit: req.query.limit ? parseInt(req.query.limit as string) : undefined,
+    popular,
+  });
 
   sendResponse(res, { statusCode: 200, data: categories });
 });
@@ -81,10 +112,8 @@ const listFavorites = catchAsync(async (req: AuthRequest, res: Response) => {
 
 const listReviews = catchAsync(async (req: Request, res: Response) => {
   const foodId = req.params.foodId as string;
-  const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 20;
 
-  const result = await FoodService.listReviews(foodId, page, limit);
+  const result = await FoodService.listReviews(foodId);
 
   sendResponse(res, { statusCode: 200, data: result });
 });
@@ -102,6 +131,7 @@ const createReview = catchAsync(async (req: AuthRequest, res: Response) => {
 
 export const FoodController = {
   list,
+  listVendorFoods,
   getBySlug,
   getById,
   listCategories,

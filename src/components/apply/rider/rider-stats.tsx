@@ -7,7 +7,7 @@ export function RiderStatsSection() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {RIDER_STATS.map((stat, idx) => (
             <div key={idx} className="space-y-1">
-              <div className="font-heading text-2xl sm:text-4xl font-bold text-primary">
+              <div className="font-heading text-2xl sm:text-4xl font-bold text-foreground">
                 {stat.value}
               </div>
               <div className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">

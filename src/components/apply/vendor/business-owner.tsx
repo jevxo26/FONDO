@@ -19,7 +19,7 @@ export function BusinessOwnerInfo({ register, errors }: Props) {
             01
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
-            <Building2 className="size-5 text-primary" /> Business Information
+            <Building2 className="size-5 text-foreground" /> Business Information
           </h3>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -94,7 +94,7 @@ export function BusinessOwnerInfo({ register, errors }: Props) {
             02
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
-            <User className="size-5 text-primary" /> Owner Information
+            <User className="size-5 text-foreground" /> Owner Information
           </h3>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -122,6 +122,14 @@ export function BusinessOwnerInfo({ register, errors }: Props) {
               className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </FormField>
+          <FormField label="Password" error={errors.password} required>
+            <input
+              {...register("password")}
+              type="password"
+              placeholder="At least 8 characters"
+              className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </FormField>
           <FormField label="National ID (NID)" error={errors.nid} required>
             <input
               {...register("nid")}
@@ -130,7 +138,7 @@ export function BusinessOwnerInfo({ register, errors }: Props) {
               className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </FormField>
-          <FormField label="Date of Birth" error={errors.dob} required className="sm:col-span-2">
+          <FormField label="Date of Birth" error={errors.dob} required>
             <input
               {...register("dob")}
               type="date"

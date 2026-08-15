@@ -33,10 +33,23 @@ const assertCanViewVendor = async (req: AuthRequest, vendorCode: string) => {
 // Core System Controls
 const createVendor = catchAsync(
   async (req: AuthRequest, res: Response) => {
-    console.log("Creating vendor with data:", req.body);
     const result = await VendorService.createVendor(
       req.body,
       req.user,
+    );
+
+    sendResponse(res, {
+      statusCode: 201,
+      message: "Vendor created",
+      data: result,
+    });
+  },
+);
+
+const registerVendor = catchAsync(
+  async (req: AuthRequest, res: Response) => {
+    const result = await VendorService.registerVendor(
+      req.body
     );
 
     sendResponse(res, {
@@ -212,6 +225,7 @@ const getMyVendor = catchAsync(async (req: AuthRequest, res: Response) => {
 
 export const VendorController = {
   createVendor,
+  registerVendor,
   getAllVendors,
   getVendorByVendorCode,
   updateVendor,

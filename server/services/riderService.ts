@@ -51,6 +51,7 @@ const createRider = catchServiceAsync(
             backgroundCheckAccepted,
         } = payload;
 
+        // Check if user already exists
         const existingUser = await prisma.user.findFirst({
             where: {
                 OR: [{ email }, { phone }],
@@ -61,6 +62,7 @@ const createRider = catchServiceAsync(
             throw new AppError(400, "Email or phone number is already in use");
         }
 
+        // Check if NID already exists
         const existingRider = await prisma.rider.findFirst({
             where: { nidNumber },
         });
@@ -69,6 +71,7 @@ const createRider = catchServiceAsync(
             throw new AppError(400, "NID number is already registered under another application");
         }
 
+        // 🔴 Password Hashing outside transaction for speed optimization
         const hashedPassword = await encryptPassword(password);
         const uniqueRiderCode = `RIDER-${String(Date.now()).slice(-7)}`;
 
@@ -77,100 +80,110 @@ const createRider = catchServiceAsync(
                 ? RiderStatus.APPROVED
                 : RiderStatus.PENDING;
 
-        return await prisma.$transaction(async (tx) => {
-            const newUser = await tx.user.create({
-                data: {
-                    firstName,
-                    lastName,
-                    email,
-                    phone,
-                    password: hashedPassword,
-                    avatar: avatar || null,
-                    role: Role.RIDER,
-                },
-            });
+        // Prepare documents array
+        const documentsToCreate: Prisma.RiderDocumentCreateWithoutRiderInput[] = [];
+        if (nidFront) documentsToCreate.push({ documentType: "NID_FRONT", fileUrl: nidFront });
+        if (nidBack) documentsToCreate.push({ documentType: "NID_BACK", fileUrl: nidBack });
+        if (licenseFront) documentsToCreate.push({ documentType: "LICENSE_FRONT", fileUrl: licenseFront });
+        if (licenseBack) documentsToCreate.push({ documentType: "LICENSE_BACK", fileUrl: licenseBack });
 
-            const documentsToCreate: Prisma.RiderDocumentCreateWithoutRiderInput[] = [];
-            if (nidFront) documentsToCreate.push({ documentType: "NID_FRONT", fileUrl: nidFront });
-            if (nidBack) documentsToCreate.push({ documentType: "NID_BACK", fileUrl: nidBack });
-            if (licenseFront) documentsToCreate.push({ documentType: "LICENSE_FRONT", fileUrl: licenseFront });
-            if (licenseBack) documentsToCreate.push({ documentType: "LICENSE_BACK", fileUrl: licenseBack });
+        // Execute Transaction with Increased Timeout for Neon DB
+        return await prisma.$transaction(
+            async (tx) => {
+                // 1. Create User
+                const newUser = await tx.user.create({
+                    data: {
+                        firstName,
+                        lastName,
+                        email,
+                        phone,
+                        password: hashedPassword,
+                        avatar: avatar || null,
+                        role: Role.RIDER,
+                    },
+                });
 
-            const newRider = await tx.rider.create({
-                data: {
-                    riderCode: uniqueRiderCode,
-                    firstName,
-                    lastName,
-                    email,
-                    phone,
-                    avatar: avatar || null,
-                    nidNumber,
-                    dob: new Date(dob),
-                    status,
+                // 2. Create Rider connected directly to the User
+                const newRider = await tx.rider.create({
+                    data: {
+                        riderCode: uniqueRiderCode,
+                        firstName,
+                        lastName,
+                        email,
+                        phone,
+                        avatar: avatar || null,
+                        nidNumber,
+                        dob: new Date(dob),
+                        status,
 
-                    division,
-                    district,
-                    upazilaOrThana,
+                        division,
+                        district,
+                        upazilaOrThana,
 
-                    emergencyName,
-                    emergencyPhone,
-                    emergencyRelation,
+                        emergencyName,
+                        emergencyPhone,
+                        emergencyRelation,
 
-                    workZoneDivision,
-                    workZoneDistrict,
-                    workZone,
+                        workZoneDivision,
+                        workZoneDistrict,
+                        workZone,
 
-                    termsAccepted,
-                    safetyCodeAccepted,
-                    backgroundCheckAccepted,
+                        termsAccepted,
+                        safetyCodeAccepted,
+                        backgroundCheckAccepted,
 
-                    vehicle: {
-                        create: {
-                            vehicleType,
-                            drivingLicenseNo: drivingLicenseNo || null,
-                            vehicleRegNumber: vehicleRegNumber || null,
+                        // Connect 1-to-1 User relation
+                        user: {
+                            connect: { id: newUser.id },
+                        },
+
+                        vehicle: {
+                            create: {
+                                vehicleType,
+                                drivingLicenseNo: drivingLicenseNo || null,
+                                vehicleRegNumber: vehicleRegNumber || null,
+                            },
+                        },
+                        payout: {
+                            create: {
+                                payoutMethod,
+                                mobileWalletNumber: mobileWalletNumber || null,
+                                bankName: bankName || null,
+                                bankAccountNumber: bankAccountNumber || null,
+                            },
+                        },
+                        settings: {
+                            create: {},
+                        },
+                        wallet: {
+                            create: {},
+                        },
+                        documents: {
+                            create: documentsToCreate,
                         },
                     },
-                    payout: {
-                        create: {
-                            payoutMethod,
-                            mobileWalletNumber: mobileWalletNumber || null,
-                            bankName: bankName || null,
-                            bankAccountNumber: bankAccountNumber || null,
-                        },
+                    include: {
+                        vehicle: true,
+                        payout: true,
+                        documents: true,
                     },
-                    settings: {
-                        create: {},
-                    },
-                    wallet: {
-                        create: {},
-                    },
-                    documents: {
-                        create: documentsToCreate,
-                    },
-                },
-                include: {
-                    vehicle: true,
-                    payout: true,
-                    documents: true,
-                },
-            });
+                });
 
-            await tx.user.update({
-                where: { id: newUser.id },
-                data: { riderId: newRider.id },
-            });
-
-            return {
-                user: {
-                    id: newUser.id,
-                    email: newUser.email,
-                    role: newUser.role,
-                },
-                rider: newRider,
-            };
-        });
-    },
+                return {
+                    user: {
+                        id: newUser.id,
+                        email: newUser.email,
+                        role: newUser.role,
+                    },
+                    rider: newRider,
+                };
+            },
+            {
+                maxWait: 5000, // wait up to 5s for DB connection
+                timeout: 15000, // 15s timeout to prevent transaction expiry on Neon DB
+            }
+        );
+    }
 );
 
 const getAllRiders = catchServiceAsync(async (whereFilters: Prisma.RiderWhereInput) => {
@@ -205,7 +218,7 @@ const updateRider = catchServiceAsync(
             where: { riderCode },
             data: updateData,
         });
-    },
+    }
 );
 
 const softDeleteRider = catchServiceAsync(async (riderCode: string) => {
@@ -225,7 +238,7 @@ const addDocument = catchServiceAsync(
                 rider: { connect: { id: riderId } },
             },
         });
-    },
+    }
 );
 
 const updateDocumentStatus = catchServiceAsync(
@@ -234,7 +247,7 @@ const updateDocumentStatus = catchServiceAsync(
             where: { id },
             data: { verificationStatus, verifiedBy, verifiedAt: new Date() },
         });
-    },
+    }
 );
 
 const getWallet = catchServiceAsync(async (riderCode: string) => {
@@ -260,7 +273,7 @@ const updateSettings = catchServiceAsync(
             where: { riderId },
             data: payload,
         });
-    },
+    }
 );
 
 const toggleOnlineStatus = catchServiceAsync(
@@ -270,7 +283,7 @@ const toggleOnlineStatus = catchServiceAsync(
             data: { isOnline },
             select: { riderCode: true, isOnline: true, isActive: true },
         });
-    },
+    }
 );
 
 export const RiderService = {

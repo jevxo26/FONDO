@@ -12,6 +12,7 @@ import { env } from "./config/env";
 import AppError from "./utils/AppError";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
+import riderRoutes from "./routes/riderRoutes";
 import vendorRoutes from "./routes/vendorRoutes";
 import vendorFoodRoutes from "./routes/vendorFoodRoutes";
 import foodRoutes from "./routes/foodRoutes";
@@ -133,6 +134,7 @@ app
     server.use("/api/users", userRoutes);
     server.use("/api/vendor/foods", vendorFoodRoutes);
     server.use("/api/vendor", vendorRoutes);
+    server.use("/api/rider", riderRoutes);
     server.use("/api/auth", authRoutes);
     server.use("/api/foods", foodRoutes);
     server.use("/api/package", packageRoutes);

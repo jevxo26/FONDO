@@ -73,6 +73,7 @@ model User {
   tokens                      UserToken[]
   vendor                      Vendor?              @relation(fields: [vendorId], references: [id])
   packageReviews              PackageReview[]
+  riders                      Rider[]
 
   @@index([role])
   @@index([status])
@@ -1955,100 +1956,194 @@ model PlatformRevenue {
   @@map("platform_revenues")
 }
 
-model Rider {
-  id                String              @id @default(uuid())
-  vendorId          String?
-  branchId          String?
-  userId            String?
-  riderCode         String              @unique
-  fullName          String
-  phone             String
-  email             String?
-  profileImage      String?
-  dateOfBirth       DateTime?
-  gender            String?
-  nidNumber         String?
-  licenseNumber     String?
-  licenseExpiryDate DateTime?
-  joiningDate       DateTime?
-  employmentType    String?
-  status            String              @default("active")
-  isOnline          Boolean             @default(false)
-  isAvailable       Boolean             @default(true)
-  lastActiveAt      DateTime?
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  deletedAt         DateTime?
-  deliveries        Delivery[]
-  attendances       RiderAttendance[]
-  availabilities    RiderAvailability[]
-  documents         RiderDocument[]
-  locations         RiderLocation[]
-  performance       RiderPerformance?
-  profile           RiderProfile?
-  ratings           RiderRating[]
-  shifts            RiderShift[]
-  vehicle           RiderVehicle?
-  wallet            RiderWallet?
-  vendor            Vendor?             @relation(fields: [vendorId], references: [id])
-  trackingSessions  TrackingSession[]
+enum RiderStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
 
-  @@index([vendorId])
-  @@index([status])
-  @@index([isOnline])
+enum VehicleType {
+  BICYCLE
+  BIKE
+  SCOOTER
+  CAR
+  VAN
+}
+
+enum PayoutMethod {
+  BKASH
+  NAGAD
+  ROCKET
+  BANK
+}
+
+model Rider {
+  id        String      @id @default(uuid())
+  riderCode String      @unique
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  avatar    String?
+  nidNumber String      @unique
+  dob       DateTime
+  status    RiderStatus @default(PENDING)
+  isActive  Boolean     @default(true)
+  isOnline  Boolean     @default(false)
+
+  // Present Address
+  division       String
+  district       String
+  upazilaOrThana String
+
+  // Emergency Contact
+  emergencyName     String
+  emergencyPhone    String
+  emergencyRelation String
+
+  // Work Zone
+  workZoneDivision String
+  workZoneDistrict String
+  workZone         String
+
+  // Consents & Agreements
+  termsAccepted           Boolean @default(false)
+  safetyCodeAccepted      Boolean @default(false)
+  backgroundCheckAccepted Boolean @default(false)
+
+  // Foreign Keys / Relations
+  vendorId String?
+  vendor   Vendor? @relation(fields: [vendorId], references: [id])
+  user     User?   @relation(fields: [userId], references: [id])
+
+  vehicle         RiderVehicle?
+  payout          RiderPayout?
+  settings        RiderSettings?
+  wallet          RiderWallet?
+  documents       RiderDocument[]
+  payoutHistories RiderPayoutHistory[]
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  deletedAt           DateTime?
+  userId              String?
+  riderAvailabilities RiderAvailability[]
+  riderShifts         RiderShift[]
+  riderAttendances    RiderAttendance[]
+  riderLocations      RiderLocation[]
+  riderPerformance    RiderPerformance?
+  riderRatings        RiderRating[]
+  deliveries          Delivery[]
+  trackingSessions    TrackingSession[]
+
   @@map("riders")
 }
 
-model RiderProfile {
-  id                    String   @id @default(uuid())
-  riderId               String   @unique
-  emergencyContactName  String?
-  emergencyContactPhone String?
-  bloodGroup            String?
-  address               String?
-  city                  String?
-  postalCode            String?
-  profileCompletion     Float?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  rider                 Rider    @relation(fields: [riderId], references: [id])
+model RiderVehicle {
+  id               String      @id @default(uuid())
+  riderId          String      @unique
+  vehicleType      VehicleType
+  drivingLicenseNo String?
+  vehicleRegNumber String?
 
-  @@map("rider_profiles")
+  rider Rider @relation(fields: [riderId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("rider_vehicles")
+}
+
+model RiderPayout {
+  id                 String       @id @default(uuid())
+  riderId            String       @unique
+  payoutMethod       PayoutMethod
+  mobileWalletNumber String?
+  bankName           String?
+  bankAccountNumber  String?
+
+  rider Rider @relation(fields: [riderId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("rider_payouts")
 }
 
 model RiderDocument {
-  id                 String    @id @default(uuid())
+  id                 String             @id @default(uuid())
   riderId            String
-  documentType       String
-  documentNumber     String?
-  documentUrl        String
-  verificationStatus String    @default("pending")
+  documentType       String // e.g. "NID_FRONT", "LICENSE_BACK"
+  fileUrl            String
+  verificationStatus VerificationStatus @default(UNVERIFIED)
   verifiedBy         String?
   verifiedAt         DateTime?
-  expiryDate         DateTime?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  rider              Rider     @relation(fields: [riderId], references: [id])
+
+  rider Rider @relation(fields: [riderId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("rider_documents")
 }
 
-model RiderVehicle {
-  id                  String    @id @default(uuid())
-  riderId             String    @unique
-  vehicleType         String
-  brand               String?
-  model               String?
-  registrationNumber  String
-  color               String?
-  insuranceNumber     String?
-  insuranceExpiryDate DateTime?
-  status              String    @default("active")
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-  rider               Rider     @relation(fields: [riderId], references: [id])
+model RiderSettings {
+  id                String  @id @default(uuid())
+  riderId           String  @unique
+  autoAcceptOrders  Boolean @default(false)
+  pushNotifications Boolean @default(true)
+  locationTracking  Boolean @default(true)
 
-  @@map("rider_vehicles")
+  rider Rider @relation(fields: [riderId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("rider_settings")
+}
+
+model RiderWallet {
+  id             String @id @default(uuid())
+  riderId        String @unique
+  currentBalance Float  @default(0.0)
+  pendingBalance Float  @default(0.0)
+
+  rider        Rider                    @relation(fields: [riderId], references: [id], onDelete: Cascade)
+  transactions RiderWalletTransaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("rider_wallets")
+}
+
+model RiderWalletTransaction {
+  id          String  @id @default(uuid())
+  walletId    String
+  amount      Float
+  type        String // e.g. "CREDIT", "DEBIT"
+  description String?
+
+  wallet RiderWallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@map("rider_wallet_transactions")
+}
+
+model RiderPayoutHistory {
+  id            String  @id @default(uuid())
+  riderId       String
+  amount        Float
+  status        String // e.g. "COMPLETED", "PROCESSING", "FAILED"
+  transactionId String?
+
+  rider Rider @relation(fields: [riderId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@map("rider_payout_histories")
 }
 
 model RiderAvailability {
@@ -2137,38 +2232,6 @@ model RiderRating {
   rider      Rider    @relation(fields: [riderId], references: [id])
 
   @@map("rider_ratings")
-}
-
-model RiderWallet {
-  id           String                   @id @default(uuid())
-  riderId      String                   @unique
-  balance      Decimal                  @default(0) @db.Decimal(10, 2)
-  holdBalance  Decimal                  @default(0) @db.Decimal(10, 2)
-  currency     String                   @default("BDT")
-  status       String                   @default("active")
-  createdAt    DateTime                 @default(now())
-  updatedAt    DateTime                 @updatedAt
-  transactions RiderWalletTransaction[]
-  rider        Rider                    @relation(fields: [riderId], references: [id])
-
-  @@map("rider_wallets")
-}
-
-model RiderWalletTransaction {
-  id              String      @id @default(uuid())
-  walletId        String
-  transactionType String
-  amount          Decimal     @db.Decimal(10, 2)
-  balanceBefore   Decimal?    @db.Decimal(10, 2)
-  balanceAfter    Decimal?    @db.Decimal(10, 2)
-  referenceType   String?
-  referenceId     String?
-  remarks         String?
-  createdAt       DateTime    @default(now())
-  wallet          RiderWallet @relation(fields: [walletId], references: [id])
-
-  @@index([walletId])
-  @@map("rider_wallet_transactions")
 }
 
 model Delivery {

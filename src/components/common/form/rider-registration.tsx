@@ -6,14 +6,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { RiderFormData, riderFormSchema } from "@/lib/schema/rider-schema";
 import { PersonalInfo } from "@/components/apply/rider/personal-info";
 import { ZoneVehicleInfo } from "@/components/apply/rider/zone-vehicle-info";
-import { PayoutDocInfo } from "@/components/apply/rider/payout-info";
 import { RiderTermsSubmit } from "@/components/apply/rider/rider-term";
+import { DocumentUploadInfo } from "@/components/apply/rider/document-upload";
+import { PayoutInfo } from "@/components/apply/rider/payout-info";
 
 export function RiderRegistrationForm() {
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<RiderFormData>({
     resolver: yupResolver(riderFormSchema),
@@ -25,6 +27,9 @@ export function RiderRegistrationForm() {
       password: "",
       nidNumber: "",
       dob: "",
+      division: "",
+      district: "",
+      upazilaOrThana: "",
       emergencyName: "",
       emergencyPhone: "",
       emergencyRelation: "",
@@ -42,7 +47,6 @@ export function RiderRegistrationForm() {
     },
   });
 
-  // eslint-disable-next-line react-hooks/incompatible-library
   const selectedVehicle = watch("vehicleType");
 
   const onSubmit = (data: RiderFormData) => {
@@ -72,13 +76,21 @@ export function RiderRegistrationForm() {
             onSubmit={handleSubmit(onSubmit)}
             className="bg-card border border-border rounded-4xl p-6 sm:p-10 shadow-[var(--shadow-elevated)] space-y-12"
           >
-            <PersonalInfo register={register} errors={errors} />
+            <PersonalInfo
+              register={register}
+              errors={errors}
+              setValue={setValue}
+              watch={watch}
+            />
             <ZoneVehicleInfo
               register={register}
               errors={errors}
               selectedVehicle={selectedVehicle}
+              setValue={setValue}
+              watch={watch}
             />
-            <PayoutDocInfo register={register} errors={errors} />
+            <PayoutInfo register={register} errors={errors} />
+            <DocumentUploadInfo register={register} errors={errors} setValue={setValue} watch={watch} />
             <RiderTermsSubmit register={register} errors={errors} isSubmitting={isSubmitting} />
           </form>
         </div>

@@ -1,18 +1,63 @@
-import React from "react";
-import { UseFormRegister, FieldErrors } from "react-hook-form";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { UseFormRegister, FieldErrors, UseFormSetValue, UseFormWatch } from "react-hook-form";
 import { MapPin } from "lucide-react";
 import { RiderFormData } from "@/lib/schema/rider-schema";
 import { FormField } from "@/components/common/form-field";
-import { WORK_ZONES } from "./riderdata";
+import {
+  getAllDivisions,
+  getDistrictsByDivision,
+  getSubLocationsByDistrict,
+} from "@/data/bangladesh-data";
 
 interface Props {
   register: UseFormRegister<RiderFormData>;
   errors: FieldErrors<RiderFormData>;
   selectedVehicle: string;
+  setValue: UseFormSetValue<RiderFormData>;
+  watch: UseFormWatch<RiderFormData>;
 }
 
-export function ZoneVehicleInfo({ register, errors, selectedVehicle }: Props) {
+export function ZoneVehicleInfo({
+  register,
+  errors,
+  selectedVehicle,
+  setValue,
+  watch,
+}: Props) {
   const isMotorized = selectedVehicle === "motorbike" || selectedVehicle === "scooter";
+
+  const workZoneDivision = watch("workZoneDivision" as keyof RiderFormData) as string;
+  const workZoneDistrict = watch("workZoneDistrict" as keyof RiderFormData) as string;
+
+  const [availableDistricts, setAvailableDistricts] = useState<string[]>([]);
+  const [availableSubLocations, setAvailableSubLocations] = useState<{
+    upazilas: string[];
+    thanas: string[];
+  }>({ upazilas: [], thanas: [] });
+
+  const divisions = getAllDivisions();
+
+  // Update Work Zone Districts when Work Zone Division changes
+  useEffect(() => {
+    if (workZoneDivision) {
+      const dists = getDistrictsByDivision(workZoneDivision);
+      setAvailableDistricts(dists);
+    } else {
+      setAvailableDistricts([]);
+    }
+  }, [workZoneDivision]);
+
+  // Update Work Zone Upazilas/Thanas when Work Zone District changes
+  useEffect(() => {
+    if (workZoneDistrict) {
+      const sub = getSubLocationsByDistrict(workZoneDistrict);
+      setAvailableSubLocations(sub);
+    } else {
+      setAvailableSubLocations({ upazilas: [], thanas: [] });
+    }
+  }, [workZoneDistrict]);
 
   return (
     <div className="space-y-12">
@@ -20,27 +65,95 @@ export function ZoneVehicleInfo({ register, errors, selectedVehicle }: Props) {
       <div className="space-y-6">
         <div className="flex items-center gap-3 border-b border-border pb-3">
           <span className="size-8 rounded-full bg-primary text-primary-foreground font-bold text-xs flex items-center justify-center">
-            03
+            04
           </span>
           <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
             <MapPin className="size-5 text-foreground" /> Work Zone & Vehicle
           </h3>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <FormField label="Preferred Work Zone" error={errors.workZone} required>
+
+        {/* Dynamic Work Zone Selector (Division -> District -> Upazila/Thana) */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* Work Zone Division */}
+          <FormField
+            label="Work Zone Division"
+            error={errors["workZoneDivision" as keyof RiderFormData]}
+            required
+          >
             <select
-              {...register("workZone")}
+              {...register("workZoneDivision" as keyof RiderFormData)}
+              onChange={(e) => {
+                setValue("workZoneDivision" as keyof RiderFormData, e.target.value);
+                setValue("workZoneDistrict" as keyof RiderFormData, "");
+                setValue("workZone" as keyof RiderFormData, "");
+              }}
               className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             >
-              <option value="">Select Delivery Zone</option>
-              {WORK_ZONES.map((zone) => (
-                <option key={zone} value={zone}>
-                  {zone}
+              <option value="">Select Division</option>
+              {divisions.map((div) => (
+                <option key={div} value={div}>
+                  {div}
                 </option>
               ))}
             </select>
           </FormField>
 
+          {/* Work Zone District */}
+          <FormField
+            label="Work Zone District"
+            error={errors["workZoneDistrict" as keyof RiderFormData]}
+            required
+          >
+            <select
+              {...register("workZoneDistrict" as keyof RiderFormData)}
+              disabled={!workZoneDivision}
+              onChange={(e) => {
+                setValue("workZoneDistrict" as keyof RiderFormData, e.target.value);
+                setValue("workZone" as keyof RiderFormData, "");
+              }}
+              className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+            >
+              <option value="">Select District</option>
+              {availableDistricts.map((dist) => (
+                <option key={dist} value={dist}>
+                  {dist}
+                </option>
+              ))}
+            </select>
+          </FormField>
+
+          {/* Work Zone Area / Upazila / Thana */}
+          <FormField label="Preferred Work Area" error={errors.workZone} required>
+            <select
+              {...register("workZone")}
+              disabled={!workZoneDistrict}
+              className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+            >
+              <option value="">Select Area / Thana</option>
+              {availableSubLocations.thanas.length > 0 && (
+                <optgroup label="Metropolitan Thanas">
+                  {availableSubLocations.thanas.map((thana) => (
+                    <option key={thana} value={thana}>
+                      {thana} (Thana)
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+              {availableSubLocations.upazilas.length > 0 && (
+                <optgroup label="Upazilas">
+                  {availableSubLocations.upazilas.map((upazila) => (
+                    <option key={upazila} value={upazila}>
+                      {upazila}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+            </select>
+          </FormField>
+        </div>
+
+        {/* Vehicle Selection & Info */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
           <FormField label="Vehicle Type" error={errors.vehicleType} required>
             <select
               {...register("vehicleType")}
@@ -75,7 +188,7 @@ export function ZoneVehicleInfo({ register, errors, selectedVehicle }: Props) {
                 <input
                   {...register("vehicleRegNumber")}
                   type="text"
-                  placeholder="Dhaka Metro-HA-XX-XXXX"
+                  placeholder="Dhaka/Chatto Metro-HA-XX-XXXX"
                   className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </FormField>

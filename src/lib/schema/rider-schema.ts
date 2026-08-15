@@ -1,6 +1,7 @@
 import * as yup from "yup";
 
 export const riderFormSchema = yup.object({
+  // --- Personal Info ---
   firstName: yup
     .string()
     .trim()
@@ -26,6 +27,12 @@ export const riderFormSchema = yup.object({
     .required("NID is required"),
   dob: yup.string().required("Date of birth is required"),
 
+  // --- Present Address ---
+  division: yup.string().required("Division is required"),
+  district: yup.string().required("District is required"),
+  upazilaOrThana: yup.string().required("Upazila or Thana is required"),
+
+  // --- Emergency Contact ---
   emergencyName: yup.string().required("Emergency contact name required"),
   emergencyPhone: yup
     .string()
@@ -33,8 +40,12 @@ export const riderFormSchema = yup.object({
     .required("Emergency phone required"),
   emergencyRelation: yup.string().required("Select relationship"),
 
-  workZone: yup.string().required("Preferred work zone is required"),
+  // --- Work Zone & Vehicle ---
+  workZoneDivision: yup.string().required("Work zone division is required"),
+  workZoneDistrict: yup.string().required("Work zone district is required"),
+  workZone: yup.string().required("Preferred work area is required"),
   vehicleType: yup.string().required("Select vehicle type"),
+
   drivingLicenseNo: yup.string().when("vehicleType", {
     is: (val: string) => val === "motorbike" || val === "scooter",
     then: (schema) => schema.required("Driving license is required for motor vehicles"),
@@ -46,6 +57,7 @@ export const riderFormSchema = yup.object({
     otherwise: (schema) => schema.optional(),
   }),
 
+  // --- Payout Info ---
   payoutMethod: yup.string().required("Select payout method"),
   mobileWalletNumber: yup
     .string()
@@ -54,6 +66,21 @@ export const riderFormSchema = yup.object({
   bankName: yup.string().optional(),
   bankAccountNumber: yup.string().optional(),
 
+  // --- Document Uploads ---
+  nidFront: yup.mixed().required("NID Front side image is required"),
+  nidBack: yup.mixed().required("NID Back side image is required"),
+  licenseFront: yup.string().when("vehicleType", {
+    is: (val: string) => val === "motorbike" || val === "scooter",
+    then: (schema) => schema.required("License front side image is required"),
+    otherwise: (schema) => schema.optional(),
+  }),
+  licenseBack: yup.string().when("vehicleType", {
+    is: (val: string) => val === "motorbike" || val === "scooter",
+    then: (schema) => schema.required("License back side image is required"),
+    otherwise: (schema) => schema.optional(),
+  }),
+
+  // --- Agreements ---
   termsAccepted: yup.boolean().oneOf([true], "Must agree to Terms").required(),
   safetyCodeAccepted: yup.boolean().oneOf([true], "Must agree to Safety Code").required(),
   backgroundCheckAccepted: yup

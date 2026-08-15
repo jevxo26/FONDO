@@ -122,6 +122,107 @@ const createVendor = catchServiceAsync(
   },
 );
 
+const registerVendor = catchServiceAsync(
+  async (
+    payload: {
+      firstName: string;
+      lastName: string;
+      password: string;
+      email: string;
+      phone: string;
+      businessName: string;
+      ownerName?: string;
+      tradeLicenseNumber?: string;
+      tinNumber?: string;
+      binNumber?: string;
+    }
+  ) => {
+    const {
+      firstName,
+      lastName,
+      password,
+      email,
+      phone,
+      businessName,
+      ownerName,
+      tradeLicenseNumber,
+      tinNumber,
+      binNumber,
+    } = payload;
+
+    const checks: Prisma.VendorWhereInput[] = [
+      { phone },
+      { email },
+      { tradeLicenseNumber },
+      { tinNumber },
+      { binNumber },
+    ].filter((c) => Object.values(c)[0]);
+
+    if (checks.length > 0) {
+      const duplicate = await prisma.vendor.findFirst({
+        where: { OR: checks },
+      });
+
+      if (duplicate) {
+        throw new AppError(400, "Some data is already in use");
+      }
+    }
+
+    const hashedPassword = await encryptPassword(password);
+    const uniqueVendorCode = `VEND-${String(Date.now()).slice(-7)}`;
+
+    const status = VendorStatus.PENDING;
+
+    return await prisma.$transaction(async (tx) => {
+      const newUser = await tx.user.create({
+        data: {
+          firstName,
+          lastName,
+          email,
+          phone,
+          password: hashedPassword,
+          role: Role.VENDOR,
+        },
+      });
+
+      const vendorData: Record<string, unknown> = {
+        businessName,
+        email,
+        phone,
+        vendorCode: uniqueVendorCode,
+        status,
+        settings: { create: {} },
+        wallet: { create: {} },
+      };
+
+      if (ownerName) vendorData.ownerName = ownerName;
+      if (tradeLicenseNumber) {
+        vendorData.tradeLicenseNumber = tradeLicenseNumber;
+      }
+      if (tinNumber) vendorData.tinNumber = tinNumber;
+      if (binNumber) vendorData.binNumber = binNumber;
+
+      const newVendor = await tx.vendor.create({
+        data: vendorData as Prisma.VendorCreateInput,
+      });
+
+      await tx.user.update({
+        where: { id: newUser.id },
+        data: { vendorId: newVendor.id },
+      });
+
+      return {
+        user: {
+          id: newUser.id,
+          email: newUser.email,
+          role: newUser.role,
+        },
+        vendor: newVendor,
+      };
+    });
+  },
+);
+
 const getAllVendors = catchServiceAsync(async (whereFilters: Prisma.VendorWhereInput) => {
   return prisma.vendor.findMany({
     where: { ...whereFilters, deletedAt: null },
@@ -282,6 +383,7 @@ const configureOperatingHours = catchServiceAsync(
 
 export const VendorService = {
   createVendor,
+  registerVendor,
   getAllVendors,
   getVendorByVendorCode,
   updateVendor,

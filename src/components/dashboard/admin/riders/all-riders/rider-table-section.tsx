@@ -3,25 +3,25 @@
 import { DataTable } from "@/components/common/table";
 import type { RowAction, FacetedFilter } from "@/components/common/table";
 import { riderColumns } from "./rider-columns";
-import type { Rider } from "@/data/riders";
 import { CheckCircle, Eye, MapPin, UserX } from "lucide-react";
+import { Rider } from "@/store/api/slices/rider-api";
 
 const rowActions: RowAction<Rider>[] = [
   {
     label: "View Profile",
     icon: <Eye className="size-4" />,
-    onClick: (row) => console.log("View Profile", row.id),
+    onClick: (row) => console.log("View Profile", row.riderCode),
   },
   {
     label: "Track Live",
     icon: <MapPin className="size-4" />,
-    onClick: (row) => console.log("Track Rider", row.id),
+    onClick: (row) => console.log("Track Rider", row.riderCode),
   },
   {
     label: "Deactivate",
     icon: <UserX className="size-4" />,
     variant: "destructive",
-    onClick: (row) => console.log("Deactivate Rider", row.id),
+    onClick: (row) => console.log("Deactivate Rider", row.riderCode),
   },
 ];
 
@@ -30,26 +30,23 @@ const statusFilter: FacetedFilter = {
   title: "Status",
   icon: <CheckCircle className="size-4" />,
   options: [
-    { label: "Active", value: "ACTIVE" },
-    { label: "Busy", value: "BUSY" },
-    { label: "Offline", value: "OFFLINE" },
-    { label: "On Leave", value: "ON_LEAVE" },
+    { label: "Pending", value: "PENDING" },
+    { label: "Approved", value: "APPROVED" },
+    { label: "Rejected", value: "REJECTED" },
+    { label: "Suspended", value: "SUSPENDED" },
   ],
 };
 
-const zoneFilter: FacetedFilter = {
-  columnId: "zone",
-  title: "Zone",
+const vehicleFilter: FacetedFilter = {
+  columnId: "vehicleType",
+  title: "Vehicle",
   icon: <MapPin className="size-4" />,
   options: [
-    { label: "Gulshan", value: "Gulshan" },
-    { label: "Banani", value: "Banani" },
-    { label: "Uttara", value: "Uttara" },
-    { label: "Mirpur", value: "Mirpur" },
-    { label: "Dhanmondi", value: "Dhanmondi" },
-    { label: "Mohammadpur", value: "Mohammadpur" },
-    { label: "Motijheel", value: "Motijheel" },
-    { label: "Bashundhara", value: "Bashundhara" },
+    { label: "Bike", value: "BIKE" },
+    { label: "Scooter", value: "SCOOTER" },
+    { label: "Bicycle", value: "BICYCLE" },
+    { label: "Car", value: "CAR" },
+    { label: "Van", value: "VAN" },
   ],
 };
 
@@ -59,7 +56,7 @@ export function RiderTableSection({ data }: { data: Rider[] }) {
       columns={riderColumns}
       data={data}
       rowActions={rowActions}
-      filters={[statusFilter, zoneFilter]}
+      filters={[statusFilter, vehicleFilter]}
     />
   );
 }

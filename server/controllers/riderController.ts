@@ -14,17 +14,14 @@ const assertCanViewRider = async (req: AuthRequest, riderCode: string) => {
         return;
     }
 
-    const user = await prisma.user.findUnique({
-        where: { id: req.user!.userId },
-        select: { riderId: true, role: true },
+    // Fixed: Foreign key is stored on Rider table (userId), not User table (riderId)
+    const rider = await prisma.rider.findFirst({
+        where: { userId: req.user!.userId, deletedAt: null },
+        select: { riderCode: true },
     });
 
-    if (user?.role === "RIDER" && user.riderId) {
-        const rider = await prisma.rider.findUnique({
-            where: { id: user.riderId },
-            select: { riderCode: true },
-        });
-        if (rider?.riderCode === riderCode) return;
+    if (rider && rider.riderCode === riderCode) {
+        return;
     }
 
     throw new AppError(403, "Access denied to this rider's data");
@@ -178,19 +175,13 @@ const toggleDutyStatus = catchAsync(async (req: AuthRequest, res: Response) => {
 
 const getMyRiderProfile = catchAsync(async (req: AuthRequest, res: Response) => {
     const userId = req.user!.userId;
-    const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { riderId: true },
-    });
 
-    const riderId = user?.riderId ?? null;
-
-    if (!riderId) {
-        throw new AppError(404, "No rider profile associated with this account");
-    }
-
+    // Fixed: Find the Rider directly by userId foreign key
     const rider = await prisma.rider.findFirst({
-        where: { id: riderId, deletedAt: null },
+        where: {
+            userId,
+            deletedAt: null
+        },
         include: {
             vehicle: true,
             payout: true,
@@ -201,11 +192,12 @@ const getMyRiderProfile = catchAsync(async (req: AuthRequest, res: Response) => 
     });
 
     if (!rider) {
-        throw new AppError(404, "Rider details unavailable");
+        throw new AppError(404, "No rider profile associated with this account");
     }
 
     sendResponse(res, {
         statusCode: 200,
+        message: "Rider profile retrieved successfully",
         data: rider,
     });
 });

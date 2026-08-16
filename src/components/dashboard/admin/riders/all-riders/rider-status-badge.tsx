@@ -1,32 +1,55 @@
-import type { RiderStatus } from "@/data/riders";
+"use client";
 
-const config: Record<RiderStatus, { dot: string; ring: string; label: string }> = {
-  ACTIVE: {
-    dot: "bg-success",
-    ring: "bg-success/10 text-success ring-success/20",
-    label: "Active",
+import { RiderStatus } from "@/store/api/slices/rider-api";
+
+
+interface RiderStatusBadgeProps {
+  status: RiderStatus | string;
+}
+
+const statusConfig: Record<
+  string,
+  { label: string; className: string; ring: string }
+> = {
+  PENDING: {
+    label: "Pending",
+    className: "bg-warning/10 text-warning border-warning/20",
+    ring: "bg-warning",
   },
-  BUSY: { dot: "bg-warning", ring: "bg-warning/10 text-warning ring-warning/20", label: "Busy" },
-  OFFLINE: {
-    dot: "bg-muted-foreground",
-    ring: "bg-muted text-muted-foreground ring-border/40",
-    label: "Offline",
+  APPROVED: {
+    label: "Approved",
+    className: "bg-success/10 text-success border-success/20",
+    ring: "bg-success",
   },
-  ON_LEAVE: {
-    dot: "bg-destructive",
-    ring: "bg-destructive/10 text-destructive ring-destructive/20",
-    label: "On Leave",
+  REJECTED: {
+    label: "Rejected",
+    className: "bg-destructive/10 text-destructive border-destructive/20",
+    ring: "bg-destructive",
+  },
+  SUSPENDED: {
+    label: "Suspended",
+    className: "bg-muted text-muted-foreground border-border",
+    ring: "bg-muted-foreground",
   },
 };
 
-export function RiderStatusBadge({ status }: { status: RiderStatus }) {
-  const c = config[status];
+// Fallback configuration if status is undefined or unknown
+const defaultConfig = {
+  label: "Unknown",
+  className: "bg-muted text-muted-foreground border-border",
+  ring: "bg-muted-foreground",
+};
+
+export function RiderStatusBadge({ status }: RiderStatusBadgeProps) {
+  // Safe lookup with fallback
+  const config = statusConfig[status] || defaultConfig;
+
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1 ${c.ring}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${config.className}`}
     >
-      <span className={`size-1.5 rounded-full ${c.dot}`} />
-      {c.label}
+      <span className={`size-1.5 rounded-full ${config.ring}`} />
+      {config.label}
     </span>
   );
 }

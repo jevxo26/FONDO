@@ -1,32 +1,52 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Rider } from "@/data/riders";
 import { DataTableColumnHeader } from "@/components/common/table";
 import { RiderStatusBadge } from "./rider-status-badge";
+import { Rider } from "@/store/api/slices/rider-api";
 
 export const riderColumns: ColumnDef<Rider>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "riderCode",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Code" />,
+    cell: ({ row }) => (
+      <span className="font-mono text-xs font-bold text-muted-foreground">
+        {row.original.riderCode}
+      </span>
+    ),
+  },
+  {
+    id: "name",
+    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
     header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
     cell: ({ row }) => (
       <div>
-        <p className="text-sm font-bold text-foreground">{row.original.name}</p>
+        <p className="text-sm font-bold text-foreground">
+          {row.original.firstName} {row.original.lastName}
+        </p>
         <p className="text-[13px] text-muted-foreground">{row.original.phone}</p>
       </div>
     ),
   },
   {
-    accessorKey: "zone",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Zone" />,
-    cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.zone}</span>,
+    accessorKey: "workZone",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Work Zone" />,
+    cell: ({ row }) => (
+      <div>
+        <p className="text-sm font-medium text-foreground">{row.original.workZone}</p>
+        <p className="text-[11px] text-muted-foreground">
+          {row.original.workZoneDistrict}, {row.original.workZoneDivision}
+        </p>
+      </div>
+    ),
   },
   {
-    accessorKey: "vehicleType",
+    id: "vehicleType",
+    accessorFn: (row) => row.vehicle?.vehicleType ?? "N/A",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Vehicle" />,
     cell: ({ row }) => (
       <span className="text-xs font-bold uppercase text-muted-foreground">
-        {row.original.vehicleType}
+        {row.original.vehicle?.vehicleType || "UNASSIGNED"}
       </span>
     ),
   },
@@ -34,25 +54,36 @@ export const riderColumns: ColumnDef<Rider>[] = [
     accessorKey: "status",
     filterFn: "equalsString",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
-    cell: ({ row }) => <RiderStatusBadge status={row.original.status} />,
+    cell: ({ row }) => <RiderStatusBadge status={row.original?.status} />,
   },
   {
-    accessorKey: "totalDeliveries",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Deliveries" />,
+    id: "payoutMethod",
+    accessorFn: (row) => row.payout?.payoutMethod ?? "N/A",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Payout" />,
     cell: ({ row }) => (
-      <span className="font-bold text-foreground">{row.original.totalDeliveries}</span>
+      <div>
+        <span className="text-xs font-semibold text-foreground">
+          {row.original.payout?.payoutMethod || "NONE"}
+        </span>
+        {row.original.payout?.mobileWalletNumber && (
+          <p className="text-[11px] text-muted-foreground">
+            {row.original.payout.mobileWalletNumber}
+          </p>
+        )}
+      </div>
     ),
   },
   {
-    accessorKey: "rating",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Rating" />,
-    cell: ({ row }) => <span className="font-bold text-foreground">{row.original.rating}</span>,
-  },
-  {
-    accessorKey: "completedToday",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Today" />,
-    cell: ({ row }) => (
-      <span className="text-sm font-semibold text-success">{row.original.completedToday}</span>
-    ),
+    id: "documents",
+    accessorFn: (row) => row.documents?.length || 0,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Docs" />,
+    cell: ({ row }) => {
+      const docsCount = row.original.documents?.length || 0;
+      return (
+        <span className="text-xs font-semibold text-muted-foreground">
+          {docsCount} Uploaded
+        </span>
+      );
+    },
   },
 ];

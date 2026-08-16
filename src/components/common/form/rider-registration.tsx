@@ -10,11 +10,11 @@ import { RiderTermsSubmit } from "@/components/apply/rider/rider-term";
 import { DocumentUploadInfo } from "@/components/apply/rider/document-upload";
 import { PayoutInfo } from "@/components/apply/rider/payout-info";
 import { uploadToCloudinary } from "@/lib/cloudinary-upload";
-import { useApplyRiderMutation } from "@/store/api/slices/rider-api";
 import Swal from "sweetalert2";
+import { useCreateRiderMutation } from "@/store/api/slices/rider-api";
 
 export function RiderRegistrationForm() {
-  const [applyRider, { isLoading: isApiSubmitting }] = useApplyRiderMutation();
+  const [applyRider, { isLoading: isApiSubmitting }] = useCreateRiderMutation();
   const [uploadStatus, setUploadStatus] = useState<string>("");
   const {
     register,

@@ -26,6 +26,7 @@ export const TAG_TYPES = [
   "Permission",
   "Device",
   "Notification",
+  "Rider"
 ] as const;
 
 export type TagType = (typeof TAG_TYPES)[number];

@@ -5,6 +5,7 @@ import { useGetAllAdminOrdersQuery } from "@/store/api/slices/admin-customers-ap
 import { OrdersTableSection } from "@/components/dashboard/admin/orders/orders-table-section";
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   Ban,
@@ -131,8 +132,9 @@ export default function AllOrdersPage() {
               : allOrders.length;
             const isActive = activeFilter === f.value;
             return (
-              <button
+              <Button
                 key={f.label}
+                variant="outline"
                 onClick={() => setActiveFilter(f.value)}
                 className={cn(
                   "flex items-center gap-3 rounded-2xl p-4 text-left transition-all duration-300 active:scale-[0.98]",
@@ -161,7 +163,7 @@ export default function AllOrdersPage() {
                   </p>
                 </div>
                 {isActive && <Check className="size-4 shrink-0 text-white/70" />}
-              </button>
+              </Button>
             );
           })}
         </div>

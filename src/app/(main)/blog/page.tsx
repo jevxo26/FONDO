@@ -3,10 +3,10 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { mockBlogs } from "@/data/mock-blogs";
 import { mockBlogCategories } from "@/data/mock-blog-categories";
 import { format } from "date-fns";
@@ -32,7 +32,7 @@ export default function BlogIndexPage() {
       <div className="space-y-8">
         {/* Header */}
         <div>
-          <h1 className="font-fraunces text-4xl font-bold tracking-tight">Blog</h1>
+          <h1 className="font-heading text-4xl font-bold tracking-tight">Blog</h1>
           <p className="mt-2 text-muted-foreground">
             Stories, tips, and insights from our community
           </p>
@@ -88,9 +88,11 @@ export default function BlogIndexPage() {
                 >
                   {blog.thumbnail && (
                     <div className="overflow-hidden rounded-xl">
-                      <img
+                      <Image
                         src={blog.thumbnail}
                         alt={blog.title}
+                        width={400}
+                        height={192}
                         className="h-48 w-full object-cover transition-transform group-hover:scale-105"
                       />
                     </div>
@@ -101,7 +103,7 @@ export default function BlogIndexPage() {
                         {category.name}
                       </Badge>
                     )}
-                    <h2 className="font-fraunces text-xl font-semibold group-hover:text-primary transition-colors line-clamp-2">
+                    <h2 className="font-heading text-xl font-semibold group-hover:text-primary transition-colors line-clamp-2">
                       {blog.title}
                     </h2>
                     <p className="text-sm text-muted-foreground">

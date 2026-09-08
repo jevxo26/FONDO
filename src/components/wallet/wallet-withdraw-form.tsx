@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ArrowUpRight, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type { WithdrawPayload } from "@/types/wallet";
 
 interface WalletWithdrawFormProps {
@@ -53,13 +54,14 @@ export function WalletWithdrawForm({ onWithdraw, isPending }: WalletWithdrawForm
           placeholder={method === "mobile_banking" ? "Mobile number (e.g. 01XXXXXXXXX)" : "Account number"}
           className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
         />
-        <button
+        <Button
           onClick={submit}
           disabled={isPending || !Number(amount) || !account}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 disabled:opacity-50"
+          variant="default"
+          className="w-full gap-2"
         >
           {isPending ? <Loader2 className="size-4 animate-spin" /> : <ArrowUpRight className="size-4" />} Request Withdrawal
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -62,11 +62,11 @@ export default function PlatformRevenuePage() {
             <div className="h-[280px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={breakdown}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                   <YAxis tick={{ fontSize: 10 }} />
                   <Tooltip />
-                  <Bar dataKey="value" fill="#A85A38" name="Revenue (৳)" />
+                  <Bar dataKey="value" fill="var(--chart-1)" name="Revenue (৳)" />
                 </BarChart>
               </ResponsiveContainer>
             </div>

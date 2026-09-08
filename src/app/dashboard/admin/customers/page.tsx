@@ -140,7 +140,7 @@ export default function CustomersPage() {
             <div className="pointer-events-none absolute right-3 top-3 z-10 size-[7px] rotate-45 border border-primary/30" />
             <div className="relative z-10">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <h3 className="font-fraunces text-xl font-semibold text-foreground">
+                <h3 className="font-heading text-xl font-semibold text-foreground">
                   Active Profiles
                 </h3>
                 <div className="flex items-center gap-2">
@@ -155,8 +155,10 @@ export default function CustomersPage() {
                   </div>
                   <div className="flex gap-1">
                     {statusOptions.map((opt) => (
-                      <button
+                      <Button
                         key={opt.value}
+                        variant="ghost"
+                        size="xs"
                         onClick={() => setStatusFilter(opt.value)}
                         className={`rounded-full px-3 py-1.5 text-[11px] font-bold uppercase transition-all ${
                           statusFilter === opt.value
@@ -165,7 +167,7 @@ export default function CustomersPage() {
                         }`}
                       >
                         {opt.label}
-                      </button>
+                      </Button>
                     ))}
                   </div>
                 </div>
@@ -190,7 +192,7 @@ export default function CustomersPage() {
                 <p className="mb-1 text-xs font-bold uppercase tracking-widest text-primary">
                   Total Assets
                 </p>
-                <h4 className="font-fraunces text-2xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] md:text-4xl">
+                <h4 className="font-heading text-2xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] md:text-4xl">
                   ৳{totalHoldings.toLocaleString()}
                 </h4>
               </div>

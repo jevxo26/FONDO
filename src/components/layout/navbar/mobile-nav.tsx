@@ -10,6 +10,7 @@ import { closeMobileMenu } from "@/store/slices/uiSlice";
 import { mainNavLinks, childIcons } from "@/data/navigation";
 import { useState } from "react";
 import { MobileAuthSection } from "./mobile-auth-section";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 const parentIcon: Record<string, typeof House> = {
   Home: House,
@@ -47,15 +48,18 @@ export function MobileNav() {
       >
         <div className="flex items-center justify-between border-b border-border px-4 py-4">
           <Logo size={40} textSize="text-lg" onClick={closeAndClear} />
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={closeAndClear}
-            className="size-8 rounded-full hover:bg-muted"
-            aria-label="Close menu"
-          >
-            <X className="size-5" />
-          </Button>
+          <div className="flex items-center gap-1">
+            <ThemeToggle />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={closeAndClear}
+              className="size-8 rounded-full hover:bg-muted"
+              aria-label="Close menu"
+            >
+              <X className="size-5" />
+            </Button>
+          </div>
         </div>
 
         <nav className="flex-1 overflow-y-auto py-2">
@@ -67,7 +71,8 @@ export function MobileNav() {
               <div key={link.label}>
                 {link.children ? (
                   <>
-                    <button
+                    <Button
+                      variant="ghost"
                       onClick={() => toggleExpand(link.label)}
                       className="flex w-full items-center justify-between px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
                     >
@@ -78,7 +83,7 @@ export function MobileNav() {
                           isExpanded && "rotate-180",
                         )}
                       />
-                    </button>
+                    </Button>
                     {isExpanded && (
                       <div className="bg-muted/30">
                         {link.children.map((child) => {

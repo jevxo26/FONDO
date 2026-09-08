@@ -68,7 +68,7 @@ export function GeneralInfoSection({
         .replace(/(^-|-$)+/g, "");
       setValue("slug", generatedSlug, { shouldValidate: true });
     }
-  }, [nameValue, isEditMode, setValue]);
+  }, [nameValue, isEditMode, setValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 2. Auto-generate Package Code when Name or Package Type changes
   useEffect(() => {
@@ -79,7 +79,7 @@ export function GeneralInfoSection({
         setValue("packageCode", newCode, { shouldValidate: true });
       }
     }
-  }, [nameValue, packageTypeWatched, isEditMode, setValue]);
+  }, [nameValue, packageTypeWatched, isEditMode, setValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleRegenerateCode = () => {
     if (!nameValue) return;

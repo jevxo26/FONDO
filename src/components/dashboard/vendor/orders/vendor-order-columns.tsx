@@ -57,7 +57,7 @@ export const vendorOrderColumns: ColumnDef<VendorOrderListItem>[] = [
     accessorKey: "totalAmount",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Total" />,
     cell: ({ row }) => (
-      <span className="font-fraunces text-lg font-bold tracking-tight text-foreground">
+      <span className="font-heading text-lg font-bold tracking-tight text-foreground">
         ৳{Number(row.original.totalAmount).toLocaleString()}
       </span>
     ),

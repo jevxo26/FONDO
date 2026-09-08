@@ -8,16 +8,16 @@ import { Star, ThumbsUp } from "lucide-react";
 import { DataTableColumnHeader } from "@/components/common/table";
 
 const foodTypeStyles: Record<string, string> = {
-  VEG: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
-  NON_VEG: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-  VEGAN: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-  SEAFOOD: "bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400",
+  VEG: "bg-success/10 text-success",
+  NON_VEG: "bg-destructive/10 text-destructive",
+  VEGAN: "bg-info/10 text-info",
+  SEAFOOD: "bg-info/10 text-info",
 };
 
 const spiceStyles: Record<string, string> = {
-  MILD: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
-  MEDIUM: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
-  HOT: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+  MILD: "bg-warning/10 text-warning",
+  MEDIUM: "bg-warning/10 text-warning",
+  HOT: "bg-destructive/10 text-destructive",
 };
 
 const statusVariants: Record<string, "default" | "secondary" | "destructive"> = {
@@ -131,7 +131,7 @@ export const foodColumns: ColumnDef<AdminFoodListItem>[] = [
           {isFeatured && (
             <span
               title="Featured"
-              className="flex size-6 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
+              className="flex size-6 items-center justify-center rounded-full bg-warning/10 text-warning"
             >
               <Star className="size-3" />
             </span>
@@ -139,7 +139,7 @@ export const foodColumns: ColumnDef<AdminFoodListItem>[] = [
           {isPopular && (
             <span
               title="Popular"
-              className="flex size-6 items-center justify-center rounded-full bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400"
+              className="flex size-6 items-center justify-center rounded-full bg-destructive/10 text-destructive"
             >
               <ThumbsUp className="size-3" />
             </span>
@@ -147,7 +147,7 @@ export const foodColumns: ColumnDef<AdminFoodListItem>[] = [
           {isRecommended && (
             <span
               title="Recommended"
-              className="flex size-6 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
+              className="flex size-6 items-center justify-center rounded-full bg-info/10 text-info"
             >
               <Star className="size-3" />
             </span>

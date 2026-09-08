@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Upload, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -56,7 +57,7 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
   if (value) {
     return (
       <div className="relative inline-block">
-        <img src={value} alt="Uploaded image" className="h-48 w-full rounded-lg object-cover" />
+        <Image src={value} alt="Uploaded image" width={400} height={192} className="h-48 w-full rounded-lg object-cover" />
         <button
           onClick={handleRemove}
           className="absolute -top-2 -right-2 rounded-full bg-destructive p-1 text-white hover:bg-destructive/90"

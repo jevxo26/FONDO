@@ -1,5 +1,6 @@
 // /dashboard/admin/cms/sliders/slider-columns.tsx
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 import { type ColumnDef } from "@tanstack/react-table";
 import { type Slider } from "@/data/mock-sliders";
 import { DataTableColumnHeader } from "@/components/common/table/data-table-column-header";
@@ -18,7 +19,7 @@ export const sliderColumns: ColumnDef<Slider>[] = [
       return (
         <div className="flex items-center gap-3">
           {slider.image && (
-            <img src={slider.image} alt={slider.title} className="h-12 w-20 rounded object-cover" />
+            <Image src={slider.image} alt={slider.title} width={80} height={48} className="h-12 w-20 rounded object-cover" />
           )}
           <div>
             <p className="font-medium">{slider.title}</p>

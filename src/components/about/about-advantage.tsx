@@ -58,7 +58,7 @@ export default function FoodoAdvantage() {
           {advantages.map((adv, idx) => (
             <div
               key={idx}
-              className="bg-white border border-foreground/10 rounded-2xl p-5 space-y-3 shadow-sm hover:border-primary/30 transition-all"
+              className="bg-card border border-foreground/10 rounded-2xl p-5 space-y-3 shadow-sm hover:border-primary/30 transition-all"
             >
               <div className="text-foreground size-8 flex items-center shrink-0">
                 {React.cloneElement(adv.icon, { className: "size-5" })}

@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+
 export default function StoryHero() {
   return (
     <section className="relative min-h-[600px] lg:min-h-[85vh] flex items-center justify-center overflow-hidden bg-foreground animate-fadeIn">
@@ -35,15 +37,13 @@ export default function StoryHero() {
 
         {/* Call to Actions utilizing global primary and secondary variables */}
         <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full sm:w-auto">
-          {/* Primary Action Button using bg-primary and dark text-primary-foreground */}
-          <button className="w-full sm:w-auto px-8 py-3.5 bg-primary text-primary-foreground font-sans font-bold text-xs rounded-xl shadow-lg hover:opacity-90 transition-all uppercase tracking-widest">
+          <Button variant="default" size="lg" className="w-full sm:w-auto uppercase tracking-widest shadow-lg">
             Explore Our Story
-          </button>
+          </Button>
 
-          {/* Secondary Action Button using transparent base and global border-border variable */}
-          <button className="w-full sm:w-auto px-8 py-3.5 bg-transparent text-background border border-border/30 hover:bg-background/10 font-sans font-bold text-xs rounded-xl transition-all uppercase tracking-widest">
+          <Button variant="outline" size="lg" className="w-full sm:w-auto uppercase tracking-widest text-background border-border/30 hover:bg-background/10">
             View Heritage Menu
-          </button>
+          </Button>
         </div>
 
         {/* Decorative Saffron Gold Vertical Line */}

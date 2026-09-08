@@ -5,32 +5,46 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* ============================================================
+     SHADCN / SEMANTIC COLORS
+     All project colors should flow through these tokens.
+     ============================================================ */
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
   --color-success: var(--success);
   --color-warning: var(--warning);
+  --color-info: var(--info);
 
   /* Sidebar */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
   --color-sidebar-accent: var(--sidebar-accent);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
@@ -43,7 +57,7 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
-  /* Overlay (warm dark surface) */
+  /* Overlay */
   --color-overlay: var(--overlay);
 
   /* Fonts */
@@ -68,117 +82,126 @@
   --radius-full: 9999px;
 }
 
+/* ==============================================================
+   SHADOWS
+   Keep shadow system centralized and mostly neutral/warm.
+   ============================================================== */
+
 @theme {
-  --shadow-card: 0px 1px 2px rgba(30, 26, 22, 0.04), 0px 8px 24px rgba(30, 26, 22, 0.06);
-  --shadow-badge: 0px 4px 8px rgba(30, 26, 22, 0.05), 0px 24px 48px -12px rgba(30, 26, 22, 0.18);
-  --shadow-elevated: 0px 8px 24px -8px rgba(13, 21, 40, 0.12), 0px 4px 8px -4px rgba(13, 21, 40, 0.06);
+  --shadow-card:
+    0px 1px 2px rgba(45, 33, 29, 0.04),
+    0px 8px 24px rgba(45, 33, 29, 0.06);
+
+  --shadow-badge:
+    0px 4px 8px rgba(45, 33, 29, 0.05),
+    0px 24px 48px -12px rgba(45, 33, 29, 0.16);
+
+  --shadow-elevated:
+    0px 8px 24px -8px rgba(45, 33, 29, 0.12),
+    0px 4px 8px -4px rgba(45, 33, 29, 0.06);
 }
 
+/* ==============================================================
+   LIGHT THEME
+   FONDO: Logo Gold + Warm Cream
+   ============================================================== */
+
 :root {
-  --background: #FAF6EF;
-  --foreground: #2B211B;
-  --card: #FFFDF9;
-  --card-foreground: #2B211B;
-  --popover: #FFFDF9;
-  --popover-foreground: #2B211B;
-  --primary: #A85A38;
-  --primary-foreground: #FFF9F2;
-  --secondary: #F1E8DA;
-  --secondary-foreground: #3A2E23;
-  --muted: #F0E7D9;
-  --muted-foreground: #6E6458;
-  --accent: #F2E3D4;
-  --accent-foreground: #3A2E23;
-  --destructive: #E0554F;
-  --destructive-foreground: #FFF9F2;
-  --border: #E3D7C4;
-  --input: #DFD3C1;
-  --ring: #A85A38;
-  --success: #3E9A72;
-  --warning: #D97B26;
+  --background: #FFFCF5;
+  --foreground: #2B1A12;
+  --card: #FFFFFF;
+  --card-foreground: #2B1A12;
+  --popover: #FFFFFF;
+  --popover-foreground: #2B1A12;
+  --primary: #CEA359;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F5EBD9;
+  --secondary-foreground: #3B2218;
+  --muted: #F6ECE2;
+  --muted-foreground: #7A6252;
+  --accent: #FFF5D6;
+  --accent-foreground: #8A6A1D;
+  --destructive: #D63C2C;
+  --destructive-foreground: #FFFFFF;
+  --border: #EDE0D4;
+  --input: #E8D9CC;
+  --ring: #CEA359;
+  --success: #2F8A5B;
+  --warning: #C97B1E;
+  --info: #3E6FB0;
 
-  /* Overlay (warm dark surface) */
-  --overlay: #221A12;
-  --overlay-deep: #120D09;
-
-  /* Navbar icon pill shadows (derive from primary) */
-  --pill-shadow:
-    inset 0 1px 1px color-mix(in srgb, var(--primary) 20%, transparent),
-    0 2px 12px color-mix(in srgb, var(--primary) 12%, transparent);
-  --pill-shadow-hover:
-    inset 0 1px 1px color-mix(in srgb, var(--primary) 22%, transparent),
-    0 0 20px color-mix(in srgb, var(--primary) 30%, transparent);
-  --icon-shadow: 0 1px 2px color-mix(in srgb, var(--primary) 40%, transparent);
+  /* Overlay */
+  --overlay: #2A1712;
 
   /* Sidebar */
-  --sidebar: #FAF5EC;
-  --sidebar-foreground: #2B211B;
-  --sidebar-primary: #A85A38;
-  --sidebar-primary-foreground: #FFF9F2;
-  --sidebar-accent: #F1E6D8;
-  --sidebar-accent-foreground: #2B211B;
-  --sidebar-border: #E3D7C4;
-  --sidebar-ring: #A85A38;
+  --sidebar: #FFFBF5;
+  --sidebar-foreground: #2B1A12;
+  --sidebar-accent: #F5EBD9;
+  --sidebar-accent-foreground: #2B1A12;
+  --sidebar-border: #EDE0D4;
+  --sidebar-ring: #CEA359;
 
   /* Charts */
-  --chart-1: #A85A38;
-  --chart-2: #3E9A72;
-  --chart-3: #E0554F;
-  --chart-4: #D97B26;
-  --chart-5: #2B211B;
+  --chart-1: #CEA359;
+  --chart-2: #E8955A;
+  --chart-3: #F5A623;
+  --chart-4: #2F8A5B;
+  --chart-5: #3E6FB0;
 
-  /* Radius */
-  --radius: 0.625rem;
-
-  /* Fluid spacing */
+  --radius: 0.75rem;
   --space-section: clamp(2rem, 1.5rem + 2.5vw, 5rem);
   --space-container: clamp(1rem, 0.5rem + 2vw, 3.75rem);
 }
 
-.dark {
-  --background: #1E1814;
-  --foreground: #F4EDE0;
-  --card: #2A221A;
-  --card-foreground: #F4EDE0;
-  --popover: #2A221A;
-  --popover-foreground: #F4EDE0;
-  --primary: #CE8665;
-  --primary-foreground: #2B140A;
-  --secondary: #332A1F;
-  --secondary-foreground: #F4EDE0;
-  --muted: #2E251C;
-  --muted-foreground: #A99C8C;
-  --accent: #3A2E21;
-  --accent-foreground: #F4EDE0;
-  --destructive: #E0604F;
-  --destructive-foreground: #FFF9F2;
-  --border: #40382C;
-  --input: #40382C;
-  --ring: #CE8665;
-  --success: #4CAF84;
-  --warning: #E09A4F;
+/* ==============================================================
+   DARK THEME
+   FONDO: Warm Dark Brown + Bright Gold
+   ============================================================== */
 
-  /* Overlay (warm dark surface) */
+.dark {
+  --background: #1C1510;
+  --foreground: #F7EDE3;
+  --card: #261C14;
+  --card-foreground: #F7EDE3;
+  --popover: #261C14;
+  --popover-foreground: #F7EDE3;
+  --primary: #E8B84A;
+  --primary-foreground: #2B1A12;
+  --secondary: #382C1E;
+  --secondary-foreground: #F7EDE3;
+  --muted: #2E2418;
+  --muted-foreground: #B9A89B;
+  --accent: #4A3A16;
+  --accent-foreground: #FFC27A;
+  --destructive: #E0524A;
+  --destructive-foreground: #FFFFFF;
+  --border: #3D2E20;
+  --input: #3D2E20;
+  --ring: #E8B84A;
+  --success: #4CAF84;
+  --warning: #E0A44F;
+  --info: #6FA1D9;
   --overlay: #1A120B;
-  --overlay-deep: #0B0806;
 
   /* Sidebar */
-  --sidebar: #221B14;
-  --sidebar-foreground: #F4EDE0;
-  --sidebar-primary: #CE8665;
-  --sidebar-primary-foreground: #2B140A;
-  --sidebar-accent: #332A1F;
-  --sidebar-accent-foreground: #F4EDE0;
-  --sidebar-border: #40382C;
-  --sidebar-ring: #CE8665;
+  --sidebar: #221510;
+  --sidebar-foreground: #F7EDE3;
+  --sidebar-accent: #382C1E;
+  --sidebar-accent-foreground: #FFC27A;
+  --sidebar-border: #3D2E20;
+  --sidebar-ring: #E8B84A;
 
   /* Charts */
-  --chart-1: #CE8665;
-  --chart-2: #4CAF84;
-  --chart-3: #E0604F;
-  --chart-4: #E09A4F;
-  --chart-5: #F4EDE0;
+  --chart-1: #E8B84A;
+  --chart-2: #F5A623;
+  --chart-3: #7BD389;
+  --chart-4: #6FA1D9;
+  --chart-5: #E8955A;
 }
+
+/* ==============================================================
+   BASE
+   ============================================================== */
 
 @layer base {
   * {
@@ -196,15 +219,24 @@
     scroll-behavior: smooth;
     scroll-padding-top: 96px;
   }
+
+  ::selection {
+    background: color-mix(in srgb, var(--accent) 75%, white);
+    color: var(--accent-foreground);
+  }
 }
 
-@utility tracking-label {
-  letter-spacing: 2.534px;
-}
+/* ==============================================================
+   TYPOGRAPHY UTILITIES
+   ============================================================== */
 
 @utility tracking-heading {
   letter-spacing: -0.96px;
 }
+
+/* ==============================================================
+   FADE IN
+   ============================================================== */
 
 @keyframes fadeIn {
   0% {
@@ -222,6 +254,10 @@
   animation: fadeIn 0.6s ease-out;
 }
 
+/* ==============================================================
+   MARQUEE
+   ============================================================== */
+
 @keyframes marquee {
   0% {
     transform: translateX(0%);
@@ -232,91 +268,72 @@
   }
 }
 
-@keyframes float {
-
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-12px);
-  }
-}
-
-@keyframes float-slow {
-
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-8px);
-  }
-}
+/* ==============================================================
+   GLOW
+   ============================================================== */
 
 @keyframes glow {
 
   0%,
   100% {
-    box-shadow: 0 0 8px rgba(168, 90, 56, 0.3);
+    box-shadow:
+      0 0 8px color-mix(in srgb, var(--primary) 22%, transparent);
   }
 
   50% {
-    box-shadow: 0 0 20px rgba(168, 90, 56, 0.6), 0 0 40px rgba(168, 90, 56, 0.2);
+    box-shadow:
+      0 0 20px color-mix(in srgb, var(--primary) 38%, transparent),
+      0 0 40px color-mix(in srgb, var(--primary) 12%, transparent);
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% center;
-  }
-
-  100% {
-    background-position: 200% center;
-  }
-}
-
-@keyframes scale-in {
-  0% {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
+/* ==============================================================
+   COMPONENT LAYER
+   ============================================================== */
 
 @layer components {
+
+  /* ------------------------------------------------------------
+     Navbar Icon Pill
+     ------------------------------------------------------------ */
   .nav-icon-pill {
-    @apply relative flex size-10 items-center justify-center rounded-full border border-border transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)];
-    background-image: linear-gradient(
-      to bottom right,
-      color-mix(in srgb, var(--foreground) 10%, transparent),
-      color-mix(in srgb, var(--foreground) 4%, transparent) 50%,
-      transparent
-    );
-    box-shadow: var(--pill-shadow);
+    @apply relative flex size-10 items-center justify-center rounded-full border border-border transition-all duration-300;
+    transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+
+    background-image: linear-gradient(to bottom right,
+        color-mix(in srgb, var(--foreground) 8%, transparent),
+        color-mix(in srgb, var(--foreground) 3%, transparent) 50%,
+        transparent);
+
+    box-shadow:
+      inset 0 1px 1px color-mix(in srgb, var(--primary) 20%, transparent),
+      0 2px 12px color-mix(in srgb, var(--primary) 12%, transparent);
   }
 
   .nav-icon-pill:hover {
-    border-color: color-mix(in srgb, var(--foreground) 25%, transparent);
-    box-shadow: var(--pill-shadow-hover);
+    border-color: color-mix(in srgb,
+        var(--foreground) 22%,
+        transparent);
+
+    box-shadow:
+      inset 0 1px 1px color-mix(in srgb, var(--primary) 22%, transparent),
+      0 0 20px color-mix(in srgb, var(--primary) 26%, transparent);
   }
 
   .nav-icon-pill:active {
-    transform: scale(0.9);
+    transform: scale(0.94);
   }
 
   .nav-icon {
     width: 1.25rem;
     height: 1.25rem;
-    filter: drop-shadow(var(--icon-shadow));
+    filter: drop-shadow(0 1px 2px color-mix(in srgb, var(--primary) 35%, transparent));
   }
 }
+
+/* ==============================================================
+   UTILITIES
+   ============================================================== */
 
 @layer utilities {
   .animate-marquee {
@@ -324,40 +341,73 @@
     animation-direction: var(--slide-direction, normal);
   }
 
-  .animate-float {
-    animation: float 4s ease-in-out infinite;
-  }
-
-  .animate-float-slow {
-    animation: float-slow 6s ease-in-out infinite;
-  }
-
   .animate-glow {
     animation: glow 3s ease-in-out infinite;
   }
 
-  .animate-shimmer {
-    background: linear-gradient(90deg, transparent 0%, rgba(168, 90, 56, 0.15) 50%, transparent 100%);
-    background-size: 200% 100%;
-    animation: shimmer 3s infinite;
-  }
-
-  .animate-scale-in {
-    animation: scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  .bg-warm-dark {
-    background: linear-gradient(180deg, var(--overlay) 0%, var(--overlay-deep) 100%);
-  }
-
+  /* ------------------------------------------------------------
+     Premium FONDO background
+     Uses ONLY semantic theme colors.
+     ------------------------------------------------------------ */
   .bg-premium-gradient {
     background:
-      radial-gradient(1100px 550px at 85% -10%, rgba(168, 90, 56, 0.28), transparent 60%),
-      radial-gradient(800px 450px at -5% 12%, rgba(168, 90, 56, 0.18), transparent 55%),
-      radial-gradient(900px 600px at 50% 115%, rgba(179, 129, 84, 0.14), transparent 60%),
+      radial-gradient(1100px 550px at 85% -10%,
+        color-mix(in srgb, var(--primary) 16%, transparent),
+        transparent 60%),
+      radial-gradient(800px 450px at -5% 12%,
+        color-mix(in srgb, var(--accent) 22%, transparent),
+        transparent 55%),
+      radial-gradient(900px 600px at 50% 115%,
+        color-mix(in srgb, var(--primary) 8%, transparent),
+        transparent 60%),
       var(--background);
   }
 
+  /* ------------------------------------------------------------
+     Tier system
+     Tier colors remain semantic to the tier meaning.
+     Gold intentionally uses the FONDO accent.
+     ------------------------------------------------------------ */
+
+  .tier-bronze {
+    --tier-bg: color-mix(in srgb, #b0783c 12%, transparent);
+    --tier-fg: #8a5a3b;
+    --tier-stripe: #b0783c;
+  }
+
+  .tier-silver {
+    --tier-bg: color-mix(in srgb, #9aa0a6 14%, transparent);
+    --tier-fg: #5f6670;
+    --tier-stripe: #9aa0a6;
+  }
+
+  .tier-gold {
+    --tier-bg: color-mix(in srgb, var(--accent) 55%, transparent);
+    --tier-fg: var(--accent-foreground);
+    --tier-stripe: var(--primary);
+  }
+
+  .dark .tier-bronze {
+    --tier-bg: color-mix(in srgb, #b0783c 28%, transparent);
+    --tier-fg: #d9a06b;
+    --tier-stripe: #d9a06b;
+  }
+
+  .dark .tier-silver {
+    --tier-bg: color-mix(in srgb, #9aa0a6 22%, transparent);
+    --tier-fg: #c2c7cc;
+    --tier-stripe: #c2c7cc;
+  }
+
+  .dark .tier-gold {
+    --tier-bg: color-mix(in srgb, var(--accent) 22%, transparent);
+    --tier-fg: var(--accent-foreground);
+    --tier-stripe: var(--primary);
+  }
+
+  /* ------------------------------------------------------------
+     Global wrapper
+     ------------------------------------------------------------ */
   .wrapper {
     margin-inline: auto;
     width: 100%;

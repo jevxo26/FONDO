@@ -31,7 +31,7 @@ export default function VendorOverviewPage() {
   const { data: vendorOrders, isLoading: ordersLoading } = useGetVendorOrdersQuery(vendorId || "", {
     skip: !vendorId,
   });
-  const { data: wallet, isLoading: walletLoading } = useGetVendorWalletQuery(vendorId || "", {
+  const { isLoading: walletLoading } = useGetVendorWalletQuery(vendorId || "", {
     skip: !vendorId,
   });
   const { data: transactions, isLoading: txLoading } = useGetVendorWalletTransactionsQuery(
@@ -87,15 +87,15 @@ export default function VendorOverviewPage() {
     });
 
     const colorMap: Record<string, string> = {
-      COMPLETED: "#10B981",
-      DELIVERED: "#8B5CF6",
-      CONFIRMED: "#3B82F6",
-      PREPARING: "#3B82F6",
-      READY_FOR_PICKUP: "#3B82F6",
-      PICKED_UP: "#3B82F6",
-      ON_THE_WAY: "#3B82F6",
-      PENDING: "#F59E0B",
-      CANCELLED: "#EF4444",
+      COMPLETED: "var(--success)",
+      DELIVERED: "var(--chart-2)",
+      CONFIRMED: "var(--info)",
+      PREPARING: "var(--info)",
+      READY_FOR_PICKUP: "var(--info)",
+      PICKED_UP: "var(--info)",
+      ON_THE_WAY: "var(--info)",
+      PENDING: "var(--warning)",
+      CANCELLED: "var(--destructive)",
     };
 
     const labelMap: Record<string, string> = {
@@ -113,7 +113,7 @@ export default function VendorOverviewPage() {
     return Object.entries(statusCount).map(([status, count]) => ({
       name: labelMap[status] || status,
       value: count,
-      color: colorMap[status] || "#6B7280",
+      color: colorMap[status] || "var(--muted-foreground)",
     }));
   }, [vendorOrders]);
 

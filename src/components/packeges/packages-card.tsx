@@ -3,6 +3,7 @@ import React from "react";
 import { Check, Clock, Settings, Star, Utensils } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { usePackages } from "./packages-context";
 import { Package } from "@/types/package";
 interface PackageCardProps {
@@ -100,18 +101,18 @@ export default function PackageCard({
         </div>
 
         <div className="flex gap-2">
-          <button
+          <Button
+            variant="outline"
+            size="sm"
             type="button"
             onClick={() => toggleComparison(pkg.id)}
-            className={`border rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all flex items-center ${
-              isCompared
-                ? "bg-primary text-primary-foreground border-primary"
-                : "border-border hover:bg-muted text-foreground"
+            className={`transition-all ${
+              isCompared ? "bg-primary text-primary-foreground border-primary" : ""
             }`}
           >
             {isCompared && <Check size={13} className="mr-1 shrink-0" />}
             Compare
-          </button>
+          </Button>
 
           <Link
             href={`/packages/${pkg.id}`}

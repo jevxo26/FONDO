@@ -6,7 +6,7 @@ import { DataTableColumnHeader } from "@/components/common/table";
 import { cn } from "@/lib/utils";
 
 const statusStyles: Record<string, string> = {
-  active: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+  active: "bg-success/10 text-success",
   inactive: "bg-muted text-muted-foreground dark:bg-muted/50",
 };
 

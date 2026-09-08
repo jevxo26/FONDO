@@ -78,7 +78,7 @@ export function DataTablePagination({
                   onClick={() => onPageChange(p)}
                   className={
                     p === currentPage
-                      ? "bg-primary text-primary-foreground border-0 shadow-[0_2px_8px_rgba(168,90,56,0.25)]"
+                      ? "bg-primary text-primary-foreground border-0 shadow-[0_2px_8px_color-mix(in_srgb,var(--primary)_25%,transparent)]"
                       : ""
                   }
                 >

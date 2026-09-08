@@ -56,14 +56,16 @@ export function ChangePasswordForm() {
               placeholder="••••••••"
               className="pr-10"
             />
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon-xs"
               onClick={() => toggleShow(id)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2"
               aria-label={show[id] ? "Hide password" : "Show password"}
             >
               {show[id] ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
-            </button>
+            </Button>
           </div>
         </FormField>
       ))}

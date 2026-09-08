@@ -4,6 +4,7 @@ import type { Package } from "@/types/package";
 
 export interface AdminPackageListItem {
     id: string;
+    _id?: string;
     packageCode: string;
     name: string;
     slug: string;
@@ -16,6 +17,8 @@ export interface AdminPackageListItem {
     discountPrice?: number | null;
     status: "PENDING" | "APPROVED" | "REJECTED";
     rejectionReason?: string | null;
+    isCustomizable?: boolean;
+    currency?: string;
     createdAt: string;
     packageCategory?: { id: string; name: string } | null;
     vendor?: { id: string; businessName: string } | null;

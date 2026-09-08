@@ -48,7 +48,7 @@ export default function VendorServiceAreasPage() {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-fraunces text-xl font-semibold tracking-tight">Service Area List</h3>
+          <h3 className="font-heading text-xl font-semibold tracking-tight">Service Area List</h3>
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
             {activeAreas} Active · {totalAreas} Total
           </p>

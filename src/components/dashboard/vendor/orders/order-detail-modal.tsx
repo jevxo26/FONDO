@@ -45,7 +45,7 @@ export function OrderDetailModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh]">
         <DialogHeader>
-          <DialogTitle className="font-fraunces text-2xl">Order {order.orderNumber}</DialogTitle>
+          <DialogTitle className="font-heading text-2xl">Order {order.orderNumber}</DialogTitle>
         </DialogHeader>
 
         <ScrollArea className="max-h-[70vh] pr-4">
@@ -86,7 +86,7 @@ export function OrderDetailModal({
               </div>
               <div className="space-y-1">
                 <p className="text-xs uppercase tracking-widest text-muted-foreground">Total Amount</p>
-                <p className="font-fraunces text-xl font-bold tracking-tight text-primary">
+                <p className="font-heading text-xl font-bold tracking-tight text-primary">
                   ৳{Number(order.totalAmount).toLocaleString()}
                 </p>
               </div>
@@ -108,7 +108,7 @@ export function OrderDetailModal({
                       <span className="text-sm font-medium">{item.food?.name ?? "Unknown"}</span>
                       <span className="text-xs text-muted-foreground">×{item.quantity}</span>
                     </div>
-                    <span className="font-fraunces text-sm font-semibold">
+                    <span className="font-heading text-sm font-semibold">
                       ৳{Number(item.totalPrice).toLocaleString()}
                     </span>
                   </div>

@@ -4,7 +4,6 @@ import { useState, useMemo, useCallback } from "react";
 import { DataTable } from "@/components/common/table";
 import { vendorOrderColumns } from "./vendor-order-columns";
 import { OrderDetailModal } from "./order-detail-modal";
-import { Button } from "@/components/ui/button";
 import { Eye, RefreshCw, XCircle } from "lucide-react";
 import { orderStatuses, paymentStatuses } from "@/data/vendor-orders";
 import type { VendorOrderListItem } from "@/store/api/slices/vendor-orders-api";

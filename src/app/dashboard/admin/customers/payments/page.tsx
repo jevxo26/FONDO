@@ -113,7 +113,7 @@ export default function PaymentsPage() {
           <div className="flex size-16 items-center justify-center rounded-full bg-muted">
             <Search className="size-6 text-muted-foreground" />
           </div>
-          <h3 className="mt-4 font-fraunces text-lg font-bold text-foreground">
+          <h3 className="mt-4 font-heading text-lg font-bold text-foreground">
             Select a Customer
           </h3>
           <p className="mt-1 max-w-md text-sm text-muted-foreground">

@@ -1,5 +1,6 @@
 // /dashboard/admin/cms/banners/banner-columns.tsx
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 import { type ColumnDef } from "@tanstack/react-table";
 import { type Banner } from "@/data/mock-banners";
 import { DataTableColumnHeader } from "@/components/common/table/data-table-column-header";
@@ -14,9 +15,11 @@ export const bannerColumns: ColumnDef<Banner>[] = [
       return (
         <div className="flex items-center gap-3">
           {banner.imageUrl && (
-            <img
+            <Image
               src={banner.imageUrl}
               alt={banner.title}
+              width={80}
+              height={48}
               className="h-12 w-20 rounded object-cover"
             />
           )}

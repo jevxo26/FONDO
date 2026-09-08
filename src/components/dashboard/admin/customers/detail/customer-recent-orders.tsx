@@ -32,7 +32,7 @@ export default function CustomerRecentOrders({ orders, customerId }: CustomerRec
       <div className="pointer-events-none absolute -bottom-6 -right-6 z-0 size-36 rounded-full bg-primary/8 blur-3xl" />
       <div className="relative z-10">
         <div className="flex items-center justify-between">
-          <h3 className="font-fraunces text-xl font-semibold text-foreground">Recent Orders</h3>
+          <h3 className="font-heading text-xl font-semibold text-foreground">Recent Orders</h3>
           <Link
             href={`/dashboard/admin/customers/${customerId}/orders`}
             className="text-xs font-bold text-primary hover:underline"

@@ -11,7 +11,7 @@ export function SettingsCards() {
   const [settings, setSettings] = useState(vendorSettings);
 
   const toggleSetting = (key: keyof typeof settings) => {
-    setSettings((prev) => ({ ...prev, [key]: !prev[key] }));
+    setSettings((prev: typeof settings) => ({ ...prev, [key]: !prev[key] }));
   };
 
   const settingsConfig = [

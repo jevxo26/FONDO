@@ -1,5 +1,6 @@
 import React from "react";
 import { Star, Edit3, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Review } from "@/types/food-review";
 import { User } from "@/types/auth";
 interface SingleReviewProps {
@@ -44,23 +45,25 @@ const FoodSingleReview = ({ review, user, setSelectedReview, setOpen }: SingleRe
 
             {isOwner && (
               <div className="flex gap-1.5 border-l border-border/10 pl-3">
-                <button
+                <Button
+                  variant="ghost"
+                  size="icon-xs"
                   onClick={() => {
                     setSelectedReview(review);
                     setOpen(true);
                   }}
-                  className="p-1 text-muted-foreground hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
                   title="Edit"
                 >
                   <Edit3 className="size-3.5" />
-                </button>
+                </Button>
 
-                <button
-                  className="p-1 text-muted-foreground hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                <Button
+                  variant="ghost"
+                  size="icon-xs"
                   title="Delete"
                 >
                   <Trash2 className="size-3.5" />
-                </button>
+                </Button>
               </div>
             )}
           </div>

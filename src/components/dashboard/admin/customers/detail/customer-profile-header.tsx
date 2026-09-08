@@ -57,7 +57,7 @@ export default function CustomerProfileHeader({
             </Avatar>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="font-fraunces text-2xl font-bold text-foreground md:text-3xl">
+                <h1 className="font-heading text-2xl font-bold text-foreground md:text-3xl">
                   {fullName}
                 </h1>
                 <Badge

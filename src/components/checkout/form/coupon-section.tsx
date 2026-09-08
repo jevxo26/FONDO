@@ -27,10 +27,11 @@ export function CouponSection({
 
   return (
     <div className="rounded-2xl bg-card border border-border/40 shadow-sm overflow-hidden transition-all duration-300">
-      <button
+      <Button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between p-4 hover:bg-muted/30 transition-colors"
+        variant="ghost"
+        className="w-full flex items-center justify-between p-4 hover:bg-muted/30 transition-colors"
       >
         <div className="flex items-center gap-2.5">
           <div className={`flex size-8 items-center justify-center rounded-lg ${appliedCoupon ? "bg-primary/10" : "bg-muted"}`}>
@@ -53,7 +54,7 @@ export function CouponSection({
             <ChevronDown className="size-4 text-muted-foreground" />
           )}
         </div>
-      </button>
+      </Button>
 
       {open && (
         <div className="px-4 pb-4 border-t border-border/40 pt-3">
@@ -74,13 +75,15 @@ export function CouponSection({
               </div>
               <Tooltip>
                 <TooltipTrigger>
-                  <button
+                  <Button
                     type="button"
                     onClick={onRemove}
-                    className="p-1.5 hover:bg-destructive/10 rounded-lg transition-colors"
+                    variant="ghost"
+                    size="icon-xs"
+                    className="rounded-lg hover:bg-destructive/10"
                   >
                     <X className="size-4 text-destructive" />
-                  </button>
+                  </Button>
                 </TooltipTrigger>
                 <TooltipContent>Remove coupon</TooltipContent>
               </Tooltip>

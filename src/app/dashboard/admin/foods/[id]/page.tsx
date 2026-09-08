@@ -62,8 +62,8 @@ function Row({ label, value }: { label: string; value: string | number }) {
 
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
-    ACTIVE: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
-    DRAFT: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+    ACTIVE: "bg-success/10 text-success",
+    DRAFT: "bg-warning/10 text-warning",
     ARCHIVED: "bg-muted text-muted-foreground dark:bg-muted/50",
     INACTIVE: "bg-muted text-muted-foreground dark:bg-muted/50",
   };
@@ -257,7 +257,7 @@ export default function FoodDetailPage() {
         <SectionCard title="Diets & Tags">
           <div className="flex flex-wrap gap-2">
             {food.diets.map((d) => (
-              <span key={d.id} className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+              <span key={d.id} className="rounded-full bg-success/10 px-3 py-1 text-xs font-medium text-success">
                 {d.dietType}
               </span>
             ))}

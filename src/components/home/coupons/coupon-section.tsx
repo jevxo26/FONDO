@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Copy, Check, Tag, Clock, Users, Gift, Percent, ArrowRight, Sparkles } from "lucide-react";
+import { Copy, Check, Tag, Clock, Users, Gift, Percent, Sparkles } from "lucide-react";
 import { mockCoupons, type Coupon } from "@/data/mock-coupons";
 import { toast } from "sonner";
 import { SectionHeader } from "@/components/common/section-header";
@@ -24,7 +24,6 @@ export function CouponSection({
   variant = "featured",
   title = "Exclusive Offers",
   description = "Save big with exclusive deals and discounts",
-  showViewAll = true,
 }: CouponSectionProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -82,6 +81,7 @@ interface CouponCardProps {
 function CouponCard({ coupon, onCopy, copiedId }: CouponCardProps) {
   const isCopied = copiedId === coupon.id;
   const isExpiringSoon =
+    // eslint-disable-next-line react-hooks/purity
     coupon.expiry && new Date(coupon.expiry) < new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
 
   return (

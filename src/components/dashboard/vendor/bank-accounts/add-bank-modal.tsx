@@ -48,7 +48,7 @@ export function AddBankModal({ open, onOpenChange }: AddBankModalProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="font-fraunces text-2xl">Add Bank Account</DialogTitle>
+          <DialogTitle className="font-heading text-2xl">Add Bank Account</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
           <BankAccountFields formData={formData} onFieldChange={handleFieldChange} />

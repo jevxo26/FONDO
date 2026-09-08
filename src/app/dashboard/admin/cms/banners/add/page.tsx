@@ -9,13 +9,13 @@ import { toast } from "sonner";
 export default function AddBannerPage() {
   const router = useRouter();
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       // TODO: Replace with actual API call
       console.log("Creating banner:", data);
       toast.success("Banner created successfully");
       router.push("/dashboard/admin/cms/banners");
-    } catch (error) {
+    } catch {
       toast.error("Failed to create banner");
     }
   };

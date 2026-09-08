@@ -3,7 +3,7 @@
 
 import { FormField } from "@/components/common/form-field";
 import { inputStyles, KitchenFormValues } from "@/lib/schema/kitchen-schema";
-import { Building2, ChefHat, Clock, Users } from "lucide-react";
+import { Building2 } from "lucide-react";
 import { FieldErrors, UseFormRegister, UseFormSetValue, Control } from "react-hook-form";
 
 interface KitchenFormSectionProps {
@@ -18,7 +18,7 @@ export function KitchenFormSection({
   register,
   errors,
   setValue,
-  control,
+  control: _control,
   branches,
 }: KitchenFormSectionProps) {
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {

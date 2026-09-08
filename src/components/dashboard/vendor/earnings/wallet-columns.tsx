@@ -63,7 +63,7 @@ export const walletColumns: ColumnDef<VendorWalletTransaction>[] = [
       const isCredit = transaction.transactionType === "CREDIT";
       return (
         <span
-          className={`font-fraunces font-semibold text-sm ${isCredit ? "text-success" : "text-destructive"}`}
+          className={`font-heading font-semibold text-sm ${isCredit ? "text-success" : "text-destructive"}`}
         >
           {isCredit ? "+" : "-"}৳{amount.toLocaleString()}
         </span>

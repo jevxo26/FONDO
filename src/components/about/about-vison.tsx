@@ -6,7 +6,7 @@ export default function MissionVision() {
     <section className="py-12 bg-background">
       <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Mission Card */}
-        <div className="bg-white border border-foreground/10 rounded-3xl p-8 space-y-4 shadow-sm">
+        <div className="bg-card border border-foreground/10 rounded-3xl p-8 space-y-4 shadow-sm">
           <div className="text-foreground bg-primary/10 size-10 rounded-full flex items-center justify-center">
             <Flag className="size-5" />
           </div>
@@ -17,7 +17,7 @@ export default function MissionVision() {
           </p>
         </div>
         {/* Vision Card */}
-        <div className="bg-white border border-foreground/10 rounded-3xl p-8 space-y-4 shadow-sm">
+        <div className="bg-card border border-foreground/10 rounded-3xl p-8 space-y-4 shadow-sm">
           <div className="text-foreground bg-primary/10 size-10 rounded-full flex items-center justify-center">
             <Eye className="size-5" />
           </div>

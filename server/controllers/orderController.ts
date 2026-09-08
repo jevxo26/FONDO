@@ -5,7 +5,7 @@ import { sendResponse } from "../utils/sendResponse";
 import * as orderService from "../services/orderService";
 import * as orderFulfillmentService from "../services/orderFulfillmentService";
 import { getInvoicePdfPath } from "../services/invoicePdfService";
-import AppError from "../utils/AppError";
+import _AppError from "../utils/AppError";
 import path from "path";
 
 export const OrderController = {

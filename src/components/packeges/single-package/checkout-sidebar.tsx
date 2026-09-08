@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ShieldCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useCreateCustomMealRequestMutation } from "@/store/api/slices/packages-api";
 import type { CustomDay, Package } from "@/types/package";
 
@@ -89,14 +90,16 @@ export default function CheckoutSidebar({
           </div>
         </div>
 
-        <button
+        <Button
           type="button"
           onClick={handleSubscribe}
           disabled={isPending}
-          className="w-full py-3.5 bg-primary text-primary-foreground font-sans font-bold text-xs rounded-xl shadow-md hover:opacity-95 transition-all uppercase tracking-widest disabled:opacity-50 cursor-pointer"
+          variant="default"
+          size="lg"
+          className="w-full font-sans font-bold uppercase tracking-widest"
         >
           {isPending ? "Processing..." : "Subscribe / Request Custom Plan"}
-        </button>
+        </Button>
 
         <div className="flex items-center gap-2 text-[10px] text-muted-foreground/70 justify-center">
           <ShieldCheck className="size-3.5 text-emerald-500" />

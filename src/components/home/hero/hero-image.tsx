@@ -69,7 +69,7 @@ export function HeroImage({ foods }: HeroImageProps) {
                       />
                     </div>
 
-                    <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-foreground/40 to-transparent rounded-b-3xl" />
+                    <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-overlay/40 to-transparent rounded-b-3xl" />
 
                     <div className="absolute left-3 top-3 sm:left-4 sm:top-4">
                       <div className="flex w-fit items-center gap-2.5 rounded-2xl bg-background/90 p-2.5 shadow-[var(--shadow-badge)] backdrop-blur-sm">
@@ -111,7 +111,7 @@ export function HeroImage({ foods }: HeroImageProps) {
               onClick={() => api?.scrollTo(index)}
               className={`size-2 rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                 index === current
-                  ? "w-6 bg-primary shadow-[0_0_8px_rgba(168,90,56,0.4)]"
+                  ? "w-6 bg-primary shadow-[0_0_8px_color-mix(in_srgb,var(--primary)_40%,transparent)]"
                   : "bg-primary/30 hover:bg-primary/50"
               }`}
             />

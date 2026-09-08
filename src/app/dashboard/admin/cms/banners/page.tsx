@@ -44,13 +44,6 @@ export default function BannersPage() {
     }
   }, [selectedBanner]);
 
-  const handleToggleStatus = useCallback((banner: Banner) => {
-    setBanners((prev) =>
-      prev.map((b) => (b.id === banner.id ? { ...b, isActive: !b.isActive } : b)),
-    );
-    toast.success(`Banner ${banner.isActive ? "deactivated" : "activated"} successfully`);
-  }, []);
-
   const rowActions: RowAction<Banner>[] = useMemo(
     () => [
       {

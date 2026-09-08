@@ -1,5 +1,6 @@
 // /dashboard/admin/cms/blogs/blog-columns.tsx
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 import { type ColumnDef } from "@tanstack/react-table";
 import { type Blog } from "@/data/mock-blogs";
 import { mockBlogCategories } from "@/data/mock-blog-categories";
@@ -15,7 +16,7 @@ export const blogColumns: ColumnDef<Blog>[] = [
       return (
         <div className="flex items-center gap-3">
           {blog.thumbnail && (
-            <img src={blog.thumbnail} alt={blog.title} className="h-12 w-16 rounded object-cover" />
+            <Image src={blog.thumbnail} alt={blog.title} width={64} height={48} className="h-12 w-16 rounded object-cover" />
           )}
           <div>
             <p className="font-medium line-clamp-1">{blog.title}</p>

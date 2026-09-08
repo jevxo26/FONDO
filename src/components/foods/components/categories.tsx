@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export interface FoodCategoryOption {
@@ -29,15 +30,17 @@ export default function Categories({
 
   return (
     <div className="space-y-1">
-      <button
+      <Button
         type="button"
+        variant="ghost"
+        size="sm"
         onClick={() => {
           setActiveCategory(cat.name);
           setActiveSubCategory("All");
           setCurrentPage(1);
         }}
         className={cn(
-          "flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-xs font-medium transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
+          "w-full justify-between text-left",
           isActive
             ? "border-l-2 border-primary bg-gradient-to-r from-primary/10 to-transparent font-bold text-primary"
             : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -57,7 +60,7 @@ export default function Categories({
             {count}
           </span>
         )}
-      </button>
+      </Button>
 
       {isActive && cat.subCategories && cat.subCategories.length > 0 && (
         <div className="relative ml-4 border-l border-primary/20 pl-4">
@@ -67,15 +70,17 @@ export default function Categories({
               const isSubActive = activeSubCategory === sub.name;
 
               return (
-                <button
+                <Button
                   key={sub.id}
                   type="button"
+                  variant="ghost"
+                  size="xs"
                   onClick={() => {
                     setActiveSubCategory(sub.name);
                     setCurrentPage(1);
                   }}
                   className={cn(
-                    "relative flex items-center gap-2 py-1.5 text-left text-[10px] transition-colors duration-300",
+                    "relative justify-start text-left text-[10px] duration-300",
                     isSubActive ? "font-bold text-primary" : "text-muted-foreground hover:text-primary",
                   )}
                 >
@@ -89,7 +94,7 @@ export default function Categories({
                     )}
                   />
                   <span className="ml-4">{sub.name}</span>
-                </button>
+                </Button>
               );
             })}
           </div>
@@ -120,20 +125,22 @@ export function CategoryChips({
       {["All", ...categories.map((c) => c.name)].map((name) => {
         const isActive = activeCategory === name;
         return (
-          <button
+          <Button
             key={name}
             type="button"
+            variant="outline"
+            size="sm"
             onClick={() => onSelect(name)}
             aria-pressed={isActive}
             className={cn(
-              "h-9 shrink-0 rounded-full border px-4 text-xs font-semibold whitespace-nowrap uppercase tracking-wider transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-95",
+              "h-9 shrink-0 rounded-full px-4 text-xs font-semibold whitespace-nowrap uppercase tracking-wider duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-95",
               isActive
                 ? "border-primary bg-primary text-primary-foreground shadow-[var(--shadow-badge)]"
                 : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground",
             )}
           >
             {name}
-          </button>
+          </Button>
         );
       })}
     </div>

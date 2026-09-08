@@ -65,7 +65,7 @@ export const packageSchema = yup.object({
   coverImage: imageFieldSchema,
   packageType: yup
     .string()
-    .oneOf(["WEEKLY", "MONTHLY", "CUSTOM"])
+    .oneOf(["WEEKLY", "MONTHLY", "CUSTOM", "CUSTOM_PACKAGE"])
     .required(),
 
   customTypeName: yup.string().when("packageType", {

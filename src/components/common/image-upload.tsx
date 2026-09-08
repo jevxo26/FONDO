@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { Camera, Loader2, Trash2, UploadCloud } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 type Variant = "circle" | "rectangle" | "gallery";
 
@@ -132,14 +133,16 @@ export default function ImageUploadField({
       </div>
 
       {hasValidImage && !loading && onRemove && (
-        <button
+        <Button
+          variant="destructive"
+          size="icon-sm"
           type="button"
           onClick={onRemove}
-          className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground p-1.5 rounded-full shadow-md hover:bg-destructive/90 transition-transform active:scale-95"
+          className="absolute -top-1 -right-1 rounded-full shadow-md active:scale-95"
           title="Remove Image"
         >
           <Trash2 className="w-3.5 h-3.5" />
-        </button>
+        </Button>
       )}
 
       {error && errorText && !hasValidImage && (

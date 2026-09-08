@@ -15,13 +15,13 @@ export default function EditBannerPage() {
   // Find the banner from mock data
   const banner = mockBanners.find((b) => b.id === bannerId);
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       // TODO: Replace with actual API call
       console.log("Updating banner:", data);
       toast.success("Banner updated successfully");
       router.push("/dashboard/admin/cms/banners");
-    } catch (error) {
+    } catch {
       toast.error("Failed to update banner");
     }
   };

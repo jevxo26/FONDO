@@ -69,7 +69,7 @@ interface CustomMealRequestInput {
   days: CustomMealDayInput[];
 }
 
-interface CreateReviewInput {
+interface _CreateReviewInput {
   rating: number;
   review?: string;
   orderId?: string;
@@ -741,7 +741,7 @@ const updateAdminPackage = async (
 
   const vendorId = data.vendorId || existing.vendorId;
 
-  if (data.days) {
+  if (data.days && vendorId) {
     await assertFoodsBelongToVendor(vendorId, collectFoodIds(data as VendorPackageInput));
   }
 

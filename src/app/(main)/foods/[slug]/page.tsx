@@ -3,7 +3,6 @@ import { ProductTabs } from "@/components/foods/single-foods/product-tab";
 import { RelatedFoods } from "@/components/foods/single-foods/related-foods";
 import { apiFetch } from "@/lib/api";
 import type { Food } from "@/types/food";
-import { log } from "console";
 import { notFound } from "next/navigation";
 
 interface PageProps {

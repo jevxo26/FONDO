@@ -3,6 +3,7 @@ import { UseFormRegister, FieldErrors } from "react-hook-form";
 import { Landmark, Truck, ArrowRight } from "lucide-react";
 import { VendorFormData } from "@/lib/schema/vendor-schema";
 import { FormField } from "@/components/common/form-field";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   register: UseFormRegister<VendorFormData>;
@@ -146,14 +147,16 @@ export function BankDeliveryTerms({ register, errors, isSubmitting }: Props) {
           </FormField>
         </div>
 
-        <button
+        <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-14 bg-primary text-primary-foreground rounded-2xl font-bold text-sm uppercase tracking-wider hover:opacity-90 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-[var(--shadow-elevated)] disabled:opacity-50"
+          variant="default"
+          size="lg"
+          className="w-full"
         >
           {isSubmitting ? "Submitting Application..." : "Apply as Vendor"}{" "}
           <ArrowRight className="size-5" />
-        </button>
+        </Button>
       </div>
     </div>
   );

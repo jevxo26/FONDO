@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Loader2, Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type { TopupPayload } from "@/types/wallet";
 
 interface WalletTopupFormProps {
@@ -36,13 +37,14 @@ export function WalletTopupForm({ onTopup, isPending }: WalletTopupFormProps) {
             className="w-full rounded-xl border border-border bg-background py-2.5 pl-8 pr-3 text-sm outline-none focus:border-primary"
           />
         </div>
-        <button
+        <Button
           onClick={submit}
           disabled={isPending || !Number(amount)}
-          className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 disabled:opacity-50"
+          variant="default"
+          className="gap-2"
         >
           {isPending ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />} Top Up
-        </button>
+        </Button>
       </div>
     </div>
   );

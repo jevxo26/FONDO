@@ -1,4 +1,5 @@
 import { Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   formData: { name: string; phone: string; email: string; message: string };
@@ -85,15 +86,17 @@ export function ContactFormFields({ formData, onChange, onSubmit }: Props) {
         </div>
 
         <div className="mt-2">
-          <button
+          <Button
             type="submit"
-            className="inline-flex items-center gap-4 h-14 pl-6 pr-2 rounded-full bg-foreground text-white hover:bg-foreground/90 transition-colors group"
+            variant="accent"
+            size="xl"
+            className="rounded-full h-14 pl-6 pr-2 gap-4"
           >
             <span className="font-sans text-sm font-semibold tracking-wide">Send Message</span>
             <div className="size-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground transition-transform group-hover:scale-105">
               <Send className="size-4 ml-0.5" />
             </div>
-          </button>
+          </Button>
         </div>
       </form>
     </div>

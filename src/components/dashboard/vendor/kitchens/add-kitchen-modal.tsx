@@ -48,7 +48,7 @@ export function AddKitchenModal({ open, onOpenChange }: AddKitchenModalProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="font-fraunces text-2xl">Add New Kitchen</DialogTitle>
+          <DialogTitle className="font-heading text-2xl">Add New Kitchen</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
           <KitchenBasicFields formData={formData} onFieldChange={handleFieldChange} />

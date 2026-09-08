@@ -9,12 +9,12 @@ import { toast } from "sonner";
 export default function AddSliderPage() {
   const router = useRouter();
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       console.log("Creating slider:", data);
       toast.success("Slider created successfully");
       router.push("/dashboard/admin/cms/sliders");
-    } catch (error) {
+    } catch {
       toast.error("Failed to create slider");
     }
   };

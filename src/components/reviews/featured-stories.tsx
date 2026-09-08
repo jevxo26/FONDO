@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Star, ChevronLeft, ChevronRight, Play } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function FeaturedStories() {
   return (
@@ -18,12 +19,12 @@ export default function FeaturedStories() {
             </h2>
           </div>
           <div className="flex items-center gap-2">
-            <button className="p-2 rounded-full border border-border bg-background hover:bg-muted text-foreground transition-all">
+            <Button variant="outline" size="icon">
               <ChevronLeft className="size-4" />
-            </button>
-            <button className="p-2 rounded-full border border-border bg-background hover:bg-muted text-foreground transition-all">
+            </Button>
+            <Button variant="outline" size="icon">
               <ChevronRight className="size-4" />
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -85,9 +86,9 @@ export default function FeaturedStories() {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-foreground/40 flex items-center justify-center">
-                  <button className="size-12 rounded-full bg-background/90 text-foreground flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-all pl-0.5">
+                  <Button variant="secondary" size="icon-lg" className="shadow-lg transform group-hover:scale-110 transition-all pl-0.5">
                     <Play className="size-5 fill-current text-foreground" />
-                  </button>
+                  </Button>
                 </div>
                 <div className="absolute bottom-3 left-3 right-3 bg-background/80 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-border text-[10px] font-bold text-foreground tracking-wide truncate">
                   {video.label}

@@ -78,7 +78,7 @@ export default function VendorSettingsPage() {
       <div className="space-y-8">
         <section className="space-y-4">
           <div className="space-y-1">
-            <h3 className="font-fraunces text-xl font-semibold tracking-tight">Profile</h3>
+            <h3 className="font-heading text-xl font-semibold tracking-tight">Profile</h3>
             <p className="text-sm text-muted-foreground">Manage your business information</p>
           </div>
           <div className="rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-6 shadow-[var(--shadow-card)]">
@@ -90,7 +90,7 @@ export default function VendorSettingsPage() {
 
         <section className="space-y-4">
           <div className="space-y-1">
-            <h3 className="font-fraunces text-xl font-semibold tracking-tight">Documents</h3>
+            <h3 className="font-heading text-xl font-semibold tracking-tight">Documents</h3>
             <p className="text-sm text-muted-foreground">
               Upload and manage business verification documents
             </p>
@@ -104,7 +104,7 @@ export default function VendorSettingsPage() {
 
         <section className="space-y-4">
           <div className="space-y-1">
-            <h3 className="font-fraunces text-xl font-semibold tracking-tight">Operating Hours</h3>
+            <h3 className="font-heading text-xl font-semibold tracking-tight">Operating Hours</h3>
             <p className="text-sm text-muted-foreground">Set your weekly business hours</p>
           </div>
           <div className="rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-6 shadow-[var(--shadow-card)]">
@@ -116,7 +116,7 @@ export default function VendorSettingsPage() {
 
         <section className="space-y-4">
           <div className="space-y-1">
-            <h3 className="font-fraunces text-xl font-semibold tracking-tight">Preferences</h3>
+            <h3 className="font-heading text-xl font-semibold tracking-tight">Preferences</h3>
             <p className="text-sm text-muted-foreground">Configure your business preferences</p>
           </div>
           <div className="rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-6 shadow-[var(--shadow-card)]">
@@ -128,7 +128,7 @@ export default function VendorSettingsPage() {
 
         <section className="space-y-4">
           <div className="space-y-1">
-            <h3 className="font-fraunces text-xl font-semibold tracking-tight text-destructive">
+            <h3 className="font-heading text-xl font-semibold tracking-tight text-destructive">
               Account
             </h3>
             <p className="text-sm text-muted-foreground">Manage your account settings</p>

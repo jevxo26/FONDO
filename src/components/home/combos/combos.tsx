@@ -6,7 +6,6 @@ import { SectionReveal } from "@/components/common/section-reveal";
 import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import {
   Carousel,
   CarouselContent,
@@ -27,19 +26,16 @@ function CarouselArrow({
 }) {
   const Icon = direction === "prev" ? ChevronLeft : ChevronRight;
   return (
-    <button
+    <Button
+      variant="outline"
+      size="icon"
       type="button"
       aria-label={direction === "prev" ? "Previous combos" : "Next combos"}
       onClick={onClick}
       disabled={disabled}
-      className={cn(
-        "flex size-10 items-center justify-center rounded-full border border-border/60 bg-background/60 text-foreground backdrop-blur-sm transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
-        "hover:border-primary/40 hover:text-primary active:scale-90",
-        "disabled:pointer-events-none disabled:opacity-40",
-      )}
     >
       <Icon className="size-4" />
-    </button>
+    </Button>
   );
 }
 

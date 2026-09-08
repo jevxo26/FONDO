@@ -35,16 +35,16 @@ export function ServiceBanner() {
                 className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/30 bg-primary/15 px-3 py-1.5"
               >
                 <div className="size-1.5 rotate-45 bg-primary/30" />
-                <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-background">
+                <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-white">
                   Tonight&apos;s service is open
                 </span>
               </motion.div>
 
-              <h2 className="font-heading text-3xl leading-tight tracking-tight text-background sm:text-4xl md:text-5xl lg:text-[60px]">
+              <h2 className="font-heading text-3xl leading-tight tracking-tight text-white sm:text-4xl md:text-5xl lg:text-[60px]">
                 A heritage feast, delivered in 25 minutes.
               </h2>
 
-              <p className="text-sm leading-tight text-background/75 sm:text-base max-w-lg">
+              <p className="text-sm leading-tight text-white/75 sm:text-base max-w-lg">
                 Free delivery over ৳999 across Dhaka. Reserve a table, or let us bring the kitchen
                 to you.
               </p>
@@ -66,13 +66,13 @@ export function ServiceBanner() {
                 </Button>
                 <Link
                   href="/foods"
-                  className="flex items-center gap-2 rounded-full border border-background/30 bg-background/10 px-3.5 py-2.5 text-sm backdrop-blur transition-all duration-300 hover:bg-background/20 hover:shadow-[var(--shadow-elevated)] sm:px-6 sm:py-3.5"
+                  className="flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3.5 py-2.5 text-sm backdrop-blur transition-all duration-300 hover:bg-white/20 hover:shadow-[var(--shadow-elevated)] sm:px-6 sm:py-3.5"
                 >
                   <span className="sm:hidden">Menu</span>
-                  <span className="hidden text-sm font-semibold text-background sm:inline">
+                  <span className="hidden text-sm font-semibold text-white sm:inline">
                     Explore menu
                   </span>
-                  <ArrowRight className="size-4 shrink-0 text-background" />
+                  <ArrowRight className="size-4 shrink-0 text-white" />
                 </Link>
               </div>
             </div>

@@ -201,8 +201,8 @@ const createReview = async (req: AuthRequest, res: Response): Promise<Response> 
       message: "Review submitted successfully and is pending approval",
       data: result,
     });
-  } catch (error: any) {
-    return res.status(400).json({ success: false, message: error.message });
+  } catch (error: unknown) {
+    return res.status(400).json({ success: false, message: getErrorMessage(error) });
   }
 };
 
@@ -225,8 +225,8 @@ const updateReview = async (req: AuthRequest, res: Response): Promise<Response> 
       message: "Review updated successfully",
       data: result,
     });
-  } catch (error: any) {
-    return res.status(400).json({ success: false, message: error.message });
+  } catch (error: unknown) {
+    return res.status(400).json({ success: false, message: getErrorMessage(error) });
   }
 };
 
@@ -245,8 +245,8 @@ const deleteReview = async (req: AuthRequest, res: Response): Promise<Response> 
       message: "Review deleted successfully",
       data: result,
     });
-  } catch (error: any) {
-    return res.status(400).json({ success: false, message: error.message });
+  } catch (error: unknown) {
+    return res.status(400).json({ success: false, message: getErrorMessage(error) });
   }
 };
 
@@ -269,8 +269,8 @@ const updateReviewStatus = async (req: AuthRequest, res: Response): Promise<Resp
       message: `Review status updated to ${status} successfully`,
       data: result,
     });
-  } catch (error: any) {
-    return res.status(400).json({ success: false, message: error.message });
+  } catch (error: unknown) {
+    return res.status(400).json({ success: false, message: getErrorMessage(error) });
   }
 };
 
@@ -284,8 +284,8 @@ const getPendingReviews = async (_req: Request, res: Response): Promise<Response
       total: reviews.length,
       data: reviews,
     });
-  } catch (error: any) {
-    return res.status(500).json({ success: false, message: error.message });
+  } catch (error: unknown) {
+    return res.status(500).json({ success: false, message: getErrorMessage(error) });
   }
 };
 

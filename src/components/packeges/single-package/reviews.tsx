@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { Star, Edit2, Trash2, Send, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
 // Import useSelector / auth state hook according to your Redux store pattern
 
 import {
@@ -170,14 +171,16 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
 
         {/* Dynamic Write Review Button */}
         {currentUserId && !userExistingReview && !isEditing && (
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={() => setIsEditing(true)}
-            className="px-3.5 py-2 bg-primary/10 text-primary text-xs font-bold rounded-xl hover:bg-primary hover:text-primary-foreground transition-all flex items-center gap-1.5"
+            className="flex items-center gap-1.5"
           >
             <Edit2 className="size-3.5" />
             Write Review
-          </button>
+          </Button>
         )}
       </div>
 
@@ -236,11 +239,13 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
           <div className="flex items-center gap-1">
             <span className="text-xs text-muted-foreground mr-2">Rating:</span>
             {[1, 2, 3, 4, 5].map((star) => (
-              <button
+              <Button
                 key={star}
                 type="button"
+                variant="ghost"
+                size="icon-xs"
                 onClick={() => setRatingInput(star)}
-                className="p-1 hover:scale-110 transition-transform"
+                className="hover:scale-110"
               >
                 <Star
                   className={`size-4 ${
@@ -249,7 +254,7 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
                       : "text-muted-foreground/30"
                   }`}
                 />
-              </button>
+              </Button>
             ))}
           </div>
 
@@ -262,21 +267,23 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
           />
 
           <div className="flex items-center justify-end gap-2">
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="sm"
               onClick={handleCancelForm}
-              className="px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted rounded-lg"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
+              variant="default"
               disabled={isCreating || isUpdating}
-              className="px-4 py-1.5 bg-primary text-primary-foreground font-bold text-xs rounded-xl flex items-center gap-1.5"
+              className="flex items-center gap-1.5"
             >
               <Send className="size-3" />
               {isCreating || isUpdating ? "Submitting..." : "Submit Review"}
-            </button>
+            </Button>
           </div>
         </form>
       )}
@@ -332,23 +339,25 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
                     {/* Edit/Delete controls for owner */}
                     {isOwner && !isEditing && (
                       <div className="flex items-center gap-1">
-                        <button
+                        <Button
                           type="button"
+                          variant="ghost"
+                          size="icon-xs"
                           onClick={() => handleStartEdit(rev)}
-                          className="p-1 hover:text-primary transition-colors text-muted-foreground"
                           title="Edit Review"
                         >
                           <Edit2 className="size-3" />
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                           type="button"
+                          variant="ghost"
+                          size="icon-xs"
                           onClick={() => handleDeleteReview(rev.id)}
                           disabled={isDeleting}
-                          className="p-1 hover:text-destructive transition-colors text-muted-foreground"
                           title="Delete Review"
                         >
                           <Trash2 className="size-3" />
-                        </button>
+                        </Button>
                       </div>
                     )}
                   </div>

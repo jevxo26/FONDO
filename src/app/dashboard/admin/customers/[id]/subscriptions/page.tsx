@@ -83,7 +83,7 @@ export default function CustomerSubscriptionsPage() {
       </Link>
 
       <div className="mb-6 flex items-center gap-3">
-        <h1 className="font-fraunces text-2xl font-bold text-foreground">Subscriptions</h1>
+        <h1 className="font-heading text-2xl font-bold text-foreground">Subscriptions</h1>
         <div className="flex gap-1">
           <Link
             href={`/dashboard/admin/customers/${id}`}

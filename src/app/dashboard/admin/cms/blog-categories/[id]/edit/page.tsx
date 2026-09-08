@@ -14,12 +14,12 @@ export default function EditBlogCategoryPage() {
 
   const category = mockBlogCategories.find((c) => c.id === categoryId);
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       console.log("Updating category:", data);
       toast.success("Category updated successfully");
       router.push("/dashboard/admin/cms/blog-categories");
-    } catch (error) {
+    } catch {
       toast.error("Failed to update category");
     }
   };

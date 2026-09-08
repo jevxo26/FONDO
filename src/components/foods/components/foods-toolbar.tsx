@@ -157,14 +157,16 @@ export function FoodsToolbar({ foods, totalCount }: { foods: Food[]; totalCount:
               className="h-9 rounded-full border-border/60 bg-card pl-9 text-sm"
             />
             {searchQuery && (
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon-xs"
                 onClick={() => setSearchQuery("")}
                 aria-label="Clear search"
-                className="absolute right-2.5 top-1/2 flex size-5 -translate-y-1/2 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-muted-foreground/20"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2"
               >
                 <X className="size-3" />
-              </button>
+              </Button>
             )}
           </div>
 
@@ -318,14 +320,16 @@ export function FoodsToolbar({ foods, totalCount }: { foods: Food[]; totalCount:
                 className="h-6 shrink-0 rounded-full border-primary/20 pl-2.5 pr-1 text-[11px] font-medium text-foreground"
               >
                 {filter.label}
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon-xs"
                   onClick={() => clearOne(filter.key)}
                   aria-label={`Remove ${filter.label} filter`}
-                  className="ml-1 flex size-4 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground"
+                  className="ml-1"
                 >
                   <X className="size-3" />
-                </button>
+                </Button>
               </Badge>
             ))}
           </div>

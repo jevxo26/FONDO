@@ -25,7 +25,7 @@ const image = pkg?.coverImage || pkg?.thumbnail;
         <Image
           fill
           priority
-          src={image}
+          src={image || "/placeholder-food.jpg"}
           alt={pkg?.name || "Package cover image"}
           className="object-cover transition-transform duration-1000 group-hover:scale-105"
           sizes="(max-width: 1024px) 100vw, 66vw"

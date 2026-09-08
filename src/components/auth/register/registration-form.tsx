@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
 import { Mail, Lock, Eye, EyeOff, Phone, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/common/form-field";
 import { registerSchema, type RegisterInput } from "@/lib/validations/auth";
 import { motion } from "framer-motion";
@@ -102,13 +103,15 @@ export function RegistrationForm({ onSubmit, loading }: RegistrationFormProps) {
               className="pl-10 pr-10 text-xs"
               {...register("password")}
             />
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon-xs"
               onClick={() => setShowPass(!showPass)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2"
             >
               {showPass ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-            </button>
+            </Button>
           </div>
         </FormField>
 
@@ -122,26 +125,33 @@ export function RegistrationForm({ onSubmit, loading }: RegistrationFormProps) {
               className="pl-10 pr-10 text-xs"
               {...register("confirmPassword")}
             />
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon-xs"
               onClick={() => setShowConfirmPass(!showConfirmPass)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2"
             >
               {showConfirmPass ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-            </button>
+            </Button>
           </div>
         </FormField>
 
-        <motion.button
-          type="submit"
-          disabled={loading}
+        <motion.div
           whileHover={{ scale: loading ? 1 : 1.01 }}
           whileTap={{ scale: loading ? 1 : 0.98 }}
-          className="w-full h-11 bg-primary text-primary-foreground rounded-xl text-xs font-bold mt-2 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] tracking-wider shadow-sm flex items-center justify-center gap-2"
         >
-          {loading ? <Loader2 className="size-4 animate-spin" /> : null}
-          {loading ? "Creating Account..." : "Register Account"}
-        </motion.button>
+          <Button
+            type="submit"
+            variant="default"
+            size="xl"
+            disabled={loading}
+            className="w-full tracking-wider"
+          >
+            {loading ? <Loader2 className="size-4 animate-spin" /> : null}
+            {loading ? "Creating Account..." : "Register Account"}
+          </Button>
+        </motion.div>
 
         <p className="text-center font-sans text-[11px] text-muted-foreground">
           Already have an account?{" "}

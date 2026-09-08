@@ -84,7 +84,7 @@ export function EarningsTableSection({
       {/* Settlements Table */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-fraunces text-lg font-semibold tracking-tight">Settlements</h3>
+          <h3 className="font-heading text-lg font-semibold tracking-tight">Settlements</h3>
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
             {settlements.filter((s) => s.paymentStatus === "PAID").length} Paid
           </p>
@@ -105,7 +105,7 @@ export function EarningsTableSection({
       {/* Wallet Transactions Table */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-fraunces text-lg font-semibold tracking-tight">
+          <h3 className="font-heading text-lg font-semibold tracking-tight">
             Wallet Transactions
           </h3>
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">

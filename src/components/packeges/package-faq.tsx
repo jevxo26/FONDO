@@ -2,6 +2,7 @@
 
 import { ChevronDown, HelpCircle } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function PackagesFaq() {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
@@ -36,15 +37,16 @@ export default function PackagesFaq() {
               key={index}
               className="bg-card border border-border rounded-xl overflow-hidden shadow-sm"
             >
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                className="w-full text-left p-4 flex items-center justify-between gap-4 font-semibold text-xs text-foreground outline-none"
+                className="w-full text-left justify-between gap-4 p-4 font-semibold text-xs text-foreground"
               >
                 <span>{faq.q}</span>
                 <ChevronDown
                   className={`size-4 text-muted-foreground shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180 text-primary" : ""}`}
                 />
-              </button>
+              </Button>
               <div
                 className={`transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? "max-h-40 border-t border-border/40" : "max-h-0"}`}
               >

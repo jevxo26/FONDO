@@ -14,6 +14,7 @@ import { KitchenCardPreview } from "@/components/dashboard/vendor/kitchens/kitch
 import { useMyVendor } from "@/store/api/slices/vendor-orders-api";
 import { useGetVendorBranchesQuery } from "@/store/api/slices/vendor-api";
 import { useCreateVendorKitchenMutation } from "@/store/api/slices/vendor-api";
+import { Button } from "@/components/ui/button";
 
 export default function AddKitchenPage() {
   const router = useRouter();
@@ -106,12 +107,13 @@ export default function AddKitchenPage() {
             <p className="text-sm text-muted-foreground">
               No branches found. Please create a branch first.
             </p>
-            <button
+            <Button
+              variant="link"
               onClick={() => router.push("/dashboard/vendor/branches")}
               className="mt-4 text-sm text-primary hover:underline"
             >
               Go to Branches
-            </button>
+            </Button>
           </div>
         </div>
       </div>

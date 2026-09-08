@@ -6,6 +6,7 @@ import { NavActions } from "./nav-actions";
 import { SearchForm } from "./search-form";
 import { mainNavLinks, childIcons } from "@/data/navigation";
 import { useScrolled } from "@/hooks/use-scrolled";
+import { usePathname } from "next/navigation";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -17,12 +18,19 @@ import {
 } from "@/components/ui/navigation-menu";
 
 export function Navbar() {
+  const pathname = usePathname();
   const scrolled = useScrolled(10);
+
+  const isActive = (href?: string) => {
+    if (!href) return false;
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  };
 
   const linkClasses = cn(
     navigationMenuTriggerStyle(),
-    "text-[16px] font-semibold text-foreground/75 relative after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-primary after:transition-transform after:duration-300",
-    "transition-colors duration-300 hover:text-primary hover:after:scale-x-100 data-[active]:text-primary data-[active]:after:scale-x-100",
+    "text-[16px] font-semibold text-foreground/75",
+    "hover:text-primary data-[active]:bg-primary/10 data-[active]:text-primary",
   );
 
   return (
@@ -30,8 +38,8 @@ export function Navbar() {
       className={cn(
         "sticky top-0 z-50 border-b border-primary/10 bg-background/85 backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
         scrolled
-          ? "shadow-[0_16px_48px_-18px_rgba(168,90,56,0.25)]"
-          : "shadow-[0_12px_40px_-16px_rgba(168,90,56,0.18)]",
+          ? "shadow-[0_16px_48px_-18px_color-mix(in_srgb,var(--primary)_25%,transparent)]"
+          : "shadow-[0_12px_40px_-16px_color-mix(in_srgb,var(--primary)_18%,transparent)]",
       )}
     >
       <div className="wrapper">
@@ -45,7 +53,10 @@ export function Navbar() {
                   <NavigationMenuItem key={link.label}>
                     {link.children ? (
                       <>
-                        <NavigationMenuTrigger className={linkClasses}>
+                        <NavigationMenuTrigger
+                          className={linkClasses}
+                          data-active={link.children.some((c) => isActive(c.href)) ? "" : undefined}
+                        >
                           {link.label}
                         </NavigationMenuTrigger>
                         <NavigationMenuContent>
@@ -69,7 +80,11 @@ export function Navbar() {
                         </NavigationMenuContent>
                       </>
                     ) : (
-                      <NavigationMenuLink href={link.href!} className={linkClasses}>
+                      <NavigationMenuLink
+                        href={link.href!}
+                        className={linkClasses}
+                        data-active={isActive(link.href) ? "" : undefined}
+                      >
                         {link.label}
                       </NavigationMenuLink>
                     )}

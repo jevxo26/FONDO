@@ -52,7 +52,7 @@ export function SearchForm() {
           <Button
             type="submit"
             variant="default"
-            className="h-9 gap-1.5 rounded-full px-4 text-sm font-medium text-primary-foreground transition-all duration-300 hover:shadow-[0_0_20px_rgba(168,90,56,0.35)]"
+            className="h-9 gap-1.5 rounded-full px-4 text-sm font-medium text-primary-foreground transition-all duration-300 hover:shadow-[0_0_20px_color-mix(in_srgb,var(--primary)_35%,transparent)]"
           >
             <Search className="size-4" />
             Search
@@ -61,7 +61,9 @@ export function SearchForm() {
       </div>
 
       {/* Search icon — below 2xl */}
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         onClick={() => dispatch(toggleSearch())}
         className={cn(
           "nav-icon-pill",
@@ -73,7 +75,7 @@ export function SearchForm() {
         aria-label="Toggle search"
       >
         {isOpen ? <X className="nav-icon" /> : <Search className="nav-icon" />}
-      </button>
+      </Button>
 
       {isOpen && (
         <div className="absolute inset-x-0 top-full border-b border-primary/10 bg-background/95 px-4 py-4 backdrop-blur-xl shadow-[0_24px_50px_-20px_rgba(30,26,22,0.25)] xl:hidden animate-in fade-in slide-in-from-top-2 duration-200">
@@ -94,7 +96,7 @@ export function SearchForm() {
               type="submit"
               variant="default"
               aria-label="Search"
-              className="h-9 rounded-full px-4 text-primary-foreground transition-all duration-300 hover:shadow-[0_0_20px_rgba(168,90,56,0.35)]"
+              className="h-9 rounded-full px-4 text-primary-foreground transition-all duration-300 hover:shadow-[0_0_20px_color-mix(in_srgb,var(--primary)_35%,transparent)]"
             >
               <Search className="size-4" />
             </Button>

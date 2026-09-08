@@ -1,7 +1,6 @@
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { StatCard } from "@/components/dashboard/common/stat-card";
 import { BottomWidgets } from "@/components/dashboard/admin/vendors/all-vendors/bottom-widgets";
-import { RegisterVendorModal } from "@/components/dashboard/admin/vendors/all-vendors/register-vendor-modal";
 import { VendorsTable } from "@/components/dashboard/admin/vendors/all-vendors/vendors-table";
 import { vendors } from "@/data/vendors";
 import { CheckCircle, Clock, Plus, Store, Wallet } from "lucide-react";

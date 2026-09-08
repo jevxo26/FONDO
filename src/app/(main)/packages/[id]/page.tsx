@@ -45,7 +45,7 @@ const extraPrice = customDays.reduce((total, day) => {
               setCustomDays={setCustomDays}
               totalPrice={Number(singlePackage.price ?? 0) + extraPrice}
             />
-            <PackageReviews packageId={singlePackage.id} rating={singlePackage.rating} />
+            <PackageReviews packageId={singlePackage.id} rating={singlePackage.rating!} />
           </div>
 
           <aside className="lg:col-span-4 lg:sticky lg:top-8 flex flex-col gap-4">

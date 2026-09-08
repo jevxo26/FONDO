@@ -70,7 +70,7 @@ export function ComboCard({ combo, index = 0, className }: ComboCardProps) {
           sizes="(max-width: 640px) 80vw, 300px"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-overlay/70 via-overlay/10 to-transparent" />
 
         <div className="absolute top-3 left-3 flex items-center gap-1.5">
           <span className={cn("inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider shadow-[var(--shadow-card)]", tier.badge)}>
@@ -79,7 +79,7 @@ export function ComboCard({ combo, index = 0, className }: ComboCardProps) {
         </div>
 
         {combo.saveAmount && (
-          <span className="absolute top-3 right-3 rounded-full bg-background/90 px-2.5 py-1 text-[10px] font-bold text-primary backdrop-blur-sm shadow-[var(--shadow-card)]">
+          <span className="absolute top-3 right-3 rounded-full bg-card/90 px-2.5 py-1 text-[10px] font-bold text-primary backdrop-blur-sm shadow-[var(--shadow-card)]">
             Save ৳{combo.saveAmount}
           </span>
         )}

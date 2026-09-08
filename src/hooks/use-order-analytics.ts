@@ -16,7 +16,7 @@ interface AdminOrder {
 
 export function useOrderAnalytics() {
   const { data, isLoading, error } = useGetAllAdminOrdersQuery();
-  const orders = (data ?? []) as AdminOrder[];
+  const orders = useMemo(() => (data ?? []) as AdminOrder[], [data]);
 
   const analytics = useMemo(() => {
     const totalRevenue = orders.reduce((s, o) => s + Number(o.totalAmount), 0);

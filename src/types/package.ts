@@ -4,7 +4,7 @@ import type { Food } from "./food";
 // ENUMS & CONSTANTS
 // ==========================================
 
-export type PackageType = "WEEKLY" | "MONTHLY" | "CUSTOM_PACKAGE" | "STANDARD";
+export type PackageType = "WEEKLY" | "MONTHLY" | "CUSTOM_PACKAGE" | "CUSTOM" | "STANDARD";
 
 export type MealType = "BREAKFAST" | "LUNCH" | "DINNER" | "SNACK";
 
@@ -25,6 +25,11 @@ export interface PackageFood {
   quantity: number;
   isExtra?: boolean;
   food?: Food;
+  name?: string;
+  thumbnail?: string;
+  price?: number | string;
+  calories?: number;
+  variants?: FoodVariant[];
 }
 
 // ==========================================
@@ -41,6 +46,8 @@ export interface PackageMeal {
 export interface PackageDay {
   id?: string;
   dayNumber: number;
+  title?: string;
+  description?: string;
   meals: PackageMeal[];
 }
 
@@ -97,6 +104,7 @@ export interface Package {
   description?: string;
   thumbnail?: string;
   coverImage?: string;
+  status?: string;
 
   // Pricing & Metrics
   price: number | string;
@@ -114,6 +122,7 @@ export interface Package {
   packageCategoryId?: string;
   rule?: PackageRule;
   packageRuleId?: string;
+  vendor?: { id: string; businessName: string } | null;
 
   // Nested Menu Items
   days: PackageDay[];

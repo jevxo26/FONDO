@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Navigation, Wallet, ShieldCheck, Flame } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function RiderAppPreviewSection() {
   return (
@@ -57,9 +58,9 @@ export function RiderAppPreviewSection() {
                   <div className="text-3xl font-bold text-foreground">৳2,150</div>
                   <div className="text-[10px] text-green-500 font-bold">14 Orders Completed</div>
                 </div>
-                <button className="w-full py-3 bg-primary text-primary-foreground font-bold text-xs rounded-xl shadow-md">
+                <Button variant="default" className="w-full">
                   Accept Next Order (1.2 km)
-                </button>
+                </Button>
               </div>
               <div className="text-[10px] text-center text-muted-foreground flex items-center justify-center gap-1">
                 <ShieldCheck className="size-3 text-primary" /> Insurance Active

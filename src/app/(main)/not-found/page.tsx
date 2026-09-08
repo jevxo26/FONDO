@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function OrderNotFound() {
   const [orderNumber, setOrderNumber] = useState("");
@@ -38,12 +39,13 @@ export default function OrderNotFound() {
               placeholder="Enter order number..."
               className="h-11 w-full md:w-72 rounded-l-xl border border-border bg-card px-4 font-sans text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
             />
-            <button
+            <Button
               type="submit"
-              className="h-11 px-6 rounded-r-xl bg-primary text-card font-sans text-xs font-semibold hover:bg-primary/85 transition-colors whitespace-nowrap"
+              variant="default"
+              className="h-11 px-6 rounded-l-none rounded-r-xl"
             >
               Track
-            </button>
+            </Button>
           </form>
         </div>
 

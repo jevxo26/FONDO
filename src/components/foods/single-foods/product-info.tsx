@@ -104,11 +104,13 @@ export function ProductInfo({
           <span className="text-xs font-medium text-muted-foreground">Select Serving:</span>
           <div className="mt-2 flex flex-wrap gap-2">
             {food.variants.map((v) => (
-              <button
+              <Button
                 key={v.id}
+                variant="outline"
+                size="sm"
                 onClick={() => onVariantChange(v)}
                 className={cn(
-                  "rounded-full border px-4 py-1.5 text-xs font-semibold transition-all",
+                  "rounded-full px-4 text-xs font-semibold",
                   v.id === selectedVariant.id
                     ? "border-primary bg-primary/10 text-primary"
                     : "border-border/60 bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground",
@@ -118,7 +120,7 @@ export function ProductInfo({
                 <span className="ml-1.5 text-primary">
                   ৳{v.discountPrice ?? v.price}
                 </span>
-              </button>
+              </Button>
             ))}
           </div>
         </div>

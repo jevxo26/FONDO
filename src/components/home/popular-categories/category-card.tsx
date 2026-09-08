@@ -23,8 +23,8 @@ export function CategoryCard({ category, className }: CategoryCardProps) {
         sizes="(max-width: 768px) 50vw, 16vw"
         className="object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
-      <div className="absolute inset-[1px] rounded-2xl ring-1 ring-inset ring-white/10 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-overlay/80 via-overlay/20 to-transparent" />
+      <div className="absolute inset-[1px] rounded-2xl ring-1 ring-inset ring-foreground/10 pointer-events-none" />
       <span className="relative z-10 p-3 text-sm font-medium text-background">
         {category.label}
       </span>

@@ -4,7 +4,7 @@ import { DataTable, DataTableColumnHeader } from "@/components/common/table";
 import type { FacetedFilter, RowAction } from "@/components/common/table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import { Eye, FileText, ShieldBan, ShieldCheck } from "lucide-react";
+import { Eye, ShieldBan, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useDeleteVendor, Vendor } from "@/store/api/slices/admin-vendor-api";
 

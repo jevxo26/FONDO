@@ -106,7 +106,6 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
       if (editingReviewId) {
         await updateReview({
           id: editingReviewId,
-          packageId,
           rating: ratingInput,
           review: reviewInput,
         }).unwrap();
@@ -126,7 +125,7 @@ export default function PackageReviews({ packageId, rating }: PackageReviewsProp
   const handleDeleteReview = async (reviewId: string) => {
     if (!confirm("Are you sure you want to delete your review?")) return;
     try {
-      await deleteReview({ id: reviewId, packageId }).unwrap();
+      await deleteReview(reviewId).unwrap();
       handleCancelForm();
     } catch (err) {
       console.error("Failed to delete review:", err);

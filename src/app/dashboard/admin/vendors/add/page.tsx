@@ -50,7 +50,8 @@ export default function AddVendorPage() {
             toast.success(`Vendor "${result.vendor.businessName}" created successfully!`);
             // Navigate to vendors list or request approval page
             router.push("/dashboard/admin/vendors");
-        } catch (error: any) {
+        } catch (err: unknown) {
+            const error = err as { data?: { message?: string } };
             toast.error(error?.data?.message || "Failed to create vendor. Please try again.");
         }
     };

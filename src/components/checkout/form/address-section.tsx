@@ -1,4 +1,5 @@
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/common/form-field";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { Address } from "@/types/address";
@@ -35,11 +36,12 @@ export function AddressSection({
       {fulfillment === "delivery" && addresses.length > 0 && (
         <div className="flex flex-col gap-2">
           {addresses.map((addr) => (
-            <button
+            <Button
               key={addr.id}
+              variant="outline"
               type="button"
               onClick={() => onSelect(addr.id)}
-              className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${
+              className={`flex items-center gap-3 p-3 rounded-xl text-left transition-all ${
                 selectedAddressId === addr.id
                   ? "border-primary bg-primary/5"
                   : "border-border bg-background hover:border-border/80"
@@ -67,7 +69,7 @@ export function AddressSection({
                 </p>
               </div>
               {selectedAddressId === addr.id && <Check className="size-4 text-primary shrink-0" />}
-            </button>
+            </Button>
           ))}
         </div>
       )}

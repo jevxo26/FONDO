@@ -37,7 +37,7 @@ export function KitchenDining() {
                 sizes="(max-width: 768px) 100vw, 292px"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/50 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-overlay/50 via-transparent to-transparent" />
               <div className="absolute bottom-3 left-3 rounded-xl bg-background/90 px-3.5 py-2 backdrop-blur-sm shadow-[var(--shadow-card)]">
                 <span className="flex items-center gap-2 text-xs font-medium text-foreground">
                   <div className="size-1.5 rotate-45 bg-primary" />
@@ -59,7 +59,7 @@ export function KitchenDining() {
                   sizes="(max-width: 768px) 100vw, 327px"
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/50 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-overlay/50 via-transparent to-transparent" />
                 <div className="absolute bottom-3 left-3 rounded-xl bg-background/90 px-3.5 py-2 backdrop-blur-sm shadow-[var(--shadow-card)]">
                   <span className="flex items-center gap-2 text-xs font-medium text-foreground">
                     <div className="size-1.5 rotate-45 bg-primary" />
@@ -79,7 +79,7 @@ export function KitchenDining() {
                   sizes="(max-width: 768px) 100vw, 327px"
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/50 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-overlay/50 via-transparent to-transparent" />
                 <div className="absolute bottom-3 left-3 rounded-xl bg-background/90 px-3.5 py-2 backdrop-blur-sm shadow-[var(--shadow-card)]">
                   <span className="flex items-center gap-2 text-xs font-medium text-foreground">
                     <div className="size-1.5 rotate-45 bg-primary" />
@@ -101,7 +101,7 @@ export function KitchenDining() {
                 sizes="(max-width: 768px) 100vw, 327px"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/50 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-overlay/50 via-transparent to-transparent" />
               <div className="absolute bottom-3 left-3 rounded-xl bg-background/90 px-3.5 py-2 backdrop-blur-sm shadow-[var(--shadow-card)]">
                 <span className="flex items-center gap-2 text-xs font-medium text-foreground">
                   <div className="size-1.5 rotate-45 bg-primary" />

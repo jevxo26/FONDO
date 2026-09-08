@@ -98,7 +98,7 @@ export interface VendorSettlementTransaction {
 
 export interface VendorSettlement {
   id: string;
-  vendorId: string;
+  vendorId?: string;
   settlementNumber: string;
   settlementPeriodStart: string;
   settlementPeriodEnd: string;
@@ -107,11 +107,11 @@ export interface VendorSettlement {
   totalCommission: number;
   vatAmount: number;
   adjustmentAmount: number;
-  totalPayable: number;
+  totalPayable?: number;
   netAmount: number;
   paymentStatus: string;
   paymentDate: string | null;
-  transactionId: string | null;
+  transactionId?: string | null;
   createdAt: string;
   updatedAt: string;
   items?: VendorSettlementItem[];

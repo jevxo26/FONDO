@@ -26,7 +26,7 @@ export default function FoodPackagesPage() {
   const { data: result, isLoading } = useListAdminPackagesQuery(params);
   const [deletePackage] = useDeletePackageMutation();
 
-  const handleDeletePackage = (pkg: FoodPackage) => {
+  const handleDeletePackage = (pkg: FoodPackage | AdminPackageListItem) => {
     const packageId = pkg.id || pkg._id;
 
     if (!packageId) {
@@ -43,8 +43,8 @@ export default function FoodPackagesPage() {
       text: `You are about to delete "${pkg.name}". This action cannot be undone!`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#ef4444",
-      cancelButtonColor: "#6b7280",
+      confirmButtonColor: "var(--destructive)",
+      cancelButtonColor: "var(--muted-foreground)",
       confirmButtonText: "Yes, delete it!",
       cancelButtonText: "Cancel",
       reverseButtons: true,
@@ -52,7 +52,8 @@ export default function FoodPackagesPage() {
       preConfirm: async () => {
         try {
           await deletePackage(packageId).unwrap();
-        } catch (error: any) {
+        } catch (err: unknown) {
+          const error = err as { data?: { message?: string } };
           Swal.showValidationMessage(
             error?.data?.message || "Failed to delete package. Please try again."
           );

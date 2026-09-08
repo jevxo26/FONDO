@@ -1,4 +1,5 @@
 import { ShoppingBag, Truck, Info } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Props {
@@ -34,11 +35,12 @@ export function FulfillmentSelector({ value, onChange }: Props) {
           const Icon = opt.icon;
           const isSelected = value === opt.id;
           return (
-            <button
+            <Button
               key={opt.id}
+              variant="outline"
               type="button"
               onClick={() => onChange(opt.id as "delivery" | "pickup")}
-              className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] border text-left ${
+              className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] text-left ${
                 isSelected
                   ? "bg-foreground border-foreground text-background shadow-lg"
                   : "bg-background border-border text-foreground hover:border-foreground/20 hover:shadow-sm"
@@ -63,7 +65,7 @@ export function FulfillmentSelector({ value, onChange }: Props) {
                   {opt.desc}
                 </p>
               </div>
-            </button>
+            </Button>
           );
         })}
       </div>

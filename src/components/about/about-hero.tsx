@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import { Button } from "@/components/ui/button";
 
 export default function HeroSection() {
   return (
@@ -15,12 +16,12 @@ export default function HeroSection() {
             and delivered fresh to your doorstep within a dedicated daily window.
           </p>
           <div className="flex flex-wrap gap-4 pt-2">
-            <button className="px-6 py-3 bg-primary text-background font-sans font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-primary/90 transition-colors">
+            <Button variant="default" size="lg" className="uppercase tracking-widest">
               Explore Meal Plans
-            </button>
-            <button className="px-6 py-3 border border-foreground/20 text-foreground font-sans font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-foreground/5 transition-colors">
+            </Button>
+            <Button variant="outline" size="lg" className="uppercase tracking-widest text-foreground border-foreground/20 hover:bg-foreground/5">
               Customize Your Plan
-            </button>
+            </Button>
           </div>
         </div>
         {/* Right image column */}

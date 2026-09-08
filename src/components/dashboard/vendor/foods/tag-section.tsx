@@ -61,7 +61,7 @@ function ChipGroup({
           <label
             key={option}
             className={cn(
-              "cursor-pointer select-none rounded-full border px-3 py-1.5 text-xs font-medium transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:shadow-[0_2px_8px_rgba(168,90,56,0.25)]",
+              "cursor-pointer select-none rounded-full border px-3 py-1.5 text-xs font-medium transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:shadow-[0_2px_8px_color-mix(in_srgb,var(--primary)_25%,transparent)]",
               "border-border bg-muted text-muted-foreground hover:border-primary/40",
             )}
           >

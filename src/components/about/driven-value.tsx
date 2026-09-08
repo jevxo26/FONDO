@@ -20,7 +20,7 @@ export default function DrivenByValues() {
         <div className="flex flex-wrap justify-center gap-8 md:gap-12">
           {values.map((val, idx) => (
             <div key={idx} className="flex flex-col items-center space-y-3">
-              <div className="size-12 rounded-full border border-foreground/15 flex items-center justify-center text-foreground bg-white shadow-sm hover:scale-105 transition-transform">
+              <div className="size-12 rounded-full border border-foreground/15 flex items-center justify-center text-foreground bg-card shadow-sm hover:scale-105 transition-transform">
                 {React.cloneElement(val.icon, { className: "size-5" })}
               </div>
               <span className="font-sans text-[10px] font-bold uppercase tracking-wider text-foreground/70">

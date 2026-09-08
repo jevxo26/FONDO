@@ -9,12 +9,12 @@ import { toast } from "sonner";
 export default function AddBlogCategoryPage() {
   const router = useRouter();
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       console.log("Creating category:", data);
       toast.success("Category created successfully");
       router.push("/dashboard/admin/cms/blog-categories");
-    } catch (error) {
+    } catch {
       toast.error("Failed to create category");
     }
   };

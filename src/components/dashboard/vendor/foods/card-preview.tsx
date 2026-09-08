@@ -74,13 +74,13 @@ export function CardPreview({
           )}
           <div className="absolute left-2.5 top-2.5 flex flex-wrap gap-1.5">
             {featured && (
-              <Badge className="gap-1 bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(168,90,56,0.35)]">
+              <Badge className="gap-1 bg-primary text-primary-foreground shadow-[0_2px_8px_color-mix(in_srgb,var(--primary)_35%,transparent)]">
                 <Star className="size-3" />
                 Featured
               </Badge>
             )}
             {popular && (
-              <Badge className="gap-1 bg-warning/90 text-white shadow-[0_2px_8px_rgba(245,158,11,0.35)]">
+              <Badge className="gap-1 bg-warning/90 text-white shadow-[0_2px_8px_color-mix(in_srgb,var(--warning)_35%,transparent)]">
                 <Heart className="size-3" />
                 Popular
               </Badge>

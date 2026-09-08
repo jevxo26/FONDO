@@ -6,7 +6,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -46,14 +45,14 @@ export function BlogForm({ onSubmit, onCancel, defaultValues }: BlogFormProps) {
     watch,
     setValue,
   } = useForm<BlogFormValues>({
-    resolver: yupResolver(blogSchema) as any,
+    resolver: yupResolver(blogSchema) as never,
     defaultValues: {
       status: "DRAFT",
       ...defaultValues,
     },
   });
 
-  const title = watch("title");
+  // eslint-disable-next-line react-hooks/incompatible-library
   const thumbnail = watch("thumbnail");
 
   // Auto-generate slug from title
@@ -101,7 +100,7 @@ export function BlogForm({ onSubmit, onCancel, defaultValues }: BlogFormProps) {
 
             <FormField label="Category" error={errors.categoryId} required>
               <Select
-                onValueChange={(value) => setValue("categoryId", value as any) }
+                onValueChange={(value) => { if (value) setValue("categoryId", value); }}
                 defaultValue={defaultValues?.categoryId}
               >
                 <SelectTrigger className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">

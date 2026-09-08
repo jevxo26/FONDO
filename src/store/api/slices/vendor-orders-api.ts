@@ -1,6 +1,5 @@
 import { api } from "../base-api";
-import { createMutationWrapper } from "../mutation-wrapper";
-import type { Order } from "@/types/order";
+
 
 export interface MyVendor {
   id: string;

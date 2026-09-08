@@ -3,12 +3,6 @@
 import React from "react";
 import {
   Clock,
-  Package,
-  CreditCard,
-  UserPlus,
-  AlertCircle,
-  ShoppingBag,
-  Truck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -83,7 +77,7 @@ export function RecentActivity({ activities, className, isLoading }: RecentActiv
 
       <div className="relative z-10 p-6">
         <div className="flex items-center justify-between">
-          <h3 className="font-fraunces text-lg font-semibold text-foreground">Recent Activity</h3>
+          <h3 className="font-heading text-lg font-semibold text-foreground">Recent Activity</h3>
           <span className="text-xs text-muted-foreground">Live</span>
         </div>
 

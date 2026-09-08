@@ -1,6 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type { Food } from "@/types/food";
 
 interface Props {
@@ -25,9 +27,11 @@ export default function FoodSelector({
             className="flex items-center justify-between border rounded-lg p-2"
           >
             <div className="flex gap-3 items-center">
-              <img
-                src={food.thumbnail}
+              <Image
+                src={food.thumbnail || "/placeholder-food.jpg"}
                 alt={food.name}
+                width={48}
+                height={48}
                 className="w-12 h-12 rounded object-cover"
               />
 
@@ -46,12 +50,14 @@ export default function FoodSelector({
               </div>
             </div>
 
-            <button
+            <Button
               onClick={() => onAddFood(food)}
-              className="p-2 rounded-lg border hover:bg-primary hover:text-white"
+              variant="outline"
+              size="icon-sm"
+              className="rounded-lg"
             >
               <Plus size={16} />
-            </button>
+            </Button>
           </div>
         ))}
       </div>

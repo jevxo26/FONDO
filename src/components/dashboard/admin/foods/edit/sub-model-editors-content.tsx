@@ -8,7 +8,6 @@ import { Switch } from "@/components/ui/switch";
 import { inputStyles } from "@/lib/schema/food-schema";
 import { SubModelManager } from "@/components/dashboard/admin/foods/edit/sub-model-manager";
 import type {
-  AdminAddonItem,
   AdminFoodAddon,
   AdminFoodAllergen,
   AdminFoodIngredient,
@@ -36,10 +35,6 @@ const toNum = (v: string) => {
   const n = Number(v);
   return Number.isNaN(n) ? undefined : n;
 };
-
-interface BaseEditorProps {
-  foodId: string;
-}
 
 // ─── Addons (with inline item management) ────────────────────
 export function AddonsEditor({ foodId, items }: { foodId: string; items: AdminFoodAddon[] }) {
@@ -315,7 +310,7 @@ export function LabelsEditor({ foodId, items }: { foodId: string; items: AdminFo
         <div className="flex items-center gap-2">
           <span
             className="inline-block size-3 rounded-full"
-            style={{ backgroundColor: l.color ?? "#64748b" }}
+            style={{ backgroundColor: l.color ?? "var(--muted-foreground)" }}
           />
           <span className="text-sm font-medium text-foreground">{l.label}</span>
         </div>

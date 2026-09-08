@@ -49,7 +49,7 @@ export function AssignRoleModal({ open, onOpenChange, staff, onAssign }: AssignR
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-fraunces text-2xl">Assign Roles</DialogTitle>
+          <DialogTitle className="font-heading text-2xl">Assign Roles</DialogTitle>
           <p className="text-sm text-muted-foreground">Assign roles to {staff.fullName}</p>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">

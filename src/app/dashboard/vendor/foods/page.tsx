@@ -69,7 +69,7 @@ export default function VendorFoodsPage() {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-fraunces text-xl font-semibold tracking-tight">Food Items List</h3>
+          <h3 className="font-heading text-xl font-semibold tracking-tight">Food Items List</h3>
           <p className="text-xs uppercase tracking-widest text-muted-foreground">
             {activeItems} Active
           </p>

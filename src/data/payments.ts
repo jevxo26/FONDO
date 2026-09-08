@@ -46,7 +46,7 @@ const customerNames = [
 const paymentMethods = [
   { method: "bKash", icon: "bg-pink-100 text-pink-600", detail: "Personal" },
   { method: "bKash", icon: "bg-pink-100 text-pink-600", detail: "Merchant" },
-  { method: "Nagad", icon: "bg-orange-100 text-orange-600", detail: "Personal" },
+  { method: "Nagad", icon: "bg-warning/10 text-warning", detail: "Personal" },
   { method: "Visa", icon: "text-blue-600", detail: "•••• 4291" },
   { method: "Mastercard", icon: "text-orange-600", detail: "•••• 8821" },
   { method: "Heritage Wallet", icon: "text-golden-amber", detail: "Wallet" },

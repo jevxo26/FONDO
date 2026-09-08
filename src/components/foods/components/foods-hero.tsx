@@ -3,6 +3,7 @@
 import { Star } from "lucide-react";
 import { useFoods } from "./foods-provider";
 import { useFoodCategories } from "@/store/api/slices/foods-api";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function FoodsHero() {
@@ -48,19 +49,21 @@ export default function FoodsHero() {
 
             <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
               {["All", ...categories.map((c) => c.name)].map((name) => (
-                <button
+                <Button
                   key={name}
                   type="button"
+                  variant="outline"
+                  size="sm"
                   onClick={() => pickCategory(name)}
                   className={cn(
-                    "rounded-full border px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-95",
+                    "rounded-full px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-95",
                     activeCategory === name
                       ? "border-primary bg-primary text-primary-foreground shadow-[var(--shadow-badge)]"
                       : "border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground",
                   )}
                 >
                   {name}
-                </button>
+                </Button>
               ))}
             </div>
 

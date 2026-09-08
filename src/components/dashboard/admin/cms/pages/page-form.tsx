@@ -37,14 +37,12 @@ export function PageForm({ onSubmit, onCancel, defaultValues }: PageFormProps) {
     watch,
     setValue,
   } = useForm<PageFormValues>({
-    resolver: yupResolver(pageSchema) as any,
+    resolver: yupResolver(pageSchema) as never,
     defaultValues: {
       isPublished: false,
       ...defaultValues,
     },
   });
-
-  const title = watch("title");
 
   const generateSlug = (value: string) => {
     return value
@@ -82,6 +80,7 @@ export function PageForm({ onSubmit, onCancel, defaultValues }: PageFormProps) {
 
             <FormField label="Content" error={errors.content} required className="md:col-span-2">
               <RichTextEditor
+                // eslint-disable-next-line react-hooks/incompatible-library
                 value={watch("content") || ""}
                 onChange={(value) => setValue("content", value, { shouldValidate: true })}
               />

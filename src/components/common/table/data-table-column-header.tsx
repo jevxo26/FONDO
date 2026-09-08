@@ -2,6 +2,7 @@
 
 import type { Column } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface DataTableColumnHeaderProps<TData, TValue> {
   column: Column<TData, TValue>;
@@ -28,7 +29,9 @@ export function DataTableColumnHeader<TData, TValue>({
   const isSorted = column.getIsSorted();
 
   return (
-    <button
+    <Button
+      variant="ghost"
+      size="sm"
       onClick={column.getToggleSortingHandler()}
       className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground"
     >
@@ -40,6 +43,6 @@ export function DataTableColumnHeader<TData, TValue>({
       ) : (
         <ArrowUpDown className="size-3 opacity-40" />
       )}
-    </button>
+    </Button>
   );
 }

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, XCircle, Copy, Check, Tag, Clock, Info } from "lucide-react";
+import { CheckCircle, XCircle, Copy, Check, Tag } from "lucide-react";
 import { mockCoupons, type Coupon } from "@/data/mock-coupons";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -49,7 +49,7 @@ export function FoodCoupons({ foodId, foodPrice }: FoodCouponsProps) {
 
   return (
     <div className="space-y-4">
-      <h3 className="font-fraunces text-lg font-semibold">
+      <h3 className="font-heading text-lg font-semibold">
         Available Coupons
         <span className="ml-2 text-sm font-normal text-muted-foreground">
           ({applicableCoupons.length})
@@ -95,7 +95,7 @@ function CouponItem({ coupon, onCopy, copiedId, isApplicable, reason }: CouponIt
         <div
           className={cn(
             "rounded-full p-2",
-            isApplicable ? "bg-green-100 dark:bg-green-900/30" : "bg-red-100 dark:bg-red-900/30",
+            isApplicable ? "bg-success/10" : "bg-destructive/10",
           )}
         >
           {isApplicable ? (

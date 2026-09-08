@@ -37,7 +37,7 @@ export default function CustomerDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <XCircle className="size-12 text-destructive" />
-        <h2 className="mt-4 font-fraunces text-xl font-bold">Customer not found</h2>
+        <h2 className="mt-4 font-heading text-xl font-bold">Customer not found</h2>
         <Link
           href="/dashboard/admin/customers"
           className="mt-2 text-sm text-primary hover:underline"

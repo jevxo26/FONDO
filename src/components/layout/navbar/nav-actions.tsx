@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 const roleLabels: Record<string, string> = {
   SUPER_ADMIN: "Super Admin",
@@ -41,6 +43,12 @@ const roleLabels: Record<string, string> = {
 
 export function NavActions() {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   const { user, isAuthenticated, logout } = useAuth();
   const permissions = useAppSelector((s) => s.auth.permissions);
@@ -65,8 +73,24 @@ export function NavActions() {
   const fullName = user ? `${user.firstName} ${user.lastName}` : "User";
   const roleLabel = user ? roleLabels[user.role] ?? user.role.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) : "";
 
+  if (!mounted) {
+    return (
+      <div className="flex items-center gap-2">
+        <ThemeToggle />
+        <div className="nav-icon-pill text-foreground">
+          <Heart className="nav-icon" />
+        </div>
+        <div className="nav-icon-pill text-foreground">
+          <ShoppingCart className="nav-icon" />
+        </div>
+        <div className="hidden lg:block h-9 w-24 rounded-lg bg-muted animate-pulse" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex items-center gap-2">
+      <ThemeToggle />
       <Link
         href="/wishlist"
         className={cn("nav-icon-pill", "text-foreground")}
@@ -112,9 +136,9 @@ export function NavActions() {
       {isAuthenticated && user ? (
         <DropdownMenu>
           <DropdownMenuTrigger className="hidden lg:block outline-none">
-            <div className="flex cursor-pointer items-center gap-3 rounded-xl bg-foreground px-3 py-1.5 pr-2 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-foreground/90 active:scale-[0.98]">
-              <Avatar className="size-7 ring-2 ring-primary/40 ring-offset-1 ring-offset-foreground shadow-[0_0_12px_rgba(168,90,56,0.2)]">
-                <AvatarFallback className="bg-primary/10 text-[10px] font-bold text-primary">
+            <div className="flex cursor-pointer items-center gap-2.5 rounded-xl border border-border bg-background px-3 py-1.5 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-muted active:scale-[0.98]">
+              <Avatar className="size-8 ring-2 ring-primary/30">
+                <AvatarFallback className="bg-secondary text-xs font-bold text-foreground">
                   {user.avatar ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={user.avatar} alt="" className="size-full rounded-full object-cover" />
@@ -124,19 +148,19 @@ export function NavActions() {
                 </AvatarFallback>
               </Avatar>
               <div className="grid text-left leading-tight">
-                <span className="max-w-[90px] truncate text-sm font-semibold text-secondary">
+                <span className="max-w-[90px] truncate text-sm font-semibold text-foreground">
                   {user.firstName}
                 </span>
-                <span className="max-w-[90px] truncate text-[9px] uppercase tracking-wider text-primary/80">
+                <span className="max-w-[90px] truncate text-[9px] uppercase tracking-wider text-muted-foreground">
                   {roleLabel}
                 </span>
               </div>
-              <ChevronDown className="size-3 shrink-0 text-secondary/70" />
+              <ChevronDown className="size-3 shrink-0 text-muted-foreground" />
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-60 p-1.5">
             <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-foreground/[0.03] to-foreground/[0.01] p-3 mb-1">
-              <Avatar className="size-9 ring-2 ring-primary/30 ring-offset-1 ring-offset-card shadow-[0_0_16px_rgba(168,90,56,0.15)]">
+              <Avatar className="size-9 ring-2 ring-primary/30 ring-offset-1 ring-offset-card shadow-[0_0_16px_color-mix(in_srgb,var(--primary)_15%,transparent)]">
                 <AvatarFallback className="bg-secondary text-xs font-bold text-foreground">
                   {initials}
                 </AvatarFallback>

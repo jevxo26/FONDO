@@ -2,6 +2,7 @@
 
 import React, { useMemo } from "react";
 import { ArrowUpDown, SlidersHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 import PackageGrid from "./package-grid";
 import { usePackages } from "./packages-context";
@@ -164,29 +165,23 @@ export default function PackagesWorkspace() {
     <section className="wrapper py-12">
       {/* Categories Bar */}
       <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 border-b border-border/60">
-        <button
+        <Button
+          variant={selectedCategory === "All" ? "default" : "outline"}
+          size="sm"
           onClick={() => setSelectedCategory("All")}
-          className={`h-9 px-4 rounded-xl text-xs font-semibold whitespace-nowrap border transition-colors ${
-            selectedCategory === "All"
-              ? "bg-primary text-primary-foreground border-primary"
-              : "bg-card border-border hover:bg-muted"
-          }`}
         >
           All
-        </button>
+        </Button>
 
         {categories.map((cat: PackageCategory) => (
-          <button
+          <Button
             key={cat.id}
+            variant={selectedCategory === cat.id ? "default" : "outline"}
+            size="sm"
             onClick={() => setSelectedCategory(cat.id)}
-            className={`h-9 px-4 rounded-xl text-xs font-semibold whitespace-nowrap border transition-colors ${
-              selectedCategory === cat.id
-                ? "bg-primary text-primary-foreground border-primary"
-                : "bg-card border-border hover:bg-muted"
-            }`}
           >
             {cat.name}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -224,20 +219,17 @@ export default function PackagesWorkspace() {
             <label className="text-xs font-medium text-foreground">Duration</label>
             <div className="grid grid-cols-3 gap-2">
               {[7, 15, 30].map((day) => (
-                <button
+                <Button
                   key={day}
+                  variant={selectedDuration === day ? "default" : "ghost"}
+                  size="sm"
                   type="button"
                   onClick={() =>
                     setSelectedDuration(selectedDuration === day ? null : day)
                   }
-                  className={`rounded-lg py-2 text-xs font-semibold transition-colors ${
-                    selectedDuration === day
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground hover:bg-muted/80"
-                  }`}
                 >
                   {day} Days
-                </button>
+                </Button>
               ))}
             </div>
           </div>

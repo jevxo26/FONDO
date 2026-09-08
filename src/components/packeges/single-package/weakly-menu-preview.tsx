@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import type { CustomDay, PackageDay, PackageMeal, PackageFood } from "@/types/package";
+import Image from "next/image";
+import type { CustomDay, PackageDay, PackageMeal, PackageFood, MealType } from "@/types/package";
 
 interface Props {
   days?: PackageDay[];
@@ -49,14 +50,14 @@ export default function WeeklyMenuPreview({ days = [], customDays = [] }: Props)
         if (!targetMeal) {
           targetMeal = {
             id: `custom-meal-${cMeal.mealType}`,
-            mealType: cMeal.mealType,
+            mealType: cMeal.mealType as MealType,
             mealTime: cMeal.mealTime || "Scheduled Time",
             foods: [],
           };
-          targetMeals.push(targetMeal);
+          targetMeals.push(targetMeal!);
         }
 
-        const targetFoods = (targetMeal.foods = targetMeal.foods ?? []);
+        const targetFoods = (targetMeal!.foods = targetMeal!.foods ?? []);
 
         cMeal.foods?.forEach((cf) => {
           const existingIndex = targetFoods.findIndex(
@@ -165,9 +166,11 @@ export default function WeeklyMenuPreview({ days = [], customDays = [] }: Props)
                         >
                           <div className="flex items-center gap-2 overflow-hidden">
                             {thumbnail && (
-                              <img
+                              <Image
                                 src={thumbnail}
                                 alt={name}
+                                width={32}
+                                height={32}
                                 className="size-8 rounded-lg object-cover flex-shrink-0"
                               />
                             )}

@@ -28,12 +28,12 @@ export function DarkCard({
         className={cn(
           "relative h-full p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] md:p-6 lg:p-8",
           variant === "foreground"
-            ? "bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] text-white"
+            ? "bg-gradient-to-br from-[var(--overlay)] to-black/80 text-white"
             : "bg-gradient-to-br from-primary to-primary/90 text-primary-foreground",
         )}
       >
         <div className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-transparent via-transparent to-primary/10" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-1.5 rounded-t-3xl bg-primary shadow-[0_2px_8px_rgba(168,90,56,0.25)]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-1.5 rounded-t-3xl bg-primary shadow-[0_2px_8px_color-mix(in_srgb,var(--primary)_25%,transparent)]" />
         <div className="pointer-events-none absolute right-3 top-3 z-10 size-[7px] rotate-45 border border-primary/40" />
         <div className="pointer-events-none absolute -bottom-8 -right-8 flex size-48 items-center justify-center opacity-20 transition-all duration-500 group-hover:scale-110 group-hover:opacity-30">
           {icon}

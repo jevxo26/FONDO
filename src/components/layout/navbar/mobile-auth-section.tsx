@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LayoutDashboard, LogOut, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { getDashboardPath } from "@/data/navigation";
 import { useAppSelector } from "@/store/store";
@@ -56,13 +57,14 @@ export function MobileAuthSection({ closeAndClear }: { closeAndClear: () => void
           Dashboard
         </Link>
       )}
-      <button
+      <Button
+        variant="ghost"
         onClick={handleLogout}
         className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-destructive transition-colors hover:bg-muted"
       >
         <LogOut className="size-4" />
         Logout
-      </button>
+      </Button>
     </div>
   );
 }

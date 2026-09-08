@@ -76,7 +76,7 @@ export function LegalModalContent({
 
             doc.on("data", (chunk: Uint8Array) => chunks.push(chunk));
             doc.on("end", () => {
-                const blob = new Blob(chunks, { type: "application/pdf" });
+                const blob = new Blob(chunks as unknown as BlobPart[], { type: "application/pdf" });
                 onOpenPdf(title, URL.createObjectURL(blob));
             });
 

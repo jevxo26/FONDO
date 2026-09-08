@@ -40,7 +40,7 @@ export function SidebarUserMenu({ userName, userRole, userInitials }: SidebarUse
                 "w-full rounded-xl border border-primary/10 bg-primary/[0.03] p-3 h-auto justify-start gap-3 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/8 hover:border-primary/20 active:scale-[0.98]",
             })}
           >
-            <Avatar className="size-8 shrink-0 ring-2 ring-primary/30 ring-offset-1 ring-offset-sidebar shadow-[0_0_12px_rgba(168,90,56,0.15)]">
+            <Avatar className="size-8 shrink-0 ring-2 ring-primary/30 ring-offset-1 ring-offset-sidebar shadow-[0_0_12px_color-mix(in_srgb,var(--primary)_15%,transparent)]">
               <AvatarFallback className="bg-primary/10 text-[11px] font-bold text-primary">
                 {userInitials}
               </AvatarFallback>

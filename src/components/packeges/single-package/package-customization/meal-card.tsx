@@ -1,6 +1,7 @@
 "use client";
 
 import { Minus, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type { PackageMeal, PackageFood } from "@/types/package";
 
 interface MealCardProps {
@@ -51,7 +52,7 @@ export default function MealCard({
               </div>
 
               <div className="flex items-center gap-2">
-                <button
+                <Button
                   onClick={() =>
                     onQuantityChange(
                       mealIndex,
@@ -59,21 +60,23 @@ export default function MealCard({
                       Math.max(1, quantity - 1)
                     )
                   }
-                  className="border rounded p-1"
+                  variant="outline"
+                  size="icon-xs"
                 >
                   <Minus size={14} />
-                </button>
+                </Button>
 
                 <span>{quantity}</span>
 
-                <button
+                <Button
                   onClick={() =>
                     onQuantityChange(mealIndex, foodIndex, quantity + 1)
                   }
-                  className="border rounded p-1"
+                  variant="outline"
+                  size="icon-xs"
                 >
                   <Plus size={14} />
-                </button>
+                </Button>
               </div>
             </div>
           );

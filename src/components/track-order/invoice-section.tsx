@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Loader2, Receipt, FileDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useInvoice } from "@/store/api/slices/orders-api";
 
 interface InvoiceSectionProps {
@@ -14,7 +15,7 @@ export function InvoiceSection({ orderId }: InvoiceSectionProps) {
 
   return (
     <div className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
-      <button onClick={() => setOpen(!open)} className="flex w-full items-center justify-between">
+      <Button variant="ghost" onClick={() => setOpen(!open)} className="flex w-full items-center justify-between">
         <div className="flex items-center gap-2">
           <Receipt className="size-4 text-muted-foreground" />
           <h3 className="font-heading text-sm font-semibold text-foreground">Invoice</h3>
@@ -24,7 +25,7 @@ export function InvoiceSection({ orderId }: InvoiceSectionProps) {
         ) : (
           <ChevronDown className="size-4 text-muted-foreground" />
         )}
-      </button>
+        </Button>
 
       {open && (
         <div className="mt-4 pt-4 border-t border-border">

@@ -60,7 +60,7 @@ export function HeroContent() {
         <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Search dishes, categories..."
-          className="h-12 w-full rounded-full border-border bg-card pl-10 pr-4 text-sm shadow-[var(--shadow-card)] transition-shadow duration-300 focus-visible:shadow-[0_0_0_2px_rgba(168,90,56,0.3),var(--shadow-elevated)]"
+          className="h-12 w-full rounded-full border-border bg-card pl-10 pr-4 text-sm shadow-[var(--shadow-card)] transition-shadow duration-300 focus-visible:shadow-[0_0_0_2px_color-mix(in_srgb,var(--primary)_30%,transparent),var(--shadow-elevated)]"
         />
       </motion.div>
 
@@ -77,7 +77,7 @@ export function HeroContent() {
             <span className="text-sm font-semibold lg:text-base">Order Now</span>
             <ArrowRight className="size-3.5 shrink-0 text-primary-foreground/60 transition-transform duration-300 group-hover:translate-x-0.5" />
           </span>
-          <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+          <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-foreground/10 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
         </Button>
         <Button
           variant="outline"

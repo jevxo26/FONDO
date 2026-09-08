@@ -9,6 +9,7 @@ import Pagination from "./pagination";
 import type { Food } from "@/types/food";
 import Categories, { CategoryChips } from "./categories";
 import { FoodsToolbar } from "./foods-toolbar";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const ITEMS_PER_PAGE = 12;
@@ -162,16 +163,18 @@ export default function FoodsWorkspace() {
               <div className="pointer-events-none absolute -bottom-6 -right-6 z-0 size-36 rounded-full bg-primary/8 blur-3xl" />
               <h3 className="font-heading text-base font-normal text-foreground">Categories</h3>
               <div className="mt-4 flex flex-col gap-1">
-                <button
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={() => pickCategory("All")}
-                  className={`w-full rounded-xl px-3 py-2 text-left text-xs font-medium transition-all duration-300 ${
+                  className={`w-full justify-start text-left duration-300 ${
                     activeCategory === "All"
                       ? "border-l-2 border-primary bg-gradient-to-r from-primary/10 to-transparent font-bold text-primary"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                 >
                   All Menu Categories
-                </button>
+                </Button>
 
                 {categories.map((cat) => (
                   <Categories

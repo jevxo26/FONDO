@@ -14,12 +14,12 @@ export default function EditSliderPage() {
 
   const slider = mockSliders.find((s) => s.id === sliderId);
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       console.log("Updating slider:", data);
       toast.success("Slider updated successfully");
       router.push("/dashboard/admin/cms/sliders");
-    } catch (error) {
+    } catch {
       toast.error("Failed to update slider");
     }
   };

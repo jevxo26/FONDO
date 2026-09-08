@@ -105,7 +105,7 @@ export const staffColumns: ColumnDef<VendorStaff>[] = [
     cell: ({ row }) => {
       const salary = row.getValue("salary") as number;
       return (
-        <span className="font-fraunces font-semibold text-sm">৳{salary.toLocaleString()}</span>
+        <span className="font-heading font-semibold text-sm">৳{salary.toLocaleString()}</span>
       );
     },
   },

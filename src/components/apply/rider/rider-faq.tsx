@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { RIDER_FAQS } from "./riderdata";
 export function RiderFaqSection() {
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
@@ -25,15 +26,16 @@ export function RiderFaqSection() {
                 key={i}
                 className="bg-card border border-border rounded-2xl overflow-hidden shadow-[var(--shadow-card)]"
               >
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => setActiveFaq(isOpen ? null : i)}
-                  className="w-full p-5 text-left flex items-center justify-between font-bold text-sm sm:text-base text-foreground cursor-pointer"
+                  className="w-full p-5 text-left justify-start"
                 >
                   <span>{faq.q}</span>
                   <ChevronDown
                     className={`size-5 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`}
                   />
-                </button>
+                </Button>
                 {isOpen && (
                   <div className="px-5 pb-5 text-xs sm:text-sm text-muted-foreground font-light leading-relaxed border-t border-border pt-3">
                     {faq.a}

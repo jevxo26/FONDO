@@ -83,7 +83,7 @@ export default function VendorKitchensPage() {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-fraunces text-xl font-semibold tracking-tight">Kitchen List</h3>
+          <h3 className="font-heading text-xl font-semibold tracking-tight">Kitchen List</h3>
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
             {activeKitchens} Active · {kitchens.length} Total
           </p>

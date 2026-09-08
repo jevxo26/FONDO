@@ -32,7 +32,7 @@ export function RefundDialog({ open, onOpenChange, payment, onRefund, isPending 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-fraunces text-xl">Issue Refund</DialogTitle>
+          <DialogTitle className="font-heading text-xl">Issue Refund</DialogTitle>
         </DialogHeader>
         {payment && (
           <div className="space-y-4">

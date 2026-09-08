@@ -127,7 +127,7 @@ export function VendorApprovalDialog({
               <X className="h-4 w-4" /> Reject Application
             </Button>
             <Button
-              className="flex-1 bg-black text-white hover:bg-gray-800 gap-2"
+              className="flex-1 bg-foreground text-background hover:bg-foreground/90 gap-2"
               onClick={onApprove}
               disabled={isDisabled}
             >

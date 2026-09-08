@@ -31,7 +31,7 @@ export function MealPlanCard({ plan }: MealPlanCardProps) {
                 {plan.name}
               </h3>
               {plan.isPopular && (
-                <span className="rounded-full bg-primary/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-[0_2px_8px_rgba(168,90,56,0.3)]">
+                <span className="rounded-full bg-primary/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-[0_2px_8px_color-mix(in_srgb,var(--primary)_30%,transparent)]">
                   Popular
                 </span>
               )}

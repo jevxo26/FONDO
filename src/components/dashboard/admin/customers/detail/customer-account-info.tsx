@@ -36,7 +36,7 @@ export default function CustomerAccountInfo({
   return (
     <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-6 shadow-[var(--shadow-card)]">
       <div className="relative z-10">
-        <h3 className="font-fraunces text-lg font-semibold text-foreground">Account Info</h3>
+        <h3 className="font-heading text-lg font-semibold text-foreground">Account Info</h3>
         <div className="mt-4 space-y-3">
           <div className="flex items-center justify-between rounded-lg bg-muted/50 px-4 py-3">
             <span className="text-xs text-muted-foreground">Customer ID</span>

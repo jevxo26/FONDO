@@ -13,7 +13,7 @@ export default function TermsPage() {
     <div className="container mx-auto max-w-4xl px-4 py-12">
       <article className="space-y-8">
         <header>
-          <h1 className="font-fraunces text-4xl font-bold tracking-tight">{page.title}</h1>
+          <h1 className="font-heading text-4xl font-bold tracking-tight">{page.title}</h1>
         </header>
 
         <div

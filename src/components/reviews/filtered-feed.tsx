@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Star, Search, ThumbsUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function FilteredFeed() {
   const [activeTab, setActiveTab] = useState("All");
@@ -35,17 +36,19 @@ export default function FilteredFeed() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/40 pb-6">
           <div className="flex gap-1.5 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
             {tabs.map((tab) => (
-              <button
+              <Button
                 key={tab}
+                variant="outline"
+                size="sm"
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap uppercase tracking-wider ${
+                className={`rounded-xl text-xs font-bold whitespace-nowrap uppercase tracking-wider ${
                   activeTab === tab
-                    ? "bg-foreground text-background shadow-[var(--shadow-card)]"
-                    : "bg-card border border-border text-muted-foreground hover:text-foreground"
+                    ? "bg-foreground text-background shadow-[var(--shadow-card)] border-foreground"
+                    : "bg-card border-border text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {tab}
-              </button>
+              </Button>
             ))}
           </div>
           <div className="relative w-full md:w-72">
@@ -92,9 +95,9 @@ export default function FilteredFeed() {
                 <span className="text-success font-bold uppercase tracking-wider bg-success/10 px-2 py-0.5 rounded">
                   Verified Plan
                 </span>
-                <button className="flex items-center gap-1 hover:text-foreground transition-colors">
+                <Button variant="ghost" size="xs" className="gap-1">
                   <ThumbsUp className="size-3" /> Helpful (2)
-                </button>
+                </Button>
               </div>
             </div>
           ))}
@@ -102,9 +105,9 @@ export default function FilteredFeed() {
 
         {/* Load More Trigger Action */}
         <div className="text-center pt-4">
-          <button className="px-6 py-2.5 bg-transparent border border-border text-foreground hover:bg-card text-xs font-bold rounded-xl transition-all uppercase tracking-widest">
+          <Button variant="outline" className="px-6 py-2.5 text-xs font-bold rounded-xl uppercase tracking-widest">
             Load More Reviews
-          </button>
+          </Button>
         </div>
       </div>
     </section>

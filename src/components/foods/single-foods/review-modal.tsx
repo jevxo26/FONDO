@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Star, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Review } from "@/types/food-review";
 import { useCreateReview, useUpdateReview } from "@/store/api/slices/reviews-api";
 
@@ -65,12 +66,14 @@ export default function ReviewModal({ open, setOpen, foodId, review }: ReviewMod
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-200"
     >
       <div className="w-full max-w-md rounded-2xl bg-card border border-border/10 p-6 shadow-[var(--shadow-elevated)] space-y-5 relative">
-        <button
+        <Button
+          variant="ghost"
+          size="icon-xs"
           onClick={() => setOpen(false)}
-          className="absolute right-4 top-4 p-1 rounded-lg text-muted-foreground hover:bg-muted transition-colors"
+          className="absolute right-4 top-4"
         >
           <X className="size-4" />
-        </button>
+        </Button>
 
         <div>
           <h3 className="font-heading text-xl font-normal text-foreground">
@@ -90,20 +93,22 @@ export default function ReviewModal({ open, setOpen, foodId, review }: ReviewMod
             {[1, 2, 3, 4, 5].map((item) => {
               const isActive = item <= (hoveredRating ?? rating);
               return (
-                <button
+                <Button
                   key={item}
                   type="button"
+                  variant="ghost"
+                  size="icon-xs"
                   onClick={() => setRating(item)}
                   onMouseEnter={() => setHoveredRating(item)}
                   onMouseLeave={() => setHoveredRating(null)}
-                  className="transition-transform active:scale-90"
+                  className="active:scale-90"
                 >
                   <Star
                     className={`size-6 transition-colors ${
                       isActive ? "fill-primary text-primary" : "text-foreground/15"
                     }`}
                   />
-                </button>
+                </Button>
               );
             })}
           </div>
@@ -125,19 +130,19 @@ export default function ReviewModal({ open, setOpen, foodId, review }: ReviewMod
 
         {/* Action Call Controls */}
         <div className="flex justify-end gap-3 pt-2">
-          <button
+          <Button
+            variant="outline"
             onClick={() => setOpen(false)}
-            className="px-4 py-2 text-xs font-bold font-sans uppercase tracking-wider text-muted-foreground border border-border/10 rounded-xl hover:bg-muted transition-colors"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="default"
             onClick={handleSubmit}
             disabled={isPending}
-            className="px-5 py-2 bg-primary text-primary-foreground rounded-xl"
           >
             {isPending ? "Saving..." : review ? "Update" : "Publish"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

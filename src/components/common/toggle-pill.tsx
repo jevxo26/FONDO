@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface TogglePillProps {
   items: readonly string[];
@@ -15,19 +16,21 @@ export function TogglePill({ items, value, onChange, className }: TogglePillProp
       {items.map((item) => {
         const isActive = value === item;
         return (
-          <button
+          <Button
             key={item}
+            variant="outline"
+            size="sm"
             type="button"
             onClick={() => onChange(item)}
             className={cn(
-              "inline-flex h-9 items-center justify-center rounded-full px-5 text-sm font-medium whitespace-nowrap transition-colors border select-none",
+              "rounded-full px-5 font-medium whitespace-nowrap",
               isActive
                 ? "bg-foreground border-foreground text-background"
                 : "bg-card border-border text-muted-foreground hover:border-primary hover:bg-muted",
             )}
           >
             {item}
-          </button>
+          </Button>
         );
       })}
     </div>

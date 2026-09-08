@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export function DashboardPreviewSection() {
   const [activeTab, setActiveTab] = useState<"orders" | "analytics">("orders");
@@ -31,18 +32,22 @@ export function DashboardPreviewSection() {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <button
+              <Button
+                variant="ghost"
+                size="xs"
                 onClick={() => setActiveTab("orders")}
-                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${activeTab === "orders" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+                className={activeTab === "orders" ? "bg-primary text-primary-foreground" : ""}
               >
                 Live Orders
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
+                size="xs"
                 onClick={() => setActiveTab("analytics")}
-                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${activeTab === "analytics" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+                className={activeTab === "analytics" ? "bg-primary text-primary-foreground" : ""}
               >
                 Analytics
-              </button>
+              </Button>
             </div>
           </div>
 

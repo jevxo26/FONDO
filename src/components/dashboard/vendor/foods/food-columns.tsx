@@ -23,7 +23,7 @@ const getStatusBadge = (status: VendorFood["status"], approvalStatus: VendorFood
   if (approvalStatus === "PENDING") {
     return {
       label: "Pending Approval",
-      className: "bg-amber-100 text-amber-700 ring-amber-700/20 dark:bg-amber-900/30 dark:text-amber-400",
+      className: "bg-warning/10 text-warning ring-1 ring-warning/20",
     };
   }
   if (approvalStatus === "REJECTED") {
@@ -112,7 +112,7 @@ export const foodColumns: ColumnDef<VendorFood>[] = [
       const price = row.getValue("price") as number;
       return (
         <div className="flex flex-col gap-0.5">
-          <span className="font-fraunces text-lg font-bold tracking-tight text-foreground">
+          <span className="font-heading text-lg font-bold tracking-tight text-foreground">
             ৳{price}
           </span>
           <span className="text-xs text-muted-foreground line-through">

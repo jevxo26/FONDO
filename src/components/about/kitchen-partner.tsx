@@ -5,22 +5,22 @@ export default function KitchenPartners() {
     {
       name: "Dhaka",
       status: "Available",
-      color: "text-emerald-700 bg-emerald-50 border-emerald-100",
+      color: "text-success bg-success/10 border-success/20",
     },
     {
       name: "Chattogram",
       status: "Available",
-      color: "text-emerald-700 bg-emerald-50 border-emerald-100",
+      color: "text-success bg-success/10 border-success/20",
     },
     {
       name: "Cumilla",
       status: "Available",
-      color: "text-emerald-700 bg-emerald-50 border-emerald-100",
+      color: "text-success bg-success/10 border-success/20",
     },
     {
       name: "Sylhet & Barisal",
       status: "Coming Soon",
-      color: "text-amber-700 bg-amber-50 border-amber-100",
+      color: "text-warning bg-warning/10 border-warning/20",
     },
   ];
 
@@ -53,7 +53,7 @@ export default function KitchenPartners() {
             {regions.map((reg, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-between p-4 bg-white border border-foreground/5 rounded-xl shadow-sm"
+                className="flex items-center justify-between p-4 bg-card border border-foreground/5 rounded-xl shadow-sm"
               >
                 <span className="font-sans text-xs font-bold text-foreground">{reg.name}</span>
                 <span

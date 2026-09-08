@@ -7,7 +7,6 @@ import * as yup from "yup";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -48,7 +47,7 @@ export function SliderForm({ onSubmit, onCancel, defaultValues }: SliderFormProp
     watch,
     setValue,
   } = useForm<SliderFormValues>({
-    resolver: yupResolver(sliderSchema) as any,
+    resolver: yupResolver(sliderSchema) as never,
     defaultValues: {
       status: "ACTIVE",
       displayOrder: 0,
@@ -56,6 +55,7 @@ export function SliderForm({ onSubmit, onCancel, defaultValues }: SliderFormProp
     },
   });
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const image = watch("image");
 
   return (

@@ -1,5 +1,6 @@
 import React from "react";
 import { Smartphone, Store, ArrowUpRight, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function VendorCtaSection() {
   return (
@@ -20,12 +21,12 @@ export function VendorCtaSection() {
                 mobile device.
               </p>
               <div className="flex flex-wrap gap-4 pt-2">
-                <button className="px-6 py-3.5 bg-foreground text-background rounded-2xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer">
+                <Button variant="accent" size="lg" className="flex items-center gap-2">
                   <Smartphone className="size-4" /> Google Play
-                </button>
-                <button className="px-6 py-3.5 bg-foreground text-background rounded-2xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer">
+                </Button>
+                <Button variant="accent" size="lg" className="flex items-center gap-2">
                   <Smartphone className="size-4" /> App Store
-                </button>
+                </Button>
               </div>
             </div>
             <div className="lg:col-span-5 flex justify-center">
@@ -38,9 +39,9 @@ export function VendorCtaSection() {
                   <Store className="size-12 text-foreground mx-auto" />
                   <div className="text-sm font-bold text-foreground">New Order #ORD-4019</div>
                   <div className="text-xs text-muted-foreground">2x Keto Salmon Salad Box</div>
-                  <button className="w-full py-2 bg-primary text-primary-foreground font-bold text-xs rounded-xl">
-                    Accept Order
-                  </button>
+                   <Button variant="default" className="w-full">
+                     Accept Order
+                   </Button>
                 </div>
                 <div className="text-[10px] text-center text-muted-foreground">
                   Connected to Fleet

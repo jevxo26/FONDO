@@ -65,7 +65,7 @@ export function AddBranchModal({ open, onOpenChange }: AddBranchModalProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="font-fraunces text-2xl">Add New Branch</DialogTitle>
+          <DialogTitle className="font-heading text-2xl">Add New Branch</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
           <BranchBasicFields formData={formData} onFieldChange={handleFieldChange} />

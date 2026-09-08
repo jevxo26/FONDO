@@ -17,7 +17,7 @@ interface OrderPieChartProps {
   isLoading?: boolean; // ← ADD THIS
 }
 
-const defaultData = [{ name: "No Orders", value: 1, color: "#6B7280" }];
+const defaultData = [{ name: "No Orders", value: 1, color: "var(--muted-foreground)" }];
 
 const RADIAN = Math.PI / 180;
 
@@ -98,7 +98,7 @@ export function OrderPieChart({ data, className, isLoading }: OrderPieChartProps
       <div className="relative z-10 p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-fraunces text-lg font-semibold text-foreground">Order Status</h3>
+            <h3 className="font-heading text-lg font-semibold text-foreground">Order Status</h3>
             <p className="mt-0.5 text-sm text-muted-foreground">Total {totalOrders} orders</p>
           </div>
         </div>

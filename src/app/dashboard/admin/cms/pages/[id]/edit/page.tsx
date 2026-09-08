@@ -14,12 +14,12 @@ export default function EditPagePage() {
 
   const page = mockPages.find((p) => p.id === pageId);
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       console.log("Updating page:", data);
       toast.success("Page updated successfully");
       router.push("/dashboard/admin/cms/pages");
-    } catch (error) {
+    } catch {
       toast.error("Failed to update page");
     }
   };

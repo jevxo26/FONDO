@@ -9,7 +9,6 @@ import {
   SlidersHorizontal,
   FileText,
   Layout,
-  Plus,
   Newspaper,
   Settings,
 } from "lucide-react";
@@ -99,14 +98,15 @@ interface QuickActionCardProps {
 
 function QuickActionCard({ icon: Icon, label, onClick, color }: QuickActionCardProps) {
   return (
-    <button
+    <Button
+      variant="outline"
       onClick={onClick}
-      className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-card p-6 transition-all hover:shadow-md hover:border-primary/20"
+      className="flex flex-col items-center justify-center gap-3 rounded-2xl border-border bg-card p-6 transition-all hover:shadow-md hover:border-primary/20"
     >
       <div className={`rounded-full p-3 ${color}`}>
         <Icon className="h-6 w-6" />
       </div>
       <span className="text-sm font-medium text-foreground">{label}</span>
-    </button>
+    </Button>
   );
 }

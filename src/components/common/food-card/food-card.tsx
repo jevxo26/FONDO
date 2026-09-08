@@ -43,7 +43,7 @@ export default memo(function FoodCard({
 
   return (
     <div
-      className={`group relative flex flex-col overflow-hidden rounded-4xl border border-border/40 bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-4 shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] ${
+      className={`group relative flex h-full flex-col overflow-hidden rounded-4xl border border-border/40 bg-gradient-to-br from-primary/[0.03] via-card to-primary/[0.01] p-4 shadow-[var(--shadow-card)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[var(--shadow-elevated)] ${
         preview ? "" : "active:scale-[0.98]"
       }`}
     >
@@ -96,7 +96,7 @@ export default memo(function FoodCard({
 
         {!preview && (
           <div className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center px-4 transition-all duration-300 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 group-active:opacity-100 group-active:scale-100">
-            <div className="pointer-events-auto inline-flex items-center gap-2 rounded-xl bg-foreground/90 px-4 py-2.5 text-background shadow-[var(--shadow-elevated)] border border-background/10 backdrop-blur-md">
+            <div className="pointer-events-auto inline-flex items-center gap-2 rounded-xl bg-card/90 px-4 py-2.5 text-foreground shadow-[var(--shadow-elevated)] border border-border/10 backdrop-blur-md">
               <div className="ml-1 flex size-8 items-center justify-center rounded-full bg-primary">
                 <ShoppingBag className="size-4 text-foreground" />
               </div>
@@ -106,9 +106,9 @@ export default memo(function FoodCard({
               <Link
                 href={`/foods/${food.slug}`}
                 aria-label={`View ${food.name}`}
-                className="ml-1 flex size-8 items-center justify-center rounded-full bg-background/20 transition-colors hover:bg-background/40"
+                className="ml-1 flex size-8 items-center justify-center rounded-full bg-primary/20 transition-colors hover:bg-primary/40"
               >
-                <ArrowUpRight className="size-5 text-background" />
+                <ArrowUpRight className="size-5 text-foreground" />
               </Link>
             </div>
           </div>

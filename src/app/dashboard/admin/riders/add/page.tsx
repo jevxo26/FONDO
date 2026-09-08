@@ -42,7 +42,7 @@ export default function AdminAddRiderPage() {
             icon: "question",
             showCancelButton: true,
             confirmButtonColor: "var(--primary)",
-            cancelButtonColor: "#6b7280",
+            cancelButtonColor: "var(--muted-foreground)",
             confirmButtonText: "Approve & Onboard",
             cancelButtonText: "Cancel",
             customClass: { popup: "rounded-3xl font-sans" },
@@ -70,7 +70,7 @@ export default function AdminAddRiderPage() {
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "var(--destructive)",
-            cancelButtonColor: "#6b7280",
+            cancelButtonColor: "var(--muted-foreground)",
             confirmButtonText: "Reject",
             customClass: { popup: "rounded-3xl font-sans" },
         }).then((result) => {
@@ -186,9 +186,9 @@ export default function AdminAddRiderPage() {
                                 </div>
                                 <h3 className="font-heading text-xl font-bold capitalize text-foreground">{activeCategory} Inspection</h3>
                             </div>
-                            <button onClick={() => setActiveCategory(null)} className="rounded-full p-2 text-muted-foreground hover:bg-muted cursor-pointer">
+                            <Button variant="ghost" size="icon" onClick={() => setActiveCategory(null)}>
                                 <XCircle className="size-6" />
-                            </button>
+                            </Button>
                         </div>
 
                         <div className="mt-6">

@@ -14,12 +14,12 @@ export default function EditBlogPage() {
 
   const blog = mockBlogs.find((b) => b.id === blogId);
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       console.log("Updating blog:", data);
       toast.success("Blog updated successfully");
       router.push("/dashboard/admin/cms/blogs");
-    } catch (error) {
+    } catch {
       toast.error("Failed to update blog");
     }
   };

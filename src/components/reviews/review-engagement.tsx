@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "@/components/ui/button";
 
 export default function EngagementBanner() {
   return (
@@ -12,9 +13,9 @@ export default function EngagementBanner() {
           real-world kitchen distribution logistics for our community.
         </p>
         <div className="pt-2">
-          <button className="px-8 py-3.5 bg-background text-foreground font-sans font-bold text-xs rounded-xl shadow-[var(--shadow-elevated)] hover:opacity-95 transition-all uppercase tracking-widest">
+          <Button variant="secondary" size="lg" className="shadow-[var(--shadow-elevated)] uppercase tracking-widest">
             Write a Review
-          </button>
+          </Button>
         </div>
         <p className="font-sans text-[9px] opacity-60 uppercase tracking-widest">
           Submission locks allocation approval tags inside database pipelines

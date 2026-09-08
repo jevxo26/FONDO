@@ -1,5 +1,6 @@
 import React from "react";
 import { Smartphone, Bike, ArrowUpRight, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function RiderCtaSection() {
   return (
@@ -20,12 +21,12 @@ export function RiderCtaSection() {
                 from your phone.
               </p>
               <div className="flex flex-wrap gap-4 pt-2">
-                <button className="px-6 py-3.5 bg-foreground text-background rounded-2xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer">
+                <Button variant="accent" size="lg" className="flex items-center gap-2">
                   <Smartphone className="size-4" /> Google Play
-                </button>
-                <button className="px-6 py-3.5 bg-foreground text-background rounded-2xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer">
+                </Button>
+                <Button variant="accent" size="lg" className="flex items-center gap-2">
                   <Smartphone className="size-4" /> App Store
-                </button>
+                </Button>
               </div>
             </div>
             <div className="lg:col-span-5 flex justify-center">

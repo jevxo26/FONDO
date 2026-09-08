@@ -2,6 +2,7 @@
 
 import { CookingPot, Timer, CheckCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/dashboard/common/page-header";
 import { useGetAllAdminOrdersQuery } from "@/store/api/slices/admin-customers-api";
 import { useUpdateOrderStatus } from "@/store/api/slices/orders-api";
@@ -83,13 +84,15 @@ export default function AdminKitchenQueuePage() {
                 </div>
                 <div className="mt-4 flex items-center justify-between border-t border-border/40 pt-3">
                   <span className="text-xs text-muted-foreground">Total ৳{Number(order.totalAmount).toLocaleString()}</span>
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={() => handleMarkReady(order.id, order.orderNumber)}
                     disabled={updateStatus.isPending}
-                    className="rounded-full bg-success/10 px-3 py-1 text-[11px] font-semibold text-success ring-1 ring-success/20 transition-all hover:bg-success/20 active:scale-[0.98] disabled:opacity-50"
+                    className="rounded-full bg-success/10 text-success ring-1 ring-success/20 hover:bg-success/20 active:scale-[0.98]"
                   >
                     <CheckCircle className="mr-1 inline size-3" /> Mark Ready
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))}

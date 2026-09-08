@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { mockPages } from "@/data/mock-pages";
-import { FileText, Calendar } from "lucide-react";
+import { FileText } from "lucide-react";
 import { format } from "date-fns";
 
 export default function PagesIndexPage() {
@@ -13,7 +13,7 @@ export default function PagesIndexPage() {
     <div className="container mx-auto max-w-4xl px-4 py-12">
       <div className="space-y-8">
         <div>
-          <h1 className="font-fraunces text-4xl font-bold tracking-tight">All Pages</h1>
+          <h1 className="font-heading text-4xl font-bold tracking-tight">All Pages</h1>
           <p className="mt-2 text-muted-foreground">Browse our collection of informational pages</p>
         </div>
 

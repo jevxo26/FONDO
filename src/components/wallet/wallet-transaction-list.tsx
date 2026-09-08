@@ -37,7 +37,7 @@ export function WalletTransactionList({
               </div>
             </div>
             <div className="text-right">
-              <p className={`font-fraunces text-base font-bold ${credit ? "text-success" : "text-foreground"}`}>
+              <p className={`font-heading text-base font-bold ${credit ? "text-success" : "text-foreground"}`}>
                 {credit ? "+" : "-"}৳{formatMoney(Number(tx.amount))}
               </p>
               <p className="text-xs text-muted-foreground">Bal: ৳{formatMoney(Number(tx.balanceAfter))}</p>

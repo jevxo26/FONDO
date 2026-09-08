@@ -219,3 +219,20 @@ export interface VendorServiceArea {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface VendorSettings {
+  id: string;
+  vendorId: string;
+  autoAcceptOrder: boolean;
+  autoAssignRider: boolean;
+  allowCustomMeal: boolean;
+  allowPackage: boolean;
+  notificationEnabled: boolean;
+  smsEnabled: boolean;
+  emailEnabled: boolean;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type { VendorSettlement, VendorWalletTransaction } from "./wallet";

@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { CalendarIcon, Sun, Clock, Sunset, Info } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -84,8 +85,10 @@ export function DeliveryScheduleSelector({ value, onChange }: Props) {
           {SLOTS.map(({ id, icon: SlotIcon }) => {
             const isSelected = value?.deliverySlot === id;
             return (
-              <button
+              <Button
                 key={id}
+                variant="outline"
+                size="sm"
                 type="button"
                 onClick={() =>
                   onChange({
@@ -94,7 +97,7 @@ export function DeliveryScheduleSelector({ value, onChange }: Props) {
                   })
                 }
                 className={cn(
-                  "flex items-center justify-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
+                  "flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
                   isSelected
                     ? "border-primary bg-primary/10 text-primary shadow-sm"
                     : "border-border bg-background text-muted-foreground hover:border-muted-foreground/30 hover:text-foreground hover:shadow-sm",
@@ -102,7 +105,7 @@ export function DeliveryScheduleSelector({ value, onChange }: Props) {
               >
                 <SlotIcon className={cn("size-4", isSelected && "text-primary")} />
                 {id}
-              </button>
+              </Button>
             );
           })}
         </div>

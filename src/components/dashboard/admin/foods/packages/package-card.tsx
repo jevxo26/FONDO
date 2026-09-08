@@ -21,11 +21,12 @@ export interface FoodPackage {
   coverImage?: string;
   packageCode: string;
   status: string;
+  isEditMode?: boolean;
 }
 
 interface PackageCardProps {
   pkg: FoodPackage | AdminPackageListItem;
-  onDelete?: (pkg: FoodPackage) => void;
+  onDelete?: (pkg: FoodPackage | AdminPackageListItem) => void;
 }
 
 const typeColors: Record<string, string> = {

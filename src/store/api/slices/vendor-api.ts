@@ -1,5 +1,5 @@
 import { api } from "../base-api";
-import type { VendorBranch, VendorSettings, Vendor } from "@/types/vendor";
+import type { VendorBranch, VendorSettings } from "@/types/vendor";
 
 export const vendorApi = api.injectEndpoints({
     endpoints: (builder) => ({

@@ -77,7 +77,7 @@ export const orderColumns: ColumnDef<VendorOrder>[] = [
     cell: ({ row }) => {
       const amount = row.getValue("totalAmount") as number;
       return (
-        <span className="font-fraunces text-lg font-bold tracking-tight text-foreground">
+        <span className="font-heading text-lg font-bold tracking-tight text-foreground">
           ৳{amount}
         </span>
       );

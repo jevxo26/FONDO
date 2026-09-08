@@ -2,6 +2,7 @@
 
 import { useGetPackagesQuery } from "@/store/api/slices/packages-api";
 import { useMemo } from "react";
+import { Button } from "@/components/ui/button";
 import { usePackages } from "./packages-context";
 
 export default function PackagesComparison() {
@@ -40,12 +41,14 @@ export default function PackagesComparison() {
               key={pkg.id}
               className="relative border border-border rounded-xl p-4 bg-background shadow-sm flex flex-col"
             >
-              <button
+              <Button
+                variant="ghost"
+                size="xs"
                 onClick={() => toggleComparison(pkg.id)}
-                className="absolute top-3 right-3 text-xs text-red-500 hover:underline"
+                className="absolute top-3 right-3 text-red-500 hover:underline"
               >
                 ✕ Remove
-              </button>
+              </Button>
 
               <div className="font-semibold pr-10 h-10 flex items-center">{pkg.name}</div>
 
@@ -79,7 +82,7 @@ export default function PackagesComparison() {
               </div>
 
               <div className="py-3 border-b flex justify-between">
-                <span className="md:hidden font-medium">Rating</span>⭐ {pkg.rating ?? 0}
+                <span className="md:hidden font-medium">Rating</span>⭐ {pkg.rating?.averageRating ?? 0}
               </div>
 
               <div className="pt-3 flex justify-between font-bold text-primary">

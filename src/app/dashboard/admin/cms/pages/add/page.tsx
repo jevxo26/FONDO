@@ -9,12 +9,12 @@ import { toast } from "sonner";
 export default function AddPagePage() {
   const router = useRouter();
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       console.log("Creating page:", data);
       toast.success("Page created successfully");
       router.push("/dashboard/admin/cms/pages");
-    } catch (error) {
+    } catch {
       toast.error("Failed to create page");
     }
   };

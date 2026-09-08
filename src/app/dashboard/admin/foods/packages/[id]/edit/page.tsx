@@ -34,12 +34,12 @@ export default function EditPackagePage({ params }: { params: { id: string } }) 
   // Populate form with fetched data
   useEffect(() => {
     if (packageData) {
-      reset(packageData);
+      reset(packageData as unknown as PackageFormValues);
     }
   }, [packageData, reset]);
 
   const onSubmit = async (values: PackageFormValues) => {
-    await updatePackage({ id: params.id, ...values });
+    await updatePackage({ id: params.id, body: values });
   };
 
   if (isLoading) return <div>Loading package details...</div>;
@@ -47,15 +47,15 @@ export default function EditPackagePage({ params }: { params: { id: string } }) 
   return (
     <form id="package-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <HeaderBar
-        isEditMode={true}
         isSubmitting={isSubmitting}
         showPreview={showPreview}
         setShowPreview={setShowPreview}
-        onReset={() => reset(packageData)}
+        onReset={() => reset(packageData as unknown as PackageFormValues)}
       />
 
       {showPreview && (
         <CardPreview
+          // eslint-disable-next-line react-hooks/incompatible-library
           nameWatched={watch("name")}
           thumbnailWatched={watch("thumbnail")}
           packageTypeWatched={watch("packageType")}

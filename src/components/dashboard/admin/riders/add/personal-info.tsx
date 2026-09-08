@@ -34,7 +34,7 @@ interface PersonalInfoSectionProps {
     onOpenModal: () => void;
 }
 
-export function PersonalInfoCard({ isVerified, onOpenModal }: PersonalInfoSectionProps) {
+export function PersonalInfoCard({ isVerified, onOpenModal }: Omit<PersonalInfoSectionProps, 'data'>) {
     return (
         <div
             onClick={onOpenModal}

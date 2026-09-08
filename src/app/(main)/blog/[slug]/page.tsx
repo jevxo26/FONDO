@@ -3,6 +3,7 @@
 
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, Calendar, User, Tag } from "lucide-react";
 import { mockBlogs } from "@/data/mock-blogs";
 import { mockBlogCategories } from "@/data/mock-blog-categories";
@@ -39,14 +40,16 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
         <header className="space-y-4">
           {blog.thumbnail && (
             <div className="overflow-hidden rounded-2xl">
-              <img
+              <Image
                 src={blog.thumbnail}
                 alt={blog.title}
+                width={800}
+                height={400}
                 className="w-full max-h-[400px] object-cover"
               />
             </div>
           )}
-          <h1 className="font-fraunces text-4xl font-bold tracking-tight">{blog.title}</h1>
+          <h1 className="font-heading text-4xl font-bold tracking-tight">{blog.title}</h1>
           <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
               <User className="h-4 w-4" />
@@ -73,7 +76,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
 
         {/* Footer */}
         <div className="border-t border-border pt-8">
-          <h3 className="font-fraunces text-lg font-semibold">Share this article</h3>
+          <h3 className="font-heading text-lg font-semibold">Share this article</h3>
           <div className="mt-4 flex gap-2">
             <Button
               variant="outline"

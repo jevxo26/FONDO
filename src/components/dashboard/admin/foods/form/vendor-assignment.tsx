@@ -38,7 +38,7 @@ export function VendorAssignment({ control, vendors, loading }: VendorAssignment
                       key={vendor.id}
                       className={`flex cursor-pointer items-center gap-3 rounded-xl border px-3 py-2.5 transition-colors ${
                         checked
-                          ? "border-primary bg-primary/5 shadow-[0_2px_8px_rgba(168,90,56,0.15)]"
+                          ? "border-primary bg-primary/5 shadow-[0_2px_8px_color-mix(in_srgb,var(--primary)_15%,transparent)]"
                           : "border-border bg-card/60 hover:border-primary/40"
                       }`}
                     >

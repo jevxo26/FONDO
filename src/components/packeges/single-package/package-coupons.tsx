@@ -5,10 +5,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Gift, Copy, Check, Percent, Calendar, Users, Sparkles } from "lucide-react";
+import { Gift, Copy, Check, Calendar, Users, Sparkles } from "lucide-react";
 import { mockCoupons } from "@/data/mock-coupons";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 
 interface PackageCouponsProps {
   packageId: string;
@@ -52,7 +51,7 @@ export function PackageCoupons({ packageId, packagePrice, isSubscription }: Pack
 
   return (
     <div className="space-y-4">
-      <h3 className="font-fraunces text-lg font-semibold flex items-center gap-2">
+      <h3 className="font-heading text-lg font-semibold flex items-center gap-2">
         <Gift className="h-5 w-5 text-foreground" />
         Package Offers
         <span className="ml-1 text-sm font-normal text-muted-foreground">

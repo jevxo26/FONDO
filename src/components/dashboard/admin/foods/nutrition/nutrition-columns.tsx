@@ -76,7 +76,7 @@ export const nutritionColumns: ColumnDef<NutritionItem>[] = [
             "inline-block rounded-full px-2 py-0.5 text-[11px] font-bold",
             pct > 20
               ? "bg-success/10 text-success"
-              : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+              : "bg-warning/10 text-warning",
           )}
         >
           {pct}% OFF

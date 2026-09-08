@@ -11,8 +11,8 @@ export const vendorSettings: VendorSettings = {
   notificationEnabled: true,
   smsEnabled: true,
   emailEnabled: true,
-  marketingEnabled: false,
   status: "ACTIVE",
+  createdAt: "2024-01-15T10:30:00Z",
   updatedAt: "2024-01-15T10:30:00Z",
 };
 

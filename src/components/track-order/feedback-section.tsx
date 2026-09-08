@@ -43,18 +43,19 @@ export default function FeedbackSection({ orderId, existing }: FeedbackSectionPr
 
       <div className="flex items-center gap-1 mb-4">
         {[1, 2, 3, 4, 5].map((star) => (
-          <button
+          <Button
             key={star}
             type="button"
+            variant="ghost"
+            size="icon-xs"
             onClick={() => setRating(star)}
             onMouseEnter={() => setHovered(star)}
             onMouseLeave={() => setHovered(0)}
-            className="transition-colors"
           >
             <Star
               className={`size-6 ${star <= (hovered || rating) ? "fill-amber-400 text-amber-400" : "text-muted-foreground/30"}`}
             />
-          </button>
+          </Button>
         ))}
       </div>
 

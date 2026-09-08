@@ -48,12 +48,12 @@ export function BannerForm({ onSubmit, onCancel, defaultValues }: BannerFormProp
   const {
     register,
     handleSubmit,
-    control,
+    control: _control,
     formState: { errors },
     watch,
     setValue,
   } = useForm<BannerFormValues>({
-    resolver: yupResolver(bannerSchema) as any,
+    resolver: yupResolver(bannerSchema) as never,
     defaultValues: {
       isActive: true,
       displayOrder: 0,
@@ -61,6 +61,7 @@ export function BannerForm({ onSubmit, onCancel, defaultValues }: BannerFormProp
     },
   });
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const imageUrl = watch("imageUrl");
 
   return (

@@ -3,6 +3,7 @@ import { UseFormRegister, UseFormSetValue, FieldErrors } from "react-hook-form";
 import { Utensils, UploadCloud } from "lucide-react";
 import { VendorFormData } from "@/lib/schema/vendor-schema";
 import { FormField } from "@/components/common/form-field";
+import { Button } from "@/components/ui/button";
 import { CUISINE_OPTIONS } from "./hero";
 
 interface Props {
@@ -37,14 +38,16 @@ export function CuisineDocInfo({ register, errors, selectedCuisines, setValue }:
             {CUISINE_OPTIONS.map((item) => {
               const isSelected = selectedCuisines.includes(item);
               return (
-                <button
+                <Button
                   key={item}
                   type="button"
+                  variant="outline"
+                  size="sm"
                   onClick={() => toggleCuisine(item)}
-                  className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${isSelected ? "bg-primary text-primary-foreground border-primary" : "bg-background text-foreground border-border hover:bg-muted"}`}
+                  className={isSelected ? "bg-primary text-primary-foreground border-primary" : ""}
                 >
                   {item} {isSelected && "✓"}
-                </button>
+                </Button>
               );
             })}
           </div>

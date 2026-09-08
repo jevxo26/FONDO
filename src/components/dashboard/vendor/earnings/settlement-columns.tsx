@@ -50,9 +50,9 @@ export const settlementColumns: ColumnDef<VendorSettlement>[] = [
       const settlement = row.original;
       return (
         <div className="flex flex-col gap-0.5">
-          <span className="text-sm">{format(new Date(settlement.periodStart), "MMM d")}</span>
+          <span className="text-sm">{format(new Date(settlement.settlementPeriodStart), "MMM d")}</span>
           <span className="text-xs text-muted-foreground">
-            to {format(new Date(settlement.periodEnd), "MMM d, yyyy")}
+            to {format(new Date(settlement.settlementPeriodEnd), "MMM d, yyyy")}
           </span>
         </div>
       );
@@ -69,14 +69,14 @@ export const settlementColumns: ColumnDef<VendorSettlement>[] = [
     cell: ({ row }) => {
       const amount = row.getValue("grossAmount") as number;
       return (
-        <span className="font-fraunces font-semibold text-sm text-foreground">
+        <span className="font-heading font-semibold text-sm text-foreground">
           ৳{amount.toLocaleString()}
         </span>
       );
     },
   },
   {
-    accessorKey: "commissionAmount",
+    accessorKey: "totalCommission",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Commission" />,
     cell: ({ row }) => {
       const amount = row.getValue("commissionAmount") as number;
@@ -89,7 +89,7 @@ export const settlementColumns: ColumnDef<VendorSettlement>[] = [
     cell: ({ row }) => {
       const amount = row.getValue("netAmount") as number;
       return (
-        <span className="font-fraunces text-base font-bold tracking-tight text-primary">
+        <span className="font-heading text-base font-bold tracking-tight text-primary">
           ৳{amount.toLocaleString()}
         </span>
       );

@@ -28,10 +28,6 @@ const toNum = (v: string) => {
   return Number.isNaN(n) ? undefined : n;
 };
 
-interface BaseEditorProps {
-  foodId: string;
-}
-
 // ─── Variants ────────────────────────────────────────────────
 export function VariantsEditor({ foodId, items }: { foodId: string; items: AdminFoodVariant[] }) {
   const { mutateAsync: create, isPending: creating } = useCreateVariant();

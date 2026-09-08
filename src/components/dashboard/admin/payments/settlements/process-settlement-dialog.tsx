@@ -36,7 +36,7 @@ export function ProcessSettlementDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-fraunces text-xl">Process Settlement</DialogTitle>
+          <DialogTitle className="font-heading text-xl">Process Settlement</DialogTitle>
         </DialogHeader>
         {settlement && (
           <div className="space-y-4">

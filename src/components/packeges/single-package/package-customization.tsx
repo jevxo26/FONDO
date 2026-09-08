@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { SlidersHorizontal, ChevronDown, Plus, Minus, Trash2, Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useGetFoods } from "@/store/api/slices/foods-api";
 import { useCreateCustomMealRequestMutation } from "@/store/api/slices/packages-api";
 import type { CustomDay, CustomMeal, CustomFood, Package } from "@/types/package";
@@ -171,8 +173,9 @@ export default function PackageCustomization({
   return (
     <section className="bg-muted/60 border border-border/30 rounded-3xl p-1 transition-all">
       <div className="bg-card rounded-3xl p-6 lg:p-8 shadow-sm space-y-6">
-        <button
+        <Button
           onClick={() => setIsOpen(!isOpen)}
+          variant="ghost"
           className="w-full flex items-center justify-between group outline-none"
         >
           <div className="flex items-center gap-3">
@@ -191,7 +194,7 @@ export default function PackageCustomization({
               isOpen ? "rotate-180" : ""
             }`}
           />
-        </button>
+        </Button>
 
         {isOpen && (
           <div className="pt-4 border-t border-border/30 space-y-6 animate-in fade-in duration-200">
@@ -204,18 +207,20 @@ export default function PackageCustomization({
                 {Array.from({ length: singlePackage.durationDays || 1 }).map((_, i) => {
                   const dayNum = i + 1;
                   return (
-                    <button
+                    <Button
                       key={dayNum}
                       type="button"
                       onClick={() => setActiveDay(dayNum)}
-                      className={`px-4 py-2 rounded-xl border text-xs font-bold transition-all whitespace-nowrap ${
+                      variant="ghost"
+                      size="sm"
+                      className={`px-4 rounded-xl border text-xs font-bold transition-all whitespace-nowrap ${
                         activeDay === dayNum
                           ? "border-primary bg-primary/10 text-primary shadow-sm"
                           : "border-border/40 hover:bg-muted"
                       }`}
                     >
                       Day {dayNum}
-                    </button>
+                    </Button>
                   );
                 })}
               </div>
@@ -228,18 +233,20 @@ export default function PackageCustomization({
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {MEAL_TYPES.map((m) => (
-                  <button
+                  <Button
                     key={m.value}
                     type="button"
                     onClick={() => setActiveMealType(m.value)}
-                    className={`py-2.5 rounded-xl border text-xs font-bold transition-all text-center ${
+                    variant={activeMealType === m.value ? "default" : "outline"}
+                    size="sm"
+                    className={`py-2.5 rounded-xl text-xs font-bold transition-all text-center ${
                       activeMealType === m.value
-                        ? "border-primary bg-primary text-primary-foreground shadow-md"
-                        : "border-border/40 bg-background hover:bg-muted"
+                        ? "shadow-md"
+                        : "bg-background"
                     }`}
                   >
                     {m.label}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -258,9 +265,11 @@ export default function PackageCustomization({
                     >
                       <div className="flex items-center gap-2">
                         {item.thumbnail && (
-                          <img
+                          <Image
                             src={item.thumbnail}
-                            alt={item.name}
+                            alt={item.name || "Food item"}
+                            width={32}
+                            height={32}
                             className="size-8 rounded-md object-cover"
                           />
                         )}
@@ -273,27 +282,31 @@ export default function PackageCustomization({
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <button
+                        <Button
                           type="button"
                           onClick={() => handleQuantityChange(item.foodId, -1)}
-                          className="p-1 rounded-lg bg-muted hover:bg-destructive/10 hover:text-destructive transition-all"
+                          variant="ghost"
+                          size="icon-xs"
+                          className="rounded-lg hover:bg-destructive/10 hover:text-destructive"
                         >
                           {item.quantity === 1 ? (
                             <Trash2 className="size-3.5" />
                           ) : (
                             <Minus className="size-3.5" />
                           )}
-                        </button>
+                        </Button>
                         <span className="font-bold text-xs min-w-[16px] text-center">
                           {item.quantity}
                         </span>
-                        <button
+                        <Button
                           type="button"
                           onClick={() => handleQuantityChange(item.foodId, 1)}
-                          className="p-1 rounded-lg bg-muted hover:bg-primary/10 hover:text-primary transition-all"
+                          variant="ghost"
+                          size="icon-xs"
+                          className="rounded-lg hover:bg-primary/10 hover:text-primary"
                         >
                           <Plus className="size-3.5" />
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   ))}
@@ -319,9 +332,11 @@ export default function PackageCustomization({
                       >
                         <div className="flex items-center gap-2 overflow-hidden">
                           {food.thumbnail && (
-                            <img
+                            <Image
                               src={food.thumbnail}
                               alt={food.name}
+                              width={40}
+                              height={40}
                               className="size-10 rounded-lg object-cover flex-shrink-0"
                             />
                           )}
@@ -331,13 +346,15 @@ export default function PackageCustomization({
                           </div>
                         </div>
 
-                        <button
+                        <Button
                           type="button"
                           onClick={() => handleAddFood(food)}
-                          className="p-2 bg-primary/10 text-primary rounded-lg hover:bg-primary hover:text-white transition-all flex-shrink-0"
+                          variant="ghost"
+                          size="icon-sm"
+                          className="bg-primary/10 text-primary rounded-lg hover:bg-primary hover:text-white flex-shrink-0"
                         >
                           <Plus className="size-4" />
-                        </button>
+                        </Button>
                       </div>
                     );
                   })}
@@ -347,15 +364,17 @@ export default function PackageCustomization({
 
             {/* Step 5: Submit Action */}
             <div className="pt-4 border-t border-border/30">
-              <button
+              <Button
                 type="button"
                 onClick={handleSubmitCustomRequest}
                 disabled={isSubmitting || customDays.length === 0}
-                className="w-full py-3 bg-primary text-primary-foreground font-bold text-xs rounded-xl shadow-md hover:bg-primary/90 transition-all flex items-center justify-center gap-2 uppercase tracking-wider disabled:opacity-50"
+                variant="default"
+                size="lg"
+                className="w-full font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2"
               >
                 <Send className="size-4" />
                 {isSubmitting ? "Submitting Request..." : "Submit Custom Meal Request"}
-              </button>
+              </Button>
             </div>
           </div>
         )}

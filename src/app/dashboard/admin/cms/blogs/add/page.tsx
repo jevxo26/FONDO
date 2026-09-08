@@ -9,12 +9,12 @@ import { toast } from "sonner";
 export default function AddBlogPage() {
   const router = useRouter();
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       console.log("Creating blog:", data);
       toast.success("Blog created successfully");
       router.push("/dashboard/admin/cms/blogs");
-    } catch (error) {
+    } catch {
       toast.error("Failed to create blog");
     }
   };

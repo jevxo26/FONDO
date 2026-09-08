@@ -8,66 +8,74 @@
 
 ## 2. Color System
 
-### CSS Variable Tokens (use in components)
+**Single source of truth:** all color tokens live in `src/app/globals.css` (light `:root` + `.dark`). Components consume them via Tailwind utilities (`bg-primary`, `text-muted-foreground`, `bg-warning/10`, …) — never hardcode brand hex values in components. Shadows over brand colors use `color-mix(in srgb, var(--primary) N%, transparent)`.
+
+### Palette
 | Token | Light | Dark | Usage |
 |-------|-------|------|-------|
-| `--background` | `#FAF6EF` | `#1E1814` | Page background |
-| `--foreground` | `#2B211B` | `#F4EDE0` | Main text |
-| `--card` | `#FFFDF9` | `#2A221A` | Card background |
-| `--card-foreground` | `#2B211B` | `#F4EDE0` | Card text |
-| `--primary` | `#A85A38` | `#CE8665` | Terracotta — button fills, active states, premium indicators |
-| `--primary-foreground` | `#FFF9F2` | `#2B140A` | Text on primary |
-| `--secondary` | `#F1E8DA` | `#332A1F` | Cream/sand backgrounds |
-| `--secondary-foreground` | `#3A2E23` | `#F4EDE0` | Text on secondary |
-| `--muted` | `#F0E7D9` | `#2E251C` | Subtle backgrounds |
-| `--muted-foreground` | `#6E6458` | `#A99C8C` | Muted text |
-| `--accent` | `#F2E3D4` | `#3A2E21` | Warm sand accent backgrounds |
-| `--accent-foreground` | `#3A2E23` | `#F4EDE0` | Text on accent |
-| `--destructive` | `#E0554F` | `#E0604F` | Error states, danger badges |
-| `--success` | `#3E9A72` | `#4CAF84` | Success states |
-| `--warning` | `#D97B26` | `#E09A4F` | Warning states |
-| `--border` | `#E3D7C4` | `#40382C` | Borders |
-| `--input` | `#DFD3C1` | `#40382C` | Input borders |
-| `--ring` | `#A85A38` | `#CE8665` | Focus rings |
-| `--sidebar` | `#FAF5EC` | `#221B14` | Sidebar background |
-| `--sidebar-foreground` | `#2B211B` | `#F4EDE0` | Sidebar text |
-| `--sidebar-primary` | `#A85A38` | `#CE8665` | Sidebar primary |
-| `--sidebar-primary-foreground` | `#FFF9F2` | `#2B140A` | Sidebar primary text |
-| `--sidebar-accent` | `#F1E6D8` | `#332A1F` | Sidebar accent |
-| `--sidebar-accent-foreground` | `#2B211B` | `#F4EDE0` | Sidebar accent text |
-| `--sidebar-border` | `#E3D7C4` | `#40382C` | Sidebar borders |
-| `--sidebar-ring` | `#A85A38` | `#CE8665` | Sidebar focus ring |
-| `--overlay` | `#221A12` | `#1A120B` | Warm dark overlay over photos (service banner, /our hero) |
-| `--overlay-deep` | `#120D09` | `#0B0806` | Deep end of `bg-warm-dark` gradient |
+| `--background` | `#FFFCF5` | `#1C1510` | Page background (warm cream / warm brown) |
+| `--foreground` | `#2B1A12` | `#F7EDE3` | Main text |
+| `--card` | `#FFFFFF` | `#261C14` | Card background |
+| `--card-foreground` | `#2B1A12` | `#F7EDE3` | Card text |
+| `--popover` | `#FFFFFF` | `#261C14` | Dropdown/menu backgrounds |
+| `--popover-foreground` | `#2B1A12` | `#F7EDE3` | Text on popover |
+| `--primary` | `#CEA359` | `#E8B84A` | Logo Gold — button fills, active states, premium indicators (brighter in dark) |
+| `--primary-foreground` | `#FFFFFF` | `#2B1A12` | Text on primary |
+| `--secondary` | `#F5EBD9` | `#382C1E` | Warm sand backgrounds, soft pills |
+| `--secondary-foreground` | `#3B2218` | `#F7EDE3` | Text on secondary |
+| `--muted` | `#F6ECE2` | `#2E2418` | Subtle backgrounds |
+| `--muted-foreground` | `#7A6252` | `#B9A89B` | Muted text |
+| `--accent` | `#FFF5D6` | `#4A3A16` | Soft butter — highlights, selection |
+| `--accent-foreground` | `#8A6A1D` | `#FFC27A` | Text on accent |
+| `--destructive` | `#D63C2C` | `#E0524A` | Error states, danger badges |
+| `--destructive-foreground` | `#FFFFFF` | `#FFFFFF` | Text on destructive |
+| `--success` | `#2F8A5B` | `#4CAF84` | Success states |
+| `--warning` | `#C97B1E` | `#E0A44F` | Warning states |
+| `--info` | `#3E6FB0` | `#6FA1D9` | Info/blue states |
+| `--border` | `#EDE0D4` | `#3D2E20` | Borders |
+| `--input` | `#E8D9CC` | `#3D2E20` | Input borders |
+| `--ring` | `#CEA359` | `#E8B84A` | Focus rings |
+| `--sidebar` | `#FFFBF5` | `#221510` | Sidebar background |
+| `--sidebar-foreground` | `#2B1A12` | `#F7EDE3` | Sidebar text |
+| `--sidebar-accent` | `#F5EBD9` | `#382C1E` | Sidebar accent |
+| `--sidebar-accent-foreground` | `#2B1A12` | `#F7EDE3` | Sidebar accent text |
+| `--sidebar-border` | `#EDE0D4` | `#3D2E20` | Sidebar borders |
+| `--sidebar-ring` | `#CEA359` | `#E8B84A` | Sidebar focus ring |
+| `--overlay` | `#2A1712` | `#1A120B` | Warm dark overlay over photos (service banner, hero) |
+| `--chart-1..5` | `#CEA359` / `#E8955A` / `#F5A623` / `#2F8A5B` / `#3E6FB0` | `#E8B84A` / `#F5A623` / `#7BD389` / `#6FA1D9` / `#E8955A` | Chart series (recharts fills) |
 
 ### Variant System
-StatCard, accent bars, and status indicators use these semantic colors:
+StatCard, accent bars, status badges, and table pills use semantic tokens (see `StatusBadge` in `src/components/common/status-badge.tsx`):
 
 | Variant | Token | Visual |
 |---------|-------|--------|
-| `default` | `--primary` | Terracotta |
+| `default` | `--primary` | Logo Gold |
 | `success` | `--success` | Green |
 | `warning` | `--warning` | Amber |
 | `danger` | `--destructive` | Red |
+| `info` | `--info` | Blue |
+| `muted` | `--muted-foreground` | Gray |
+
+Badge pattern: `bg-{token}/10 text-{token}` (+ optional `ring-1 ring-{token}/20`). Tokens adapt automatically to dark mode — no `dark:` overrides needed.
 
 ### Brand Color Budget
-Primary is the **terracotta accent** — the warm premium signal. Use it for high-signal actions and accents, never as a background fill for large areas.
+Primary is **Logo Gold** (`#CEA359`) — derived from the brand logo. **Butter** (`#FFF5D6`) sits in the `--accent` family for highlights. Use primary for high-signal actions and accents, never as a background fill for large areas.
 - **USE `--primary`** for: CTA buttons, active/selected states (tabs, pills, pagination, sidebar active), count badges, high-signal emphasis tags, icon accents.
-- **Text on primary** uses `--primary-foreground` (warm cream).
+- **Text on primary** uses `--primary-foreground`.
 - **Decorative accents on light backgrounds:** `text-primary` for emphasis headings/icons, `bg-primary/10` (or `bg-primary/5`) for soft tint chips, `border-primary/30` for subtle borders/lines. Keep these restrained — one warm accent per view.
 - **Dark surfaces** (DarkCard, `bg-foreground` sections): `text-primary`/`bg-primary/10` warm accents are correct there.
-- Rating stars: `fill-primary text-primary` (warm terracotta). Focus rings: `ring-primary`.
+- Rating stars: `fill-primary text-primary`. Focus rings: `ring-primary`.
 - Eyebrow/section labels: `text-muted-foreground` + uppercase tracking.
 - Decorative dividers/lines: `bg-primary/30`, not solid primary.
+- Brand-tinted shadows/glows: `color-mix(in srgb, var(--primary) N%, transparent)` — never hardcoded `rgba(168, 90, 56, …)`.
+
+### Exceptions (data, not theme)
+These color values are **data**, not component styling, and stay hardcoded:
+- Tag/label preset palettes (`src/data/mock-coupons.ts`, `src/data/foodsdata.ts`, `tag-section.tsx` presets) — stored in DB, rendered via inline `style`.
+- Tier colors (`--tier-bg/fg/stripe` in `globals.css` + `.tier-*` utilities).
 
 ### Tier Color System
-For customer/profile tiering (bronze/silver/gold):
-
-| Tier | Light bg | Dark bg | Badge | Accent |
-|------|----------|---------|-------|--------|
-| Bronze | `bg-amber-100/80` | `bg-amber-900/40` | `bg-amber-900/10 text-amber-700` | `bg-amber-600` |
-| Silver | `bg-slate-100/70` | `bg-zinc-800/50` | `bg-muted text-muted-foreground` | `bg-slate-400` |
-| Gold | `from-primary/15` | `from-primary/30` | `bg-primary/10 text-primary` | `bg-primary` |
+For customer/profile tiering, use the `.tier-bronze` / `.tier-silver` / `.tier-gold` utilities in `globals.css` (they set `--tier-bg` / `--tier-fg` / `--tier-stripe` for light and dark).
 
 ## 3. Typography
 
